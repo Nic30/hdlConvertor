@@ -45,11 +45,11 @@ ANTLR = 'antlr4-runtime-cpp/'
 
 ANTRL_INCLUDE = [
                  ANTLR,
-                 ANTLR+"/misc",
-                 ANTLR+"/atn",
-                 ANTLR+"/dfa",
-                 ANTLR+"/tree",
-                 ANTLR+"/support",
+                 #ANTLR+"misc/",
+                 #ANTLR+"atn/",
+                 #ANTLR+"dfa/",
+                 #ANTLR+"tree/",
+                 #ANTLR+"support/",
                 ]  
 BASE = "src/"
 ALL_SOURCE = [] + list(collectFiles(BASE))
@@ -57,18 +57,22 @@ for d in ANTRL_INCLUDE:
     ALL_SOURCE += list(collectFiles(d)) 
 
 
-module1 = Extension('hdlConvertor',
-                    define_macros = [('MAJOR_VERSION', '1'),
-                                     ('MINOR_VERSION', '0')],
-                    include_dirs = ['/usr/local/include'] + ANTRL_INCLUDE,
+hdlConvertor = Extension('hdlConvertor',
+                    #define_macros = [('MAJOR_VERSION', '0'),
+                    #                 ('MINOR_VERSION', '2')],
+                    include_dirs = ANTRL_INCLUDE,
                     #library_dirs = ['/usr/local/lib'],
-                    libraries = ['libantlr4-runtime'],
+                    #libraries = ['libantlr4-runtime'],
                     extra_compile_args=['-std=c++11'],
                     sources = ALL_SOURCE)
 
 setup (cmdclass = {'build_ext': buildWithoutStrictPrototypes},
        name = 'hdlConvertor',
+       version = '0.3',
+       description = 'Vhdl and verilog parser written in c++, this module is primary used for hw_toolkit library for hdl manipulation',
        url='https://github.com/Nic30/hdlConvertor',
        author='Michal Orsak',
        author_email='michal.o.socials@gmail.com',
-       ext_modules = [module1])
+       ext_modules = [hdlConvertor],
+       keywords = ['vhdl', 'verilog', 'parser', 'hdl'], # arbitrary keywords
+)

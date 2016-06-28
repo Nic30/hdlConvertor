@@ -28,6 +28,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1075942593" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 								<option id="gnu.cpp.compiler.option.include.paths.1994835443" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/python3.5"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hdlConvertor/antlr4-runtime-cpp}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1563262245" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.debugging.level.623126369" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
@@ -38,6 +39,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1102855950" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
 								<option id="gnu.c.compiler.option.include.paths.1747910726" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/python3.5"/>
+									<listOptionValue builtIn="false" value="/hdlConvertor/antlr4-runtime-cpp"/>
 								</option>
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1990387646" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1386946710" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
@@ -68,6 +70,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="antlr4-runtime-cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="antlr4-runtime-cpp"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

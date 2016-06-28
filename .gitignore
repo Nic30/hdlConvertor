@@ -28,6 +28,7 @@
 *.out
 *.app
 
+# build folders
 Debug/
 target/
-
+dist/
