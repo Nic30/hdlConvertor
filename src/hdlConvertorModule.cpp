@@ -47,7 +47,7 @@ NULL, //spam_doc, /* module documentation, may be NULL */
 PyObject *
 hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 	char *filename = NULL, *langue = NULL;
-	bool debug= false, hierarchyOnly = false;
+	bool debug = false, hierarchyOnly = false;
 	Langue _lang;
 	PyObject * syntaxErrorHandler = NULL, *_debug = NULL,
 			*_hierarchyOnly = NULL;
@@ -66,9 +66,7 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 		debug = PyObject_IsTrue(_debug);
 
 	//toLowercase((char *) langue);
-	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly);
-	MOD_DEBUG("debug: " << debug);
-	MOD_DEBUG("langue:" << langue);
+	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly); MOD_DEBUG("debug: " << debug); MOD_DEBUG("langue:" << langue);
 
 	if (strcmp(langue, "vhdl") == 0) {
 		_lang = VHDL;
@@ -82,8 +80,14 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 	}
 	Context * c = Convertor::parse(filename, _lang, hierarchyOnly, debug);
 	if (!c) {
-		PyErr_SetString(PyExc_TypeError,
-				"Converter::parse did not returned correct context for file");
+		switch (Convertor::err) {
+		case PERR_FILE:
+			PyErr_SetString(PyExc_IOError, strerror(errno));
+			break;
+		default:
+			PyErr_SetString(PyExc_TypeError,
+					"Converter::parse did not returned correct context for file");
+		}
 		return NULL;
 	}
 
