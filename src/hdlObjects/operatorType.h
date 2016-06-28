@@ -1,0 +1,47 @@
+#pragma once
+
+enum OperatorType {
+	RANGE,
+	INDEX,
+	DOWNTO,
+	TO,
+	UN_MINUS,
+	UN_PLUS,
+	SUB,
+	ADD,
+	DIV,
+	MUL,
+	MOD,
+	REM,
+	CONCAT,
+	POW,
+	ABS,
+	NOT,
+	LOG_AND,
+	LOG_OR,
+	AND,
+	OR,
+	NAND,
+	NOR,
+	XOR,
+	XNOR,
+	EQ,
+	NEQ,
+	LOWERTHAN,
+	LE,
+	GREATERTHAN,
+	GE,
+	SLL,
+	SRL,
+	SLA,
+	SRA,
+	ROL,
+	ROR,
+	TERNARY,
+	DOT,
+	CALL,
+	ARROW
+};
+
+const char* OperatorType_toString(OperatorType opt);
+int OperatorType_arity(OperatorType opt);
