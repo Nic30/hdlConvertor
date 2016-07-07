@@ -34,8 +34,6 @@ def parallelCCompile(self, sources, output_dir=None, macros=None, include_dirs=N
     list(multiprocessing.pool.ThreadPool(N).imap(_single_compile,objects))
     return objects
 
-
-
 def listFiles(baseDir):
     for root, dirs, files in os.walk(baseDir):
         for file in files:
@@ -45,16 +43,6 @@ def collectSourceFiles(baseDir):
     for file in listFiles(baseDir):
         if (file.endswith(".c") or file.endswith(".cpp")) and not file.endswith("main.c"):
             yield file
-
-#def collectHeaderFiles(baseDir):
-#    for file in listFiles(baseDir):
-#        if file.endswith(".h"):
-#            yield file
-
-
-def collectDirs(root):
-    for root, _, _ in os.walk(root):
-        yield root
 
 BASE = "src/"
 ALL_SOURCE = list(collectSourceFiles(BASE))
