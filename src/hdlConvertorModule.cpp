@@ -1,18 +1,7 @@
 #include "hdlConvertorModule.h"
-#include "langue.h"
 #include "convertor.h"
 
-#define ch(str) ((const char *) str)
-//inline char * __str__(PyObject* obj) {
-//	return PyUnicode_AsUTF8(PyObject_Str(obj));
-//}
-//char * toLowercase(char * str) {
-//	while (*str) {
-//		*str = tolower(*str);
-//		str++;
-//	}
-//	return str;
-//}
+#ifdef USE_PYTHON
 
 static PyMethodDef hdlConvertorMethods[] =
 		{
@@ -38,7 +27,7 @@ static PyMethodDef hdlConvertorMethods[] =
 		};
 
 static struct PyModuleDef hdlConvertor = {
-PyModuleDef_HEAD_INIT, ch("hdlConvertor"), /* name of module */
+PyModuleDef_HEAD_INIT, "hdlConvertor", /* name of module */
 NULL, //spam_doc, /* module documentation, may be NULL */
 		-1, /* size of per-interpreter state of the module,
 		 or -1 if the module keeps state in global variables. */
@@ -66,7 +55,7 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 		debug = PyObject_IsTrue(_debug);
 
 	//toLowercase((char *) langue);
-	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly); MOD_DEBUG("debug: " << debug); MOD_DEBUG("langue:" << langue);
+	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly);MOD_DEBUG("debug: " << debug);MOD_DEBUG("langue:" << langue);
 
 	if (strcmp(langue, "vhdl") == 0) {
 		_lang = VHDL;
@@ -100,3 +89,4 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 PyMODINIT_FUNC PyInit_hdlConvertor(void) {
 	return PyModule_Create(&hdlConvertor);
 }
+#endif

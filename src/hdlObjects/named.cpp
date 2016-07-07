@@ -1,10 +1,11 @@
 #include "named.h"
-#include <assert.h>
+
 
 Named::Named() {
 	name = NULL;
 }
 
+#ifdef USE_PYTHON
 PyObject * Named::toJson() const {
 	PyObject *d = PyDict_New();
 	assert(name != NULL);
@@ -12,6 +13,7 @@ PyObject * Named::toJson() const {
 	Py_IncRef(d);
 	return d;
 }
+#endif
 
 void Named::dump(int indent) const {
 	std::cout << "{\n";

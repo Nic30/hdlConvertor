@@ -27,5 +27,7 @@ public:
 	static Statement* RETURN();
 	static Statement* ASSIG(Expr * dst, Expr * src);
 	static Statement* WHILE(Expr * cond, std::vector<Statement*>* body);
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 };

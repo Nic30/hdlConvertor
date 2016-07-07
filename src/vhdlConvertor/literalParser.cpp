@@ -8,7 +8,7 @@ Expr * LiteralParser::visitLiteral(Ref<vhdlParser::LiteralContext> ctx) {
 	// | enumeration_literal
 	// | numeric_literal
 	// ;
-	if (ctx->T_NULL())
+	if (ctx->NULL_SYM())
 		return Expr::null();
 
 	auto n = ctx->BIT_STRING_LITERAL();

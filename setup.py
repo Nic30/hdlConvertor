@@ -5,6 +5,9 @@ from distutils.sysconfig import customize_compiler
 import distutils.ccompiler
 
 class buildWithoutStrictPrototypes(build_ext):
+    """
+    Sorce code of this library is written in c++ strict-prototypes does not make sence for c++ compilation
+    """
     def build_extensions(self):
         customize_compiler(self.compiler)
         try:
@@ -30,49 +33,48 @@ def parallelCCompile(self, sources, output_dir=None, macros=None, include_dirs=N
     # convert to list, imap is evaluated on-demand
     list(multiprocessing.pool.ThreadPool(N).imap(_single_compile,objects))
     return objects
-distutils.ccompiler.CCompiler.compile=parallelCCompile
 
 
-def collectFiles(baseDir ):
+
+def listFiles(baseDir):
     for root, dirs, files in os.walk(baseDir):
         for file in files:
-            if (file.endswith(".c") or file.endswith(".cpp")) and not file.endswith("main.c"):
-                yield os.path.join(root, file)
+            yield os.path.join(root, file) 
+            
+def collectSourceFiles(baseDir):
+    for file in listFiles(baseDir):
+        if (file.endswith(".c") or file.endswith(".cpp")) and not file.endswith("main.c"):
+            yield file
+
+#def collectHeaderFiles(baseDir):
+#    for file in listFiles(baseDir):
+#        if file.endswith(".h"):
+#            yield file
 
 
+def collectDirs(root):
+    for root, _, _ in os.walk(root):
+        yield root
 
-ANTLR = 'antlr4-runtime-cpp/'
-
-ANTRL_INCLUDE = [
-                 ANTLR,
-                 #ANTLR+"misc/",
-                 #ANTLR+"atn/",
-                 #ANTLR+"dfa/",
-                 #ANTLR+"tree/",
-                 #ANTLR+"support/",
-                ]  
 BASE = "src/"
-ALL_SOURCE = [] + list(collectFiles(BASE))
-for d in ANTRL_INCLUDE:
-    ALL_SOURCE += list(collectFiles(d)) 
+ALL_SOURCE = list(collectSourceFiles(BASE))
 
 
+distutils.ccompiler.CCompiler.compile=parallelCCompile
 hdlConvertor = Extension('hdlConvertor',
-                    #define_macros = [('MAJOR_VERSION', '0'),
-                    #                 ('MINOR_VERSION', '2')],
-                    include_dirs = ANTRL_INCLUDE,
-                    #library_dirs = ['/usr/local/lib'],
-                    #libraries = ['libantlr4-runtime'],
+                    include_dirs = [BASE + "antlr4-runtime-cpp/"],
                     extra_compile_args=['-std=c++11'],
-                    sources = ALL_SOURCE)
+                    sources = ALL_SOURCE,
+                    language="c++",
+                    )
 
 setup (cmdclass = {'build_ext': buildWithoutStrictPrototypes},
        name = 'hdlConvertor',
-       version = '0.3',
+       version = '0.8',
        description = 'Vhdl and verilog parser written in c++, this module is primary used for hw_toolkit library for hdl manipulation',
        url='https://github.com/Nic30/hdlConvertor',
        author='Michal Orsak',
        author_email='michal.o.socials@gmail.com',
        ext_modules = [hdlConvertor],
-       keywords = ['vhdl', 'verilog', 'parser', 'hdl'], # arbitrary keywords
+       keywords = ['vhdl', 'verilog', 'parser', 'hdl'],
 )

@@ -1,5 +1,6 @@
 #include "context.h"
 
+#ifdef USE_PYTHON
 PyObject * Context::toJson() const {
 	PyObject * c = PyDict_New();
 
@@ -23,6 +24,7 @@ PyObject * Context::toJson() const {
 	Py_IncRef(c);
 	return c;
 }
+#endif
 
 void Context::dump(int indent) const {
 	mkIndent(indent) << "{\n";

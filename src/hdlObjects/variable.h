@@ -9,6 +9,8 @@ public:
 	Expr * value;
 
 	Variable(std::string id, Expr * type, Expr * val);
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 	void dump(int indent) const;
 };

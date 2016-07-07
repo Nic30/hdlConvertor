@@ -114,7 +114,7 @@ char * Expr::extractStr() {
 Expr::~Expr() {
 	delete data;
 }
-
+#ifdef USE_PYTHON
 PyObject * Expr::toJson() const {
 	PyObject *d = PyDict_New();
 	Operator * op = dynamic_cast<Operator*>(data);
@@ -130,7 +130,7 @@ PyObject * Expr::toJson() const {
 	Py_INCREF(d);
 	return d;
 }
-
+#endif
 void Expr::dump(int indent) const {
 	Operator * op = dynamic_cast<Operator*>(data);
 	std::cout << "{\n";

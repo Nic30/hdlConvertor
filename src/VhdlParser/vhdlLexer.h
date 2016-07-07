@@ -24,7 +24,7 @@ public:
     GUARDED = 35, IF = 36, IMPURE = 37, IN = 38, INERTIAL = 39, INOUT = 40, 
     IS = 41, LABEL = 42, LIBRARY = 43, LIMIT = 44, LINKAGE = 45, LITERAL = 46, 
     LOOP = 47, MAP = 48, MOD = 49, NAND = 50, NATURE = 51, NEW = 52, NEXT = 53, 
-    NOISE = 54, NOR = 55, NOT = 56, T_NULL = 57, OF = 58, ON = 59, OPEN = 60, 
+    NOISE = 54, NOR = 55, NOT = 56, NULL_SYM = 57, OF = 58, ON = 59, OPEN = 60, 
     OR = 61, OTHERS = 62, OUT = 63, PACKAGE = 64, PORT = 65, POSTPONED = 66, 
     PROCESS = 67, PROCEDURE = 68, PROCEDURAL = 69, PURE = 70, QUANTITY = 71, 
     RANGE = 72, REVERSE_RANGE = 73, REJECT = 74, REM = 75, RECORD = 76, 
@@ -58,7 +58,7 @@ public:
   virtual const std::vector<std::string>& getTokenNames() const override; // deprecated, use vocabulary instead
   virtual dfa::Vocabulary& getVocabulary() const override;
 
-  virtual const std::vector<uint16_t> getSerializedATN() const;
+  virtual const std::vector<uint16_t> getSerializedATN() const override;
   virtual const atn::ATN& getATN() const override;
 
 

@@ -1,14 +1,15 @@
 #pragma once
 
-#include <Python.h>
 #include <vector>
 #include <string>
-#include <strings.h>
+#include <string.h>
+#include <assert.h>
 
 #include "bigInteger.h"
 #include "symbolType.h"
 #include "operatorType.h"
 #include "exprItem.h"
+#include "../debugConfig.h"
 
 class Expr {
 public:
@@ -41,7 +42,9 @@ public:
 	static Expr * all();
 	static Expr * null();
 	char * extractStr();
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 	void dump(int indent) const;
 	~Expr();
 };

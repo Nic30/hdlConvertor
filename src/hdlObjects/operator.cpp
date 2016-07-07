@@ -45,6 +45,7 @@ Operator::~Operator() {
 		delete op1;
 }
 
+#ifdef USE_PYTHON
 PyObject * Operator::toJson() const {
 	PyObject *d = PyDict_New();
 	PyDict_SetItemString(d, "op0", op0->toJson());
@@ -68,6 +69,7 @@ PyObject * Operator::toJson() const {
 	Py_IncRef(d);
 	return d;
 }
+#endif
 
 void Operator::dump(int indent) const {
 	std::cout << "{\n";

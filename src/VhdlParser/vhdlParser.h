@@ -26,7 +26,7 @@ public:
     GUARDED = 35, IF = 36, IMPURE = 37, IN = 38, INERTIAL = 39, INOUT = 40, 
     IS = 41, LABEL = 42, LIBRARY = 43, LIMIT = 44, LINKAGE = 45, LITERAL = 46, 
     LOOP = 47, MAP = 48, MOD = 49, NAND = 50, NATURE = 51, NEW = 52, NEXT = 53, 
-    NOISE = 54, NOR = 55, NOT = 56, T_NULL = 57, OF = 58, ON = 59, OPEN = 60, 
+    NOISE = 54, NOR = 55, NOT = 56, NULL_SYM = 57, OF = 58, ON = 59, OPEN = 60, 
     OR = 61, OTHERS = 62, OUT = 63, PACKAGE = 64, PORT = 65, POSTPONED = 66, 
     PROCESS = 67, PROCEDURE = 68, PROCEDURAL = 69, PURE = 70, QUANTITY = 71, 
     RANGE = 72, REVERSE_RANGE = 73, REJECT = 74, REM = 75, RECORD = 76, 
@@ -3856,7 +3856,7 @@ public:
   public:
     LiteralContext(std::weak_ptr<ParserRuleContext> parent, int invokingState);
     virtual ssize_t getRuleIndex() const override;
-    Ref<tree::TerminalNode> T_NULL();
+    Ref<tree::TerminalNode> NULL_SYM();
     Ref<tree::TerminalNode> BIT_STRING_LITERAL();
     Ref<tree::TerminalNode> STRING_LITERAL();
     Ref<Enumeration_literalContext> enumeration_literal();
@@ -5512,7 +5512,7 @@ public:
     Ref<Next_statementContext> next_statement();
     Ref<Exit_statementContext> exit_statement();
     Ref<Return_statementContext> return_statement();
-    Ref<tree::TerminalNode> T_NULL();
+    Ref<tree::TerminalNode> NULL_SYM();
     Ref<tree::TerminalNode> SEMI();
     Ref<Label_colonContext> label_colon();
     Ref<Break_statementContext> break_statement();
@@ -5889,7 +5889,7 @@ public:
     Ref<Simultaneous_if_statementContext> simultaneous_if_statement();
     Ref<Simultaneous_case_statementContext> simultaneous_case_statement();
     Ref<Simultaneous_procedural_statementContext> simultaneous_procedural_statement();
-    Ref<tree::TerminalNode> T_NULL();
+    Ref<tree::TerminalNode> NULL_SYM();
     Ref<tree::TerminalNode> SEMI();
     Ref<Label_colonContext> label_colon();
 

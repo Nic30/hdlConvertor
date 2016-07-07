@@ -3,7 +3,7 @@
 Entity::Entity() :
 		Named() {
 }
-
+#ifdef USE_PYTHON
 PyObject * Entity::toJson() const {
 	PyObject * d = Named::toJson();
 	addJsonArrP(d, "generics", generics);
@@ -11,6 +11,7 @@ PyObject * Entity::toJson() const {
 	Py_INCREF(d);
 	return d;
 }
+#endif
 
 void Entity::dump(int indent) const {
 	Named::dump(indent);

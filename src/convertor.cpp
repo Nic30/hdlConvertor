@@ -17,8 +17,6 @@ void parseFnVerilog(
 }
 
 void parseFnVHDL(vhdlParser * antlrParser, DesignFileParser * hdlParser) {
-	auto i = antlrParser->getInterpreter<atn::ParserATNSimulator>();
-	i->setPredictionMode(antlr4::atn::PredictionMode::SLL);
 	Ref<vhdlParser::Design_fileContext> tree = antlrParser->design_file();
 	hdlParser->visitDesign_file(tree);
 	tree.reset();

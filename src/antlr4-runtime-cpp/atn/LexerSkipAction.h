@@ -29,42 +29,53 @@
  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "misc/MurmurHash.h"
-#include "Lexer.h"
+#pragma once
 
-#include "atn/LexerPopModeAction.h"
+#include "atn/LexerAction.h"
+#include "atn/LexerActionType.h"
 
-using namespace antlr4;
-using namespace antlr4::atn;
-using namespace antlr4::misc;
+namespace antlr4 {
+namespace atn {
 
-const Ref<LexerPopModeAction> LexerPopModeAction::INSTANCE { new LexerPopModeAction() };
+  /// <summary>
+  /// Implements the {@code skip} lexer action by calling <seealso cref="Lexer#skip"/>.
+  ///
+  /// <para>The {@code skip} command does not have any parameters, so this action is
+  /// implemented as a singleton instance exposed by <seealso cref="#INSTANCE"/>.</para>
+  ///
+  /// @author Sam Harwell
+  /// @since 4.2
+  /// </summary>
+  class ANTLR4CPP_PUBLIC LexerSkipAction final : public LexerAction {
+  public:
+    /// Provides a singleton instance of this parameterless lexer action.
+    static const Ref<LexerSkipAction> getInstance();
 
-LexerPopModeAction::LexerPopModeAction() {
-}
+    /// <summary>
+    /// {@inheritDoc} </summary>
+    /// <returns> This method returns <seealso cref="LexerActionType#SKIP"/>. </returns>
+    virtual LexerActionType getActionType() const override;
 
-LexerActionType LexerPopModeAction::getActionType() const {
-  return LexerActionType::POP_MODE;
-}
+    /// <summary>
+    /// {@inheritDoc} </summary>
+    /// <returns> This method returns {@code false}. </returns>
+    virtual bool isPositionDependent() const override;
 
-bool LexerPopModeAction::isPositionDependent() const {
-  return false;
-}
+    /// <summary>
+    /// {@inheritDoc}
+    ///
+    /// <para>This action is implemented by calling <seealso cref="Lexer#skip"/>.</para>
+    /// </summary>
+    virtual void execute(Lexer *lexer) override;
 
-void LexerPopModeAction::execute(Lexer *lexer) {
-  lexer->popMode();
-}
+    virtual size_t hashCode() const override;
+    virtual bool operator == (const LexerAction &obj) const override;
+    virtual std::string toString() const override;
 
-size_t LexerPopModeAction::hashCode() const {
-  size_t hash = MurmurHash::initialize();
-  hash = MurmurHash::update(hash, (size_t)getActionType());
-  return MurmurHash::finish(hash, 1);
-}
+  private:
+    /// Constructs the singleton instance of the lexer {@code skip} command.
+    LexerSkipAction();
+  };
 
-bool LexerPopModeAction::operator == (const LexerAction &obj) const {
-  return &obj == this;
-}
-
-std::string LexerPopModeAction::toString() const {
-  return "popMode";
-}
+} // namespace atn
+} // namespace antlr4

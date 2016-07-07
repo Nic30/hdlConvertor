@@ -11,6 +11,7 @@ Function::Function(
 	this->params = params;
 }
 
+#ifdef USE_PYTHON
 PyObject * Function::toJson() const {
 	PyObject *d = Named::toJson();
 	PyDict_SetItemString(d, "isOperator", PyBool_FromLong(isOperator));
@@ -26,3 +27,4 @@ PyObject * Function::toJson() const {
 	Py_IncRef(d);
 	return d;
 }
+#endif

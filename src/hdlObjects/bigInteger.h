@@ -1,33 +1,29 @@
 #pragma once
-#include <Python.h>
-#include <string>
-#include <iostream>
 
+#include <string>
+#include "../debugConfig.h"
+
+#ifdef USE_PYTHON
 typedef PyObject * BigInteger;
+#else
+typedef long long int BigInteger;
+#endif
 
 inline BigInteger BigInteger_fromStr(const char * str, int base) {
-	auto v = PyLong_FromString(str, NULL, base);
-
-	//PyTypeObject* type = v->ob_type;
-	//const char* p = type->tp_name;
-	//std::cout << "My type is " << p << std::endl;
-    //
-	//auto s = PyObject_Str(v);
-	//std::cout << PyUnicode_AsUTF8(s) << "\n";
+#ifdef USE_PYTHON
+	auto v = PyLong_FromString((char *)str, NULL, base);
 	return v;
+#else
+	return atoi(str);
+#endif
 }
 inline BigInteger BigInteger_fromStr(std::string str, int base) {
-	return PyLong_FromString(str.c_str(), NULL, base);
+	return BigInteger_fromStr(str.c_str(), base);
 }
 inline BigInteger BigInteger_fromLong(long long val) {
-	BigInteger v = PyLong_FromLongLong(val);
-
-	//PyTypeObject* type = v->ob_type;
-	//const char* p = type->tp_name;
-	//std::cout << "My type is " << p << std::endl;
-    //
-	//auto s = PyObject_Str(v);
-	//std::cout << PyUnicode_AsUTF8(s) << "\n";
-
-	return v;
+#ifdef USE_PYTHON
+	return PyLong_FromLongLong(val);
+#else
+	return val;
+#endif
 }

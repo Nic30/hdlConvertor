@@ -18,6 +18,7 @@ public:
 			bool isOperator,
 			Expr * returnT,
 			std::vector<Variable*> * params);
-
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 };

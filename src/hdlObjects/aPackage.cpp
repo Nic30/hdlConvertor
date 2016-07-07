@@ -6,7 +6,7 @@ using namespace std;
 aPackage::aPackage() :
 		Named() {
 }
-
+#ifdef USE_PYTHON
 PyObject * aPackage::toJson() const {
 	PyObject *d = Named::toJson();
 	addJsonArrP(d, "components", components);
@@ -15,7 +15,7 @@ PyObject * aPackage::toJson() const {
 	Py_INCREF(d);
 	return d;
 }
-
+#endif
 void aPackage::dump(int indent) const {
 	Named::dump(indent);
 	indent += INDENT_INCR;

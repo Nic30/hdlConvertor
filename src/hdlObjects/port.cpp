@@ -1,5 +1,6 @@
 #include "port.h"
 
+#ifdef USE_PYTHON
 PyObject * Port::toJson() const {
 	PyObject *d = PyDict_New();
 	PyDict_SetItemString(d, "direction",
@@ -8,6 +9,7 @@ PyObject * Port::toJson() const {
 	Py_IncRef(d);
 	return d;
 }
+#endif
 
 void Port::dump(int indent) const {
 	std::cout << "{\n";

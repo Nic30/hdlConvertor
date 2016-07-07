@@ -1,4 +1,6 @@
 #pragma once
+
+#include <stdlib.h>
 #include "jsonable.h"
 #include "bigInteger.h"
 #include "symbolType.h"
@@ -12,7 +14,9 @@ public:
 
 	Symbol(SymbolType type, LiteralVal value);
 	Symbol(BigInteger value, int bits);
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 	void dump(int indent) const;
 
 	~Symbol();

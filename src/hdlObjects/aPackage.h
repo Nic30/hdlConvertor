@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Python.h>
 #include <vector>
 #include <assert.h>
 
@@ -16,8 +15,9 @@ public:
 	std::vector<Variable*> variables;
 
 	aPackage();
-
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 	void dump(int indent) const;
 	~aPackage();
 };

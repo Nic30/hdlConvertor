@@ -12,9 +12,11 @@ Symbol::Symbol(BigInteger value, int bits) {
 }
 Symbol::~Symbol() {
 	switch (type) {
+#ifdef USE_PYTHON
 	case symb_INT:
 		free(value._int);
 		break;
+#endif
 	case symb_ID:
 	case symb_STRING:
 		free((char *) value._str);
@@ -23,7 +25,7 @@ Symbol::~Symbol() {
 		break;
 	}
 }
-
+#ifdef USE_PYTHON
 PyObject * Symbol::toJson() const {
 	PyObject * d = PyDict_New();
 
@@ -55,12 +57,13 @@ PyObject * Symbol::toJson() const {
 	Py_INCREF(d);
 	return d;
 }
+#endif
 
 void Symbol::dump(int indent) const {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
 	dumpVal("type", indent, SymbolType_toString(type)) << ",\n";
-	char * _v;
+	const char * _v;
 
 	switch (type) {
 	case symb_ID:
@@ -73,7 +76,11 @@ void Symbol::dump(int indent) const {
 	case symb_INT:
 		if (bits > 0)
 			dumpVal("bits", indent, bits) << ",\n";
+#ifdef USE_PYTHON
 		_v = PyUnicode_AsUTF8(PyObject_Str(value._int));
+#else
+		_v = std::to_string(value._int).c_str();
+#endif
 		dumpVal("value", indent, _v) << "\n";
 		break;
 	case symb_ALL:

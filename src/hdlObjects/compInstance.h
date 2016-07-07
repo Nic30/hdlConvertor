@@ -10,5 +10,7 @@ public:
 	std::vector<Expr*> portMap;
 
 	CompInstance(char * name, Expr * _entityName);
+#ifdef USE_PYTHON
 	PyObject * toJson() const;
+#endif
 };

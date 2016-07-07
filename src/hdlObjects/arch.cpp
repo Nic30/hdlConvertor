@@ -1,5 +1,6 @@
 #include "arch.h"
 
+#ifdef USE_PYTHON
 PyObject * Arch::toJson() const {
 	PyObject * o = Named::toJson();
 	JSN_DEBUG("Arch - name")
@@ -13,3 +14,4 @@ PyObject * Arch::toJson() const {
 	Py_INCREF(o);
 	return o;
 }
+#endif

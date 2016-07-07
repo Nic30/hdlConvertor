@@ -34,28 +34,30 @@
 #include "atn/LexerAction.h"
 #include "atn/LexerActionType.h"
 
+#include <memory>
+
 namespace antlr4 {
 namespace atn {
 
   /// <summary>
-  /// Implements the {@code more} lexer action by calling <seealso cref="Lexer#more"/>.
+  /// Implements the {@code popMode} lexer action by calling <seealso cref="Lexer#popMode"/>.
   ///
-  /// <para>The {@code more} command does not have any parameters, so this action is
+  /// <para>The {@code popMode} command does not have any parameters, so this action is
   /// implemented as a singleton instance exposed by <seealso cref="#INSTANCE"/>.</para>
   ///
   /// @author Sam Harwell
   /// @since 4.2
   /// </summary>
-  class ANTLR4CPP_PUBLIC LexerMoreAction final : public LexerAction {
+  class ANTLR4CPP_PUBLIC LexerPopModeAction final : public LexerAction {
   public:
     /// <summary>
     /// Provides a singleton instance of this parameterless lexer action.
     /// </summary>
-    static const Ref<LexerMoreAction> INSTANCE;
+    static const Ref<LexerPopModeAction> getInstance();
 
     /// <summary>
     /// {@inheritDoc} </summary>
-    /// <returns> This method returns <seealso cref="LexerActionType#MORE"/>. </returns>
+    /// <returns> This method returns <seealso cref="LexerActionType#POP_MODE"/>. </returns>
     virtual LexerActionType getActionType() const override;
 
     /// <summary>
@@ -66,7 +68,7 @@ namespace atn {
     /// <summary>
     /// {@inheritDoc}
     ///
-    /// <para>This action is implemented by calling <seealso cref="Lexer#more"/>.</para>
+    /// <para>This action is implemented by calling <seealso cref="Lexer#popMode"/>.</para>
     /// </summary>
     virtual void execute(Lexer *lexer) override;
 
@@ -75,8 +77,8 @@ namespace atn {
     virtual std::string toString() const override;
 
   private:
-    /// Constructs the singleton instance of the lexer {@code more} command.
-    LexerMoreAction();
+    /// Constructs the singleton instance of the lexer {@code popMode} command.
+    LexerPopModeAction();
   };
   
 } // namespace atn

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Python.h>
 #include <vector>
 #include <iostream>
 #include "../debugConfig.h"
 
 #define INDENT_INCR 2
 
+#ifdef USE_PYTHON
 PyObject * addJsonArr_empty(PyObject * parent, const char * name);
 
 template<typename T>
@@ -25,6 +25,7 @@ void addJsonArrP(
 	Py_IncRef(objList);
 	PyDict_SetItemString(parent, name, objList);
 }
+#endif
 
 inline std::ostream& mkIndent(int indent) {
 	for (int i = 0; i < indent; i++) {

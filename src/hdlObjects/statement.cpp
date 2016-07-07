@@ -72,6 +72,7 @@ Statement* Statement::WHILE(Expr * cond, std::vector<Statement*> * body) {
 	return s;
 
 }
+#ifdef USE_PYTHON
 PyObject * Statement::toJson() const {
 	PyObject * d = PyDict_New();
 	PyDict_SetItemString(d, "type",
@@ -111,3 +112,4 @@ PyObject * Statement::toJson() const {
 	Py_IncRef(d);
 	return d;
 }
+#endif
