@@ -6,12 +6,12 @@ addons:
     sources:
     # add PPAs with more up-to-date toolchains
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.6
+
     packages:
     # install toolchains
     - gcc-5
     - g++-5
-    - clang-3.6
+
 
 language: python
 python:
@@ -23,7 +23,7 @@ python:
 
 # command to install dependencies
 install: 
-  - python3 setup.py install
+  - CC="gcc-5" CCX="g++-5" python3 setup.py install
 
 # command to run tests
 script: nosetests
