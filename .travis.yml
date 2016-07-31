@@ -1,3 +1,4 @@
+# if trusty is not used compilation is killed (out or mem)
 sudo: required
 dist: trusty
 
@@ -7,7 +8,7 @@ cache:
   apt: true
 
 # clang is required because there is not enought ram for gcc
-compiler: clang
+compiler: gcc
 python:
   - "3.5"
 addons:
@@ -20,13 +21,10 @@ addons:
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
 env: CC=g++-5 CXX=g++-5 
-#CFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
 
 
 # command to install dependencies
 install:
-  - free 
-  - echo $CC 
   - python3 setup.py install
 
 # command to run tests
