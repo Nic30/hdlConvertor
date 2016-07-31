@@ -1,5 +1,6 @@
-sudo: required
-dist: trusty
+-platforms:
+-  - name: ubuntu-16.04
+
 language: python
 python:
   - "3.5"
