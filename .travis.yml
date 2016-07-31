@@ -12,14 +12,15 @@ addons:
       - ubuntu-toolchain-r-test
 os: linux
 compiler: gcc-6
+env: 
+  - COMPILER=g++-6
 
 #env:
 #  - CC=gcc-5 CCX=g++-5 COMPILER=g++-5
 
 # command to install dependencies
 install: 
-  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; export CC=${COMPILER}; fi
-  - gcc --version
+  - export CXX=${COMPILER}; export CC=${COMPILER};
   - echo $CC 
   - python3 setup.py install
 
