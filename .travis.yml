@@ -1,25 +1,24 @@
-sudo: required
-addons:
-  apt:
-    sources:
-    # add PPAs with more up-to-date toolchains
-    - ubuntu-toolchain-r-test
 
-    packages:
-    # install toolchains
-    - gcc-5.4
-    - g++-5.4
-
-
-language: python
+language: python c++
 python:
   - "3.5"
+
+addons:
+  apt:
+    packages:
+      - valgrind
+      - g++-6
+    sources: &sources
+      - ubuntu-toolchain-r-test
+os: linux
+compiler: gcc
 
 #env:
 #  - CC=gcc-5 CCX=g++-5 COMPILER=g++-5
 
 # command to install dependencies
 install: 
+  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
   - gcc --version
   - echo $CC 
   - python3 setup.py install
