@@ -21,4 +21,4 @@ install:
   - python3 setup.py install
 
 # command to run tests
-#script: nosetests
+script: nosetests
