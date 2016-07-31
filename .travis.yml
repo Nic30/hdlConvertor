@@ -18,7 +18,7 @@ compiler: gcc-6
 
 # command to install dependencies
 install: 
-  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; export CC=${COMPILER}; fi
   - gcc --version
   - echo $CC 
   - python3 setup.py install
