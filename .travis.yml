@@ -4,12 +4,15 @@ python:
 
 matrix:
   include:
-  - os: linux
-     compiler: clang
+  - compiler: clang
      addons:
        apt:
-         sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise']
-          packages: ['clang-3.9', 'valgrind']
+         sources: 
+            - 'ubuntu-toolchain-r-test'
+            - 'llvm-toolchain-precise'
+          packages: 
+            - 'clang-3.9'
+            #- 'valgrind'
      env: COMPILER=clang++-3.9  CC=clang-3.9 CXX=clang-3.9
 
 # command to install dependencies
