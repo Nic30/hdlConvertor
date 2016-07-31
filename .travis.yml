@@ -10,8 +10,9 @@ addons:
          - ubuntu-toolchain-r-test
          - llvm-toolchain-precise
       packages:
-         - clang-3.9
-env: CC=clang-3.9 CXX=clang-3.9
+         - g++-6
+         - clang-3.8
+env: CC=clang-3.8 CXX=clang-3.8
 
 
 # command to install dependencies
