@@ -18,10 +18,12 @@ compiler:
   - gcc-5.4
 
 env:
-  - CC=gcc-5.4 CCX=g++-5.4
+  - CC=gcc-5 CCX=g++-5
 
 # command to install dependencies
 install: 
+  - gcc --version
+  - echo $CC 
   - python3 setup.py install
 
 # command to run tests
