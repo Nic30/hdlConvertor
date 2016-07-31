@@ -1,6 +1,7 @@
 language: python
 
 
+# clang is required because there is not enought ram for gcc
 compiler: clang
 python:
   - "3.5"
@@ -12,7 +13,7 @@ addons:
       packages:
          - g++-6
          - clang-3.8
-env: CC=clang-3.8 CXX=clang-3.8
+env: CC=clang-3.8 CXX=clang-3.8 CCFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
 
 
 # command to install dependencies
