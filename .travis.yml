@@ -13,14 +13,15 @@ addons:
 os: linux
 compiler: gcc-6
 env: 
-  - COMPILER=g++-6
-
-#env:
-#  - CC=gcc-5 CCX=g++-5 COMPILER=g++-5
+  - CC=g++-6 CC=g++-c
 
 # command to install dependencies
 install: 
-  - export CXX=${COMPILER}; export CC=${COMPILER};
+  # adding swap because travis default ram is not enought
+  - dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
+  - mkswap /var/swap.img
+  - swapon /var/swap.img
+  # set compilers
   - echo $CC 
   - python3 setup.py install
 
