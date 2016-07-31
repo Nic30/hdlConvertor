@@ -1,7 +1,7 @@
 language: python
 
 
-compiler: gcc
+compiler: clang
 python:
   - "3.5"
 addons:
@@ -11,7 +11,7 @@ addons:
          - llvm-toolchain-precise
       packages:
          - clang-3.9
-   env: COMPILER=clang++-3.9  CC=clang-3.9 CXX=clang-3.9
+env: CC=clang-3.9 CXX=clang-3.9
 
 
 # command to install dependencies
