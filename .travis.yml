@@ -1,17 +1,23 @@
-compiler:
-  - gcc-5
+
+matrix:
+    # Test gcc-5.0: C++11
+    - env: GCC_VERSION=5 CPP=11 LIBCXX=Off
+      os: linux
+      addons: &gcc5
+        apt:
+          packages:
+            - g++-5
+            - gcc-5
+          sources:
+            - ubuntu-toolchain-r-test
 
 language: python
 python:
   - "3.5"
-#  - "3.5-dev" # 3.5 development branch
-#  - "nightly" # currently points to 3.6-dev
-#compiler:
-#  - gcc-5.4
 
 # command to install dependencies
 install: 
-  - CC="gcc-5" CCX="g++-5" python3 setup.py install
+  - python3 setup.py install
 
 # command to run tests
 script: nosetests
