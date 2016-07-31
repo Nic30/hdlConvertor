@@ -1,3 +1,4 @@
+sudo: required
 addons:
   apt:
     sources:
@@ -14,11 +15,8 @@ language: python
 python:
   - "3.5"
 
-compiler:
-  - gcc-5.4
-
-env:
-  - CC=gcc-5 CCX=g++-5
+#env:
+#  - CC=gcc-5 CCX=g++-5 COMPILER=g++-5
 
 # command to install dependencies
 install: 
