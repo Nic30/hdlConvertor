@@ -6,8 +6,8 @@ addons:
 
     packages:
     # install toolchains
-    - gcc-5
-    - g++-5
+    - gcc-5.4
+    - g++-5.4
 
 
 language: python
@@ -17,9 +17,12 @@ python:
 compiler:
   - gcc-5.4
 
+env:
+  - CC=gcc-5.4 CCX=g++-5.4
+
 # command to install dependencies
 install: 
-  - CC="gcc-5" CCX="g++-5" python3 setup.py install
+  - python3 setup.py install
 
 # command to run tests
 script: nosetests
