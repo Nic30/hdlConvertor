@@ -1,10 +1,11 @@
 language: python
-python:
-  - "3.5"
+
 
 matrix:
   include:
     - compiler: gcc
+      python:
+        - "3.5"
       addons:
         apt:
           sources:
