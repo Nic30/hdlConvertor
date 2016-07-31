@@ -1,15 +1,12 @@
-
-matrix:
-    # Test gcc-5.0: C++11
-    - env: GCC_VERSION=5 CPP=11 LIBCXX=Off
-      os: linux
-      addons: &gcc5
-        apt:
-          packages:
-            - g++-5
-            - gcc-5
-          sources:
-            - ubuntu-toolchain-r-test
+addons:
+  apt:
+    sources:
+    # add PPAs with more up-to-date toolchains
+    - ubuntu-toolchain-r-test
+    packages:
+    # install toolchains
+    - gcc-5
+    - g++-5
 
 language: python
 python:
