@@ -7,20 +7,15 @@ addons:
   apt:
     packages:
       - valgrind
-      - g++-6
+      - clang-3.9
     sources: &sources
       - ubuntu-toolchain-r-test
 os: linux
-compiler: gcc-6
 env: 
-  - CC=g++-6 CC=g++-c
+  - CC=clang-3.9 CC=clang-3.9
 
 # command to install dependencies
 install: 
-  # adding swap because travis default ram is not enought
-  - dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
-  - mkswap /var/swap.img
-  - swapon /var/swap.img
   # set compilers
   - echo $CC 
   - python3 setup.py install
