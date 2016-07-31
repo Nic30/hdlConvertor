@@ -8,13 +8,24 @@ addons:
     - gcc-5
     - g++-5
 
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+
 language: python
 python:
   - "3.5"
 
 # command to install dependencies
 install: 
-  - python3 setup.py install
+  -CC="gcc-5" CXX="g++-5" python3 setup.py install
 
 # command to run tests
 script: nosetests
