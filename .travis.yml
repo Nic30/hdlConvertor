@@ -1,17 +1,5 @@
-#-sudo: required
-#-dist: xenial
-
-addons:
-  apt:
-    sources:
-    # add PPAs with more up-to-date toolchains
-    - ubuntu-toolchain-r-test
-
-    packages:
-    # install toolchains
-    - gcc-5
-    - g++-5
-
+compiler:
+  - gcc-5
 
 language: python
 python:
