@@ -11,7 +11,7 @@ addons:
     sources: &sources
       - ubuntu-toolchain-r-test
 os: linux
-compiler: gcc
+compiler: gcc-6
 
 #env:
 #  - CC=gcc-5 CCX=g++-5 COMPILER=g++-5
