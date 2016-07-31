@@ -7,7 +7,8 @@ compiler:
   - gcc-5.4
 
 # command to install dependencies
-install: "python3 setup.py install"
+install: 
+  - CC=gcc-5.4 CXX=g++-5.4 python3 setup.py install"
 
 # command to run tests
 script: nosetests
