@@ -1,5 +1,7 @@
 language: python
 
+cache:
+  apt: true
 
 # clang is required because there is not enought ram for gcc
 compiler: clang
@@ -9,11 +11,11 @@ addons:
    apt:
       sources:
          - ubuntu-toolchain-r-test
-         - llvm-toolchain-precise-3.8
+         - llvm-toolchain-precise-3.9
       packages:
          - g++-6
-         - clang-3.8
-env: CC=clang-3.8 CXX=clang-3.8 CFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
+         - clang-3.9
+env: CC=clang-3.9 CXX=clang-3.9 CFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
 
 
 # command to install dependencies
