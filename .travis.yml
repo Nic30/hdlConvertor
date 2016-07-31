@@ -13,7 +13,7 @@ addons:
       packages:
          - g++-6
          - clang-3.8
-env: CC=clang-3.8 CXX=clang-3.8 CCFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
+env: CC=clang-3.8 CXX=clang-3.8 CFLAGS=-stdlib=libc++ CXXFLAGS=-stdlib=libc++
 
 
 # command to install dependencies
