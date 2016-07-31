@@ -7,12 +7,12 @@ addons:
   apt:
     packages:
       - valgrind
-      - clang-3.9
+      - clang-3.8
     sources: &sources
       - ubuntu-toolchain-r-test
 os: linux
 env: 
-  - CC=clang-3.9 CC=clang-3.9
+  - CC=clang-3.8 CC=clang-3.8
 
 # command to install dependencies
 install: 
