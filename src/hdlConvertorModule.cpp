@@ -55,7 +55,11 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 		debug = PyObject_IsTrue(_debug);
 
 	//toLowercase((char *) langue);
-	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly);MOD_DEBUG("debug: " << debug);MOD_DEBUG("langue:" << langue);
+	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly);
+
+	MOD_DEBUG("debug: " << debug);
+
+	MOD_DEBUG("langue:" << langue);
 
 	if (strcmp(langue, "vhdl") == 0) {
 		_lang = VHDL;
@@ -73,6 +77,12 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 		case PERR_FILE:
 			PyErr_SetString(PyExc_IOError, strerror(errno));
 			break;
+		case PARSING_ERR:
+			PyErr_SetString(PyExc_Exception, Convertor::errStr);
+			break;
+		case CONVERTING_ERR:
+			PyErr_SetString(PyExc_Exception, Convertor::errStr);
+			break;
 		default:
 			PyErr_SetString(PyExc_TypeError,
 					"Converter::parse did not returned correct context for file");
@@ -81,11 +91,17 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 	}
 
 	MOD_DEBUG("cntx loaded");
-	PyObject * d = c->toJson();
+	PyObject * d = NULL;
+	try {
+		d = c->toJson();
+	} catch (const char * errStr) {
+		PyErr_SetString(PyExc_Exception, errStr);
+	}
 	delete c;
 	MOD_DEBUG("cntx in json");
 	return d;
 }
+
 PyMODINIT_FUNC PyInit_hdlConvertor(void) {
 	return PyModule_Create(&hdlConvertor);
 }

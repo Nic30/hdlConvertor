@@ -12,7 +12,7 @@ using namespace antlr4;
 using namespace vhdl;
 
 enum ParserErrors {
-	PERR_OK = 0, PERR_FILE
+	PERR_OK = 0, PERR_FILE, PARSING_ERR, CONVERTING_ERR
 };
 
 inline bool file_exists(const char * name) {
