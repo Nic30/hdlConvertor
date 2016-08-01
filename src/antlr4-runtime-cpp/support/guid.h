@@ -110,4 +110,3 @@ private:
   jmethodID _leastSignificantBitsMethod;
 #endif
 };
-

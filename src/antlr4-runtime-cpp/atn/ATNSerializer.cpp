@@ -1,4 +1,4 @@
-/*
+﻿/*
  * [The "BSD license"]
  *  Copyright (c) 2016 Mike Lischke
  *  Copyright (c) 2013 Terence Parr
@@ -641,4 +641,3 @@ void ATNSerializer::serializeUUID(std::vector<size_t> &data, Guid uuid) {
   if (!firstByte)
      throw IllegalArgumentException( "The UUID provided is not valid (odd number of bytes)." );
 }
-

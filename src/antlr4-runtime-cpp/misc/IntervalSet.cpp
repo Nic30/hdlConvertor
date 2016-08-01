@@ -1,4 +1,4 @@
-/*
+﻿/*
  * [The "BSD license"]
  *  Copyright (c) 2016 Mike Lischke
  *  Copyright (c) 2013 Terence Parr
@@ -569,4 +569,3 @@ void IntervalSet::setReadOnly(bool readonly) {
 void IntervalSet::InitializeInstanceFields() {
   _readonly = false;
 }
-

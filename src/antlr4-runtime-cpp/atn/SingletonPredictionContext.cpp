@@ -76,12 +76,9 @@ bool SingletonPredictionContext::operator == (const PredictionContext &o) const 
     return false;
   }
 
-  if(calculateHashCode(parent, returnState) != calculateHashCode(other->parent, other->returnState)){
-	  return false;
+  if (this->hashCode() != other->hashCode()) {
+    return false; // can't be same if hash is different
   }
-  //if (this->hashCode() != other->hashCode()) {
-  //  return false; // can't be same if hash is different
-  //}
 
   //return returnState == other->returnState && (!parent.expired() && parent.lock() == other->parent.lock());
   return returnState == other->returnState && (parent != nullptr && *parent == *other->parent);

@@ -11,8 +11,6 @@ using namespace antlr4;
 
 namespace verilog {
 
-template <typename T>
-class Verilog2001Visitor;
 
 class Verilog2001Parser : public Parser {
 public:
@@ -505,13 +503,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConfig_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -529,13 +521,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDesign_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -554,13 +540,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConfig_rule_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -574,13 +554,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDefault_clause(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -595,13 +569,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInst_clause(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -618,13 +586,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInst_name(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -640,13 +602,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLiblist_clause(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -662,13 +618,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCell_clause(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -684,13 +634,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitUse_clause(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -710,13 +654,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSource_text(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -731,13 +669,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDescription(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -762,13 +694,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -782,13 +708,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_keyword(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -804,13 +724,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_parameter_port_list(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -826,13 +740,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_ports(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -848,13 +756,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_port_declarations(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -870,13 +772,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPort(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -892,13 +788,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPort_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -915,13 +805,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPort_reference(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -940,13 +824,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPort_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -969,13 +847,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -998,13 +870,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_or_generate_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1026,13 +892,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNon_port_module_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1056,13 +916,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_or_generate_item_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1077,13 +931,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParameter_override(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1099,13 +947,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLocal_parameter_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1120,13 +962,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParameter_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1142,13 +978,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParameter_declaration_(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1164,13 +994,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecparam_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1187,13 +1011,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInout_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1210,13 +1028,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInput_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1235,13 +1047,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOutput_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1256,13 +1062,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1277,13 +1077,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1298,13 +1092,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInteger_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1319,13 +1107,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTime_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1340,13 +1122,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitReal_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1361,13 +1137,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitRealtime_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1383,13 +1153,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitReg_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1410,13 +1174,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1430,13 +1188,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1450,13 +1202,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOutput_variable_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1474,13 +1220,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitReal_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1498,13 +1238,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1520,13 +1254,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDrive_strength(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1540,13 +1268,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStrength0(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1560,13 +1282,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStrength1(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1580,13 +1296,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCharge_strength(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1602,13 +1312,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelay3(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1624,13 +1328,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelay2(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1648,13 +1346,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelay_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1672,13 +1364,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_event_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1696,13 +1382,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_net_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1718,13 +1398,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_genvar_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1740,13 +1414,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_port_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1762,13 +1430,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_net_decl_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1784,13 +1446,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_param_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1806,13 +1462,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_specparam_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1828,13 +1478,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_real_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1850,13 +1494,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_variable_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1874,13 +1512,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_variable_port_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1896,13 +1528,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_decl_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1918,13 +1544,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParam_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1941,13 +1561,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecparam_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1965,13 +1579,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPulse_control_specparam(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -1986,13 +1594,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitError_limit_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2007,13 +1609,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitReject_limit_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2028,13 +1624,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLimit_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2050,13 +1640,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDimension(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2072,13 +1656,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitRange(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2100,13 +1678,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2122,13 +1694,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_item_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2144,13 +1710,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_port_list(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2167,13 +1727,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_port(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2188,13 +1742,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitRange_or_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2215,13 +1763,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2239,13 +1781,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_item_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2261,13 +1797,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_port_list(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2284,13 +1814,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_port_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2307,13 +1831,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTf_decl_header(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2329,13 +1847,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTf_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2349,13 +1861,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_port_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2379,13 +1885,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBlock_item_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2401,13 +1901,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBlock_reg_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2423,13 +1917,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_block_variable_identifiers(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2446,13 +1934,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBlock_variable_type(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2494,13 +1976,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGate_instantiation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2519,13 +1995,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCmos_switch_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2543,13 +2013,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEnable_gate_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2567,13 +2031,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMos_switch_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2591,13 +2049,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitN_input_gate_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2615,13 +2067,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitN_output_gate_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2638,13 +2084,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPass_switch_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2662,13 +2102,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPass_enable_switch_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2684,13 +2118,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPull_gate_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2706,13 +2134,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitName_of_gate_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2728,13 +2150,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPulldown_strength(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2750,13 +2166,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPullup_strength(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2771,13 +2181,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEnable_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2792,13 +2196,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNcontrol_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2813,13 +2211,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPcontrol_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2834,13 +2226,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInput_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2855,13 +2241,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInout_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2876,13 +2256,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOutput_terminal(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2896,13 +2270,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCmos_switchtype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2916,13 +2284,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEnable_gatetype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2936,13 +2298,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMos_switchtype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2956,13 +2312,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitN_input_gatetype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2976,13 +2326,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitN_output_gatetype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -2996,13 +2340,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPass_en_switchtype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3016,13 +2354,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPass_switchtype(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3040,13 +2372,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_instantiation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3061,13 +2387,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParameter_value_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3085,13 +2405,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_parameter_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3106,13 +2420,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOrdered_parameter_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3128,13 +2436,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNamed_parameter_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3150,13 +2452,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3172,13 +2468,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitName_of_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3196,13 +2486,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_port_connections(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3219,13 +2503,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOrdered_port_connection(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3243,13 +2521,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNamed_port_connection(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3265,13 +2537,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerated_instantiation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3286,13 +2552,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_item_or_null(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3311,13 +2571,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3334,13 +2588,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_conditional_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3357,13 +2605,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_case_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3380,13 +2622,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_case_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3404,13 +2640,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_loop_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3426,13 +2656,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3449,13 +2673,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_block(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3472,13 +2690,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitContinuous_assign(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3494,13 +2706,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_net_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3516,13 +2722,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3537,13 +2737,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInitial_construct(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3558,13 +2752,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitAlways_construct(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3581,13 +2769,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBlocking_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3604,13 +2786,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNonblocking_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3628,13 +2804,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitProcedural_continuous_assignments(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3650,13 +2820,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_blocking_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3673,13 +2837,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_statement_or_null(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3698,13 +2856,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_seq_block(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3720,13 +2872,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_assignment(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3745,13 +2891,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPar_block(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3770,13 +2910,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSeq_block(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3806,13 +2940,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStatement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3829,13 +2957,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStatement_or_null(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3858,13 +2980,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3881,13 +2997,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelay_or_event_control(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3903,13 +3013,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelay_control(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3925,13 +3029,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDisable_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3947,13 +3045,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_control(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3968,13 +3060,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_trigger(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -3990,13 +3076,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4011,13 +3091,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_primary(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4033,13 +3107,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitProcedural_timing_control_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4055,13 +3123,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitWait_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4079,13 +3141,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConditional_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4103,13 +3159,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitIf_else_if_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4127,13 +3177,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_conditional_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4151,13 +3195,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_if_else_if_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4174,13 +3212,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCase_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4197,13 +3229,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCase_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4220,13 +3246,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_case_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4243,13 +3263,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_case_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4267,13 +3281,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_loop_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4291,13 +3299,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLoop_statement(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4314,13 +3316,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSystem_task_enable(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4337,13 +3333,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_enable(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4359,13 +3349,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecify_block(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4383,13 +3367,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecify_item(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4404,13 +3382,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPulsestyle_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4425,13 +3397,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitShowcancelled_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4448,13 +3414,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPath_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4471,13 +3431,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSimple_path_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4494,13 +3448,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParallel_path_description(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4517,13 +3465,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFull_path_description(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4539,13 +3481,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_path_inputs(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4561,13 +3497,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_path_outputs(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4584,13 +3514,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecify_input_terminal_descriptor(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4607,13 +3531,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecify_output_terminal_descriptor(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4629,13 +3547,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInput_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4651,13 +3563,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOutput_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4672,13 +3578,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPath_delay_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4708,13 +3608,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitList_of_path_delay_expressions(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4729,13 +3623,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4750,13 +3638,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTrise_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4771,13 +3653,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTfall_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4792,13 +3668,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTz_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4813,13 +3683,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT01_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4834,13 +3698,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT10_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4855,13 +3713,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT0z_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4876,13 +3728,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTz1_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4897,13 +3743,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT1z_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4918,13 +3758,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTz0_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4939,13 +3773,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT0x_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4960,13 +3788,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTx1_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -4981,13 +3803,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitT1x_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5002,13 +3818,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTx0_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5023,13 +3833,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTxz_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5044,13 +3848,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTzx_path_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5065,13 +3863,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPath_delay_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5088,13 +3880,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEdge_sensitive_path_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5113,13 +3899,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParallel_edge_sensitive_path_description(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5138,13 +3918,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFull_edge_sensitive_path_description(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5159,13 +3933,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitData_source_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5179,13 +3947,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEdge_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5202,13 +3964,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitState_dependent_path_declaration(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5222,13 +3978,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPolarity_operator(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5243,13 +3993,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitChecktime_condition(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5265,13 +4009,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelayed_data(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5287,13 +4025,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDelayed_reference(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5308,13 +4040,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEnd_edge_offset(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5329,13 +4055,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_based_flag(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5350,13 +4070,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNotify_reg(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5371,13 +4085,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitRemain_active_flag(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5392,13 +4100,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStamptime_condition(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5413,13 +4115,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitStart_edge_offset(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5434,13 +4130,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitThreshold(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5455,13 +4145,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTiming_check_limit(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5477,13 +4161,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConcatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5499,13 +4177,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5521,13 +4193,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_multiple_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5543,13 +4209,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5565,13 +4225,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_multiple_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5587,13 +4241,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMultiple_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5609,13 +4257,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5634,13 +4276,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_concatenation_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5656,13 +4292,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_concatenation(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5681,13 +4311,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_concatenation_value(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5706,13 +4330,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_function_call(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5731,13 +4349,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_call(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5754,13 +4366,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSystem_function_call(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5779,13 +4385,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_function_call(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5800,13 +4400,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBase_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5821,13 +4415,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_base_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5842,13 +4430,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5864,13 +4446,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_mintypmax_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5889,13 +4465,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_range_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5910,13 +4480,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDimension_constant_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5938,13 +4502,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitExpression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5963,13 +4521,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTerm(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -5984,13 +4536,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLsb_constant_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6006,13 +4552,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMintypmax_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6030,13 +4570,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_conditional_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6058,13 +4592,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6080,13 +4608,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_mintypmax_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6101,13 +4623,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMsb_constant_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6126,13 +4642,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitRange_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6147,13 +4657,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitWidth_constant_expression(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6175,13 +4679,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConstant_primary(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6203,13 +4701,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_path_primary(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6234,13 +4726,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPrimary(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6259,13 +4745,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_lvalue(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6284,13 +4764,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_lvalue(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6304,13 +4778,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitUnary_operator(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6324,13 +4792,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBinary_operator(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6344,13 +4806,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitUnary_module_path_operator(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6364,13 +4820,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBinary_module_path_operator(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6389,13 +4839,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNumber(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6410,13 +4854,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitDefault_nettype_spec(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6432,13 +4870,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTiming_spec(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6454,13 +4886,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitAttribute_instance(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6476,13 +4902,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitAttr_spec(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6497,13 +4917,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitAttr_name(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6519,13 +4933,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitArrayed_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6540,13 +4948,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitBlock_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6561,13 +4963,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitCell_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6582,13 +4978,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitConfig_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6604,13 +4994,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEscaped_arrayed_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6628,13 +5012,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEscaped_hierarchical_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6649,13 +5027,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEvent_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6670,13 +5042,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitFunction_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6691,13 +5057,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGate_instance_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6712,13 +5072,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenerate_block_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6733,13 +5087,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_function_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6754,13 +5102,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitGenvar_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6775,13 +5117,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_block_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6796,13 +5132,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_event_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6817,13 +5147,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_function_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6839,13 +5163,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6860,13 +5178,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_net_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6881,13 +5193,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_variable_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6902,13 +5208,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitHierarchical_task_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6924,13 +5224,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitIdentifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6945,13 +5239,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInout_port_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6966,13 +5254,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInput_port_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -6987,13 +5269,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitInstance_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7008,13 +5284,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitLibrary_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7029,13 +5299,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitMemory_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7050,13 +5314,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7071,13 +5329,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitModule_instance_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7092,13 +5344,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitNet_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7113,13 +5359,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitOutput_port_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7134,13 +5374,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitParameter_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7155,13 +5389,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitPort_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7176,13 +5404,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitReal_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7198,13 +5420,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSimple_arrayed_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7220,13 +5436,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSimple_hierarchical_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7241,13 +5451,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSpecparam_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7262,13 +5466,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSystem_function_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7283,13 +5481,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSystem_task_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7304,13 +5496,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTask_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7325,13 +5511,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTerminal_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7346,13 +5526,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitText_macro_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7367,13 +5541,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitTopmodule_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7388,13 +5556,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitUdp_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7409,13 +5571,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitUdp_instance_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7430,13 +5586,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitVariable_identifier(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7454,13 +5604,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitSimple_hierarchical_branch(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 
@@ -7478,13 +5622,7 @@ public:
     virtual void enterRule(tree::ParseTreeListener *listener) override;
     virtual void exitRule(tree::ParseTreeListener *listener) override;
 
-    template <typename T>
-    T* accept(tree::ParseTreeVisitor<T> *visitor) {
-      if (dynamic_cast<Verilog2001Visitor<T>*>(visitor) != nullptr)
-        return ((Verilog2001Visitor<T> *)visitor)->visitEscaped_hierarchical_branch(this);
-      else
-        return visitor->visitChildren(this);
-    }
+    virtual antlrcpp::Any accept(tree::ParseTreeVisitor *visitor) override;
    
   };
 

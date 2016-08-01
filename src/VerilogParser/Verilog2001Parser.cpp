@@ -2,7 +2,8 @@
 // Generated from Verilog2001.g4 by ANTLR 4.5.3
 
 
-#include "Verilog2001BaseListener.h"
+#include "Verilog2001Listener.h"
+#include "Verilog2001Visitor.h"
 
 #include "Verilog2001Parser.h"
 
@@ -72,6 +73,12 @@ void Verilog2001Parser::Config_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Config_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConfig_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Config_declarationContext> Verilog2001Parser::config_declaration() {
   Ref<Config_declarationContext> _localctx = std::make_shared<Config_declarationContext>(_ctx, getState());
@@ -157,6 +164,12 @@ void Verilog2001Parser::Design_statementContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Design_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDesign_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Design_statementContext> Verilog2001Parser::design_statement() {
   Ref<Design_statementContext> _localctx = std::make_shared<Design_statementContext>(_ctx, getState());
@@ -252,6 +265,12 @@ void Verilog2001Parser::Config_rule_statementContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Config_rule_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConfig_rule_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Config_rule_statementContext> Verilog2001Parser::config_rule_statement() {
   Ref<Config_rule_statementContext> _localctx = std::make_shared<Config_rule_statementContext>(_ctx, getState());
@@ -345,6 +364,12 @@ void Verilog2001Parser::Default_clauseContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Default_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDefault_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Default_clauseContext> Verilog2001Parser::default_clause() {
   Ref<Default_clauseContext> _localctx = std::make_shared<Default_clauseContext>(_ctx, getState());
@@ -396,6 +421,12 @@ void Verilog2001Parser::Inst_clauseContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Inst_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInst_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Inst_clauseContext> Verilog2001Parser::inst_clause() {
   Ref<Inst_clauseContext> _localctx = std::make_shared<Inst_clauseContext>(_ctx, getState());
@@ -457,6 +488,12 @@ void Verilog2001Parser::Inst_nameContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Inst_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInst_name(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Inst_nameContext> Verilog2001Parser::inst_name() {
   Ref<Inst_nameContext> _localctx = std::make_shared<Inst_nameContext>(_ctx, getState());
@@ -525,6 +562,12 @@ void Verilog2001Parser::Liblist_clauseContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Liblist_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLiblist_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Liblist_clauseContext> Verilog2001Parser::liblist_clause() {
   Ref<Liblist_clauseContext> _localctx = std::make_shared<Liblist_clauseContext>(_ctx, getState());
@@ -593,6 +636,12 @@ void Verilog2001Parser::Cell_clauseContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Cell_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCell_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Cell_clauseContext> Verilog2001Parser::cell_clause() {
   Ref<Cell_clauseContext> _localctx = std::make_shared<Cell_clauseContext>(_ctx, getState());
@@ -663,6 +712,12 @@ void Verilog2001Parser::Use_clauseContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Use_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitUse_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Use_clauseContext> Verilog2001Parser::use_clause() {
   Ref<Use_clauseContext> _localctx = std::make_shared<Use_clauseContext>(_ctx, getState());
@@ -757,6 +812,12 @@ void Verilog2001Parser::Source_textContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Source_textContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSource_text(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
   Ref<Source_textContext> _localctx = std::make_shared<Source_textContext>(_ctx, getState());
@@ -847,6 +908,12 @@ void Verilog2001Parser::DescriptionContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::DescriptionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDescription(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::DescriptionContext> Verilog2001Parser::description() {
   Ref<DescriptionContext> _localctx = std::make_shared<DescriptionContext>(_ctx, getState());
@@ -938,6 +1005,12 @@ void Verilog2001Parser::Module_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_declaration() {
   Ref<Module_declarationContext> _localctx = std::make_shared<Module_declarationContext>(_ctx, getState());
@@ -1200,6 +1273,12 @@ void Verilog2001Parser::Module_keywordContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_keywordContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_keyword(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_keywordContext> Verilog2001Parser::module_keyword() {
   Ref<Module_keywordContext> _localctx = std::make_shared<Module_keywordContext>(_ctx, getState());
@@ -1263,6 +1342,12 @@ void Verilog2001Parser::Module_parameter_port_listContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_parameter_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_parameter_port_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_parameter_port_listContext> Verilog2001Parser::module_parameter_port_list() {
   Ref<Module_parameter_port_listContext> _localctx = std::make_shared<Module_parameter_port_listContext>(_ctx, getState());
@@ -1337,6 +1422,12 @@ void Verilog2001Parser::List_of_portsContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_portsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_ports(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_portsContext> Verilog2001Parser::list_of_ports() {
   Ref<List_of_portsContext> _localctx = std::make_shared<List_of_portsContext>(_ctx, getState());
@@ -1409,6 +1500,12 @@ void Verilog2001Parser::List_of_port_declarationsContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_port_declarationsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_port_declarations(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_port_declarationsContext> Verilog2001Parser::list_of_port_declarations() {
   Ref<List_of_port_declarationsContext> _localctx = std::make_shared<List_of_port_declarationsContext>(_ctx, getState());
@@ -1498,6 +1595,12 @@ void Verilog2001Parser::PortContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any Verilog2001Parser::PortContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPort(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::PortContext> Verilog2001Parser::port() {
   Ref<PortContext> _localctx = std::make_shared<PortContext>(_ctx, getState());
@@ -1597,6 +1700,12 @@ void Verilog2001Parser::Port_expressionContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Port_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPort_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Port_expressionContext> Verilog2001Parser::port_expression() {
   Ref<Port_expressionContext> _localctx = std::make_shared<Port_expressionContext>(_ctx, getState());
@@ -1691,6 +1800,12 @@ void Verilog2001Parser::Port_referenceContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Port_referenceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPort_reference(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Port_referenceContext> Verilog2001Parser::port_reference() {
   Ref<Port_referenceContext> _localctx = std::make_shared<Port_referenceContext>(_ctx, getState());
@@ -1792,6 +1907,12 @@ void Verilog2001Parser::Port_declarationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Port_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPort_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Port_declarationContext> Verilog2001Parser::port_declaration() {
   Ref<Port_declarationContext> _localctx = std::make_shared<Port_declarationContext>(_ctx, getState());
@@ -1928,6 +2049,12 @@ void Verilog2001Parser::Module_itemContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_itemContext> Verilog2001Parser::module_item() {
   Ref<Module_itemContext> _localctx = std::make_shared<Module_itemContext>(_ctx, getState());
@@ -2114,6 +2241,12 @@ void Verilog2001Parser::Module_or_generate_itemContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_or_generate_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_or_generate_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::module_or_generate_item() {
   Ref<Module_or_generate_itemContext> _localctx = std::make_shared<Module_or_generate_itemContext>(_ctx, getState());
@@ -2314,6 +2447,12 @@ void Verilog2001Parser::Non_port_module_itemContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Non_port_module_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNon_port_module_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Non_port_module_itemContext> Verilog2001Parser::non_port_module_item() {
   Ref<Non_port_module_itemContext> _localctx = std::make_shared<Non_port_module_itemContext>(_ctx, getState());
@@ -2508,6 +2647,12 @@ void Verilog2001Parser::Module_or_generate_item_declarationContext::exitRule(tre
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_or_generate_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_or_generate_item_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_or_generate_item_declarationContext> Verilog2001Parser::module_or_generate_item_declaration() {
   Ref<Module_or_generate_item_declarationContext> _localctx = std::make_shared<Module_or_generate_item_declarationContext>(_ctx, getState());
@@ -2642,6 +2787,12 @@ void Verilog2001Parser::Parameter_overrideContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parameter_overrideContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParameter_override(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parameter_overrideContext> Verilog2001Parser::parameter_override() {
   Ref<Parameter_overrideContext> _localctx = std::make_shared<Parameter_overrideContext>(_ctx, getState());
@@ -2701,6 +2852,12 @@ void Verilog2001Parser::Local_parameter_declarationContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Local_parameter_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLocal_parameter_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::local_parameter_declaration() {
   Ref<Local_parameter_declarationContext> _localctx = std::make_shared<Local_parameter_declarationContext>(_ctx, getState());
@@ -2831,6 +2988,12 @@ void Verilog2001Parser::Parameter_declarationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parameter_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParameter_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::parameter_declaration() {
   Ref<Parameter_declarationContext> _localctx = std::make_shared<Parameter_declarationContext>(_ctx, getState());
@@ -2888,6 +3051,12 @@ void Verilog2001Parser::Parameter_declaration_Context::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parameter_declaration_Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParameter_declaration_(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::parameter_declaration_() {
   Ref<Parameter_declaration_Context> _localctx = std::make_shared<Parameter_declaration_Context>(_ctx, getState());
@@ -3012,6 +3181,12 @@ void Verilog2001Parser::Specparam_declarationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specparam_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecparam_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::specparam_declaration() {
   Ref<Specparam_declarationContext> _localctx = std::make_shared<Specparam_declarationContext>(_ctx, getState());
@@ -3083,6 +3258,12 @@ void Verilog2001Parser::Inout_declarationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Inout_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInout_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declaration() {
   Ref<Inout_declarationContext> _localctx = std::make_shared<Inout_declarationContext>(_ctx, getState());
@@ -3176,6 +3357,12 @@ void Verilog2001Parser::Input_declarationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Input_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInput_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declaration() {
   Ref<Input_declarationContext> _localctx = std::make_shared<Input_declarationContext>(_ctx, getState());
@@ -3277,6 +3464,12 @@ void Verilog2001Parser::Output_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Output_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOutput_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_declaration() {
   Ref<Output_declarationContext> _localctx = std::make_shared<Output_declarationContext>(_ctx, getState());
@@ -3454,6 +3647,12 @@ void Verilog2001Parser::Event_declarationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_declarationContext> Verilog2001Parser::event_declaration() {
   Ref<Event_declarationContext> _localctx = std::make_shared<Event_declarationContext>(_ctx, getState());
@@ -3509,6 +3708,12 @@ void Verilog2001Parser::Genvar_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_declarationContext> Verilog2001Parser::genvar_declaration() {
   Ref<Genvar_declarationContext> _localctx = std::make_shared<Genvar_declarationContext>(_ctx, getState());
@@ -3564,6 +3769,12 @@ void Verilog2001Parser::Integer_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Integer_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInteger_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Integer_declarationContext> Verilog2001Parser::integer_declaration() {
   Ref<Integer_declarationContext> _localctx = std::make_shared<Integer_declarationContext>(_ctx, getState());
@@ -3619,6 +3830,12 @@ void Verilog2001Parser::Time_declarationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Time_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTime_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Time_declarationContext> Verilog2001Parser::time_declaration() {
   Ref<Time_declarationContext> _localctx = std::make_shared<Time_declarationContext>(_ctx, getState());
@@ -3674,6 +3891,12 @@ void Verilog2001Parser::Real_declarationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Real_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitReal_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Real_declarationContext> Verilog2001Parser::real_declaration() {
   Ref<Real_declarationContext> _localctx = std::make_shared<Real_declarationContext>(_ctx, getState());
@@ -3729,6 +3952,12 @@ void Verilog2001Parser::Realtime_declarationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Realtime_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitRealtime_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Realtime_declarationContext> Verilog2001Parser::realtime_declaration() {
   Ref<Realtime_declarationContext> _localctx = std::make_shared<Realtime_declarationContext>(_ctx, getState());
@@ -3788,6 +4017,12 @@ void Verilog2001Parser::Reg_declarationContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Reg_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitReg_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::reg_declaration() {
   Ref<Reg_declarationContext> _localctx = std::make_shared<Reg_declarationContext>(_ctx, getState());
@@ -3882,6 +4117,12 @@ void Verilog2001Parser::Net_declarationContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaration() {
   Ref<Net_declarationContext> _localctx = std::make_shared<Net_declarationContext>(_ctx, getState());
@@ -4285,6 +4526,12 @@ void Verilog2001Parser::Net_typeContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::net_type() {
   Ref<Net_typeContext> _localctx = std::make_shared<Net_typeContext>(_ctx, getState());
@@ -4348,6 +4595,12 @@ void Verilog2001Parser::Output_variable_typeContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Output_variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOutput_variable_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Output_variable_typeContext> Verilog2001Parser::output_variable_type() {
   Ref<Output_variable_typeContext> _localctx = std::make_shared<Output_variable_typeContext>(_ctx, getState());
@@ -4419,6 +4672,12 @@ void Verilog2001Parser::Real_typeContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Real_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitReal_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Real_typeContext> Verilog2001Parser::real_type() {
   Ref<Real_typeContext> _localctx = std::make_shared<Real_typeContext>(_ctx, getState());
@@ -4519,6 +4778,12 @@ void Verilog2001Parser::Variable_typeContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_typeContext> Verilog2001Parser::variable_type() {
   Ref<Variable_typeContext> _localctx = std::make_shared<Variable_typeContext>(_ctx, getState());
@@ -4611,6 +4876,12 @@ void Verilog2001Parser::Drive_strengthContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Drive_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDrive_strength(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::drive_strength() {
   Ref<Drive_strengthContext> _localctx = std::make_shared<Drive_strengthContext>(_ctx, getState());
@@ -4725,6 +4996,12 @@ void Verilog2001Parser::Strength0Context::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Strength0Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStrength0(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::strength0() {
   Ref<Strength0Context> _localctx = std::make_shared<Strength0Context>(_ctx, getState());
@@ -4782,6 +5059,12 @@ void Verilog2001Parser::Strength1Context::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Strength1Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStrength1(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::strength1() {
   Ref<Strength1Context> _localctx = std::make_shared<Strength1Context>(_ctx, getState());
@@ -4839,6 +5122,12 @@ void Verilog2001Parser::Charge_strengthContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Charge_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCharge_strength(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Charge_strengthContext> Verilog2001Parser::charge_strength() {
   Ref<Charge_strengthContext> _localctx = std::make_shared<Charge_strengthContext>(_ctx, getState());
@@ -4928,6 +5217,12 @@ void Verilog2001Parser::Delay3Context::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delay3Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelay3(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::delay3() {
   Ref<Delay3Context> _localctx = std::make_shared<Delay3Context>(_ctx, getState());
@@ -5025,6 +5320,12 @@ void Verilog2001Parser::Delay2Context::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delay2Context::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelay2(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delay2Context> Verilog2001Parser::delay2() {
   Ref<Delay2Context> _localctx = std::make_shared<Delay2Context>(_ctx, getState());
@@ -5121,6 +5422,12 @@ void Verilog2001Parser::Delay_valueContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delay_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelay_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::delay_value() {
   Ref<Delay_valueContext> _localctx = std::make_shared<Delay_valueContext>(_ctx, getState());
@@ -5213,6 +5520,12 @@ void Verilog2001Parser::List_of_event_identifiersContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_event_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_event_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::list_of_event_identifiers() {
   Ref<List_of_event_identifiersContext> _localctx = std::make_shared<List_of_event_identifiersContext>(_ctx, getState());
@@ -5323,6 +5636,12 @@ void Verilog2001Parser::List_of_net_identifiersContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_net_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_net_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::list_of_net_identifiers() {
   Ref<List_of_net_identifiersContext> _localctx = std::make_shared<List_of_net_identifiersContext>(_ctx, getState());
@@ -5425,6 +5744,12 @@ void Verilog2001Parser::List_of_genvar_identifiersContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_genvar_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_genvar_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_genvar_identifiersContext> Verilog2001Parser::list_of_genvar_identifiers() {
   Ref<List_of_genvar_identifiersContext> _localctx = std::make_shared<List_of_genvar_identifiersContext>(_ctx, getState());
@@ -5493,6 +5818,12 @@ void Verilog2001Parser::List_of_port_identifiersContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_port_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_port_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::list_of_port_identifiers() {
   Ref<List_of_port_identifiersContext> _localctx = std::make_shared<List_of_port_identifiersContext>(_ctx, getState());
@@ -5563,6 +5894,12 @@ void Verilog2001Parser::List_of_net_decl_assignmentsContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_net_decl_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_net_decl_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_net_decl_assignmentsContext> Verilog2001Parser::list_of_net_decl_assignments() {
   Ref<List_of_net_decl_assignmentsContext> _localctx = std::make_shared<List_of_net_decl_assignmentsContext>(_ctx, getState());
@@ -5631,6 +5968,12 @@ void Verilog2001Parser::List_of_param_assignmentsContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_param_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_param_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::list_of_param_assignments() {
   Ref<List_of_param_assignmentsContext> _localctx = std::make_shared<List_of_param_assignmentsContext>(_ctx, getState());
@@ -5701,6 +6044,12 @@ void Verilog2001Parser::List_of_specparam_assignmentsContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_specparam_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_specparam_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_specparam_assignmentsContext> Verilog2001Parser::list_of_specparam_assignments() {
   Ref<List_of_specparam_assignmentsContext> _localctx = std::make_shared<List_of_specparam_assignmentsContext>(_ctx, getState());
@@ -5769,6 +6118,12 @@ void Verilog2001Parser::List_of_real_identifiersContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_real_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_real_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_real_identifiersContext> Verilog2001Parser::list_of_real_identifiers() {
   Ref<List_of_real_identifiersContext> _localctx = std::make_shared<List_of_real_identifiersContext>(_ctx, getState());
@@ -5837,6 +6192,12 @@ void Verilog2001Parser::List_of_variable_identifiersContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_variable_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_variable_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::list_of_variable_identifiers() {
   Ref<List_of_variable_identifiersContext> _localctx = std::make_shared<List_of_variable_identifiersContext>(_ctx, getState());
@@ -5913,6 +6274,12 @@ void Verilog2001Parser::List_of_variable_port_identifiersContext::exitRule(tree:
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_variable_port_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_variable_port_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> Verilog2001Parser::list_of_variable_port_identifiers() {
   Ref<List_of_variable_port_identifiersContext> _localctx = std::make_shared<List_of_variable_port_identifiersContext>(_ctx, getState());
@@ -6002,6 +6369,12 @@ void Verilog2001Parser::Net_decl_assignmentContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_decl_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_decl_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_decl_assignmentContext> Verilog2001Parser::net_decl_assignment() {
   Ref<Net_decl_assignmentContext> _localctx = std::make_shared<Net_decl_assignmentContext>(_ctx, getState());
@@ -6061,6 +6434,12 @@ void Verilog2001Parser::Param_assignmentContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Param_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParam_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Param_assignmentContext> Verilog2001Parser::param_assignment() {
   Ref<Param_assignmentContext> _localctx = std::make_shared<Param_assignmentContext>(_ctx, getState());
@@ -6124,6 +6503,12 @@ void Verilog2001Parser::Specparam_assignmentContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specparam_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecparam_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specparam_assignmentContext> Verilog2001Parser::specparam_assignment() {
   Ref<Specparam_assignmentContext> _localctx = std::make_shared<Specparam_assignmentContext>(_ctx, getState());
@@ -6209,6 +6594,12 @@ void Verilog2001Parser::Pulse_control_specparamContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pulse_control_specparamContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPulse_control_specparam(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::pulse_control_specparam() {
   Ref<Pulse_control_specparamContext> _localctx = std::make_shared<Pulse_control_specparamContext>(_ctx, getState());
@@ -6320,6 +6711,12 @@ void Verilog2001Parser::Error_limit_valueContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Error_limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitError_limit_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Error_limit_valueContext> Verilog2001Parser::error_limit_value() {
   Ref<Error_limit_valueContext> _localctx = std::make_shared<Error_limit_valueContext>(_ctx, getState());
@@ -6371,6 +6768,12 @@ void Verilog2001Parser::Reject_limit_valueContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Reject_limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitReject_limit_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Reject_limit_valueContext> Verilog2001Parser::reject_limit_value() {
   Ref<Reject_limit_valueContext> _localctx = std::make_shared<Reject_limit_valueContext>(_ctx, getState());
@@ -6422,6 +6825,12 @@ void Verilog2001Parser::Limit_valueContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLimit_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Limit_valueContext> Verilog2001Parser::limit_value() {
   Ref<Limit_valueContext> _localctx = std::make_shared<Limit_valueContext>(_ctx, getState());
@@ -6477,6 +6886,12 @@ void Verilog2001Parser::DimensionContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::DimensionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDimension(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::dimension() {
   Ref<DimensionContext> _localctx = std::make_shared<DimensionContext>(_ctx, getState());
@@ -6540,6 +6955,12 @@ void Verilog2001Parser::RangeContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any Verilog2001Parser::RangeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitRange(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::range() {
   Ref<RangeContext> _localctx = std::make_shared<RangeContext>(_ctx, getState());
@@ -6627,6 +7048,12 @@ void Verilog2001Parser::Function_declarationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_declaration() {
   Ref<Function_declarationContext> _localctx = std::make_shared<Function_declarationContext>(_ctx, getState());
@@ -6837,6 +7264,12 @@ void Verilog2001Parser::Function_item_declarationContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_item_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_item_declarationContext> Verilog2001Parser::function_item_declaration() {
   Ref<Function_item_declarationContext> _localctx = std::make_shared<Function_item_declarationContext>(_ctx, getState());
@@ -6921,6 +7354,12 @@ void Verilog2001Parser::Function_port_listContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_port_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_port_listContext> Verilog2001Parser::function_port_list() {
   Ref<Function_port_listContext> _localctx = std::make_shared<Function_port_listContext>(_ctx, getState());
@@ -6993,6 +7432,12 @@ void Verilog2001Parser::Function_portContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_portContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_port(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_portContext> Verilog2001Parser::function_port() {
   Ref<Function_portContext> _localctx = std::make_shared<Function_portContext>(_ctx, getState());
@@ -7055,6 +7500,12 @@ void Verilog2001Parser::Range_or_typeContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Range_or_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitRange_or_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Range_or_typeContext> Verilog2001Parser::range_or_type() {
   Ref<Range_or_typeContext> _localctx = std::make_shared<Range_or_typeContext>(_ctx, getState());
@@ -7168,6 +7619,12 @@ void Verilog2001Parser::Task_declarationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declaration() {
   Ref<Task_declarationContext> _localctx = std::make_shared<Task_declarationContext>(_ctx, getState());
@@ -7317,6 +7774,12 @@ void Verilog2001Parser::Task_item_declarationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_item_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_item_declarationContext> Verilog2001Parser::task_item_declaration() {
   Ref<Task_item_declarationContext> _localctx = std::make_shared<Task_item_declarationContext>(_ctx, getState());
@@ -7400,6 +7863,12 @@ void Verilog2001Parser::Task_port_listContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_port_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_port_listContext> Verilog2001Parser::task_port_list() {
   Ref<Task_port_listContext> _localctx = std::make_shared<Task_port_listContext>(_ctx, getState());
@@ -7472,6 +7941,12 @@ void Verilog2001Parser::Task_port_itemContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_port_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_port_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_port_itemContext> Verilog2001Parser::task_port_item() {
   Ref<Task_port_itemContext> _localctx = std::make_shared<Task_port_itemContext>(_ctx, getState());
@@ -7542,6 +8017,12 @@ void Verilog2001Parser::Tf_decl_headerContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tf_decl_headerContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTf_decl_header(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header() {
   Ref<Tf_decl_headerContext> _localctx = std::make_shared<Tf_decl_headerContext>(_ctx, getState());
@@ -7695,6 +8176,12 @@ void Verilog2001Parser::Tf_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tf_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTf_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::tf_declaration() {
   Ref<Tf_declarationContext> _localctx = std::make_shared<Tf_declarationContext>(_ctx, getState());
@@ -7744,6 +8231,12 @@ void Verilog2001Parser::Task_port_typeContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_port_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_port_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_port_typeContext> Verilog2001Parser::task_port_type() {
   Ref<Task_port_typeContext> _localctx = std::make_shared<Task_port_typeContext>(_ctx, getState());
@@ -7841,6 +8334,12 @@ void Verilog2001Parser::Block_item_declarationContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Block_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBlock_item_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::block_item_declaration() {
   Ref<Block_item_declarationContext> _localctx = std::make_shared<Block_item_declarationContext>(_ctx, getState());
@@ -8034,6 +8533,12 @@ void Verilog2001Parser::Block_reg_declarationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Block_reg_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBlock_reg_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::block_reg_declaration() {
   Ref<Block_reg_declarationContext> _localctx = std::make_shared<Block_reg_declarationContext>(_ctx, getState());
@@ -8108,6 +8613,12 @@ void Verilog2001Parser::List_of_block_variable_identifiersContext::exitRule(tree
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_block_variable_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_block_variable_identifiers(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_block_variable_identifiersContext> Verilog2001Parser::list_of_block_variable_identifiers() {
   Ref<List_of_block_variable_identifiersContext> _localctx = std::make_shared<List_of_block_variable_identifiersContext>(_ctx, getState());
@@ -8180,6 +8691,12 @@ void Verilog2001Parser::Block_variable_typeContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Block_variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBlock_variable_type(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Block_variable_typeContext> Verilog2001Parser::block_variable_type() {
   Ref<Block_variable_typeContext> _localctx = std::make_shared<Block_variable_typeContext>(_ctx, getState());
@@ -8367,6 +8884,12 @@ void Verilog2001Parser::Gate_instantiationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Gate_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGate_instantiation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instantiation() {
   Ref<Gate_instantiationContext> _localctx = std::make_shared<Gate_instantiationContext>(_ctx, getState());
@@ -8777,6 +9300,12 @@ void Verilog2001Parser::Cmos_switch_instanceContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Cmos_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCmos_switch_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Cmos_switch_instanceContext> Verilog2001Parser::cmos_switch_instance() {
   Ref<Cmos_switch_instanceContext> _localctx = std::make_shared<Cmos_switch_instanceContext>(_ctx, getState());
@@ -8866,6 +9395,12 @@ void Verilog2001Parser::Enable_gate_instanceContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Enable_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEnable_gate_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Enable_gate_instanceContext> Verilog2001Parser::enable_gate_instance() {
   Ref<Enable_gate_instanceContext> _localctx = std::make_shared<Enable_gate_instanceContext>(_ctx, getState());
@@ -8951,6 +9486,12 @@ void Verilog2001Parser::Mos_switch_instanceContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Mos_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMos_switch_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Mos_switch_instanceContext> Verilog2001Parser::mos_switch_instance() {
   Ref<Mos_switch_instanceContext> _localctx = std::make_shared<Mos_switch_instanceContext>(_ctx, getState());
@@ -9036,6 +9577,12 @@ void Verilog2001Parser::N_input_gate_instanceContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::N_input_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitN_input_gate_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::N_input_gate_instanceContext> Verilog2001Parser::n_input_gate_instance() {
   Ref<N_input_gate_instanceContext> _localctx = std::make_shared<N_input_gate_instanceContext>(_ctx, getState());
@@ -9129,6 +9676,12 @@ void Verilog2001Parser::N_output_gate_instanceContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::N_output_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitN_output_gate_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::N_output_gate_instanceContext> Verilog2001Parser::n_output_gate_instance() {
   Ref<N_output_gate_instanceContext> _localctx = std::make_shared<N_output_gate_instanceContext>(_ctx, getState());
@@ -9221,6 +9774,12 @@ void Verilog2001Parser::Pass_switch_instanceContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pass_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPass_switch_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pass_switch_instanceContext> Verilog2001Parser::pass_switch_instance() {
   Ref<Pass_switch_instanceContext> _localctx = std::make_shared<Pass_switch_instanceContext>(_ctx, getState());
@@ -9302,6 +9861,12 @@ void Verilog2001Parser::Pass_enable_switch_instanceContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pass_enable_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPass_enable_switch_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pass_enable_switch_instanceContext> Verilog2001Parser::pass_enable_switch_instance() {
   Ref<Pass_enable_switch_instanceContext> _localctx = std::make_shared<Pass_enable_switch_instanceContext>(_ctx, getState());
@@ -9379,6 +9944,12 @@ void Verilog2001Parser::Pull_gate_instanceContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pull_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPull_gate_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pull_gate_instanceContext> Verilog2001Parser::pull_gate_instance() {
   Ref<Pull_gate_instanceContext> _localctx = std::make_shared<Pull_gate_instanceContext>(_ctx, getState());
@@ -9448,6 +10019,12 @@ void Verilog2001Parser::Name_of_gate_instanceContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Name_of_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitName_of_gate_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::name_of_gate_instance() {
   Ref<Name_of_gate_instanceContext> _localctx = std::make_shared<Name_of_gate_instanceContext>(_ctx, getState());
@@ -9511,6 +10088,12 @@ void Verilog2001Parser::Pulldown_strengthContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pulldown_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPulldown_strength(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pulldown_strengthContext> Verilog2001Parser::pulldown_strength() {
   Ref<Pulldown_strengthContext> _localctx = std::make_shared<Pulldown_strengthContext>(_ctx, getState());
@@ -9608,6 +10191,12 @@ void Verilog2001Parser::Pullup_strengthContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pullup_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPullup_strength(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pullup_strengthContext> Verilog2001Parser::pullup_strength() {
   Ref<Pullup_strengthContext> _localctx = std::make_shared<Pullup_strengthContext>(_ctx, getState());
@@ -9701,6 +10290,12 @@ void Verilog2001Parser::Enable_terminalContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Enable_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEnable_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::enable_terminal() {
   Ref<Enable_terminalContext> _localctx = std::make_shared<Enable_terminalContext>(_ctx, getState());
@@ -9752,6 +10347,12 @@ void Verilog2001Parser::Ncontrol_terminalContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Ncontrol_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNcontrol_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Ncontrol_terminalContext> Verilog2001Parser::ncontrol_terminal() {
   Ref<Ncontrol_terminalContext> _localctx = std::make_shared<Ncontrol_terminalContext>(_ctx, getState());
@@ -9803,6 +10404,12 @@ void Verilog2001Parser::Pcontrol_terminalContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pcontrol_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPcontrol_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pcontrol_terminalContext> Verilog2001Parser::pcontrol_terminal() {
   Ref<Pcontrol_terminalContext> _localctx = std::make_shared<Pcontrol_terminalContext>(_ctx, getState());
@@ -9854,6 +10461,12 @@ void Verilog2001Parser::Input_terminalContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Input_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInput_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::input_terminal() {
   Ref<Input_terminalContext> _localctx = std::make_shared<Input_terminalContext>(_ctx, getState());
@@ -9905,6 +10518,12 @@ void Verilog2001Parser::Inout_terminalContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Inout_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInout_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Inout_terminalContext> Verilog2001Parser::inout_terminal() {
   Ref<Inout_terminalContext> _localctx = std::make_shared<Inout_terminalContext>(_ctx, getState());
@@ -9956,6 +10575,12 @@ void Verilog2001Parser::Output_terminalContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Output_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOutput_terminal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::output_terminal() {
   Ref<Output_terminalContext> _localctx = std::make_shared<Output_terminalContext>(_ctx, getState());
@@ -10003,6 +10628,12 @@ void Verilog2001Parser::Cmos_switchtypeContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Cmos_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCmos_switchtype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Cmos_switchtypeContext> Verilog2001Parser::cmos_switchtype() {
   Ref<Cmos_switchtypeContext> _localctx = std::make_shared<Cmos_switchtypeContext>(_ctx, getState());
@@ -10058,6 +10689,12 @@ void Verilog2001Parser::Enable_gatetypeContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Enable_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEnable_gatetype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Enable_gatetypeContext> Verilog2001Parser::enable_gatetype() {
   Ref<Enable_gatetypeContext> _localctx = std::make_shared<Enable_gatetypeContext>(_ctx, getState());
@@ -10115,6 +10752,12 @@ void Verilog2001Parser::Mos_switchtypeContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Mos_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMos_switchtype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Mos_switchtypeContext> Verilog2001Parser::mos_switchtype() {
   Ref<Mos_switchtypeContext> _localctx = std::make_shared<Mos_switchtypeContext>(_ctx, getState());
@@ -10172,6 +10815,12 @@ void Verilog2001Parser::N_input_gatetypeContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::N_input_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitN_input_gatetype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::n_input_gatetype() {
   Ref<N_input_gatetypeContext> _localctx = std::make_shared<N_input_gatetypeContext>(_ctx, getState());
@@ -10231,6 +10880,12 @@ void Verilog2001Parser::N_output_gatetypeContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::N_output_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitN_output_gatetype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::N_output_gatetypeContext> Verilog2001Parser::n_output_gatetype() {
   Ref<N_output_gatetypeContext> _localctx = std::make_shared<N_output_gatetypeContext>(_ctx, getState());
@@ -10286,6 +10941,12 @@ void Verilog2001Parser::Pass_en_switchtypeContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pass_en_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPass_en_switchtype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pass_en_switchtypeContext> Verilog2001Parser::pass_en_switchtype() {
   Ref<Pass_en_switchtypeContext> _localctx = std::make_shared<Pass_en_switchtypeContext>(_ctx, getState());
@@ -10343,6 +11004,12 @@ void Verilog2001Parser::Pass_switchtypeContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pass_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPass_switchtype(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pass_switchtypeContext> Verilog2001Parser::pass_switchtype() {
   Ref<Pass_switchtypeContext> _localctx = std::make_shared<Pass_switchtypeContext>(_ctx, getState());
@@ -10414,6 +11081,12 @@ void Verilog2001Parser::Module_instantiationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_instantiation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_instantiationContext> Verilog2001Parser::module_instantiation() {
   Ref<Module_instantiationContext> _localctx = std::make_shared<Module_instantiationContext>(_ctx, getState());
@@ -10489,6 +11162,12 @@ void Verilog2001Parser::Parameter_value_assignmentContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parameter_value_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParameter_value_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parameter_value_assignmentContext> Verilog2001Parser::parameter_value_assignment() {
   Ref<Parameter_value_assignmentContext> _localctx = std::make_shared<Parameter_value_assignmentContext>(_ctx, getState());
@@ -10558,6 +11237,12 @@ void Verilog2001Parser::List_of_parameter_assignmentsContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_parameter_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_parameter_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_parameter_assignmentsContext> Verilog2001Parser::list_of_parameter_assignments() {
   Ref<List_of_parameter_assignmentsContext> _localctx = std::make_shared<List_of_parameter_assignmentsContext>(_ctx, getState());
@@ -10672,6 +11357,12 @@ void Verilog2001Parser::Ordered_parameter_assignmentContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::Ordered_parameter_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOrdered_parameter_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Ordered_parameter_assignmentContext> Verilog2001Parser::ordered_parameter_assignment() {
   Ref<Ordered_parameter_assignmentContext> _localctx = std::make_shared<Ordered_parameter_assignmentContext>(_ctx, getState());
@@ -10727,6 +11418,12 @@ void Verilog2001Parser::Named_parameter_assignmentContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Named_parameter_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNamed_parameter_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Named_parameter_assignmentContext> Verilog2001Parser::named_parameter_assignment() {
   Ref<Named_parameter_assignmentContext> _localctx = std::make_shared<Named_parameter_assignmentContext>(_ctx, getState());
@@ -10818,6 +11515,12 @@ void Verilog2001Parser::Module_instanceContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_instanceContext> Verilog2001Parser::module_instance() {
   Ref<Module_instanceContext> _localctx = std::make_shared<Module_instanceContext>(_ctx, getState());
@@ -10879,6 +11582,12 @@ void Verilog2001Parser::Name_of_instanceContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Name_of_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitName_of_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Name_of_instanceContext> Verilog2001Parser::name_of_instance() {
   Ref<Name_of_instanceContext> _localctx = std::make_shared<Name_of_instanceContext>(_ctx, getState());
@@ -10950,6 +11659,12 @@ void Verilog2001Parser::List_of_port_connectionsContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_port_connectionsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_port_connections(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_port_connectionsContext> Verilog2001Parser::list_of_port_connections() {
   Ref<List_of_port_connectionsContext> _localctx = std::make_shared<List_of_port_connectionsContext>(_ctx, getState());
@@ -11049,6 +11764,12 @@ void Verilog2001Parser::Ordered_port_connectionContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Ordered_port_connectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOrdered_port_connection(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Ordered_port_connectionContext> Verilog2001Parser::ordered_port_connection() {
   Ref<Ordered_port_connectionContext> _localctx = std::make_shared<Ordered_port_connectionContext>(_ctx, getState());
@@ -11153,6 +11874,12 @@ void Verilog2001Parser::Named_port_connectionContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Named_port_connectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNamed_port_connection(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Named_port_connectionContext> Verilog2001Parser::named_port_connection() {
   Ref<Named_port_connectionContext> _localctx = std::make_shared<Named_port_connectionContext>(_ctx, getState());
@@ -11254,6 +11981,12 @@ void Verilog2001Parser::Generated_instantiationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generated_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerated_instantiation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::generated_instantiation() {
   Ref<Generated_instantiationContext> _localctx = std::make_shared<Generated_instantiationContext>(_ctx, getState());
@@ -11375,6 +12108,12 @@ void Verilog2001Parser::Generate_item_or_nullContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_item_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_item_or_null(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_item_or_nullContext> Verilog2001Parser::generate_item_or_null() {
   Ref<Generate_item_or_nullContext> _localctx = std::make_shared<Generate_item_or_nullContext>(_ctx, getState());
@@ -11515,6 +12254,12 @@ void Verilog2001Parser::Generate_itemContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::generate_item() {
   Ref<Generate_itemContext> _localctx = std::make_shared<Generate_itemContext>(_ctx, getState());
@@ -11664,6 +12409,12 @@ void Verilog2001Parser::Generate_conditional_statementContext::exitRule(tree::Pa
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_conditional_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_conditional_statementContext> Verilog2001Parser::generate_conditional_statement() {
   Ref<Generate_conditional_statementContext> _localctx = std::make_shared<Generate_conditional_statementContext>(_ctx, getState());
@@ -11744,6 +12495,12 @@ void Verilog2001Parser::Generate_case_statementContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_case_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_case_statementContext> Verilog2001Parser::generate_case_statement() {
   Ref<Generate_case_statementContext> _localctx = std::make_shared<Generate_case_statementContext>(_ctx, getState());
@@ -11847,6 +12604,12 @@ void Verilog2001Parser::Genvar_case_itemContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_case_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_case_itemContext> Verilog2001Parser::genvar_case_item() {
   Ref<Genvar_case_itemContext> _localctx = std::make_shared<Genvar_case_itemContext>(_ctx, getState());
@@ -11974,6 +12737,12 @@ void Verilog2001Parser::Generate_loop_statementContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_loop_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_loop_statementContext> Verilog2001Parser::generate_loop_statement() {
   Ref<Generate_loop_statementContext> _localctx = std::make_shared<Generate_loop_statementContext>(_ctx, getState());
@@ -12045,6 +12814,12 @@ void Verilog2001Parser::Genvar_assignmentContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_assignmentContext> Verilog2001Parser::genvar_assignment() {
   Ref<Genvar_assignmentContext> _localctx = std::make_shared<Genvar_assignmentContext>(_ctx, getState());
@@ -12108,6 +12883,12 @@ void Verilog2001Parser::Generate_blockContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_blockContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_block(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block() {
   Ref<Generate_blockContext> _localctx = std::make_shared<Generate_blockContext>(_ctx, getState());
@@ -12246,6 +13027,12 @@ void Verilog2001Parser::Continuous_assignContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Continuous_assignContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitContinuous_assign(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::continuous_assign() {
   Ref<Continuous_assignContext> _localctx = std::make_shared<Continuous_assignContext>(_ctx, getState());
@@ -12330,6 +13117,12 @@ void Verilog2001Parser::List_of_net_assignmentsContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_net_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_net_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_net_assignmentsContext> Verilog2001Parser::list_of_net_assignments() {
   Ref<List_of_net_assignmentsContext> _localctx = std::make_shared<List_of_net_assignmentsContext>(_ctx, getState());
@@ -12398,6 +13191,12 @@ void Verilog2001Parser::Net_assignmentContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_assignmentContext> Verilog2001Parser::net_assignment() {
   Ref<Net_assignmentContext> _localctx = std::make_shared<Net_assignmentContext>(_ctx, getState());
@@ -12453,6 +13252,12 @@ void Verilog2001Parser::Initial_constructContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Initial_constructContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInitial_construct(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Initial_constructContext> Verilog2001Parser::initial_construct() {
   Ref<Initial_constructContext> _localctx = std::make_shared<Initial_constructContext>(_ctx, getState());
@@ -12506,6 +13311,12 @@ void Verilog2001Parser::Always_constructContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Always_constructContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitAlways_construct(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Always_constructContext> Verilog2001Parser::always_construct() {
   Ref<Always_constructContext> _localctx = std::make_shared<Always_constructContext>(_ctx, getState());
@@ -12567,6 +13378,12 @@ void Verilog2001Parser::Blocking_assignmentContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Blocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBlocking_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Blocking_assignmentContext> Verilog2001Parser::blocking_assignment() {
   Ref<Blocking_assignmentContext> _localctx = std::make_shared<Blocking_assignmentContext>(_ctx, getState());
@@ -12640,6 +13457,12 @@ void Verilog2001Parser::Nonblocking_assignmentContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Nonblocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNonblocking_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Nonblocking_assignmentContext> Verilog2001Parser::nonblocking_assignment() {
   Ref<Nonblocking_assignmentContext> _localctx = std::make_shared<Nonblocking_assignmentContext>(_ctx, getState());
@@ -12717,6 +13540,12 @@ void Verilog2001Parser::Procedural_continuous_assignmentsContext::exitRule(tree:
 }
 
 
+antlrcpp::Any Verilog2001Parser::Procedural_continuous_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitProcedural_continuous_assignments(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Procedural_continuous_assignmentsContext> Verilog2001Parser::procedural_continuous_assignments() {
   Ref<Procedural_continuous_assignmentsContext> _localctx = std::make_shared<Procedural_continuous_assignmentsContext>(_ctx, getState());
@@ -12827,6 +13656,12 @@ void Verilog2001Parser::Function_blocking_assignmentContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_blocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_blocking_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_blocking_assignmentContext> Verilog2001Parser::function_blocking_assignment() {
   Ref<Function_blocking_assignmentContext> _localctx = std::make_shared<Function_blocking_assignmentContext>(_ctx, getState());
@@ -12890,6 +13725,12 @@ void Verilog2001Parser::Function_statement_or_nullContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_statement_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_statement_or_null(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::function_statement_or_null() {
   Ref<Function_statement_or_nullContext> _localctx = std::make_shared<Function_statement_or_nullContext>(_ctx, getState());
@@ -12983,6 +13824,12 @@ void Verilog2001Parser::Function_seq_blockContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_seq_blockContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_seq_block(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::function_seq_block() {
   Ref<Function_seq_blockContext> _localctx = std::make_shared<Function_seq_blockContext>(_ctx, getState());
@@ -13088,6 +13935,12 @@ void Verilog2001Parser::Variable_assignmentContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::variable_assignment() {
   Ref<Variable_assignmentContext> _localctx = std::make_shared<Variable_assignmentContext>(_ctx, getState());
@@ -13159,6 +14012,12 @@ void Verilog2001Parser::Par_blockContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Par_blockContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPar_block(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::par_block() {
   Ref<Par_blockContext> _localctx = std::make_shared<Par_blockContext>(_ctx, getState());
@@ -13285,6 +14144,12 @@ void Verilog2001Parser::Seq_blockContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Seq_blockContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSeq_block(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::seq_block() {
   Ref<Seq_blockContext> _localctx = std::make_shared<Seq_blockContext>(_ctx, getState());
@@ -13455,6 +14320,12 @@ void Verilog2001Parser::StatementContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::StatementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStatement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::statement() {
   Ref<StatementContext> _localctx = std::make_shared<StatementContext>(_ctx, getState());
@@ -13760,6 +14631,12 @@ void Verilog2001Parser::Statement_or_nullContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Statement_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStatement_or_null(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::statement_or_null() {
   Ref<Statement_or_nullContext> _localctx = std::make_shared<Statement_or_nullContext>(_ctx, getState());
@@ -13869,6 +14746,12 @@ void Verilog2001Parser::Function_statementContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::function_statement() {
   Ref<Function_statementContext> _localctx = std::make_shared<Function_statementContext>(_ctx, getState());
@@ -14051,6 +14934,12 @@ void Verilog2001Parser::Delay_or_event_controlContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delay_or_event_controlContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelay_or_event_control(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::delay_or_event_control() {
   Ref<Delay_or_event_controlContext> _localctx = std::make_shared<Delay_or_event_controlContext>(_ctx, getState());
@@ -14138,6 +15027,12 @@ void Verilog2001Parser::Delay_controlContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delay_controlContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelay_control(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delay_controlContext> Verilog2001Parser::delay_control() {
   Ref<Delay_controlContext> _localctx = std::make_shared<Delay_controlContext>(_ctx, getState());
@@ -14216,6 +15111,12 @@ void Verilog2001Parser::Disable_statementContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Disable_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDisable_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Disable_statementContext> Verilog2001Parser::disable_statement() {
   Ref<Disable_statementContext> _localctx = std::make_shared<Disable_statementContext>(_ctx, getState());
@@ -14294,6 +15195,12 @@ void Verilog2001Parser::Event_controlContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_controlContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_control(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_controlContext> Verilog2001Parser::event_control() {
   Ref<Event_controlContext> _localctx = std::make_shared<Event_controlContext>(_ctx, getState());
@@ -14390,6 +15297,12 @@ void Verilog2001Parser::Event_triggerContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_triggerContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_trigger(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_triggerContext> Verilog2001Parser::event_trigger() {
   Ref<Event_triggerContext> _localctx = std::make_shared<Event_triggerContext>(_ctx, getState());
@@ -14449,6 +15362,12 @@ void Verilog2001Parser::Event_expressionContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_expressionContext> Verilog2001Parser::event_expression() {
   Ref<Event_expressionContext> _localctx = std::make_shared<Event_expressionContext>(_ctx, getState());
@@ -14531,6 +15450,12 @@ void Verilog2001Parser::Event_primaryContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_primary(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_primaryContext> Verilog2001Parser::event_primary() {
   Ref<Event_primaryContext> _localctx = std::make_shared<Event_primaryContext>(_ctx, getState());
@@ -14633,6 +15558,12 @@ void Verilog2001Parser::Procedural_timing_control_statementContext::exitRule(tre
 }
 
 
+antlrcpp::Any Verilog2001Parser::Procedural_timing_control_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitProcedural_timing_control_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Procedural_timing_control_statementContext> Verilog2001Parser::procedural_timing_control_statement() {
   Ref<Procedural_timing_control_statementContext> _localctx = std::make_shared<Procedural_timing_control_statementContext>(_ctx, getState());
@@ -14690,6 +15621,12 @@ void Verilog2001Parser::Wait_statementContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Wait_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitWait_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Wait_statementContext> Verilog2001Parser::wait_statement() {
   Ref<Wait_statementContext> _localctx = std::make_shared<Wait_statementContext>(_ctx, getState());
@@ -14761,6 +15698,12 @@ void Verilog2001Parser::Conditional_statementContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConditional_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Conditional_statementContext> Verilog2001Parser::conditional_statement() {
   Ref<Conditional_statementContext> _localctx = std::make_shared<Conditional_statementContext>(_ctx, getState());
@@ -14860,6 +15803,12 @@ void Verilog2001Parser::If_else_if_statementContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::If_else_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitIf_else_if_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::If_else_if_statementContext> Verilog2001Parser::if_else_if_statement() {
   Ref<If_else_if_statementContext> _localctx = std::make_shared<If_else_if_statementContext>(_ctx, getState());
@@ -14967,6 +15916,12 @@ void Verilog2001Parser::Function_conditional_statementContext::exitRule(tree::Pa
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_conditional_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_conditional_statementContext> Verilog2001Parser::function_conditional_statement() {
   Ref<Function_conditional_statementContext> _localctx = std::make_shared<Function_conditional_statementContext>(_ctx, getState());
@@ -15066,6 +16021,12 @@ void Verilog2001Parser::Function_if_else_if_statementContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_if_else_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_if_else_if_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_if_else_if_statementContext> Verilog2001Parser::function_if_else_if_statement() {
   Ref<Function_if_else_if_statementContext> _localctx = std::make_shared<Function_if_else_if_statementContext>(_ctx, getState());
@@ -15169,6 +16130,12 @@ void Verilog2001Parser::Case_statementContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCase_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement() {
   Ref<Case_statementContext> _localctx = std::make_shared<Case_statementContext>(_ctx, getState());
@@ -15382,6 +16349,12 @@ void Verilog2001Parser::Case_itemContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCase_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Case_itemContext> Verilog2001Parser::case_item() {
   Ref<Case_itemContext> _localctx = std::make_shared<Case_itemContext>(_ctx, getState());
@@ -15505,6 +16478,12 @@ void Verilog2001Parser::Function_case_statementContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_case_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::function_case_statement() {
   Ref<Function_case_statementContext> _localctx = std::make_shared<Function_case_statementContext>(_ctx, getState());
@@ -15718,6 +16697,12 @@ void Verilog2001Parser::Function_case_itemContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_case_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_case_itemContext> Verilog2001Parser::function_case_item() {
   Ref<Function_case_itemContext> _localctx = std::make_shared<Function_case_itemContext>(_ctx, getState());
@@ -15845,6 +16830,12 @@ void Verilog2001Parser::Function_loop_statementContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_loop_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_loop_statementContext> Verilog2001Parser::function_loop_statement() {
   Ref<Function_loop_statementContext> _localctx = std::make_shared<Function_loop_statementContext>(_ctx, getState());
@@ -15973,6 +16964,12 @@ void Verilog2001Parser::Loop_statementContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLoop_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Loop_statementContext> Verilog2001Parser::loop_statement() {
   Ref<Loop_statementContext> _localctx = std::make_shared<Loop_statementContext>(_ctx, getState());
@@ -16097,6 +17094,12 @@ void Verilog2001Parser::System_task_enableContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::System_task_enableContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSystem_task_enable(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::system_task_enable() {
   Ref<System_task_enableContext> _localctx = std::make_shared<System_task_enableContext>(_ctx, getState());
@@ -16209,6 +17212,12 @@ void Verilog2001Parser::Task_enableContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_enableContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_enable(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_enableContext> Verilog2001Parser::task_enable() {
   Ref<Task_enableContext> _localctx = std::make_shared<Task_enableContext>(_ctx, getState());
@@ -16317,6 +17326,12 @@ void Verilog2001Parser::Specify_blockContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specify_blockContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecify_block(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::specify_block() {
   Ref<Specify_blockContext> _localctx = std::make_shared<Specify_blockContext>(_ctx, getState());
@@ -16403,6 +17418,12 @@ void Verilog2001Parser::Specify_itemContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specify_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecify_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specify_itemContext> Verilog2001Parser::specify_item() {
   Ref<Specify_itemContext> _localctx = std::make_shared<Specify_itemContext>(_ctx, getState());
@@ -16491,6 +17512,12 @@ void Verilog2001Parser::Pulsestyle_declarationContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Pulsestyle_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPulsestyle_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Pulsestyle_declarationContext> Verilog2001Parser::pulsestyle_declaration() {
   Ref<Pulsestyle_declarationContext> _localctx = std::make_shared<Pulsestyle_declarationContext>(_ctx, getState());
@@ -16567,6 +17594,12 @@ void Verilog2001Parser::Showcancelled_declarationContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Showcancelled_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitShowcancelled_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Showcancelled_declarationContext> Verilog2001Parser::showcancelled_declaration() {
   Ref<Showcancelled_declarationContext> _localctx = std::make_shared<Showcancelled_declarationContext>(_ctx, getState());
@@ -16651,6 +17684,12 @@ void Verilog2001Parser::Path_declarationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPath_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Path_declarationContext> Verilog2001Parser::path_declaration() {
   Ref<Path_declarationContext> _localctx = std::make_shared<Path_declarationContext>(_ctx, getState());
@@ -16738,6 +17777,12 @@ void Verilog2001Parser::Simple_path_declarationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Simple_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSimple_path_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Simple_path_declarationContext> Verilog2001Parser::simple_path_declaration() {
   Ref<Simple_path_declarationContext> _localctx = std::make_shared<Simple_path_declarationContext>(_ctx, getState());
@@ -16823,6 +17868,12 @@ void Verilog2001Parser::Parallel_path_descriptionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parallel_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParallel_path_description(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parallel_path_descriptionContext> Verilog2001Parser::parallel_path_description() {
   Ref<Parallel_path_descriptionContext> _localctx = std::make_shared<Parallel_path_descriptionContext>(_ctx, getState());
@@ -16896,6 +17947,12 @@ void Verilog2001Parser::Full_path_descriptionContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Full_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFull_path_description(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Full_path_descriptionContext> Verilog2001Parser::full_path_description() {
   Ref<Full_path_descriptionContext> _localctx = std::make_shared<Full_path_descriptionContext>(_ctx, getState());
@@ -16969,6 +18026,12 @@ void Verilog2001Parser::List_of_path_inputsContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_path_inputsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_path_inputs(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_path_inputsContext> Verilog2001Parser::list_of_path_inputs() {
   Ref<List_of_path_inputsContext> _localctx = std::make_shared<List_of_path_inputsContext>(_ctx, getState());
@@ -17037,6 +18100,12 @@ void Verilog2001Parser::List_of_path_outputsContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_path_outputsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_path_outputs(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::list_of_path_outputs() {
   Ref<List_of_path_outputsContext> _localctx = std::make_shared<List_of_path_outputsContext>(_ctx, getState());
@@ -17109,6 +18178,12 @@ void Verilog2001Parser::Specify_input_terminal_descriptorContext::exitRule(tree:
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specify_input_terminal_descriptorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecify_input_terminal_descriptor(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::specify_input_terminal_descriptor() {
   Ref<Specify_input_terminal_descriptorContext> _localctx = std::make_shared<Specify_input_terminal_descriptorContext>(_ctx, getState());
@@ -17202,6 +18277,12 @@ void Verilog2001Parser::Specify_output_terminal_descriptorContext::exitRule(tree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specify_output_terminal_descriptorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecify_output_terminal_descriptor(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::specify_output_terminal_descriptor() {
   Ref<Specify_output_terminal_descriptorContext> _localctx = std::make_shared<Specify_output_terminal_descriptorContext>(_ctx, getState());
@@ -17291,6 +18372,12 @@ void Verilog2001Parser::Input_identifierContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Input_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInput_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Input_identifierContext> Verilog2001Parser::input_identifier() {
   Ref<Input_identifierContext> _localctx = std::make_shared<Input_identifierContext>(_ctx, getState());
@@ -17361,6 +18448,12 @@ void Verilog2001Parser::Output_identifierContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Output_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOutput_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Output_identifierContext> Verilog2001Parser::output_identifier() {
   Ref<Output_identifierContext> _localctx = std::make_shared<Output_identifierContext>(_ctx, getState());
@@ -17427,6 +18520,12 @@ void Verilog2001Parser::Path_delay_valueContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Path_delay_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPath_delay_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Path_delay_valueContext> Verilog2001Parser::path_delay_value() {
   Ref<Path_delay_valueContext> _localctx = std::make_shared<Path_delay_valueContext>(_ctx, getState());
@@ -17557,6 +18656,12 @@ void Verilog2001Parser::List_of_path_delay_expressionsContext::exitRule(tree::Pa
 }
 
 
+antlrcpp::Any Verilog2001Parser::List_of_path_delay_expressionsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitList_of_path_delay_expressions(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::List_of_path_delay_expressionsContext> Verilog2001Parser::list_of_path_delay_expressions() {
   Ref<List_of_path_delay_expressionsContext> _localctx = std::make_shared<List_of_path_delay_expressionsContext>(_ctx, getState());
@@ -17720,6 +18825,12 @@ void Verilog2001Parser::T_path_delay_expressionContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::T_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T_path_delay_expressionContext> Verilog2001Parser::t_path_delay_expression() {
   Ref<T_path_delay_expressionContext> _localctx = std::make_shared<T_path_delay_expressionContext>(_ctx, getState());
@@ -17771,6 +18882,12 @@ void Verilog2001Parser::Trise_path_delay_expressionContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Trise_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTrise_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Trise_path_delay_expressionContext> Verilog2001Parser::trise_path_delay_expression() {
   Ref<Trise_path_delay_expressionContext> _localctx = std::make_shared<Trise_path_delay_expressionContext>(_ctx, getState());
@@ -17822,6 +18939,12 @@ void Verilog2001Parser::Tfall_path_delay_expressionContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tfall_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTfall_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tfall_path_delay_expressionContext> Verilog2001Parser::tfall_path_delay_expression() {
   Ref<Tfall_path_delay_expressionContext> _localctx = std::make_shared<Tfall_path_delay_expressionContext>(_ctx, getState());
@@ -17873,6 +18996,12 @@ void Verilog2001Parser::Tz_path_delay_expressionContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tz_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTz_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tz_path_delay_expressionContext> Verilog2001Parser::tz_path_delay_expression() {
   Ref<Tz_path_delay_expressionContext> _localctx = std::make_shared<Tz_path_delay_expressionContext>(_ctx, getState());
@@ -17924,6 +19053,12 @@ void Verilog2001Parser::T01_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T01_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT01_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T01_path_delay_expressionContext> Verilog2001Parser::t01_path_delay_expression() {
   Ref<T01_path_delay_expressionContext> _localctx = std::make_shared<T01_path_delay_expressionContext>(_ctx, getState());
@@ -17975,6 +19110,12 @@ void Verilog2001Parser::T10_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T10_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT10_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T10_path_delay_expressionContext> Verilog2001Parser::t10_path_delay_expression() {
   Ref<T10_path_delay_expressionContext> _localctx = std::make_shared<T10_path_delay_expressionContext>(_ctx, getState());
@@ -18026,6 +19167,12 @@ void Verilog2001Parser::T0z_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T0z_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT0z_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T0z_path_delay_expressionContext> Verilog2001Parser::t0z_path_delay_expression() {
   Ref<T0z_path_delay_expressionContext> _localctx = std::make_shared<T0z_path_delay_expressionContext>(_ctx, getState());
@@ -18077,6 +19224,12 @@ void Verilog2001Parser::Tz1_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tz1_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTz1_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tz1_path_delay_expressionContext> Verilog2001Parser::tz1_path_delay_expression() {
   Ref<Tz1_path_delay_expressionContext> _localctx = std::make_shared<Tz1_path_delay_expressionContext>(_ctx, getState());
@@ -18128,6 +19281,12 @@ void Verilog2001Parser::T1z_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T1z_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT1z_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T1z_path_delay_expressionContext> Verilog2001Parser::t1z_path_delay_expression() {
   Ref<T1z_path_delay_expressionContext> _localctx = std::make_shared<T1z_path_delay_expressionContext>(_ctx, getState());
@@ -18179,6 +19338,12 @@ void Verilog2001Parser::Tz0_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tz0_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTz0_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tz0_path_delay_expressionContext> Verilog2001Parser::tz0_path_delay_expression() {
   Ref<Tz0_path_delay_expressionContext> _localctx = std::make_shared<Tz0_path_delay_expressionContext>(_ctx, getState());
@@ -18230,6 +19395,12 @@ void Verilog2001Parser::T0x_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T0x_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT0x_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T0x_path_delay_expressionContext> Verilog2001Parser::t0x_path_delay_expression() {
   Ref<T0x_path_delay_expressionContext> _localctx = std::make_shared<T0x_path_delay_expressionContext>(_ctx, getState());
@@ -18281,6 +19452,12 @@ void Verilog2001Parser::Tx1_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tx1_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTx1_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tx1_path_delay_expressionContext> Verilog2001Parser::tx1_path_delay_expression() {
   Ref<Tx1_path_delay_expressionContext> _localctx = std::make_shared<Tx1_path_delay_expressionContext>(_ctx, getState());
@@ -18332,6 +19509,12 @@ void Verilog2001Parser::T1x_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::T1x_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitT1x_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::T1x_path_delay_expressionContext> Verilog2001Parser::t1x_path_delay_expression() {
   Ref<T1x_path_delay_expressionContext> _localctx = std::make_shared<T1x_path_delay_expressionContext>(_ctx, getState());
@@ -18383,6 +19566,12 @@ void Verilog2001Parser::Tx0_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tx0_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTx0_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tx0_path_delay_expressionContext> Verilog2001Parser::tx0_path_delay_expression() {
   Ref<Tx0_path_delay_expressionContext> _localctx = std::make_shared<Tx0_path_delay_expressionContext>(_ctx, getState());
@@ -18434,6 +19623,12 @@ void Verilog2001Parser::Txz_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Txz_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTxz_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Txz_path_delay_expressionContext> Verilog2001Parser::txz_path_delay_expression() {
   Ref<Txz_path_delay_expressionContext> _localctx = std::make_shared<Txz_path_delay_expressionContext>(_ctx, getState());
@@ -18485,6 +19680,12 @@ void Verilog2001Parser::Tzx_path_delay_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Tzx_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTzx_path_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Tzx_path_delay_expressionContext> Verilog2001Parser::tzx_path_delay_expression() {
   Ref<Tzx_path_delay_expressionContext> _localctx = std::make_shared<Tzx_path_delay_expressionContext>(_ctx, getState());
@@ -18536,6 +19737,12 @@ void Verilog2001Parser::Path_delay_expressionContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPath_delay_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::path_delay_expression() {
   Ref<Path_delay_expressionContext> _localctx = std::make_shared<Path_delay_expressionContext>(_ctx, getState());
@@ -18595,6 +19802,12 @@ void Verilog2001Parser::Edge_sensitive_path_declarationContext::exitRule(tree::P
 }
 
 
+antlrcpp::Any Verilog2001Parser::Edge_sensitive_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEdge_sensitive_path_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Edge_sensitive_path_declarationContext> Verilog2001Parser::edge_sensitive_path_declaration() {
   Ref<Edge_sensitive_path_declarationContext> _localctx = std::make_shared<Edge_sensitive_path_declarationContext>(_ctx, getState());
@@ -18685,6 +19898,12 @@ void Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::exitRul
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParallel_edge_sensitive_path_description(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2001Parser::parallel_edge_sensitive_path_description() {
   Ref<Parallel_edge_sensitive_path_descriptionContext> _localctx = std::make_shared<Parallel_edge_sensitive_path_descriptionContext>(_ctx, getState());
@@ -18783,6 +20002,12 @@ void Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::exitRule(tr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFull_edge_sensitive_path_description(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001Parser::full_edge_sensitive_path_description() {
   Ref<Full_edge_sensitive_path_descriptionContext> _localctx = std::make_shared<Full_edge_sensitive_path_descriptionContext>(_ctx, getState());
@@ -18865,6 +20090,12 @@ void Verilog2001Parser::Data_source_expressionContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Data_source_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitData_source_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Data_source_expressionContext> Verilog2001Parser::data_source_expression() {
   Ref<Data_source_expressionContext> _localctx = std::make_shared<Data_source_expressionContext>(_ctx, getState());
@@ -18912,6 +20143,12 @@ void Verilog2001Parser::Edge_identifierContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Edge_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEdge_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::edge_identifier() {
   Ref<Edge_identifierContext> _localctx = std::make_shared<Edge_identifierContext>(_ctx, getState());
@@ -18979,6 +20216,12 @@ void Verilog2001Parser::State_dependent_path_declarationContext::exitRule(tree::
 }
 
 
+antlrcpp::Any Verilog2001Parser::State_dependent_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitState_dependent_path_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::State_dependent_path_declarationContext> Verilog2001Parser::state_dependent_path_declaration() {
   Ref<State_dependent_path_declarationContext> _localctx = std::make_shared<State_dependent_path_declarationContext>(_ctx, getState());
@@ -19066,6 +20309,12 @@ void Verilog2001Parser::Polarity_operatorContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Polarity_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPolarity_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::polarity_operator() {
   Ref<Polarity_operatorContext> _localctx = std::make_shared<Polarity_operatorContext>(_ctx, getState());
@@ -19125,6 +20374,12 @@ void Verilog2001Parser::Checktime_conditionContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Checktime_conditionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitChecktime_condition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Checktime_conditionContext> Verilog2001Parser::checktime_condition() {
   Ref<Checktime_conditionContext> _localctx = std::make_shared<Checktime_conditionContext>(_ctx, getState());
@@ -19180,6 +20435,12 @@ void Verilog2001Parser::Delayed_dataContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delayed_dataContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelayed_data(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delayed_dataContext> Verilog2001Parser::delayed_data() {
   Ref<Delayed_dataContext> _localctx = std::make_shared<Delayed_dataContext>(_ctx, getState());
@@ -19256,6 +20517,12 @@ void Verilog2001Parser::Delayed_referenceContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Delayed_referenceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDelayed_reference(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Delayed_referenceContext> Verilog2001Parser::delayed_reference() {
   Ref<Delayed_referenceContext> _localctx = std::make_shared<Delayed_referenceContext>(_ctx, getState());
@@ -19328,6 +20595,12 @@ void Verilog2001Parser::End_edge_offsetContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::End_edge_offsetContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEnd_edge_offset(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::End_edge_offsetContext> Verilog2001Parser::end_edge_offset() {
   Ref<End_edge_offsetContext> _localctx = std::make_shared<End_edge_offsetContext>(_ctx, getState());
@@ -19379,6 +20652,12 @@ void Verilog2001Parser::Event_based_flagContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_based_flagContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_based_flag(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_based_flagContext> Verilog2001Parser::event_based_flag() {
   Ref<Event_based_flagContext> _localctx = std::make_shared<Event_based_flagContext>(_ctx, getState());
@@ -19430,6 +20709,12 @@ void Verilog2001Parser::Notify_regContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Notify_regContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNotify_reg(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Notify_regContext> Verilog2001Parser::notify_reg() {
   Ref<Notify_regContext> _localctx = std::make_shared<Notify_regContext>(_ctx, getState());
@@ -19481,6 +20766,12 @@ void Verilog2001Parser::Remain_active_flagContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Remain_active_flagContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitRemain_active_flag(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Remain_active_flagContext> Verilog2001Parser::remain_active_flag() {
   Ref<Remain_active_flagContext> _localctx = std::make_shared<Remain_active_flagContext>(_ctx, getState());
@@ -19532,6 +20823,12 @@ void Verilog2001Parser::Stamptime_conditionContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Stamptime_conditionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStamptime_condition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Stamptime_conditionContext> Verilog2001Parser::stamptime_condition() {
   Ref<Stamptime_conditionContext> _localctx = std::make_shared<Stamptime_conditionContext>(_ctx, getState());
@@ -19583,6 +20880,12 @@ void Verilog2001Parser::Start_edge_offsetContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Start_edge_offsetContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitStart_edge_offset(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Start_edge_offsetContext> Verilog2001Parser::start_edge_offset() {
   Ref<Start_edge_offsetContext> _localctx = std::make_shared<Start_edge_offsetContext>(_ctx, getState());
@@ -19634,6 +20937,12 @@ void Verilog2001Parser::ThresholdContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::ThresholdContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitThreshold(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::ThresholdContext> Verilog2001Parser::threshold() {
   Ref<ThresholdContext> _localctx = std::make_shared<ThresholdContext>(_ctx, getState());
@@ -19685,6 +20994,12 @@ void Verilog2001Parser::Timing_check_limitContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Timing_check_limitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTiming_check_limit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Timing_check_limitContext> Verilog2001Parser::timing_check_limit() {
   Ref<Timing_check_limitContext> _localctx = std::make_shared<Timing_check_limitContext>(_ctx, getState());
@@ -19740,6 +21055,12 @@ void Verilog2001Parser::ConcatenationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::ConcatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConcatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::ConcatenationContext> Verilog2001Parser::concatenation() {
   Ref<ConcatenationContext> _localctx = std::make_shared<ConcatenationContext>(_ctx, getState());
@@ -19812,6 +21133,12 @@ void Verilog2001Parser::Constant_concatenationContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_concatenationContext> Verilog2001Parser::constant_concatenation() {
   Ref<Constant_concatenationContext> _localctx = std::make_shared<Constant_concatenationContext>(_ctx, getState());
@@ -19884,6 +21211,12 @@ void Verilog2001Parser::Constant_multiple_concatenationContext::exitRule(tree::P
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_multiple_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_multiple_concatenationContext> Verilog2001Parser::constant_multiple_concatenation() {
   Ref<Constant_multiple_concatenationContext> _localctx = std::make_shared<Constant_multiple_concatenationContext>(_ctx, getState());
@@ -19945,6 +21278,12 @@ void Verilog2001Parser::Module_path_concatenationContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_concatenationContext> Verilog2001Parser::module_path_concatenation() {
   Ref<Module_path_concatenationContext> _localctx = std::make_shared<Module_path_concatenationContext>(_ctx, getState());
@@ -20017,6 +21356,12 @@ void Verilog2001Parser::Module_path_multiple_concatenationContext::exitRule(tree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_multiple_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_multiple_concatenationContext> Verilog2001Parser::module_path_multiple_concatenation() {
   Ref<Module_path_multiple_concatenationContext> _localctx = std::make_shared<Module_path_multiple_concatenationContext>(_ctx, getState());
@@ -20078,6 +21423,12 @@ void Verilog2001Parser::Multiple_concatenationContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMultiple_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Multiple_concatenationContext> Verilog2001Parser::multiple_concatenation() {
   Ref<Multiple_concatenationContext> _localctx = std::make_shared<Multiple_concatenationContext>(_ctx, getState());
@@ -20139,6 +21490,12 @@ void Verilog2001Parser::Net_concatenationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_concatenationContext> Verilog2001Parser::net_concatenation() {
   Ref<Net_concatenationContext> _localctx = std::make_shared<Net_concatenationContext>(_ctx, getState());
@@ -20223,6 +21580,12 @@ void Verilog2001Parser::Net_concatenation_valueContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_concatenation_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_concatenation_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_concatenation_valueContext> Verilog2001Parser::net_concatenation_value() {
   Ref<Net_concatenation_valueContext> _localctx = std::make_shared<Net_concatenation_valueContext>(_ctx, getState());
@@ -20370,6 +21733,12 @@ void Verilog2001Parser::Variable_concatenationContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_concatenation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_concatenationContext> Verilog2001Parser::variable_concatenation() {
   Ref<Variable_concatenationContext> _localctx = std::make_shared<Variable_concatenationContext>(_ctx, getState());
@@ -20454,6 +21823,12 @@ void Verilog2001Parser::Variable_concatenation_valueContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_concatenation_valueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_concatenation_value(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_concatenation_valueContext> Verilog2001Parser::variable_concatenation_value() {
   Ref<Variable_concatenation_valueContext> _localctx = std::make_shared<Variable_concatenation_valueContext>(_ctx, getState());
@@ -20613,6 +21988,12 @@ void Verilog2001Parser::Constant_function_callContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_function_call(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::constant_function_call() {
   Ref<Constant_function_callContext> _localctx = std::make_shared<Constant_function_callContext>(_ctx, getState());
@@ -20739,6 +22120,12 @@ void Verilog2001Parser::Function_callContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_callContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_call(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::function_call() {
   Ref<Function_callContext> _localctx = std::make_shared<Function_callContext>(_ctx, getState());
@@ -20857,6 +22244,12 @@ void Verilog2001Parser::System_function_callContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::System_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSystem_function_call(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::System_function_callContext> Verilog2001Parser::system_function_call() {
   Ref<System_function_callContext> _localctx = std::make_shared<System_function_callContext>(_ctx, getState());
@@ -20950,6 +22343,12 @@ void Verilog2001Parser::Genvar_function_callContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_function_call(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_function_callContext> Verilog2001Parser::genvar_function_call() {
   Ref<Genvar_function_callContext> _localctx = std::make_shared<Genvar_function_callContext>(_ctx, getState());
@@ -21060,6 +22459,12 @@ void Verilog2001Parser::Base_expressionContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Base_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBase_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Base_expressionContext> Verilog2001Parser::base_expression() {
   Ref<Base_expressionContext> _localctx = std::make_shared<Base_expressionContext>(_ctx, getState());
@@ -21111,6 +22516,12 @@ void Verilog2001Parser::Constant_base_expressionContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_base_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_base_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_base_expressionContext> Verilog2001Parser::constant_base_expression() {
   Ref<Constant_base_expressionContext> _localctx = std::make_shared<Constant_base_expressionContext>(_ctx, getState());
@@ -21162,6 +22573,12 @@ void Verilog2001Parser::Constant_expressionContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::constant_expression() {
   Ref<Constant_expressionContext> _localctx = std::make_shared<Constant_expressionContext>(_ctx, getState());
@@ -21217,6 +22634,12 @@ void Verilog2001Parser::Constant_mintypmax_expressionContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_mintypmax_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::constant_mintypmax_expression() {
   Ref<Constant_mintypmax_expressionContext> _localctx = std::make_shared<Constant_mintypmax_expressionContext>(_ctx, getState());
@@ -21307,6 +22730,12 @@ void Verilog2001Parser::Constant_range_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_range_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_range_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_range_expressionContext> Verilog2001Parser::constant_range_expression() {
   Ref<Constant_range_expressionContext> _localctx = std::make_shared<Constant_range_expressionContext>(_ctx, getState());
@@ -21399,6 +22828,12 @@ void Verilog2001Parser::Dimension_constant_expressionContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::Dimension_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDimension_constant_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Dimension_constant_expressionContext> Verilog2001Parser::dimension_constant_expression() {
   Ref<Dimension_constant_expressionContext> _localctx = std::make_shared<Dimension_constant_expressionContext>(_ctx, getState());
@@ -21478,6 +22913,12 @@ void Verilog2001Parser::ExpressionContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any Verilog2001Parser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitExpression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::expression() {
   Ref<ExpressionContext> _localctx = std::make_shared<ExpressionContext>(_ctx, getState());
@@ -21630,6 +23071,12 @@ void Verilog2001Parser::TermContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any Verilog2001Parser::TermContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTerm(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::TermContext> Verilog2001Parser::term() {
   Ref<TermContext> _localctx = std::make_shared<TermContext>(_ctx, getState());
@@ -21739,6 +23186,12 @@ void Verilog2001Parser::Lsb_constant_expressionContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Lsb_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLsb_constant_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::lsb_constant_expression() {
   Ref<Lsb_constant_expressionContext> _localctx = std::make_shared<Lsb_constant_expressionContext>(_ctx, getState());
@@ -21794,6 +23247,12 @@ void Verilog2001Parser::Mintypmax_expressionContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMintypmax_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::mintypmax_expression() {
   Ref<Mintypmax_expressionContext> _localctx = std::make_shared<Mintypmax_expressionContext>(_ctx, getState());
@@ -21871,6 +23330,12 @@ void Verilog2001Parser::Module_path_conditional_expressionContext::exitRule(tree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_conditional_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_conditional_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_conditional_expressionContext> Verilog2001Parser::module_path_conditional_expression() {
   Ref<Module_path_conditional_expressionContext> _localctx = std::make_shared<Module_path_conditional_expressionContext>(_ctx, getState());
@@ -21971,6 +23436,12 @@ void Verilog2001Parser::Module_path_expressionContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::module_path_expression() {
   Ref<Module_path_expressionContext> _localctx = std::make_shared<Module_path_expressionContext>(_ctx, getState());
@@ -22142,6 +23613,12 @@ void Verilog2001Parser::Module_path_mintypmax_expressionContext::exitRule(tree::
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_mintypmax_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_mintypmax_expressionContext> Verilog2001Parser::module_path_mintypmax_expression() {
   Ref<Module_path_mintypmax_expressionContext> _localctx = std::make_shared<Module_path_mintypmax_expressionContext>(_ctx, getState());
@@ -22207,6 +23684,12 @@ void Verilog2001Parser::Msb_constant_expressionContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Msb_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMsb_constant_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::msb_constant_expression() {
   Ref<Msb_constant_expressionContext> _localctx = std::make_shared<Msb_constant_expressionContext>(_ctx, getState());
@@ -22274,6 +23757,12 @@ void Verilog2001Parser::Range_expressionContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Range_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitRange_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::range_expression() {
   Ref<Range_expressionContext> _localctx = std::make_shared<Range_expressionContext>(_ctx, getState());
@@ -22366,6 +23855,12 @@ void Verilog2001Parser::Width_constant_expressionContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Width_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitWidth_constant_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Width_constant_expressionContext> Verilog2001Parser::width_constant_expression() {
   Ref<Width_constant_expressionContext> _localctx = std::make_shared<Width_constant_expressionContext>(_ctx, getState());
@@ -22445,6 +23940,12 @@ void Verilog2001Parser::Constant_primaryContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Constant_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConstant_primary(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Constant_primaryContext> Verilog2001Parser::constant_primary() {
   Ref<Constant_primaryContext> _localctx = std::make_shared<Constant_primaryContext>(_ctx, getState());
@@ -22585,6 +24086,12 @@ void Verilog2001Parser::Module_path_primaryContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_path_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_path_primary(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_path_primaryContext> Verilog2001Parser::module_path_primary() {
   Ref<Module_path_primaryContext> _localctx = std::make_shared<Module_path_primaryContext>(_ctx, getState());
@@ -22737,6 +24244,12 @@ void Verilog2001Parser::PrimaryContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any Verilog2001Parser::PrimaryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPrimary(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::PrimaryContext> Verilog2001Parser::primary() {
   Ref<PrimaryContext> _localctx = std::make_shared<PrimaryContext>(_ctx, getState());
@@ -22936,6 +24449,12 @@ void Verilog2001Parser::Net_lvalueContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_lvalueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_lvalue(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::net_lvalue() {
   Ref<Net_lvalueContext> _localctx = std::make_shared<Net_lvalueContext>(_ctx, getState());
@@ -23095,6 +24614,12 @@ void Verilog2001Parser::Variable_lvalueContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_lvalueContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_lvalue(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::variable_lvalue() {
   Ref<Variable_lvalueContext> _localctx = std::make_shared<Variable_lvalueContext>(_ctx, getState());
@@ -23234,6 +24759,12 @@ void Verilog2001Parser::Unary_operatorContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Unary_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitUnary_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::unary_operator() {
   Ref<Unary_operatorContext> _localctx = std::make_shared<Unary_operatorContext>(_ctx, getState());
@@ -23298,6 +24829,12 @@ void Verilog2001Parser::Binary_operatorContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Binary_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBinary_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::binary_operator() {
   Ref<Binary_operatorContext> _localctx = std::make_shared<Binary_operatorContext>(_ctx, getState());
@@ -23376,6 +24913,12 @@ void Verilog2001Parser::Unary_module_path_operatorContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Unary_module_path_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitUnary_module_path_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::unary_module_path_operator() {
   Ref<Unary_module_path_operatorContext> _localctx = std::make_shared<Unary_module_path_operatorContext>(_ctx, getState());
@@ -23438,6 +24981,12 @@ void Verilog2001Parser::Binary_module_path_operatorContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Binary_module_path_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBinary_module_path_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::binary_module_path_operator() {
   Ref<Binary_module_path_operatorContext> _localctx = std::make_shared<Binary_module_path_operatorContext>(_ctx, getState());
@@ -23520,6 +25069,12 @@ void Verilog2001Parser::NumberContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any Verilog2001Parser::NumberContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNumber(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::number() {
   Ref<NumberContext> _localctx = std::make_shared<NumberContext>(_ctx, getState());
@@ -23582,6 +25137,12 @@ void Verilog2001Parser::Default_nettype_specContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Default_nettype_specContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitDefault_nettype_spec(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Default_nettype_specContext> Verilog2001Parser::default_nettype_spec() {
   Ref<Default_nettype_specContext> _localctx = std::make_shared<Default_nettype_specContext>(_ctx, getState());
@@ -23639,6 +25200,12 @@ void Verilog2001Parser::Timing_specContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any Verilog2001Parser::Timing_specContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTiming_spec(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Timing_specContext> Verilog2001Parser::timing_spec() {
   Ref<Timing_specContext> _localctx = std::make_shared<Timing_specContext>(_ctx, getState());
@@ -23700,6 +25267,12 @@ void Verilog2001Parser::Attribute_instanceContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Attribute_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitAttribute_instance(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::attribute_instance() {
   Ref<Attribute_instanceContext> _localctx = std::make_shared<Attribute_instanceContext>(_ctx, getState());
@@ -23776,6 +25349,12 @@ void Verilog2001Parser::Attr_specContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Attr_specContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitAttr_spec(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Attr_specContext> Verilog2001Parser::attr_spec() {
   Ref<Attr_specContext> _localctx = std::make_shared<Attr_specContext>(_ctx, getState());
@@ -23846,6 +25425,12 @@ void Verilog2001Parser::Attr_nameContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any Verilog2001Parser::Attr_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitAttr_name(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Attr_nameContext> Verilog2001Parser::attr_name() {
   Ref<Attr_nameContext> _localctx = std::make_shared<Attr_nameContext>(_ctx, getState());
@@ -23901,6 +25486,12 @@ void Verilog2001Parser::Arrayed_identifierContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitArrayed_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::arrayed_identifier() {
   Ref<Arrayed_identifierContext> _localctx = std::make_shared<Arrayed_identifierContext>(_ctx, getState());
@@ -23969,6 +25560,12 @@ void Verilog2001Parser::Block_identifierContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitBlock_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::block_identifier() {
   Ref<Block_identifierContext> _localctx = std::make_shared<Block_identifierContext>(_ctx, getState());
@@ -24020,6 +25617,12 @@ void Verilog2001Parser::Cell_identifierContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Cell_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitCell_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::cell_identifier() {
   Ref<Cell_identifierContext> _localctx = std::make_shared<Cell_identifierContext>(_ctx, getState());
@@ -24071,6 +25674,12 @@ void Verilog2001Parser::Config_identifierContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Config_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitConfig_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Config_identifierContext> Verilog2001Parser::config_identifier() {
   Ref<Config_identifierContext> _localctx = std::make_shared<Config_identifierContext>(_ctx, getState());
@@ -24126,6 +25735,12 @@ void Verilog2001Parser::Escaped_arrayed_identifierContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Escaped_arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEscaped_arrayed_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Escaped_arrayed_identifierContext> Verilog2001Parser::escaped_arrayed_identifier() {
   Ref<Escaped_arrayed_identifierContext> _localctx = std::make_shared<Escaped_arrayed_identifierContext>(_ctx, getState());
@@ -24200,6 +25815,12 @@ void Verilog2001Parser::Escaped_hierarchical_identifierContext::exitRule(tree::P
 }
 
 
+antlrcpp::Any Verilog2001Parser::Escaped_hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEscaped_hierarchical_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Escaped_hierarchical_identifierContext> Verilog2001Parser::escaped_hierarchical_identifier() {
   Ref<Escaped_hierarchical_identifierContext> _localctx = std::make_shared<Escaped_hierarchical_identifierContext>(_ctx, getState());
@@ -24280,6 +25901,12 @@ void Verilog2001Parser::Event_identifierContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any Verilog2001Parser::Event_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEvent_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Event_identifierContext> Verilog2001Parser::event_identifier() {
   Ref<Event_identifierContext> _localctx = std::make_shared<Event_identifierContext>(_ctx, getState());
@@ -24331,6 +25958,12 @@ void Verilog2001Parser::Function_identifierContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitFunction_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Function_identifierContext> Verilog2001Parser::function_identifier() {
   Ref<Function_identifierContext> _localctx = std::make_shared<Function_identifierContext>(_ctx, getState());
@@ -24382,6 +26015,12 @@ void Verilog2001Parser::Gate_instance_identifierContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any Verilog2001Parser::Gate_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGate_instance_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Gate_instance_identifierContext> Verilog2001Parser::gate_instance_identifier() {
   Ref<Gate_instance_identifierContext> _localctx = std::make_shared<Gate_instance_identifierContext>(_ctx, getState());
@@ -24433,6 +26072,12 @@ void Verilog2001Parser::Generate_block_identifierContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Generate_block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenerate_block_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Generate_block_identifierContext> Verilog2001Parser::generate_block_identifier() {
   Ref<Generate_block_identifierContext> _localctx = std::make_shared<Generate_block_identifierContext>(_ctx, getState());
@@ -24484,6 +26129,12 @@ void Verilog2001Parser::Genvar_function_identifierContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_function_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_function_identifierContext> Verilog2001Parser::genvar_function_identifier() {
   Ref<Genvar_function_identifierContext> _localctx = std::make_shared<Genvar_function_identifierContext>(_ctx, getState());
@@ -24535,6 +26186,12 @@ void Verilog2001Parser::Genvar_identifierContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Genvar_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitGenvar_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::genvar_identifier() {
   Ref<Genvar_identifierContext> _localctx = std::make_shared<Genvar_identifierContext>(_ctx, getState());
@@ -24586,6 +26243,12 @@ void Verilog2001Parser::Hierarchical_block_identifierContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_block_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_block_identifierContext> Verilog2001Parser::hierarchical_block_identifier() {
   Ref<Hierarchical_block_identifierContext> _localctx = std::make_shared<Hierarchical_block_identifierContext>(_ctx, getState());
@@ -24637,6 +26300,12 @@ void Verilog2001Parser::Hierarchical_event_identifierContext::exitRule(tree::Par
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_event_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_event_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_event_identifierContext> Verilog2001Parser::hierarchical_event_identifier() {
   Ref<Hierarchical_event_identifierContext> _localctx = std::make_shared<Hierarchical_event_identifierContext>(_ctx, getState());
@@ -24688,6 +26357,12 @@ void Verilog2001Parser::Hierarchical_function_identifierContext::exitRule(tree::
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_function_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_function_identifierContext> Verilog2001Parser::hierarchical_function_identifier() {
   Ref<Hierarchical_function_identifierContext> _localctx = std::make_shared<Hierarchical_function_identifierContext>(_ctx, getState());
@@ -24743,6 +26418,12 @@ void Verilog2001Parser::Hierarchical_identifierContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::hierarchical_identifier() {
   Ref<Hierarchical_identifierContext> _localctx = std::make_shared<Hierarchical_identifierContext>(_ctx, getState());
@@ -24811,6 +26492,12 @@ void Verilog2001Parser::Hierarchical_net_identifierContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_net_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_net_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_net_identifierContext> Verilog2001Parser::hierarchical_net_identifier() {
   Ref<Hierarchical_net_identifierContext> _localctx = std::make_shared<Hierarchical_net_identifierContext>(_ctx, getState());
@@ -24862,6 +26549,12 @@ void Verilog2001Parser::Hierarchical_variable_identifierContext::exitRule(tree::
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_variable_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_variable_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_variable_identifierContext> Verilog2001Parser::hierarchical_variable_identifier() {
   Ref<Hierarchical_variable_identifierContext> _localctx = std::make_shared<Hierarchical_variable_identifierContext>(_ctx, getState());
@@ -24913,6 +26606,12 @@ void Verilog2001Parser::Hierarchical_task_identifierContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any Verilog2001Parser::Hierarchical_task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitHierarchical_task_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Hierarchical_task_identifierContext> Verilog2001Parser::hierarchical_task_identifier() {
   Ref<Hierarchical_task_identifierContext> _localctx = std::make_shared<Hierarchical_task_identifierContext>(_ctx, getState());
@@ -24968,6 +26667,12 @@ void Verilog2001Parser::IdentifierContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any Verilog2001Parser::IdentifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitIdentifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::identifier() {
   Ref<IdentifierContext> _localctx = std::make_shared<IdentifierContext>(_ctx, getState());
@@ -25027,6 +26732,12 @@ void Verilog2001Parser::Inout_port_identifierContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Inout_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInout_port_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Inout_port_identifierContext> Verilog2001Parser::inout_port_identifier() {
   Ref<Inout_port_identifierContext> _localctx = std::make_shared<Inout_port_identifierContext>(_ctx, getState());
@@ -25078,6 +26789,12 @@ void Verilog2001Parser::Input_port_identifierContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Input_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInput_port_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Input_port_identifierContext> Verilog2001Parser::input_port_identifier() {
   Ref<Input_port_identifierContext> _localctx = std::make_shared<Input_port_identifierContext>(_ctx, getState());
@@ -25129,6 +26846,12 @@ void Verilog2001Parser::Instance_identifierContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitInstance_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Instance_identifierContext> Verilog2001Parser::instance_identifier() {
   Ref<Instance_identifierContext> _localctx = std::make_shared<Instance_identifierContext>(_ctx, getState());
@@ -25180,6 +26903,12 @@ void Verilog2001Parser::Library_identifierContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any Verilog2001Parser::Library_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitLibrary_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::library_identifier() {
   Ref<Library_identifierContext> _localctx = std::make_shared<Library_identifierContext>(_ctx, getState());
@@ -25231,6 +26960,12 @@ void Verilog2001Parser::Memory_identifierContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Memory_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitMemory_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Memory_identifierContext> Verilog2001Parser::memory_identifier() {
   Ref<Memory_identifierContext> _localctx = std::make_shared<Memory_identifierContext>(_ctx, getState());
@@ -25282,6 +27017,12 @@ void Verilog2001Parser::Module_identifierContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_identifierContext> Verilog2001Parser::module_identifier() {
   Ref<Module_identifierContext> _localctx = std::make_shared<Module_identifierContext>(_ctx, getState());
@@ -25333,6 +27074,12 @@ void Verilog2001Parser::Module_instance_identifierContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Module_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitModule_instance_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Module_instance_identifierContext> Verilog2001Parser::module_instance_identifier() {
   Ref<Module_instance_identifierContext> _localctx = std::make_shared<Module_instance_identifierContext>(_ctx, getState());
@@ -25384,6 +27131,12 @@ void Verilog2001Parser::Net_identifierContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Net_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitNet_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Net_identifierContext> Verilog2001Parser::net_identifier() {
   Ref<Net_identifierContext> _localctx = std::make_shared<Net_identifierContext>(_ctx, getState());
@@ -25435,6 +27188,12 @@ void Verilog2001Parser::Output_port_identifierContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::Output_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitOutput_port_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Output_port_identifierContext> Verilog2001Parser::output_port_identifier() {
   Ref<Output_port_identifierContext> _localctx = std::make_shared<Output_port_identifierContext>(_ctx, getState());
@@ -25486,6 +27245,12 @@ void Verilog2001Parser::Parameter_identifierContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Parameter_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitParameter_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::parameter_identifier() {
   Ref<Parameter_identifierContext> _localctx = std::make_shared<Parameter_identifierContext>(_ctx, getState());
@@ -25537,6 +27302,12 @@ void Verilog2001Parser::Port_identifierContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitPort_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::port_identifier() {
   Ref<Port_identifierContext> _localctx = std::make_shared<Port_identifierContext>(_ctx, getState());
@@ -25588,6 +27359,12 @@ void Verilog2001Parser::Real_identifierContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Real_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitReal_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Real_identifierContext> Verilog2001Parser::real_identifier() {
   Ref<Real_identifierContext> _localctx = std::make_shared<Real_identifierContext>(_ctx, getState());
@@ -25643,6 +27420,12 @@ void Verilog2001Parser::Simple_arrayed_identifierContext::exitRule(tree::ParseTr
 }
 
 
+antlrcpp::Any Verilog2001Parser::Simple_arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSimple_arrayed_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Simple_arrayed_identifierContext> Verilog2001Parser::simple_arrayed_identifier() {
   Ref<Simple_arrayed_identifierContext> _localctx = std::make_shared<Simple_arrayed_identifierContext>(_ctx, getState());
@@ -25709,6 +27492,12 @@ void Verilog2001Parser::Simple_hierarchical_identifierContext::exitRule(tree::Pa
 }
 
 
+antlrcpp::Any Verilog2001Parser::Simple_hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSimple_hierarchical_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Simple_hierarchical_identifierContext> Verilog2001Parser::simple_hierarchical_identifier() {
   Ref<Simple_hierarchical_identifierContext> _localctx = std::make_shared<Simple_hierarchical_identifierContext>(_ctx, getState());
@@ -25770,6 +27559,12 @@ void Verilog2001Parser::Specparam_identifierContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Specparam_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSpecparam_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::specparam_identifier() {
   Ref<Specparam_identifierContext> _localctx = std::make_shared<Specparam_identifierContext>(_ctx, getState());
@@ -25821,6 +27616,12 @@ void Verilog2001Parser::System_function_identifierContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::System_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSystem_function_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::System_function_identifierContext> Verilog2001Parser::system_function_identifier() {
   Ref<System_function_identifierContext> _localctx = std::make_shared<System_function_identifierContext>(_ctx, getState());
@@ -25872,6 +27673,12 @@ void Verilog2001Parser::System_task_identifierContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any Verilog2001Parser::System_task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSystem_task_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::System_task_identifierContext> Verilog2001Parser::system_task_identifier() {
   Ref<System_task_identifierContext> _localctx = std::make_shared<System_task_identifierContext>(_ctx, getState());
@@ -25923,6 +27730,12 @@ void Verilog2001Parser::Task_identifierContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any Verilog2001Parser::Task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTask_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Task_identifierContext> Verilog2001Parser::task_identifier() {
   Ref<Task_identifierContext> _localctx = std::make_shared<Task_identifierContext>(_ctx, getState());
@@ -25974,6 +27787,12 @@ void Verilog2001Parser::Terminal_identifierContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Terminal_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTerminal_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Terminal_identifierContext> Verilog2001Parser::terminal_identifier() {
   Ref<Terminal_identifierContext> _localctx = std::make_shared<Terminal_identifierContext>(_ctx, getState());
@@ -26025,6 +27844,12 @@ void Verilog2001Parser::Text_macro_identifierContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any Verilog2001Parser::Text_macro_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitText_macro_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Text_macro_identifierContext> Verilog2001Parser::text_macro_identifier() {
   Ref<Text_macro_identifierContext> _localctx = std::make_shared<Text_macro_identifierContext>(_ctx, getState());
@@ -26076,6 +27901,12 @@ void Verilog2001Parser::Topmodule_identifierContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any Verilog2001Parser::Topmodule_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitTopmodule_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Topmodule_identifierContext> Verilog2001Parser::topmodule_identifier() {
   Ref<Topmodule_identifierContext> _localctx = std::make_shared<Topmodule_identifierContext>(_ctx, getState());
@@ -26127,6 +27958,12 @@ void Verilog2001Parser::Udp_identifierContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any Verilog2001Parser::Udp_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitUdp_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Udp_identifierContext> Verilog2001Parser::udp_identifier() {
   Ref<Udp_identifierContext> _localctx = std::make_shared<Udp_identifierContext>(_ctx, getState());
@@ -26178,6 +28015,12 @@ void Verilog2001Parser::Udp_instance_identifierContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any Verilog2001Parser::Udp_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitUdp_instance_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Udp_instance_identifierContext> Verilog2001Parser::udp_instance_identifier() {
   Ref<Udp_instance_identifierContext> _localctx = std::make_shared<Udp_instance_identifierContext>(_ctx, getState());
@@ -26229,6 +28072,12 @@ void Verilog2001Parser::Variable_identifierContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any Verilog2001Parser::Variable_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitVariable_identifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::variable_identifier() {
   Ref<Variable_identifierContext> _localctx = std::make_shared<Variable_identifierContext>(_ctx, getState());
@@ -26292,6 +28141,12 @@ void Verilog2001Parser::Simple_hierarchical_branchContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any Verilog2001Parser::Simple_hierarchical_branchContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitSimple_hierarchical_branch(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Simple_hierarchical_branchContext> Verilog2001Parser::simple_hierarchical_branch() {
   Ref<Simple_hierarchical_branchContext> _localctx = std::make_shared<Simple_hierarchical_branchContext>(_ctx, getState());
@@ -26400,6 +28255,12 @@ void Verilog2001Parser::Escaped_hierarchical_branchContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any Verilog2001Parser::Escaped_hierarchical_branchContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
+    return ((Verilog2001Visitor *)visitor)->visitEscaped_hierarchical_branch(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<Verilog2001Parser::Escaped_hierarchical_branchContext> Verilog2001Parser::escaped_hierarchical_branch() {
   Ref<Escaped_hierarchical_branchContext> _localctx = std::make_shared<Escaped_hierarchical_branchContext>(_ctx, getState());

@@ -2,7 +2,8 @@
 // Generated from vhdl.g4 by ANTLR 4.5.3
 
 
-#include "vhdlBaseListener.h"
+#include "vhdlListener.h"
+#include "vhdlVisitor.h"
 
 #include "vhdlParser.h"
 
@@ -68,6 +69,12 @@ void vhdlParser::Abstract_literalContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Abstract_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAbstract_literal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Abstract_literalContext> vhdlParser::abstract_literal() {
   Ref<Abstract_literalContext> _localctx = std::make_shared<Abstract_literalContext>(_ctx, getState());
@@ -132,6 +139,12 @@ void vhdlParser::Access_type_definitionContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Access_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAccess_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Access_type_definitionContext> vhdlParser::access_type_definition() {
   Ref<Access_type_definitionContext> _localctx = std::make_shared<Access_type_definitionContext>(_ctx, getState());
@@ -201,6 +214,12 @@ void vhdlParser::Across_aspectContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Across_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAcross_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Across_aspectContext> vhdlParser::across_aspect() {
   Ref<Across_aspectContext> _localctx = std::make_shared<Across_aspectContext>(_ctx, getState());
@@ -275,6 +294,12 @@ void vhdlParser::Actual_designatorContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Actual_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitActual_designator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Actual_designatorContext> vhdlParser::actual_designator() {
   Ref<Actual_designatorContext> _localctx = std::make_shared<Actual_designatorContext>(_ctx, getState());
@@ -357,6 +382,12 @@ void vhdlParser::Actual_parameter_partContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Actual_parameter_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitActual_parameter_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Actual_parameter_partContext> vhdlParser::actual_parameter_part() {
   Ref<Actual_parameter_partContext> _localctx = std::make_shared<Actual_parameter_partContext>(_ctx, getState());
@@ -420,6 +451,12 @@ void vhdlParser::Actual_partContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Actual_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitActual_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Actual_partContext> vhdlParser::actual_part() {
   Ref<Actual_partContext> _localctx = std::make_shared<Actual_partContext>(_ctx, getState());
@@ -500,6 +537,12 @@ void vhdlParser::Adding_operatorContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Adding_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAdding_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Adding_operatorContext> vhdlParser::adding_operator() {
   Ref<Adding_operatorContext> _localctx = std::make_shared<Adding_operatorContext>(_ctx, getState());
@@ -580,6 +623,12 @@ void vhdlParser::AggregateContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::AggregateContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAggregate(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::AggregateContext> vhdlParser::aggregate() {
   Ref<AggregateContext> _localctx = std::make_shared<AggregateContext>(_ctx, getState());
@@ -676,6 +725,12 @@ void vhdlParser::Alias_declarationContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Alias_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAlias_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Alias_declarationContext> vhdlParser::alias_declaration() {
   Ref<Alias_declarationContext> _localctx = std::make_shared<Alias_declarationContext>(_ctx, getState());
@@ -760,6 +815,12 @@ void vhdlParser::Alias_designatorContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Alias_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAlias_designator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Alias_designatorContext> vhdlParser::alias_designator() {
   Ref<Alias_designatorContext> _localctx = std::make_shared<Alias_designatorContext>(_ctx, getState());
@@ -840,6 +901,12 @@ void vhdlParser::Alias_indicationContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Alias_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAlias_indication(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Alias_indicationContext> vhdlParser::alias_indication() {
   Ref<Alias_indicationContext> _localctx = std::make_shared<Alias_indicationContext>(_ctx, getState());
@@ -914,6 +981,12 @@ void vhdlParser::AllocatorContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::AllocatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAllocator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::AllocatorContext> vhdlParser::allocator() {
   Ref<AllocatorContext> _localctx = std::make_shared<AllocatorContext>(_ctx, getState());
@@ -1021,6 +1094,12 @@ void vhdlParser::Architecture_bodyContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Architecture_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArchitecture_body(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Architecture_bodyContext> vhdlParser::architecture_body() {
   Ref<Architecture_bodyContext> _localctx = std::make_shared<Architecture_bodyContext>(_ctx, getState());
@@ -1111,6 +1190,12 @@ void vhdlParser::Architecture_declarative_partContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Architecture_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArchitecture_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Architecture_declarative_partContext> vhdlParser::architecture_declarative_part() {
   Ref<Architecture_declarative_partContext> _localctx = std::make_shared<Architecture_declarative_partContext>(_ctx, getState());
@@ -1234,6 +1319,12 @@ void vhdlParser::Architecture_statementContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Architecture_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArchitecture_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Architecture_statementContext> vhdlParser::architecture_statement() {
   Ref<Architecture_statementContext> _localctx = std::make_shared<Architecture_statementContext>(_ctx, getState());
@@ -1397,6 +1488,12 @@ void vhdlParser::Architecture_statement_partContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Architecture_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArchitecture_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Architecture_statement_partContext> vhdlParser::architecture_statement_part() {
   Ref<Architecture_statement_partContext> _localctx = std::make_shared<Architecture_statement_partContext>(_ctx, getState());
@@ -1484,6 +1581,12 @@ void vhdlParser::Array_nature_definitionContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Array_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArray_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Array_nature_definitionContext> vhdlParser::array_nature_definition() {
   Ref<Array_nature_definitionContext> _localctx = std::make_shared<Array_nature_definitionContext>(_ctx, getState());
@@ -1554,6 +1657,12 @@ void vhdlParser::Array_type_definitionContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Array_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitArray_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Array_type_definitionContext> vhdlParser::array_type_definition() {
   Ref<Array_type_definitionContext> _localctx = std::make_shared<Array_type_definitionContext>(_ctx, getState());
@@ -1640,6 +1749,12 @@ void vhdlParser::AssertionContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::AssertionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAssertion(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::AssertionContext> vhdlParser::assertion() {
   Ref<AssertionContext> _localctx = std::make_shared<AssertionContext>(_ctx, getState());
@@ -1720,6 +1835,12 @@ void vhdlParser::Assertion_statementContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Assertion_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAssertion_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Assertion_statementContext> vhdlParser::assertion_statement() {
   Ref<Assertion_statementContext> _localctx = std::make_shared<Assertion_statementContext>(_ctx, getState());
@@ -1791,6 +1912,12 @@ void vhdlParser::Association_elementContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Association_elementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAssociation_element(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Association_elementContext> vhdlParser::association_element() {
   Ref<Association_elementContext> _localctx = std::make_shared<Association_elementContext>(_ctx, getState());
@@ -1867,6 +1994,12 @@ void vhdlParser::Association_listContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Association_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAssociation_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Association_listContext> vhdlParser::association_list() {
   Ref<Association_listContext> _localctx = std::make_shared<Association_listContext>(_ctx, getState());
@@ -1943,6 +2076,12 @@ void vhdlParser::Attribute_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Attribute_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAttribute_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Attribute_declarationContext> vhdlParser::attribute_declaration() {
   Ref<Attribute_declarationContext> _localctx = std::make_shared<Attribute_declarationContext>(_ctx, getState());
@@ -2024,6 +2163,12 @@ void vhdlParser::Attribute_designatorContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Attribute_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAttribute_designator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Attribute_designatorContext> vhdlParser::attribute_designator() {
   Ref<Attribute_designatorContext> _localctx = std::make_shared<Attribute_designatorContext>(_ctx, getState());
@@ -2152,6 +2297,12 @@ void vhdlParser::Attribute_specificationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Attribute_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitAttribute_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Attribute_specificationContext> vhdlParser::attribute_specification() {
   Ref<Attribute_specificationContext> _localctx = std::make_shared<Attribute_specificationContext>(_ctx, getState());
@@ -2219,6 +2370,12 @@ void vhdlParser::Base_unit_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Base_unit_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBase_unit_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Base_unit_declarationContext> vhdlParser::base_unit_declaration() {
   Ref<Base_unit_declarationContext> _localctx = std::make_shared<Base_unit_declarationContext>(_ctx, getState());
@@ -2284,6 +2441,12 @@ void vhdlParser::Binding_indicationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Binding_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBinding_indication(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Binding_indicationContext> vhdlParser::binding_indication() {
   Ref<Binding_indicationContext> _localctx = std::make_shared<Binding_indicationContext>(_ctx, getState());
@@ -2389,6 +2552,12 @@ void vhdlParser::Block_configurationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Block_configurationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_configuration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_configurationContext> vhdlParser::block_configuration() {
   Ref<Block_configurationContext> _localctx = std::make_shared<Block_configurationContext>(_ctx, getState());
@@ -2553,6 +2722,12 @@ void vhdlParser::Block_declarative_itemContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Block_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_declarative_itemContext> vhdlParser::block_declarative_item() {
   Ref<Block_declarative_itemContext> _localctx = std::make_shared<Block_declarative_itemContext>(_ctx, getState());
@@ -2763,6 +2938,12 @@ void vhdlParser::Block_declarative_partContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Block_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_declarative_partContext> vhdlParser::block_declarative_part() {
   Ref<Block_declarative_partContext> _localctx = std::make_shared<Block_declarative_partContext>(_ctx, getState());
@@ -2866,6 +3047,12 @@ void vhdlParser::Block_headerContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Block_headerContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_header(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_headerContext> vhdlParser::block_header() {
   Ref<Block_headerContext> _localctx = std::make_shared<Block_headerContext>(_ctx, getState());
@@ -2964,6 +3151,12 @@ void vhdlParser::Block_specificationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Block_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_specificationContext> vhdlParser::block_specification() {
   Ref<Block_specificationContext> _localctx = std::make_shared<Block_specificationContext>(_ctx, getState());
@@ -3094,6 +3287,12 @@ void vhdlParser::Block_statementContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Block_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_statementContext> vhdlParser::block_statement() {
   Ref<Block_statementContext> _localctx = std::make_shared<Block_statementContext>(_ctx, getState());
@@ -3193,6 +3392,12 @@ void vhdlParser::Block_statement_partContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Block_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBlock_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Block_statement_partContext> vhdlParser::block_statement_part() {
   Ref<Block_statement_partContext> _localctx = std::make_shared<Block_statement_partContext>(_ctx, getState());
@@ -3292,6 +3497,12 @@ void vhdlParser::Branch_quantity_declarationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Branch_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBranch_quantity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Branch_quantity_declarationContext> vhdlParser::branch_quantity_declaration() {
   Ref<Branch_quantity_declarationContext> _localctx = std::make_shared<Branch_quantity_declarationContext>(_ctx, getState());
@@ -3381,6 +3592,12 @@ void vhdlParser::Break_elementContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Break_elementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBreak_element(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Break_elementContext> vhdlParser::break_element() {
   Ref<Break_elementContext> _localctx = std::make_shared<Break_elementContext>(_ctx, getState());
@@ -3456,6 +3673,12 @@ void vhdlParser::Break_listContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::Break_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBreak_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Break_listContext> vhdlParser::break_list() {
   Ref<Break_listContext> _localctx = std::make_shared<Break_listContext>(_ctx, getState());
@@ -3528,6 +3751,12 @@ void vhdlParser::Break_selector_clauseContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Break_selector_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBreak_selector_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Break_selector_clauseContext> vhdlParser::break_selector_clause() {
   Ref<Break_selector_clauseContext> _localctx = std::make_shared<Break_selector_clauseContext>(_ctx, getState());
@@ -3603,6 +3832,12 @@ void vhdlParser::Break_statementContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Break_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitBreak_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Break_statementContext> vhdlParser::break_statement() {
   Ref<Break_statementContext> _localctx = std::make_shared<Break_statementContext>(_ctx, getState());
@@ -3720,6 +3955,12 @@ void vhdlParser::Case_statementContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitCase_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Case_statementContext> vhdlParser::case_statement() {
   Ref<Case_statementContext> _localctx = std::make_shared<Case_statementContext>(_ctx, getState());
@@ -3822,6 +4063,12 @@ void vhdlParser::Case_statement_alternativeContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Case_statement_alternativeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitCase_statement_alternative(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Case_statement_alternativeContext> vhdlParser::case_statement_alternative() {
   Ref<Case_statement_alternativeContext> _localctx = std::make_shared<Case_statement_alternativeContext>(_ctx, getState());
@@ -3891,6 +4138,12 @@ void vhdlParser::ChoiceContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::ChoiceContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitChoice(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::ChoiceContext> vhdlParser::choice() {
   Ref<ChoiceContext> _localctx = std::make_shared<ChoiceContext>(_ctx, getState());
@@ -3983,6 +4236,12 @@ void vhdlParser::ChoicesContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::ChoicesContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitChoices(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::ChoicesContext> vhdlParser::choices() {
   Ref<ChoicesContext> _localctx = std::make_shared<ChoicesContext>(_ctx, getState());
@@ -4075,6 +4334,12 @@ void vhdlParser::Component_configurationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Component_configurationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComponent_configuration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Component_configurationContext> vhdlParser::component_configuration() {
   Ref<Component_configurationContext> _localctx = std::make_shared<Component_configurationContext>(_ctx, getState());
@@ -4187,6 +4452,12 @@ void vhdlParser::Component_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Component_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComponent_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Component_declarationContext> vhdlParser::component_declaration() {
   Ref<Component_declarationContext> _localctx = std::make_shared<Component_declarationContext>(_ctx, getState());
@@ -4293,6 +4564,12 @@ void vhdlParser::Component_instantiation_statementContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any vhdlParser::Component_instantiation_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComponent_instantiation_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Component_instantiation_statementContext> vhdlParser::component_instantiation_statement() {
   Ref<Component_instantiation_statementContext> _localctx = std::make_shared<Component_instantiation_statementContext>(_ctx, getState());
@@ -4371,6 +4648,12 @@ void vhdlParser::Component_specificationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Component_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComponent_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Component_specificationContext> vhdlParser::component_specification() {
   Ref<Component_specificationContext> _localctx = std::make_shared<Component_specificationContext>(_ctx, getState());
@@ -4430,6 +4713,12 @@ void vhdlParser::Composite_nature_definitionContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Composite_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComposite_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Composite_nature_definitionContext> vhdlParser::composite_nature_definition() {
   Ref<Composite_nature_definitionContext> _localctx = std::make_shared<Composite_nature_definitionContext>(_ctx, getState());
@@ -4502,6 +4791,12 @@ void vhdlParser::Composite_type_definitionContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Composite_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitComposite_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Composite_type_definitionContext> vhdlParser::composite_type_definition() {
   Ref<Composite_type_definitionContext> _localctx = std::make_shared<Composite_type_definitionContext>(_ctx, getState());
@@ -4582,6 +4877,12 @@ void vhdlParser::Concurrent_assertion_statementContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Concurrent_assertion_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConcurrent_assertion_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Concurrent_assertion_statementContext> vhdlParser::concurrent_assertion_statement() {
   Ref<Concurrent_assertion_statementContext> _localctx = std::make_shared<Concurrent_assertion_statementContext>(_ctx, getState());
@@ -4676,6 +4977,12 @@ void vhdlParser::Concurrent_break_statementContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Concurrent_break_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConcurrent_break_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Concurrent_break_statementContext> vhdlParser::concurrent_break_statement() {
   Ref<Concurrent_break_statementContext> _localctx = std::make_shared<Concurrent_break_statementContext>(_ctx, getState());
@@ -4776,6 +5083,12 @@ void vhdlParser::Concurrent_procedure_call_statementContext::exitRule(tree::Pars
 }
 
 
+antlrcpp::Any vhdlParser::Concurrent_procedure_call_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConcurrent_procedure_call_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Concurrent_procedure_call_statementContext> vhdlParser::concurrent_procedure_call_statement() {
   Ref<Concurrent_procedure_call_statementContext> _localctx = std::make_shared<Concurrent_procedure_call_statementContext>(_ctx, getState());
@@ -4860,6 +5173,12 @@ void vhdlParser::Concurrent_signal_assignment_statementContext::exitRule(tree::P
 }
 
 
+antlrcpp::Any vhdlParser::Concurrent_signal_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConcurrent_signal_assignment_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Concurrent_signal_assignment_statementContext> vhdlParser::concurrent_signal_assignment_statement() {
   Ref<Concurrent_signal_assignment_statementContext> _localctx = std::make_shared<Concurrent_signal_assignment_statementContext>(_ctx, getState());
@@ -4948,6 +5267,12 @@ void vhdlParser::ConditionContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::ConditionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitCondition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::ConditionContext> vhdlParser::condition() {
   Ref<ConditionContext> _localctx = std::make_shared<ConditionContext>(_ctx, getState());
@@ -5003,6 +5328,12 @@ void vhdlParser::Condition_clauseContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Condition_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitCondition_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Condition_clauseContext> vhdlParser::condition_clause() {
   Ref<Condition_clauseContext> _localctx = std::make_shared<Condition_clauseContext>(_ctx, getState());
@@ -5072,6 +5403,12 @@ void vhdlParser::Conditional_signal_assignmentContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Conditional_signal_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConditional_signal_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Conditional_signal_assignmentContext> vhdlParser::conditional_signal_assignment() {
   Ref<Conditional_signal_assignmentContext> _localctx = std::make_shared<Conditional_signal_assignmentContext>(_ctx, getState());
@@ -5147,6 +5484,12 @@ void vhdlParser::Conditional_waveformsContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Conditional_waveformsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConditional_waveforms(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Conditional_waveformsContext> vhdlParser::conditional_waveforms() {
   Ref<Conditional_waveformsContext> _localctx = std::make_shared<Conditional_waveformsContext>(_ctx, getState());
@@ -5257,6 +5600,12 @@ void vhdlParser::Configuration_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Configuration_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConfiguration_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Configuration_declarationContext> vhdlParser::configuration_declaration() {
   Ref<Configuration_declarationContext> _localctx = std::make_shared<Configuration_declarationContext>(_ctx, getState());
@@ -5349,6 +5698,12 @@ void vhdlParser::Configuration_declarative_itemContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Configuration_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConfiguration_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Configuration_declarative_itemContext> vhdlParser::configuration_declarative_item() {
   Ref<Configuration_declarative_itemContext> _localctx = std::make_shared<Configuration_declarative_itemContext>(_ctx, getState());
@@ -5428,6 +5783,12 @@ void vhdlParser::Configuration_declarative_partContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Configuration_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConfiguration_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Configuration_declarative_partContext> vhdlParser::configuration_declarative_part() {
   Ref<Configuration_declarative_partContext> _localctx = std::make_shared<Configuration_declarative_partContext>(_ctx, getState());
@@ -5494,6 +5855,12 @@ void vhdlParser::Configuration_itemContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Configuration_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConfiguration_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Configuration_itemContext> vhdlParser::configuration_item() {
   Ref<Configuration_itemContext> _localctx = std::make_shared<Configuration_itemContext>(_ctx, getState());
@@ -5572,6 +5939,12 @@ void vhdlParser::Configuration_specificationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Configuration_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConfiguration_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Configuration_specificationContext> vhdlParser::configuration_specification() {
   Ref<Configuration_specificationContext> _localctx = std::make_shared<Configuration_specificationContext>(_ctx, getState());
@@ -5653,6 +6026,12 @@ void vhdlParser::Constant_declarationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Constant_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConstant_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Constant_declarationContext> vhdlParser::constant_declaration() {
   Ref<Constant_declarationContext> _localctx = std::make_shared<Constant_declarationContext>(_ctx, getState());
@@ -5734,6 +6113,12 @@ void vhdlParser::Constrained_array_definitionContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any vhdlParser::Constrained_array_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConstrained_array_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Constrained_array_definitionContext> vhdlParser::constrained_array_definition() {
   Ref<Constrained_array_definitionContext> _localctx = std::make_shared<Constrained_array_definitionContext>(_ctx, getState());
@@ -5803,6 +6188,12 @@ void vhdlParser::Constrained_nature_definitionContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Constrained_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConstrained_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Constrained_nature_definitionContext> vhdlParser::constrained_nature_definition() {
   Ref<Constrained_nature_definitionContext> _localctx = std::make_shared<Constrained_nature_definitionContext>(_ctx, getState());
@@ -5864,6 +6255,12 @@ void vhdlParser::ConstraintContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::ConstraintContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitConstraint(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::ConstraintContext> vhdlParser::constraint() {
   Ref<ConstraintContext> _localctx = std::make_shared<ConstraintContext>(_ctx, getState());
@@ -5936,6 +6333,12 @@ void vhdlParser::Context_clauseContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Context_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitContext_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Context_clauseContext> vhdlParser::context_clause() {
   Ref<Context_clauseContext> _localctx = std::make_shared<Context_clauseContext>(_ctx, getState());
@@ -6002,6 +6405,12 @@ void vhdlParser::Context_itemContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Context_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitContext_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Context_itemContext> vhdlParser::context_item() {
   Ref<Context_itemContext> _localctx = std::make_shared<Context_itemContext>(_ctx, getState());
@@ -6082,6 +6491,12 @@ void vhdlParser::Delay_mechanismContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Delay_mechanismContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDelay_mechanism(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Delay_mechanismContext> vhdlParser::delay_mechanism() {
   Ref<Delay_mechanismContext> _localctx = std::make_shared<Delay_mechanismContext>(_ctx, getState());
@@ -6169,6 +6584,12 @@ void vhdlParser::Design_fileContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Design_fileContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDesign_file(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Design_fileContext> vhdlParser::design_file() {
   Ref<Design_fileContext> _localctx = std::make_shared<Design_fileContext>(_ctx, getState());
@@ -6241,6 +6662,12 @@ void vhdlParser::Design_unitContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Design_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDesign_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Design_unitContext> vhdlParser::design_unit() {
   Ref<Design_unitContext> _localctx = std::make_shared<Design_unitContext>(_ctx, getState());
@@ -6298,6 +6725,12 @@ void vhdlParser::DesignatorContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::DesignatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDesignator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::DesignatorContext> vhdlParser::designator() {
   Ref<DesignatorContext> _localctx = std::make_shared<DesignatorContext>(_ctx, getState());
@@ -6371,6 +6804,12 @@ void vhdlParser::DirectionContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::DirectionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDirection(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::DirectionContext> vhdlParser::direction() {
   Ref<DirectionContext> _localctx = std::make_shared<DirectionContext>(_ctx, getState());
@@ -6444,6 +6883,12 @@ void vhdlParser::Disconnection_specificationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Disconnection_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDisconnection_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Disconnection_specificationContext> vhdlParser::disconnection_specification() {
   Ref<Disconnection_specificationContext> _localctx = std::make_shared<Disconnection_specificationContext>(_ctx, getState());
@@ -6507,6 +6952,12 @@ void vhdlParser::Discrete_rangeContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Discrete_rangeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitDiscrete_range(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Discrete_rangeContext> vhdlParser::discrete_range() {
   Ref<Discrete_rangeContext> _localctx = std::make_shared<Discrete_rangeContext>(_ctx, getState());
@@ -6581,6 +7032,12 @@ void vhdlParser::Element_associationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Element_associationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitElement_association(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Element_associationContext> vhdlParser::element_association() {
   Ref<Element_associationContext> _localctx = std::make_shared<Element_associationContext>(_ctx, getState());
@@ -6657,6 +7114,12 @@ void vhdlParser::Element_declarationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Element_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitElement_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Element_declarationContext> vhdlParser::element_declaration() {
   Ref<Element_declarationContext> _localctx = std::make_shared<Element_declarationContext>(_ctx, getState());
@@ -6714,6 +7177,12 @@ void vhdlParser::Element_subnature_definitionContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any vhdlParser::Element_subnature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitElement_subnature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Element_subnature_definitionContext> vhdlParser::element_subnature_definition() {
   Ref<Element_subnature_definitionContext> _localctx = std::make_shared<Element_subnature_definitionContext>(_ctx, getState());
@@ -6765,6 +7234,12 @@ void vhdlParser::Element_subtype_definitionContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Element_subtype_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitElement_subtype_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Element_subtype_definitionContext> vhdlParser::element_subtype_definition() {
   Ref<Element_subtype_definitionContext> _localctx = std::make_shared<Element_subtype_definitionContext>(_ctx, getState());
@@ -6840,6 +7315,12 @@ void vhdlParser::Entity_aspectContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Entity_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_aspectContext> vhdlParser::entity_aspect() {
   Ref<Entity_aspectContext> _localctx = std::make_shared<Entity_aspectContext>(_ctx, getState());
@@ -7011,6 +7492,12 @@ void vhdlParser::Entity_classContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Entity_classContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_class(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_classContext> vhdlParser::entity_class() {
   Ref<Entity_classContext> _localctx = std::make_shared<Entity_classContext>(_ctx, getState());
@@ -7093,6 +7580,12 @@ void vhdlParser::Entity_class_entryContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Entity_class_entryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_class_entry(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_class_entryContext> vhdlParser::entity_class_entry() {
   Ref<Entity_class_entryContext> _localctx = std::make_shared<Entity_class_entryContext>(_ctx, getState());
@@ -7164,6 +7657,12 @@ void vhdlParser::Entity_class_entry_listContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Entity_class_entry_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_class_entry_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_class_entry_listContext> vhdlParser::entity_class_entry_list() {
   Ref<Entity_class_entry_listContext> _localctx = std::make_shared<Entity_class_entry_listContext>(_ctx, getState());
@@ -7268,6 +7767,12 @@ void vhdlParser::Entity_declarationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Entity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_declarationContext> vhdlParser::entity_declaration() {
   Ref<Entity_declarationContext> _localctx = std::make_shared<Entity_declarationContext>(_ctx, getState());
@@ -7433,6 +7938,12 @@ void vhdlParser::Entity_declarative_itemContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Entity_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_declarative_itemContext> vhdlParser::entity_declarative_item() {
   Ref<Entity_declarative_itemContext> _localctx = std::make_shared<Entity_declarative_itemContext>(_ctx, getState());
@@ -7629,6 +8140,12 @@ void vhdlParser::Entity_declarative_partContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Entity_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_declarative_partContext> vhdlParser::entity_declarative_part() {
   Ref<Entity_declarative_partContext> _localctx = std::make_shared<Entity_declarative_partContext>(_ctx, getState());
@@ -7714,6 +8231,12 @@ void vhdlParser::Entity_designatorContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Entity_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_designator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_designatorContext> vhdlParser::entity_designator() {
   Ref<Entity_designatorContext> _localctx = std::make_shared<Entity_designatorContext>(_ctx, getState());
@@ -7777,6 +8300,12 @@ void vhdlParser::Entity_headerContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Entity_headerContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_header(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_headerContext> vhdlParser::entity_header() {
   Ref<Entity_headerContext> _localctx = std::make_shared<Entity_headerContext>(_ctx, getState());
@@ -7861,6 +8390,12 @@ void vhdlParser::Entity_name_listContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Entity_name_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_name_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_name_listContext> vhdlParser::entity_name_list() {
   Ref<Entity_name_listContext> _localctx = std::make_shared<Entity_name_listContext>(_ctx, getState());
@@ -7960,6 +8495,12 @@ void vhdlParser::Entity_specificationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Entity_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_specificationContext> vhdlParser::entity_specification() {
   Ref<Entity_specificationContext> _localctx = std::make_shared<Entity_specificationContext>(_ctx, getState());
@@ -8023,6 +8564,12 @@ void vhdlParser::Entity_statementContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Entity_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_statementContext> vhdlParser::entity_statement() {
   Ref<Entity_statementContext> _localctx = std::make_shared<Entity_statementContext>(_ctx, getState());
@@ -8100,6 +8647,12 @@ void vhdlParser::Entity_statement_partContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Entity_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_statement_partContext> vhdlParser::entity_statement_part() {
   Ref<Entity_statement_partContext> _localctx = std::make_shared<Entity_statement_partContext>(_ctx, getState());
@@ -8172,6 +8725,12 @@ void vhdlParser::Entity_tagContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::Entity_tagContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEntity_tag(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Entity_tagContext> vhdlParser::entity_tag() {
   Ref<Entity_tagContext> _localctx = std::make_shared<Entity_tagContext>(_ctx, getState());
@@ -8252,6 +8811,12 @@ void vhdlParser::Enumeration_literalContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Enumeration_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEnumeration_literal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Enumeration_literalContext> vhdlParser::enumeration_literal() {
   Ref<Enumeration_literalContext> _localctx = std::make_shared<Enumeration_literalContext>(_ctx, getState());
@@ -8341,6 +8906,12 @@ void vhdlParser::Enumeration_type_definitionContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Enumeration_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitEnumeration_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Enumeration_type_definitionContext> vhdlParser::enumeration_type_definition() {
   Ref<Enumeration_type_definitionContext> _localctx = std::make_shared<Enumeration_type_definitionContext>(_ctx, getState());
@@ -8429,6 +9000,12 @@ void vhdlParser::Exit_statementContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Exit_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitExit_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Exit_statementContext> vhdlParser::exit_statement() {
   Ref<Exit_statementContext> _localctx = std::make_shared<Exit_statementContext>(_ctx, getState());
@@ -8522,6 +9099,12 @@ void vhdlParser::ExpressionContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitExpression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::ExpressionContext> vhdlParser::expression() {
   Ref<ExpressionContext> _localctx = std::make_shared<ExpressionContext>(_ctx, getState());
@@ -8604,6 +9187,12 @@ void vhdlParser::FactorContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::FactorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFactor(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::FactorContext> vhdlParser::factor() {
   Ref<FactorContext> _localctx = std::make_shared<FactorContext>(_ctx, getState());
@@ -8726,6 +9315,12 @@ void vhdlParser::File_declarationContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::File_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFile_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::File_declarationContext> vhdlParser::file_declaration() {
   Ref<File_declarationContext> _localctx = std::make_shared<File_declarationContext>(_ctx, getState());
@@ -8795,6 +9390,12 @@ void vhdlParser::File_logical_nameContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::File_logical_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFile_logical_name(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::File_logical_nameContext> vhdlParser::file_logical_name() {
   Ref<File_logical_nameContext> _localctx = std::make_shared<File_logical_nameContext>(_ctx, getState());
@@ -8858,6 +9459,12 @@ void vhdlParser::File_open_informationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::File_open_informationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFile_open_information(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::File_open_informationContext> vhdlParser::file_open_information() {
   Ref<File_open_informationContext> _localctx = std::make_shared<File_open_informationContext>(_ctx, getState());
@@ -8929,6 +9536,12 @@ void vhdlParser::File_type_definitionContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::File_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFile_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::File_type_definitionContext> vhdlParser::file_type_definition() {
   Ref<File_type_definitionContext> _localctx = std::make_shared<File_type_definitionContext>(_ctx, getState());
@@ -8984,6 +9597,12 @@ void vhdlParser::Formal_parameter_listContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Formal_parameter_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFormal_parameter_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Formal_parameter_listContext> vhdlParser::formal_parameter_list() {
   Ref<Formal_parameter_listContext> _localctx = std::make_shared<Formal_parameter_listContext>(_ctx, getState());
@@ -9047,6 +9666,12 @@ void vhdlParser::Formal_partContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Formal_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFormal_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Formal_partContext> vhdlParser::formal_part() {
   Ref<Formal_partContext> _localctx = std::make_shared<Formal_partContext>(_ctx, getState());
@@ -9143,6 +9768,12 @@ void vhdlParser::Free_quantity_declarationContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Free_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFree_quantity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Free_quantity_declarationContext> vhdlParser::free_quantity_declaration() {
   Ref<Free_quantity_declarationContext> _localctx = std::make_shared<Free_quantity_declarationContext>(_ctx, getState());
@@ -9256,6 +9887,12 @@ void vhdlParser::Generate_statementContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Generate_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGenerate_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Generate_statementContext> vhdlParser::generate_statement() {
   Ref<Generate_statementContext> _localctx = std::make_shared<Generate_statementContext>(_ctx, getState());
@@ -9436,6 +10073,12 @@ void vhdlParser::Generation_schemeContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Generation_schemeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGeneration_scheme(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Generation_schemeContext> vhdlParser::generation_scheme() {
   Ref<Generation_schemeContext> _localctx = std::make_shared<Generation_schemeContext>(_ctx, getState());
@@ -9524,6 +10167,12 @@ void vhdlParser::Generic_clauseContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Generic_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGeneric_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Generic_clauseContext> vhdlParser::generic_clause() {
   Ref<Generic_clauseContext> _localctx = std::make_shared<Generic_clauseContext>(_ctx, getState());
@@ -9595,6 +10244,12 @@ void vhdlParser::Generic_listContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Generic_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGeneric_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Generic_listContext> vhdlParser::generic_list() {
   Ref<Generic_listContext> _localctx = std::make_shared<Generic_listContext>(_ctx, getState());
@@ -9675,6 +10330,12 @@ void vhdlParser::Generic_map_aspectContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Generic_map_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGeneric_map_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Generic_map_aspectContext> vhdlParser::generic_map_aspect() {
   Ref<Generic_map_aspectContext> _localctx = std::make_shared<Generic_map_aspectContext>(_ctx, getState());
@@ -9738,6 +10399,12 @@ void vhdlParser::Group_constituentContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Group_constituentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGroup_constituent(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Group_constituentContext> vhdlParser::group_constituent() {
   Ref<Group_constituentContext> _localctx = std::make_shared<Group_constituentContext>(_ctx, getState());
@@ -9819,6 +10486,12 @@ void vhdlParser::Group_constituent_listContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Group_constituent_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGroup_constituent_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Group_constituent_listContext> vhdlParser::group_constituent_list() {
   Ref<Group_constituent_listContext> _localctx = std::make_shared<Group_constituent_listContext>(_ctx, getState());
@@ -9907,6 +10580,12 @@ void vhdlParser::Group_declarationContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Group_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGroup_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Group_declarationContext> vhdlParser::group_declaration() {
   Ref<Group_declarationContext> _localctx = std::make_shared<Group_declarationContext>(_ctx, getState());
@@ -9994,6 +10673,12 @@ void vhdlParser::Group_template_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Group_template_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGroup_template_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Group_template_declarationContext> vhdlParser::group_template_declaration() {
   Ref<Group_template_declarationContext> _localctx = std::make_shared<Group_template_declarationContext>(_ctx, getState());
@@ -10065,6 +10750,12 @@ void vhdlParser::Guarded_signal_specificationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any vhdlParser::Guarded_signal_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitGuarded_signal_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Guarded_signal_specificationContext> vhdlParser::guarded_signal_specification() {
   Ref<Guarded_signal_specificationContext> _localctx = std::make_shared<Guarded_signal_specificationContext>(_ctx, getState());
@@ -10124,6 +10815,12 @@ void vhdlParser::IdentifierContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::IdentifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIdentifier(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::IdentifierContext> vhdlParser::identifier() {
   Ref<IdentifierContext> _localctx = std::make_shared<IdentifierContext>(_ctx, getState());
@@ -10195,6 +10892,12 @@ void vhdlParser::Identifier_listContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Identifier_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIdentifier_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Identifier_listContext> vhdlParser::identifier_list() {
   Ref<Identifier_listContext> _localctx = std::make_shared<Identifier_listContext>(_ctx, getState());
@@ -10315,6 +11018,12 @@ void vhdlParser::If_statementContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::If_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIf_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::If_statementContext> vhdlParser::if_statement() {
   Ref<If_statementContext> _localctx = std::make_shared<If_statementContext>(_ctx, getState());
@@ -10442,6 +11151,12 @@ void vhdlParser::Index_constraintContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Index_constraintContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIndex_constraint(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Index_constraintContext> vhdlParser::index_constraint() {
   Ref<Index_constraintContext> _localctx = std::make_shared<Index_constraintContext>(_ctx, getState());
@@ -10514,6 +11229,12 @@ void vhdlParser::Index_specificationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Index_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIndex_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Index_specificationContext> vhdlParser::index_specification() {
   Ref<Index_specificationContext> _localctx = std::make_shared<Index_specificationContext>(_ctx, getState());
@@ -10588,6 +11309,12 @@ void vhdlParser::Index_subtype_definitionContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Index_subtype_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIndex_subtype_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Index_subtype_definitionContext> vhdlParser::index_subtype_definition() {
   Ref<Index_subtype_definitionContext> _localctx = std::make_shared<Index_subtype_definitionContext>(_ctx, getState());
@@ -10667,6 +11394,12 @@ void vhdlParser::Instantiated_unitContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Instantiated_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInstantiated_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Instantiated_unitContext> vhdlParser::instantiated_unit() {
   Ref<Instantiated_unitContext> _localctx = std::make_shared<Instantiated_unitContext>(_ctx, getState());
@@ -10787,6 +11520,12 @@ void vhdlParser::Instantiation_listContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Instantiation_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInstantiation_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Instantiation_listContext> vhdlParser::instantiation_list() {
   Ref<Instantiation_listContext> _localctx = std::make_shared<Instantiation_listContext>(_ctx, getState());
@@ -10900,6 +11639,12 @@ void vhdlParser::Interface_constant_declarationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Interface_constant_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_constant_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_constant_declarationContext> vhdlParser::interface_constant_declaration() {
   Ref<Interface_constant_declarationContext> _localctx = std::make_shared<Interface_constant_declarationContext>(_ctx, getState());
@@ -10999,6 +11744,12 @@ void vhdlParser::Interface_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Interface_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_declarationContext> vhdlParser::interface_declaration() {
   Ref<Interface_declarationContext> _localctx = std::make_shared<Interface_declarationContext>(_ctx, getState());
@@ -11093,6 +11844,12 @@ void vhdlParser::Interface_elementContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Interface_elementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_element(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_elementContext> vhdlParser::interface_element() {
   Ref<Interface_elementContext> _localctx = std::make_shared<Interface_elementContext>(_ctx, getState());
@@ -11156,6 +11913,12 @@ void vhdlParser::Interface_file_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Interface_file_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_file_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_file_declarationContext> vhdlParser::interface_file_declaration() {
   Ref<Interface_file_declarationContext> _localctx = std::make_shared<Interface_file_declarationContext>(_ctx, getState());
@@ -11225,6 +11988,12 @@ void vhdlParser::Interface_signal_listContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Interface_signal_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_signal_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_signal_listContext> vhdlParser::interface_signal_list() {
   Ref<Interface_signal_listContext> _localctx = std::make_shared<Interface_signal_listContext>(_ctx, getState());
@@ -11301,6 +12070,12 @@ void vhdlParser::Interface_port_listContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Interface_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_port_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_port_listContext> vhdlParser::interface_port_list() {
   Ref<Interface_port_listContext> _localctx = std::make_shared<Interface_port_listContext>(_ctx, getState());
@@ -11377,6 +12152,12 @@ void vhdlParser::Interface_listContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Interface_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_listContext> vhdlParser::interface_list() {
   Ref<Interface_listContext> _localctx = std::make_shared<Interface_listContext>(_ctx, getState());
@@ -11469,6 +12250,12 @@ void vhdlParser::Interface_quantity_declarationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Interface_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_quantity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_quantity_declarationContext> vhdlParser::interface_quantity_declaration() {
   Ref<Interface_quantity_declarationContext> _localctx = std::make_shared<Interface_quantity_declarationContext>(_ctx, getState());
@@ -11576,6 +12363,12 @@ void vhdlParser::Interface_port_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Interface_port_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_port_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_port_declarationContext> vhdlParser::interface_port_declaration() {
   Ref<Interface_port_declarationContext> _localctx = std::make_shared<Interface_port_declarationContext>(_ctx, getState());
@@ -11686,6 +12479,12 @@ void vhdlParser::Interface_signal_declarationContext::exitRule(tree::ParseTreeLi
 }
 
 
+antlrcpp::Any vhdlParser::Interface_signal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_signal_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_signal_declarationContext> vhdlParser::interface_signal_declaration() {
   Ref<Interface_signal_declarationContext> _localctx = std::make_shared<Interface_signal_declarationContext>(_ctx, getState());
@@ -11790,6 +12589,12 @@ void vhdlParser::Interface_terminal_declarationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Interface_terminal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_terminal_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_terminal_declarationContext> vhdlParser::interface_terminal_declaration() {
   Ref<Interface_terminal_declarationContext> _localctx = std::make_shared<Interface_terminal_declarationContext>(_ctx, getState());
@@ -11871,6 +12676,12 @@ void vhdlParser::Interface_variable_declarationContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Interface_variable_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitInterface_variable_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Interface_variable_declarationContext> vhdlParser::interface_variable_declaration() {
   Ref<Interface_variable_declarationContext> _localctx = std::make_shared<Interface_variable_declarationContext>(_ctx, getState());
@@ -11967,6 +12778,12 @@ void vhdlParser::Iteration_schemeContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Iteration_schemeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitIteration_scheme(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Iteration_schemeContext> vhdlParser::iteration_scheme() {
   Ref<Iteration_schemeContext> _localctx = std::make_shared<Iteration_schemeContext>(_ctx, getState());
@@ -12043,6 +12860,12 @@ void vhdlParser::Label_colonContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Label_colonContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLabel_colon(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Label_colonContext> vhdlParser::label_colon() {
   Ref<Label_colonContext> _localctx = std::make_shared<Label_colonContext>(_ctx, getState());
@@ -12104,6 +12927,12 @@ void vhdlParser::Library_clauseContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Library_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLibrary_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Library_clauseContext> vhdlParser::library_clause() {
   Ref<Library_clauseContext> _localctx = std::make_shared<Library_clauseContext>(_ctx, getState());
@@ -12163,6 +12992,12 @@ void vhdlParser::Library_unitContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Library_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLibrary_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Library_unitContext> vhdlParser::library_unit() {
   Ref<Library_unitContext> _localctx = std::make_shared<Library_unitContext>(_ctx, getState());
@@ -12245,6 +13080,12 @@ void vhdlParser::LiteralContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::LiteralContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLiteral(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::LiteralContext> vhdlParser::literal() {
   Ref<LiteralContext> _localctx = std::make_shared<LiteralContext>(_ctx, getState());
@@ -12338,6 +13179,12 @@ void vhdlParser::Logical_nameContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Logical_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLogical_name(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Logical_nameContext> vhdlParser::logical_name() {
   Ref<Logical_nameContext> _localctx = std::make_shared<Logical_nameContext>(_ctx, getState());
@@ -12401,6 +13248,12 @@ void vhdlParser::Logical_name_listContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Logical_name_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLogical_name_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Logical_name_listContext> vhdlParser::logical_name_list() {
   Ref<Logical_name_listContext> _localctx = std::make_shared<Logical_name_listContext>(_ctx, getState());
@@ -12485,6 +13338,12 @@ void vhdlParser::Logical_operatorContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Logical_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLogical_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Logical_operatorContext> vhdlParser::logical_operator() {
   Ref<Logical_operatorContext> _localctx = std::make_shared<Logical_operatorContext>(_ctx, getState());
@@ -12576,6 +13435,12 @@ void vhdlParser::Loop_statementContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitLoop_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Loop_statementContext> vhdlParser::loop_statement() {
   Ref<Loop_statementContext> _localctx = std::make_shared<Loop_statementContext>(_ctx, getState());
@@ -12677,6 +13542,12 @@ void vhdlParser::Signal_modeContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Signal_modeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignal_mode(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Signal_modeContext> vhdlParser::signal_mode() {
   Ref<Signal_modeContext> _localctx = std::make_shared<Signal_modeContext>(_ctx, getState());
@@ -12751,6 +13622,12 @@ void vhdlParser::Multiplying_operatorContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Multiplying_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitMultiplying_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Multiplying_operatorContext> vhdlParser::multiplying_operator() {
   Ref<Multiplying_operatorContext> _localctx = std::make_shared<Multiplying_operatorContext>(_ctx, getState());
@@ -12828,6 +13705,12 @@ void vhdlParser::NameContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::NameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::NameContext> vhdlParser::name() {
   Ref<NameContext> _localctx = std::make_shared<NameContext>(_ctx, getState());
@@ -12917,6 +13800,12 @@ void vhdlParser::Name_partContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::Name_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Name_partContext> vhdlParser::name_part() {
   Ref<Name_partContext> _localctx = std::make_shared<Name_partContext>(_ctx, getState());
@@ -12989,6 +13878,12 @@ void vhdlParser::Name_part_specificatorContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Name_part_specificatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName_part_specificator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Name_part_specificatorContext> vhdlParser::name_part_specificator() {
   Ref<Name_part_specificatorContext> _localctx = std::make_shared<Name_part_specificatorContext>(_ctx, getState());
@@ -13082,6 +13977,12 @@ void vhdlParser::Name_attribute_partContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Name_attribute_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName_attribute_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Name_attribute_partContext> vhdlParser::name_attribute_part() {
   Ref<Name_attribute_partContext> _localctx = std::make_shared<Name_attribute_partContext>(_ctx, getState());
@@ -13169,6 +14070,12 @@ void vhdlParser::Name_function_call_or_indexed_partContext::exitRule(tree::Parse
 }
 
 
+antlrcpp::Any vhdlParser::Name_function_call_or_indexed_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName_function_call_or_indexed_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Name_function_call_or_indexed_partContext> vhdlParser::name_function_call_or_indexed_part() {
   Ref<Name_function_call_or_indexed_partContext> _localctx = std::make_shared<Name_function_call_or_indexed_partContext>(_ctx, getState());
@@ -13266,6 +14173,12 @@ void vhdlParser::Name_slice_partContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Name_slice_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitName_slice_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Name_slice_partContext> vhdlParser::name_slice_part() {
   Ref<Name_slice_partContext> _localctx = std::make_shared<Name_slice_partContext>(_ctx, getState());
@@ -13350,6 +14263,12 @@ void vhdlParser::Selected_nameContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Selected_nameContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSelected_name(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Selected_nameContext> vhdlParser::selected_name() {
   Ref<Selected_nameContext> _localctx = std::make_shared<Selected_nameContext>(_ctx, getState());
@@ -13432,6 +14351,12 @@ void vhdlParser::Nature_declarationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Nature_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitNature_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Nature_declarationContext> vhdlParser::nature_declaration() {
   Ref<Nature_declarationContext> _localctx = std::make_shared<Nature_declarationContext>(_ctx, getState());
@@ -13495,6 +14420,12 @@ void vhdlParser::Nature_definitionContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitNature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Nature_definitionContext> vhdlParser::nature_definition() {
   Ref<Nature_definitionContext> _localctx = std::make_shared<Nature_definitionContext>(_ctx, getState());
@@ -13573,6 +14504,12 @@ void vhdlParser::Nature_element_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Nature_element_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitNature_element_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Nature_element_declarationContext> vhdlParser::nature_element_declaration() {
   Ref<Nature_element_declarationContext> _localctx = std::make_shared<Nature_element_declarationContext>(_ctx, getState());
@@ -13648,6 +14585,12 @@ void vhdlParser::Next_statementContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Next_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitNext_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Next_statementContext> vhdlParser::next_statement() {
   Ref<Next_statementContext> _localctx = std::make_shared<Next_statementContext>(_ctx, getState());
@@ -13733,6 +14676,12 @@ void vhdlParser::Numeric_literalContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Numeric_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitNumeric_literal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Numeric_literalContext> vhdlParser::numeric_literal() {
   Ref<Numeric_literalContext> _localctx = std::make_shared<Numeric_literalContext>(_ctx, getState());
@@ -13819,6 +14768,12 @@ void vhdlParser::Object_declarationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Object_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitObject_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Object_declarationContext> vhdlParser::object_declaration() {
   Ref<Object_declarationContext> _localctx = std::make_shared<Object_declarationContext>(_ctx, getState());
@@ -13920,6 +14875,12 @@ void vhdlParser::OptsContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::OptsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitOpts(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::OptsContext> vhdlParser::opts() {
   Ref<OptsContext> _localctx = std::make_shared<OptsContext>(_ctx, getState());
@@ -14023,6 +14984,12 @@ void vhdlParser::Package_bodyContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Package_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_body(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_bodyContext> vhdlParser::package_body() {
   Ref<Package_bodyContext> _localctx = std::make_shared<Package_bodyContext>(_ctx, getState());
@@ -14145,6 +15112,12 @@ void vhdlParser::Package_body_declarative_itemContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Package_body_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_body_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_body_declarative_itemContext> vhdlParser::package_body_declarative_item() {
   Ref<Package_body_declarative_itemContext> _localctx = std::make_shared<Package_body_declarative_itemContext>(_ctx, getState());
@@ -14278,6 +15251,12 @@ void vhdlParser::Package_body_declarative_partContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Package_body_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_body_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_body_declarative_partContext> vhdlParser::package_body_declarative_part() {
   Ref<Package_body_declarative_partContext> _localctx = std::make_shared<Package_body_declarative_partContext>(_ctx, getState());
@@ -14379,6 +15358,12 @@ void vhdlParser::Package_declarationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Package_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_declarationContext> vhdlParser::package_declaration() {
   Ref<Package_declarationContext> _localctx = std::make_shared<Package_declarationContext>(_ctx, getState());
@@ -14525,6 +15510,12 @@ void vhdlParser::Package_declarative_itemContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Package_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_declarative_itemContext> vhdlParser::package_declarative_item() {
   Ref<Package_declarative_itemContext> _localctx = std::make_shared<Package_declarative_itemContext>(_ctx, getState());
@@ -14707,6 +15698,12 @@ void vhdlParser::Package_declarative_partContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Package_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPackage_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Package_declarative_partContext> vhdlParser::package_declarative_part() {
   Ref<Package_declarative_partContext> _localctx = std::make_shared<Package_declarative_partContext>(_ctx, getState());
@@ -14795,6 +15792,12 @@ void vhdlParser::Parameter_specificationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Parameter_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitParameter_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Parameter_specificationContext> vhdlParser::parameter_specification() {
   Ref<Parameter_specificationContext> _localctx = std::make_shared<Parameter_specificationContext>(_ctx, getState());
@@ -14854,6 +15857,12 @@ void vhdlParser::Physical_literalContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Physical_literalContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPhysical_literal(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Physical_literalContext> vhdlParser::physical_literal() {
   Ref<Physical_literalContext> _localctx = std::make_shared<Physical_literalContext>(_ctx, getState());
@@ -14936,6 +15945,12 @@ void vhdlParser::Physical_type_definitionContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Physical_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPhysical_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Physical_type_definitionContext> vhdlParser::physical_type_definition() {
   Ref<Physical_type_definitionContext> _localctx = std::make_shared<Physical_type_definitionContext>(_ctx, getState());
@@ -15033,6 +16048,12 @@ void vhdlParser::Port_clauseContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Port_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPort_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Port_clauseContext> vhdlParser::port_clause() {
   Ref<Port_clauseContext> _localctx = std::make_shared<Port_clauseContext>(_ctx, getState());
@@ -15092,6 +16113,12 @@ void vhdlParser::Port_listContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::Port_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPort_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Port_listContext> vhdlParser::port_list() {
   Ref<Port_listContext> _localctx = std::make_shared<Port_listContext>(_ctx, getState());
@@ -15159,6 +16186,12 @@ void vhdlParser::Port_map_aspectContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Port_map_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPort_map_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Port_map_aspectContext> vhdlParser::port_map_aspect() {
   Ref<Port_map_aspectContext> _localctx = std::make_shared<Port_map_aspectContext>(_ctx, getState());
@@ -15246,6 +16279,12 @@ void vhdlParser::PrimaryContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::PrimaryContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPrimary(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::PrimaryContext> vhdlParser::primary() {
   Ref<PrimaryContext> _localctx = std::make_shared<PrimaryContext>(_ctx, getState());
@@ -15352,6 +16391,12 @@ void vhdlParser::Primary_unitContext::exitRule(tree::ParseTreeListener *listener
 }
 
 
+antlrcpp::Any vhdlParser::Primary_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitPrimary_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Primary_unitContext> vhdlParser::primary_unit() {
   Ref<Primary_unitContext> _localctx = std::make_shared<Primary_unitContext>(_ctx, getState());
@@ -15471,6 +16516,12 @@ void vhdlParser::Procedural_declarative_itemContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Procedural_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedural_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedural_declarative_itemContext> vhdlParser::procedural_declarative_item() {
   Ref<Procedural_declarative_itemContext> _localctx = std::make_shared<Procedural_declarative_itemContext>(_ctx, getState());
@@ -15611,6 +16662,12 @@ void vhdlParser::Procedural_declarative_partContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Procedural_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedural_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedural_declarative_partContext> vhdlParser::procedural_declarative_part() {
   Ref<Procedural_declarative_partContext> _localctx = std::make_shared<Procedural_declarative_partContext>(_ctx, getState());
@@ -15688,6 +16745,12 @@ void vhdlParser::Procedural_statement_partContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Procedural_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedural_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedural_statement_partContext> vhdlParser::procedural_statement_part() {
   Ref<Procedural_statement_partContext> _localctx = std::make_shared<Procedural_statement_partContext>(_ctx, getState());
@@ -15776,6 +16839,12 @@ void vhdlParser::Procedure_callContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Procedure_callContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedure_call(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedure_callContext> vhdlParser::procedure_call() {
   Ref<Procedure_callContext> _localctx = std::make_shared<Procedure_callContext>(_ctx, getState());
@@ -15847,6 +16916,12 @@ void vhdlParser::Procedure_call_statementContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Procedure_call_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedure_call_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedure_call_statementContext> vhdlParser::procedure_call_statement() {
   Ref<Procedure_call_statementContext> _localctx = std::make_shared<Procedure_call_statementContext>(_ctx, getState());
@@ -15959,6 +17034,12 @@ void vhdlParser::Process_declarative_itemContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Process_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcess_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Process_declarative_itemContext> vhdlParser::process_declarative_item() {
   Ref<Process_declarative_itemContext> _localctx = std::make_shared<Process_declarative_itemContext>(_ctx, getState());
@@ -16106,6 +17187,12 @@ void vhdlParser::Process_declarative_partContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Process_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcess_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Process_declarative_partContext> vhdlParser::process_declarative_part() {
   Ref<Process_declarative_partContext> _localctx = std::make_shared<Process_declarative_partContext>(_ctx, getState());
@@ -16236,6 +17323,12 @@ void vhdlParser::Process_statementContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Process_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcess_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Process_statementContext> vhdlParser::process_statement() {
   Ref<Process_statementContext> _localctx = std::make_shared<Process_statementContext>(_ctx, getState());
@@ -16354,6 +17447,12 @@ void vhdlParser::Process_statement_partContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Process_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcess_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Process_statement_partContext> vhdlParser::process_statement_part() {
   Ref<Process_statement_partContext> _localctx = std::make_shared<Process_statement_partContext>(_ctx, getState());
@@ -16450,6 +17549,12 @@ void vhdlParser::Qualified_expressionContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Qualified_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitQualified_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Qualified_expressionContext> vhdlParser::qualified_expression() {
   Ref<Qualified_expressionContext> _localctx = std::make_shared<Qualified_expressionContext>(_ctx, getState());
@@ -16531,6 +17636,12 @@ void vhdlParser::Quantity_declarationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitQuantity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Quantity_declarationContext> vhdlParser::quantity_declaration() {
   Ref<Quantity_declarationContext> _localctx = std::make_shared<Quantity_declarationContext>(_ctx, getState());
@@ -16624,6 +17735,12 @@ void vhdlParser::Quantity_listContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Quantity_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitQuantity_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Quantity_listContext> vhdlParser::quantity_list() {
   Ref<Quantity_listContext> _localctx = std::make_shared<Quantity_listContext>(_ctx, getState());
@@ -16721,6 +17838,12 @@ void vhdlParser::Quantity_specificationContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Quantity_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitQuantity_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Quantity_specificationContext> vhdlParser::quantity_specification() {
   Ref<Quantity_specificationContext> _localctx = std::make_shared<Quantity_specificationContext>(_ctx, getState());
@@ -16780,6 +17903,12 @@ void vhdlParser::RangeContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::RangeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRange(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::RangeContext> vhdlParser::range() {
   Ref<RangeContext> _localctx = std::make_shared<RangeContext>(_ctx, getState());
@@ -16854,6 +17983,12 @@ void vhdlParser::Explicit_rangeContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Explicit_rangeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitExplicit_range(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Explicit_rangeContext> vhdlParser::explicit_range() {
   Ref<Explicit_rangeContext> _localctx = std::make_shared<Explicit_rangeContext>(_ctx, getState());
@@ -16913,6 +18048,12 @@ void vhdlParser::Range_constraintContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Range_constraintContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRange_constraint(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Range_constraintContext> vhdlParser::range_constraint() {
   Ref<Range_constraintContext> _localctx = std::make_shared<Range_constraintContext>(_ctx, getState());
@@ -16986,6 +18127,12 @@ void vhdlParser::Record_nature_definitionContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Record_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRecord_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Record_nature_definitionContext> vhdlParser::record_nature_definition() {
   Ref<Record_nature_definitionContext> _localctx = std::make_shared<Record_nature_definitionContext>(_ctx, getState());
@@ -17083,6 +18230,12 @@ void vhdlParser::Record_type_definitionContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Record_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRecord_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Record_type_definitionContext> vhdlParser::record_type_definition() {
   Ref<Record_type_definitionContext> _localctx = std::make_shared<Record_type_definitionContext>(_ctx, getState());
@@ -17168,6 +18321,12 @@ void vhdlParser::RelationContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::RelationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRelation(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::RelationContext> vhdlParser::relation() {
   Ref<RelationContext> _localctx = std::make_shared<RelationContext>(_ctx, getState());
@@ -17252,6 +18411,12 @@ void vhdlParser::Relational_operatorContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Relational_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitRelational_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Relational_operatorContext> vhdlParser::relational_operator() {
   Ref<Relational_operatorContext> _localctx = std::make_shared<Relational_operatorContext>(_ctx, getState());
@@ -17335,6 +18500,12 @@ void vhdlParser::Report_statementContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Report_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitReport_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Report_statementContext> vhdlParser::report_statement() {
   Ref<Report_statementContext> _localctx = std::make_shared<Report_statementContext>(_ctx, getState());
@@ -17421,6 +18592,12 @@ void vhdlParser::Return_statementContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Return_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitReturn_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Return_statementContext> vhdlParser::return_statement() {
   Ref<Return_statementContext> _localctx = std::make_shared<Return_statementContext>(_ctx, getState());
@@ -17522,6 +18699,12 @@ void vhdlParser::Scalar_nature_definitionContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Scalar_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitScalar_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Scalar_nature_definitionContext> vhdlParser::scalar_nature_definition() {
   Ref<Scalar_nature_definitionContext> _localctx = std::make_shared<Scalar_nature_definitionContext>(_ctx, getState());
@@ -17591,6 +18774,12 @@ void vhdlParser::Scalar_type_definitionContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Scalar_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitScalar_type_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Scalar_type_definitionContext> vhdlParser::scalar_type_definition() {
   Ref<Scalar_type_definitionContext> _localctx = std::make_shared<Scalar_type_definitionContext>(_ctx, getState());
@@ -17668,6 +18857,12 @@ void vhdlParser::Secondary_unitContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Secondary_unitContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSecondary_unit(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Secondary_unitContext> vhdlParser::secondary_unit() {
   Ref<Secondary_unitContext> _localctx = std::make_shared<Secondary_unitContext>(_ctx, getState());
@@ -17748,6 +18943,12 @@ void vhdlParser::Secondary_unit_declarationContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Secondary_unit_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSecondary_unit_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Secondary_unit_declarationContext> vhdlParser::secondary_unit_declaration() {
   Ref<Secondary_unit_declarationContext> _localctx = std::make_shared<Secondary_unit_declarationContext>(_ctx, getState());
@@ -17833,6 +19034,12 @@ void vhdlParser::Selected_signal_assignmentContext::exitRule(tree::ParseTreeList
 }
 
 
+antlrcpp::Any vhdlParser::Selected_signal_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSelected_signal_assignment(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Selected_signal_assignmentContext> vhdlParser::selected_signal_assignment() {
   Ref<Selected_signal_assignmentContext> _localctx = std::make_shared<Selected_signal_assignmentContext>(_ctx, getState());
@@ -17926,6 +19133,12 @@ void vhdlParser::Selected_waveformsContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Selected_waveformsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSelected_waveforms(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Selected_waveformsContext> vhdlParser::selected_waveforms() {
   Ref<Selected_waveformsContext> _localctx = std::make_shared<Selected_waveformsContext>(_ctx, getState());
@@ -18002,6 +19215,12 @@ void vhdlParser::Sensitivity_clauseContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Sensitivity_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSensitivity_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Sensitivity_clauseContext> vhdlParser::sensitivity_clause() {
   Ref<Sensitivity_clauseContext> _localctx = std::make_shared<Sensitivity_clauseContext>(_ctx, getState());
@@ -18067,6 +19286,12 @@ void vhdlParser::Sensitivity_listContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Sensitivity_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSensitivity_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Sensitivity_listContext> vhdlParser::sensitivity_list() {
   Ref<Sensitivity_listContext> _localctx = std::make_shared<Sensitivity_listContext>(_ctx, getState());
@@ -18135,6 +19360,12 @@ void vhdlParser::Sequence_of_statementsContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Sequence_of_statementsContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSequence_of_statements(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Sequence_of_statementsContext> vhdlParser::sequence_of_statements() {
   Ref<Sequence_of_statementsContext> _localctx = std::make_shared<Sequence_of_statementsContext>(_ctx, getState());
@@ -18271,6 +19502,12 @@ void vhdlParser::Sequential_statementContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Sequential_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSequential_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Sequential_statementContext> vhdlParser::sequential_statement() {
   Ref<Sequential_statementContext> _localctx = std::make_shared<Sequential_statementContext>(_ctx, getState());
@@ -18441,6 +19678,12 @@ void vhdlParser::Shift_expressionContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Shift_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitShift_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Shift_expressionContext> vhdlParser::shift_expression() {
   Ref<Shift_expressionContext> _localctx = std::make_shared<Shift_expressionContext>(_ctx, getState());
@@ -18525,6 +19768,12 @@ void vhdlParser::Shift_operatorContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Shift_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitShift_operator(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Shift_operatorContext> vhdlParser::shift_operator() {
   Ref<Shift_operatorContext> _localctx = std::make_shared<Shift_operatorContext>(_ctx, getState());
@@ -18608,6 +19857,12 @@ void vhdlParser::Signal_assignment_statementContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Signal_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignal_assignment_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Signal_assignment_statementContext> vhdlParser::signal_assignment_statement() {
   Ref<Signal_assignment_statementContext> _localctx = std::make_shared<Signal_assignment_statementContext>(_ctx, getState());
@@ -18715,6 +19970,12 @@ void vhdlParser::Signal_declarationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Signal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignal_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Signal_declarationContext> vhdlParser::signal_declaration() {
   Ref<Signal_declarationContext> _localctx = std::make_shared<Signal_declarationContext>(_ctx, getState());
@@ -18797,6 +20058,12 @@ void vhdlParser::Signal_kindContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Signal_kindContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignal_kind(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Signal_kindContext> vhdlParser::signal_kind() {
   Ref<Signal_kindContext> _localctx = std::make_shared<Signal_kindContext>(_ctx, getState());
@@ -18876,6 +20143,12 @@ void vhdlParser::Signal_listContext::exitRule(tree::ParseTreeListener *listener)
 }
 
 
+antlrcpp::Any vhdlParser::Signal_listContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignal_list(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Signal_listContext> vhdlParser::signal_list() {
   Ref<Signal_listContext> _localctx = std::make_shared<Signal_listContext>(_ctx, getState());
@@ -18989,6 +20262,12 @@ void vhdlParser::SignatureContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::SignatureContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSignature(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::SignatureContext> vhdlParser::signature() {
   Ref<SignatureContext> _localctx = std::make_shared<SignatureContext>(_ctx, getState());
@@ -19093,6 +20372,12 @@ void vhdlParser::Simple_expressionContext::exitRule(tree::ParseTreeListener *lis
 }
 
 
+antlrcpp::Any vhdlParser::Simple_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimple_expression(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simple_expressionContext> vhdlParser::simple_expression() {
   Ref<Simple_expressionContext> _localctx = std::make_shared<Simple_expressionContext>(_ctx, getState());
@@ -19196,6 +20481,12 @@ void vhdlParser::Simple_simultaneous_statementContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Simple_simultaneous_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimple_simultaneous_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simple_simultaneous_statementContext> vhdlParser::simple_simultaneous_statement() {
   Ref<Simple_simultaneous_statementContext> _localctx = std::make_shared<Simple_simultaneous_statementContext>(_ctx, getState());
@@ -19284,6 +20575,12 @@ void vhdlParser::Simultaneous_alternativeContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_alternativeContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_alternative(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_alternativeContext> vhdlParser::simultaneous_alternative() {
   Ref<Simultaneous_alternativeContext> _localctx = std::make_shared<Simultaneous_alternativeContext>(_ctx, getState());
@@ -19377,6 +20674,12 @@ void vhdlParser::Simultaneous_case_statementContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_case_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_case_statementContext> vhdlParser::simultaneous_case_statement() {
   Ref<Simultaneous_case_statementContext> _localctx = std::make_shared<Simultaneous_case_statementContext>(_ctx, getState());
@@ -19519,6 +20822,12 @@ void vhdlParser::Simultaneous_if_statementContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_if_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_if_statementContext> vhdlParser::simultaneous_if_statement() {
   Ref<Simultaneous_if_statementContext> _localctx = std::make_shared<Simultaneous_if_statementContext>(_ctx, getState());
@@ -19662,6 +20971,12 @@ void vhdlParser::Simultaneous_procedural_statementContext::exitRule(tree::ParseT
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_procedural_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_procedural_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_procedural_statementContext> vhdlParser::simultaneous_procedural_statement() {
   Ref<Simultaneous_procedural_statementContext> _localctx = std::make_shared<Simultaneous_procedural_statementContext>(_ctx, getState());
@@ -19775,6 +21090,12 @@ void vhdlParser::Simultaneous_statementContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_statementContext> vhdlParser::simultaneous_statement() {
   Ref<Simultaneous_statementContext> _localctx = std::make_shared<Simultaneous_statementContext>(_ctx, getState());
@@ -19878,6 +21199,12 @@ void vhdlParser::Simultaneous_statement_partContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Simultaneous_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSimultaneous_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Simultaneous_statement_partContext> vhdlParser::simultaneous_statement_part() {
   Ref<Simultaneous_statement_partContext> _localctx = std::make_shared<Simultaneous_statement_partContext>(_ctx, getState());
@@ -19972,6 +21299,12 @@ void vhdlParser::Source_aspectContext::exitRule(tree::ParseTreeListener *listene
 }
 
 
+antlrcpp::Any vhdlParser::Source_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSource_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Source_aspectContext> vhdlParser::source_aspect() {
   Ref<Source_aspectContext> _localctx = std::make_shared<Source_aspectContext>(_ctx, getState());
@@ -20068,6 +21401,12 @@ void vhdlParser::Source_quantity_declarationContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Source_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSource_quantity_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Source_quantity_declarationContext> vhdlParser::source_quantity_declaration() {
   Ref<Source_quantity_declarationContext> _localctx = std::make_shared<Source_quantity_declarationContext>(_ctx, getState());
@@ -20145,6 +21484,12 @@ void vhdlParser::Step_limit_specificationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Step_limit_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitStep_limit_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Step_limit_specificationContext> vhdlParser::step_limit_specification() {
   Ref<Step_limit_specificationContext> _localctx = std::make_shared<Step_limit_specificationContext>(_ctx, getState());
@@ -20220,6 +21565,12 @@ void vhdlParser::Subnature_declarationContext::exitRule(tree::ParseTreeListener 
 }
 
 
+antlrcpp::Any vhdlParser::Subnature_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubnature_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subnature_declarationContext> vhdlParser::subnature_declaration() {
   Ref<Subnature_declarationContext> _localctx = std::make_shared<Subnature_declarationContext>(_ctx, getState());
@@ -20303,6 +21654,12 @@ void vhdlParser::Subnature_indicationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Subnature_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubnature_indication(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subnature_indicationContext> vhdlParser::subnature_indication() {
   Ref<Subnature_indicationContext> _localctx = std::make_shared<Subnature_indicationContext>(_ctx, getState());
@@ -20409,6 +21766,12 @@ void vhdlParser::Subprogram_bodyContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_body(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_bodyContext> vhdlParser::subprogram_body() {
   Ref<Subprogram_bodyContext> _localctx = std::make_shared<Subprogram_bodyContext>(_ctx, getState());
@@ -20496,6 +21859,12 @@ void vhdlParser::Subprogram_declarationContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_declarationContext> vhdlParser::subprogram_declaration() {
   Ref<Subprogram_declarationContext> _localctx = std::make_shared<Subprogram_declarationContext>(_ctx, getState());
@@ -20597,6 +21966,12 @@ void vhdlParser::Subprogram_declarative_itemContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_declarative_item(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_declarative_itemContext> vhdlParser::subprogram_declarative_item() {
   Ref<Subprogram_declarative_itemContext> _localctx = std::make_shared<Subprogram_declarative_itemContext>(_ctx, getState());
@@ -20744,6 +22119,12 @@ void vhdlParser::Subprogram_declarative_partContext::exitRule(tree::ParseTreeLis
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_declarative_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_declarative_partContext> vhdlParser::subprogram_declarative_part() {
   Ref<Subprogram_declarative_partContext> _localctx = std::make_shared<Subprogram_declarative_partContext>(_ctx, getState());
@@ -20822,6 +22203,12 @@ void vhdlParser::Subprogram_kindContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_kindContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_kind(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_kindContext> vhdlParser::subprogram_kind() {
   Ref<Subprogram_kindContext> _localctx = std::make_shared<Subprogram_kindContext>(_ctx, getState());
@@ -20885,6 +22272,12 @@ void vhdlParser::Subprogram_specificationContext::exitRule(tree::ParseTreeListen
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_specificationContext> vhdlParser::subprogram_specification() {
   Ref<Subprogram_specificationContext> _localctx = std::make_shared<Subprogram_specificationContext>(_ctx, getState());
@@ -20971,6 +22364,12 @@ void vhdlParser::Procedure_specificationContext::exitRule(tree::ParseTreeListene
 }
 
 
+antlrcpp::Any vhdlParser::Procedure_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitProcedure_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Procedure_specificationContext> vhdlParser::procedure_specification() {
   Ref<Procedure_specificationContext> _localctx = std::make_shared<Procedure_specificationContext>(_ctx, getState());
@@ -21068,6 +22467,12 @@ void vhdlParser::Function_specificationContext::exitRule(tree::ParseTreeListener
 }
 
 
+antlrcpp::Any vhdlParser::Function_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitFunction_specification(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Function_specificationContext> vhdlParser::function_specification() {
   Ref<Function_specificationContext> _localctx = std::make_shared<Function_specificationContext>(_ctx, getState());
@@ -21157,6 +22562,12 @@ void vhdlParser::Subprogram_statement_partContext::exitRule(tree::ParseTreeListe
 }
 
 
+antlrcpp::Any vhdlParser::Subprogram_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubprogram_statement_part(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subprogram_statement_partContext> vhdlParser::subprogram_statement_part() {
   Ref<Subprogram_statement_partContext> _localctx = std::make_shared<Subprogram_statement_partContext>(_ctx, getState());
@@ -21249,6 +22660,12 @@ void vhdlParser::Subtype_declarationContext::exitRule(tree::ParseTreeListener *l
 }
 
 
+antlrcpp::Any vhdlParser::Subtype_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubtype_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subtype_declarationContext> vhdlParser::subtype_declaration() {
   Ref<Subtype_declarationContext> _localctx = std::make_shared<Subtype_declarationContext>(_ctx, getState());
@@ -21320,6 +22737,12 @@ void vhdlParser::Subtype_indicationContext::exitRule(tree::ParseTreeListener *li
 }
 
 
+antlrcpp::Any vhdlParser::Subtype_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSubtype_indication(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Subtype_indicationContext> vhdlParser::subtype_indication() {
   Ref<Subtype_indicationContext> _localctx = std::make_shared<Subtype_indicationContext>(_ctx, getState());
@@ -21416,6 +22839,12 @@ void vhdlParser::SuffixContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::SuffixContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitSuffix(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::SuffixContext> vhdlParser::suffix() {
   Ref<SuffixContext> _localctx = std::make_shared<SuffixContext>(_ctx, getState());
@@ -21503,6 +22932,12 @@ void vhdlParser::TargetContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::TargetContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTarget(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::TargetContext> vhdlParser::target() {
   Ref<TargetContext> _localctx = std::make_shared<TargetContext>(_ctx, getState());
@@ -21584,6 +23019,12 @@ void vhdlParser::TermContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::TermContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTerm(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::TermContext> vhdlParser::term() {
   Ref<TermContext> _localctx = std::make_shared<TermContext>(_ctx, getState());
@@ -21658,6 +23099,12 @@ void vhdlParser::Terminal_aspectContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Terminal_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTerminal_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Terminal_aspectContext> vhdlParser::terminal_aspect() {
   Ref<Terminal_aspectContext> _localctx = std::make_shared<Terminal_aspectContext>(_ctx, getState());
@@ -21735,6 +23182,12 @@ void vhdlParser::Terminal_declarationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Terminal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTerminal_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Terminal_declarationContext> vhdlParser::terminal_declaration() {
   Ref<Terminal_declarationContext> _localctx = std::make_shared<Terminal_declarationContext>(_ctx, getState());
@@ -21810,6 +23263,12 @@ void vhdlParser::Through_aspectContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Through_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitThrough_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Through_aspectContext> vhdlParser::through_aspect() {
   Ref<Through_aspectContext> _localctx = std::make_shared<Through_aspectContext>(_ctx, getState());
@@ -21884,6 +23343,12 @@ void vhdlParser::Timeout_clauseContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Timeout_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTimeout_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Timeout_clauseContext> vhdlParser::timeout_clause() {
   Ref<Timeout_clauseContext> _localctx = std::make_shared<Timeout_clauseContext>(_ctx, getState());
@@ -21941,6 +23406,12 @@ void vhdlParser::Tolerance_aspectContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Tolerance_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitTolerance_aspect(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Tolerance_aspectContext> vhdlParser::tolerance_aspect() {
   Ref<Tolerance_aspectContext> _localctx = std::make_shared<Tolerance_aspectContext>(_ctx, getState());
@@ -22010,6 +23481,12 @@ void vhdlParser::Type_declarationContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Type_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitType_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Type_declarationContext> vhdlParser::type_declaration() {
   Ref<Type_declarationContext> _localctx = std::make_shared<Type_declarationContext>(_ctx, getState());
@@ -22087,6 +23564,12 @@ void vhdlParser::Type_definitionContext::exitRule(tree::ParseTreeListener *liste
 }
 
 
+antlrcpp::Any vhdlParser::Type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitType_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Type_definitionContext> vhdlParser::type_definition() {
   Ref<Type_definitionContext> _localctx = std::make_shared<Type_definitionContext>(_ctx, getState());
@@ -22203,6 +23686,12 @@ void vhdlParser::Unconstrained_array_definitionContext::exitRule(tree::ParseTree
 }
 
 
+antlrcpp::Any vhdlParser::Unconstrained_array_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitUnconstrained_array_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Unconstrained_array_definitionContext> vhdlParser::unconstrained_array_definition() {
   Ref<Unconstrained_array_definitionContext> _localctx = std::make_shared<Unconstrained_array_definitionContext>(_ctx, getState());
@@ -22309,6 +23798,12 @@ void vhdlParser::Unconstrained_nature_definitionContext::exitRule(tree::ParseTre
 }
 
 
+antlrcpp::Any vhdlParser::Unconstrained_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitUnconstrained_nature_definition(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Unconstrained_nature_definitionContext> vhdlParser::unconstrained_nature_definition() {
   Ref<Unconstrained_nature_definitionContext> _localctx = std::make_shared<Unconstrained_nature_definitionContext>(_ctx, getState());
@@ -22403,6 +23898,12 @@ void vhdlParser::Use_clauseContext::exitRule(tree::ParseTreeListener *listener) 
 }
 
 
+antlrcpp::Any vhdlParser::Use_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitUse_clause(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Use_clauseContext> vhdlParser::use_clause() {
   Ref<Use_clauseContext> _localctx = std::make_shared<Use_clauseContext>(_ctx, getState());
@@ -22487,6 +23988,12 @@ void vhdlParser::Variable_assignment_statementContext::exitRule(tree::ParseTreeL
 }
 
 
+antlrcpp::Any vhdlParser::Variable_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitVariable_assignment_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Variable_assignment_statementContext> vhdlParser::variable_assignment_statement() {
   Ref<Variable_assignment_statementContext> _localctx = std::make_shared<Variable_assignment_statementContext>(_ctx, getState());
@@ -22583,6 +24090,12 @@ void vhdlParser::Variable_declarationContext::exitRule(tree::ParseTreeListener *
 }
 
 
+antlrcpp::Any vhdlParser::Variable_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitVariable_declaration(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Variable_declarationContext> vhdlParser::variable_declaration() {
   Ref<Variable_declarationContext> _localctx = std::make_shared<Variable_declarationContext>(_ctx, getState());
@@ -22679,6 +24192,12 @@ void vhdlParser::Wait_statementContext::exitRule(tree::ParseTreeListener *listen
 }
 
 
+antlrcpp::Any vhdlParser::Wait_statementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitWait_statement(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Wait_statementContext> vhdlParser::wait_statement() {
   Ref<Wait_statementContext> _localctx = std::make_shared<Wait_statementContext>(_ctx, getState());
@@ -22779,6 +24298,12 @@ void vhdlParser::WaveformContext::exitRule(tree::ParseTreeListener *listener) {
 }
 
 
+antlrcpp::Any vhdlParser::WaveformContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitWaveform(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::WaveformContext> vhdlParser::waveform() {
   Ref<WaveformContext> _localctx = std::make_shared<WaveformContext>(_ctx, getState());
@@ -22882,6 +24407,12 @@ void vhdlParser::Waveform_elementContext::exitRule(tree::ParseTreeListener *list
 }
 
 
+antlrcpp::Any vhdlParser::Waveform_elementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
+    return ((vhdlVisitor *)visitor)->visitWaveform_element(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Ref<vhdlParser::Waveform_elementContext> vhdlParser::waveform_element() {
   Ref<Waveform_elementContext> _localctx = std::make_shared<Waveform_elementContext>(_ctx, getState());

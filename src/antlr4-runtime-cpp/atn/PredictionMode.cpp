@@ -61,12 +61,7 @@ struct AltAndContextConfigComparer {
     if (a == b) {
       return true;
     }
-    if ( a->state->stateNumber == b->state->stateNumber){
-    	if( (*a->context.get()) == (*b->context.get())){
-    		return true;
-    	}
-    }
-    return false;
+    return a->state->stateNumber == b->state->stateNumber && a->context == b->context;
   }
 };
 
@@ -190,14 +185,6 @@ antlrcpp::BitSet PredictionModeClass::getAlts(ATNConfigSet *configs) {
 
 std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNConfigSet *configs) {
   std::unordered_map<ATNConfig *, antlrcpp::BitSet, AltAndContextConfigHasher, AltAndContextConfigComparer> configToAlts;
-  //static bool wasSix = false;
-
-  //if (configs->configs.size()==6){
-//	  if (wasSix){
-//		  std::cout << configs->toString() << std::endl;
-//	  }
-//	  wasSix = true;
-  //}
   for (auto &config : configs->configs) {
     configToAlts[config.get()].set(config->alt);
   }
@@ -205,25 +192,6 @@ std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNC
   for (auto it : configToAlts) {
     values.push_back(it.second);
   }
-
-
-  //if (configs->configs.size() != values.size()) {
-  //	//  std::cout<< std::endl << "values:" <<std::endl;
-  //	//  for (auto v : values){
-  //	//	  std::cout << v.toString()<<std::endl;
-  //	//  }
-  //  //
-  //	//  std::cout<< std::endl << "configToAlts:"<<std::endl;
-  //	//  for (auto it : configToAlts) {
-  //	//      std::cout<< it.first->toString() << std::endl;
-  //	//  }
-  //
-  //	  std::cout<< std::endl << "configs.size() " << configs->configs.size() << ", values.size() " << values.size() << std::endl;
-  //	  exit(1);
-  //}else{
-  // std::cout<< std::endl << "configs.size() " << configs->configs.size() << std::endl;
-  //}
-
   return values;
 }
 
