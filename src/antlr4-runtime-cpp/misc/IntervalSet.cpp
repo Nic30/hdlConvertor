@@ -1,4 +1,4 @@
-﻿/*
+/*
  * [The "BSD license"]
  *  Copyright (c) 2016 Mike Lischke
  *  Copyright (c) 2013 Terence Parr
@@ -128,7 +128,7 @@ void IntervalSet::add(const Interval &addition) {
         }
 
         // if we bump up against or overlap next, merge
-        _intervals.erase(iterator);// remove this one
+        iterator = _intervals.erase(iterator);// remove this one
         --iterator; // move backwards to what we just set
         *iterator = bigger.Union(next); // set to 3 merged ones
         // ml: no need to advance iterator, we do that in the next round anyway. ++iterator; // first call to next after previous duplicates the result
@@ -363,7 +363,7 @@ bool IntervalSet::operator == (const IntervalSet &other) const {
   if (_intervals.empty() && other._intervals.empty())
     return true;
 
-  if (_intervals.empty() || other._intervals.empty())
+  if (_intervals.size() != other._intervals.size())
     return false;
 
   return std::equal(_intervals.begin(), _intervals.end(), other._intervals.begin());
@@ -569,3 +569,4 @@ void IntervalSet::setReadOnly(bool readonly) {
 void IntervalSet::InitializeInstanceFields() {
   _readonly = false;
 }
+

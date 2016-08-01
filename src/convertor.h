@@ -31,6 +31,7 @@ public:
 	static bool hierarchyOnly;
 	static bool debug;
 	static ParserErrors err;
+	static const char * errStr;
 
 	static Context * parse(
 			const char * fileName,
