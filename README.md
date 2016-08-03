@@ -1,8 +1,6 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
 
-[attention] there is bug in antlr4 c++ runtime which is causing non determinism of parser after issue https://github.com/DanMcLaughlin/antlr4/issues/12 and https://github.com/DanMcLaughlin/antlr4/issues/25 is fixed library should work as it used to 
-
 verilog and vhdl parser module for python
 
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.
