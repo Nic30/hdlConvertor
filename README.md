@@ -1,8 +1,6 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
 
-[attention] there is bug in antlr4 c++ runtime which is causing non determinism of parser after issue https://github.com/DanMcLaughlin/antlr4/issues/12 and https://github.com/DanMcLaughlin/antlr4/issues/25 is fixed library should work as it used to 
-
 verilog and vhdl parser module for python
 
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.
@@ -21,8 +19,17 @@ To make your live easier I included it to this package for you.
 
 
 Package is stored in pip respository you can install it by:
-`pip install hdlConvertor`
-or for python3
 `pip3 install hdlConvertor`
+or download repository and run `python3 setup.py install`
 
-Currently package is testet only under python3.5.
+Example of usage:
+```python
+import hdlConvertor
+res = hdlConvertor.parse("yourfile.vhd", "vhdl")
+for e in res['entities']:
+    print(e['name'])
+
+```
+
+
+Currently package is testet only for python3.5 under linux but should work with every python3.x on any system where is compiler with c++11 support.
