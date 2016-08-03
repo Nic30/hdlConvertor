@@ -33,7 +33,7 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
 	Statement * s = new Statement(s_IF);
 	s->op0 = cond;
 	s->ops = new std::vector<std::vector<Statement*>*>(1);
-	s->ops->push_back(ifTrue);
+	(*s->ops)[0] = ifTrue;
 
 	return s;
 }
@@ -44,8 +44,8 @@ Statement* Statement::IF(
 	Statement * s = new Statement(s_IF);
 	s->op0 = cond;
 	s->ops = new std::vector<std::vector<Statement*>*>(2);
-	s->ops->push_back(ifTrue);
-	s->ops->push_back(ifFalse);
+	(*s->ops)[0] = ifTrue;
+	(*s->ops)[1] = ifFalse;
 
 	return s;
 }
@@ -68,7 +68,7 @@ Statement* Statement::WHILE(Expr * cond, std::vector<Statement*> * body) {
 	Statement * s = new Statement(s_WHILE);
 	s->op0 = cond;
 	s->ops = new std::vector<std::vector<Statement*> *>(1);
-	s->ops->push_back(body);
+	(*s->ops)[0] = body;
 	return s;
 
 }
