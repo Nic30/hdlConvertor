@@ -87,6 +87,11 @@ std::string ATNState::toString() const {
 
   return ss.str();
 }
+std::string ATNState::toStringJavaLike() const {
+	return std::to_string(stateNumber);
+}
+
+
 
 std::vector<Transition*> ATNState::getTransitions() {
   return transitions;

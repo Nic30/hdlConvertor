@@ -52,7 +52,7 @@ namespace atn {
     const std::vector<int> returnStates;
 
     ArrayPredictionContext(Ref<SingletonPredictionContext> const& a);
-    ArrayPredictionContext(std::vector<std::weak_ptr<PredictionContext>> parents_,
+    ArrayPredictionContext(std::vector<Ref<PredictionContext>> parents_,
                            std::vector<int> const& returnStates);
     virtual ~ArrayPredictionContext() {};
 
@@ -63,8 +63,8 @@ namespace atn {
     bool operator == (const PredictionContext &o) const override;
 
     virtual std::string toString() const override;
+    static std::vector<Ref<PredictionContext>> makeRef(const std::vector<std::weak_ptr<PredictionContext>> &input);
   private:
-    std::vector<Ref<PredictionContext>> makeRef(const std::vector<std::weak_ptr<PredictionContext>> &input);
   };
 
 } // namespace atn

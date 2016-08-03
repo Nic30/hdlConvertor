@@ -217,8 +217,11 @@ void ATNConfigSet::setReadonly(bool readonly) {
 std::string ATNConfigSet::toString() {
   std::stringstream ss;
   ss << "[";
+  size_t lastIndex = configs.size()-1;
   for (size_t i = 0; i < configs.size(); i++) {
-    ss << configs[i]->toString();
+    ss << configs[i]->toStringJavaLike(true);
+    if (i!= lastIndex)
+    	ss<< ", ";
   }
   ss << "]";
 
@@ -226,16 +229,16 @@ std::string ATNConfigSet::toString() {
     ss << ",hasSemanticContext = " <<  hasSemanticContext;
   }
   if (uniqueAlt != ATN::INVALID_ALT_NUMBER) {
-    ss << ",uniqueAlt = " << uniqueAlt;
+    ss << ",uniqueAlt=" << uniqueAlt;
   }
 
-  if (conflictingAlts.size() > 0) {
-    ss << ",conflictingAlts = ";
-    ss << conflictingAlts.toString();
-  }
+  //if (conflictingAlts.size() > 0) {
+  //  ss << ",conflictingAlts = ";
+  //  ss << conflictingAlts.toString();
+  //}
 
   if (dipsIntoOuterContext) {
-    ss << ", dipsIntoOuterContext";
+    ss << ",dipsIntoOuterContext";
   }
   return ss.str();
 }

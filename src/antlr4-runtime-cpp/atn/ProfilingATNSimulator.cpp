@@ -48,6 +48,7 @@ ProfilingATNSimulator::ProfilingATNSimulator(Parser *parser)
   : ParserATNSimulator(parser, parser->getInterpreter<ParserATNSimulator>()->atn,
                        parser->getInterpreter<ParserATNSimulator>()->decisionToDFA,
                        parser->getInterpreter<ParserATNSimulator>()->getSharedContextCache()) {
+  _currentState = NULL;
   for (size_t i = 0; i < atn.decisionToState.size(); i++) {
     _decisions.push_back(DecisionInfo(i));
   }

@@ -293,7 +293,7 @@ namespace atn {
     ///  also be examined during cache lookup.
     /// </summary>
   protected:
-    PredictionContextMergeCache mergeCache;
+    PredictionContextMergeCache * mergeCache;
 
     // LAME globals to avoid parameters!!!!! I need these down deep in predTransition
     TokenStream *_input;

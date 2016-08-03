@@ -44,7 +44,7 @@ namespace atn {
   typedef std::unordered_set<Ref<PredictionContext>, PredictionContextHasher, PredictionContextComparer> PredictionContextCache;
 
   // For the keys we use raw pointers, as we don't need to access them.
-  typedef std::map<std::pair<PredictionContext *, PredictionContext *>, Ref<PredictionContext>> PredictionContextMergeCache;
+  typedef std::map<std::pair<Ref<PredictionContext>, Ref<PredictionContext>>, Ref<PredictionContext>> PredictionContextMergeCache;
 
   class ANTLR4CPP_PUBLIC PredictionContext {
   public:
@@ -107,7 +107,9 @@ namespace atn {
     virtual bool isEmpty() const;
     virtual bool hasEmptyPath() const;
     virtual size_t hashCode() const;
-
+    //static void dumpMergeCache(
+    //		std::string scope,
+    //		PredictionContextMergeCache * mergeCache);
   protected:
     static size_t calculateEmptyHashCode();
     static size_t calculateHashCode(std::weak_ptr<PredictionContext> parent, int returnState);
@@ -221,7 +223,7 @@ namespace atn {
   protected:
     /// Make pass over all M parents; merge any equal() ones.
     /// @returns true if the list has been changed (i.e. duplicates where found).
-    static bool combineCommonParents(std::vector<std::weak_ptr<PredictionContext>> &parents);
+    static bool combineCommonParents(std::vector<Ref<PredictionContext>> &parents);
 
   public:
     static std::string toDOTString(const Ref<PredictionContext> &context);

@@ -185,6 +185,7 @@ antlrcpp::BitSet PredictionModeClass::getAlts(ATNConfigSet *configs) {
 
 std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNConfigSet *configs) {
   std::unordered_map<ATNConfig *, antlrcpp::BitSet, AltAndContextConfigHasher, AltAndContextConfigComparer> configToAlts;
+  //std::cout<< configs->toString() << std::endl;
   for (auto &config : configs->configs) {
     configToAlts[config.get()].set(config->alt);
   }
@@ -192,6 +193,7 @@ std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNC
   for (auto it : configToAlts) {
     values.push_back(it.second);
   }
+  //std::cout<< "getConflictingAltSubsets: configs.size():"<< values.size() << std::endl;
   return values;
 }
 

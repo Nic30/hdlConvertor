@@ -271,7 +271,7 @@ void LexerATNSimulator::getReachableConfigSet(CharStream *input, ATNConfigSet *c
     }
 
 #if DEBUG_ATN == 1
-      std::cout << "testing " << getTokenName((int)t) << " at " << c->toString(true) << std::endl;
+      std::cout << "testing " << getTokenName((int)t) << " at " << c->toStringJavaLike(true) << std::endl;
 #endif
 
     size_t n = c->state->getNumberOfTransitions();
@@ -339,7 +339,7 @@ std::unique_ptr<ATNConfigSet> LexerATNSimulator::computeStartState(CharStream *i
 bool LexerATNSimulator::closure(CharStream *input, const Ref<LexerATNConfig> &config, ATNConfigSet *configs,
                                 bool currentAltReachedAcceptState, bool speculative, bool treatEofAsEpsilon) {
 #if DEBUG_ATN == 1
-    std::cout << "closure(" << config->toString(true) << ")" << std::endl;
+    std::cout << "closure(" << config->toStringJavaLike(true) << ")" << std::endl;
 #endif
 
   if (is<RuleStopState *>(config->state)) {

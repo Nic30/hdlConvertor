@@ -143,6 +143,7 @@ namespace atn {
 
     virtual bool isNonGreedyExitState();
     virtual std::string toString() const;
+    virtual std::string toStringJavaLike() const;
     virtual  std::vector<Transition*> getTransitions();
     virtual size_t getNumberOfTransitions();
     virtual void addTransition(Transition *e);

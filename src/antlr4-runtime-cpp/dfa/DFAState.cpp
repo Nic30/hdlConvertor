@@ -103,7 +103,7 @@ std::string DFAState::toString() {
     ss << ":" << configs->toString();
   }
   if (isAcceptState) {
-    ss << " => ";
+    ss << "=>";
     if (!predicates.empty()) {
       for (size_t i = 0; i < predicates.size(); i++) {
         ss << predicates[i]->toString();

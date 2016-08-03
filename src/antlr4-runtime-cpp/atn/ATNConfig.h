@@ -133,6 +133,7 @@ namespace atn {
 
     virtual std::string toString();
     std::string toString(bool showAlt);
+    std::string toStringJavaLike(bool showAlt);
 
   private:
     /**

@@ -36,13 +36,22 @@
 
 using namespace antlr4::atn;
 
+template<typename T>
+std::vector<std::weak_ptr<T>> sharedToWeak(std::vector<Ref<T>>& vec){
+	std::vector<std::weak_ptr<T>> wvec (vec.size());
+	for(size_t i =0; i< vec.size(); i++){
+		wvec[i] = vec[i];
+	}
+	return wvec;
+}
+
 ArrayPredictionContext::ArrayPredictionContext(Ref<SingletonPredictionContext> const& a)
   : ArrayPredictionContext({ a->parent }, { a->returnState }) {
 }
 
-ArrayPredictionContext::ArrayPredictionContext(std::vector<std::weak_ptr<PredictionContext>> parents_,
+ArrayPredictionContext::ArrayPredictionContext(std::vector<Ref<PredictionContext>> parents_,
                                                std::vector<int> const& returnStates)
-  : PredictionContext(calculateHashCode(parents_, returnStates)), parents(makeRef(parents_)), returnStates(returnStates) {
+  : PredictionContext(calculateHashCode(sharedToWeak(parents_), returnStates)), parents(parents_), returnStates(returnStates) {
     assert(parents.size() > 0);
     assert(returnStates.size() > 0);
 }

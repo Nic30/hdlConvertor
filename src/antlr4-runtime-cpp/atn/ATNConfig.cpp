@@ -116,6 +116,28 @@ std::string ATNConfig::toString() {
   return toString(true);
 }
 
+std::string ATNConfig::toStringJavaLike(bool showAlt){
+	std::stringstream ss;
+	ss << "(";
+
+	ss << state->toStringJavaLike();
+	if (showAlt) {
+	  ss << "," << alt;
+	}
+	if (context) {
+	  ss << ",[" << context->toString() << "]";
+	}
+	if (semanticContext != nullptr && semanticContext != SemanticContext::NONE) {
+	  ss << "," << semanticContext.get()->toString();
+	}
+	if (getOuterContextDepth() > 0) {
+	  ss << ",up=" << getOuterContextDepth();
+	}
+	ss << ')';
+
+	return ss.str();
+}
+
 std::string ATNConfig::toString(bool showAlt) {
   std::stringstream ss;
   ss << "(";
