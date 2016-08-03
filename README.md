@@ -19,8 +19,6 @@ To make your live easier I included it to this package for you.
 
 
 Package is stored in pip respository you can install it by:
-`pip install hdlConvertor`
-or for python3
 `pip3 install hdlConvertor`
 
-Currently package is testet only under python3.5.
+Currently package is testet only for python3.5 under linux but should work with every python3.x on any system where is compiler with c++11 support.
