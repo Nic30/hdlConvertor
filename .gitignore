@@ -28,6 +28,9 @@
 *.out
 *.app
 
+# generated files
+MANIFEST
+
 # build folders
 Debug/
 target/
