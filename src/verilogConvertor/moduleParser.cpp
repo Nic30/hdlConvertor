@@ -140,6 +140,18 @@ void ModuleParser::visitModule_item(
 	// | attribute_instance* specify_block
 	// | attribute_instance* specparam_declaration
 	// ;
+	auto pd = ctx->port_declaration();
+	if (pd){
+		auto portsDeclr = PortParser::visitPort_declaration(pd);
+		for (auto declr: *portsDeclr){
+			Port * p = ent->getPortByName(declr->variable->name);
+			p->direction = declr->direction;
+			p->variable = declr->variable;
+			delete declr;
+		}
+		delete portsDeclr;
+		return;
+	}
 	NotImplementedLogger::print("ModuleParser.visitModule_item");
 }
 void ModuleParser::visitNon_port_module_item(

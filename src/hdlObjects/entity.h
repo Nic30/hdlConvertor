@@ -8,6 +8,7 @@ public:
 	std::vector<Variable*> generics;
 	std::vector<Port*> ports;
 	Entity();
+	Port * getPortByName(const char * name);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif
