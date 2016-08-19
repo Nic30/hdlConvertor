@@ -701,7 +701,7 @@ lifetime : 'static' | 'automatic'
 // A.2.2.1 Net and variable types
 casting_type : 
 simple_type 
-//ilr | constant_primary 
+| constant_primary //ilr
 | signing 
 | 'string' 
 | 'const'
@@ -2884,8 +2884,8 @@ primary
 | inc_or_dec_expression
 | '(' operator_assignment ')'
 | expression binary_operator  ( attribute_instance )*  expression
-//ilr | conditional_expression
-//ilr | inside_expression
+| conditional_expression //ilr
+| inside_expression      //ilr
 | tagged_union_expression
 ;
 
@@ -2915,7 +2915,7 @@ module_path_expression :
 module_path_primary
 | unary_module_path_operator  ( attribute_instance )*  module_path_primary
 | module_path_expression binary_module_path_operator  ( attribute_instance )* module_path_expression
-//ilr | module_path_conditional_expression
+| module_path_conditional_expression //ilr
 ;
 
 module_path_mintypmax_expression :
@@ -2968,10 +2968,10 @@ primary_literal
 | empty_queue
 | concatenation ( '[' range_expression ']' )?
 | multiple_concatenation ( '[' range_expression ']' )?
-//ilr | function_subroutine_call
+| function_subroutine_call //ilr 
 | let_expression
 | '(' mintypmax_expression ')'
-//ilr | cast
+| cast                     //ilr 
 | assignment_pattern_expression
 | streaming_concatenation
 | sequence_method_call
