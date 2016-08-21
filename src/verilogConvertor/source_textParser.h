@@ -8,16 +8,14 @@
 #include "../hdlObjects/expr.h"
 #include "exprParser.h"
 #include "moduleParser.h"
+#include "../baseHdlParser/baseHdlParser.h"
 
 using namespace antlr4;
 using namespace verilog;
 
-class Source_textParser {
-	bool hierarchyOnly;
-	Context * context;
+class Source_textParser : public BaseHdlParser {
 public:
 	Source_textParser(bool _hierarchyOnly);
-	Context * getContext();
 	void visitSource_text(Ref<Verilog2001Parser::Source_textContext> ctx);
 	void visitTiming_spec(Ref<Verilog2001Parser::Timing_specContext> ctx);
 	void visitDescription(Ref<Verilog2001Parser::DescriptionContext> ctx);

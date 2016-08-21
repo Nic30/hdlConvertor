@@ -1,13 +1,7 @@
 #include "designFileParser.h"
 
-DesignFileParser::DesignFileParser(bool _hierarchyOnly) {
-	hierarchyOnly = _hierarchyOnly;
-	context = new Context();
-}
+DesignFileParser::DesignFileParser(bool _hierarchyOnly) : BaseHdlParser(_hierarchyOnly) {}
 
-Context * DesignFileParser::getContext() {
-	return context;
-}
 void DesignFileParser::visitDesign_file(
 		Ref<vhdlParser::Design_fileContext> ctx) {
 	if (!ctx)

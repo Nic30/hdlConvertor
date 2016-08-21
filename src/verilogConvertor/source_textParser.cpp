@@ -1,12 +1,7 @@
 #include "source_textParser.h"
 
-Source_textParser::Source_textParser(bool _hierarchyOnly) {
-	context = new Context();
-	hierarchyOnly = _hierarchyOnly;
-}
-Context * Source_textParser::getContext() {
-	return context;
-}
+Source_textParser::Source_textParser(bool _hierarchyOnly) : BaseHdlParser(_hierarchyOnly) {}
+
 void Source_textParser::visitSource_text(
 		Ref<Verilog2001Parser::Source_textContext> ctx) {
 	//// START SYMBOL

@@ -9,8 +9,7 @@ bool Convertor::debug = false;
 
 ParserErrors Convertor::err = PERR_OK;
 
-void parseFnVerilog(
-		Verilog2001Parser * antlrParser,
+void parseFnVerilog(Verilog2001Parser * antlrParser,
 		Source_textParser * hdlParser) {
 	Ref<Verilog2001Parser::Source_textContext> tree =
 			antlrParser->source_text();
@@ -24,11 +23,16 @@ void parseFnVHDL(vhdlParser * antlrParser, DesignFileParser * hdlParser) {
 	tree.reset();
 }
 
-Context * Convertor::parse(
-		const char * _fileName,
-		Langue _lang,
-		bool _hierarchyOnly,
-		bool _debug) {
+void parseFnSystemVerilog(sv::sv2012Parser * antlrParser,
+		Library_textParser * hdlParser) {
+	Ref<sv::sv2012Parser::Library_textContext> tree =
+				antlrParser->library_text();
+		hdlParser->visitLibrary_text(tree);
+		tree.reset();
+}
+
+Context * Convertor::parse(const char * _fileName, Langue _lang,
+		bool _hierarchyOnly, bool _debug) {
 	fileName = _fileName;
 	lang = _lang;
 	hierarchyOnly = _hierarchyOnly;
@@ -49,6 +53,15 @@ Context * Convertor::parse(
 			c = pc->context;
 			delete pc;
 
+		} else if (lang == SYSTEM_VERILOG) {
+			auto pc = new ParserContainer<sv::sv2012Lexer, sv::sv2012Parser,
+					Library_textParser>();
+			err = pc->parseFile(fileName, hierarchyOnly, debug, parseFnSystemVerilog);
+			c = pc->context;
+			delete pc;
+
+		} else {
+			throw "Unsupported language.";
 		}
 	} catch (const char * _errStr) {
 		err = PARSING_ERR;

@@ -15,12 +15,17 @@
 #include "VerilogParser/Verilog2001Parser.h"
 #include "verilogConvertor/source_textParser.h"
 
+#include "SVParser/sv2012Lexer.h"
+#include "SVParser/sv2012Parser.h"
+#include "svConverter/library_textParser.h"
+
 #include "syntaxErrorLogger.h"
 #include "langue.h"
 #include "parserContainer.h"
 
 using namespace antlr4;
 using namespace vhdl;
+
 
 
 class Convertor {

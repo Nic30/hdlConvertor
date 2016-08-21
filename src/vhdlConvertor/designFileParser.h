@@ -8,18 +8,14 @@
 #include "packageParser.h"
 #include "entityParser.h"
 #include "packageHeaderParser.h"
-
+#include "../baseHdlParser/baseHdlParser.h"
 
 using namespace antlr4;
 using namespace vhdl;
 
-class DesignFileParser {
+class DesignFileParser : public BaseHdlParser {
 public:
-	bool hierarchyOnly;
-	Context * context;
-	DesignFileParser(bool hierarchyOnly);
-
-	Context * getContext();
+	DesignFileParser(bool _hierarchyOnly);
 	void visitDesign_file(Ref<vhdlParser::Design_fileContext> ctx);
 	void visitDesign_unit(Ref<vhdlParser::Design_unitContext> ctx);
 	void visitLibrary_unit(Ref<vhdlParser::Library_unitContext> ctx);

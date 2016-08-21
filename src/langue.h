@@ -2,5 +2,5 @@
 
 
 enum Langue {
-	VHDL, VERILOG
+	VHDL, VERILOG, SYSTEM_VERILOG
 };
