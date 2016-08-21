@@ -2,7 +2,6 @@
 // Generated from vhdl.g4 by ANTLR 4.5.3
 
 
-#include "vhdlListener.h"
 #include "vhdlVisitor.h"
 
 #include "vhdlParser.h"
@@ -55,19 +54,6 @@ Ref<tree::TerminalNode> vhdlParser::Abstract_literalContext::BASE_LITERAL() {
 ssize_t vhdlParser::Abstract_literalContext::getRuleIndex() const {
   return vhdlParser::RuleAbstract_literal;
 }
-
-void vhdlParser::Abstract_literalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAbstract_literal(this);
-}
-
-void vhdlParser::Abstract_literalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAbstract_literal(this);
-}
-
 
 antlrcpp::Any vhdlParser::Abstract_literalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -125,19 +111,6 @@ Ref<vhdlParser::Subtype_indicationContext> vhdlParser::Access_type_definitionCon
 ssize_t vhdlParser::Access_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleAccess_type_definition;
 }
-
-void vhdlParser::Access_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAccess_type_definition(this);
-}
-
-void vhdlParser::Access_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAccess_type_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Access_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -200,19 +173,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Across_aspectContext::expression(
 ssize_t vhdlParser::Across_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleAcross_aspect;
 }
-
-void vhdlParser::Across_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAcross_aspect(this);
-}
-
-void vhdlParser::Across_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAcross_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Across_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -280,19 +240,6 @@ Ref<tree::TerminalNode> vhdlParser::Actual_designatorContext::OPEN() {
 ssize_t vhdlParser::Actual_designatorContext::getRuleIndex() const {
   return vhdlParser::RuleActual_designator;
 }
-
-void vhdlParser::Actual_designatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterActual_designator(this);
-}
-
-void vhdlParser::Actual_designatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitActual_designator(this);
-}
-
 
 antlrcpp::Any vhdlParser::Actual_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -369,19 +316,6 @@ ssize_t vhdlParser::Actual_parameter_partContext::getRuleIndex() const {
   return vhdlParser::RuleActual_parameter_part;
 }
 
-void vhdlParser::Actual_parameter_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterActual_parameter_part(this);
-}
-
-void vhdlParser::Actual_parameter_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitActual_parameter_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Actual_parameter_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitActual_parameter_part(this);
@@ -437,19 +371,6 @@ Ref<tree::TerminalNode> vhdlParser::Actual_partContext::RPAREN() {
 ssize_t vhdlParser::Actual_partContext::getRuleIndex() const {
   return vhdlParser::RuleActual_part;
 }
-
-void vhdlParser::Actual_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterActual_part(this);
-}
-
-void vhdlParser::Actual_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitActual_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Actual_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -524,19 +445,6 @@ ssize_t vhdlParser::Adding_operatorContext::getRuleIndex() const {
   return vhdlParser::RuleAdding_operator;
 }
 
-void vhdlParser::Adding_operatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAdding_operator(this);
-}
-
-void vhdlParser::Adding_operatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAdding_operator(this);
-}
-
-
 antlrcpp::Any vhdlParser::Adding_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAdding_operator(this);
@@ -609,19 +517,6 @@ Ref<tree::TerminalNode> vhdlParser::AggregateContext::COMMA(int i) {
 ssize_t vhdlParser::AggregateContext::getRuleIndex() const {
   return vhdlParser::RuleAggregate;
 }
-
-void vhdlParser::AggregateContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAggregate(this);
-}
-
-void vhdlParser::AggregateContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAggregate(this);
-}
-
 
 antlrcpp::Any vhdlParser::AggregateContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -712,19 +607,6 @@ ssize_t vhdlParser::Alias_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleAlias_declaration;
 }
 
-void vhdlParser::Alias_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAlias_declaration(this);
-}
-
-void vhdlParser::Alias_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAlias_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Alias_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAlias_declaration(this);
@@ -802,19 +684,6 @@ ssize_t vhdlParser::Alias_designatorContext::getRuleIndex() const {
   return vhdlParser::RuleAlias_designator;
 }
 
-void vhdlParser::Alias_designatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAlias_designator(this);
-}
-
-void vhdlParser::Alias_designatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAlias_designator(this);
-}
-
-
 antlrcpp::Any vhdlParser::Alias_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAlias_designator(this);
@@ -888,19 +757,6 @@ ssize_t vhdlParser::Alias_indicationContext::getRuleIndex() const {
   return vhdlParser::RuleAlias_indication;
 }
 
-void vhdlParser::Alias_indicationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAlias_indication(this);
-}
-
-void vhdlParser::Alias_indicationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAlias_indication(this);
-}
-
-
 antlrcpp::Any vhdlParser::Alias_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAlias_indication(this);
@@ -967,19 +823,6 @@ Ref<vhdlParser::Subtype_indicationContext> vhdlParser::AllocatorContext::subtype
 ssize_t vhdlParser::AllocatorContext::getRuleIndex() const {
   return vhdlParser::RuleAllocator;
 }
-
-void vhdlParser::AllocatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAllocator(this);
-}
-
-void vhdlParser::AllocatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAllocator(this);
-}
-
 
 antlrcpp::Any vhdlParser::AllocatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -1081,19 +924,6 @@ ssize_t vhdlParser::Architecture_bodyContext::getRuleIndex() const {
   return vhdlParser::RuleArchitecture_body;
 }
 
-void vhdlParser::Architecture_bodyContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArchitecture_body(this);
-}
-
-void vhdlParser::Architecture_bodyContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArchitecture_body(this);
-}
-
-
 antlrcpp::Any vhdlParser::Architecture_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitArchitecture_body(this);
@@ -1176,19 +1006,6 @@ Ref<vhdlParser::Block_declarative_itemContext> vhdlParser::Architecture_declarat
 ssize_t vhdlParser::Architecture_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleArchitecture_declarative_part;
 }
-
-void vhdlParser::Architecture_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArchitecture_declarative_part(this);
-}
-
-void vhdlParser::Architecture_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArchitecture_declarative_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Architecture_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -1305,19 +1122,6 @@ Ref<vhdlParser::Simultaneous_statementContext> vhdlParser::Architecture_statemen
 ssize_t vhdlParser::Architecture_statementContext::getRuleIndex() const {
   return vhdlParser::RuleArchitecture_statement;
 }
-
-void vhdlParser::Architecture_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArchitecture_statement(this);
-}
-
-void vhdlParser::Architecture_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArchitecture_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Architecture_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -1475,19 +1279,6 @@ ssize_t vhdlParser::Architecture_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleArchitecture_statement_part;
 }
 
-void vhdlParser::Architecture_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArchitecture_statement_part(this);
-}
-
-void vhdlParser::Architecture_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArchitecture_statement_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Architecture_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitArchitecture_statement_part(this);
@@ -1568,19 +1359,6 @@ ssize_t vhdlParser::Array_nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleArray_nature_definition;
 }
 
-void vhdlParser::Array_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArray_nature_definition(this);
-}
-
-void vhdlParser::Array_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArray_nature_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Array_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitArray_nature_definition(this);
@@ -1643,19 +1421,6 @@ Ref<vhdlParser::Constrained_array_definitionContext> vhdlParser::Array_type_defi
 ssize_t vhdlParser::Array_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleArray_type_definition;
 }
-
-void vhdlParser::Array_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArray_type_definition(this);
-}
-
-void vhdlParser::Array_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArray_type_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Array_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -1736,19 +1501,6 @@ ssize_t vhdlParser::AssertionContext::getRuleIndex() const {
   return vhdlParser::RuleAssertion;
 }
 
-void vhdlParser::AssertionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAssertion(this);
-}
-
-void vhdlParser::AssertionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAssertion(this);
-}
-
-
 antlrcpp::Any vhdlParser::AssertionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAssertion(this);
@@ -1822,19 +1574,6 @@ ssize_t vhdlParser::Assertion_statementContext::getRuleIndex() const {
   return vhdlParser::RuleAssertion_statement;
 }
 
-void vhdlParser::Assertion_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAssertion_statement(this);
-}
-
-void vhdlParser::Assertion_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAssertion_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Assertion_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAssertion_statement(this);
@@ -1898,19 +1637,6 @@ Ref<tree::TerminalNode> vhdlParser::Association_elementContext::ARROW() {
 ssize_t vhdlParser::Association_elementContext::getRuleIndex() const {
   return vhdlParser::RuleAssociation_element;
 }
-
-void vhdlParser::Association_elementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAssociation_element(this);
-}
-
-void vhdlParser::Association_elementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAssociation_element(this);
-}
-
 
 antlrcpp::Any vhdlParser::Association_elementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -1981,19 +1707,6 @@ ssize_t vhdlParser::Association_listContext::getRuleIndex() const {
   return vhdlParser::RuleAssociation_list;
 }
 
-void vhdlParser::Association_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAssociation_list(this);
-}
-
-void vhdlParser::Association_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAssociation_list(this);
-}
-
-
 antlrcpp::Any vhdlParser::Association_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAssociation_list(this);
@@ -2062,19 +1775,6 @@ Ref<tree::TerminalNode> vhdlParser::Attribute_declarationContext::SEMI() {
 ssize_t vhdlParser::Attribute_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleAttribute_declaration;
 }
-
-void vhdlParser::Attribute_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAttribute_declaration(this);
-}
-
-void vhdlParser::Attribute_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAttribute_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Attribute_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -2149,19 +1849,6 @@ Ref<tree::TerminalNode> vhdlParser::Attribute_designatorContext::TOLERANCE() {
 ssize_t vhdlParser::Attribute_designatorContext::getRuleIndex() const {
   return vhdlParser::RuleAttribute_designator;
 }
-
-void vhdlParser::Attribute_designatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAttribute_designator(this);
-}
-
-void vhdlParser::Attribute_designatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAttribute_designator(this);
-}
-
 
 antlrcpp::Any vhdlParser::Attribute_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -2284,19 +1971,6 @@ ssize_t vhdlParser::Attribute_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleAttribute_specification;
 }
 
-void vhdlParser::Attribute_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAttribute_specification(this);
-}
-
-void vhdlParser::Attribute_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAttribute_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Attribute_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitAttribute_specification(this);
@@ -2357,19 +2031,6 @@ ssize_t vhdlParser::Base_unit_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleBase_unit_declaration;
 }
 
-void vhdlParser::Base_unit_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBase_unit_declaration(this);
-}
-
-void vhdlParser::Base_unit_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBase_unit_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Base_unit_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBase_unit_declaration(this);
@@ -2427,19 +2088,6 @@ Ref<vhdlParser::Port_map_aspectContext> vhdlParser::Binding_indicationContext::p
 ssize_t vhdlParser::Binding_indicationContext::getRuleIndex() const {
   return vhdlParser::RuleBinding_indication;
 }
-
-void vhdlParser::Binding_indicationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBinding_indication(this);
-}
-
-void vhdlParser::Binding_indicationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBinding_indication(this);
-}
-
 
 antlrcpp::Any vhdlParser::Binding_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -2538,19 +2186,6 @@ Ref<vhdlParser::Configuration_itemContext> vhdlParser::Block_configurationContex
 ssize_t vhdlParser::Block_configurationContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_configuration;
 }
-
-void vhdlParser::Block_configurationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_configuration(this);
-}
-
-void vhdlParser::Block_configurationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_configuration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Block_configurationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -2708,19 +2343,6 @@ Ref<vhdlParser::Terminal_declarationContext> vhdlParser::Block_declarative_itemC
 ssize_t vhdlParser::Block_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_declarative_item;
 }
-
-void vhdlParser::Block_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_declarative_item(this);
-}
-
-void vhdlParser::Block_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Block_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -2925,19 +2547,6 @@ ssize_t vhdlParser::Block_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_declarative_part;
 }
 
-void vhdlParser::Block_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_declarative_part(this);
-}
-
-void vhdlParser::Block_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Block_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBlock_declarative_part(this);
@@ -3034,19 +2643,6 @@ ssize_t vhdlParser::Block_headerContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_header;
 }
 
-void vhdlParser::Block_headerContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_header(this);
-}
-
-void vhdlParser::Block_headerContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_header(this);
-}
-
-
 antlrcpp::Any vhdlParser::Block_headerContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBlock_header(this);
@@ -3137,19 +2733,6 @@ Ref<vhdlParser::NameContext> vhdlParser::Block_specificationContext::name() {
 ssize_t vhdlParser::Block_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_specification;
 }
-
-void vhdlParser::Block_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_specification(this);
-}
-
-void vhdlParser::Block_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_specification(this);
-}
-
 
 antlrcpp::Any vhdlParser::Block_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -3274,19 +2857,6 @@ ssize_t vhdlParser::Block_statementContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_statement;
 }
 
-void vhdlParser::Block_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_statement(this);
-}
-
-void vhdlParser::Block_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Block_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBlock_statement(this);
@@ -3378,19 +2948,6 @@ Ref<vhdlParser::Architecture_statementContext> vhdlParser::Block_statement_partC
 ssize_t vhdlParser::Block_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleBlock_statement_part;
 }
-
-void vhdlParser::Block_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock_statement_part(this);
-}
-
-void vhdlParser::Block_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock_statement_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Block_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -3484,19 +3041,6 @@ ssize_t vhdlParser::Branch_quantity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleBranch_quantity_declaration;
 }
 
-void vhdlParser::Branch_quantity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBranch_quantity_declaration(this);
-}
-
-void vhdlParser::Branch_quantity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBranch_quantity_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Branch_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBranch_quantity_declaration(this);
@@ -3579,19 +3123,6 @@ ssize_t vhdlParser::Break_elementContext::getRuleIndex() const {
   return vhdlParser::RuleBreak_element;
 }
 
-void vhdlParser::Break_elementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBreak_element(this);
-}
-
-void vhdlParser::Break_elementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBreak_element(this);
-}
-
-
 antlrcpp::Any vhdlParser::Break_elementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBreak_element(this);
@@ -3660,19 +3191,6 @@ ssize_t vhdlParser::Break_listContext::getRuleIndex() const {
   return vhdlParser::RuleBreak_list;
 }
 
-void vhdlParser::Break_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBreak_list(this);
-}
-
-void vhdlParser::Break_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBreak_list(this);
-}
-
-
 antlrcpp::Any vhdlParser::Break_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitBreak_list(this);
@@ -3737,19 +3255,6 @@ Ref<tree::TerminalNode> vhdlParser::Break_selector_clauseContext::USE() {
 ssize_t vhdlParser::Break_selector_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleBreak_selector_clause;
 }
-
-void vhdlParser::Break_selector_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBreak_selector_clause(this);
-}
-
-void vhdlParser::Break_selector_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBreak_selector_clause(this);
-}
-
 
 antlrcpp::Any vhdlParser::Break_selector_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -3818,19 +3323,6 @@ Ref<vhdlParser::ConditionContext> vhdlParser::Break_statementContext::condition(
 ssize_t vhdlParser::Break_statementContext::getRuleIndex() const {
   return vhdlParser::RuleBreak_statement;
 }
-
-void vhdlParser::Break_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBreak_statement(this);
-}
-
-void vhdlParser::Break_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBreak_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Break_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -3942,19 +3434,6 @@ ssize_t vhdlParser::Case_statementContext::getRuleIndex() const {
   return vhdlParser::RuleCase_statement;
 }
 
-void vhdlParser::Case_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterCase_statement(this);
-}
-
-void vhdlParser::Case_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitCase_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitCase_statement(this);
@@ -4050,19 +3529,6 @@ ssize_t vhdlParser::Case_statement_alternativeContext::getRuleIndex() const {
   return vhdlParser::RuleCase_statement_alternative;
 }
 
-void vhdlParser::Case_statement_alternativeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterCase_statement_alternative(this);
-}
-
-void vhdlParser::Case_statement_alternativeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitCase_statement_alternative(this);
-}
-
-
 antlrcpp::Any vhdlParser::Case_statement_alternativeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitCase_statement_alternative(this);
@@ -4124,19 +3590,6 @@ Ref<tree::TerminalNode> vhdlParser::ChoiceContext::OTHERS() {
 ssize_t vhdlParser::ChoiceContext::getRuleIndex() const {
   return vhdlParser::RuleChoice;
 }
-
-void vhdlParser::ChoiceContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterChoice(this);
-}
-
-void vhdlParser::ChoiceContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitChoice(this);
-}
-
 
 antlrcpp::Any vhdlParser::ChoiceContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -4223,19 +3676,6 @@ ssize_t vhdlParser::ChoicesContext::getRuleIndex() const {
   return vhdlParser::RuleChoices;
 }
 
-void vhdlParser::ChoicesContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterChoices(this);
-}
-
-void vhdlParser::ChoicesContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitChoices(this);
-}
-
-
 antlrcpp::Any vhdlParser::ChoicesContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitChoices(this);
@@ -4320,19 +3760,6 @@ Ref<vhdlParser::Block_configurationContext> vhdlParser::Component_configurationC
 ssize_t vhdlParser::Component_configurationContext::getRuleIndex() const {
   return vhdlParser::RuleComponent_configuration;
 }
-
-void vhdlParser::Component_configurationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComponent_configuration(this);
-}
-
-void vhdlParser::Component_configurationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComponent_configuration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Component_configurationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -4439,19 +3866,6 @@ ssize_t vhdlParser::Component_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleComponent_declaration;
 }
 
-void vhdlParser::Component_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComponent_declaration(this);
-}
-
-void vhdlParser::Component_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComponent_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Component_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitComponent_declaration(this);
@@ -4551,19 +3965,6 @@ ssize_t vhdlParser::Component_instantiation_statementContext::getRuleIndex() con
   return vhdlParser::RuleComponent_instantiation_statement;
 }
 
-void vhdlParser::Component_instantiation_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComponent_instantiation_statement(this);
-}
-
-void vhdlParser::Component_instantiation_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComponent_instantiation_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Component_instantiation_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitComponent_instantiation_statement(this);
@@ -4635,19 +4036,6 @@ ssize_t vhdlParser::Component_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleComponent_specification;
 }
 
-void vhdlParser::Component_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComponent_specification(this);
-}
-
-void vhdlParser::Component_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComponent_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Component_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitComponent_specification(this);
@@ -4699,19 +4087,6 @@ Ref<vhdlParser::Record_nature_definitionContext> vhdlParser::Composite_nature_de
 ssize_t vhdlParser::Composite_nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleComposite_nature_definition;
 }
-
-void vhdlParser::Composite_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComposite_nature_definition(this);
-}
-
-void vhdlParser::Composite_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComposite_nature_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Composite_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -4777,19 +4152,6 @@ Ref<vhdlParser::Record_type_definitionContext> vhdlParser::Composite_type_defini
 ssize_t vhdlParser::Composite_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleComposite_type_definition;
 }
-
-void vhdlParser::Composite_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterComposite_type_definition(this);
-}
-
-void vhdlParser::Composite_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitComposite_type_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Composite_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -4863,19 +4225,6 @@ Ref<tree::TerminalNode> vhdlParser::Concurrent_assertion_statementContext::POSTP
 ssize_t vhdlParser::Concurrent_assertion_statementContext::getRuleIndex() const {
   return vhdlParser::RuleConcurrent_assertion_statement;
 }
-
-void vhdlParser::Concurrent_assertion_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConcurrent_assertion_statement(this);
-}
-
-void vhdlParser::Concurrent_assertion_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConcurrent_assertion_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Concurrent_assertion_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -4963,19 +4312,6 @@ Ref<vhdlParser::ConditionContext> vhdlParser::Concurrent_break_statementContext:
 ssize_t vhdlParser::Concurrent_break_statementContext::getRuleIndex() const {
   return vhdlParser::RuleConcurrent_break_statement;
 }
-
-void vhdlParser::Concurrent_break_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConcurrent_break_statement(this);
-}
-
-void vhdlParser::Concurrent_break_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConcurrent_break_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Concurrent_break_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5070,19 +4406,6 @@ ssize_t vhdlParser::Concurrent_procedure_call_statementContext::getRuleIndex() c
   return vhdlParser::RuleConcurrent_procedure_call_statement;
 }
 
-void vhdlParser::Concurrent_procedure_call_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConcurrent_procedure_call_statement(this);
-}
-
-void vhdlParser::Concurrent_procedure_call_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConcurrent_procedure_call_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Concurrent_procedure_call_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConcurrent_procedure_call_statement(this);
@@ -5159,19 +4482,6 @@ Ref<tree::TerminalNode> vhdlParser::Concurrent_signal_assignment_statementContex
 ssize_t vhdlParser::Concurrent_signal_assignment_statementContext::getRuleIndex() const {
   return vhdlParser::RuleConcurrent_signal_assignment_statement;
 }
-
-void vhdlParser::Concurrent_signal_assignment_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConcurrent_signal_assignment_statement(this);
-}
-
-void vhdlParser::Concurrent_signal_assignment_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConcurrent_signal_assignment_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Concurrent_signal_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5254,19 +4564,6 @@ ssize_t vhdlParser::ConditionContext::getRuleIndex() const {
   return vhdlParser::RuleCondition;
 }
 
-void vhdlParser::ConditionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterCondition(this);
-}
-
-void vhdlParser::ConditionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitCondition(this);
-}
-
-
 antlrcpp::Any vhdlParser::ConditionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitCondition(this);
@@ -5314,19 +4611,6 @@ Ref<vhdlParser::ConditionContext> vhdlParser::Condition_clauseContext::condition
 ssize_t vhdlParser::Condition_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleCondition_clause;
 }
-
-void vhdlParser::Condition_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterCondition_clause(this);
-}
-
-void vhdlParser::Condition_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitCondition_clause(this);
-}
-
 
 antlrcpp::Any vhdlParser::Condition_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5389,19 +4673,6 @@ Ref<tree::TerminalNode> vhdlParser::Conditional_signal_assignmentContext::SEMI()
 ssize_t vhdlParser::Conditional_signal_assignmentContext::getRuleIndex() const {
   return vhdlParser::RuleConditional_signal_assignment;
 }
-
-void vhdlParser::Conditional_signal_assignmentContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConditional_signal_assignment(this);
-}
-
-void vhdlParser::Conditional_signal_assignmentContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConditional_signal_assignment(this);
-}
-
 
 antlrcpp::Any vhdlParser::Conditional_signal_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5470,19 +4741,6 @@ Ref<vhdlParser::Conditional_waveformsContext> vhdlParser::Conditional_waveformsC
 ssize_t vhdlParser::Conditional_waveformsContext::getRuleIndex() const {
   return vhdlParser::RuleConditional_waveforms;
 }
-
-void vhdlParser::Conditional_waveformsContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConditional_waveforms(this);
-}
-
-void vhdlParser::Conditional_waveformsContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConditional_waveforms(this);
-}
-
 
 antlrcpp::Any vhdlParser::Conditional_waveformsContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5587,19 +4845,6 @@ ssize_t vhdlParser::Configuration_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleConfiguration_declaration;
 }
 
-void vhdlParser::Configuration_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConfiguration_declaration(this);
-}
-
-void vhdlParser::Configuration_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConfiguration_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Configuration_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConfiguration_declaration(this);
@@ -5685,19 +4930,6 @@ ssize_t vhdlParser::Configuration_declarative_itemContext::getRuleIndex() const 
   return vhdlParser::RuleConfiguration_declarative_item;
 }
 
-void vhdlParser::Configuration_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConfiguration_declarative_item(this);
-}
-
-void vhdlParser::Configuration_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConfiguration_declarative_item(this);
-}
-
-
 antlrcpp::Any vhdlParser::Configuration_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConfiguration_declarative_item(this);
@@ -5770,19 +5002,6 @@ ssize_t vhdlParser::Configuration_declarative_partContext::getRuleIndex() const 
   return vhdlParser::RuleConfiguration_declarative_part;
 }
 
-void vhdlParser::Configuration_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConfiguration_declarative_part(this);
-}
-
-void vhdlParser::Configuration_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConfiguration_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Configuration_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConfiguration_declarative_part(this);
@@ -5841,19 +5060,6 @@ Ref<vhdlParser::Component_configurationContext> vhdlParser::Configuration_itemCo
 ssize_t vhdlParser::Configuration_itemContext::getRuleIndex() const {
   return vhdlParser::RuleConfiguration_item;
 }
-
-void vhdlParser::Configuration_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConfiguration_item(this);
-}
-
-void vhdlParser::Configuration_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConfiguration_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Configuration_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -5925,19 +5131,6 @@ Ref<tree::TerminalNode> vhdlParser::Configuration_specificationContext::SEMI() {
 ssize_t vhdlParser::Configuration_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleConfiguration_specification;
 }
-
-void vhdlParser::Configuration_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConfiguration_specification(this);
-}
-
-void vhdlParser::Configuration_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConfiguration_specification(this);
-}
-
 
 antlrcpp::Any vhdlParser::Configuration_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -6013,19 +5206,6 @@ ssize_t vhdlParser::Constant_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleConstant_declaration;
 }
 
-void vhdlParser::Constant_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConstant_declaration(this);
-}
-
-void vhdlParser::Constant_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConstant_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Constant_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConstant_declaration(this);
@@ -6100,19 +5280,6 @@ ssize_t vhdlParser::Constrained_array_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleConstrained_array_definition;
 }
 
-void vhdlParser::Constrained_array_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConstrained_array_definition(this);
-}
-
-void vhdlParser::Constrained_array_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConstrained_array_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Constrained_array_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConstrained_array_definition(this);
@@ -6175,19 +5342,6 @@ ssize_t vhdlParser::Constrained_nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleConstrained_nature_definition;
 }
 
-void vhdlParser::Constrained_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConstrained_nature_definition(this);
-}
-
-void vhdlParser::Constrained_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConstrained_nature_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Constrained_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitConstrained_nature_definition(this);
@@ -6241,19 +5395,6 @@ Ref<vhdlParser::Index_constraintContext> vhdlParser::ConstraintContext::index_co
 ssize_t vhdlParser::ConstraintContext::getRuleIndex() const {
   return vhdlParser::RuleConstraint;
 }
-
-void vhdlParser::ConstraintContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConstraint(this);
-}
-
-void vhdlParser::ConstraintContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConstraint(this);
-}
-
 
 antlrcpp::Any vhdlParser::ConstraintContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -6320,19 +5461,6 @@ ssize_t vhdlParser::Context_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleContext_clause;
 }
 
-void vhdlParser::Context_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterContext_clause(this);
-}
-
-void vhdlParser::Context_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitContext_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Context_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitContext_clause(this);
@@ -6391,19 +5519,6 @@ Ref<vhdlParser::Use_clauseContext> vhdlParser::Context_itemContext::use_clause()
 ssize_t vhdlParser::Context_itemContext::getRuleIndex() const {
   return vhdlParser::RuleContext_item;
 }
-
-void vhdlParser::Context_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterContext_item(this);
-}
-
-void vhdlParser::Context_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitContext_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Context_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -6477,19 +5592,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Delay_mechanismContext::expressio
 ssize_t vhdlParser::Delay_mechanismContext::getRuleIndex() const {
   return vhdlParser::RuleDelay_mechanism;
 }
-
-void vhdlParser::Delay_mechanismContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDelay_mechanism(this);
-}
-
-void vhdlParser::Delay_mechanismContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDelay_mechanism(this);
-}
-
 
 antlrcpp::Any vhdlParser::Delay_mechanismContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -6571,19 +5673,6 @@ ssize_t vhdlParser::Design_fileContext::getRuleIndex() const {
   return vhdlParser::RuleDesign_file;
 }
 
-void vhdlParser::Design_fileContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDesign_file(this);
-}
-
-void vhdlParser::Design_fileContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDesign_file(this);
-}
-
-
 antlrcpp::Any vhdlParser::Design_fileContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitDesign_file(this);
@@ -6649,19 +5738,6 @@ ssize_t vhdlParser::Design_unitContext::getRuleIndex() const {
   return vhdlParser::RuleDesign_unit;
 }
 
-void vhdlParser::Design_unitContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDesign_unit(this);
-}
-
-void vhdlParser::Design_unitContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDesign_unit(this);
-}
-
-
 antlrcpp::Any vhdlParser::Design_unitContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitDesign_unit(this);
@@ -6711,19 +5787,6 @@ Ref<tree::TerminalNode> vhdlParser::DesignatorContext::STRING_LITERAL() {
 ssize_t vhdlParser::DesignatorContext::getRuleIndex() const {
   return vhdlParser::RuleDesignator;
 }
-
-void vhdlParser::DesignatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDesignator(this);
-}
-
-void vhdlParser::DesignatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDesignator(this);
-}
-
 
 antlrcpp::Any vhdlParser::DesignatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -6791,19 +5854,6 @@ ssize_t vhdlParser::DirectionContext::getRuleIndex() const {
   return vhdlParser::RuleDirection;
 }
 
-void vhdlParser::DirectionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDirection(this);
-}
-
-void vhdlParser::DirectionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDirection(this);
-}
-
-
 antlrcpp::Any vhdlParser::DirectionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitDirection(this);
@@ -6870,19 +5920,6 @@ ssize_t vhdlParser::Disconnection_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleDisconnection_specification;
 }
 
-void vhdlParser::Disconnection_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDisconnection_specification(this);
-}
-
-void vhdlParser::Disconnection_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDisconnection_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Disconnection_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitDisconnection_specification(this);
@@ -6938,19 +5975,6 @@ Ref<vhdlParser::Subtype_indicationContext> vhdlParser::Discrete_rangeContext::su
 ssize_t vhdlParser::Discrete_rangeContext::getRuleIndex() const {
   return vhdlParser::RuleDiscrete_range;
 }
-
-void vhdlParser::Discrete_rangeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDiscrete_range(this);
-}
-
-void vhdlParser::Discrete_rangeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDiscrete_range(this);
-}
-
 
 antlrcpp::Any vhdlParser::Discrete_rangeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7018,19 +6042,6 @@ Ref<tree::TerminalNode> vhdlParser::Element_associationContext::ARROW() {
 ssize_t vhdlParser::Element_associationContext::getRuleIndex() const {
   return vhdlParser::RuleElement_association;
 }
-
-void vhdlParser::Element_associationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterElement_association(this);
-}
-
-void vhdlParser::Element_associationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitElement_association(this);
-}
-
 
 antlrcpp::Any vhdlParser::Element_associationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7101,19 +6112,6 @@ ssize_t vhdlParser::Element_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleElement_declaration;
 }
 
-void vhdlParser::Element_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterElement_declaration(this);
-}
-
-void vhdlParser::Element_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitElement_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Element_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitElement_declaration(this);
@@ -7164,19 +6162,6 @@ ssize_t vhdlParser::Element_subnature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleElement_subnature_definition;
 }
 
-void vhdlParser::Element_subnature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterElement_subnature_definition(this);
-}
-
-void vhdlParser::Element_subnature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitElement_subnature_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Element_subnature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitElement_subnature_definition(this);
@@ -7220,19 +6205,6 @@ Ref<vhdlParser::Subtype_indicationContext> vhdlParser::Element_subtype_definitio
 ssize_t vhdlParser::Element_subtype_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleElement_subtype_definition;
 }
-
-void vhdlParser::Element_subtype_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterElement_subtype_definition(this);
-}
-
-void vhdlParser::Element_subtype_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitElement_subtype_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Element_subtype_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7301,19 +6273,6 @@ Ref<tree::TerminalNode> vhdlParser::Entity_aspectContext::OPEN() {
 ssize_t vhdlParser::Entity_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_aspect;
 }
-
-void vhdlParser::Entity_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_aspect(this);
-}
-
-void vhdlParser::Entity_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7479,19 +6438,6 @@ ssize_t vhdlParser::Entity_classContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_class;
 }
 
-void vhdlParser::Entity_classContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_class(this);
-}
-
-void vhdlParser::Entity_classContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_class(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_classContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_class(this);
@@ -7567,19 +6513,6 @@ ssize_t vhdlParser::Entity_class_entryContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_class_entry;
 }
 
-void vhdlParser::Entity_class_entryContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_class_entry(this);
-}
-
-void vhdlParser::Entity_class_entryContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_class_entry(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_class_entryContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_class_entry(this);
@@ -7643,19 +6576,6 @@ Ref<tree::TerminalNode> vhdlParser::Entity_class_entry_listContext::COMMA(int i)
 ssize_t vhdlParser::Entity_class_entry_listContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_class_entry_list;
 }
-
-void vhdlParser::Entity_class_entry_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_class_entry_list(this);
-}
-
-void vhdlParser::Entity_class_entry_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_class_entry_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_class_entry_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7753,19 +6673,6 @@ Ref<vhdlParser::Entity_statement_partContext> vhdlParser::Entity_declarationCont
 ssize_t vhdlParser::Entity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_declaration;
 }
-
-void vhdlParser::Entity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_declaration(this);
-}
-
-void vhdlParser::Entity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -7924,19 +6831,6 @@ Ref<vhdlParser::Terminal_declarationContext> vhdlParser::Entity_declarative_item
 ssize_t vhdlParser::Entity_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_declarative_item;
 }
-
-void vhdlParser::Entity_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_declarative_item(this);
-}
-
-void vhdlParser::Entity_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8127,19 +7021,6 @@ ssize_t vhdlParser::Entity_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_declarative_part;
 }
 
-void vhdlParser::Entity_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_declarative_part(this);
-}
-
-void vhdlParser::Entity_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_declarative_part(this);
@@ -8218,19 +7099,6 @@ ssize_t vhdlParser::Entity_designatorContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_designator;
 }
 
-void vhdlParser::Entity_designatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_designator(this);
-}
-
-void vhdlParser::Entity_designatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_designator(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_designatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_designator(this);
@@ -8286,19 +7154,6 @@ Ref<vhdlParser::Port_clauseContext> vhdlParser::Entity_headerContext::port_claus
 ssize_t vhdlParser::Entity_headerContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_header;
 }
-
-void vhdlParser::Entity_headerContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_header(this);
-}
-
-void vhdlParser::Entity_headerContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_header(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_headerContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8376,19 +7231,6 @@ Ref<tree::TerminalNode> vhdlParser::Entity_name_listContext::ALL() {
 ssize_t vhdlParser::Entity_name_listContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_name_list;
 }
-
-void vhdlParser::Entity_name_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_name_list(this);
-}
-
-void vhdlParser::Entity_name_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_name_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_name_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8482,19 +7324,6 @@ ssize_t vhdlParser::Entity_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_specification;
 }
 
-void vhdlParser::Entity_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_specification(this);
-}
-
-void vhdlParser::Entity_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_specification(this);
@@ -8550,19 +7379,6 @@ Ref<vhdlParser::Concurrent_procedure_call_statementContext> vhdlParser::Entity_s
 ssize_t vhdlParser::Entity_statementContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_statement;
 }
-
-void vhdlParser::Entity_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_statement(this);
-}
-
-void vhdlParser::Entity_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8634,19 +7450,6 @@ ssize_t vhdlParser::Entity_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_statement_part;
 }
 
-void vhdlParser::Entity_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_statement_part(this);
-}
-
-void vhdlParser::Entity_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_statement_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Entity_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEntity_statement_part(this);
@@ -8711,19 +7514,6 @@ Ref<tree::TerminalNode> vhdlParser::Entity_tagContext::STRING_LITERAL() {
 ssize_t vhdlParser::Entity_tagContext::getRuleIndex() const {
   return vhdlParser::RuleEntity_tag;
 }
-
-void vhdlParser::Entity_tagContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEntity_tag(this);
-}
-
-void vhdlParser::Entity_tagContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEntity_tag(this);
-}
-
 
 antlrcpp::Any vhdlParser::Entity_tagContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8797,19 +7587,6 @@ Ref<tree::TerminalNode> vhdlParser::Enumeration_literalContext::CHARACTER_LITERA
 ssize_t vhdlParser::Enumeration_literalContext::getRuleIndex() const {
   return vhdlParser::RuleEnumeration_literal;
 }
-
-void vhdlParser::Enumeration_literalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEnumeration_literal(this);
-}
-
-void vhdlParser::Enumeration_literalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEnumeration_literal(this);
-}
-
 
 antlrcpp::Any vhdlParser::Enumeration_literalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -8893,19 +7670,6 @@ ssize_t vhdlParser::Enumeration_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleEnumeration_type_definition;
 }
 
-void vhdlParser::Enumeration_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEnumeration_type_definition(this);
-}
-
-void vhdlParser::Enumeration_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEnumeration_type_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Enumeration_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitEnumeration_type_definition(this);
@@ -8986,19 +7750,6 @@ Ref<vhdlParser::ConditionContext> vhdlParser::Exit_statementContext::condition()
 ssize_t vhdlParser::Exit_statementContext::getRuleIndex() const {
   return vhdlParser::RuleExit_statement;
 }
-
-void vhdlParser::Exit_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterExit_statement(this);
-}
-
-void vhdlParser::Exit_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitExit_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Exit_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9086,19 +7837,6 @@ ssize_t vhdlParser::ExpressionContext::getRuleIndex() const {
   return vhdlParser::RuleExpression;
 }
 
-void vhdlParser::ExpressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterExpression(this);
-}
-
-void vhdlParser::ExpressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitExpression(this);
-}
-
-
 antlrcpp::Any vhdlParser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitExpression(this);
@@ -9173,19 +7911,6 @@ Ref<tree::TerminalNode> vhdlParser::FactorContext::NOT() {
 ssize_t vhdlParser::FactorContext::getRuleIndex() const {
   return vhdlParser::RuleFactor;
 }
-
-void vhdlParser::FactorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFactor(this);
-}
-
-void vhdlParser::FactorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFactor(this);
-}
-
 
 antlrcpp::Any vhdlParser::FactorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9302,19 +8027,6 @@ ssize_t vhdlParser::File_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleFile_declaration;
 }
 
-void vhdlParser::File_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFile_declaration(this);
-}
-
-void vhdlParser::File_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFile_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::File_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitFile_declaration(this);
@@ -9377,19 +8089,6 @@ ssize_t vhdlParser::File_logical_nameContext::getRuleIndex() const {
   return vhdlParser::RuleFile_logical_name;
 }
 
-void vhdlParser::File_logical_nameContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFile_logical_name(this);
-}
-
-void vhdlParser::File_logical_nameContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFile_logical_name(this);
-}
-
-
 antlrcpp::Any vhdlParser::File_logical_nameContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitFile_logical_name(this);
@@ -9445,19 +8144,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::File_open_informationContext::exp
 ssize_t vhdlParser::File_open_informationContext::getRuleIndex() const {
   return vhdlParser::RuleFile_open_information;
 }
-
-void vhdlParser::File_open_informationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFile_open_information(this);
-}
-
-void vhdlParser::File_open_informationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFile_open_information(this);
-}
-
 
 antlrcpp::Any vhdlParser::File_open_informationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9523,19 +8209,6 @@ ssize_t vhdlParser::File_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleFile_type_definition;
 }
 
-void vhdlParser::File_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFile_type_definition(this);
-}
-
-void vhdlParser::File_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFile_type_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::File_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitFile_type_definition(this);
@@ -9583,19 +8256,6 @@ Ref<vhdlParser::Interface_listContext> vhdlParser::Formal_parameter_listContext:
 ssize_t vhdlParser::Formal_parameter_listContext::getRuleIndex() const {
   return vhdlParser::RuleFormal_parameter_list;
 }
-
-void vhdlParser::Formal_parameter_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFormal_parameter_list(this);
-}
-
-void vhdlParser::Formal_parameter_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFormal_parameter_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Formal_parameter_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9652,19 +8312,6 @@ Ref<tree::TerminalNode> vhdlParser::Formal_partContext::RPAREN() {
 ssize_t vhdlParser::Formal_partContext::getRuleIndex() const {
   return vhdlParser::RuleFormal_part;
 }
-
-void vhdlParser::Formal_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFormal_part(this);
-}
-
-void vhdlParser::Formal_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFormal_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Formal_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9754,19 +8401,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Free_quantity_declarationContext:
 ssize_t vhdlParser::Free_quantity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleFree_quantity_declaration;
 }
-
-void vhdlParser::Free_quantity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFree_quantity_declaration(this);
-}
-
-void vhdlParser::Free_quantity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFree_quantity_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Free_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -9873,19 +8507,6 @@ Ref<vhdlParser::Block_declarative_itemContext> vhdlParser::Generate_statementCon
 ssize_t vhdlParser::Generate_statementContext::getRuleIndex() const {
   return vhdlParser::RuleGenerate_statement;
 }
-
-void vhdlParser::Generate_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGenerate_statement(this);
-}
-
-void vhdlParser::Generate_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGenerate_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Generate_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -10060,19 +8681,6 @@ ssize_t vhdlParser::Generation_schemeContext::getRuleIndex() const {
   return vhdlParser::RuleGeneration_scheme;
 }
 
-void vhdlParser::Generation_schemeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGeneration_scheme(this);
-}
-
-void vhdlParser::Generation_schemeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGeneration_scheme(this);
-}
-
-
 antlrcpp::Any vhdlParser::Generation_schemeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGeneration_scheme(this);
@@ -10154,19 +8762,6 @@ ssize_t vhdlParser::Generic_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleGeneric_clause;
 }
 
-void vhdlParser::Generic_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGeneric_clause(this);
-}
-
-void vhdlParser::Generic_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGeneric_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Generic_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGeneric_clause(this);
@@ -10230,19 +8825,6 @@ Ref<tree::TerminalNode> vhdlParser::Generic_listContext::SEMI(int i) {
 ssize_t vhdlParser::Generic_listContext::getRuleIndex() const {
   return vhdlParser::RuleGeneric_list;
 }
-
-void vhdlParser::Generic_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGeneric_list(this);
-}
-
-void vhdlParser::Generic_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGeneric_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Generic_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -10317,19 +8899,6 @@ ssize_t vhdlParser::Generic_map_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleGeneric_map_aspect;
 }
 
-void vhdlParser::Generic_map_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGeneric_map_aspect(this);
-}
-
-void vhdlParser::Generic_map_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGeneric_map_aspect(this);
-}
-
-
 antlrcpp::Any vhdlParser::Generic_map_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGeneric_map_aspect(this);
@@ -10385,19 +8954,6 @@ Ref<tree::TerminalNode> vhdlParser::Group_constituentContext::CHARACTER_LITERAL(
 ssize_t vhdlParser::Group_constituentContext::getRuleIndex() const {
   return vhdlParser::RuleGroup_constituent;
 }
-
-void vhdlParser::Group_constituentContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGroup_constituent(this);
-}
-
-void vhdlParser::Group_constituentContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGroup_constituent(this);
-}
-
 
 antlrcpp::Any vhdlParser::Group_constituentContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -10472,19 +9028,6 @@ Ref<tree::TerminalNode> vhdlParser::Group_constituent_listContext::COMMA(int i) 
 ssize_t vhdlParser::Group_constituent_listContext::getRuleIndex() const {
   return vhdlParser::RuleGroup_constituent_list;
 }
-
-void vhdlParser::Group_constituent_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGroup_constituent_list(this);
-}
-
-void vhdlParser::Group_constituent_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGroup_constituent_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Group_constituent_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -10567,19 +9110,6 @@ ssize_t vhdlParser::Group_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleGroup_declaration;
 }
 
-void vhdlParser::Group_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGroup_declaration(this);
-}
-
-void vhdlParser::Group_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGroup_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Group_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGroup_declaration(this);
@@ -10660,19 +9190,6 @@ ssize_t vhdlParser::Group_template_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleGroup_template_declaration;
 }
 
-void vhdlParser::Group_template_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGroup_template_declaration(this);
-}
-
-void vhdlParser::Group_template_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGroup_template_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Group_template_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGroup_template_declaration(this);
@@ -10737,19 +9254,6 @@ ssize_t vhdlParser::Guarded_signal_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleGuarded_signal_specification;
 }
 
-void vhdlParser::Guarded_signal_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterGuarded_signal_specification(this);
-}
-
-void vhdlParser::Guarded_signal_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitGuarded_signal_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Guarded_signal_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitGuarded_signal_specification(this);
@@ -10801,19 +9305,6 @@ Ref<tree::TerminalNode> vhdlParser::IdentifierContext::EXTENDED_IDENTIFIER() {
 ssize_t vhdlParser::IdentifierContext::getRuleIndex() const {
   return vhdlParser::RuleIdentifier;
 }
-
-void vhdlParser::IdentifierContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIdentifier(this);
-}
-
-void vhdlParser::IdentifierContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIdentifier(this);
-}
-
 
 antlrcpp::Any vhdlParser::IdentifierContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -10878,19 +9369,6 @@ Ref<tree::TerminalNode> vhdlParser::Identifier_listContext::COMMA(int i) {
 ssize_t vhdlParser::Identifier_listContext::getRuleIndex() const {
   return vhdlParser::RuleIdentifier_list;
 }
-
-void vhdlParser::Identifier_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIdentifier_list(this);
-}
-
-void vhdlParser::Identifier_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIdentifier_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Identifier_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11004,19 +9482,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::If_statementContext::identifier()
 ssize_t vhdlParser::If_statementContext::getRuleIndex() const {
   return vhdlParser::RuleIf_statement;
 }
-
-void vhdlParser::If_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIf_statement(this);
-}
-
-void vhdlParser::If_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIf_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::If_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11138,19 +9603,6 @@ ssize_t vhdlParser::Index_constraintContext::getRuleIndex() const {
   return vhdlParser::RuleIndex_constraint;
 }
 
-void vhdlParser::Index_constraintContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIndex_constraint(this);
-}
-
-void vhdlParser::Index_constraintContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIndex_constraint(this);
-}
-
-
 antlrcpp::Any vhdlParser::Index_constraintContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitIndex_constraint(this);
@@ -11215,19 +9667,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Index_specificationContext::expre
 ssize_t vhdlParser::Index_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleIndex_specification;
 }
-
-void vhdlParser::Index_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIndex_specification(this);
-}
-
-void vhdlParser::Index_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIndex_specification(this);
-}
-
 
 antlrcpp::Any vhdlParser::Index_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11295,19 +9734,6 @@ Ref<tree::TerminalNode> vhdlParser::Index_subtype_definitionContext::BOX() {
 ssize_t vhdlParser::Index_subtype_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleIndex_subtype_definition;
 }
-
-void vhdlParser::Index_subtype_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIndex_subtype_definition(this);
-}
-
-void vhdlParser::Index_subtype_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIndex_subtype_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Index_subtype_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11380,19 +9806,6 @@ Ref<tree::TerminalNode> vhdlParser::Instantiated_unitContext::CONFIGURATION() {
 ssize_t vhdlParser::Instantiated_unitContext::getRuleIndex() const {
   return vhdlParser::RuleInstantiated_unit;
 }
-
-void vhdlParser::Instantiated_unitContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInstantiated_unit(this);
-}
-
-void vhdlParser::Instantiated_unitContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInstantiated_unit(this);
-}
-
 
 antlrcpp::Any vhdlParser::Instantiated_unitContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11507,19 +9920,6 @@ ssize_t vhdlParser::Instantiation_listContext::getRuleIndex() const {
   return vhdlParser::RuleInstantiation_list;
 }
 
-void vhdlParser::Instantiation_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInstantiation_list(this);
-}
-
-void vhdlParser::Instantiation_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInstantiation_list(this);
-}
-
-
 antlrcpp::Any vhdlParser::Instantiation_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInstantiation_list(this);
@@ -11626,19 +10026,6 @@ ssize_t vhdlParser::Interface_constant_declarationContext::getRuleIndex() const 
   return vhdlParser::RuleInterface_constant_declaration;
 }
 
-void vhdlParser::Interface_constant_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_constant_declaration(this);
-}
-
-void vhdlParser::Interface_constant_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_constant_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_constant_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_constant_declaration(this);
@@ -11731,19 +10118,6 @@ ssize_t vhdlParser::Interface_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_declaration;
 }
 
-void vhdlParser::Interface_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_declaration(this);
-}
-
-void vhdlParser::Interface_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_declaration(this);
@@ -11831,19 +10205,6 @@ ssize_t vhdlParser::Interface_elementContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_element;
 }
 
-void vhdlParser::Interface_elementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_element(this);
-}
-
-void vhdlParser::Interface_elementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_element(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_elementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_element(this);
@@ -11899,19 +10260,6 @@ Ref<vhdlParser::Subtype_indicationContext> vhdlParser::Interface_file_declaratio
 ssize_t vhdlParser::Interface_file_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_file_declaration;
 }
-
-void vhdlParser::Interface_file_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_file_declaration(this);
-}
-
-void vhdlParser::Interface_file_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_file_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_file_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -11974,19 +10322,6 @@ Ref<tree::TerminalNode> vhdlParser::Interface_signal_listContext::SEMI(int i) {
 ssize_t vhdlParser::Interface_signal_listContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_signal_list;
 }
-
-void vhdlParser::Interface_signal_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_signal_list(this);
-}
-
-void vhdlParser::Interface_signal_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_signal_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_signal_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -12057,19 +10392,6 @@ ssize_t vhdlParser::Interface_port_listContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_port_list;
 }
 
-void vhdlParser::Interface_port_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_port_list(this);
-}
-
-void vhdlParser::Interface_port_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_port_list(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_port_list(this);
@@ -12138,19 +10460,6 @@ Ref<tree::TerminalNode> vhdlParser::Interface_listContext::SEMI(int i) {
 ssize_t vhdlParser::Interface_listContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_list;
 }
-
-void vhdlParser::Interface_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_list(this);
-}
-
-void vhdlParser::Interface_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -12236,19 +10545,6 @@ Ref<tree::TerminalNode> vhdlParser::Interface_quantity_declarationContext::OUT()
 ssize_t vhdlParser::Interface_quantity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_quantity_declaration;
 }
-
-void vhdlParser::Interface_quantity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_quantity_declaration(this);
-}
-
-void vhdlParser::Interface_quantity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_quantity_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -12349,19 +10645,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Interface_port_declarationContext
 ssize_t vhdlParser::Interface_port_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_port_declaration;
 }
-
-void vhdlParser::Interface_port_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_port_declaration(this);
-}
-
-void vhdlParser::Interface_port_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_port_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_port_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -12466,19 +10749,6 @@ ssize_t vhdlParser::Interface_signal_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_signal_declaration;
 }
 
-void vhdlParser::Interface_signal_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_signal_declaration(this);
-}
-
-void vhdlParser::Interface_signal_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_signal_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_signal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_signal_declaration(this);
@@ -12576,19 +10846,6 @@ ssize_t vhdlParser::Interface_terminal_declarationContext::getRuleIndex() const 
   return vhdlParser::RuleInterface_terminal_declaration;
 }
 
-void vhdlParser::Interface_terminal_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_terminal_declaration(this);
-}
-
-void vhdlParser::Interface_terminal_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_terminal_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Interface_terminal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitInterface_terminal_declaration(this);
@@ -12662,19 +10919,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Interface_variable_declarationCon
 ssize_t vhdlParser::Interface_variable_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleInterface_variable_declaration;
 }
-
-void vhdlParser::Interface_variable_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInterface_variable_declaration(this);
-}
-
-void vhdlParser::Interface_variable_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInterface_variable_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Interface_variable_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -12765,19 +11009,6 @@ ssize_t vhdlParser::Iteration_schemeContext::getRuleIndex() const {
   return vhdlParser::RuleIteration_scheme;
 }
 
-void vhdlParser::Iteration_schemeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIteration_scheme(this);
-}
-
-void vhdlParser::Iteration_schemeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIteration_scheme(this);
-}
-
-
 antlrcpp::Any vhdlParser::Iteration_schemeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitIteration_scheme(this);
@@ -12847,19 +11078,6 @@ ssize_t vhdlParser::Label_colonContext::getRuleIndex() const {
   return vhdlParser::RuleLabel_colon;
 }
 
-void vhdlParser::Label_colonContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLabel_colon(this);
-}
-
-void vhdlParser::Label_colonContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLabel_colon(this);
-}
-
-
 antlrcpp::Any vhdlParser::Label_colonContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitLabel_colon(this);
@@ -12914,19 +11132,6 @@ ssize_t vhdlParser::Library_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleLibrary_clause;
 }
 
-void vhdlParser::Library_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLibrary_clause(this);
-}
-
-void vhdlParser::Library_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLibrary_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Library_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitLibrary_clause(this);
@@ -12978,19 +11183,6 @@ Ref<vhdlParser::Primary_unitContext> vhdlParser::Library_unitContext::primary_un
 ssize_t vhdlParser::Library_unitContext::getRuleIndex() const {
   return vhdlParser::RuleLibrary_unit;
 }
-
-void vhdlParser::Library_unitContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLibrary_unit(this);
-}
-
-void vhdlParser::Library_unitContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLibrary_unit(this);
-}
-
 
 antlrcpp::Any vhdlParser::Library_unitContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13066,19 +11258,6 @@ Ref<vhdlParser::Numeric_literalContext> vhdlParser::LiteralContext::numeric_lite
 ssize_t vhdlParser::LiteralContext::getRuleIndex() const {
   return vhdlParser::RuleLiteral;
 }
-
-void vhdlParser::LiteralContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLiteral(this);
-}
-
-void vhdlParser::LiteralContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLiteral(this);
-}
-
 
 antlrcpp::Any vhdlParser::LiteralContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13166,19 +11345,6 @@ ssize_t vhdlParser::Logical_nameContext::getRuleIndex() const {
   return vhdlParser::RuleLogical_name;
 }
 
-void vhdlParser::Logical_nameContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLogical_name(this);
-}
-
-void vhdlParser::Logical_nameContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLogical_name(this);
-}
-
-
 antlrcpp::Any vhdlParser::Logical_nameContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitLogical_name(this);
@@ -13234,19 +11400,6 @@ Ref<tree::TerminalNode> vhdlParser::Logical_name_listContext::COMMA(int i) {
 ssize_t vhdlParser::Logical_name_listContext::getRuleIndex() const {
   return vhdlParser::RuleLogical_name_list;
 }
-
-void vhdlParser::Logical_name_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLogical_name_list(this);
-}
-
-void vhdlParser::Logical_name_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLogical_name_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Logical_name_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13324,19 +11477,6 @@ Ref<tree::TerminalNode> vhdlParser::Logical_operatorContext::XNOR() {
 ssize_t vhdlParser::Logical_operatorContext::getRuleIndex() const {
   return vhdlParser::RuleLogical_operator;
 }
-
-void vhdlParser::Logical_operatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLogical_operator(this);
-}
-
-void vhdlParser::Logical_operatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLogical_operator(this);
-}
-
 
 antlrcpp::Any vhdlParser::Logical_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13421,19 +11561,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Loop_statementContext::identifier
 ssize_t vhdlParser::Loop_statementContext::getRuleIndex() const {
   return vhdlParser::RuleLoop_statement;
 }
-
-void vhdlParser::Loop_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLoop_statement(this);
-}
-
-void vhdlParser::Loop_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLoop_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13529,19 +11656,6 @@ ssize_t vhdlParser::Signal_modeContext::getRuleIndex() const {
   return vhdlParser::RuleSignal_mode;
 }
 
-void vhdlParser::Signal_modeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignal_mode(this);
-}
-
-void vhdlParser::Signal_modeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignal_mode(this);
-}
-
-
 antlrcpp::Any vhdlParser::Signal_modeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSignal_mode(this);
@@ -13608,19 +11722,6 @@ Ref<tree::TerminalNode> vhdlParser::Multiplying_operatorContext::REM() {
 ssize_t vhdlParser::Multiplying_operatorContext::getRuleIndex() const {
   return vhdlParser::RuleMultiplying_operator;
 }
-
-void vhdlParser::Multiplying_operatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterMultiplying_operator(this);
-}
-
-void vhdlParser::Multiplying_operatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitMultiplying_operator(this);
-}
-
 
 antlrcpp::Any vhdlParser::Multiplying_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13691,19 +11792,6 @@ Ref<tree::TerminalNode> vhdlParser::NameContext::DOT(int i) {
 ssize_t vhdlParser::NameContext::getRuleIndex() const {
   return vhdlParser::RuleName;
 }
-
-void vhdlParser::NameContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName(this);
-}
-
-void vhdlParser::NameContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName(this);
-}
-
 
 antlrcpp::Any vhdlParser::NameContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13787,19 +11875,6 @@ ssize_t vhdlParser::Name_partContext::getRuleIndex() const {
   return vhdlParser::RuleName_part;
 }
 
-void vhdlParser::Name_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName_part(this);
-}
-
-void vhdlParser::Name_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Name_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitName_part(this);
@@ -13864,19 +11939,6 @@ Ref<vhdlParser::Name_slice_partContext> vhdlParser::Name_part_specificatorContex
 ssize_t vhdlParser::Name_part_specificatorContext::getRuleIndex() const {
   return vhdlParser::RuleName_part_specificator;
 }
-
-void vhdlParser::Name_part_specificatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName_part_specificator(this);
-}
-
-void vhdlParser::Name_part_specificatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName_part_specificator(this);
-}
-
 
 antlrcpp::Any vhdlParser::Name_part_specificatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -13964,19 +12026,6 @@ ssize_t vhdlParser::Name_attribute_partContext::getRuleIndex() const {
   return vhdlParser::RuleName_attribute_part;
 }
 
-void vhdlParser::Name_attribute_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName_attribute_part(this);
-}
-
-void vhdlParser::Name_attribute_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName_attribute_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Name_attribute_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitName_attribute_part(this);
@@ -14056,19 +12105,6 @@ Ref<vhdlParser::Actual_parameter_partContext> vhdlParser::Name_function_call_or_
 ssize_t vhdlParser::Name_function_call_or_indexed_partContext::getRuleIndex() const {
   return vhdlParser::RuleName_function_call_or_indexed_part;
 }
-
-void vhdlParser::Name_function_call_or_indexed_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName_function_call_or_indexed_part(this);
-}
-
-void vhdlParser::Name_function_call_or_indexed_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName_function_call_or_indexed_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Name_function_call_or_indexed_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -14160,19 +12196,6 @@ ssize_t vhdlParser::Name_slice_partContext::getRuleIndex() const {
   return vhdlParser::RuleName_slice_part;
 }
 
-void vhdlParser::Name_slice_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterName_slice_part(this);
-}
-
-void vhdlParser::Name_slice_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitName_slice_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Name_slice_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitName_slice_part(this);
@@ -14250,19 +12273,6 @@ ssize_t vhdlParser::Selected_nameContext::getRuleIndex() const {
   return vhdlParser::RuleSelected_name;
 }
 
-void vhdlParser::Selected_nameContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSelected_name(this);
-}
-
-void vhdlParser::Selected_nameContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSelected_name(this);
-}
-
-
 antlrcpp::Any vhdlParser::Selected_nameContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSelected_name(this);
@@ -14338,19 +12348,6 @@ ssize_t vhdlParser::Nature_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleNature_declaration;
 }
 
-void vhdlParser::Nature_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNature_declaration(this);
-}
-
-void vhdlParser::Nature_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNature_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Nature_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitNature_declaration(this);
@@ -14406,19 +12403,6 @@ Ref<vhdlParser::Composite_nature_definitionContext> vhdlParser::Nature_definitio
 ssize_t vhdlParser::Nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleNature_definition;
 }
-
-void vhdlParser::Nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNature_definition(this);
-}
-
-void vhdlParser::Nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNature_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -14491,19 +12475,6 @@ ssize_t vhdlParser::Nature_element_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleNature_element_declaration;
 }
 
-void vhdlParser::Nature_element_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNature_element_declaration(this);
-}
-
-void vhdlParser::Nature_element_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNature_element_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Nature_element_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitNature_element_declaration(this);
@@ -14571,19 +12542,6 @@ Ref<vhdlParser::ConditionContext> vhdlParser::Next_statementContext::condition()
 ssize_t vhdlParser::Next_statementContext::getRuleIndex() const {
   return vhdlParser::RuleNext_statement;
 }
-
-void vhdlParser::Next_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNext_statement(this);
-}
-
-void vhdlParser::Next_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNext_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Next_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -14663,19 +12621,6 @@ ssize_t vhdlParser::Numeric_literalContext::getRuleIndex() const {
   return vhdlParser::RuleNumeric_literal;
 }
 
-void vhdlParser::Numeric_literalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNumeric_literal(this);
-}
-
-void vhdlParser::Numeric_literalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNumeric_literal(this);
-}
-
-
 antlrcpp::Any vhdlParser::Numeric_literalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitNumeric_literal(this);
@@ -14754,19 +12699,6 @@ Ref<vhdlParser::Quantity_declarationContext> vhdlParser::Object_declarationConte
 ssize_t vhdlParser::Object_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleObject_declaration;
 }
-
-void vhdlParser::Object_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterObject_declaration(this);
-}
-
-void vhdlParser::Object_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitObject_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Object_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -14861,19 +12793,6 @@ Ref<vhdlParser::Delay_mechanismContext> vhdlParser::OptsContext::delay_mechanism
 ssize_t vhdlParser::OptsContext::getRuleIndex() const {
   return vhdlParser::RuleOpts;
 }
-
-void vhdlParser::OptsContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterOpts(this);
-}
-
-void vhdlParser::OptsContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitOpts(this);
-}
-
 
 antlrcpp::Any vhdlParser::OptsContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -14970,19 +12889,6 @@ Ref<tree::TerminalNode> vhdlParser::Package_bodyContext::SEMI() {
 ssize_t vhdlParser::Package_bodyContext::getRuleIndex() const {
   return vhdlParser::RulePackage_body;
 }
-
-void vhdlParser::Package_bodyContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_body(this);
-}
-
-void vhdlParser::Package_bodyContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_body(this);
-}
-
 
 antlrcpp::Any vhdlParser::Package_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -15098,19 +13004,6 @@ Ref<vhdlParser::Group_declarationContext> vhdlParser::Package_body_declarative_i
 ssize_t vhdlParser::Package_body_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RulePackage_body_declarative_item;
 }
-
-void vhdlParser::Package_body_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_body_declarative_item(this);
-}
-
-void vhdlParser::Package_body_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_body_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Package_body_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -15238,19 +13131,6 @@ ssize_t vhdlParser::Package_body_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RulePackage_body_declarative_part;
 }
 
-void vhdlParser::Package_body_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_body_declarative_part(this);
-}
-
-void vhdlParser::Package_body_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_body_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Package_body_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitPackage_body_declarative_part(this);
@@ -15344,19 +13224,6 @@ Ref<tree::TerminalNode> vhdlParser::Package_declarationContext::SEMI() {
 ssize_t vhdlParser::Package_declarationContext::getRuleIndex() const {
   return vhdlParser::RulePackage_declaration;
 }
-
-void vhdlParser::Package_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_declaration(this);
-}
-
-void vhdlParser::Package_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Package_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -15496,19 +13363,6 @@ Ref<vhdlParser::Terminal_declarationContext> vhdlParser::Package_declarative_ite
 ssize_t vhdlParser::Package_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RulePackage_declarative_item;
 }
-
-void vhdlParser::Package_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_declarative_item(this);
-}
-
-void vhdlParser::Package_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Package_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -15685,19 +13539,6 @@ ssize_t vhdlParser::Package_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RulePackage_declarative_part;
 }
 
-void vhdlParser::Package_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPackage_declarative_part(this);
-}
-
-void vhdlParser::Package_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPackage_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Package_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitPackage_declarative_part(this);
@@ -15779,19 +13620,6 @@ ssize_t vhdlParser::Parameter_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleParameter_specification;
 }
 
-void vhdlParser::Parameter_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterParameter_specification(this);
-}
-
-void vhdlParser::Parameter_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitParameter_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Parameter_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitParameter_specification(this);
@@ -15843,19 +13671,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Physical_literalContext::identifi
 ssize_t vhdlParser::Physical_literalContext::getRuleIndex() const {
   return vhdlParser::RulePhysical_literal;
 }
-
-void vhdlParser::Physical_literalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPhysical_literal(this);
-}
-
-void vhdlParser::Physical_literalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPhysical_literal(this);
-}
-
 
 antlrcpp::Any vhdlParser::Physical_literalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -15931,19 +13746,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Physical_type_definitionContext::
 ssize_t vhdlParser::Physical_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RulePhysical_type_definition;
 }
-
-void vhdlParser::Physical_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPhysical_type_definition(this);
-}
-
-void vhdlParser::Physical_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPhysical_type_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Physical_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16035,19 +13837,6 @@ ssize_t vhdlParser::Port_clauseContext::getRuleIndex() const {
   return vhdlParser::RulePort_clause;
 }
 
-void vhdlParser::Port_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPort_clause(this);
-}
-
-void vhdlParser::Port_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPort_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Port_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitPort_clause(this);
@@ -16099,19 +13888,6 @@ Ref<vhdlParser::Interface_port_listContext> vhdlParser::Port_listContext::interf
 ssize_t vhdlParser::Port_listContext::getRuleIndex() const {
   return vhdlParser::RulePort_list;
 }
-
-void vhdlParser::Port_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPort_list(this);
-}
-
-void vhdlParser::Port_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPort_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Port_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16172,19 +13948,6 @@ Ref<tree::TerminalNode> vhdlParser::Port_map_aspectContext::RPAREN() {
 ssize_t vhdlParser::Port_map_aspectContext::getRuleIndex() const {
   return vhdlParser::RulePort_map_aspect;
 }
-
-void vhdlParser::Port_map_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPort_map_aspect(this);
-}
-
-void vhdlParser::Port_map_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPort_map_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Port_map_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16265,19 +14028,6 @@ Ref<vhdlParser::NameContext> vhdlParser::PrimaryContext::name() {
 ssize_t vhdlParser::PrimaryContext::getRuleIndex() const {
   return vhdlParser::RulePrimary;
 }
-
-void vhdlParser::PrimaryContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPrimary(this);
-}
-
-void vhdlParser::PrimaryContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPrimary(this);
-}
-
 
 antlrcpp::Any vhdlParser::PrimaryContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16377,19 +14127,6 @@ Ref<vhdlParser::Package_declarationContext> vhdlParser::Primary_unitContext::pac
 ssize_t vhdlParser::Primary_unitContext::getRuleIndex() const {
   return vhdlParser::RulePrimary_unit;
 }
-
-void vhdlParser::Primary_unitContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPrimary_unit(this);
-}
-
-void vhdlParser::Primary_unitContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPrimary_unit(this);
-}
-
 
 antlrcpp::Any vhdlParser::Primary_unitContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16502,19 +14239,6 @@ Ref<vhdlParser::Group_declarationContext> vhdlParser::Procedural_declarative_ite
 ssize_t vhdlParser::Procedural_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RuleProcedural_declarative_item;
 }
-
-void vhdlParser::Procedural_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedural_declarative_item(this);
-}
-
-void vhdlParser::Procedural_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedural_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Procedural_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16649,19 +14373,6 @@ ssize_t vhdlParser::Procedural_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleProcedural_declarative_part;
 }
 
-void vhdlParser::Procedural_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedural_declarative_part(this);
-}
-
-void vhdlParser::Procedural_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedural_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Procedural_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitProcedural_declarative_part(this);
@@ -16731,19 +14442,6 @@ Ref<vhdlParser::Sequential_statementContext> vhdlParser::Procedural_statement_pa
 ssize_t vhdlParser::Procedural_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleProcedural_statement_part;
 }
-
-void vhdlParser::Procedural_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedural_statement_part(this);
-}
-
-void vhdlParser::Procedural_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedural_statement_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Procedural_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -16826,19 +14524,6 @@ ssize_t vhdlParser::Procedure_callContext::getRuleIndex() const {
   return vhdlParser::RuleProcedure_call;
 }
 
-void vhdlParser::Procedure_callContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedure_call(this);
-}
-
-void vhdlParser::Procedure_callContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedure_call(this);
-}
-
-
 antlrcpp::Any vhdlParser::Procedure_callContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitProcedure_call(this);
@@ -16902,19 +14587,6 @@ Ref<vhdlParser::Label_colonContext> vhdlParser::Procedure_call_statementContext:
 ssize_t vhdlParser::Procedure_call_statementContext::getRuleIndex() const {
   return vhdlParser::RuleProcedure_call_statement;
 }
-
-void vhdlParser::Procedure_call_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedure_call_statement(this);
-}
-
-void vhdlParser::Procedure_call_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedure_call_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Procedure_call_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -17020,19 +14692,6 @@ Ref<vhdlParser::Group_declarationContext> vhdlParser::Process_declarative_itemCo
 ssize_t vhdlParser::Process_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RuleProcess_declarative_item;
 }
-
-void vhdlParser::Process_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcess_declarative_item(this);
-}
-
-void vhdlParser::Process_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcess_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Process_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -17174,19 +14833,6 @@ ssize_t vhdlParser::Process_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleProcess_declarative_part;
 }
 
-void vhdlParser::Process_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcess_declarative_part(this);
-}
-
-void vhdlParser::Process_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcess_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Process_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitProcess_declarative_part(this);
@@ -17310,19 +14956,6 @@ ssize_t vhdlParser::Process_statementContext::getRuleIndex() const {
   return vhdlParser::RuleProcess_statement;
 }
 
-void vhdlParser::Process_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcess_statement(this);
-}
-
-void vhdlParser::Process_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcess_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Process_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitProcess_statement(this);
@@ -17434,19 +15067,6 @@ ssize_t vhdlParser::Process_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleProcess_statement_part;
 }
 
-void vhdlParser::Process_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcess_statement_part(this);
-}
-
-void vhdlParser::Process_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcess_statement_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Process_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitProcess_statement_part(this);
@@ -17536,19 +15156,6 @@ ssize_t vhdlParser::Qualified_expressionContext::getRuleIndex() const {
   return vhdlParser::RuleQualified_expression;
 }
 
-void vhdlParser::Qualified_expressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterQualified_expression(this);
-}
-
-void vhdlParser::Qualified_expressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitQualified_expression(this);
-}
-
-
 antlrcpp::Any vhdlParser::Qualified_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitQualified_expression(this);
@@ -17622,19 +15229,6 @@ Ref<vhdlParser::Source_quantity_declarationContext> vhdlParser::Quantity_declara
 ssize_t vhdlParser::Quantity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleQuantity_declaration;
 }
-
-void vhdlParser::Quantity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterQuantity_declaration(this);
-}
-
-void vhdlParser::Quantity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitQuantity_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -17721,19 +15315,6 @@ Ref<tree::TerminalNode> vhdlParser::Quantity_listContext::ALL() {
 ssize_t vhdlParser::Quantity_listContext::getRuleIndex() const {
   return vhdlParser::RuleQuantity_list;
 }
-
-void vhdlParser::Quantity_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterQuantity_list(this);
-}
-
-void vhdlParser::Quantity_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitQuantity_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Quantity_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -17825,19 +15406,6 @@ ssize_t vhdlParser::Quantity_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleQuantity_specification;
 }
 
-void vhdlParser::Quantity_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterQuantity_specification(this);
-}
-
-void vhdlParser::Quantity_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitQuantity_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Quantity_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitQuantity_specification(this);
@@ -17889,19 +15457,6 @@ Ref<vhdlParser::NameContext> vhdlParser::RangeContext::name() {
 ssize_t vhdlParser::RangeContext::getRuleIndex() const {
   return vhdlParser::RuleRange;
 }
-
-void vhdlParser::RangeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRange(this);
-}
-
-void vhdlParser::RangeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRange(this);
-}
-
 
 antlrcpp::Any vhdlParser::RangeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -17970,19 +15525,6 @@ ssize_t vhdlParser::Explicit_rangeContext::getRuleIndex() const {
   return vhdlParser::RuleExplicit_range;
 }
 
-void vhdlParser::Explicit_rangeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterExplicit_range(this);
-}
-
-void vhdlParser::Explicit_rangeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitExplicit_range(this);
-}
-
-
 antlrcpp::Any vhdlParser::Explicit_rangeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitExplicit_range(this);
@@ -18034,19 +15576,6 @@ Ref<vhdlParser::RangeContext> vhdlParser::Range_constraintContext::range() {
 ssize_t vhdlParser::Range_constraintContext::getRuleIndex() const {
   return vhdlParser::RuleRange_constraint;
 }
-
-void vhdlParser::Range_constraintContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRange_constraint(this);
-}
-
-void vhdlParser::Range_constraintContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRange_constraint(this);
-}
-
 
 antlrcpp::Any vhdlParser::Range_constraintContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18113,19 +15642,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Record_nature_definitionContext::
 ssize_t vhdlParser::Record_nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleRecord_nature_definition;
 }
-
-void vhdlParser::Record_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRecord_nature_definition(this);
-}
-
-void vhdlParser::Record_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRecord_nature_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Record_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18217,19 +15733,6 @@ ssize_t vhdlParser::Record_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleRecord_type_definition;
 }
 
-void vhdlParser::Record_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRecord_type_definition(this);
-}
-
-void vhdlParser::Record_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRecord_type_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Record_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitRecord_type_definition(this);
@@ -18308,19 +15811,6 @@ ssize_t vhdlParser::RelationContext::getRuleIndex() const {
   return vhdlParser::RuleRelation;
 }
 
-void vhdlParser::RelationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRelation(this);
-}
-
-void vhdlParser::RelationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRelation(this);
-}
-
-
 antlrcpp::Any vhdlParser::RelationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitRelation(this);
@@ -18398,19 +15888,6 @@ ssize_t vhdlParser::Relational_operatorContext::getRuleIndex() const {
   return vhdlParser::RuleRelational_operator;
 }
 
-void vhdlParser::Relational_operatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterRelational_operator(this);
-}
-
-void vhdlParser::Relational_operatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitRelational_operator(this);
-}
-
-
 antlrcpp::Any vhdlParser::Relational_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitRelational_operator(this);
@@ -18486,19 +15963,6 @@ Ref<tree::TerminalNode> vhdlParser::Report_statementContext::SEVERITY() {
 ssize_t vhdlParser::Report_statementContext::getRuleIndex() const {
   return vhdlParser::RuleReport_statement;
 }
-
-void vhdlParser::Report_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterReport_statement(this);
-}
-
-void vhdlParser::Report_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitReport_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Report_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18578,19 +16042,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Return_statementContext::expressi
 ssize_t vhdlParser::Return_statementContext::getRuleIndex() const {
   return vhdlParser::RuleReturn_statement;
 }
-
-void vhdlParser::Return_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterReturn_statement(this);
-}
-
-void vhdlParser::Return_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitReturn_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Return_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18686,19 +16137,6 @@ ssize_t vhdlParser::Scalar_nature_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleScalar_nature_definition;
 }
 
-void vhdlParser::Scalar_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterScalar_nature_definition(this);
-}
-
-void vhdlParser::Scalar_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitScalar_nature_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Scalar_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitScalar_nature_definition(this);
@@ -18760,19 +16198,6 @@ Ref<vhdlParser::Range_constraintContext> vhdlParser::Scalar_type_definitionConte
 ssize_t vhdlParser::Scalar_type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleScalar_type_definition;
 }
-
-void vhdlParser::Scalar_type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterScalar_type_definition(this);
-}
-
-void vhdlParser::Scalar_type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitScalar_type_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Scalar_type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18843,19 +16268,6 @@ Ref<vhdlParser::Package_bodyContext> vhdlParser::Secondary_unitContext::package_
 ssize_t vhdlParser::Secondary_unitContext::getRuleIndex() const {
   return vhdlParser::RuleSecondary_unit;
 }
-
-void vhdlParser::Secondary_unitContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSecondary_unit(this);
-}
-
-void vhdlParser::Secondary_unitContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSecondary_unit(this);
-}
-
 
 antlrcpp::Any vhdlParser::Secondary_unitContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -18929,19 +16341,6 @@ Ref<tree::TerminalNode> vhdlParser::Secondary_unit_declarationContext::SEMI() {
 ssize_t vhdlParser::Secondary_unit_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSecondary_unit_declaration;
 }
-
-void vhdlParser::Secondary_unit_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSecondary_unit_declaration(this);
-}
-
-void vhdlParser::Secondary_unit_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSecondary_unit_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Secondary_unit_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19020,19 +16419,6 @@ Ref<tree::TerminalNode> vhdlParser::Selected_signal_assignmentContext::SEMI() {
 ssize_t vhdlParser::Selected_signal_assignmentContext::getRuleIndex() const {
   return vhdlParser::RuleSelected_signal_assignment;
 }
-
-void vhdlParser::Selected_signal_assignmentContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSelected_signal_assignment(this);
-}
-
-void vhdlParser::Selected_signal_assignmentContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSelected_signal_assignment(this);
-}
-
 
 antlrcpp::Any vhdlParser::Selected_signal_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19120,19 +16506,6 @@ ssize_t vhdlParser::Selected_waveformsContext::getRuleIndex() const {
   return vhdlParser::RuleSelected_waveforms;
 }
 
-void vhdlParser::Selected_waveformsContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSelected_waveforms(this);
-}
-
-void vhdlParser::Selected_waveformsContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSelected_waveforms(this);
-}
-
-
 antlrcpp::Any vhdlParser::Selected_waveformsContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSelected_waveforms(this);
@@ -19202,19 +16575,6 @@ ssize_t vhdlParser::Sensitivity_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleSensitivity_clause;
 }
 
-void vhdlParser::Sensitivity_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSensitivity_clause(this);
-}
-
-void vhdlParser::Sensitivity_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSensitivity_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Sensitivity_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSensitivity_clause(this);
@@ -19272,19 +16632,6 @@ Ref<tree::TerminalNode> vhdlParser::Sensitivity_listContext::COMMA(int i) {
 ssize_t vhdlParser::Sensitivity_listContext::getRuleIndex() const {
   return vhdlParser::RuleSensitivity_list;
 }
-
-void vhdlParser::Sensitivity_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSensitivity_list(this);
-}
-
-void vhdlParser::Sensitivity_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSensitivity_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Sensitivity_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19346,19 +16693,6 @@ Ref<vhdlParser::Sequential_statementContext> vhdlParser::Sequence_of_statementsC
 ssize_t vhdlParser::Sequence_of_statementsContext::getRuleIndex() const {
   return vhdlParser::RuleSequence_of_statements;
 }
-
-void vhdlParser::Sequence_of_statementsContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSequence_of_statements(this);
-}
-
-void vhdlParser::Sequence_of_statementsContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSequence_of_statements(this);
-}
-
 
 antlrcpp::Any vhdlParser::Sequence_of_statementsContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19488,19 +16822,6 @@ Ref<vhdlParser::Procedure_call_statementContext> vhdlParser::Sequential_statemen
 ssize_t vhdlParser::Sequential_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSequential_statement;
 }
-
-void vhdlParser::Sequential_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSequential_statement(this);
-}
-
-void vhdlParser::Sequential_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSequential_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Sequential_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19665,19 +16986,6 @@ ssize_t vhdlParser::Shift_expressionContext::getRuleIndex() const {
   return vhdlParser::RuleShift_expression;
 }
 
-void vhdlParser::Shift_expressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterShift_expression(this);
-}
-
-void vhdlParser::Shift_expressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitShift_expression(this);
-}
-
-
 antlrcpp::Any vhdlParser::Shift_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitShift_expression(this);
@@ -19755,19 +17063,6 @@ ssize_t vhdlParser::Shift_operatorContext::getRuleIndex() const {
   return vhdlParser::RuleShift_operator;
 }
 
-void vhdlParser::Shift_operatorContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterShift_operator(this);
-}
-
-void vhdlParser::Shift_operatorContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitShift_operator(this);
-}
-
-
 antlrcpp::Any vhdlParser::Shift_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitShift_operator(this);
@@ -19843,19 +17138,6 @@ Ref<vhdlParser::Delay_mechanismContext> vhdlParser::Signal_assignment_statementC
 ssize_t vhdlParser::Signal_assignment_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSignal_assignment_statement;
 }
-
-void vhdlParser::Signal_assignment_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignal_assignment_statement(this);
-}
-
-void vhdlParser::Signal_assignment_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignal_assignment_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Signal_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -19957,19 +17239,6 @@ ssize_t vhdlParser::Signal_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSignal_declaration;
 }
 
-void vhdlParser::Signal_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignal_declaration(this);
-}
-
-void vhdlParser::Signal_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignal_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Signal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSignal_declaration(this);
@@ -20045,19 +17314,6 @@ ssize_t vhdlParser::Signal_kindContext::getRuleIndex() const {
   return vhdlParser::RuleSignal_kind;
 }
 
-void vhdlParser::Signal_kindContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignal_kind(this);
-}
-
-void vhdlParser::Signal_kindContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignal_kind(this);
-}
-
-
 antlrcpp::Any vhdlParser::Signal_kindContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSignal_kind(this);
@@ -20129,19 +17385,6 @@ Ref<tree::TerminalNode> vhdlParser::Signal_listContext::ALL() {
 ssize_t vhdlParser::Signal_listContext::getRuleIndex() const {
   return vhdlParser::RuleSignal_list;
 }
-
-void vhdlParser::Signal_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignal_list(this);
-}
-
-void vhdlParser::Signal_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignal_list(this);
-}
-
 
 antlrcpp::Any vhdlParser::Signal_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -20249,19 +17492,6 @@ ssize_t vhdlParser::SignatureContext::getRuleIndex() const {
   return vhdlParser::RuleSignature;
 }
 
-void vhdlParser::SignatureContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSignature(this);
-}
-
-void vhdlParser::SignatureContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSignature(this);
-}
-
-
 antlrcpp::Any vhdlParser::SignatureContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSignature(this);
@@ -20359,19 +17589,6 @@ ssize_t vhdlParser::Simple_expressionContext::getRuleIndex() const {
   return vhdlParser::RuleSimple_expression;
 }
 
-void vhdlParser::Simple_expressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimple_expression(this);
-}
-
-void vhdlParser::Simple_expressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimple_expression(this);
-}
-
-
 antlrcpp::Any vhdlParser::Simple_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSimple_expression(this);
@@ -20468,19 +17685,6 @@ ssize_t vhdlParser::Simple_simultaneous_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSimple_simultaneous_statement;
 }
 
-void vhdlParser::Simple_simultaneous_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimple_simultaneous_statement(this);
-}
-
-void vhdlParser::Simple_simultaneous_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimple_simultaneous_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Simple_simultaneous_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSimple_simultaneous_statement(this);
@@ -20561,19 +17765,6 @@ Ref<vhdlParser::Simultaneous_statement_partContext> vhdlParser::Simultaneous_alt
 ssize_t vhdlParser::Simultaneous_alternativeContext::getRuleIndex() const {
   return vhdlParser::RuleSimultaneous_alternative;
 }
-
-void vhdlParser::Simultaneous_alternativeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_alternative(this);
-}
-
-void vhdlParser::Simultaneous_alternativeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_alternative(this);
-}
-
 
 antlrcpp::Any vhdlParser::Simultaneous_alternativeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -20660,19 +17851,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Simultaneous_case_statementContex
 ssize_t vhdlParser::Simultaneous_case_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSimultaneous_case_statement;
 }
-
-void vhdlParser::Simultaneous_case_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_case_statement(this);
-}
-
-void vhdlParser::Simultaneous_case_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_case_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Simultaneous_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -20808,19 +17986,6 @@ Ref<vhdlParser::IdentifierContext> vhdlParser::Simultaneous_if_statementContext:
 ssize_t vhdlParser::Simultaneous_if_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSimultaneous_if_statement;
 }
-
-void vhdlParser::Simultaneous_if_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_if_statement(this);
-}
-
-void vhdlParser::Simultaneous_if_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_if_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Simultaneous_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -20958,19 +18123,6 @@ ssize_t vhdlParser::Simultaneous_procedural_statementContext::getRuleIndex() con
   return vhdlParser::RuleSimultaneous_procedural_statement;
 }
 
-void vhdlParser::Simultaneous_procedural_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_procedural_statement(this);
-}
-
-void vhdlParser::Simultaneous_procedural_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_procedural_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Simultaneous_procedural_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSimultaneous_procedural_statement(this);
@@ -21077,19 +18229,6 @@ ssize_t vhdlParser::Simultaneous_statementContext::getRuleIndex() const {
   return vhdlParser::RuleSimultaneous_statement;
 }
 
-void vhdlParser::Simultaneous_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_statement(this);
-}
-
-void vhdlParser::Simultaneous_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_statement(this);
-}
-
-
 antlrcpp::Any vhdlParser::Simultaneous_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSimultaneous_statement(this);
@@ -21186,19 +18325,6 @@ ssize_t vhdlParser::Simultaneous_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleSimultaneous_statement_part;
 }
 
-void vhdlParser::Simultaneous_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSimultaneous_statement_part(this);
-}
-
-void vhdlParser::Simultaneous_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSimultaneous_statement_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Simultaneous_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSimultaneous_statement_part(this);
@@ -21285,19 +18411,6 @@ Ref<tree::TerminalNode> vhdlParser::Source_aspectContext::NOISE() {
 ssize_t vhdlParser::Source_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleSource_aspect;
 }
-
-void vhdlParser::Source_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSource_aspect(this);
-}
-
-void vhdlParser::Source_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSource_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Source_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -21388,19 +18501,6 @@ ssize_t vhdlParser::Source_quantity_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSource_quantity_declaration;
 }
 
-void vhdlParser::Source_quantity_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSource_quantity_declaration(this);
-}
-
-void vhdlParser::Source_quantity_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSource_quantity_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Source_quantity_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSource_quantity_declaration(this);
@@ -21471,19 +18571,6 @@ ssize_t vhdlParser::Step_limit_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleStep_limit_specification;
 }
 
-void vhdlParser::Step_limit_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterStep_limit_specification(this);
-}
-
-void vhdlParser::Step_limit_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitStep_limit_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Step_limit_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitStep_limit_specification(this);
@@ -21551,19 +18638,6 @@ Ref<tree::TerminalNode> vhdlParser::Subnature_declarationContext::SEMI() {
 ssize_t vhdlParser::Subnature_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSubnature_declaration;
 }
-
-void vhdlParser::Subnature_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubnature_declaration(this);
-}
-
-void vhdlParser::Subnature_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubnature_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subnature_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -21640,19 +18714,6 @@ Ref<tree::TerminalNode> vhdlParser::Subnature_indicationContext::THROUGH() {
 ssize_t vhdlParser::Subnature_indicationContext::getRuleIndex() const {
   return vhdlParser::RuleSubnature_indication;
 }
-
-void vhdlParser::Subnature_indicationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubnature_indication(this);
-}
-
-void vhdlParser::Subnature_indicationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubnature_indication(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subnature_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -21753,19 +18814,6 @@ ssize_t vhdlParser::Subprogram_bodyContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_body;
 }
 
-void vhdlParser::Subprogram_bodyContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_body(this);
-}
-
-void vhdlParser::Subprogram_bodyContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_body(this);
-}
-
-
 antlrcpp::Any vhdlParser::Subprogram_bodyContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSubprogram_body(this);
@@ -21845,19 +18893,6 @@ Ref<tree::TerminalNode> vhdlParser::Subprogram_declarationContext::SEMI() {
 ssize_t vhdlParser::Subprogram_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_declaration;
 }
-
-void vhdlParser::Subprogram_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_declaration(this);
-}
-
-void vhdlParser::Subprogram_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subprogram_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -21952,19 +18987,6 @@ Ref<vhdlParser::Group_declarationContext> vhdlParser::Subprogram_declarative_ite
 ssize_t vhdlParser::Subprogram_declarative_itemContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_declarative_item;
 }
-
-void vhdlParser::Subprogram_declarative_itemContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_declarative_item(this);
-}
-
-void vhdlParser::Subprogram_declarative_itemContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_declarative_item(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subprogram_declarative_itemContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -22106,19 +19128,6 @@ ssize_t vhdlParser::Subprogram_declarative_partContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_declarative_part;
 }
 
-void vhdlParser::Subprogram_declarative_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_declarative_part(this);
-}
-
-void vhdlParser::Subprogram_declarative_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_declarative_part(this);
-}
-
-
 antlrcpp::Any vhdlParser::Subprogram_declarative_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSubprogram_declarative_part(this);
@@ -22190,19 +19199,6 @@ ssize_t vhdlParser::Subprogram_kindContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_kind;
 }
 
-void vhdlParser::Subprogram_kindContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_kind(this);
-}
-
-void vhdlParser::Subprogram_kindContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_kind(this);
-}
-
-
 antlrcpp::Any vhdlParser::Subprogram_kindContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSubprogram_kind(this);
@@ -22258,19 +19254,6 @@ Ref<vhdlParser::Function_specificationContext> vhdlParser::Subprogram_specificat
 ssize_t vhdlParser::Subprogram_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_specification;
 }
-
-void vhdlParser::Subprogram_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_specification(this);
-}
-
-void vhdlParser::Subprogram_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_specification(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subprogram_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -22350,19 +19333,6 @@ Ref<tree::TerminalNode> vhdlParser::Procedure_specificationContext::RPAREN() {
 ssize_t vhdlParser::Procedure_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleProcedure_specification;
 }
-
-void vhdlParser::Procedure_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProcedure_specification(this);
-}
-
-void vhdlParser::Procedure_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProcedure_specification(this);
-}
-
 
 antlrcpp::Any vhdlParser::Procedure_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -22454,19 +19424,6 @@ ssize_t vhdlParser::Function_specificationContext::getRuleIndex() const {
   return vhdlParser::RuleFunction_specification;
 }
 
-void vhdlParser::Function_specificationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFunction_specification(this);
-}
-
-void vhdlParser::Function_specificationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFunction_specification(this);
-}
-
-
 antlrcpp::Any vhdlParser::Function_specificationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitFunction_specification(this);
@@ -22548,19 +19505,6 @@ Ref<vhdlParser::Sequential_statementContext> vhdlParser::Subprogram_statement_pa
 ssize_t vhdlParser::Subprogram_statement_partContext::getRuleIndex() const {
   return vhdlParser::RuleSubprogram_statement_part;
 }
-
-void vhdlParser::Subprogram_statement_partContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubprogram_statement_part(this);
-}
-
-void vhdlParser::Subprogram_statement_partContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubprogram_statement_part(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subprogram_statement_partContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -22647,19 +19591,6 @@ ssize_t vhdlParser::Subtype_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleSubtype_declaration;
 }
 
-void vhdlParser::Subtype_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubtype_declaration(this);
-}
-
-void vhdlParser::Subtype_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubtype_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Subtype_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSubtype_declaration(this);
@@ -22723,19 +19654,6 @@ Ref<vhdlParser::Tolerance_aspectContext> vhdlParser::Subtype_indicationContext::
 ssize_t vhdlParser::Subtype_indicationContext::getRuleIndex() const {
   return vhdlParser::RuleSubtype_indication;
 }
-
-void vhdlParser::Subtype_indicationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSubtype_indication(this);
-}
-
-void vhdlParser::Subtype_indicationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSubtype_indication(this);
-}
-
 
 antlrcpp::Any vhdlParser::Subtype_indicationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -22826,19 +19744,6 @@ ssize_t vhdlParser::SuffixContext::getRuleIndex() const {
   return vhdlParser::RuleSuffix;
 }
 
-void vhdlParser::SuffixContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSuffix(this);
-}
-
-void vhdlParser::SuffixContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSuffix(this);
-}
-
-
 antlrcpp::Any vhdlParser::SuffixContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitSuffix(this);
@@ -22919,19 +19824,6 @@ ssize_t vhdlParser::TargetContext::getRuleIndex() const {
   return vhdlParser::RuleTarget;
 }
 
-void vhdlParser::TargetContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTarget(this);
-}
-
-void vhdlParser::TargetContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTarget(this);
-}
-
-
 antlrcpp::Any vhdlParser::TargetContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitTarget(this);
@@ -23006,19 +19898,6 @@ ssize_t vhdlParser::TermContext::getRuleIndex() const {
   return vhdlParser::RuleTerm;
 }
 
-void vhdlParser::TermContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTerm(this);
-}
-
-void vhdlParser::TermContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTerm(this);
-}
-
-
 antlrcpp::Any vhdlParser::TermContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitTerm(this);
@@ -23085,19 +19964,6 @@ Ref<tree::TerminalNode> vhdlParser::Terminal_aspectContext::TO() {
 ssize_t vhdlParser::Terminal_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleTerminal_aspect;
 }
-
-void vhdlParser::Terminal_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTerminal_aspect(this);
-}
-
-void vhdlParser::Terminal_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTerminal_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Terminal_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -23169,19 +20035,6 @@ ssize_t vhdlParser::Terminal_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleTerminal_declaration;
 }
 
-void vhdlParser::Terminal_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTerminal_declaration(this);
-}
-
-void vhdlParser::Terminal_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTerminal_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Terminal_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitTerminal_declaration(this);
@@ -23250,19 +20103,6 @@ ssize_t vhdlParser::Through_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleThrough_aspect;
 }
 
-void vhdlParser::Through_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterThrough_aspect(this);
-}
-
-void vhdlParser::Through_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitThrough_aspect(this);
-}
-
-
 antlrcpp::Any vhdlParser::Through_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitThrough_aspect(this);
@@ -23330,19 +20170,6 @@ ssize_t vhdlParser::Timeout_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleTimeout_clause;
 }
 
-void vhdlParser::Timeout_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTimeout_clause(this);
-}
-
-void vhdlParser::Timeout_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTimeout_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Timeout_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitTimeout_clause(this);
@@ -23392,19 +20219,6 @@ Ref<vhdlParser::ExpressionContext> vhdlParser::Tolerance_aspectContext::expressi
 ssize_t vhdlParser::Tolerance_aspectContext::getRuleIndex() const {
   return vhdlParser::RuleTolerance_aspect;
 }
-
-void vhdlParser::Tolerance_aspectContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTolerance_aspect(this);
-}
-
-void vhdlParser::Tolerance_aspectContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTolerance_aspect(this);
-}
-
 
 antlrcpp::Any vhdlParser::Tolerance_aspectContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -23467,19 +20281,6 @@ Ref<vhdlParser::Type_definitionContext> vhdlParser::Type_declarationContext::typ
 ssize_t vhdlParser::Type_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleType_declaration;
 }
-
-void vhdlParser::Type_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterType_declaration(this);
-}
-
-void vhdlParser::Type_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitType_declaration(this);
-}
-
 
 antlrcpp::Any vhdlParser::Type_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -23550,19 +20351,6 @@ Ref<vhdlParser::File_type_definitionContext> vhdlParser::Type_definitionContext:
 ssize_t vhdlParser::Type_definitionContext::getRuleIndex() const {
   return vhdlParser::RuleType_definition;
 }
-
-void vhdlParser::Type_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterType_definition(this);
-}
-
-void vhdlParser::Type_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitType_definition(this);
-}
-
 
 antlrcpp::Any vhdlParser::Type_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -23673,19 +20461,6 @@ ssize_t vhdlParser::Unconstrained_array_definitionContext::getRuleIndex() const 
   return vhdlParser::RuleUnconstrained_array_definition;
 }
 
-void vhdlParser::Unconstrained_array_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterUnconstrained_array_definition(this);
-}
-
-void vhdlParser::Unconstrained_array_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitUnconstrained_array_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Unconstrained_array_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitUnconstrained_array_definition(this);
@@ -23785,19 +20560,6 @@ ssize_t vhdlParser::Unconstrained_nature_definitionContext::getRuleIndex() const
   return vhdlParser::RuleUnconstrained_nature_definition;
 }
 
-void vhdlParser::Unconstrained_nature_definitionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterUnconstrained_nature_definition(this);
-}
-
-void vhdlParser::Unconstrained_nature_definitionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitUnconstrained_nature_definition(this);
-}
-
-
 antlrcpp::Any vhdlParser::Unconstrained_nature_definitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitUnconstrained_nature_definition(this);
@@ -23885,19 +20647,6 @@ ssize_t vhdlParser::Use_clauseContext::getRuleIndex() const {
   return vhdlParser::RuleUse_clause;
 }
 
-void vhdlParser::Use_clauseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterUse_clause(this);
-}
-
-void vhdlParser::Use_clauseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitUse_clause(this);
-}
-
-
 antlrcpp::Any vhdlParser::Use_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitUse_clause(this);
@@ -23974,19 +20723,6 @@ Ref<vhdlParser::Label_colonContext> vhdlParser::Variable_assignment_statementCon
 ssize_t vhdlParser::Variable_assignment_statementContext::getRuleIndex() const {
   return vhdlParser::RuleVariable_assignment_statement;
 }
-
-void vhdlParser::Variable_assignment_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterVariable_assignment_statement(this);
-}
-
-void vhdlParser::Variable_assignment_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitVariable_assignment_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Variable_assignment_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -24077,19 +20813,6 @@ ssize_t vhdlParser::Variable_declarationContext::getRuleIndex() const {
   return vhdlParser::RuleVariable_declaration;
 }
 
-void vhdlParser::Variable_declarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterVariable_declaration(this);
-}
-
-void vhdlParser::Variable_declarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitVariable_declaration(this);
-}
-
-
 antlrcpp::Any vhdlParser::Variable_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
     return ((vhdlVisitor *)visitor)->visitVariable_declaration(this);
@@ -24178,19 +20901,6 @@ Ref<vhdlParser::Timeout_clauseContext> vhdlParser::Wait_statementContext::timeou
 ssize_t vhdlParser::Wait_statementContext::getRuleIndex() const {
   return vhdlParser::RuleWait_statement;
 }
-
-void vhdlParser::Wait_statementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterWait_statement(this);
-}
-
-void vhdlParser::Wait_statementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitWait_statement(this);
-}
-
 
 antlrcpp::Any vhdlParser::Wait_statementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -24284,19 +20994,6 @@ Ref<tree::TerminalNode> vhdlParser::WaveformContext::UNAFFECTED() {
 ssize_t vhdlParser::WaveformContext::getRuleIndex() const {
   return vhdlParser::RuleWaveform;
 }
-
-void vhdlParser::WaveformContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterWaveform(this);
-}
-
-void vhdlParser::WaveformContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitWaveform(this);
-}
-
 
 antlrcpp::Any vhdlParser::WaveformContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
@@ -24393,19 +21090,6 @@ Ref<tree::TerminalNode> vhdlParser::Waveform_elementContext::AFTER() {
 ssize_t vhdlParser::Waveform_elementContext::getRuleIndex() const {
   return vhdlParser::RuleWaveform_element;
 }
-
-void vhdlParser::Waveform_elementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterWaveform_element(this);
-}
-
-void vhdlParser::Waveform_elementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<vhdlListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitWaveform_element(this);
-}
-
 
 antlrcpp::Any vhdlParser::Waveform_elementContext::accept(tree::ParseTreeVisitor *visitor) {
   if (dynamic_cast<vhdlVisitor*>(visitor) != nullptr)
