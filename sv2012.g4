@@ -211,8 +211,9 @@ interface_identifier ( '.' modport_identifier )?
 | 'interface' ( '.' modport_identifier )?
 ;
 
+// [MODIFIED] net_port_header can be reduced to "" so it does not require ?
 ansi_port_declaration :
-( net_port_header | interface_port_header )? port_identifier  ( unpacked_dimension )* 
+( net_port_header | interface_port_header ) port_identifier  ( unpacked_dimension )* 
 ( '=' constant_expression )?
 | ( variable_port_header )? port_identifier  ( variable_dimension )*  ( '=' constant_expression )?
 | ( port_direction )? '.' port_identifier '(' ( expression )? ')'
@@ -466,8 +467,9 @@ class_method :
 | 'extern'  ( method_qualifier )*  class_constructor_prototype
 ;
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 class_constructor_prototype :
-'function' 'new' ( '(' ( tf_port_list )? ')' )? ';'
+'function' 'new' ( '(' tf_port_list ')' )? ';'
 ;
 
 class_constraint :
@@ -501,8 +503,9 @@ task_prototype
 | function_prototype
 ;
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 class_constructor_declaration :
-'function' ( class_scope )? 'new' ( '(' ( tf_port_list )? ')' )? ';'
+'function' ( class_scope )? 'new' ( '(' tf_port_list ')' )? ';'
 ( block_item_declaration )* 
 ( 'super' '.' 'new' ( '(' list_of_arguments ')' )? ';' )?
 ( function_statement_or_null )* 
@@ -977,6 +980,7 @@ data_type_or_void
 function_declaration : 'function' ( lifetime )? function_body_declaration
 ;
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 function_body_declaration :
 function_data_type_or_implicit
 ( interface_identifier '.' | class_scope )? function_identifier ';'
@@ -984,13 +988,14 @@ function_data_type_or_implicit
 ( function_statement_or_null )* 
 'endfunction' ( ':' function_identifier )?
 | function_data_type_or_implicit
-( interface_identifier '.' | class_scope )? function_identifier '(' ( tf_port_list )? ')' ';'
+( interface_identifier '.' | class_scope )? function_identifier '(' tf_port_list ')' ';'
 ( block_item_declaration )* 
 ( function_statement_or_null )* 
 'endfunction' ( ':' function_identifier )?
 ;
 
-function_prototype : 'function' data_type_or_void function_identifier ( '(' ( tf_port_list )? ')' )?
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
+function_prototype : 'function' data_type_or_void function_identifier ( '(' tf_port_list ')' )?
 ;
 
 dpi_import_export :
@@ -1019,12 +1024,13 @@ dpi_task_proto : task_prototype
 task_declaration : 'task' ( lifetime )? task_body_declaration
 ;
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 task_body_declaration :
 ( interface_identifier '.' | class_scope )? task_identifier ';'
 ( tf_item_declaration )* 
 ( statement_or_null )* 
 'endtask' ( ':' task_identifier )?
-| ( interface_identifier '.' | class_scope )? task_identifier '(' ( tf_port_list )? ')' ';'
+| ( interface_identifier '.' | class_scope )? task_identifier '(' tf_port_list ')' ';'
 ( block_item_declaration )* 
 ( statement_or_null )* 
 'endtask' ( ':' task_identifier )?
@@ -1052,7 +1058,8 @@ tf_port_declaration :
 ( attribute_instance )*  tf_port_direction ( 'var' )? data_type_or_implicit list_of_tf_variable_identifiers ';'
 ;
 
-task_prototype : 'task' task_identifier ( '(' ( tf_port_list )? ')' )?
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
+task_prototype : 'task' task_identifier ( '(' tf_port_list ')' )?
 ;
 
 // A.2.8 Block item declarations
@@ -1151,8 +1158,9 @@ restrict_property_statement:
 'restrict' 'property' '(' property_spec ')' ';'
 ;
 
+// [MODIFIED] property_list_of_arguments can be reduced to "" so it does not require ?
 property_instance :
-ps_or_hierarchical_property_identifier ( '(' ( property_list_of_arguments )? ')' )?
+ps_or_hierarchical_property_identifier ( '(' property_list_of_arguments ')' )?
 ;
 
 property_list_of_arguments :
@@ -1299,8 +1307,9 @@ operator_assignment
 | subroutine_call
 ;
 
+// [MODIFIED] sequence_list_of_arguments can be reduced to "" so it does not require ?
 sequence_instance :
-ps_or_hierarchical_sequence_identifier ( '(' ( sequence_list_of_arguments )? ')' )?
+ps_or_hierarchical_sequence_identifier ( '(' sequence_list_of_arguments ')' )?
 ;
 
 sequence_list_of_arguments :
@@ -1372,8 +1381,9 @@ data_type_or_implicit
 | 'untyped'
 ;
 
+// [MODIFIED] let_list_of_arguments can be reduced to "" so it does not require ?
 let_expression :
-( package_scope )? let_identifier ( '(' ( let_list_of_arguments )? ')' )?
+( package_scope )? let_identifier ( '(' let_list_of_arguments ')' )?
 ;
 
 let_list_of_arguments :
@@ -1387,8 +1397,9 @@ expression
 
 // A.2.11 Covergroup declarations
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 covergroup_declaration :
-'covergroup' covergroup_identifier ( '(' ( tf_port_list )? ')' )? ( coverage_event )? ';'
+'covergroup' covergroup_identifier ( '(' tf_port_list ')' )? ( coverage_event )? ';'
 ( coverage_spec_or_option )* 
 'endgroup' ( ':' covergroup_identifier )?
 ;
@@ -1408,9 +1419,10 @@ cover_point
 | cover_cross
 ;
 
+// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 coverage_event :
 clocking_event
-| 'with' 'function sample' '(' ( tf_port_list )? ')'
+| 'with' 'function sample' '(' tf_port_list ')'
 | '@' '@' '(' block_event_expression ')'
 ;
 
@@ -1426,8 +1438,9 @@ hierarchical_tf_identifier
 | ( hierarchical_identifier '.' | class_scope )? method_identifier
 ;
 
+// [MODIFIED] data_type_or_implicit -> implicit_data_type can be reduced to "" so it does not require ?
 cover_point :
-( ( data_type_or_implicit )? cover_point_identifier ':' )? 'coverpoint' expression ( 'iff' '(' expression ')' )?
+( data_type_or_implicit cover_point_identifier ':' )? 'coverpoint' expression ( 'iff' '(' expression ')' )?
 bins_or_empty
 ;
 
@@ -1666,7 +1679,8 @@ ordered_parameter_assignment : param_expression
 named_parameter_assignment : '.' parameter_identifier '(' ( param_expression )? ')'
 ;
 
-hierarchical_instance : name_of_instance '(' ( list_of_port_connections )? ')'
+// [MODIFIED] list_of_port_connections can be reduced to "" so it does not require ?
+hierarchical_instance : name_of_instance '(' list_of_port_connections ')'
 ;
 
 name_of_instance : instance_identifier  ( unpacked_dimension )* 
@@ -1699,8 +1713,9 @@ program_identifier ( parameter_value_assignment )? hierarchical_instance  ( ',' 
 
 // A.4.1.4 Checker instantiation
 
+// [MODIFIED] list_of_checker_port_connections can be "" so it does not require ?
 checker_instantiation :
-ps_checker_identifier name_of_instance '(' (list_of_checker_port_connections)? ')' ';'
+ps_checker_identifier name_of_instance '(' list_of_checker_port_connections ')' ';'
 ;
 
 list_of_checker_port_connections :
@@ -2981,9 +2996,10 @@ number
 | '(' module_path_mintypmax_expression ')'
 ;
 
+// [MODIFIED] class_qualifier is reduced to "" so it does not require ?
 primary :
 primary_literal
-| ( class_qualifier | package_scope )? hierarchical_identifier select
+| ( class_qualifier | package_scope ) hierarchical_identifier select
 | empty_queue
 | concatenation ( '[' range_expression ']' )?
 | multiple_concatenation ( '[' range_expression ']' )?
