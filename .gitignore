@@ -35,3 +35,6 @@ MANIFEST
 Debug/
 target/
 dist/
+SVParser/
+VerilogParser/
+VhdlParser/
