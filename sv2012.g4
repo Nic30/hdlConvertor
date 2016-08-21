@@ -190,7 +190,7 @@ port :
 
 port_expression :
 port_reference
-|  ( port_reference  ( ',' port_reference )*  )* 
+|  '{' port_reference  ( ',' port_reference )*  '}' 
 ;
 
 port_reference :
@@ -219,11 +219,12 @@ ansi_port_declaration :
 ;
 
 // A.1.4 Module items
+// [MODIFIED] list_of_arguments can "" so it do not to have ? 
 elaboration_system_task :
-'$fatal' ( '(' finish_number (',' list_of_arguments )? ')' )? ';'
-| '$error' ( '(' ( list_of_arguments )? ')' )? ';'
-| '$warning' ( '(' ( list_of_arguments )? ')' )? ';'
-| '$info' ( '(' ( list_of_arguments )? ')' )? ';'
+  '$fatal'   ( '(' finish_number (',' list_of_arguments )? ')' )? ';'
+| '$error'   ( '(' list_of_arguments ')' )? ';'
+| '$warning' ( '(' list_of_arguments ')' )? ';'
+| '$info'    ( '(' list_of_arguments ')' )? ';'
 ;
 
 finish_number : Unsigned_number
@@ -699,8 +700,17 @@ lifetime : 'static' | 'automatic'
 
 // A.2.2 Declaration data types
 // A.2.2.1 Net and variable types
-casting_type : 
+casting_type_reduced : //[TODO] 
 simple_type 
+| signing 
+| 'string' 
+| 'const'
+;
+
+
+
+casting_type :
+simple_type
 | constant_primary //ilr
 | signing 
 | 'string' 
@@ -2790,7 +2800,7 @@ function_subroutine_call : subroutine_call
 subroutine_call :
 tf_call
 | system_tf_call
-| method_call
+//| method_call [TODO]
 | ( 'std' ':' ':' )? randomize_call
 ;
 
@@ -2801,7 +2811,8 @@ method_call_root : primary | implicit_class_handle
 ;
 
 list_of_arguments :
-( expression )?  ( ',' ( expression )? )*   ( ',' '.' identifier '(' ( expression )? ')' )* 
+()
+| expression  ( ',' ( expression )? )*   ( ',' '.' identifier '(' ( expression )? ')' )* 
 | '.' identifier '(' ( expression )? ')'  ( ',' '.' identifier '(' ( expression )? ')' )* 
 ;
 
@@ -2838,12 +2849,14 @@ inc_or_dec_operator  ( attribute_instance )*  variable_lvalue
 | variable_lvalue  ( attribute_instance )*  inc_or_dec_operator
 ;
 
+
 conditional_expression : cond_predicate '?'  ( attribute_instance )*  expression ':' expression
 ;
 
 constant_expression :
-constant_primary
-| unary_operator  ( attribute_instance )*  constant_primary
+//constant_primary [TODO]
+//|
+ unary_operator  ( attribute_instance )*  constant_primary
 | constant_expression binary_operator  ( attribute_instance )*  constant_expression
 | constant_expression '?'  ( attribute_instance )*  constant_expression ':' constant_expression
 ;
@@ -2878,14 +2891,19 @@ constant_expression '+' ':' constant_expression
 | constant_expression '-' ':' constant_expression
 ;
 
+expression_cond_or_inside :
+('matches' pattern)? '?'  ( attribute_instance )*  expression ':' expression //conditional_expression //ilr
+| 'inside' '{' open_range_list '}' //inside_expression      //ilr
+;
+
+
 expression :
 primary
 | unary_operator  ( attribute_instance )*  primary
 | inc_or_dec_expression
 | '(' operator_assignment ')'
 | expression binary_operator  ( attribute_instance )*  expression
-| conditional_expression //ilr
-| inside_expression      //ilr
+| expression expression_cond_or_inside 
 | tagged_union_expression
 ;
 
@@ -2912,10 +2930,10 @@ module_path_conditional_expression :
 ;
 
 module_path_expression :
-module_path_primary
+ module_path_primary 
 | unary_module_path_operator  ( attribute_instance )*  module_path_primary
 | module_path_expression binary_module_path_operator  ( attribute_instance )* module_path_expression
-| module_path_conditional_expression //ilr
+| '(' module_path_conditional_expression ')' //ilr [TODO] parenthesis should not be there
 ;
 
 module_path_mintypmax_expression :
@@ -2937,8 +2955,9 @@ genvar_expression : constant_expression
 // A.8.4 Primaries
 
 constant_primary :
-primary_literal
-| ps_parameter_identifier constant_select
+//primary_literal  // [TODO]
+//|
+ ps_parameter_identifier constant_select
 | specparam_identifier ( '[' constant_range_expression ']' )?
 | genvar_identifier
 | formal_port_identifier constant_select
@@ -3022,7 +3041,8 @@ constant_select :
 ;
 
 constant_cast :
-casting_type '\'' '(' constant_expression ')'
+// was casting type
+casting_type_reduced '\'' '(' constant_expression ')'
 ;
 
 constant_let_expression : let_expression
@@ -3244,8 +3264,7 @@ enum_identifier : identifier
 ;
 
 Escaped_identifier
-	:	'\\' ~[ \r\t\n]*
-        {_input.LA(1)!=' '&&_input.LA(1)!='\t'&&_input.LA(1)!='\t'&&_input.LA(1)!='\n'}?
+	:	'\\' ~[ \r\t\n]+ [ \r\t\n]
     ;
 
 
@@ -3403,7 +3422,7 @@ ps_or_hierarchical_tf_identifier :
 
 ps_parameter_identifier :
 ( package_scope | class_scope )? parameter_identifier
-|  ( generate_block_identifier ( ( constant_expression )? )? '.' )*  parameter_identifier
+|  ( generate_block_identifier ( '[' constant_expression ']' )? '.' )*  parameter_identifier
 ;
 
 ps_type_identifier : ( 'local' ':' ':' | package_scope )? type_identifier
