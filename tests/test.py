@@ -14,3 +14,7 @@ pprint(res)
 f = path.join(BASE_DIR, "tests/uart.v")
 res = hdlConvertor.parse(f, "verilog", debug=True)
 pprint(res)
+
+f = path.join(BASE_DIR, "tests/mem_base_object.sv")
+res = hdlConvertor.parse(f, "system_verilog", debug=True)
+pprint(res)
