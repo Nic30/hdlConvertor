@@ -1,5 +1,7 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
+(!!! Note that Travis just has not enough RAM to build this !!!)
+
 
 verilog and vhdl parser module for python
 
