@@ -25,7 +25,8 @@ env: CC=g++-5 CXX=g++-5
 
 # command to install dependencies
 install:
-  - travis_wait "python3 setup.py install"
+  - python3 setup.py install
+  #- travis_wait "python3 setup.py install"
 
 # command to run tests
 script: nosetests
