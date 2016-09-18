@@ -77,7 +77,7 @@ antlr4 = ('antlr4',
 
 setup (cmdclass={'build_ext': buildWithoutStrictPrototypes},
        name='hdlConvertor',
-       version='0.9',
+       version='1.0',
        description='Vhdl and verilog parser written in c++, this module is primary used for hw_toolkit library for hdl manipulation',
        url='https://github.com/Nic30/hdlConvertor',
        author='Michal Orsak',
