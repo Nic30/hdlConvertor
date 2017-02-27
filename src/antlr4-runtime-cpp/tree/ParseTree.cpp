@@ -3,10 +3,13 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 
-#include "atn/StarBlockStartState.h"
+#include "tree/ParseTree.h"
 
-using namespace antlr4::atn;
+using namespace antlr4::tree;
 
-size_t StarBlockStartState::getStateType() {
-  return STAR_BLOCK_START;
+ParseTree::ParseTree() : parent(nullptr) {
+}
+
+bool ParseTree::operator == (const ParseTree &other) const {
+  return &other == this;
 }

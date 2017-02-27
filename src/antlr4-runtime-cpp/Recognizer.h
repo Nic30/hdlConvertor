@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -38,7 +12,7 @@ namespace antlr4 {
 
   class ANTLR4CPP_PUBLIC Recognizer : public IRecognizer {
   public:
-    static const ssize_t EOF = -1;
+    static const size_t EOF = (size_t)-1;
 
     Recognizer();
     virtual ~Recognizer() {};
@@ -65,7 +39,7 @@ namespace antlr4 {
     /// <p/>
     /// Used for XPath and tree pattern compilation.
     /// </summary>
-    virtual std::map<std::string, ssize_t> getTokenTypeMap();
+    virtual std::map<std::string, size_t> getTokenTypeMap();
 
     /// <summary>
     /// Get a map from rule names to rule indexes.
@@ -74,7 +48,7 @@ namespace antlr4 {
     /// </summary>
     virtual std::map<std::string, size_t> getRuleIndexMap();
 
-    virtual ssize_t getTokenType(const std::string &tokenName);
+    virtual size_t getTokenType(const std::string &tokenName);
 
     /// <summary>
     /// If this recognizer was generated, it will have a serialized ATN
@@ -100,13 +74,6 @@ namespace antlr4 {
       return dynamic_cast<T *>(_interpreter);
     }
 
-    /** If profiling during the parse/lex, this will return DecisionInfo records
-     *  for each decision in recognizer in a ParseInfo object.
-     *
-     * @since 4.3
-     */
-    virtual Ref<atn::ParseInfo> getParseInfo() const;
-    
     /**
      * Set the ATN interpreter used by the recognizer for prediction.
      *
@@ -114,7 +81,7 @@ namespace antlr4 {
      * prediction.
      */
     void setInterpreter(atn::ATNSimulator *interpreter);
-    
+
     /// What is the error header, normally line/character position information?
     virtual std::string getErrorHeader(RecognitionException *e);
 
@@ -144,13 +111,13 @@ namespace antlr4 {
 
     // subclass needs to override these if there are sempreds or actions
     // that the ATN interp needs to execute
-    virtual bool sempred(Ref<RuleContext> const& localctx, int ruleIndex, int actionIndex);
+    virtual bool sempred(RuleContext *localctx, size_t ruleIndex, size_t actionIndex);
 
-    virtual bool precpred(Ref<RuleContext> const& localctx, int precedence);
+    virtual bool precpred(RuleContext *localctx, int precedence);
 
-    virtual void action(Ref<RuleContext> const& localctx, int ruleIndex, int actionIndex);
+    virtual void action(RuleContext *localctx, size_t ruleIndex, size_t actionIndex);
 
-    int getState();
+    virtual size_t getState() const override;
 
     /// <summary>
     /// Indicate that the recognizer has changed internal state that is
@@ -160,7 +127,7 @@ namespace antlr4 {
     ///  invoking rules. Combine this and we have complete ATN
     ///  configuration information.
     /// </summary>
-    void setState(int atnState);
+    void setState(size_t atnState);
 
     virtual IntStream* getInputStream() = 0;
 
@@ -174,17 +141,17 @@ namespace antlr4 {
   protected:
     atn::ATNSimulator *_interpreter; // Set and deleted in descendants (or the profiler).
 
+    // Mutex to manage synchronized access for multithreading.
+    std::mutex _mutex;
+
   private:
-    static std::map<const dfa::Vocabulary*, std::map<std::string, ssize_t>> _tokenTypeMapCache;
+    static std::map<const dfa::Vocabulary*, std::map<std::string, size_t>> _tokenTypeMapCache;
     static std::map<std::vector<std::string>, std::map<std::string, size_t>> _ruleIndexMapCache;
 
     ProxyErrorListener _proxListener; // Manages a collection of listeners.
 
-    // Mutex to manage synchronized access for multithreading.
-    std::recursive_mutex mtx;
+    size_t _stateNumber;
 
-    int _stateNumber;
-    
     void InitializeInstanceFields();
 
   };

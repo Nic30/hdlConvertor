@@ -1,38 +1,13 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
 
 #include "Recognizer.h"
 #include "tree/ParseTreeListener.h"
+#include "tree/ParseTree.h"
 #include "TokenStream.h"
 #include "TokenSource.h"
 #include "misc/Interval.h"
@@ -49,8 +24,8 @@ namespace antlr4 {
       virtual ~TraceListener() {};
 
       virtual void enterEveryRule(ParserRuleContext *ctx) override;
-      virtual void visitTerminal(Ref<tree::TerminalNode> const& node) override;
-      virtual void visitErrorNode(Ref<tree::ErrorNode> const& node) override;
+      virtual void visitTerminal(tree::TerminalNode *node) override;
+      virtual void visitErrorNode(tree::ErrorNode *node) override;
       virtual void exitEveryRule(ParserRuleContext *ctx) override;
 
     private:
@@ -64,8 +39,8 @@ namespace antlr4 {
       virtual ~TrimToSizeListener() {};
 
       virtual void enterEveryRule(ParserRuleContext *ctx) override;
-      virtual void visitTerminal(Ref<tree::TerminalNode> const& node) override;
-      virtual void visitErrorNode(Ref<tree::ErrorNode> const& node) override;
+      virtual void visitTerminal(tree::TerminalNode *node) override;
+      virtual void visitErrorNode(tree::ErrorNode *node) override;
       virtual void exitEveryRule(ParserRuleContext *ctx) override;
     };
 
@@ -92,7 +67,7 @@ namespace antlr4 {
     /// <exception cref="RecognitionException"> if the current input symbol did not match
     /// {@code ttype} and the error strategy could not recover from the
     /// mismatched symbol </exception>
-    virtual Token* match(int ttype);
+    virtual Token* match(size_t ttype);
 
     /// <summary>
     /// Match current input symbol as a wildcard. If the symbol type matches
@@ -197,7 +172,7 @@ namespace antlr4 {
     /// </summary>
     /// <seealso cref= #addParseListener </seealso>
     virtual void removeParseListeners();
-    
+
     /// <summary>
     /// Notify any parse listeners of an enter rule event.
     /// </summary>
@@ -209,13 +184,13 @@ namespace antlr4 {
     /// </summary>
     /// <seealso cref= #addParseListener </seealso>
     virtual void triggerExitRuleEvent();
-    
+
     /// <summary>
     /// Gets the number of syntax errors reported during parsing. This value is
     /// incremented each time <seealso cref="#notifyErrorListeners"/> is called.
     /// </summary>
     /// <seealso cref= #notifyErrorListeners </seealso>
-    virtual int getNumberOfSyntaxErrors();
+    virtual size_t getNumberOfSyntaxErrors();
 
     virtual Ref<TokenFactory<CommonToken>> getTokenFactory() override;
 
@@ -271,7 +246,6 @@ namespace antlr4 {
 
     virtual void notifyErrorListeners(Token *offendingToken, const std::string &msg, std::exception_ptr e);
 
-    /// <summary>
     /// Consume and return the <seealso cref="#getCurrentToken current symbol"/>.
     /// <p/>
     /// E.g., given the following input with {@code A} being the current
@@ -291,18 +265,15 @@ namespace antlr4 {
     /// <seealso cref="ParserRuleContext#addErrorNode(Token)"/>, and
     /// <seealso cref="ParseTreeListener#visitErrorNode"/> is called on any parse
     /// listeners.
-    /// </summary>
     virtual Token* consume();
-    
-    /// <summary>
+
     /// Always called by generated parsers upon entry to a rule. Access field
     /// <seealso cref="#_ctx"/> get the current context.
-    /// </summary>
-    virtual void enterRule(Ref<ParserRuleContext> const& localctx, int state, int ruleIndex);
+    virtual void enterRule(ParserRuleContext *localctx, size_t state, size_t ruleIndex);
 
     virtual void exitRule();
 
-    virtual void enterOuterAlt(Ref<ParserRuleContext> const& localctx, int altNum);
+    virtual void enterOuterAlt(ParserRuleContext *localctx, size_t altNum);
 
     /**
      * Get the precedence level for the top-most precedence rule.
@@ -314,18 +285,18 @@ namespace antlr4 {
 
     /// @deprecated Use
     /// <seealso cref="#enterRecursionRule(ParserRuleContext, int, int, int)"/> instead.
-    virtual void enterRecursionRule(Ref<ParserRuleContext> const& localctx, int ruleIndex);
-    virtual void enterRecursionRule(Ref<ParserRuleContext> const& localctx, int state, int ruleIndex, int precedence);
+    virtual void enterRecursionRule(ParserRuleContext *localctx, size_t ruleIndex);
+    virtual void enterRecursionRule(ParserRuleContext *localctx, size_t state, size_t ruleIndex, int precedence);
 
     /** Like {@link #enterRule} but for recursive rules.
      *  Make the current context the child of the incoming localctx.
      */
-    virtual void pushNewRecursionContext(Ref<ParserRuleContext> const& localctx, int state, int ruleIndex);
-    virtual void unrollRecursionContexts(Ref<ParserRuleContext> const& parentctx);
-    virtual Ref<ParserRuleContext> getInvokingContext(int ruleIndex);
-    virtual Ref<ParserRuleContext> getContext();
-    virtual void setContext(Ref<ParserRuleContext> const& ctx);
-    virtual bool precpred(Ref<RuleContext> const& localctx, int precedence) override;
+    virtual void pushNewRecursionContext(ParserRuleContext *localctx, size_t state, size_t ruleIndex);
+    virtual void unrollRecursionContexts(ParserRuleContext *parentctx);
+    virtual ParserRuleContext* getInvokingContext(size_t ruleIndex);
+    virtual ParserRuleContext* getContext();
+    virtual void setContext(ParserRuleContext *ctx);
+    virtual bool precpred(RuleContext *localctx, int precedence) override;
     virtual bool inContext(const std::string &context);
 
     /// <summary>
@@ -341,7 +312,7 @@ namespace antlr4 {
     /// <param name="symbol"> the symbol type to check </param>
     /// <returns> {@code true} if {@code symbol} can follow the current state in
     /// the ATN, otherwise {@code false}. </returns>
-    virtual bool isExpectedToken(int symbol);
+    virtual bool isExpectedToken(size_t symbol);
 
     bool isMatchedEOF() const;
 
@@ -355,11 +326,10 @@ namespace antlr4 {
 
     virtual misc::IntervalSet getExpectedTokensWithinCurrentRule();
 
-    /// <summary>
-    /// Get a rule's index (i.e., {@code RULE_ruleName} field) or -1 if not found. </summary>
-    virtual ssize_t getRuleIndex(const std::string &ruleName);
+    /// Get a rule's index (i.e., {@code RULE_ruleName} field) or INVALID_INDEX if not found.
+    virtual size_t getRuleIndex(const std::string &ruleName);
 
-    virtual Ref<ParserRuleContext> getRuleContext();
+    virtual ParserRuleContext* getRuleContext();
 
     /// <summary>
     /// Return List&lt;String&gt; of the rule names in your parser instance
@@ -371,7 +341,7 @@ namespace antlr4 {
     /// </summary>
     virtual std::vector<std::string> getRuleInvocationStack();
 
-    virtual std::vector<std::string> getRuleInvocationStack(Ref<RuleContext> const& p);
+    virtual std::vector<std::string> getRuleInvocationStack(RuleContext *p);
 
     /// <summary>
     /// For debugging and other purposes. </summary>
@@ -383,19 +353,19 @@ namespace antlr4 {
 
     virtual std::string getSourceName();
 
-    virtual Ref<atn::ParseInfo> getParseInfo() const override;
-    
+    atn::ParseInfo getParseInfo() const;
+
     /**
      * @since 4.3
      */
     void setProfile(bool profile);
-    
+
     /// <summary>
     /// During a parse is sometimes useful to listen in on the rule entry and exit
     ///  events as well as token matches. This is for quick and dirty debugging.
     /// </summary>
     virtual void setTrace(bool trace);
-    
+
     /**
      * Gets whether a {@link TraceListener} is registered as a parse listener
      * for the parser.
@@ -404,10 +374,13 @@ namespace antlr4 {
      */
     bool isTrace() const;
 
+    tree::ParseTreeTracker& getTreeTracker() { return _tracker; };
+
   protected:
     /// The ParserRuleContext object for the currently executing rule.
     /// This is always non-null during the parsing process.
-    Ref<ParserRuleContext> _ctx;
+    // ml: this is one of the contexts tracked in _allocatedContexts.
+    ParserRuleContext *_ctx;
 
     /// The error handling strategy for the parser. The default is DefaultErrorStrategy.
     /// See also getErrorHandler.
@@ -421,9 +394,6 @@ namespace antlr4 {
     TokenStream *_input;
 
     std::vector<int> _precedenceStack;
-    
-    //Mutex to manage synchronized access for multithreading in the parser
-    std::recursive_mutex mtx;
 
     /// <summary>
     /// Specifies whether or not the parser should construct a parse tree during
@@ -442,12 +412,15 @@ namespace antlr4 {
     /// The number of syntax errors reported during parsing. This value is
     /// incremented each time <seealso cref="#notifyErrorListeners"/> is called.
     /// </summary>
-    int _syntaxErrors;
-    
+    size_t _syntaxErrors;
+
     /** Indicates parser has match()ed EOF token. See {@link #exitRule()}. */
     bool _matchedEOF;
-    
+
     virtual void addContextToParseTree();
+
+    // All rule contexts created during a parse run. This is cleared when calling reset().
+    tree::ParseTreeTracker _tracker;
 
   private:
     /// This field maps from the serialized ATN string to the deserialized <seealso cref="ATN"/> with

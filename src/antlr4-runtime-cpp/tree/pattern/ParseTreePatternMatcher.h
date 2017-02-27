@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- * Copyright (c) 2013 Terence Parr
- * Copyright (c) 2013 Dan McLaughlin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -127,20 +101,20 @@ namespace pattern {
 
     /// <summary>
     /// Does {@code pattern} matched as rule {@code patternRuleIndex} match {@code tree}? </summary>
-    virtual bool matches(Ref<ParseTree> const& tree, const std::string &pattern, int patternRuleIndex);
+    virtual bool matches(ParseTree *tree, const std::string &pattern, int patternRuleIndex);
 
     /// <summary>
     /// Does {@code pattern} matched as rule patternRuleIndex match tree? Pass in a
     ///  compiled pattern instead of a string representation of a tree pattern.
     /// </summary>
-    virtual bool matches(Ref<ParseTree> const& tree, const ParseTreePattern &pattern);
+    virtual bool matches(ParseTree *tree, const ParseTreePattern &pattern);
 
     /// <summary>
     /// Compare {@code pattern} matched as rule {@code patternRuleIndex} against
     /// {@code tree} and return a <seealso cref="ParseTreeMatch"/> object that contains the
     /// matched elements, or the node at which the match failed.
     /// </summary>
-    virtual ParseTreeMatch match(Ref<ParseTree> const& tree, const std::string &pattern, int patternRuleIndex);
+    virtual ParseTreeMatch match(ParseTree *tree, const std::string &pattern, int patternRuleIndex);
 
     /// <summary>
     /// Compare {@code pattern} matched against {@code tree} and return a
@@ -148,7 +122,7 @@ namespace pattern {
     /// node at which the match failed. Pass in a compiled pattern instead of a
     /// string representation of a tree pattern.
     /// </summary>
-    virtual ParseTreeMatch match(Ref<ParseTree> const& tree, const ParseTreePattern &pattern);
+    virtual ParseTreeMatch match(ParseTree *tree, const ParseTreePattern &pattern);
 
     /// <summary>
     /// For repeated use of a tree pattern, compile it to a
@@ -174,7 +148,7 @@ namespace pattern {
 
     /// Split "<ID> = <e:expr>;" into 4 chunks for tokenizing by tokenize().
     virtual std::vector<Chunk> split(const std::string &pattern);
-    
+
   protected:
     std::string _start;
     std::string _stop;
@@ -187,16 +161,15 @@ namespace pattern {
     /// a corresponding node in {@code patternTree}, or {@code null} if the match
     /// was successful. The specific node returned depends on the matching
     /// algorithm used by the implementation, and may be overridden. </returns>
-    virtual Ref<tree::ParseTree> matchImpl(Ref<ParseTree> const& tree,
-      Ref<ParseTree> const& patternTree, std::map<std::string, std::vector<Ref<ParseTree>>> &labels);
+    virtual ParseTree* matchImpl(ParseTree *tree, ParseTree *patternTree, std::map<std::string, std::vector<ParseTree *>> &labels);
 
     /// Is t <expr> subtree?
-    virtual RuleTagToken* getRuleTagToken(Ref<ParseTree> const& t);
+    virtual RuleTagToken* getRuleTagToken(ParseTree *t);
 
   private:
     Lexer *_lexer;
     Parser *_parser;
-    
+
     void InitializeInstanceFields();
   };
 

@@ -1,33 +1,7 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
-*  Copyright (c) 2013 Terence Parr
-*  Copyright (c) 2013 Dan McLaughlin
-*  All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without
-*  modification, are permitted provided that the following conditions
-*  are met:
-*
-*  1. Redistributions of source code must retain the above copyright
-*     notice, this list of conditions and the following disclaimer.
-*  2. Redistributions in binary form must reproduce the above copyright
-*     notice, this list of conditions and the following disclaimer in the
-*     documentation and/or other materials provided with the distribution.
-*  3. The name of the author may not be used to endorse or promote products
-*     derived from this software without specific prior written permission.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-*  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-*  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-*  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-*  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-*  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-*  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
+ */
 
 #include "misc/Interval.h"
 #include "Exceptions.h"
@@ -37,6 +11,7 @@
 
 using namespace antlrcpp;
 using namespace antlr4;
+using namespace antlr4::misc;
 
 UnbufferedCharStream::UnbufferedCharStream(std::wistream &input) : _input(input) {
   InitializeInstanceFields();
@@ -69,15 +44,15 @@ void UnbufferedCharStream::consume() {
 }
 
 void UnbufferedCharStream::sync(size_t want) {
-  size_t need = (_p + want - 1) - _data.size() + 1; // how many more elements we need?
-  if (need > 0) {
-    fill(need);
-  }
+  if (_p + want <= _data.size()) // Already enough data loaded?
+    return;
+
+  fill(_p + want - _data.size());
 }
 
 size_t UnbufferedCharStream::fill(size_t n) {
   for (size_t i = 0; i < n; i++) {
-    if (_data.size() > 0 && _data.back() == static_cast<char32_t>(EOF)) { // TODO: we cannot encode -1 as this is not a valid code point
+    if (_data.size() > 0 && _data.back() == (uint32_t)EOF) {
       return i;
     }
 
@@ -108,25 +83,29 @@ void UnbufferedCharStream::add(char32_t c) {
   _data += c;
 }
 
-ssize_t UnbufferedCharStream::LA(ssize_t i) {
+size_t UnbufferedCharStream::LA(ssize_t i) {
   if (i == -1) { // special case
     return _lastChar;
   }
-  sync((size_t)i);
+
+  // We can look back only as many chars as we have buffered.
   ssize_t index = (ssize_t)_p + i - 1;
   if (index < 0) {
     throw IndexOutOfBoundsException();
   }
 
+  if (i > 0) {
+    sync((size_t)i); // No need to sync if we look back.
+  }
   if ((size_t)index >= _data.size()) {
     return EOF;
   }
 
-  ssize_t c = _data[(size_t)index];
-  if (c == EOF) {
+  if (_data[(size_t)index] == (uint32_t)EOF) {
     return EOF;
   }
-  return c;
+
+  return _data[(size_t)index];
 }
 
 ssize_t UnbufferedCharStream::mark() {
@@ -194,29 +173,29 @@ std::string UnbufferedCharStream::getSourceName() const {
   if (name.empty()) {
     return UNKNOWN_SOURCE_NAME;
   }
-  
+
   return name;
 }
 
 std::string UnbufferedCharStream::getText(const misc::Interval &interval) {
-  if (interval.a < 0 || interval.b < interval.a - 1) {
+  if (interval.a < 0 || interval.b >= interval.a - 1) {
     throw IllegalArgumentException("invalid interval");
   }
 
   size_t bufferStartIndex = getBufferStartIndex();
   if (!_data.empty() && _data.back() == 0xFFFF) {
-    if ((size_t)(interval.a + interval.length()) > bufferStartIndex + _data.size()) {
+    if (interval.a + interval.length() > bufferStartIndex + _data.size()) {
       throw IllegalArgumentException("the interval extends past the end of the stream");
     }
   }
 
-  if ((size_t)interval.a < bufferStartIndex || (size_t)interval.b >= bufferStartIndex + _data.size()) {
+  if (interval.a < (ssize_t)bufferStartIndex || interval.b >= ssize_t(bufferStartIndex + _data.size())) {
     throw UnsupportedOperationException("interval " + interval.toString() + " outside buffer: " +
       std::to_string(bufferStartIndex) + ".." + std::to_string(bufferStartIndex + _data.size() - 1));
   }
   // convert from absolute to local index
-  size_t i = (size_t)interval.a - bufferStartIndex;
-  return utfConverter.to_bytes(_data.substr(i, (size_t)interval.length()));
+  size_t i = interval.a - bufferStartIndex;
+  return utfConverter.to_bytes(_data.substr(i, interval.length()));
 }
 
 size_t UnbufferedCharStream::getBufferStartIndex() const {

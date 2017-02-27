@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -49,7 +23,7 @@ namespace atn {
     ATNDeserializer(const ATNDeserializationOptions& dso);
     virtual ~ATNDeserializer() {};
 
-    static Guid toUUID(const unsigned short *data, int offset);
+    static Guid toUUID(const unsigned short *data, size_t offset);
 
     virtual ATN deserialize(const std::vector<uint16_t> &input);
     virtual void verifyATN(const ATN &atn);
@@ -57,10 +31,10 @@ namespace atn {
     static void checkCondition(bool condition);
     static void checkCondition(bool condition, const std::string &message);
 
-    static Transition *edgeFactory(const ATN &atn, int type, int src, int trg, int arg1, int arg2, int arg3,
-                                   const std::vector<misc::IntervalSet> &sets);
+    static Transition *edgeFactory(const ATN &atn, size_t type, size_t src, size_t trg, size_t arg1, size_t arg2,
+                                   size_t arg3, const std::vector<misc::IntervalSet> &sets);
 
-    static ATNState *stateFactory(int type, int ruleIndex);
+    static ATNState *stateFactory(size_t type, size_t ruleIndex);
 
   protected:
     /// Determines if a particular serialized representation of an ATN supports
@@ -93,10 +67,17 @@ namespace atn {
      */
     static Guid ADDED_LEXER_ACTIONS();
 
+    /**
+     * This UUID indicates the serialized ATN contains two sets of
+     * IntervalSets, where the second set's values are encoded as
+     * 32-bit integers to support the full Unicode SMP range up to U+10FFFF.
+     */
+    static Guid ADDED_UNICODE_SMP();
+
     /// This list contains all of the currently supported UUIDs, ordered by when
     /// the feature first appeared in this branch.
     static std::vector<Guid>& SUPPORTED_UUIDS();
-    
+
     ATNDeserializationOptions deserializationOptions;
   };
 

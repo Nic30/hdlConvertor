@@ -1,38 +1,11 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
 
 #include "tree/ParseTreeVisitor.h"
-#include "tree/RuleNode.h"
 
 namespace antlr4 {
 namespace tree {
@@ -58,16 +31,15 @@ namespace tree {
      * the tree structure. Visitors that modify the tree should override this
      * method to behave properly in respect to the specific algorithm in use.</p>
      */
-    virtual antlrcpp::Any visitChildren(RuleNode *node) override {
+    virtual antlrcpp::Any visitChildren(ParseTree *node) override {
       antlrcpp::Any result = defaultResult();
-      size_t n = node->getChildCount();
+      size_t n = node->children.size();
       for (size_t i = 0; i < n; i++) {
         if (!shouldVisitNextChild(node, result)) {
           break;
         }
 
-        Ref<ParseTree> c = node->getChild(i);
-        antlrcpp::Any childResult = c->accept(this);
+        antlrcpp::Any childResult = node->children[i]->accept(this);
         result = aggregateResult(result, childResult);
       }
 
@@ -98,7 +70,7 @@ namespace tree {
     /// </summary>
     /// <returns> The default value returned by visitor methods. </returns>
     virtual antlrcpp::Any defaultResult() {
-      return 0;
+      return nullptr; // support isNotNull
     }
 
     /// <summary>
@@ -119,7 +91,7 @@ namespace tree {
     /// a child node.
     /// </param>
     /// <returns> The updated aggregate result. </returns>
-    virtual antlrcpp::Any aggregateResult(antlrcpp::Any /*aggregate*/, antlrcpp::Any nextResult) {
+    virtual antlrcpp::Any aggregateResult(antlrcpp::Any /*aggregate*/, const antlrcpp::Any &nextResult) {
       return nextResult;
     }
 
@@ -138,7 +110,7 @@ namespace tree {
     /// child has the potential to determine the result of the visit operation as
     /// a whole.
     /// </summary>
-    /// <param name="node"> The <seealso cref="RuleNode"/> whose children are currently being
+    /// <param name="node"> The <seealso cref="ParseTree"/> whose children are currently being
     /// visited. </param>
     /// <param name="currentResult"> The current aggregate result of the children visited
     /// to the current point.
@@ -146,7 +118,7 @@ namespace tree {
     /// <returns> {@code true} to continue visiting children. Otherwise return
     /// {@code false} to stop visiting children and immediately return the
     /// current aggregate result from <seealso cref="#visitChildren"/>. </returns>
-    virtual bool shouldVisitNextChild(RuleNode * /*node*/, antlrcpp::Any /*currentResult*/) {
+    virtual bool shouldVisitNextChild(ParseTree * /*node*/, const antlrcpp::Any &/*currentResult*/) {
       return true;
     }
 

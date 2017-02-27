@@ -1,5 +1,5 @@
 
-// Generated from vhdl.g4 by ANTLR 4.5.3
+// Generated from vhdl.g4 by ANTLR 4.6
 
 
 #include "vhdlBaseVisitor.h"

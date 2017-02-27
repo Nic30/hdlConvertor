@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -44,19 +18,19 @@ namespace antlr4 {
   /// of speed.
   class ANTLR4CPP_PUBLIC Lexer : public Recognizer, public TokenSource {
   public:
-    static const int DEFAULT_MODE = 0;
-    static const int MORE = -2;
-    static const int SKIP = -3;
+    static const size_t DEFAULT_MODE = 0;
+    static const size_t MORE = (size_t)-2;
+    static const size_t SKIP = (size_t)-3;
 
     static const size_t DEFAULT_TOKEN_CHANNEL = Token::DEFAULT_CHANNEL;
-    static const int HIDDEN = Token::HIDDEN_CHANNEL;
+    static const size_t HIDDEN = Token::HIDDEN_CHANNEL;
     static const size_t MIN_CHAR_VALUE = 0;
     static const size_t MAX_CHAR_VALUE = 0x10FFFF;
 
     CharStream *_input; // Pure reference, usually from statically allocated instance.
+
   protected:
-     /// <summary>
-    /// How to create token objects </summary>
+    /// How to create token objects.
     Ref<TokenFactory<CommonToken>> _factory;
 
   public:
@@ -78,29 +52,24 @@ namespace antlr4 {
     ///  Needed, for example, to get the text for current token.  Set at
     ///  the start of nextToken.
     /// </summary>
-    int tokenStartCharIndex;
+    size_t tokenStartCharIndex;
 
     /// <summary>
     /// The line on which the first character of the token resides </summary>
     size_t tokenStartLine;
 
-    /// <summary>
-    /// The character position of first character within the line </summary>
-    int tokenStartCharPositionInLine;
+    /// The character position of first character within the line.
+    size_t tokenStartCharPositionInLine;
 
-    /// <summary>
     /// Once we see EOF on char stream, next token will be EOF.
-    ///  If you have DONE : EOF ; then you see DONE EOF.
-    /// </summary>
+    /// If you have DONE : EOF ; then you see DONE EOF.
     bool hitEOF;
 
-    /// <summary>
-    /// The channel number for the current token </summary>
-    int channel;
+    /// The channel number for the current token.
+    size_t channel;
 
-    /// <summary>
-    /// The token type for the current token </summary>
-    ssize_t type;
+    /// The token type for the current token.
+    size_t type;
 
     // Use the vector as a stack.
     std::vector<size_t> modeStack;
@@ -108,6 +77,7 @@ namespace antlr4 {
 
     Lexer();
     Lexer(CharStream *input);
+    virtual ~Lexer() {}
 
     virtual void reset();
 
@@ -156,14 +126,14 @@ namespace antlr4 {
 
     virtual size_t getLine() const override;
 
-    virtual int getCharPositionInLine() override;
+    virtual size_t getCharPositionInLine() override;
 
     virtual void setLine(size_t line);
 
-    virtual void setCharPositionInLine(int charPositionInLine);
+    virtual void setCharPositionInLine(size_t charPositionInLine);
 
     /// What is the index of the current character of lookahead?
-    virtual int getCharIndex();
+    virtual size_t getCharIndex();
 
     /// Return the text matched so far for the current token or any
     /// text override.
@@ -178,13 +148,15 @@ namespace antlr4 {
 
     virtual void setToken(std::unique_ptr<Token> newToken);
 
-    virtual void setType(ssize_t ttype);
+    virtual void setType(size_t ttype);
 
-    virtual ssize_t getType();
+    virtual size_t getType();
 
-    virtual void setChannel(int newChannel);
+    virtual void setChannel(size_t newChannel);
 
-    virtual int getChannel();
+    virtual size_t getChannel();
+
+    virtual const std::vector<std::string>& getChannelNames() const = 0;
 
     virtual const std::vector<std::string>& getModeNames() const = 0;
 
@@ -204,12 +176,20 @@ namespace antlr4 {
     /// to do sophisticated error recovery if you are in a fragment rule.
     virtual void recover(RecognitionException *re);
 
+    /// <summary>
+    /// Gets the number of syntax errors reported during parsing. This value is
+    /// incremented each time <seealso cref="#notifyErrorListeners"/> is called.
+    /// </summary>
+    /// <seealso cref= #notifyListeners </seealso>
+    virtual size_t getNumberOfSyntaxErrors();
+
   protected:
     /// You can set the text for the current token to override what is in
     /// the input char buffer (via setText()).
     std::string _text;
 
   private:
+    size_t _syntaxErrors;
     void InitializeInstanceFields();
   };
 

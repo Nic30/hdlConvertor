@@ -1,8 +1,7 @@
-﻿/*
+/*
  * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
+ *  Copyright (c) 2012 Terence Parr
+ *  Copyright (c) 2012 Sam Harwell
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -29,10 +28,26 @@
  *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "tree/Tree.h"
+#pragma once
 
-using namespace antlr4::tree;
+#include "antlr4-common.h"
 
-bool Tree::operator == (const Tree &other) const {
-  return &other == this;
-}
+#include "tree/ParseTreeWalker.h"
+
+namespace antlr4 {
+namespace tree {
+
+  class ParseTreeListener;
+  
+  /**
+   * An iterative (read: non-recursive) pre-order and post-order tree walker that
+   * doesn't use the thread stack but heap-based stacks. Makes it possible to
+   * process deeply nested parse trees.
+   */
+  class ANTLR4CPP_PUBLIC IterativeParseTreeWalker : public ParseTreeWalker {
+  public:
+    virtual void walk(ParseTreeListener *listener, ParseTree *t) const override;
+  };
+
+} // namespace tree
+} // namespace antlr4

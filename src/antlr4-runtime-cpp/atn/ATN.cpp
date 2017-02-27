@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "atn/LL1Analyzer.h"
@@ -50,6 +24,7 @@ ATN::ATN() : ATN(ATNType::LEXER, 0) {
 }
 
 ATN::ATN(ATN &&other) {
+  // All source vectors are implicitly cleared by the moves.
   states = std::move(other.states);
   decisionToState = std::move(other.decisionToState);
   ruleToStartState = std::move(other.ruleToStartState);
@@ -92,6 +67,7 @@ ATN& ATN::operator = (ATN &other) NOEXCEPT {
  * operators it seems the copy operator is preferred causing trouble when releasing the allocated ATNState instances.
  */
 ATN& ATN::operator = (ATN &&other) NOEXCEPT {
+  // All source vectors are implicitly cleared by the moves.
   states = std::move(other.states);
   decisionToState = std::move(other.decisionToState);
   ruleToStartState = std::move(other.ruleToStartState);
@@ -105,7 +81,7 @@ ATN& ATN::operator = (ATN &&other) NOEXCEPT {
   return *this;
 }
 
-misc::IntervalSet ATN::nextTokens(ATNState *s, Ref<RuleContext> const& ctx) const {
+misc::IntervalSet ATN::nextTokens(ATNState *s, RuleContext *ctx) const {
   LL1Analyzer analyzer(*this);
   return analyzer.LOOK(s, ctx);
 
@@ -129,8 +105,8 @@ void ATN::addState(ATNState *state) {
 }
 
 void ATN::removeState(ATNState *state) {
-  delete states.at((size_t)state->stateNumber);// just free mem, don't shift states in list
-  states.at((size_t)state->stateNumber) = nullptr;
+  delete states.at(state->stateNumber);// just free mem, don't shift states in list
+  states.at(state->stateNumber) = nullptr;
 }
 
 int ATN::defineDecisionState(DecisionState *s) {
@@ -139,24 +115,24 @@ int ATN::defineDecisionState(DecisionState *s) {
   return s->decision;
 }
 
-DecisionState *ATN::getDecisionState(int decision) const {
+DecisionState *ATN::getDecisionState(size_t decision) const {
   if (!decisionToState.empty()) {
-    return decisionToState[(size_t)decision];
+    return decisionToState[decision];
   }
   return nullptr;
 }
 
-int ATN::getNumberOfDecisions() const {
-  return (int)decisionToState.size();
+size_t ATN::getNumberOfDecisions() const {
+  return decisionToState.size();
 }
 
-misc::IntervalSet ATN::getExpectedTokens(int stateNumber, Ref<RuleContext> const& context) const {
-  if (stateNumber < 0 || stateNumber >= (int)states.size()) {
+misc::IntervalSet ATN::getExpectedTokens(size_t stateNumber, RuleContext *context) const {
+  if (stateNumber == ATNState::INVALID_STATE_NUMBER || stateNumber >= states.size()) {
     throw IllegalArgumentException("Invalid state number.");
   }
 
-  Ref<RuleContext> ctx = context;
-  ATNState *s = states.at((size_t)stateNumber);
+  RuleContext *ctx = context;
+  ATNState *s = states.at(stateNumber);
   misc::IntervalSet following = nextTokens(s);
   if (!following.contains(Token::EPSILON)) {
     return following;
@@ -165,17 +141,17 @@ misc::IntervalSet ATN::getExpectedTokens(int stateNumber, Ref<RuleContext> const
   misc::IntervalSet expected;
   expected.addAll(following);
   expected.remove(Token::EPSILON);
-  while (ctx && ctx->invokingState >= 0 && following.contains(Token::EPSILON)) {
-    ATNState *invokingState = states.at((size_t)ctx->invokingState);
-    RuleTransition *rt = static_cast<RuleTransition*>(invokingState->transition(0));
+  while (ctx && ctx->invokingState != ATNState::INVALID_STATE_NUMBER && following.contains(Token::EPSILON)) {
+    ATNState *invokingState = states.at(ctx->invokingState);
+    RuleTransition *rt = static_cast<RuleTransition*>(invokingState->transitions[0]);
     following = nextTokens(rt->followState);
     expected.addAll(following);
     expected.remove(Token::EPSILON);
 
-    if (ctx->parent.expired()) {
+    if (ctx->parent == nullptr) {
       break;
     }
-    ctx = ctx->parent.lock();
+    ctx = (RuleContext *)ctx->parent;
   }
 
   if (following.contains(Token::EPSILON)) {

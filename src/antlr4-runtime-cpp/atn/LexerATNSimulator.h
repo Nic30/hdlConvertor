@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -44,11 +18,11 @@ namespace atn {
     class SimState {
     public:
       virtual ~SimState() {};
-      
+
     protected:
-      int index;
+      size_t index;
       size_t line;
-      int charPos;
+      size_t charPos;
       dfa::DFAState *dfaState;
       virtual void reset();
       friend class LexerATNSimulator;
@@ -64,9 +38,10 @@ namespace atn {
 
 
   public:
-    static const int MIN_DFA_EDGE = 0;
-    static const int MAX_DFA_EDGE = 127; // forces unicode to stay in ATN
+    static const size_t MIN_DFA_EDGE = 0;
+    static const size_t MAX_DFA_EDGE = 127; // forces unicode to stay in ATN
 
+  protected:
     /// <summary>
     /// When we hit an accept state in either the DFA or the ATN, we
     ///  have to notify the character stream to start buffering characters
@@ -83,24 +58,19 @@ namespace atn {
     ///  then the ATN does the accept and the DFA simulator that invoked it
     ///  can simply return the predicted token type.
     /// </summary>
-  protected:
     Lexer *const _recog;
 
-    /// <summary>
     /// The current token's starting index into the character stream.
     ///  Shared across DFA to ATN simulation in case the ATN fails and the
     ///  DFA did not have a previous accept state. In this case, we use the
     ///  ATN-generated exception object.
-    /// </summary>
-    int _startIndex;
+    size_t _startIndex;
 
-    /// <summary>
-    /// line number 1..n within the input </summary>
+    /// line number 1..n within the input.
     size_t _line;
 
-    /// <summary>
-    /// The index of the character relative to the beginning of the line 0..n-1 </summary>
-    int _charPositionInLine;
+    /// The index of the character relative to the beginning of the line 0..n-1.
+    size_t _charPositionInLine;
 
   public:
     std::vector<dfa::DFA> &_decisionToDFA;
@@ -114,20 +84,18 @@ namespace atn {
   public:
     static int match_calls;
 
-    LexerATNSimulator(const ATN &atn, std::vector<dfa::DFA> &decisionToDFA,
-                      PredictionContextCache &sharedContextCache);
-    LexerATNSimulator(Lexer *recog, const ATN &atn, std::vector<dfa::DFA> &decisionToDFA,
-                      PredictionContextCache &sharedContextCache);
+    LexerATNSimulator(const ATN &atn, std::vector<dfa::DFA> &decisionToDFA, PredictionContextCache &sharedContextCache);
+    LexerATNSimulator(Lexer *recog, const ATN &atn, std::vector<dfa::DFA> &decisionToDFA, PredictionContextCache &sharedContextCache);
 
     virtual void copyState(LexerATNSimulator *simulator);
-    virtual int match(CharStream *input, size_t mode);
+    virtual size_t match(CharStream *input, size_t mode);
     virtual void reset() override;
 
     virtual void clearDFA() override;
-    
+
   protected:
-    virtual int matchATN(CharStream *input);
-    virtual int execATN(CharStream *input, dfa::DFAState *ds0);
+    virtual size_t matchATN(CharStream *input);
+    virtual size_t execATN(CharStream *input, dfa::DFAState *ds0);
 
     /// <summary>
     /// Get an existing target state for an edge in the DFA. If the target state
@@ -139,7 +107,7 @@ namespace atn {
     /// <returns> The existing target DFA state for the given input symbol
     /// {@code t}, or {@code null} if the target state for this edge is not
     /// already cached </returns>
-    virtual dfa::DFAState *getExistingTargetState(dfa::DFAState *s, ssize_t t);
+    virtual dfa::DFAState *getExistingTargetState(dfa::DFAState *s, size_t t);
 
     /// <summary>
     /// Compute a target state for an edge in the DFA, and attempt to add the
@@ -152,9 +120,9 @@ namespace atn {
     /// <returns> The computed target DFA state for the given input symbol
     /// {@code t}. If {@code t} does not lead to a valid DFA state, this method
     /// returns <seealso cref="#ERROR"/>. </returns>
-    virtual dfa::DFAState *computeTargetState(CharStream *input, dfa::DFAState *s, ssize_t t);
+    virtual dfa::DFAState *computeTargetState(CharStream *input, dfa::DFAState *s, size_t t);
 
-    virtual int failOrAccept(CharStream *input, ATNConfigSet *reach, ssize_t t);
+    virtual size_t failOrAccept(CharStream *input, ATNConfigSet *reach, size_t t);
 
     /// <summary>
     /// Given a starting configuration set, figure out all ATN configurations
@@ -162,12 +130,12 @@ namespace atn {
     ///  parameter.
     /// </summary>
     void getReachableConfigSet(CharStream *input, ATNConfigSet *closure_, // closure_ as we have a closure() already
-                               ATNConfigSet *reach, ssize_t t);
+                               ATNConfigSet *reach, size_t t);
 
-    virtual void accept(CharStream *input, const Ref<LexerActionExecutor> &lexerActionExecutor, int startIndex, size_t index,
+    virtual void accept(CharStream *input, const Ref<LexerActionExecutor> &lexerActionExecutor, size_t startIndex, size_t index,
                         size_t line, size_t charPos);
 
-    virtual ATNState *getReachableTarget(Transition *trans, ssize_t t);
+    virtual ATNState *getReachableTarget(Transition *trans, size_t t);
 
     virtual std::unique_ptr<ATNConfigSet> computeStartState(CharStream *input, ATNState *p);
 
@@ -207,11 +175,11 @@ namespace atn {
     /// </param>
     /// <returns> {@code true} if the specified predicate evaluates to
     /// {@code true}. </returns>
-    virtual bool evaluatePredicate(CharStream *input, int ruleIndex, int predIndex, bool speculative);
+    virtual bool evaluatePredicate(CharStream *input, size_t ruleIndex, size_t predIndex, bool speculative);
 
     virtual void captureSimState(CharStream *input, dfa::DFAState *dfaState);
-    virtual dfa::DFAState* addDFAEdge(dfa::DFAState *from, ssize_t t, ATNConfigSet *q);
-    virtual void addDFAEdge(dfa::DFAState *p, ssize_t t, dfa::DFAState *q);
+    virtual dfa::DFAState* addDFAEdge(dfa::DFAState *from, size_t t, ATNConfigSet *q);
+    virtual void addDFAEdge(dfa::DFAState *p, size_t t, dfa::DFAState *q);
 
     /// <summary>
     /// Add a new DFA state if there isn't one with this set of
@@ -228,10 +196,10 @@ namespace atn {
     virtual std::string getText(CharStream *input);
     virtual size_t getLine() const;
     virtual void setLine(size_t line);
-    virtual int getCharPositionInLine();
-    virtual void setCharPositionInLine(int charPositionInLine);
+    virtual size_t getCharPositionInLine();
+    virtual void setCharPositionInLine(size_t charPositionInLine);
     virtual void consume(CharStream *input);
-    virtual std::string getTokenName(int t);
+    virtual std::string getTokenName(size_t t);
 
   private:
     void InitializeInstanceFields();

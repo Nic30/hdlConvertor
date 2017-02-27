@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "dfa/DFASerializer.h"
@@ -44,35 +18,40 @@ using namespace antlrcpp;
 DFA::DFA(atn::DecisionState *atnStartState) : DFA(atnStartState, 0) {
 }
 
-DFA::DFA(atn::DecisionState *atnStartState, int decision)
+DFA::DFA(atn::DecisionState *atnStartState, size_t decision)
   : atnStartState(atnStartState), s0(nullptr), decision(decision) {
 
   _precedenceDfa = false;
   if (is<atn::StarLoopEntryState *>(atnStartState)) {
     if (static_cast<atn::StarLoopEntryState *>(atnStartState)->isPrecedenceDecision) {
       _precedenceDfa = true;
-      // ml: this state should probably be added to the states list to be freed on destruction.
-      DFAState *precedenceState = new DFAState(std::unique_ptr<atn::ATNConfigSet>(new atn::ATNConfigSet())); // TODO: mem leak
-      precedenceState->isAcceptState = false;
-      precedenceState->requiresFullContext = false;
-      s0 = precedenceState;
+      s0 = new DFAState(std::unique_ptr<atn::ATNConfigSet>(new atn::ATNConfigSet()));
+      _s0Shadow = s0;
+      s0->isAcceptState = false;
+      s0->requiresFullContext = false;
     }
   }
 }
 
 DFA::DFA(DFA &&other) : atnStartState(std::move(other.atnStartState)), decision(std::move(other.decision)) {
+  // Source states are implicitly cleared by the move.
   states = std::move(other.states);
-  s0 = std::move(other.s0);
-  _precedenceDfa = std::move(other._precedenceDfa);
-}
 
-DFA::DFA(const DFA &other) : atnStartState(other.atnStartState), decision(other.decision) {
-  states = other.states;
+  // Manually move s0 pointers.
   s0 = other.s0;
+  other.s0 = nullptr;
+  _s0Shadow = other._s0Shadow;
+  other._s0Shadow = nullptr;
+
   _precedenceDfa = other._precedenceDfa;
 }
 
 DFA::~DFA() {
+  // ml: s0 can be set either in our constructor or by external code, so we need a way to track our own creation.
+  // We could use a shared pointer again (and force that on all external assignments etc.) or just shadow it.
+  // I hesitate moving s0 to the normal states list as this might conflict with consumers of that list.
+  delete _s0Shadow;
+
   for (auto state : states) {
     delete state;
   }
@@ -83,19 +62,16 @@ bool DFA::isPrecedenceDfa() const {
 }
 
 DFAState* DFA::getPrecedenceStartState(int precedence) const {
-  if (!isPrecedenceDfa()) {
-    throw IllegalStateException("Only precedence DFAs may contain a precedence start state.");
-  }
+  assert(_precedenceDfa); // Only precedence DFAs may contain a precedence start state.
 
-  // s0.edges is never null for a precedence DFA
-  if (precedence < 0 || precedence >= (int)s0->edges.size()) {
+  auto iterator = s0->edges.find(precedence);
+  if (iterator == s0->edges.end())
     return nullptr;
-  }
 
-  return s0->edges[precedence];
+  return iterator->second;
 }
 
-void DFA::setPrecedenceStartState(int precedence, DFAState *startState) {
+void DFA::setPrecedenceStartState(int precedence, DFAState *startState, SingleWriteMultipleReadLock &lock) {
   if (!isPrecedenceDfa()) {
     throw IllegalStateException("Only precedence DFAs may contain a precedence start state.");
   }
@@ -104,14 +80,10 @@ void DFA::setPrecedenceStartState(int precedence, DFAState *startState) {
     return;
   }
 
-  std::unique_lock<std::recursive_mutex> lock(_lock);
   {
-    // s0.edges is never null for a precedence DFA
-    if (precedence >= (int)s0->edges.size()) {
-      s0->edges.resize(precedence + 1);
-    }
-
+    lock.writeLock();
     s0->edges[precedence] = startState;
+    lock.writeUnlock();
   }
 }
 

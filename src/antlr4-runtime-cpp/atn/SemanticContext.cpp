@@ -1,36 +1,11 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "misc/MurmurHash.h"
 #include "support/CPPUtils.h"
+#include "support/Arrays.h"
 
 #include "SemanticContext.h"
 
@@ -40,16 +15,16 @@ using namespace antlrcpp;
 
 //------------------ Predicate -----------------------------------------------------------------------------------------
 
-SemanticContext::Predicate::Predicate() : Predicate(-1, -1, false) {
+SemanticContext::Predicate::Predicate() : Predicate(INVALID_INDEX, INVALID_INDEX, false) {
 }
 
-SemanticContext::Predicate::Predicate(int ruleIndex, int predIndex, bool isCtxDependent)
+SemanticContext::Predicate::Predicate(size_t ruleIndex, size_t predIndex, bool isCtxDependent)
 : ruleIndex(ruleIndex), predIndex(predIndex), isCtxDependent(isCtxDependent) {
 }
 
 
-bool SemanticContext::Predicate::eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
-  Ref<RuleContext> localctx;
+bool SemanticContext::Predicate::eval(Recognizer *parser, RuleContext *parserCallStack) {
+  RuleContext *localctx = nullptr;
   if (isCtxDependent)
     localctx = parserCallStack;
   return parser->sempred(localctx, ruleIndex, predIndex);
@@ -57,8 +32,8 @@ bool SemanticContext::Predicate::eval(Recognizer *parser, Ref<RuleContext> const
 
 size_t SemanticContext::Predicate::hashCode() const {
   size_t hashCode = misc::MurmurHash::initialize();
-  hashCode = misc::MurmurHash::update(hashCode, (size_t)ruleIndex);
-  hashCode = misc::MurmurHash::update(hashCode, (size_t)predIndex);
+  hashCode = misc::MurmurHash::update(hashCode, ruleIndex);
+  hashCode = misc::MurmurHash::update(hashCode, predIndex);
   hashCode = misc::MurmurHash::update(hashCode, isCtxDependent ? 1 : 0);
   hashCode = misc::MurmurHash::finish(hashCode, 3);
   return hashCode;
@@ -87,12 +62,12 @@ SemanticContext::PrecedencePredicate::PrecedencePredicate() : precedence(0) {
 SemanticContext::PrecedencePredicate::PrecedencePredicate(int precedence) : precedence(precedence) {
 }
 
-bool SemanticContext::PrecedencePredicate::eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
+bool SemanticContext::PrecedencePredicate::eval(Recognizer *parser, RuleContext *parserCallStack) {
   return parser->precpred(parserCallStack, precedence);
 }
 
 Ref<SemanticContext> SemanticContext::PrecedencePredicate::evalPrecedence(Recognizer *parser,
-  Ref<RuleContext> const& parserCallStack) {
+  RuleContext *parserCallStack) {
   if (parser->precpred(parserCallStack, precedence)) {
     return SemanticContext::NONE;
   }
@@ -174,21 +149,14 @@ bool SemanticContext::AND::operator == (const SemanticContext &other) const {
   if (context == nullptr)
     return false;
 
-  if (opnds == context->opnds)
-    return true;
-
-  for (auto opndIt = opnds.begin(), otherIt = context->opnds.begin(); opndIt < opnds.end(), otherIt < context->opnds.end(); ++opndIt, ++otherIt) {
-    if (*opndIt != *otherIt)
-      return false;
-  }
-  return true;
+  return Arrays::equals(opnds, context->opnds);
 }
 
 size_t SemanticContext::AND::hashCode() const {
   return misc::MurmurHash::hashCode(opnds, typeid(AND).hash_code());
 }
 
-bool SemanticContext::AND::eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
+bool SemanticContext::AND::eval(Recognizer *parser, RuleContext *parserCallStack) {
   for (auto opnd : opnds) {
     if (!opnd->eval(parser, parserCallStack)) {
       return false;
@@ -197,7 +165,7 @@ bool SemanticContext::AND::eval(Recognizer *parser, Ref<RuleContext> const& pars
   return true;
 }
 
-Ref<SemanticContext> SemanticContext::AND::evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
+Ref<SemanticContext> SemanticContext::AND::evalPrecedence(Recognizer *parser, RuleContext *parserCallStack) {
   bool differs = false;
   std::vector<Ref<SemanticContext>> operands;
   for (auto context : opnds) {
@@ -283,21 +251,14 @@ bool SemanticContext::OR::operator == (const SemanticContext &other) const {
   if (context == nullptr)
     return false;
 
-  if (opnds == context->opnds)
-    return true;
-
-  for (auto opndIt = opnds.begin(), otherIt = context->opnds.begin(); opndIt < opnds.end(), otherIt < context->opnds.end(); ++opndIt, ++otherIt ) {
-    if (*opndIt != *otherIt)
-      return false;
-  }
-  return true;
+  return Arrays::equals(opnds, context->opnds);
 }
 
 size_t SemanticContext::OR::hashCode() const {
   return misc::MurmurHash::hashCode(opnds, typeid(OR).hash_code());
 }
 
-bool SemanticContext::OR::eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
+bool SemanticContext::OR::eval(Recognizer *parser, RuleContext *parserCallStack) {
   for (auto opnd : opnds) {
     if (opnd->eval(parser, parserCallStack)) {
       return true;
@@ -306,7 +267,7 @@ bool SemanticContext::OR::eval(Recognizer *parser, Ref<RuleContext> const& parse
   return false;
 }
 
-Ref<SemanticContext> SemanticContext::OR::evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack) {
+Ref<SemanticContext> SemanticContext::OR::evalPrecedence(Recognizer *parser, RuleContext *parserCallStack) {
   bool differs = false;
   std::vector<Ref<SemanticContext>> operands;
   for (auto context : opnds) {
@@ -348,9 +309,13 @@ std::string SemanticContext::OR::toString() const {
 
 //------------------ SemanticContext -----------------------------------------------------------------------------------
 
-const Ref<SemanticContext> SemanticContext::NONE = std::make_shared<Predicate>(-1, -1, false);
+const Ref<SemanticContext> SemanticContext::NONE = std::make_shared<Predicate>(INVALID_INDEX, INVALID_INDEX, false);
 
-Ref<SemanticContext> SemanticContext::evalPrecedence(Recognizer * /*parser*/, Ref<RuleContext> const& /*parserCallStack*/) {
+bool SemanticContext::operator != (const SemanticContext &other) const {
+  return !(*this == other);
+}
+
+Ref<SemanticContext> SemanticContext::evalPrecedence(Recognizer * /*parser*/, RuleContext * /*parserCallStack*/) {
   return shared_from_this();
 }
 

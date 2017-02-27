@@ -1,5 +1,5 @@
 
-// Generated from Verilog2001.g4 by ANTLR 4.5.3
+// Generated from Verilog2001.g4 by ANTLR 4.6
 
 #pragma once
 
@@ -14,7 +14,7 @@ namespace verilog {
  * This class provides an empty implementation of Verilog2001Visitor, which can be
  * extended to create a visitor which only needs to handle a subset of the available methods.
  */
-class Verilog2001BaseVisitor : public Verilog2001Visitor {
+class  Verilog2001BaseVisitor : public Verilog2001Visitor {
 public:
 
   virtual antlrcpp::Any visitConfig_declaration(Verilog2001Parser::Config_declarationContext *ctx) override {

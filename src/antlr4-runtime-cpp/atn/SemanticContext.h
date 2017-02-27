@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -54,7 +28,9 @@ namespace atn {
 
     struct Comparer {
       bool operator()(Ref<SemanticContext> const& lhs, Ref<SemanticContext> const& rhs) const {
-        return *lhs == *rhs;
+        if (lhs == rhs)
+          return true;
+        return (lhs->hashCode() == rhs->hashCode()) && (*lhs == *rhs);
       }
     };
 
@@ -68,10 +44,11 @@ namespace atn {
     static const Ref<SemanticContext> NONE;
 
     virtual ~SemanticContext() {};
-    
+
     virtual size_t hashCode() const = 0;
     virtual std::string toString() const = 0;
     virtual bool operator == (const SemanticContext &other) const = 0;
+    virtual bool operator != (const SemanticContext &other) const;
 
     /// <summary>
     /// For context independent predicates, we evaluate them without a local
@@ -86,7 +63,7 @@ namespace atn {
     /// prediction, so we passed in the outer context here in case of context
     /// dependent predicate evaluation.
     /// </summary>
-    virtual bool eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) = 0;
+    virtual bool eval(Recognizer *parser, RuleContext *parserCallStack) = 0;
 
     /**
      * Evaluate the precedence predicates for the context and reduce the result.
@@ -106,7 +83,7 @@ namespace atn {
      * semantic context after precedence predicates are evaluated.</li>
      * </ul>
      */
-    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack);
+    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, RuleContext *parserCallStack);
 
     static Ref<SemanticContext> And(Ref<SemanticContext> const& a, Ref<SemanticContext> const& b);
 
@@ -125,22 +102,22 @@ namespace atn {
 
   class ANTLR4CPP_PUBLIC SemanticContext::Predicate : public SemanticContext {
   public:
-    const int ruleIndex;
-    const int predIndex;
+    const size_t ruleIndex;
+    const size_t predIndex;
     const bool isCtxDependent; // e.g., $i ref in pred
 
   protected:
     Predicate();
 
   public:
-    Predicate(int ruleIndex, int predIndex, bool isCtxDependent);
+    Predicate(size_t ruleIndex, size_t predIndex, bool isCtxDependent);
 
-    virtual bool eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
+    virtual bool eval(Recognizer *parser, RuleContext *parserCallStack) override;
     virtual size_t hashCode() const override;
     virtual bool operator == (const SemanticContext &other) const override;
     virtual std::string toString() const override;
   };
-  
+
   class ANTLR4CPP_PUBLIC SemanticContext::PrecedencePredicate : public SemanticContext {
   public:
     const int precedence;
@@ -151,8 +128,8 @@ namespace atn {
   public:
     PrecedencePredicate(int precedence);
 
-    virtual bool eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
-    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
+    virtual bool eval(Recognizer *parser, RuleContext *parserCallStack) override;
+    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, RuleContext *parserCallStack) override;
     virtual int compareTo(PrecedencePredicate *o);
     virtual size_t hashCode() const override;
     virtual bool operator == (const SemanticContext &other) const override;
@@ -178,7 +155,7 @@ namespace atn {
 
     virtual std::vector<Ref<SemanticContext>> getOperands() const = 0;
   };
-  
+
   /**
    * A semantic context which is true whenever none of the contained contexts
    * is false.
@@ -197,8 +174,8 @@ namespace atn {
      * The evaluation of predicates by this context is short-circuiting, but
      * unordered.</p>
      */
-    virtual bool eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
-    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
+    virtual bool eval(Recognizer *parser, RuleContext *parserCallStack) override;
+    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, RuleContext *parserCallStack) override;
     virtual std::string toString() const override;
   };
 
@@ -220,11 +197,11 @@ namespace atn {
      * The evaluation of predicates by this context is short-circuiting, but
      * unordered.
      */
-    virtual bool eval(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
-    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, Ref<RuleContext> const& parserCallStack) override;
+    virtual bool eval(Recognizer *parser, RuleContext *parserCallStack) override;
+    virtual Ref<SemanticContext> evalPrecedence(Recognizer *parser, RuleContext *parserCallStack) override;
     virtual std::string toString() const override;
   };
-  
+
 } // namespace atn
 } // namespace antlr4
 

@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- * Copyright (c) 2016 Mike Lischke
- * Copyright (c) 2013 Terence Parr
- * Copyright (c) 2013 Dan McLaughlin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -63,21 +37,21 @@ namespace antlr4 {
     ~ParserInterpreter();
 
     virtual void reset() override;
-    
+
     virtual const atn::ATN& getATN() const override;
 
     // @deprecated
     virtual const std::vector<std::string>& getTokenNames() const override;
 
     virtual const dfa::Vocabulary& getVocabulary() const override;
-    
+
     virtual const std::vector<std::string>& getRuleNames() const override;
     virtual std::string getGrammarFileName() const override;
 
     /// Begin parsing at startRuleIndex
-    virtual Ref<ParserRuleContext> parse(int startRuleIndex);
+    virtual ParserRuleContext* parse(size_t startRuleIndex);
 
-    virtual void enterRecursionRule(Ref<ParserRuleContext> const& localctx, int state, int ruleIndex, int precedence) override;
+    virtual void enterRecursionRule(ParserRuleContext *localctx, size_t state, size_t ruleIndex, int precedence) override;
 
 
     /** Override this parser interpreters normal decision-making process
@@ -121,9 +95,9 @@ namespace antlr4 {
      *  @since 4.5.1
      */
     void addDecisionOverride(int decision, int tokenIndex, int forcedAlt);
-    
+
     Ref<InterpreterRuleContext> getOverrideDecisionRoot() const;
-    
+
     /** Return the root of the parse, which can be useful if the parser
      *  bails out. You still can access the top node. Note that,
      *  because of the way left recursive rules add children, it's possible
@@ -132,7 +106,7 @@ namespace antlr4 {
      *
      * @since 4.5.1
      */
-    Ref<InterpreterRuleContext> getRootContext();
+    InterpreterRuleContext* getRootContext();
 
   protected:
     const std::string _grammarFileName;
@@ -157,14 +131,14 @@ namespace antlr4 {
      *  Those values are used to create new recursive rule invocation contexts
      *  associated with left operand of an alt like "expr '*' expr".
      */
-    std::stack<std::pair<Ref<ParserRuleContext>, int>> _parentContextStack;
-    
+    std::stack<std::pair<ParserRuleContext *, size_t>> _parentContextStack;
+
     /** We need a map from (decision,inputIndex)->forced alt for computing ambiguous
      *  parse trees. For now, we allow exactly one override.
      */
     int _overrideDecision = -1;
-    int _overrideDecisionInputIndex = -1;
-    int _overrideDecisionAlt = -1;
+    size_t _overrideDecisionInputIndex = INVALID_INDEX;
+    size_t _overrideDecisionAlt = INVALID_INDEX;
     bool _overrideDecisionReached = false; // latch and only override once; error might trigger infinite loop
 
     /** What is the current context when we override a decision? This tells
@@ -172,8 +146,8 @@ namespace antlr4 {
      *  for an ambiguity/lookahead check.
      */
     Ref<InterpreterRuleContext> _overrideDecisionRoot;
-    Ref<InterpreterRuleContext> _rootContext;
-    
+    InterpreterRuleContext* _rootContext;
+
     virtual atn::ATNState *getATNState();
     virtual void visitState(atn::ATNState *p);
 
@@ -181,13 +155,12 @@ namespace antlr4 {
      *  a decision state (instance of DecisionState). It gives an opportunity
      *  for subclasses to track interesting things.
      */
-    int visitDecisionState(atn::DecisionState *p);
+    size_t visitDecisionState(atn::DecisionState *p);
 
     /** Provide simple "factory" for InterpreterRuleContext's.
      *  @since 4.5.1
      */
-    Ref<InterpreterRuleContext> createInterpreterRuleContext(std::weak_ptr<ParserRuleContext> parent, int invokingStateNumber,
-                                                             int ruleIndex);
+    InterpreterRuleContext* createInterpreterRuleContext(ParserRuleContext *parent, size_t invokingStateNumber, size_t ruleIndex);
 
     virtual void visitRuleStopState(atn::ATNState *p);
 

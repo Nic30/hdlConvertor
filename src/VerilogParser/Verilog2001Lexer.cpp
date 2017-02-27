@@ -1,5 +1,5 @@
 
-// Generated from Verilog2001.g4 by ANTLR 4.5.3
+// Generated from Verilog2001.g4 by ANTLR 4.6
 
 
 #include "Verilog2001Lexer.h"
@@ -140,7 +140,7 @@ dfa::Vocabulary Verilog2001Lexer::_vocabulary(_literalNames, _symbolicNames);
 std::vector<std::string> Verilog2001Lexer::_tokenNames;
 
 Verilog2001Lexer::Initializer::Initializer() {
-  // This code could be in a static initializer lambda, but VS doesn't allow access to private class members from there. 
+  // This code could be in a static initializer lambda, but VS doesn't allow access to private class members from there.
 	for (size_t i = 0; i < _symbolicNames.size(); ++i) {
 		std::string name = _vocabulary.getLiteralName(i);
 		if (name.empty()) {
@@ -1268,8 +1268,10 @@ Verilog2001Lexer::Initializer::Initializer() {
   atn::ATNDeserializer deserializer;
   _atn = deserializer.deserialize(_serializedATN);
 
-  for (int i = 0; i < _atn.getNumberOfDecisions(); i++) { 
-    _decisionToDFA.push_back(dfa::DFA(_atn.getDecisionState(i), i));
+  size_t count = _atn.getNumberOfDecisions();
+  _decisionToDFA.reserve(count);
+  for (size_t i = 0; i < count; i++) { 
+    _decisionToDFA.emplace_back(_atn.getDecisionState(i), i);
   }
 }
 

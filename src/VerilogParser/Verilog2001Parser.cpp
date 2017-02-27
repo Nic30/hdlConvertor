@@ -1,5 +1,5 @@
 
-// Generated from Verilog2001.g4 by ANTLR 4.5.3
+// Generated from Verilog2001.g4 by ANTLR 4.6
 
 
 #include "Verilog2001Visitor.h"
@@ -34,42 +34,42 @@ dfa::Vocabulary& Verilog2001Parser::getVocabulary() const {
 
 //----------------- Config_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Config_declarationContext::Config_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Config_declarationContext::Config_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Config_identifierContext> Verilog2001Parser::Config_declarationContext::config_identifier() {
+Verilog2001Parser::Config_identifierContext* Verilog2001Parser::Config_declarationContext::config_identifier() {
   return getRuleContext<Verilog2001Parser::Config_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Design_statementContext> Verilog2001Parser::Config_declarationContext::design_statement() {
+Verilog2001Parser::Design_statementContext* Verilog2001Parser::Config_declarationContext::design_statement() {
   return getRuleContext<Verilog2001Parser::Design_statementContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Config_rule_statementContext>> Verilog2001Parser::Config_declarationContext::config_rule_statement() {
+std::vector<Verilog2001Parser::Config_rule_statementContext *> Verilog2001Parser::Config_declarationContext::config_rule_statement() {
   return getRuleContexts<Verilog2001Parser::Config_rule_statementContext>();
 }
 
-Ref<Verilog2001Parser::Config_rule_statementContext> Verilog2001Parser::Config_declarationContext::config_rule_statement(int i) {
-  return getRuleContext<Verilog2001Parser::Config_rule_statementContext>((size_t)i);
+Verilog2001Parser::Config_rule_statementContext* Verilog2001Parser::Config_declarationContext::config_rule_statement(size_t i) {
+  return getRuleContext<Verilog2001Parser::Config_rule_statementContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Config_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Config_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConfig_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Config_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConfig_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConfig_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Config_declarationContext> Verilog2001Parser::config_declaration() {
-  Ref<Config_declarationContext> _localctx = std::make_shared<Config_declarationContext>(_ctx, getState());
+Verilog2001Parser::Config_declarationContext* Verilog2001Parser::config_declaration() {
+  Config_declarationContext *_localctx = _tracker.createInstance<Config_declarationContext>(_ctx, getState());
   enterRule(_localctx, 0, Verilog2001Parser::RuleConfig_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -87,7 +87,7 @@ Ref<Verilog2001Parser::Config_declarationContext> Verilog2001Parser::config_decl
     setState(627);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
       | (1ULL << Verilog2001Parser::T__6)
       | (1ULL << Verilog2001Parser::T__8))) != 0)) {
@@ -112,42 +112,42 @@ Ref<Verilog2001Parser::Config_declarationContext> Verilog2001Parser::config_decl
 
 //----------------- Design_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Design_statementContext::Design_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Design_statementContext::Design_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Cell_identifierContext>> Verilog2001Parser::Design_statementContext::cell_identifier() {
+std::vector<Verilog2001Parser::Cell_identifierContext *> Verilog2001Parser::Design_statementContext::cell_identifier() {
   return getRuleContexts<Verilog2001Parser::Cell_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::Design_statementContext::cell_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Cell_identifierContext>((size_t)i);
+Verilog2001Parser::Cell_identifierContext* Verilog2001Parser::Design_statementContext::cell_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Cell_identifierContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Library_identifierContext>> Verilog2001Parser::Design_statementContext::library_identifier() {
+std::vector<Verilog2001Parser::Library_identifierContext *> Verilog2001Parser::Design_statementContext::library_identifier() {
   return getRuleContexts<Verilog2001Parser::Library_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::Design_statementContext::library_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Library_identifierContext>((size_t)i);
+Verilog2001Parser::Library_identifierContext* Verilog2001Parser::Design_statementContext::library_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Library_identifierContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Design_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Design_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDesign_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Design_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDesign_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDesign_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Design_statementContext> Verilog2001Parser::design_statement() {
-  Ref<Design_statementContext> _localctx = std::make_shared<Design_statementContext>(_ctx, getState());
+Verilog2001Parser::Design_statementContext* Verilog2001Parser::design_statement() {
+  Design_statementContext *_localctx = _tracker.createInstance<Design_statementContext>(_ctx, getState());
   enterRule(_localctx, 2, Verilog2001Parser::RuleDesign_statement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -196,44 +196,44 @@ Ref<Verilog2001Parser::Design_statementContext> Verilog2001Parser::design_statem
 
 //----------------- Config_rule_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Config_rule_statementContext::Config_rule_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Config_rule_statementContext::Config_rule_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Default_clauseContext> Verilog2001Parser::Config_rule_statementContext::default_clause() {
+Verilog2001Parser::Default_clauseContext* Verilog2001Parser::Config_rule_statementContext::default_clause() {
   return getRuleContext<Verilog2001Parser::Default_clauseContext>(0);
 }
 
-Ref<Verilog2001Parser::Liblist_clauseContext> Verilog2001Parser::Config_rule_statementContext::liblist_clause() {
+Verilog2001Parser::Liblist_clauseContext* Verilog2001Parser::Config_rule_statementContext::liblist_clause() {
   return getRuleContext<Verilog2001Parser::Liblist_clauseContext>(0);
 }
 
-Ref<Verilog2001Parser::Inst_clauseContext> Verilog2001Parser::Config_rule_statementContext::inst_clause() {
+Verilog2001Parser::Inst_clauseContext* Verilog2001Parser::Config_rule_statementContext::inst_clause() {
   return getRuleContext<Verilog2001Parser::Inst_clauseContext>(0);
 }
 
-Ref<Verilog2001Parser::Use_clauseContext> Verilog2001Parser::Config_rule_statementContext::use_clause() {
+Verilog2001Parser::Use_clauseContext* Verilog2001Parser::Config_rule_statementContext::use_clause() {
   return getRuleContext<Verilog2001Parser::Use_clauseContext>(0);
 }
 
-Ref<Verilog2001Parser::Cell_clauseContext> Verilog2001Parser::Config_rule_statementContext::cell_clause() {
+Verilog2001Parser::Cell_clauseContext* Verilog2001Parser::Config_rule_statementContext::cell_clause() {
   return getRuleContext<Verilog2001Parser::Cell_clauseContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Config_rule_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Config_rule_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConfig_rule_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Config_rule_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConfig_rule_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConfig_rule_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Config_rule_statementContext> Verilog2001Parser::config_rule_statement() {
-  Ref<Config_rule_statementContext> _localctx = std::make_shared<Config_rule_statementContext>(_ctx, getState());
+Verilog2001Parser::Config_rule_statementContext* Verilog2001Parser::config_rule_statement() {
+  Config_rule_statementContext *_localctx = _tracker.createInstance<Config_rule_statementContext>(_ctx, getState());
   enterRule(_localctx, 4, Verilog2001Parser::RuleConfig_rule_statement);
 
   auto onExit = finally([=] {
@@ -302,24 +302,24 @@ Ref<Verilog2001Parser::Config_rule_statementContext> Verilog2001Parser::config_r
 
 //----------------- Default_clauseContext ------------------------------------------------------------------
 
-Verilog2001Parser::Default_clauseContext::Default_clauseContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Default_clauseContext::Default_clauseContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Default_clauseContext::getRuleIndex() const {
+size_t Verilog2001Parser::Default_clauseContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDefault_clause;
 }
 
 antlrcpp::Any Verilog2001Parser::Default_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDefault_clause(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDefault_clause(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Default_clauseContext> Verilog2001Parser::default_clause() {
-  Ref<Default_clauseContext> _localctx = std::make_shared<Default_clauseContext>(_ctx, getState());
+Verilog2001Parser::Default_clauseContext* Verilog2001Parser::default_clause() {
+  Default_clauseContext *_localctx = _tracker.createInstance<Default_clauseContext>(_ctx, getState());
   enterRule(_localctx, 6, Verilog2001Parser::RuleDefault_clause);
 
   auto onExit = finally([=] {
@@ -342,28 +342,28 @@ Ref<Verilog2001Parser::Default_clauseContext> Verilog2001Parser::default_clause(
 
 //----------------- Inst_clauseContext ------------------------------------------------------------------
 
-Verilog2001Parser::Inst_clauseContext::Inst_clauseContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Inst_clauseContext::Inst_clauseContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Inst_nameContext> Verilog2001Parser::Inst_clauseContext::inst_name() {
+Verilog2001Parser::Inst_nameContext* Verilog2001Parser::Inst_clauseContext::inst_name() {
   return getRuleContext<Verilog2001Parser::Inst_nameContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Inst_clauseContext::getRuleIndex() const {
+size_t Verilog2001Parser::Inst_clauseContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInst_clause;
 }
 
 antlrcpp::Any Verilog2001Parser::Inst_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInst_clause(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInst_clause(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Inst_clauseContext> Verilog2001Parser::inst_clause() {
-  Ref<Inst_clauseContext> _localctx = std::make_shared<Inst_clauseContext>(_ctx, getState());
+Verilog2001Parser::Inst_clauseContext* Verilog2001Parser::inst_clause() {
+  Inst_clauseContext *_localctx = _tracker.createInstance<Inst_clauseContext>(_ctx, getState());
   enterRule(_localctx, 8, Verilog2001Parser::RuleInst_clause);
 
   auto onExit = finally([=] {
@@ -388,38 +388,38 @@ Ref<Verilog2001Parser::Inst_clauseContext> Verilog2001Parser::inst_clause() {
 
 //----------------- Inst_nameContext ------------------------------------------------------------------
 
-Verilog2001Parser::Inst_nameContext::Inst_nameContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Inst_nameContext::Inst_nameContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Topmodule_identifierContext> Verilog2001Parser::Inst_nameContext::topmodule_identifier() {
+Verilog2001Parser::Topmodule_identifierContext* Verilog2001Parser::Inst_nameContext::topmodule_identifier() {
   return getRuleContext<Verilog2001Parser::Topmodule_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Instance_identifierContext>> Verilog2001Parser::Inst_nameContext::instance_identifier() {
+std::vector<Verilog2001Parser::Instance_identifierContext *> Verilog2001Parser::Inst_nameContext::instance_identifier() {
   return getRuleContexts<Verilog2001Parser::Instance_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Instance_identifierContext> Verilog2001Parser::Inst_nameContext::instance_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Instance_identifierContext>((size_t)i);
+Verilog2001Parser::Instance_identifierContext* Verilog2001Parser::Inst_nameContext::instance_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Instance_identifierContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Inst_nameContext::getRuleIndex() const {
+size_t Verilog2001Parser::Inst_nameContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInst_name;
 }
 
 antlrcpp::Any Verilog2001Parser::Inst_nameContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInst_name(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInst_name(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Inst_nameContext> Verilog2001Parser::inst_name() {
-  Ref<Inst_nameContext> _localctx = std::make_shared<Inst_nameContext>(_ctx, getState());
+Verilog2001Parser::Inst_nameContext* Verilog2001Parser::inst_name() {
+  Inst_nameContext *_localctx = _tracker.createInstance<Inst_nameContext>(_ctx, getState());
   enterRule(_localctx, 10, Verilog2001Parser::RuleInst_name);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -453,34 +453,34 @@ Ref<Verilog2001Parser::Inst_nameContext> Verilog2001Parser::inst_name() {
 
 //----------------- Liblist_clauseContext ------------------------------------------------------------------
 
-Verilog2001Parser::Liblist_clauseContext::Liblist_clauseContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Liblist_clauseContext::Liblist_clauseContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Library_identifierContext>> Verilog2001Parser::Liblist_clauseContext::library_identifier() {
+std::vector<Verilog2001Parser::Library_identifierContext *> Verilog2001Parser::Liblist_clauseContext::library_identifier() {
   return getRuleContexts<Verilog2001Parser::Library_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::Liblist_clauseContext::library_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Library_identifierContext>((size_t)i);
+Verilog2001Parser::Library_identifierContext* Verilog2001Parser::Liblist_clauseContext::library_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Library_identifierContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Liblist_clauseContext::getRuleIndex() const {
+size_t Verilog2001Parser::Liblist_clauseContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLiblist_clause;
 }
 
 antlrcpp::Any Verilog2001Parser::Liblist_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLiblist_clause(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLiblist_clause(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Liblist_clauseContext> Verilog2001Parser::liblist_clause() {
-  Ref<Liblist_clauseContext> _localctx = std::make_shared<Liblist_clauseContext>(_ctx, getState());
+Verilog2001Parser::Liblist_clauseContext* Verilog2001Parser::liblist_clause() {
+  Liblist_clauseContext *_localctx = _tracker.createInstance<Liblist_clauseContext>(_ctx, getState());
   enterRule(_localctx, 12, Verilog2001Parser::RuleLiblist_clause);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -514,32 +514,32 @@ Ref<Verilog2001Parser::Liblist_clauseContext> Verilog2001Parser::liblist_clause(
 
 //----------------- Cell_clauseContext ------------------------------------------------------------------
 
-Verilog2001Parser::Cell_clauseContext::Cell_clauseContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Cell_clauseContext::Cell_clauseContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::Cell_clauseContext::cell_identifier() {
+Verilog2001Parser::Cell_identifierContext* Verilog2001Parser::Cell_clauseContext::cell_identifier() {
   return getRuleContext<Verilog2001Parser::Cell_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::Cell_clauseContext::library_identifier() {
+Verilog2001Parser::Library_identifierContext* Verilog2001Parser::Cell_clauseContext::library_identifier() {
   return getRuleContext<Verilog2001Parser::Library_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Cell_clauseContext::getRuleIndex() const {
+size_t Verilog2001Parser::Cell_clauseContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCell_clause;
 }
 
 antlrcpp::Any Verilog2001Parser::Cell_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCell_clause(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCell_clause(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Cell_clauseContext> Verilog2001Parser::cell_clause() {
-  Ref<Cell_clauseContext> _localctx = std::make_shared<Cell_clauseContext>(_ctx, getState());
+Verilog2001Parser::Cell_clauseContext* Verilog2001Parser::cell_clause() {
+  Cell_clauseContext *_localctx = _tracker.createInstance<Cell_clauseContext>(_ctx, getState());
   enterRule(_localctx, 14, Verilog2001Parser::RuleCell_clause);
 
   auto onExit = finally([=] {
@@ -577,34 +577,34 @@ Ref<Verilog2001Parser::Cell_clauseContext> Verilog2001Parser::cell_clause() {
 
 //----------------- Use_clauseContext ------------------------------------------------------------------
 
-Verilog2001Parser::Use_clauseContext::Use_clauseContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Use_clauseContext::Use_clauseContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::Use_clauseContext::cell_identifier() {
+Verilog2001Parser::Cell_identifierContext* Verilog2001Parser::Use_clauseContext::cell_identifier() {
   return getRuleContext<Verilog2001Parser::Cell_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::Use_clauseContext::library_identifier() {
+Verilog2001Parser::Library_identifierContext* Verilog2001Parser::Use_clauseContext::library_identifier() {
   return getRuleContext<Verilog2001Parser::Library_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Use_clauseContext::getRuleIndex() const {
+size_t Verilog2001Parser::Use_clauseContext::getRuleIndex() const {
   return Verilog2001Parser::RuleUse_clause;
 }
 
 antlrcpp::Any Verilog2001Parser::Use_clauseContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitUse_clause(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitUse_clause(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Use_clauseContext> Verilog2001Parser::use_clause() {
-  Ref<Use_clauseContext> _localctx = std::make_shared<Use_clauseContext>(_ctx, getState());
+Verilog2001Parser::Use_clauseContext* Verilog2001Parser::use_clause() {
+  Use_clauseContext *_localctx = _tracker.createInstance<Use_clauseContext>(_ctx, getState());
   enterRule(_localctx, 16, Verilog2001Parser::RuleUse_clause);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -629,6 +629,7 @@ Ref<Verilog2001Parser::Use_clauseContext> Verilog2001Parser::use_clause() {
     setState(697);
     cell_identifier();
     setState(699);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__10) {
@@ -648,50 +649,50 @@ Ref<Verilog2001Parser::Use_clauseContext> Verilog2001Parser::use_clause() {
 
 //----------------- Source_textContext ------------------------------------------------------------------
 
-Verilog2001Parser::Source_textContext::Source_textContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Source_textContext::Source_textContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Source_textContext::EOF() {
+tree::TerminalNode* Verilog2001Parser::Source_textContext::EOF() {
   return getToken(Verilog2001Parser::EOF, 0);
 }
 
-Ref<Verilog2001Parser::Timing_specContext> Verilog2001Parser::Source_textContext::timing_spec() {
+Verilog2001Parser::Timing_specContext* Verilog2001Parser::Source_textContext::timing_spec() {
   return getRuleContext<Verilog2001Parser::Timing_specContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Default_nettype_specContext>> Verilog2001Parser::Source_textContext::default_nettype_spec() {
+std::vector<Verilog2001Parser::Default_nettype_specContext *> Verilog2001Parser::Source_textContext::default_nettype_spec() {
   return getRuleContexts<Verilog2001Parser::Default_nettype_specContext>();
 }
 
-Ref<Verilog2001Parser::Default_nettype_specContext> Verilog2001Parser::Source_textContext::default_nettype_spec(int i) {
-  return getRuleContext<Verilog2001Parser::Default_nettype_specContext>((size_t)i);
+Verilog2001Parser::Default_nettype_specContext* Verilog2001Parser::Source_textContext::default_nettype_spec(size_t i) {
+  return getRuleContext<Verilog2001Parser::Default_nettype_specContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::DescriptionContext>> Verilog2001Parser::Source_textContext::description() {
+std::vector<Verilog2001Parser::DescriptionContext *> Verilog2001Parser::Source_textContext::description() {
   return getRuleContexts<Verilog2001Parser::DescriptionContext>();
 }
 
-Ref<Verilog2001Parser::DescriptionContext> Verilog2001Parser::Source_textContext::description(int i) {
-  return getRuleContext<Verilog2001Parser::DescriptionContext>((size_t)i);
+Verilog2001Parser::DescriptionContext* Verilog2001Parser::Source_textContext::description(size_t i) {
+  return getRuleContext<Verilog2001Parser::DescriptionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Source_textContext::getRuleIndex() const {
+size_t Verilog2001Parser::Source_textContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSource_text;
 }
 
 antlrcpp::Any Verilog2001Parser::Source_textContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSource_text(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSource_text(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
-  Ref<Source_textContext> _localctx = std::make_shared<Source_textContext>(_ctx, getState());
+Verilog2001Parser::Source_textContext* Verilog2001Parser::source_text() {
+  Source_textContext *_localctx = _tracker.createInstance<Source_textContext>(_ctx, getState());
   enterRule(_localctx, 18, Verilog2001Parser::RuleSource_text);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -699,6 +700,7 @@ Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
   try {
     enterOuterAlt(_localctx, 1);
     setState(702);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__166) {
@@ -719,7 +721,7 @@ Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
     setState(710);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__12)
       | (1ULL << Verilog2001Parser::T__13)
       | (1ULL << Verilog2001Parser::T__15))) != 0)) {
@@ -730,6 +732,7 @@ Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
       _la = _input->LA(1);
     }
     setState(714);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__165) {
@@ -751,28 +754,28 @@ Ref<Verilog2001Parser::Source_textContext> Verilog2001Parser::source_text() {
 
 //----------------- DescriptionContext ------------------------------------------------------------------
 
-Verilog2001Parser::DescriptionContext::DescriptionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::DescriptionContext::DescriptionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::DescriptionContext::module_declaration() {
+Verilog2001Parser::Module_declarationContext* Verilog2001Parser::DescriptionContext::module_declaration() {
   return getRuleContext<Verilog2001Parser::Module_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::DescriptionContext::getRuleIndex() const {
+size_t Verilog2001Parser::DescriptionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDescription;
 }
 
 antlrcpp::Any Verilog2001Parser::DescriptionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDescription(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDescription(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::DescriptionContext> Verilog2001Parser::description() {
-  Ref<DescriptionContext> _localctx = std::make_shared<DescriptionContext>(_ctx, getState());
+Verilog2001Parser::DescriptionContext* Verilog2001Parser::description() {
+  DescriptionContext *_localctx = _tracker.createInstance<DescriptionContext>(_ctx, getState());
   enterRule(_localctx, 20, Verilog2001Parser::RuleDescription);
 
   auto onExit = finally([=] {
@@ -795,70 +798,70 @@ Ref<Verilog2001Parser::DescriptionContext> Verilog2001Parser::description() {
 
 //----------------- Module_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_declarationContext::Module_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_declarationContext::Module_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_keywordContext> Verilog2001Parser::Module_declarationContext::module_keyword() {
+Verilog2001Parser::Module_keywordContext* Verilog2001Parser::Module_declarationContext::module_keyword() {
   return getRuleContext<Verilog2001Parser::Module_keywordContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_identifierContext> Verilog2001Parser::Module_declarationContext::module_identifier() {
+Verilog2001Parser::Module_identifierContext* Verilog2001Parser::Module_declarationContext::module_identifier() {
   return getRuleContext<Verilog2001Parser::Module_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Module_declarationContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Module_declarationContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Module_declarationContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Module_declarationContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Module_parameter_port_listContext> Verilog2001Parser::Module_declarationContext::module_parameter_port_list() {
+Verilog2001Parser::Module_parameter_port_listContext* Verilog2001Parser::Module_declarationContext::module_parameter_port_list() {
   return getRuleContext<Verilog2001Parser::Module_parameter_port_listContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_portsContext> Verilog2001Parser::Module_declarationContext::list_of_ports() {
+Verilog2001Parser::List_of_portsContext* Verilog2001Parser::Module_declarationContext::list_of_ports() {
   return getRuleContext<Verilog2001Parser::List_of_portsContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Module_itemContext>> Verilog2001Parser::Module_declarationContext::module_item() {
+std::vector<Verilog2001Parser::Module_itemContext *> Verilog2001Parser::Module_declarationContext::module_item() {
   return getRuleContexts<Verilog2001Parser::Module_itemContext>();
 }
 
-Ref<Verilog2001Parser::Module_itemContext> Verilog2001Parser::Module_declarationContext::module_item(int i) {
-  return getRuleContext<Verilog2001Parser::Module_itemContext>((size_t)i);
+Verilog2001Parser::Module_itemContext* Verilog2001Parser::Module_declarationContext::module_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_itemContext>(i);
 }
 
-Ref<Verilog2001Parser::List_of_port_declarationsContext> Verilog2001Parser::Module_declarationContext::list_of_port_declarations() {
+Verilog2001Parser::List_of_port_declarationsContext* Verilog2001Parser::Module_declarationContext::list_of_port_declarations() {
   return getRuleContext<Verilog2001Parser::List_of_port_declarationsContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Non_port_module_itemContext>> Verilog2001Parser::Module_declarationContext::non_port_module_item() {
+std::vector<Verilog2001Parser::Non_port_module_itemContext *> Verilog2001Parser::Module_declarationContext::non_port_module_item() {
   return getRuleContexts<Verilog2001Parser::Non_port_module_itemContext>();
 }
 
-Ref<Verilog2001Parser::Non_port_module_itemContext> Verilog2001Parser::Module_declarationContext::non_port_module_item(int i) {
-  return getRuleContext<Verilog2001Parser::Non_port_module_itemContext>((size_t)i);
+Verilog2001Parser::Non_port_module_itemContext* Verilog2001Parser::Module_declarationContext::non_port_module_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Non_port_module_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_declaration() {
-  Ref<Module_declarationContext> _localctx = std::make_shared<Module_declarationContext>(_ctx, getState());
+Verilog2001Parser::Module_declarationContext* Verilog2001Parser::module_declaration() {
+  Module_declarationContext *_localctx = _tracker.createInstance<Module_declarationContext>(_ctx, getState());
   enterRule(_localctx, 22, Verilog2001Parser::RuleModule_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -884,6 +887,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
       setState(727);
       module_identifier();
       setState(729);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -891,6 +895,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
         module_parameter_port_list();
       }
       setState(732);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15) {
@@ -902,7 +907,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
       setState(738);
       _errHandler->sync(this);
       _la = _input->LA(1);
-      while ((((_la & ~(ssize_t)0x3f) == 0) &&
+      while ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__15)
         | (1ULL << Verilog2001Parser::T__22)
         | (1ULL << Verilog2001Parser::T__23)
@@ -928,7 +933,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
         | (1ULL << Verilog2001Parser::T__46)
         | (1ULL << Verilog2001Parser::T__47)
         | (1ULL << Verilog2001Parser::T__48)
-        | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~(ssize_t)0x3f) == 0) &&
+        | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 66)) & ((1ULL << (Verilog2001Parser::T__65 - 66))
         | (1ULL << (Verilog2001Parser::T__68 - 66))
         | (1ULL << (Verilog2001Parser::T__70 - 66))
@@ -992,6 +997,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
       setState(750);
       module_identifier();
       setState(752);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -999,6 +1005,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
         module_parameter_port_list();
       }
       setState(755);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15) {
@@ -1010,7 +1017,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
       setState(761);
       _errHandler->sync(this);
       _la = _input->LA(1);
-      while ((((_la & ~(ssize_t)0x3f) == 0) &&
+      while ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__15)
         | (1ULL << Verilog2001Parser::T__22)
         | (1ULL << Verilog2001Parser::T__23)
@@ -1033,7 +1040,7 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
         | (1ULL << Verilog2001Parser::T__46)
         | (1ULL << Verilog2001Parser::T__47)
         | (1ULL << Verilog2001Parser::T__48)
-        | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~(ssize_t)0x3f) == 0) &&
+        | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 66)) & ((1ULL << (Verilog2001Parser::T__65 - 66))
         | (1ULL << (Verilog2001Parser::T__68 - 66))
         | (1ULL << (Verilog2001Parser::T__70 - 66))
@@ -1094,26 +1101,26 @@ Ref<Verilog2001Parser::Module_declarationContext> Verilog2001Parser::module_decl
 
 //----------------- Module_keywordContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_keywordContext::Module_keywordContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_keywordContext::Module_keywordContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Module_keywordContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_keywordContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_keyword;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_keywordContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_keyword(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_keyword(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_keywordContext> Verilog2001Parser::module_keyword() {
-  Ref<Module_keywordContext> _localctx = std::make_shared<Module_keywordContext>(_ctx, getState());
+Verilog2001Parser::Module_keywordContext* Verilog2001Parser::module_keyword() {
+  Module_keywordContext *_localctx = _tracker.createInstance<Module_keywordContext>(_ctx, getState());
   enterRule(_localctx, 24, Verilog2001Parser::RuleModule_keyword);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1126,7 +1133,9 @@ Ref<Verilog2001Parser::Module_keywordContext> Verilog2001Parser::module_keyword(
 
     || _la == Verilog2001Parser::T__13)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -1142,34 +1151,34 @@ Ref<Verilog2001Parser::Module_keywordContext> Verilog2001Parser::module_keyword(
 
 //----------------- Module_parameter_port_listContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_parameter_port_listContext::Module_parameter_port_listContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_parameter_port_listContext::Module_parameter_port_listContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Parameter_declaration_Context>> Verilog2001Parser::Module_parameter_port_listContext::parameter_declaration_() {
+std::vector<Verilog2001Parser::Parameter_declaration_Context *> Verilog2001Parser::Module_parameter_port_listContext::parameter_declaration_() {
   return getRuleContexts<Verilog2001Parser::Parameter_declaration_Context>();
 }
 
-Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::Module_parameter_port_listContext::parameter_declaration_(int i) {
-  return getRuleContext<Verilog2001Parser::Parameter_declaration_Context>((size_t)i);
+Verilog2001Parser::Parameter_declaration_Context* Verilog2001Parser::Module_parameter_port_listContext::parameter_declaration_(size_t i) {
+  return getRuleContext<Verilog2001Parser::Parameter_declaration_Context>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_parameter_port_listContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_parameter_port_listContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_parameter_port_list;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_parameter_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_parameter_port_list(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_parameter_port_list(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_parameter_port_listContext> Verilog2001Parser::module_parameter_port_list() {
-  Ref<Module_parameter_port_listContext> _localctx = std::make_shared<Module_parameter_port_listContext>(_ctx, getState());
+Verilog2001Parser::Module_parameter_port_listContext* Verilog2001Parser::module_parameter_port_list() {
+  Module_parameter_port_listContext *_localctx = _tracker.createInstance<Module_parameter_port_listContext>(_ctx, getState());
   enterRule(_localctx, 26, Verilog2001Parser::RuleModule_parameter_port_list);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1209,34 +1218,34 @@ Ref<Verilog2001Parser::Module_parameter_port_listContext> Verilog2001Parser::mod
 
 //----------------- List_of_portsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_portsContext::List_of_portsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_portsContext::List_of_portsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::PortContext>> Verilog2001Parser::List_of_portsContext::port() {
+std::vector<Verilog2001Parser::PortContext *> Verilog2001Parser::List_of_portsContext::port() {
   return getRuleContexts<Verilog2001Parser::PortContext>();
 }
 
-Ref<Verilog2001Parser::PortContext> Verilog2001Parser::List_of_portsContext::port(int i) {
-  return getRuleContext<Verilog2001Parser::PortContext>((size_t)i);
+Verilog2001Parser::PortContext* Verilog2001Parser::List_of_portsContext::port(size_t i) {
+  return getRuleContext<Verilog2001Parser::PortContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_portsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_portsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_ports;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_portsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_ports(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_ports(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_portsContext> Verilog2001Parser::list_of_ports() {
-  Ref<List_of_portsContext> _localctx = std::make_shared<List_of_portsContext>(_ctx, getState());
+Verilog2001Parser::List_of_portsContext* Verilog2001Parser::list_of_ports() {
+  List_of_portsContext *_localctx = _tracker.createInstance<List_of_portsContext>(_ctx, getState());
   enterRule(_localctx, 28, Verilog2001Parser::RuleList_of_ports);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1274,34 +1283,34 @@ Ref<Verilog2001Parser::List_of_portsContext> Verilog2001Parser::list_of_ports() 
 
 //----------------- List_of_port_declarationsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_port_declarationsContext::List_of_port_declarationsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_port_declarationsContext::List_of_port_declarationsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Port_declarationContext>> Verilog2001Parser::List_of_port_declarationsContext::port_declaration() {
+std::vector<Verilog2001Parser::Port_declarationContext *> Verilog2001Parser::List_of_port_declarationsContext::port_declaration() {
   return getRuleContexts<Verilog2001Parser::Port_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Port_declarationContext> Verilog2001Parser::List_of_port_declarationsContext::port_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Port_declarationContext>((size_t)i);
+Verilog2001Parser::Port_declarationContext* Verilog2001Parser::List_of_port_declarationsContext::port_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Port_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_port_declarationsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_port_declarationsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_port_declarations;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_port_declarationsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_port_declarations(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_port_declarations(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_port_declarationsContext> Verilog2001Parser::list_of_port_declarations() {
-  Ref<List_of_port_declarationsContext> _localctx = std::make_shared<List_of_port_declarationsContext>(_ctx, getState());
+Verilog2001Parser::List_of_port_declarationsContext* Verilog2001Parser::list_of_port_declarations() {
+  List_of_port_declarationsContext *_localctx = _tracker.createInstance<List_of_port_declarationsContext>(_ctx, getState());
   enterRule(_localctx, 30, Verilog2001Parser::RuleList_of_port_declarations);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1356,34 +1365,34 @@ Ref<Verilog2001Parser::List_of_port_declarationsContext> Verilog2001Parser::list
 
 //----------------- PortContext ------------------------------------------------------------------
 
-Verilog2001Parser::PortContext::PortContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::PortContext::PortContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Port_expressionContext> Verilog2001Parser::PortContext::port_expression() {
+Verilog2001Parser::Port_expressionContext* Verilog2001Parser::PortContext::port_expression() {
   return getRuleContext<Verilog2001Parser::Port_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::PortContext::port_identifier() {
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::PortContext::port_identifier() {
   return getRuleContext<Verilog2001Parser::Port_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::PortContext::getRuleIndex() const {
+size_t Verilog2001Parser::PortContext::getRuleIndex() const {
   return Verilog2001Parser::RulePort;
 }
 
 antlrcpp::Any Verilog2001Parser::PortContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPort(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPort(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::PortContext> Verilog2001Parser::port() {
-  Ref<PortContext> _localctx = std::make_shared<PortContext>(_ctx, getState());
+Verilog2001Parser::PortContext* Verilog2001Parser::port() {
+  PortContext *_localctx = _tracker.createInstance<PortContext>(_ctx, getState());
   enterRule(_localctx, 32, Verilog2001Parser::RulePort);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1399,6 +1408,7 @@ Ref<Verilog2001Parser::PortContext> Verilog2001Parser::port() {
       case Verilog2001Parser::Simple_identifier: {
         enterOuterAlt(_localctx, 1);
         setState(809);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__18 || _la == Verilog2001Parser::Escaped_identifier
@@ -1419,6 +1429,7 @@ Ref<Verilog2001Parser::PortContext> Verilog2001Parser::port() {
         setState(813);
         match(Verilog2001Parser::T__15);
         setState(815);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__18 || _la == Verilog2001Parser::Escaped_identifier
@@ -1448,34 +1459,34 @@ Ref<Verilog2001Parser::PortContext> Verilog2001Parser::port() {
 
 //----------------- Port_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Port_expressionContext::Port_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Port_expressionContext::Port_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Port_referenceContext>> Verilog2001Parser::Port_expressionContext::port_reference() {
+std::vector<Verilog2001Parser::Port_referenceContext *> Verilog2001Parser::Port_expressionContext::port_reference() {
   return getRuleContexts<Verilog2001Parser::Port_referenceContext>();
 }
 
-Ref<Verilog2001Parser::Port_referenceContext> Verilog2001Parser::Port_expressionContext::port_reference(int i) {
-  return getRuleContext<Verilog2001Parser::Port_referenceContext>((size_t)i);
+Verilog2001Parser::Port_referenceContext* Verilog2001Parser::Port_expressionContext::port_reference(size_t i) {
+  return getRuleContext<Verilog2001Parser::Port_referenceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Port_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Port_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RulePort_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Port_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPort_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPort_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Port_expressionContext> Verilog2001Parser::port_expression() {
-  Ref<Port_expressionContext> _localctx = std::make_shared<Port_expressionContext>(_ctx, getState());
+Verilog2001Parser::Port_expressionContext* Verilog2001Parser::port_expression() {
+  Port_expressionContext *_localctx = _tracker.createInstance<Port_expressionContext>(_ctx, getState());
   enterRule(_localctx, 34, Verilog2001Parser::RulePort_expression);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1531,36 +1542,36 @@ Ref<Verilog2001Parser::Port_expressionContext> Verilog2001Parser::port_expressio
 
 //----------------- Port_referenceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Port_referenceContext::Port_referenceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Port_referenceContext::Port_referenceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::Port_referenceContext::port_identifier() {
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::Port_referenceContext::port_identifier() {
   return getRuleContext<Verilog2001Parser::Port_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Port_referenceContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Port_referenceContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Port_referenceContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Port_referenceContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Port_referenceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Port_referenceContext::getRuleIndex() const {
   return Verilog2001Parser::RulePort_reference;
 }
 
 antlrcpp::Any Verilog2001Parser::Port_referenceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPort_reference(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPort_reference(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Port_referenceContext> Verilog2001Parser::port_reference() {
-  Ref<Port_referenceContext> _localctx = std::make_shared<Port_referenceContext>(_ctx, getState());
+Verilog2001Parser::Port_referenceContext* Verilog2001Parser::port_reference() {
+  Port_referenceContext *_localctx = _tracker.createInstance<Port_referenceContext>(_ctx, getState());
   enterRule(_localctx, 36, Verilog2001Parser::RulePort_reference);
 
   auto onExit = finally([=] {
@@ -1617,46 +1628,46 @@ Ref<Verilog2001Parser::Port_referenceContext> Verilog2001Parser::port_reference(
 
 //----------------- Port_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Port_declarationContext::Port_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Port_declarationContext::Port_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::Port_declarationContext::inout_declaration() {
+Verilog2001Parser::Inout_declarationContext* Verilog2001Parser::Port_declarationContext::inout_declaration() {
   return getRuleContext<Verilog2001Parser::Inout_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Port_declarationContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Port_declarationContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Port_declarationContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Port_declarationContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::Port_declarationContext::input_declaration() {
+Verilog2001Parser::Input_declarationContext* Verilog2001Parser::Port_declarationContext::input_declaration() {
   return getRuleContext<Verilog2001Parser::Input_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::Port_declarationContext::output_declaration() {
+Verilog2001Parser::Output_declarationContext* Verilog2001Parser::Port_declarationContext::output_declaration() {
   return getRuleContext<Verilog2001Parser::Output_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Port_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Port_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RulePort_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Port_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPort_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPort_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Port_declarationContext> Verilog2001Parser::port_declaration() {
-  Ref<Port_declarationContext> _localctx = std::make_shared<Port_declarationContext>(_ctx, getState());
+Verilog2001Parser::Port_declarationContext* Verilog2001Parser::port_declaration() {
+  Port_declarationContext *_localctx = _tracker.createInstance<Port_declarationContext>(_ctx, getState());
   enterRule(_localctx, 38, Verilog2001Parser::RulePort_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1730,62 +1741,62 @@ Ref<Verilog2001Parser::Port_declarationContext> Verilog2001Parser::port_declarat
 
 //----------------- Module_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_itemContext::Module_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_itemContext::Module_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::Module_itemContext::module_or_generate_item() {
+Verilog2001Parser::Module_or_generate_itemContext* Verilog2001Parser::Module_itemContext::module_or_generate_item() {
   return getRuleContext<Verilog2001Parser::Module_or_generate_itemContext>(0);
 }
 
-Ref<Verilog2001Parser::Port_declarationContext> Verilog2001Parser::Module_itemContext::port_declaration() {
+Verilog2001Parser::Port_declarationContext* Verilog2001Parser::Module_itemContext::port_declaration() {
   return getRuleContext<Verilog2001Parser::Port_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::Module_itemContext::generated_instantiation() {
+Verilog2001Parser::Generated_instantiationContext* Verilog2001Parser::Module_itemContext::generated_instantiation() {
   return getRuleContext<Verilog2001Parser::Generated_instantiationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Module_itemContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Module_itemContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Module_itemContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Module_itemContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::Module_itemContext::local_parameter_declaration() {
+Verilog2001Parser::Local_parameter_declarationContext* Verilog2001Parser::Module_itemContext::local_parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Local_parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::Module_itemContext::parameter_declaration() {
+Verilog2001Parser::Parameter_declarationContext* Verilog2001Parser::Module_itemContext::parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::Module_itemContext::specify_block() {
+Verilog2001Parser::Specify_blockContext* Verilog2001Parser::Module_itemContext::specify_block() {
   return getRuleContext<Verilog2001Parser::Specify_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::Module_itemContext::specparam_declaration() {
+Verilog2001Parser::Specparam_declarationContext* Verilog2001Parser::Module_itemContext::specparam_declaration() {
   return getRuleContext<Verilog2001Parser::Specparam_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_itemContext> Verilog2001Parser::module_item() {
-  Ref<Module_itemContext> _localctx = std::make_shared<Module_itemContext>(_ctx, getState());
+Verilog2001Parser::Module_itemContext* Verilog2001Parser::module_item() {
+  Module_itemContext *_localctx = _tracker.createInstance<Module_itemContext>(_ctx, getState());
   enterRule(_localctx, 40, Verilog2001Parser::RuleModule_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -1909,62 +1920,62 @@ Ref<Verilog2001Parser::Module_itemContext> Verilog2001Parser::module_item() {
 
 //----------------- Module_or_generate_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_or_generate_itemContext::Module_or_generate_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_or_generate_itemContext::Module_or_generate_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_or_generate_item_declarationContext> Verilog2001Parser::Module_or_generate_itemContext::module_or_generate_item_declaration() {
+Verilog2001Parser::Module_or_generate_item_declarationContext* Verilog2001Parser::Module_or_generate_itemContext::module_or_generate_item_declaration() {
   return getRuleContext<Verilog2001Parser::Module_or_generate_item_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Module_or_generate_itemContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Module_or_generate_itemContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Module_or_generate_itemContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Module_or_generate_itemContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Parameter_overrideContext> Verilog2001Parser::Module_or_generate_itemContext::parameter_override() {
+Verilog2001Parser::Parameter_overrideContext* Verilog2001Parser::Module_or_generate_itemContext::parameter_override() {
   return getRuleContext<Verilog2001Parser::Parameter_overrideContext>(0);
 }
 
-Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::Module_or_generate_itemContext::continuous_assign() {
+Verilog2001Parser::Continuous_assignContext* Verilog2001Parser::Module_or_generate_itemContext::continuous_assign() {
   return getRuleContext<Verilog2001Parser::Continuous_assignContext>(0);
 }
 
-Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::Module_or_generate_itemContext::gate_instantiation() {
+Verilog2001Parser::Gate_instantiationContext* Verilog2001Parser::Module_or_generate_itemContext::gate_instantiation() {
   return getRuleContext<Verilog2001Parser::Gate_instantiationContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_instantiationContext> Verilog2001Parser::Module_or_generate_itemContext::module_instantiation() {
+Verilog2001Parser::Module_instantiationContext* Verilog2001Parser::Module_or_generate_itemContext::module_instantiation() {
   return getRuleContext<Verilog2001Parser::Module_instantiationContext>(0);
 }
 
-Ref<Verilog2001Parser::Initial_constructContext> Verilog2001Parser::Module_or_generate_itemContext::initial_construct() {
+Verilog2001Parser::Initial_constructContext* Verilog2001Parser::Module_or_generate_itemContext::initial_construct() {
   return getRuleContext<Verilog2001Parser::Initial_constructContext>(0);
 }
 
-Ref<Verilog2001Parser::Always_constructContext> Verilog2001Parser::Module_or_generate_itemContext::always_construct() {
+Verilog2001Parser::Always_constructContext* Verilog2001Parser::Module_or_generate_itemContext::always_construct() {
   return getRuleContext<Verilog2001Parser::Always_constructContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_or_generate_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_or_generate_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_or_generate_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_or_generate_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_or_generate_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_or_generate_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::module_or_generate_item() {
-  Ref<Module_or_generate_itemContext> _localctx = std::make_shared<Module_or_generate_itemContext>(_ctx, getState());
+Verilog2001Parser::Module_or_generate_itemContext* Verilog2001Parser::module_or_generate_item() {
+  Module_or_generate_itemContext *_localctx = _tracker.createInstance<Module_or_generate_itemContext>(_ctx, getState());
   enterRule(_localctx, 42, Verilog2001Parser::RuleModule_or_generate_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2106,64 +2117,64 @@ Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::module
 
 //----------------- Non_port_module_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Non_port_module_itemContext::Non_port_module_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Non_port_module_itemContext::Non_port_module_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::Non_port_module_itemContext::generated_instantiation() {
+Verilog2001Parser::Generated_instantiationContext* Verilog2001Parser::Non_port_module_itemContext::generated_instantiation() {
   return getRuleContext<Verilog2001Parser::Generated_instantiationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Non_port_module_itemContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Non_port_module_itemContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Non_port_module_itemContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Non_port_module_itemContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::Non_port_module_itemContext::local_parameter_declaration() {
+Verilog2001Parser::Local_parameter_declarationContext* Verilog2001Parser::Non_port_module_itemContext::local_parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Local_parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::Non_port_module_itemContext::module_or_generate_item() {
+Verilog2001Parser::Module_or_generate_itemContext* Verilog2001Parser::Non_port_module_itemContext::module_or_generate_item() {
   return getRuleContext<Verilog2001Parser::Module_or_generate_itemContext>(0);
 }
 
-Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::Non_port_module_itemContext::parameter_declaration() {
+Verilog2001Parser::Parameter_declarationContext* Verilog2001Parser::Non_port_module_itemContext::parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::Non_port_module_itemContext::specify_block() {
+Verilog2001Parser::Specify_blockContext* Verilog2001Parser::Non_port_module_itemContext::specify_block() {
   return getRuleContext<Verilog2001Parser::Specify_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::Non_port_module_itemContext::specparam_declaration() {
+Verilog2001Parser::Specparam_declarationContext* Verilog2001Parser::Non_port_module_itemContext::specparam_declaration() {
   return getRuleContext<Verilog2001Parser::Specparam_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Non_port_module_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Non_port_module_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNon_port_module_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Non_port_module_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNon_port_module_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNon_port_module_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Non_port_module_itemContext> Verilog2001Parser::non_port_module_item() {
-  Ref<Non_port_module_itemContext> _localctx = std::make_shared<Non_port_module_itemContext>(_ctx, getState());
+Verilog2001Parser::Non_port_module_itemContext* Verilog2001Parser::non_port_module_item() {
+  Non_port_module_itemContext *_localctx = _tracker.createInstance<Non_port_module_itemContext>(_ctx, getState());
   enterRule(_localctx, 44, Verilog2001Parser::RuleNon_port_module_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(1005);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 56, _ctx)) {
@@ -2285,64 +2296,64 @@ Ref<Verilog2001Parser::Non_port_module_itemContext> Verilog2001Parser::non_port_
 
 //----------------- Module_or_generate_item_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_or_generate_item_declarationContext::Module_or_generate_item_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_or_generate_item_declarationContext::Module_or_generate_item_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::net_declaration() {
+Verilog2001Parser::Net_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::net_declaration() {
   return getRuleContext<Verilog2001Parser::Net_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::reg_declaration() {
+Verilog2001Parser::Reg_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::reg_declaration() {
   return getRuleContext<Verilog2001Parser::Reg_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Integer_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::integer_declaration() {
+Verilog2001Parser::Integer_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::integer_declaration() {
   return getRuleContext<Verilog2001Parser::Integer_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Real_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::real_declaration() {
+Verilog2001Parser::Real_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::real_declaration() {
   return getRuleContext<Verilog2001Parser::Real_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Time_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::time_declaration() {
+Verilog2001Parser::Time_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::time_declaration() {
   return getRuleContext<Verilog2001Parser::Time_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Realtime_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::realtime_declaration() {
+Verilog2001Parser::Realtime_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::realtime_declaration() {
   return getRuleContext<Verilog2001Parser::Realtime_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Event_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::event_declaration() {
+Verilog2001Parser::Event_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::event_declaration() {
   return getRuleContext<Verilog2001Parser::Event_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Genvar_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::genvar_declaration() {
+Verilog2001Parser::Genvar_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::genvar_declaration() {
   return getRuleContext<Verilog2001Parser::Genvar_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::task_declaration() {
+Verilog2001Parser::Task_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::task_declaration() {
   return getRuleContext<Verilog2001Parser::Task_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::Module_or_generate_item_declarationContext::function_declaration() {
+Verilog2001Parser::Function_declarationContext* Verilog2001Parser::Module_or_generate_item_declarationContext::function_declaration() {
   return getRuleContext<Verilog2001Parser::Function_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_or_generate_item_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_or_generate_item_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_or_generate_item_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_or_generate_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_or_generate_item_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_or_generate_item_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_or_generate_item_declarationContext> Verilog2001Parser::module_or_generate_item_declaration() {
-  Ref<Module_or_generate_item_declarationContext> _localctx = std::make_shared<Module_or_generate_item_declarationContext>(_ctx, getState());
+Verilog2001Parser::Module_or_generate_item_declarationContext* Verilog2001Parser::module_or_generate_item_declaration() {
+  Module_or_generate_item_declarationContext *_localctx = _tracker.createInstance<Module_or_generate_item_declarationContext>(_ctx, getState());
   enterRule(_localctx, 46, Verilog2001Parser::RuleModule_or_generate_item_declaration);
 
   auto onExit = finally([=] {
@@ -2448,28 +2459,28 @@ Ref<Verilog2001Parser::Module_or_generate_item_declarationContext> Verilog2001Pa
 
 //----------------- Parameter_overrideContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parameter_overrideContext::Parameter_overrideContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parameter_overrideContext::Parameter_overrideContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::Parameter_overrideContext::list_of_param_assignments() {
+Verilog2001Parser::List_of_param_assignmentsContext* Verilog2001Parser::Parameter_overrideContext::list_of_param_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_param_assignmentsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parameter_overrideContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parameter_overrideContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParameter_override;
 }
 
 antlrcpp::Any Verilog2001Parser::Parameter_overrideContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParameter_override(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParameter_override(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parameter_overrideContext> Verilog2001Parser::parameter_override() {
-  Ref<Parameter_overrideContext> _localctx = std::make_shared<Parameter_overrideContext>(_ctx, getState());
+Verilog2001Parser::Parameter_overrideContext* Verilog2001Parser::parameter_override() {
+  Parameter_overrideContext *_localctx = _tracker.createInstance<Parameter_overrideContext>(_ctx, getState());
   enterRule(_localctx, 48, Verilog2001Parser::RuleParameter_override);
 
   auto onExit = finally([=] {
@@ -2496,34 +2507,34 @@ Ref<Verilog2001Parser::Parameter_overrideContext> Verilog2001Parser::parameter_o
 
 //----------------- Local_parameter_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Local_parameter_declarationContext::Local_parameter_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Local_parameter_declarationContext::Local_parameter_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::Local_parameter_declarationContext::list_of_param_assignments() {
+Verilog2001Parser::List_of_param_assignmentsContext* Verilog2001Parser::Local_parameter_declarationContext::list_of_param_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_param_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Local_parameter_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Local_parameter_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Local_parameter_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Local_parameter_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLocal_parameter_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Local_parameter_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLocal_parameter_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLocal_parameter_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::local_parameter_declaration() {
-  Ref<Local_parameter_declarationContext> _localctx = std::make_shared<Local_parameter_declarationContext>(_ctx, getState());
+Verilog2001Parser::Local_parameter_declarationContext* Verilog2001Parser::local_parameter_declaration() {
+  Local_parameter_declarationContext *_localctx = _tracker.createInstance<Local_parameter_declarationContext>(_ctx, getState());
   enterRule(_localctx, 50, Verilog2001Parser::RuleLocal_parameter_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2537,6 +2548,7 @@ Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::lo
       setState(1023);
       match(Verilog2001Parser::T__23);
       setState(1025);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -2544,6 +2556,7 @@ Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::lo
         match(Verilog2001Parser::T__24);
       }
       setState(1028);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -2623,28 +2636,28 @@ Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::lo
 
 //----------------- Parameter_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parameter_declarationContext::Parameter_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parameter_declarationContext::Parameter_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::Parameter_declarationContext::parameter_declaration_() {
+Verilog2001Parser::Parameter_declaration_Context* Verilog2001Parser::Parameter_declarationContext::parameter_declaration_() {
   return getRuleContext<Verilog2001Parser::Parameter_declaration_Context>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parameter_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parameter_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParameter_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Parameter_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParameter_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParameter_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::parameter_declaration() {
-  Ref<Parameter_declarationContext> _localctx = std::make_shared<Parameter_declarationContext>(_ctx, getState());
+Verilog2001Parser::Parameter_declarationContext* Verilog2001Parser::parameter_declaration() {
+  Parameter_declarationContext *_localctx = _tracker.createInstance<Parameter_declarationContext>(_ctx, getState());
   enterRule(_localctx, 52, Verilog2001Parser::RuleParameter_declaration);
 
   auto onExit = finally([=] {
@@ -2669,34 +2682,34 @@ Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::paramete
 
 //----------------- Parameter_declaration_Context ------------------------------------------------------------------
 
-Verilog2001Parser::Parameter_declaration_Context::Parameter_declaration_Context(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parameter_declaration_Context::Parameter_declaration_Context(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::Parameter_declaration_Context::list_of_param_assignments() {
+Verilog2001Parser::List_of_param_assignmentsContext* Verilog2001Parser::Parameter_declaration_Context::list_of_param_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_param_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Parameter_declaration_Context::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Parameter_declaration_Context::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parameter_declaration_Context::getRuleIndex() const {
+size_t Verilog2001Parser::Parameter_declaration_Context::getRuleIndex() const {
   return Verilog2001Parser::RuleParameter_declaration_;
 }
 
 antlrcpp::Any Verilog2001Parser::Parameter_declaration_Context::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParameter_declaration_(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParameter_declaration_(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::parameter_declaration_() {
-  Ref<Parameter_declaration_Context> _localctx = std::make_shared<Parameter_declaration_Context>(_ctx, getState());
+Verilog2001Parser::Parameter_declaration_Context* Verilog2001Parser::parameter_declaration_() {
+  Parameter_declaration_Context *_localctx = _tracker.createInstance<Parameter_declaration_Context>(_ctx, getState());
   enterRule(_localctx, 54, Verilog2001Parser::RuleParameter_declaration_);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2710,6 +2723,7 @@ Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::paramet
       setState(1058);
       match(Verilog2001Parser::T__29);
       setState(1060);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -2717,6 +2731,7 @@ Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::paramet
         match(Verilog2001Parser::T__24);
       }
       setState(1063);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -2786,34 +2801,34 @@ Ref<Verilog2001Parser::Parameter_declaration_Context> Verilog2001Parser::paramet
 
 //----------------- Specparam_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specparam_declarationContext::Specparam_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specparam_declarationContext::Specparam_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_specparam_assignmentsContext> Verilog2001Parser::Specparam_declarationContext::list_of_specparam_assignments() {
+Verilog2001Parser::List_of_specparam_assignmentsContext* Verilog2001Parser::Specparam_declarationContext::list_of_specparam_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_specparam_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Specparam_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Specparam_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specparam_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specparam_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecparam_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Specparam_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecparam_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecparam_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::specparam_declaration() {
-  Ref<Specparam_declarationContext> _localctx = std::make_shared<Specparam_declarationContext>(_ctx, getState());
+Verilog2001Parser::Specparam_declarationContext* Verilog2001Parser::specparam_declaration() {
+  Specparam_declarationContext *_localctx = _tracker.createInstance<Specparam_declarationContext>(_ctx, getState());
   enterRule(_localctx, 56, Verilog2001Parser::RuleSpecparam_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2823,6 +2838,7 @@ Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::specpara
     setState(1080);
     match(Verilog2001Parser::T__30);
     setState(1082);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -2846,38 +2862,38 @@ Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::specpara
 
 //----------------- Inout_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Inout_declarationContext::Inout_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Inout_declarationContext::Inout_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::Inout_declarationContext::list_of_port_identifiers() {
+Verilog2001Parser::List_of_port_identifiersContext* Verilog2001Parser::Inout_declarationContext::list_of_port_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_port_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::Inout_declarationContext::net_type() {
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::Inout_declarationContext::net_type() {
   return getRuleContext<Verilog2001Parser::Net_typeContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Inout_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Inout_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Inout_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Inout_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInout_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Inout_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInout_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInout_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declaration() {
-  Ref<Inout_declarationContext> _localctx = std::make_shared<Inout_declarationContext>(_ctx, getState());
+Verilog2001Parser::Inout_declarationContext* Verilog2001Parser::inout_declaration() {
+  Inout_declarationContext *_localctx = _tracker.createInstance<Inout_declarationContext>(_ctx, getState());
   enterRule(_localctx, 58, Verilog2001Parser::RuleInout_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2887,9 +2903,10 @@ Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declar
     setState(1087);
     match(Verilog2001Parser::T__31);
     setState(1089);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
-    if ((((_la & ~(ssize_t)0x3f) == 0) &&
+    if ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
       | (1ULL << Verilog2001Parser::T__41)
       | (1ULL << Verilog2001Parser::T__42)
@@ -2904,6 +2921,7 @@ Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declar
       net_type();
     }
     setState(1092);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__24) {
@@ -2911,6 +2929,7 @@ Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declar
       match(Verilog2001Parser::T__24);
     }
     setState(1095);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -2932,38 +2951,38 @@ Ref<Verilog2001Parser::Inout_declarationContext> Verilog2001Parser::inout_declar
 
 //----------------- Input_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Input_declarationContext::Input_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Input_declarationContext::Input_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::Input_declarationContext::list_of_port_identifiers() {
+Verilog2001Parser::List_of_port_identifiersContext* Verilog2001Parser::Input_declarationContext::list_of_port_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_port_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::Input_declarationContext::net_type() {
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::Input_declarationContext::net_type() {
   return getRuleContext<Verilog2001Parser::Net_typeContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Input_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Input_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Input_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Input_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInput_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Input_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInput_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInput_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declaration() {
-  Ref<Input_declarationContext> _localctx = std::make_shared<Input_declarationContext>(_ctx, getState());
+Verilog2001Parser::Input_declarationContext* Verilog2001Parser::input_declaration() {
+  Input_declarationContext *_localctx = _tracker.createInstance<Input_declarationContext>(_ctx, getState());
   enterRule(_localctx, 60, Verilog2001Parser::RuleInput_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -2973,9 +2992,10 @@ Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declar
     setState(1099);
     match(Verilog2001Parser::T__32);
     setState(1101);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
-    if ((((_la & ~(ssize_t)0x3f) == 0) &&
+    if ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
       | (1ULL << Verilog2001Parser::T__41)
       | (1ULL << Verilog2001Parser::T__42)
@@ -2990,6 +3010,7 @@ Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declar
       net_type();
     }
     setState(1104);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__24) {
@@ -2997,6 +3018,7 @@ Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declar
       match(Verilog2001Parser::T__24);
     }
     setState(1107);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -3018,46 +3040,46 @@ Ref<Verilog2001Parser::Input_declarationContext> Verilog2001Parser::input_declar
 
 //----------------- Output_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Output_declarationContext::Output_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Output_declarationContext::Output_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::Output_declarationContext::list_of_port_identifiers() {
+Verilog2001Parser::List_of_port_identifiersContext* Verilog2001Parser::Output_declarationContext::list_of_port_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_port_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::Output_declarationContext::net_type() {
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::Output_declarationContext::net_type() {
   return getRuleContext<Verilog2001Parser::Net_typeContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Output_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Output_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> Verilog2001Parser::Output_declarationContext::list_of_variable_port_identifiers() {
+Verilog2001Parser::List_of_variable_port_identifiersContext* Verilog2001Parser::Output_declarationContext::list_of_variable_port_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_variable_port_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::Output_variable_typeContext> Verilog2001Parser::Output_declarationContext::output_variable_type() {
+Verilog2001Parser::Output_variable_typeContext* Verilog2001Parser::Output_declarationContext::output_variable_type() {
   return getRuleContext<Verilog2001Parser::Output_variable_typeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Output_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Output_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOutput_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Output_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOutput_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOutput_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_declaration() {
-  Ref<Output_declarationContext> _localctx = std::make_shared<Output_declarationContext>(_ctx, getState());
+Verilog2001Parser::Output_declarationContext* Verilog2001Parser::output_declaration() {
+  Output_declarationContext *_localctx = _tracker.createInstance<Output_declarationContext>(_ctx, getState());
   enterRule(_localctx, 62, Verilog2001Parser::RuleOutput_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -3071,9 +3093,10 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
       setState(1111);
       match(Verilog2001Parser::T__33);
       setState(1113);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__42)
@@ -3088,6 +3111,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
         net_type();
       }
       setState(1116);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3095,6 +3119,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
         match(Verilog2001Parser::T__24);
       }
       setState(1119);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -3111,6 +3136,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
       setState(1122);
       match(Verilog2001Parser::T__33);
       setState(1124);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__34) {
@@ -3118,6 +3144,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
         match(Verilog2001Parser::T__34);
       }
       setState(1127);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3125,6 +3152,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
         match(Verilog2001Parser::T__24);
       }
       setState(1130);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -3143,6 +3171,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
       setState(1134);
       match(Verilog2001Parser::T__34);
       setState(1136);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3150,6 +3179,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
         match(Verilog2001Parser::T__24);
       }
       setState(1139);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -3166,6 +3196,7 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
       setState(1142);
       match(Verilog2001Parser::T__33);
       setState(1144);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__25
@@ -3204,28 +3235,28 @@ Ref<Verilog2001Parser::Output_declarationContext> Verilog2001Parser::output_decl
 
 //----------------- Event_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_declarationContext::Event_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_declarationContext::Event_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::Event_declarationContext::list_of_event_identifiers() {
+Verilog2001Parser::List_of_event_identifiersContext* Verilog2001Parser::Event_declarationContext::list_of_event_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_event_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_declarationContext> Verilog2001Parser::event_declaration() {
-  Ref<Event_declarationContext> _localctx = std::make_shared<Event_declarationContext>(_ctx, getState());
+Verilog2001Parser::Event_declarationContext* Verilog2001Parser::event_declaration() {
+  Event_declarationContext *_localctx = _tracker.createInstance<Event_declarationContext>(_ctx, getState());
   enterRule(_localctx, 64, Verilog2001Parser::RuleEvent_declaration);
 
   auto onExit = finally([=] {
@@ -3252,28 +3283,28 @@ Ref<Verilog2001Parser::Event_declarationContext> Verilog2001Parser::event_declar
 
 //----------------- Genvar_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_declarationContext::Genvar_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_declarationContext::Genvar_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_genvar_identifiersContext> Verilog2001Parser::Genvar_declarationContext::list_of_genvar_identifiers() {
+Verilog2001Parser::List_of_genvar_identifiersContext* Verilog2001Parser::Genvar_declarationContext::list_of_genvar_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_genvar_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_declarationContext> Verilog2001Parser::genvar_declaration() {
-  Ref<Genvar_declarationContext> _localctx = std::make_shared<Genvar_declarationContext>(_ctx, getState());
+Verilog2001Parser::Genvar_declarationContext* Verilog2001Parser::genvar_declaration() {
+  Genvar_declarationContext *_localctx = _tracker.createInstance<Genvar_declarationContext>(_ctx, getState());
   enterRule(_localctx, 66, Verilog2001Parser::RuleGenvar_declaration);
 
   auto onExit = finally([=] {
@@ -3300,28 +3331,28 @@ Ref<Verilog2001Parser::Genvar_declarationContext> Verilog2001Parser::genvar_decl
 
 //----------------- Integer_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Integer_declarationContext::Integer_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Integer_declarationContext::Integer_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::Integer_declarationContext::list_of_variable_identifiers() {
+Verilog2001Parser::List_of_variable_identifiersContext* Verilog2001Parser::Integer_declarationContext::list_of_variable_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_variable_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Integer_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Integer_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInteger_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Integer_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInteger_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInteger_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Integer_declarationContext> Verilog2001Parser::integer_declaration() {
-  Ref<Integer_declarationContext> _localctx = std::make_shared<Integer_declarationContext>(_ctx, getState());
+Verilog2001Parser::Integer_declarationContext* Verilog2001Parser::integer_declaration() {
+  Integer_declarationContext *_localctx = _tracker.createInstance<Integer_declarationContext>(_ctx, getState());
   enterRule(_localctx, 68, Verilog2001Parser::RuleInteger_declaration);
 
   auto onExit = finally([=] {
@@ -3348,28 +3379,28 @@ Ref<Verilog2001Parser::Integer_declarationContext> Verilog2001Parser::integer_de
 
 //----------------- Time_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Time_declarationContext::Time_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Time_declarationContext::Time_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::Time_declarationContext::list_of_variable_identifiers() {
+Verilog2001Parser::List_of_variable_identifiersContext* Verilog2001Parser::Time_declarationContext::list_of_variable_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_variable_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Time_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Time_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTime_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Time_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTime_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTime_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Time_declarationContext> Verilog2001Parser::time_declaration() {
-  Ref<Time_declarationContext> _localctx = std::make_shared<Time_declarationContext>(_ctx, getState());
+Verilog2001Parser::Time_declarationContext* Verilog2001Parser::time_declaration() {
+  Time_declarationContext *_localctx = _tracker.createInstance<Time_declarationContext>(_ctx, getState());
   enterRule(_localctx, 70, Verilog2001Parser::RuleTime_declaration);
 
   auto onExit = finally([=] {
@@ -3396,28 +3427,28 @@ Ref<Verilog2001Parser::Time_declarationContext> Verilog2001Parser::time_declarat
 
 //----------------- Real_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Real_declarationContext::Real_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Real_declarationContext::Real_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_real_identifiersContext> Verilog2001Parser::Real_declarationContext::list_of_real_identifiers() {
+Verilog2001Parser::List_of_real_identifiersContext* Verilog2001Parser::Real_declarationContext::list_of_real_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_real_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Real_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Real_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleReal_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Real_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitReal_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitReal_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Real_declarationContext> Verilog2001Parser::real_declaration() {
-  Ref<Real_declarationContext> _localctx = std::make_shared<Real_declarationContext>(_ctx, getState());
+Verilog2001Parser::Real_declarationContext* Verilog2001Parser::real_declaration() {
+  Real_declarationContext *_localctx = _tracker.createInstance<Real_declarationContext>(_ctx, getState());
   enterRule(_localctx, 72, Verilog2001Parser::RuleReal_declaration);
 
   auto onExit = finally([=] {
@@ -3444,28 +3475,28 @@ Ref<Verilog2001Parser::Real_declarationContext> Verilog2001Parser::real_declarat
 
 //----------------- Realtime_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Realtime_declarationContext::Realtime_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Realtime_declarationContext::Realtime_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_real_identifiersContext> Verilog2001Parser::Realtime_declarationContext::list_of_real_identifiers() {
+Verilog2001Parser::List_of_real_identifiersContext* Verilog2001Parser::Realtime_declarationContext::list_of_real_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_real_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Realtime_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Realtime_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleRealtime_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Realtime_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitRealtime_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitRealtime_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Realtime_declarationContext> Verilog2001Parser::realtime_declaration() {
-  Ref<Realtime_declarationContext> _localctx = std::make_shared<Realtime_declarationContext>(_ctx, getState());
+Verilog2001Parser::Realtime_declarationContext* Verilog2001Parser::realtime_declaration() {
+  Realtime_declarationContext *_localctx = _tracker.createInstance<Realtime_declarationContext>(_ctx, getState());
   enterRule(_localctx, 74, Verilog2001Parser::RuleRealtime_declaration);
 
   auto onExit = finally([=] {
@@ -3492,34 +3523,34 @@ Ref<Verilog2001Parser::Realtime_declarationContext> Verilog2001Parser::realtime_
 
 //----------------- Reg_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Reg_declarationContext::Reg_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Reg_declarationContext::Reg_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::Reg_declarationContext::list_of_variable_identifiers() {
+Verilog2001Parser::List_of_variable_identifiersContext* Verilog2001Parser::Reg_declarationContext::list_of_variable_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_variable_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Reg_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Reg_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Reg_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Reg_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleReg_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Reg_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitReg_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitReg_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::reg_declaration() {
-  Ref<Reg_declarationContext> _localctx = std::make_shared<Reg_declarationContext>(_ctx, getState());
+Verilog2001Parser::Reg_declarationContext* Verilog2001Parser::reg_declaration() {
+  Reg_declarationContext *_localctx = _tracker.createInstance<Reg_declarationContext>(_ctx, getState());
   enterRule(_localctx, 76, Verilog2001Parser::RuleReg_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -3529,6 +3560,7 @@ Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::reg_declaratio
     setState(1177);
     match(Verilog2001Parser::T__34);
     setState(1179);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__24) {
@@ -3536,6 +3568,7 @@ Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::reg_declaratio
       match(Verilog2001Parser::T__24);
     }
     setState(1182);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -3559,54 +3592,54 @@ Ref<Verilog2001Parser::Reg_declarationContext> Verilog2001Parser::reg_declaratio
 
 //----------------- Net_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_declarationContext::Net_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_declarationContext::Net_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::Net_declarationContext::net_type() {
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::Net_declarationContext::net_type() {
   return getRuleContext<Verilog2001Parser::Net_typeContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::Net_declarationContext::list_of_net_identifiers() {
+Verilog2001Parser::List_of_net_identifiersContext* Verilog2001Parser::Net_declarationContext::list_of_net_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_net_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::Net_declarationContext::delay3() {
+Verilog2001Parser::Delay3Context* Verilog2001Parser::Net_declarationContext::delay3() {
   return getRuleContext<Verilog2001Parser::Delay3Context>(0);
 }
 
-Ref<Verilog2001Parser::List_of_net_decl_assignmentsContext> Verilog2001Parser::Net_declarationContext::list_of_net_decl_assignments() {
+Verilog2001Parser::List_of_net_decl_assignmentsContext* Verilog2001Parser::Net_declarationContext::list_of_net_decl_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_net_decl_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::Net_declarationContext::drive_strength() {
+Verilog2001Parser::Drive_strengthContext* Verilog2001Parser::Net_declarationContext::drive_strength() {
   return getRuleContext<Verilog2001Parser::Drive_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::Charge_strengthContext> Verilog2001Parser::Net_declarationContext::charge_strength() {
+Verilog2001Parser::Charge_strengthContext* Verilog2001Parser::Net_declarationContext::charge_strength() {
   return getRuleContext<Verilog2001Parser::Charge_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Net_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Net_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaration() {
-  Ref<Net_declarationContext> _localctx = std::make_shared<Net_declarationContext>(_ctx, getState());
+Verilog2001Parser::Net_declarationContext* Verilog2001Parser::net_declaration() {
+  Net_declarationContext *_localctx = _tracker.createInstance<Net_declarationContext>(_ctx, getState());
   enterRule(_localctx, 78, Verilog2001Parser::RuleNet_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -3620,6 +3653,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1187);
       net_type();
       setState(1189);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3627,6 +3661,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         match(Verilog2001Parser::T__24);
       }
       setState(1192);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3645,9 +3680,10 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1197);
       net_type();
       setState(1199);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__51)
@@ -3662,6 +3698,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         drive_strength();
       }
       setState(1202);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3669,6 +3706,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         match(Verilog2001Parser::T__24);
       }
       setState(1205);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3687,9 +3725,10 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1210);
       match(Verilog2001Parser::T__37);
       setState(1212);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__51)
@@ -3704,6 +3743,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         drive_strength();
       }
       setState(1215);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3711,6 +3751,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         match(Verilog2001Parser::T__24);
       }
       setState(1218);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3729,6 +3770,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1223);
       match(Verilog2001Parser::T__37);
       setState(1225);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15) {
@@ -3736,6 +3778,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         charge_strength();
       }
       setState(1228);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3743,6 +3786,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         match(Verilog2001Parser::T__24);
       }
       setState(1231);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3761,6 +3805,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1236);
       match(Verilog2001Parser::T__37);
       setState(1238);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15) {
@@ -3768,6 +3813,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         charge_strength();
       }
       setState(1241);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__38
@@ -3779,11 +3825,14 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
 
         || _la == Verilog2001Parser::T__39)) {
         _errHandler->recoverInline(this);
-        } else {
+        }
+        else {
+          _errHandler->reportMatch(this);
           consume();
         }
       }
       setState(1244);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3793,6 +3842,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1246);
       range();
       setState(1248);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3811,9 +3861,10 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1253);
       match(Verilog2001Parser::T__37);
       setState(1255);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__51)
@@ -3828,6 +3879,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         drive_strength();
       }
       setState(1258);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__38
@@ -3839,11 +3891,14 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
 
         || _la == Verilog2001Parser::T__39)) {
         _errHandler->recoverInline(this);
-        } else {
+        }
+        else {
+          _errHandler->reportMatch(this);
           consume();
         }
       }
       setState(1261);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3853,6 +3908,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1263);
       range();
       setState(1265);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3871,9 +3927,10 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1270);
       net_type();
       setState(1272);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__51)
@@ -3888,6 +3945,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
         drive_strength();
       }
       setState(1275);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__38
@@ -3899,11 +3957,14 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
 
         || _la == Verilog2001Parser::T__39)) {
         _errHandler->recoverInline(this);
-        } else {
+        }
+        else {
+          _errHandler->reportMatch(this);
           consume();
         }
       }
       setState(1278);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3913,6 +3974,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1280);
       range();
       setState(1282);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3931,6 +3993,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1287);
       net_type();
       setState(1289);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__38
@@ -3942,11 +4005,14 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
 
         || _la == Verilog2001Parser::T__39)) {
         _errHandler->recoverInline(this);
-        } else {
+        }
+        else {
+          _errHandler->reportMatch(this);
           consume();
         }
       }
       setState(1292);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -3956,6 +4022,7 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
       setState(1294);
       range();
       setState(1296);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__14) {
@@ -3983,26 +4050,26 @@ Ref<Verilog2001Parser::Net_declarationContext> Verilog2001Parser::net_declaratio
 
 //----------------- Net_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_typeContext::Net_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_typeContext::Net_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Net_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::net_type() {
-  Ref<Net_typeContext> _localctx = std::make_shared<Net_typeContext>(_ctx, getState());
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::net_type() {
+  Net_typeContext *_localctx = _tracker.createInstance<Net_typeContext>(_ctx, getState());
   enterRule(_localctx, 80, Verilog2001Parser::RuleNet_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4011,7 +4078,7 @@ Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::net_type() {
     enterOuterAlt(_localctx, 1);
     setState(1303);
     _la = _input->LA(1);
-    if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+    if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
       | (1ULL << Verilog2001Parser::T__41)
       | (1ULL << Verilog2001Parser::T__42)
@@ -4023,7 +4090,9 @@ Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::net_type() {
       | (1ULL << Verilog2001Parser::T__48)
       | (1ULL << Verilog2001Parser::T__49))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -4039,26 +4108,26 @@ Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::net_type() {
 
 //----------------- Output_variable_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Output_variable_typeContext::Output_variable_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Output_variable_typeContext::Output_variable_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Output_variable_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Output_variable_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOutput_variable_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Output_variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOutput_variable_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOutput_variable_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Output_variable_typeContext> Verilog2001Parser::output_variable_type() {
-  Ref<Output_variable_typeContext> _localctx = std::make_shared<Output_variable_typeContext>(_ctx, getState());
+Verilog2001Parser::Output_variable_typeContext* Verilog2001Parser::output_variable_type() {
+  Output_variable_typeContext *_localctx = _tracker.createInstance<Output_variable_typeContext>(_ctx, getState());
   enterRule(_localctx, 82, Verilog2001Parser::RuleOutput_variable_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4071,7 +4140,9 @@ Ref<Verilog2001Parser::Output_variable_typeContext> Verilog2001Parser::output_va
 
     || _la == Verilog2001Parser::T__28)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -4087,42 +4158,42 @@ Ref<Verilog2001Parser::Output_variable_typeContext> Verilog2001Parser::output_va
 
 //----------------- Real_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Real_typeContext::Real_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Real_typeContext::Real_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Real_identifierContext> Verilog2001Parser::Real_typeContext::real_identifier() {
+Verilog2001Parser::Real_identifierContext* Verilog2001Parser::Real_typeContext::real_identifier() {
   return getRuleContext<Verilog2001Parser::Real_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Real_typeContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Real_typeContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::DimensionContext>> Verilog2001Parser::Real_typeContext::dimension() {
+std::vector<Verilog2001Parser::DimensionContext *> Verilog2001Parser::Real_typeContext::dimension() {
   return getRuleContexts<Verilog2001Parser::DimensionContext>();
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::Real_typeContext::dimension(int i) {
-  return getRuleContext<Verilog2001Parser::DimensionContext>((size_t)i);
+Verilog2001Parser::DimensionContext* Verilog2001Parser::Real_typeContext::dimension(size_t i) {
+  return getRuleContext<Verilog2001Parser::DimensionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Real_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Real_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleReal_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Real_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitReal_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitReal_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Real_typeContext> Verilog2001Parser::real_type() {
-  Ref<Real_typeContext> _localctx = std::make_shared<Real_typeContext>(_ctx, getState());
+Verilog2001Parser::Real_typeContext* Verilog2001Parser::real_type() {
+  Real_typeContext *_localctx = _tracker.createInstance<Real_typeContext>(_ctx, getState());
   enterRule(_localctx, 84, Verilog2001Parser::RuleReal_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4136,6 +4207,7 @@ Ref<Verilog2001Parser::Real_typeContext> Verilog2001Parser::real_type() {
       setState(1307);
       real_identifier();
       setState(1310);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__50) {
@@ -4180,42 +4252,42 @@ Ref<Verilog2001Parser::Real_typeContext> Verilog2001Parser::real_type() {
 
 //----------------- Variable_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_typeContext::Variable_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_typeContext::Variable_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::Variable_typeContext::variable_identifier() {
+Verilog2001Parser::Variable_identifierContext* Verilog2001Parser::Variable_typeContext::variable_identifier() {
   return getRuleContext<Verilog2001Parser::Variable_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Variable_typeContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Variable_typeContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::DimensionContext>> Verilog2001Parser::Variable_typeContext::dimension() {
+std::vector<Verilog2001Parser::DimensionContext *> Verilog2001Parser::Variable_typeContext::dimension() {
   return getRuleContexts<Verilog2001Parser::DimensionContext>();
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::Variable_typeContext::dimension(int i) {
-  return getRuleContext<Verilog2001Parser::DimensionContext>((size_t)i);
+Verilog2001Parser::DimensionContext* Verilog2001Parser::Variable_typeContext::dimension(size_t i) {
+  return getRuleContext<Verilog2001Parser::DimensionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Variable_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_typeContext> Verilog2001Parser::variable_type() {
-  Ref<Variable_typeContext> _localctx = std::make_shared<Variable_typeContext>(_ctx, getState());
+Verilog2001Parser::Variable_typeContext* Verilog2001Parser::variable_type() {
+  Variable_typeContext *_localctx = _tracker.createInstance<Variable_typeContext>(_ctx, getState());
   enterRule(_localctx, 86, Verilog2001Parser::RuleVariable_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4229,6 +4301,7 @@ Ref<Verilog2001Parser::Variable_typeContext> Verilog2001Parser::variable_type() 
       setState(1322);
       variable_identifier();
       setState(1325);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__50) {
@@ -4273,32 +4346,32 @@ Ref<Verilog2001Parser::Variable_typeContext> Verilog2001Parser::variable_type() 
 
 //----------------- Drive_strengthContext ------------------------------------------------------------------
 
-Verilog2001Parser::Drive_strengthContext::Drive_strengthContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Drive_strengthContext::Drive_strengthContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::Drive_strengthContext::strength0() {
+Verilog2001Parser::Strength0Context* Verilog2001Parser::Drive_strengthContext::strength0() {
   return getRuleContext<Verilog2001Parser::Strength0Context>(0);
 }
 
-Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::Drive_strengthContext::strength1() {
+Verilog2001Parser::Strength1Context* Verilog2001Parser::Drive_strengthContext::strength1() {
   return getRuleContext<Verilog2001Parser::Strength1Context>(0);
 }
 
 
-ssize_t Verilog2001Parser::Drive_strengthContext::getRuleIndex() const {
+size_t Verilog2001Parser::Drive_strengthContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDrive_strength;
 }
 
 antlrcpp::Any Verilog2001Parser::Drive_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDrive_strength(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDrive_strength(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::drive_strength() {
-  Ref<Drive_strengthContext> _localctx = std::make_shared<Drive_strengthContext>(_ctx, getState());
+Verilog2001Parser::Drive_strengthContext* Verilog2001Parser::drive_strength() {
+  Drive_strengthContext *_localctx = _tracker.createInstance<Drive_strengthContext>(_ctx, getState());
   enterRule(_localctx, 88, Verilog2001Parser::RuleDrive_strength);
 
   auto onExit = finally([=] {
@@ -4388,26 +4461,26 @@ Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::drive_strength(
 
 //----------------- Strength0Context ------------------------------------------------------------------
 
-Verilog2001Parser::Strength0Context::Strength0Context(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Strength0Context::Strength0Context(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Strength0Context::getRuleIndex() const {
+size_t Verilog2001Parser::Strength0Context::getRuleIndex() const {
   return Verilog2001Parser::RuleStrength0;
 }
 
 antlrcpp::Any Verilog2001Parser::Strength0Context::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStrength0(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStrength0(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::strength0() {
-  Ref<Strength0Context> _localctx = std::make_shared<Strength0Context>(_ctx, getState());
+Verilog2001Parser::Strength0Context* Verilog2001Parser::strength0() {
+  Strength0Context *_localctx = _tracker.createInstance<Strength0Context>(_ctx, getState());
   enterRule(_localctx, 90, Verilog2001Parser::RuleStrength0);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4416,13 +4489,15 @@ Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::strength0() {
     enterOuterAlt(_localctx, 1);
     setState(1361);
     _la = _input->LA(1);
-    if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+    if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
       | (1ULL << Verilog2001Parser::T__53)
       | (1ULL << Verilog2001Parser::T__54)
       | (1ULL << Verilog2001Parser::T__55))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -4438,26 +4513,26 @@ Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::strength0() {
 
 //----------------- Strength1Context ------------------------------------------------------------------
 
-Verilog2001Parser::Strength1Context::Strength1Context(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Strength1Context::Strength1Context(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Strength1Context::getRuleIndex() const {
+size_t Verilog2001Parser::Strength1Context::getRuleIndex() const {
   return Verilog2001Parser::RuleStrength1;
 }
 
 antlrcpp::Any Verilog2001Parser::Strength1Context::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStrength1(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStrength1(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::strength1() {
-  Ref<Strength1Context> _localctx = std::make_shared<Strength1Context>(_ctx, getState());
+Verilog2001Parser::Strength1Context* Verilog2001Parser::strength1() {
+  Strength1Context *_localctx = _tracker.createInstance<Strength1Context>(_ctx, getState());
   enterRule(_localctx, 92, Verilog2001Parser::RuleStrength1);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4466,13 +4541,15 @@ Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::strength1() {
     enterOuterAlt(_localctx, 1);
     setState(1363);
     _la = _input->LA(1);
-    if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+    if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__41)
       | (1ULL << Verilog2001Parser::T__56)
       | (1ULL << Verilog2001Parser::T__57)
       | (1ULL << Verilog2001Parser::T__58))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -4488,24 +4565,24 @@ Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::strength1() {
 
 //----------------- Charge_strengthContext ------------------------------------------------------------------
 
-Verilog2001Parser::Charge_strengthContext::Charge_strengthContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Charge_strengthContext::Charge_strengthContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Charge_strengthContext::getRuleIndex() const {
+size_t Verilog2001Parser::Charge_strengthContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCharge_strength;
 }
 
 antlrcpp::Any Verilog2001Parser::Charge_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCharge_strength(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCharge_strength(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Charge_strengthContext> Verilog2001Parser::charge_strength() {
-  Ref<Charge_strengthContext> _localctx = std::make_shared<Charge_strengthContext>(_ctx, getState());
+Verilog2001Parser::Charge_strengthContext* Verilog2001Parser::charge_strength() {
+  Charge_strengthContext *_localctx = _tracker.createInstance<Charge_strengthContext>(_ctx, getState());
   enterRule(_localctx, 94, Verilog2001Parser::RuleCharge_strength);
 
   auto onExit = finally([=] {
@@ -4562,34 +4639,34 @@ Ref<Verilog2001Parser::Charge_strengthContext> Verilog2001Parser::charge_strengt
 
 //----------------- Delay3Context ------------------------------------------------------------------
 
-Verilog2001Parser::Delay3Context::Delay3Context(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delay3Context::Delay3Context(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Delay_valueContext>> Verilog2001Parser::Delay3Context::delay_value() {
+std::vector<Verilog2001Parser::Delay_valueContext *> Verilog2001Parser::Delay3Context::delay_value() {
   return getRuleContexts<Verilog2001Parser::Delay_valueContext>();
 }
 
-Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::Delay3Context::delay_value(int i) {
-  return getRuleContext<Verilog2001Parser::Delay_valueContext>((size_t)i);
+Verilog2001Parser::Delay_valueContext* Verilog2001Parser::Delay3Context::delay_value(size_t i) {
+  return getRuleContext<Verilog2001Parser::Delay_valueContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Delay3Context::getRuleIndex() const {
+size_t Verilog2001Parser::Delay3Context::getRuleIndex() const {
   return Verilog2001Parser::RuleDelay3;
 }
 
 antlrcpp::Any Verilog2001Parser::Delay3Context::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelay3(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelay3(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::delay3() {
-  Ref<Delay3Context> _localctx = std::make_shared<Delay3Context>(_ctx, getState());
+Verilog2001Parser::Delay3Context* Verilog2001Parser::delay3() {
+  Delay3Context *_localctx = _tracker.createInstance<Delay3Context>(_ctx, getState());
   enterRule(_localctx, 96, Verilog2001Parser::RuleDelay3);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4616,6 +4693,7 @@ Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::delay3() {
       setState(1380);
       delay_value();
       setState(1387);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__16) {
@@ -4624,6 +4702,7 @@ Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::delay3() {
         setState(1382);
         delay_value();
         setState(1385);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__16) {
@@ -4652,34 +4731,34 @@ Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::delay3() {
 
 //----------------- Delay2Context ------------------------------------------------------------------
 
-Verilog2001Parser::Delay2Context::Delay2Context(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delay2Context::Delay2Context(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Delay_valueContext>> Verilog2001Parser::Delay2Context::delay_value() {
+std::vector<Verilog2001Parser::Delay_valueContext *> Verilog2001Parser::Delay2Context::delay_value() {
   return getRuleContexts<Verilog2001Parser::Delay_valueContext>();
 }
 
-Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::Delay2Context::delay_value(int i) {
-  return getRuleContext<Verilog2001Parser::Delay_valueContext>((size_t)i);
+Verilog2001Parser::Delay_valueContext* Verilog2001Parser::Delay2Context::delay_value(size_t i) {
+  return getRuleContext<Verilog2001Parser::Delay_valueContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Delay2Context::getRuleIndex() const {
+size_t Verilog2001Parser::Delay2Context::getRuleIndex() const {
   return Verilog2001Parser::RuleDelay2;
 }
 
 antlrcpp::Any Verilog2001Parser::Delay2Context::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelay2(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelay2(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delay2Context> Verilog2001Parser::delay2() {
-  Ref<Delay2Context> _localctx = std::make_shared<Delay2Context>(_ctx, getState());
+Verilog2001Parser::Delay2Context* Verilog2001Parser::delay2() {
+  Delay2Context *_localctx = _tracker.createInstance<Delay2Context>(_ctx, getState());
   enterRule(_localctx, 98, Verilog2001Parser::RuleDelay2);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4706,6 +4785,7 @@ Ref<Verilog2001Parser::Delay2Context> Verilog2001Parser::delay2() {
       setState(1397);
       delay_value();
       setState(1400);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__16) {
@@ -4733,40 +4813,40 @@ Ref<Verilog2001Parser::Delay2Context> Verilog2001Parser::delay2() {
 
 //----------------- Delay_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Delay_valueContext::Delay_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delay_valueContext::Delay_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Delay_valueContext::Decimal_number() {
+tree::TerminalNode* Verilog2001Parser::Delay_valueContext::Decimal_number() {
   return getToken(Verilog2001Parser::Decimal_number, 0);
 }
 
-Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::Delay_valueContext::parameter_identifier() {
+Verilog2001Parser::Parameter_identifierContext* Verilog2001Parser::Delay_valueContext::parameter_identifier() {
   return getRuleContext<Verilog2001Parser::Parameter_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::Delay_valueContext::specparam_identifier() {
+Verilog2001Parser::Specparam_identifierContext* Verilog2001Parser::Delay_valueContext::specparam_identifier() {
   return getRuleContext<Verilog2001Parser::Specparam_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::Delay_valueContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::Delay_valueContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Delay_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Delay_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDelay_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Delay_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelay_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelay_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::delay_value() {
-  Ref<Delay_valueContext> _localctx = std::make_shared<Delay_valueContext>(_ctx, getState());
+Verilog2001Parser::Delay_valueContext* Verilog2001Parser::delay_value() {
+  Delay_valueContext *_localctx = _tracker.createInstance<Delay_valueContext>(_ctx, getState());
   enterRule(_localctx, 100, Verilog2001Parser::RuleDelay_value);
 
   auto onExit = finally([=] {
@@ -4818,42 +4898,42 @@ Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::delay_value() {
 
 //----------------- List_of_event_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_event_identifiersContext::List_of_event_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_event_identifiersContext::List_of_event_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Event_identifierContext>> Verilog2001Parser::List_of_event_identifiersContext::event_identifier() {
+std::vector<Verilog2001Parser::Event_identifierContext *> Verilog2001Parser::List_of_event_identifiersContext::event_identifier() {
   return getRuleContexts<Verilog2001Parser::Event_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Event_identifierContext> Verilog2001Parser::List_of_event_identifiersContext::event_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Event_identifierContext>((size_t)i);
+Verilog2001Parser::Event_identifierContext* Verilog2001Parser::List_of_event_identifiersContext::event_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Event_identifierContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::DimensionContext>> Verilog2001Parser::List_of_event_identifiersContext::dimension() {
+std::vector<Verilog2001Parser::DimensionContext *> Verilog2001Parser::List_of_event_identifiersContext::dimension() {
   return getRuleContexts<Verilog2001Parser::DimensionContext>();
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::List_of_event_identifiersContext::dimension(int i) {
-  return getRuleContext<Verilog2001Parser::DimensionContext>((size_t)i);
+Verilog2001Parser::DimensionContext* Verilog2001Parser::List_of_event_identifiersContext::dimension(size_t i) {
+  return getRuleContext<Verilog2001Parser::DimensionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_event_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_event_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_event_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_event_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_event_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_event_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::list_of_event_identifiers() {
-  Ref<List_of_event_identifiersContext> _localctx = std::make_shared<List_of_event_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_event_identifiersContext* Verilog2001Parser::list_of_event_identifiers() {
+  List_of_event_identifiersContext *_localctx = _tracker.createInstance<List_of_event_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 102, Verilog2001Parser::RuleList_of_event_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4863,6 +4943,7 @@ Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::list
     setState(1412);
     event_identifier();
     setState(1420);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -4888,6 +4969,7 @@ Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::list
       setState(1423);
       event_identifier();
       setState(1431);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -4921,42 +5003,42 @@ Ref<Verilog2001Parser::List_of_event_identifiersContext> Verilog2001Parser::list
 
 //----------------- List_of_net_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_net_identifiersContext::List_of_net_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_net_identifiersContext::List_of_net_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Net_identifierContext>> Verilog2001Parser::List_of_net_identifiersContext::net_identifier() {
+std::vector<Verilog2001Parser::Net_identifierContext *> Verilog2001Parser::List_of_net_identifiersContext::net_identifier() {
   return getRuleContexts<Verilog2001Parser::Net_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Net_identifierContext> Verilog2001Parser::List_of_net_identifiersContext::net_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Net_identifierContext>((size_t)i);
+Verilog2001Parser::Net_identifierContext* Verilog2001Parser::List_of_net_identifiersContext::net_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Net_identifierContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::DimensionContext>> Verilog2001Parser::List_of_net_identifiersContext::dimension() {
+std::vector<Verilog2001Parser::DimensionContext *> Verilog2001Parser::List_of_net_identifiersContext::dimension() {
   return getRuleContexts<Verilog2001Parser::DimensionContext>();
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::List_of_net_identifiersContext::dimension(int i) {
-  return getRuleContext<Verilog2001Parser::DimensionContext>((size_t)i);
+Verilog2001Parser::DimensionContext* Verilog2001Parser::List_of_net_identifiersContext::dimension(size_t i) {
+  return getRuleContext<Verilog2001Parser::DimensionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_net_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_net_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_net_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_net_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_net_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_net_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::list_of_net_identifiers() {
-  Ref<List_of_net_identifiersContext> _localctx = std::make_shared<List_of_net_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_net_identifiersContext* Verilog2001Parser::list_of_net_identifiers() {
+  List_of_net_identifiersContext *_localctx = _tracker.createInstance<List_of_net_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 104, Verilog2001Parser::RuleList_of_net_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -4966,6 +5048,7 @@ Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::list_o
     setState(1438);
     net_identifier();
     setState(1446);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -4991,6 +5074,7 @@ Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::list_o
       setState(1449);
       net_identifier();
       setState(1457);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -5024,34 +5108,34 @@ Ref<Verilog2001Parser::List_of_net_identifiersContext> Verilog2001Parser::list_o
 
 //----------------- List_of_genvar_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_genvar_identifiersContext::List_of_genvar_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_genvar_identifiersContext::List_of_genvar_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Genvar_identifierContext>> Verilog2001Parser::List_of_genvar_identifiersContext::genvar_identifier() {
+std::vector<Verilog2001Parser::Genvar_identifierContext *> Verilog2001Parser::List_of_genvar_identifiersContext::genvar_identifier() {
   return getRuleContexts<Verilog2001Parser::Genvar_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::List_of_genvar_identifiersContext::genvar_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Genvar_identifierContext>((size_t)i);
+Verilog2001Parser::Genvar_identifierContext* Verilog2001Parser::List_of_genvar_identifiersContext::genvar_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Genvar_identifierContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_genvar_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_genvar_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_genvar_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_genvar_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_genvar_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_genvar_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_genvar_identifiersContext> Verilog2001Parser::list_of_genvar_identifiers() {
-  Ref<List_of_genvar_identifiersContext> _localctx = std::make_shared<List_of_genvar_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_genvar_identifiersContext* Verilog2001Parser::list_of_genvar_identifiers() {
+  List_of_genvar_identifiersContext *_localctx = _tracker.createInstance<List_of_genvar_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 106, Verilog2001Parser::RuleList_of_genvar_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5085,39 +5169,39 @@ Ref<Verilog2001Parser::List_of_genvar_identifiersContext> Verilog2001Parser::lis
 
 //----------------- List_of_port_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_port_identifiersContext::List_of_port_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_port_identifiersContext::List_of_port_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Port_identifierContext>> Verilog2001Parser::List_of_port_identifiersContext::port_identifier() {
+std::vector<Verilog2001Parser::Port_identifierContext *> Verilog2001Parser::List_of_port_identifiersContext::port_identifier() {
   return getRuleContexts<Verilog2001Parser::Port_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::List_of_port_identifiersContext::port_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Port_identifierContext>((size_t)i);
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::List_of_port_identifiersContext::port_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Port_identifierContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_port_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_port_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_port_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_port_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_port_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_port_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::list_of_port_identifiers() {
-  Ref<List_of_port_identifiersContext> _localctx = std::make_shared<List_of_port_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_port_identifiersContext* Verilog2001Parser::list_of_port_identifiers() {
+  List_of_port_identifiersContext *_localctx = _tracker.createInstance<List_of_port_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 108, Verilog2001Parser::RuleList_of_port_identifiers);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(1472);
     port_identifier();
@@ -5148,34 +5232,34 @@ Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::list_
 
 //----------------- List_of_net_decl_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_net_decl_assignmentsContext::List_of_net_decl_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_net_decl_assignmentsContext::List_of_net_decl_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Net_decl_assignmentContext>> Verilog2001Parser::List_of_net_decl_assignmentsContext::net_decl_assignment() {
+std::vector<Verilog2001Parser::Net_decl_assignmentContext *> Verilog2001Parser::List_of_net_decl_assignmentsContext::net_decl_assignment() {
   return getRuleContexts<Verilog2001Parser::Net_decl_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Net_decl_assignmentContext> Verilog2001Parser::List_of_net_decl_assignmentsContext::net_decl_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Net_decl_assignmentContext>((size_t)i);
+Verilog2001Parser::Net_decl_assignmentContext* Verilog2001Parser::List_of_net_decl_assignmentsContext::net_decl_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Net_decl_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_net_decl_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_net_decl_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_net_decl_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_net_decl_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_net_decl_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_net_decl_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_net_decl_assignmentsContext> Verilog2001Parser::list_of_net_decl_assignments() {
-  Ref<List_of_net_decl_assignmentsContext> _localctx = std::make_shared<List_of_net_decl_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::List_of_net_decl_assignmentsContext* Verilog2001Parser::list_of_net_decl_assignments() {
+  List_of_net_decl_assignmentsContext *_localctx = _tracker.createInstance<List_of_net_decl_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 110, Verilog2001Parser::RuleList_of_net_decl_assignments);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5209,39 +5293,39 @@ Ref<Verilog2001Parser::List_of_net_decl_assignmentsContext> Verilog2001Parser::l
 
 //----------------- List_of_param_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_param_assignmentsContext::List_of_param_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_param_assignmentsContext::List_of_param_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Param_assignmentContext>> Verilog2001Parser::List_of_param_assignmentsContext::param_assignment() {
+std::vector<Verilog2001Parser::Param_assignmentContext *> Verilog2001Parser::List_of_param_assignmentsContext::param_assignment() {
   return getRuleContexts<Verilog2001Parser::Param_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Param_assignmentContext> Verilog2001Parser::List_of_param_assignmentsContext::param_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Param_assignmentContext>((size_t)i);
+Verilog2001Parser::Param_assignmentContext* Verilog2001Parser::List_of_param_assignmentsContext::param_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Param_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_param_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_param_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_param_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_param_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_param_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_param_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::list_of_param_assignments() {
-  Ref<List_of_param_assignmentsContext> _localctx = std::make_shared<List_of_param_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::List_of_param_assignmentsContext* Verilog2001Parser::list_of_param_assignments() {
+  List_of_param_assignmentsContext *_localctx = _tracker.createInstance<List_of_param_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 112, Verilog2001Parser::RuleList_of_param_assignments);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(1488);
     param_assignment();
@@ -5272,34 +5356,34 @@ Ref<Verilog2001Parser::List_of_param_assignmentsContext> Verilog2001Parser::list
 
 //----------------- List_of_specparam_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_specparam_assignmentsContext::List_of_specparam_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_specparam_assignmentsContext::List_of_specparam_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Specparam_assignmentContext>> Verilog2001Parser::List_of_specparam_assignmentsContext::specparam_assignment() {
+std::vector<Verilog2001Parser::Specparam_assignmentContext *> Verilog2001Parser::List_of_specparam_assignmentsContext::specparam_assignment() {
   return getRuleContexts<Verilog2001Parser::Specparam_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Specparam_assignmentContext> Verilog2001Parser::List_of_specparam_assignmentsContext::specparam_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Specparam_assignmentContext>((size_t)i);
+Verilog2001Parser::Specparam_assignmentContext* Verilog2001Parser::List_of_specparam_assignmentsContext::specparam_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Specparam_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_specparam_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_specparam_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_specparam_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_specparam_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_specparam_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_specparam_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_specparam_assignmentsContext> Verilog2001Parser::list_of_specparam_assignments() {
-  Ref<List_of_specparam_assignmentsContext> _localctx = std::make_shared<List_of_specparam_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::List_of_specparam_assignmentsContext* Verilog2001Parser::list_of_specparam_assignments() {
+  List_of_specparam_assignmentsContext *_localctx = _tracker.createInstance<List_of_specparam_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 114, Verilog2001Parser::RuleList_of_specparam_assignments);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5333,34 +5417,34 @@ Ref<Verilog2001Parser::List_of_specparam_assignmentsContext> Verilog2001Parser::
 
 //----------------- List_of_real_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_real_identifiersContext::List_of_real_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_real_identifiersContext::List_of_real_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Real_typeContext>> Verilog2001Parser::List_of_real_identifiersContext::real_type() {
+std::vector<Verilog2001Parser::Real_typeContext *> Verilog2001Parser::List_of_real_identifiersContext::real_type() {
   return getRuleContexts<Verilog2001Parser::Real_typeContext>();
 }
 
-Ref<Verilog2001Parser::Real_typeContext> Verilog2001Parser::List_of_real_identifiersContext::real_type(int i) {
-  return getRuleContext<Verilog2001Parser::Real_typeContext>((size_t)i);
+Verilog2001Parser::Real_typeContext* Verilog2001Parser::List_of_real_identifiersContext::real_type(size_t i) {
+  return getRuleContext<Verilog2001Parser::Real_typeContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_real_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_real_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_real_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_real_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_real_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_real_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_real_identifiersContext> Verilog2001Parser::list_of_real_identifiers() {
-  Ref<List_of_real_identifiersContext> _localctx = std::make_shared<List_of_real_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_real_identifiersContext* Verilog2001Parser::list_of_real_identifiers() {
+  List_of_real_identifiersContext *_localctx = _tracker.createInstance<List_of_real_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 116, Verilog2001Parser::RuleList_of_real_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5394,34 +5478,34 @@ Ref<Verilog2001Parser::List_of_real_identifiersContext> Verilog2001Parser::list_
 
 //----------------- List_of_variable_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_variable_identifiersContext::List_of_variable_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_variable_identifiersContext::List_of_variable_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Variable_typeContext>> Verilog2001Parser::List_of_variable_identifiersContext::variable_type() {
+std::vector<Verilog2001Parser::Variable_typeContext *> Verilog2001Parser::List_of_variable_identifiersContext::variable_type() {
   return getRuleContexts<Verilog2001Parser::Variable_typeContext>();
 }
 
-Ref<Verilog2001Parser::Variable_typeContext> Verilog2001Parser::List_of_variable_identifiersContext::variable_type(int i) {
-  return getRuleContext<Verilog2001Parser::Variable_typeContext>((size_t)i);
+Verilog2001Parser::Variable_typeContext* Verilog2001Parser::List_of_variable_identifiersContext::variable_type(size_t i) {
+  return getRuleContext<Verilog2001Parser::Variable_typeContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_variable_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_variable_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_variable_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_variable_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_variable_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_variable_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::list_of_variable_identifiers() {
-  Ref<List_of_variable_identifiersContext> _localctx = std::make_shared<List_of_variable_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_variable_identifiersContext* Verilog2001Parser::list_of_variable_identifiers() {
+  List_of_variable_identifiersContext *_localctx = _tracker.createInstance<List_of_variable_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 118, Verilog2001Parser::RuleList_of_variable_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5455,52 +5539,53 @@ Ref<Verilog2001Parser::List_of_variable_identifiersContext> Verilog2001Parser::l
 
 //----------------- List_of_variable_port_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_variable_port_identifiersContext::List_of_variable_port_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_variable_port_identifiersContext::List_of_variable_port_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Port_identifierContext>> Verilog2001Parser::List_of_variable_port_identifiersContext::port_identifier() {
+std::vector<Verilog2001Parser::Port_identifierContext *> Verilog2001Parser::List_of_variable_port_identifiersContext::port_identifier() {
   return getRuleContexts<Verilog2001Parser::Port_identifierContext>();
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::List_of_variable_port_identifiersContext::port_identifier(int i) {
-  return getRuleContext<Verilog2001Parser::Port_identifierContext>((size_t)i);
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::List_of_variable_port_identifiersContext::port_identifier(size_t i) {
+  return getRuleContext<Verilog2001Parser::Port_identifierContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::List_of_variable_port_identifiersContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::List_of_variable_port_identifiersContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::List_of_variable_port_identifiersContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::List_of_variable_port_identifiersContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_variable_port_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_variable_port_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_variable_port_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_variable_port_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_variable_port_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_variable_port_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> Verilog2001Parser::list_of_variable_port_identifiers() {
-  Ref<List_of_variable_port_identifiersContext> _localctx = std::make_shared<List_of_variable_port_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_variable_port_identifiersContext* Verilog2001Parser::list_of_variable_port_identifiers() {
+  List_of_variable_port_identifiersContext *_localctx = _tracker.createInstance<List_of_variable_port_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 120, Verilog2001Parser::RuleList_of_variable_port_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(1520);
     port_identifier();
     setState(1523);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__50) {
@@ -5519,6 +5604,7 @@ Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> Verilog2001Pars
         setState(1526);
         port_identifier();
         setState(1529);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__50) {
@@ -5545,32 +5631,32 @@ Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> Verilog2001Pars
 
 //----------------- Net_decl_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_decl_assignmentContext::Net_decl_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_decl_assignmentContext::Net_decl_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_identifierContext> Verilog2001Parser::Net_decl_assignmentContext::net_identifier() {
+Verilog2001Parser::Net_identifierContext* Verilog2001Parser::Net_decl_assignmentContext::net_identifier() {
   return getRuleContext<Verilog2001Parser::Net_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Net_decl_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Net_decl_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_decl_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_decl_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_decl_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_decl_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_decl_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_decl_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_decl_assignmentContext> Verilog2001Parser::net_decl_assignment() {
-  Ref<Net_decl_assignmentContext> _localctx = std::make_shared<Net_decl_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Net_decl_assignmentContext* Verilog2001Parser::net_decl_assignment() {
+  Net_decl_assignmentContext *_localctx = _tracker.createInstance<Net_decl_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 122, Verilog2001Parser::RuleNet_decl_assignment);
 
   auto onExit = finally([=] {
@@ -5597,32 +5683,32 @@ Ref<Verilog2001Parser::Net_decl_assignmentContext> Verilog2001Parser::net_decl_a
 
 //----------------- Param_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Param_assignmentContext::Param_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Param_assignmentContext::Param_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::Param_assignmentContext::parameter_identifier() {
+Verilog2001Parser::Parameter_identifierContext* Verilog2001Parser::Param_assignmentContext::parameter_identifier() {
   return getRuleContext<Verilog2001Parser::Parameter_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Param_assignmentContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Param_assignmentContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Param_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Param_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParam_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Param_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParam_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParam_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Param_assignmentContext> Verilog2001Parser::param_assignment() {
-  Ref<Param_assignmentContext> _localctx = std::make_shared<Param_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Param_assignmentContext* Verilog2001Parser::param_assignment() {
+  Param_assignmentContext *_localctx = _tracker.createInstance<Param_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 124, Verilog2001Parser::RuleParam_assignment);
 
   auto onExit = finally([=] {
@@ -5649,36 +5735,36 @@ Ref<Verilog2001Parser::Param_assignmentContext> Verilog2001Parser::param_assignm
 
 //----------------- Specparam_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specparam_assignmentContext::Specparam_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specparam_assignmentContext::Specparam_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::Specparam_assignmentContext::specparam_identifier() {
+Verilog2001Parser::Specparam_identifierContext* Verilog2001Parser::Specparam_assignmentContext::specparam_identifier() {
   return getRuleContext<Verilog2001Parser::Specparam_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Specparam_assignmentContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Specparam_assignmentContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::Specparam_assignmentContext::pulse_control_specparam() {
+Verilog2001Parser::Pulse_control_specparamContext* Verilog2001Parser::Specparam_assignmentContext::pulse_control_specparam() {
   return getRuleContext<Verilog2001Parser::Pulse_control_specparamContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specparam_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specparam_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecparam_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Specparam_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecparam_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecparam_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specparam_assignmentContext> Verilog2001Parser::specparam_assignment() {
-  Ref<Specparam_assignmentContext> _localctx = std::make_shared<Specparam_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Specparam_assignmentContext* Verilog2001Parser::specparam_assignment() {
+  Specparam_assignmentContext *_localctx = _tracker.createInstance<Specparam_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 126, Verilog2001Parser::RuleSpecparam_assignment);
 
   auto onExit = finally([=] {
@@ -5723,42 +5809,42 @@ Ref<Verilog2001Parser::Specparam_assignmentContext> Verilog2001Parser::specparam
 
 //----------------- Pulse_control_specparamContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pulse_control_specparamContext::Pulse_control_specparamContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pulse_control_specparamContext::Pulse_control_specparamContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Reject_limit_valueContext> Verilog2001Parser::Pulse_control_specparamContext::reject_limit_value() {
+Verilog2001Parser::Reject_limit_valueContext* Verilog2001Parser::Pulse_control_specparamContext::reject_limit_value() {
   return getRuleContext<Verilog2001Parser::Reject_limit_valueContext>(0);
 }
 
-Ref<Verilog2001Parser::Error_limit_valueContext> Verilog2001Parser::Pulse_control_specparamContext::error_limit_value() {
+Verilog2001Parser::Error_limit_valueContext* Verilog2001Parser::Pulse_control_specparamContext::error_limit_value() {
   return getRuleContext<Verilog2001Parser::Error_limit_valueContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::Pulse_control_specparamContext::specify_input_terminal_descriptor() {
+Verilog2001Parser::Specify_input_terminal_descriptorContext* Verilog2001Parser::Pulse_control_specparamContext::specify_input_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_input_terminal_descriptorContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::Pulse_control_specparamContext::specify_output_terminal_descriptor() {
+Verilog2001Parser::Specify_output_terminal_descriptorContext* Verilog2001Parser::Pulse_control_specparamContext::specify_output_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_output_terminal_descriptorContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pulse_control_specparamContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pulse_control_specparamContext::getRuleIndex() const {
   return Verilog2001Parser::RulePulse_control_specparam;
 }
 
 antlrcpp::Any Verilog2001Parser::Pulse_control_specparamContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPulse_control_specparam(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPulse_control_specparam(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::pulse_control_specparam() {
-  Ref<Pulse_control_specparamContext> _localctx = std::make_shared<Pulse_control_specparamContext>(_ctx, getState());
+Verilog2001Parser::Pulse_control_specparamContext* Verilog2001Parser::pulse_control_specparam() {
+  Pulse_control_specparamContext *_localctx = _tracker.createInstance<Pulse_control_specparamContext>(_ctx, getState());
   enterRule(_localctx, 128, Verilog2001Parser::RulePulse_control_specparam);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -5778,6 +5864,7 @@ Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::pulse_
       setState(1554);
       reject_limit_value();
       setState(1557);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__16) {
@@ -5810,6 +5897,7 @@ Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::pulse_
       setState(1568);
       reject_limit_value();
       setState(1571);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__16) {
@@ -5839,28 +5927,28 @@ Ref<Verilog2001Parser::Pulse_control_specparamContext> Verilog2001Parser::pulse_
 
 //----------------- Error_limit_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Error_limit_valueContext::Error_limit_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Error_limit_valueContext::Error_limit_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Limit_valueContext> Verilog2001Parser::Error_limit_valueContext::limit_value() {
+Verilog2001Parser::Limit_valueContext* Verilog2001Parser::Error_limit_valueContext::limit_value() {
   return getRuleContext<Verilog2001Parser::Limit_valueContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Error_limit_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Error_limit_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleError_limit_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Error_limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitError_limit_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitError_limit_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Error_limit_valueContext> Verilog2001Parser::error_limit_value() {
-  Ref<Error_limit_valueContext> _localctx = std::make_shared<Error_limit_valueContext>(_ctx, getState());
+Verilog2001Parser::Error_limit_valueContext* Verilog2001Parser::error_limit_value() {
+  Error_limit_valueContext *_localctx = _tracker.createInstance<Error_limit_valueContext>(_ctx, getState());
   enterRule(_localctx, 130, Verilog2001Parser::RuleError_limit_value);
 
   auto onExit = finally([=] {
@@ -5883,28 +5971,28 @@ Ref<Verilog2001Parser::Error_limit_valueContext> Verilog2001Parser::error_limit_
 
 //----------------- Reject_limit_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Reject_limit_valueContext::Reject_limit_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Reject_limit_valueContext::Reject_limit_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Limit_valueContext> Verilog2001Parser::Reject_limit_valueContext::limit_value() {
+Verilog2001Parser::Limit_valueContext* Verilog2001Parser::Reject_limit_valueContext::limit_value() {
   return getRuleContext<Verilog2001Parser::Limit_valueContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Reject_limit_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Reject_limit_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleReject_limit_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Reject_limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitReject_limit_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitReject_limit_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Reject_limit_valueContext> Verilog2001Parser::reject_limit_value() {
-  Ref<Reject_limit_valueContext> _localctx = std::make_shared<Reject_limit_valueContext>(_ctx, getState());
+Verilog2001Parser::Reject_limit_valueContext* Verilog2001Parser::reject_limit_value() {
+  Reject_limit_valueContext *_localctx = _tracker.createInstance<Reject_limit_valueContext>(_ctx, getState());
   enterRule(_localctx, 132, Verilog2001Parser::RuleReject_limit_value);
 
   auto onExit = finally([=] {
@@ -5927,28 +6015,28 @@ Ref<Verilog2001Parser::Reject_limit_valueContext> Verilog2001Parser::reject_limi
 
 //----------------- Limit_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Limit_valueContext::Limit_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Limit_valueContext::Limit_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Limit_valueContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Limit_valueContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Limit_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Limit_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLimit_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Limit_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLimit_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLimit_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Limit_valueContext> Verilog2001Parser::limit_value() {
-  Ref<Limit_valueContext> _localctx = std::make_shared<Limit_valueContext>(_ctx, getState());
+Verilog2001Parser::Limit_valueContext* Verilog2001Parser::limit_value() {
+  Limit_valueContext *_localctx = _tracker.createInstance<Limit_valueContext>(_ctx, getState());
   enterRule(_localctx, 134, Verilog2001Parser::RuleLimit_value);
 
   auto onExit = finally([=] {
@@ -5971,32 +6059,32 @@ Ref<Verilog2001Parser::Limit_valueContext> Verilog2001Parser::limit_value() {
 
 //----------------- DimensionContext ------------------------------------------------------------------
 
-Verilog2001Parser::DimensionContext::DimensionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::DimensionContext::DimensionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Dimension_constant_expressionContext>> Verilog2001Parser::DimensionContext::dimension_constant_expression() {
+std::vector<Verilog2001Parser::Dimension_constant_expressionContext *> Verilog2001Parser::DimensionContext::dimension_constant_expression() {
   return getRuleContexts<Verilog2001Parser::Dimension_constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Dimension_constant_expressionContext> Verilog2001Parser::DimensionContext::dimension_constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Dimension_constant_expressionContext>((size_t)i);
+Verilog2001Parser::Dimension_constant_expressionContext* Verilog2001Parser::DimensionContext::dimension_constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Dimension_constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::DimensionContext::getRuleIndex() const {
+size_t Verilog2001Parser::DimensionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDimension;
 }
 
 antlrcpp::Any Verilog2001Parser::DimensionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDimension(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDimension(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::dimension() {
-  Ref<DimensionContext> _localctx = std::make_shared<DimensionContext>(_ctx, getState());
+Verilog2001Parser::DimensionContext* Verilog2001Parser::dimension() {
+  DimensionContext *_localctx = _tracker.createInstance<DimensionContext>(_ctx, getState());
   enterRule(_localctx, 136, Verilog2001Parser::RuleDimension);
 
   auto onExit = finally([=] {
@@ -6027,32 +6115,32 @@ Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::dimension() {
 
 //----------------- RangeContext ------------------------------------------------------------------
 
-Verilog2001Parser::RangeContext::RangeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::RangeContext::RangeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::RangeContext::msb_constant_expression() {
+Verilog2001Parser::Msb_constant_expressionContext* Verilog2001Parser::RangeContext::msb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Msb_constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::RangeContext::lsb_constant_expression() {
+Verilog2001Parser::Lsb_constant_expressionContext* Verilog2001Parser::RangeContext::lsb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Lsb_constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::RangeContext::getRuleIndex() const {
+size_t Verilog2001Parser::RangeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleRange;
 }
 
 antlrcpp::Any Verilog2001Parser::RangeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitRange(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitRange(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::range() {
-  Ref<RangeContext> _localctx = std::make_shared<RangeContext>(_ctx, getState());
+Verilog2001Parser::RangeContext* Verilog2001Parser::range() {
+  RangeContext *_localctx = _tracker.createInstance<RangeContext>(_ctx, getState());
   enterRule(_localctx, 138, Verilog2001Parser::RuleRange);
 
   auto onExit = finally([=] {
@@ -6083,64 +6171,64 @@ Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::range() {
 
 //----------------- Function_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_declarationContext::Function_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_declarationContext::Function_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Function_identifierContext> Verilog2001Parser::Function_declarationContext::function_identifier() {
+Verilog2001Parser::Function_identifierContext* Verilog2001Parser::Function_declarationContext::function_identifier() {
   return getRuleContext<Verilog2001Parser::Function_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Range_or_typeContext> Verilog2001Parser::Function_declarationContext::range_or_type() {
+Verilog2001Parser::Range_or_typeContext* Verilog2001Parser::Function_declarationContext::range_or_type() {
   return getRuleContext<Verilog2001Parser::Range_or_typeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Function_item_declarationContext>> Verilog2001Parser::Function_declarationContext::function_item_declaration() {
+std::vector<Verilog2001Parser::Function_item_declarationContext *> Verilog2001Parser::Function_declarationContext::function_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Function_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Function_item_declarationContext> Verilog2001Parser::Function_declarationContext::function_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Function_item_declarationContext>((size_t)i);
+Verilog2001Parser::Function_item_declarationContext* Verilog2001Parser::Function_declarationContext::function_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_item_declarationContext>(i);
 }
 
-Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::Function_declarationContext::function_statement() {
+Verilog2001Parser::Function_statementContext* Verilog2001Parser::Function_declarationContext::function_statement() {
   return getRuleContext<Verilog2001Parser::Function_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_port_listContext> Verilog2001Parser::Function_declarationContext::function_port_list() {
+Verilog2001Parser::Function_port_listContext* Verilog2001Parser::Function_declarationContext::function_port_list() {
   return getRuleContext<Verilog2001Parser::Function_port_listContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Block_item_declarationContext>> Verilog2001Parser::Function_declarationContext::block_item_declaration() {
+std::vector<Verilog2001Parser::Block_item_declarationContext *> Verilog2001Parser::Function_declarationContext::block_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Block_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Function_declarationContext::block_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>((size_t)i);
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Function_declarationContext::block_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_declaration() {
-  Ref<Function_declarationContext> _localctx = std::make_shared<Function_declarationContext>(_ctx, getState());
+Verilog2001Parser::Function_declarationContext* Verilog2001Parser::function_declaration() {
+  Function_declarationContext *_localctx = _tracker.createInstance<Function_declarationContext>(_ctx, getState());
   enterRule(_localctx, 140, Verilog2001Parser::RuleFunction_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(1645);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 158, _ctx)) {
@@ -6149,6 +6237,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
       setState(1596);
       match(Verilog2001Parser::T__65);
       setState(1598);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__66) {
@@ -6156,6 +6245,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         match(Verilog2001Parser::T__66);
       }
       setState(1601);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -6163,9 +6253,10 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         match(Verilog2001Parser::T__24);
       }
       setState(1604);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__20)
         | (1ULL << Verilog2001Parser::T__25)
         | (1ULL << Verilog2001Parser::T__26)
@@ -6191,11 +6282,12 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 151, _ctx);
       }
       setState(1615);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15
 
-      || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+      || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
         | (1ULL << (Verilog2001Parser::T__100 - 99))
         | (1ULL << (Verilog2001Parser::T__102 - 99))
@@ -6205,7 +6297,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         | (1ULL << (Verilog2001Parser::T__122 - 99))
         | (1ULL << (Verilog2001Parser::T__123 - 99))
         | (1ULL << (Verilog2001Parser::T__124 - 99))
-        | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~(ssize_t)0x3f) == 0) &&
+        | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 176)) & ((1ULL << (Verilog2001Parser::Escaped_identifier - 176))
         | (1ULL << (Verilog2001Parser::Simple_identifier - 176))
         | (1ULL << (Verilog2001Parser::Dollar_Identifier - 176)))) != 0)) {
@@ -6222,6 +6314,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
       setState(1619);
       match(Verilog2001Parser::T__65);
       setState(1621);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__66) {
@@ -6229,6 +6322,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         match(Verilog2001Parser::T__66);
       }
       setState(1624);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -6236,9 +6330,10 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         match(Verilog2001Parser::T__24);
       }
       setState(1627);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__20)
         | (1ULL << Verilog2001Parser::T__25)
         | (1ULL << Verilog2001Parser::T__26)
@@ -6270,11 +6365,12 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 156, _ctx);
       }
       setState(1641);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15
 
-      || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+      || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
         | (1ULL << (Verilog2001Parser::T__100 - 99))
         | (1ULL << (Verilog2001Parser::T__102 - 99))
@@ -6284,7 +6380,7 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
         | (1ULL << (Verilog2001Parser::T__122 - 99))
         | (1ULL << (Verilog2001Parser::T__123 - 99))
         | (1ULL << (Verilog2001Parser::T__124 - 99))
-        | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~(ssize_t)0x3f) == 0) &&
+        | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 176)) & ((1ULL << (Verilog2001Parser::Escaped_identifier - 176))
         | (1ULL << (Verilog2001Parser::Simple_identifier - 176))
         | (1ULL << (Verilog2001Parser::Dollar_Identifier - 176)))) != 0)) {
@@ -6310,32 +6406,32 @@ Ref<Verilog2001Parser::Function_declarationContext> Verilog2001Parser::function_
 
 //----------------- Function_item_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_item_declarationContext::Function_item_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_item_declarationContext::Function_item_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Function_item_declarationContext::block_item_declaration() {
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Function_item_declarationContext::block_item_declaration() {
   return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::Function_item_declarationContext::tf_declaration() {
+Verilog2001Parser::Tf_declarationContext* Verilog2001Parser::Function_item_declarationContext::tf_declaration() {
   return getRuleContext<Verilog2001Parser::Tf_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_item_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_item_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_item_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_item_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_item_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_item_declarationContext> Verilog2001Parser::function_item_declaration() {
-  Ref<Function_item_declarationContext> _localctx = std::make_shared<Function_item_declarationContext>(_ctx, getState());
+Verilog2001Parser::Function_item_declarationContext* Verilog2001Parser::function_item_declaration() {
+  Function_item_declarationContext *_localctx = _tracker.createInstance<Function_item_declarationContext>(_ctx, getState());
   enterRule(_localctx, 142, Verilog2001Parser::RuleFunction_item_declaration);
 
   auto onExit = finally([=] {
@@ -6387,34 +6483,34 @@ Ref<Verilog2001Parser::Function_item_declarationContext> Verilog2001Parser::func
 
 //----------------- Function_port_listContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_port_listContext::Function_port_listContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_port_listContext::Function_port_listContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Function_portContext>> Verilog2001Parser::Function_port_listContext::function_port() {
+std::vector<Verilog2001Parser::Function_portContext *> Verilog2001Parser::Function_port_listContext::function_port() {
   return getRuleContexts<Verilog2001Parser::Function_portContext>();
 }
 
-Ref<Verilog2001Parser::Function_portContext> Verilog2001Parser::Function_port_listContext::function_port(int i) {
-  return getRuleContext<Verilog2001Parser::Function_portContext>((size_t)i);
+Verilog2001Parser::Function_portContext* Verilog2001Parser::Function_port_listContext::function_port(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_portContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_port_listContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_port_listContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_port_list;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_port_list(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_port_list(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_port_listContext> Verilog2001Parser::function_port_list() {
-  Ref<Function_port_listContext> _localctx = std::make_shared<Function_port_listContext>(_ctx, getState());
+Verilog2001Parser::Function_port_listContext* Verilog2001Parser::function_port_list() {
+  Function_port_listContext *_localctx = _tracker.createInstance<Function_port_listContext>(_ctx, getState());
   enterRule(_localctx, 144, Verilog2001Parser::RuleFunction_port_list);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6448,38 +6544,38 @@ Ref<Verilog2001Parser::Function_port_listContext> Verilog2001Parser::function_po
 
 //----------------- Function_portContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_portContext::Function_portContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_portContext::Function_portContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::Function_portContext::tf_declaration() {
+Verilog2001Parser::Tf_declarationContext* Verilog2001Parser::Function_portContext::tf_declaration() {
   return getRuleContext<Verilog2001Parser::Tf_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Function_portContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Function_portContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Function_portContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Function_portContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_portContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_portContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_port;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_portContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_port(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_port(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_portContext> Verilog2001Parser::function_port() {
-  Ref<Function_portContext> _localctx = std::make_shared<Function_portContext>(_ctx, getState());
+Verilog2001Parser::Function_portContext* Verilog2001Parser::function_port() {
+  Function_portContext *_localctx = _tracker.createInstance<Function_portContext>(_ctx, getState());
   enterRule(_localctx, 146, Verilog2001Parser::RuleFunction_port);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6511,28 +6607,28 @@ Ref<Verilog2001Parser::Function_portContext> Verilog2001Parser::function_port() 
 
 //----------------- Range_or_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Range_or_typeContext::Range_or_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Range_or_typeContext::Range_or_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Range_or_typeContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Range_or_typeContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Range_or_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Range_or_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleRange_or_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Range_or_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitRange_or_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitRange_or_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Range_or_typeContext> Verilog2001Parser::range_or_type() {
-  Ref<Range_or_typeContext> _localctx = std::make_shared<Range_or_typeContext>(_ctx, getState());
+Verilog2001Parser::Range_or_typeContext* Verilog2001Parser::range_or_type() {
+  Range_or_typeContext *_localctx = _tracker.createInstance<Range_or_typeContext>(_ctx, getState());
   enterRule(_localctx, 148, Verilog2001Parser::RuleRange_or_type);
 
   auto onExit = finally([=] {
@@ -6593,60 +6689,60 @@ Ref<Verilog2001Parser::Range_or_typeContext> Verilog2001Parser::range_or_type() 
 
 //----------------- Task_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_declarationContext::Task_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_declarationContext::Task_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Task_identifierContext> Verilog2001Parser::Task_declarationContext::task_identifier() {
+Verilog2001Parser::Task_identifierContext* Verilog2001Parser::Task_declarationContext::task_identifier() {
   return getRuleContext<Verilog2001Parser::Task_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Task_declarationContext::statement() {
+Verilog2001Parser::StatementContext* Verilog2001Parser::Task_declarationContext::statement() {
   return getRuleContext<Verilog2001Parser::StatementContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Task_item_declarationContext>> Verilog2001Parser::Task_declarationContext::task_item_declaration() {
+std::vector<Verilog2001Parser::Task_item_declarationContext *> Verilog2001Parser::Task_declarationContext::task_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Task_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Task_item_declarationContext> Verilog2001Parser::Task_declarationContext::task_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Task_item_declarationContext>((size_t)i);
+Verilog2001Parser::Task_item_declarationContext* Verilog2001Parser::Task_declarationContext::task_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Task_item_declarationContext>(i);
 }
 
-Ref<Verilog2001Parser::Task_port_listContext> Verilog2001Parser::Task_declarationContext::task_port_list() {
+Verilog2001Parser::Task_port_listContext* Verilog2001Parser::Task_declarationContext::task_port_list() {
   return getRuleContext<Verilog2001Parser::Task_port_listContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Block_item_declarationContext>> Verilog2001Parser::Task_declarationContext::block_item_declaration() {
+std::vector<Verilog2001Parser::Block_item_declarationContext *> Verilog2001Parser::Task_declarationContext::block_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Block_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Task_declarationContext::block_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>((size_t)i);
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Task_declarationContext::block_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Task_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declaration() {
-  Ref<Task_declarationContext> _localctx = std::make_shared<Task_declarationContext>(_ctx, getState());
+Verilog2001Parser::Task_declarationContext* Verilog2001Parser::task_declaration() {
+  Task_declarationContext *_localctx = _tracker.createInstance<Task_declarationContext>(_ctx, getState());
   enterRule(_localctx, 150, Verilog2001Parser::RuleTask_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(1711);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 168, _ctx)) {
@@ -6655,6 +6751,7 @@ Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declarat
       setState(1676);
       match(Verilog2001Parser::T__68);
       setState(1678);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__66) {
@@ -6689,6 +6786,7 @@ Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declarat
       setState(1691);
       match(Verilog2001Parser::T__68);
       setState(1693);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__66) {
@@ -6700,9 +6798,10 @@ Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declarat
       setState(1696);
       match(Verilog2001Parser::T__15);
       setState(1698);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__15)
         | (1ULL << Verilog2001Parser::T__31)
         | (1ULL << Verilog2001Parser::T__32)
@@ -6747,42 +6846,42 @@ Ref<Verilog2001Parser::Task_declarationContext> Verilog2001Parser::task_declarat
 
 //----------------- Task_item_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_item_declarationContext::Task_item_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_item_declarationContext::Task_item_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Task_item_declarationContext::block_item_declaration() {
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Task_item_declarationContext::block_item_declaration() {
   return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::Task_item_declarationContext::tf_declaration() {
+Verilog2001Parser::Tf_declarationContext* Verilog2001Parser::Task_item_declarationContext::tf_declaration() {
   return getRuleContext<Verilog2001Parser::Tf_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Task_item_declarationContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Task_item_declarationContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Task_item_declarationContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Task_item_declarationContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Task_item_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_item_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_item_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_item_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_item_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_item_declarationContext> Verilog2001Parser::task_item_declaration() {
-  Ref<Task_item_declarationContext> _localctx = std::make_shared<Task_item_declarationContext>(_ctx, getState());
+Verilog2001Parser::Task_item_declarationContext* Verilog2001Parser::task_item_declaration() {
+  Task_item_declarationContext *_localctx = _tracker.createInstance<Task_item_declarationContext>(_ctx, getState());
   enterRule(_localctx, 152, Verilog2001Parser::RuleTask_item_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6831,34 +6930,34 @@ Ref<Verilog2001Parser::Task_item_declarationContext> Verilog2001Parser::task_ite
 
 //----------------- Task_port_listContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_port_listContext::Task_port_listContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_port_listContext::Task_port_listContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Task_port_itemContext>> Verilog2001Parser::Task_port_listContext::task_port_item() {
+std::vector<Verilog2001Parser::Task_port_itemContext *> Verilog2001Parser::Task_port_listContext::task_port_item() {
   return getRuleContexts<Verilog2001Parser::Task_port_itemContext>();
 }
 
-Ref<Verilog2001Parser::Task_port_itemContext> Verilog2001Parser::Task_port_listContext::task_port_item(int i) {
-  return getRuleContext<Verilog2001Parser::Task_port_itemContext>((size_t)i);
+Verilog2001Parser::Task_port_itemContext* Verilog2001Parser::Task_port_listContext::task_port_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Task_port_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Task_port_listContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_port_listContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_port_list;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_port_listContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_port_list(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_port_list(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_port_listContext> Verilog2001Parser::task_port_list() {
-  Ref<Task_port_listContext> _localctx = std::make_shared<Task_port_listContext>(_ctx, getState());
+Verilog2001Parser::Task_port_listContext* Verilog2001Parser::task_port_list() {
+  Task_port_listContext *_localctx = _tracker.createInstance<Task_port_listContext>(_ctx, getState());
   enterRule(_localctx, 154, Verilog2001Parser::RuleTask_port_list);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6892,38 +6991,38 @@ Ref<Verilog2001Parser::Task_port_listContext> Verilog2001Parser::task_port_list(
 
 //----------------- Task_port_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_port_itemContext::Task_port_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_port_itemContext::Task_port_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::Task_port_itemContext::tf_declaration() {
+Verilog2001Parser::Tf_declarationContext* Verilog2001Parser::Task_port_itemContext::tf_declaration() {
   return getRuleContext<Verilog2001Parser::Tf_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Task_port_itemContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Task_port_itemContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Task_port_itemContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Task_port_itemContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Task_port_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_port_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_port_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_port_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_port_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_port_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_port_itemContext> Verilog2001Parser::task_port_item() {
-  Ref<Task_port_itemContext> _localctx = std::make_shared<Task_port_itemContext>(_ctx, getState());
+Verilog2001Parser::Task_port_itemContext* Verilog2001Parser::task_port_item() {
+  Task_port_itemContext *_localctx = _tracker.createInstance<Task_port_itemContext>(_ctx, getState());
   enterRule(_localctx, 156, Verilog2001Parser::RuleTask_port_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6955,38 +7054,38 @@ Ref<Verilog2001Parser::Task_port_itemContext> Verilog2001Parser::task_port_item(
 
 //----------------- Tf_decl_headerContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tf_decl_headerContext::Tf_decl_headerContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tf_decl_headerContext::Tf_decl_headerContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_typeContext> Verilog2001Parser::Tf_decl_headerContext::net_type() {
+Verilog2001Parser::Net_typeContext* Verilog2001Parser::Tf_decl_headerContext::net_type() {
   return getRuleContext<Verilog2001Parser::Net_typeContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Tf_decl_headerContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Tf_decl_headerContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
-Ref<Verilog2001Parser::Task_port_typeContext> Verilog2001Parser::Tf_decl_headerContext::task_port_type() {
+Verilog2001Parser::Task_port_typeContext* Verilog2001Parser::Tf_decl_headerContext::task_port_type() {
   return getRuleContext<Verilog2001Parser::Task_port_typeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tf_decl_headerContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tf_decl_headerContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTf_decl_header;
 }
 
 antlrcpp::Any Verilog2001Parser::Tf_decl_headerContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTf_decl_header(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTf_decl_header(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header() {
-  Ref<Tf_decl_headerContext> _localctx = std::make_shared<Tf_decl_headerContext>(_ctx, getState());
+Verilog2001Parser::Tf_decl_headerContext* Verilog2001Parser::tf_decl_header() {
+  Tf_decl_headerContext *_localctx = _tracker.createInstance<Tf_decl_headerContext>(_ctx, getState());
   enterRule(_localctx, 158, Verilog2001Parser::RuleTf_decl_header);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -6999,18 +7098,21 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
       enterOuterAlt(_localctx, 1);
       setState(1741);
       _la = _input->LA(1);
-      if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+      if (!((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__31)
         | (1ULL << Verilog2001Parser::T__32)
         | (1ULL << Verilog2001Parser::T__33))) != 0))) {
       _errHandler->recoverInline(this);
-      } else {
+      }
+      else {
+        _errHandler->reportMatch(this);
         consume();
       }
       setState(1743);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__42)
@@ -7025,6 +7127,7 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
         net_type();
       }
       setState(1746);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__34) {
@@ -7032,6 +7135,7 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
         match(Verilog2001Parser::T__34);
       }
       setState(1749);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__24) {
@@ -7039,6 +7143,7 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
         match(Verilog2001Parser::T__24);
       }
       setState(1752);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__20) {
@@ -7052,18 +7157,21 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
       enterOuterAlt(_localctx, 2);
       setState(1754);
       _la = _input->LA(1);
-      if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+      if (!((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__31)
         | (1ULL << Verilog2001Parser::T__32)
         | (1ULL << Verilog2001Parser::T__33))) != 0))) {
       _errHandler->recoverInline(this);
-      } else {
+      }
+      else {
+        _errHandler->reportMatch(this);
         consume();
       }
       setState(1756);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
         | (1ULL << Verilog2001Parser::T__41)
         | (1ULL << Verilog2001Parser::T__42)
@@ -7078,9 +7186,10 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
         net_type();
       }
       setState(1759);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if ((((_la & ~(ssize_t)0x3f) == 0) &&
+      if ((((_la & ~ 0x3fULL) == 0) &&
         ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__25)
         | (1ULL << Verilog2001Parser::T__26)
         | (1ULL << Verilog2001Parser::T__27)
@@ -7105,32 +7214,32 @@ Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::tf_decl_header(
 
 //----------------- Tf_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tf_declarationContext::Tf_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tf_declarationContext::Tf_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Tf_decl_headerContext> Verilog2001Parser::Tf_declarationContext::tf_decl_header() {
+Verilog2001Parser::Tf_decl_headerContext* Verilog2001Parser::Tf_declarationContext::tf_decl_header() {
   return getRuleContext<Verilog2001Parser::Tf_decl_headerContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_port_identifiersContext> Verilog2001Parser::Tf_declarationContext::list_of_port_identifiers() {
+Verilog2001Parser::List_of_port_identifiersContext* Verilog2001Parser::Tf_declarationContext::list_of_port_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_port_identifiersContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tf_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tf_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTf_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Tf_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTf_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTf_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::tf_declaration() {
-  Ref<Tf_declarationContext> _localctx = std::make_shared<Tf_declarationContext>(_ctx, getState());
+Verilog2001Parser::Tf_declarationContext* Verilog2001Parser::tf_declaration() {
+  Tf_declarationContext *_localctx = _tracker.createInstance<Tf_declarationContext>(_ctx, getState());
   enterRule(_localctx, 160, Verilog2001Parser::RuleTf_declaration);
 
   auto onExit = finally([=] {
@@ -7155,26 +7264,26 @@ Ref<Verilog2001Parser::Tf_declarationContext> Verilog2001Parser::tf_declaration(
 
 //----------------- Task_port_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_port_typeContext::Task_port_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_port_typeContext::Task_port_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Task_port_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_port_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_port_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_port_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_port_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_port_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_port_typeContext> Verilog2001Parser::task_port_type() {
-  Ref<Task_port_typeContext> _localctx = std::make_shared<Task_port_typeContext>(_ctx, getState());
+Verilog2001Parser::Task_port_typeContext* Verilog2001Parser::task_port_type() {
+  Task_port_typeContext *_localctx = _tracker.createInstance<Task_port_typeContext>(_ctx, getState());
   enterRule(_localctx, 162, Verilog2001Parser::RuleTask_port_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7183,13 +7292,15 @@ Ref<Verilog2001Parser::Task_port_typeContext> Verilog2001Parser::task_port_type(
     enterOuterAlt(_localctx, 1);
     setState(1766);
     _la = _input->LA(1);
-    if (!((((_la & ~(ssize_t)0x3f) == 0) &&
+    if (!((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__25)
       | (1ULL << Verilog2001Parser::T__26)
       | (1ULL << Verilog2001Parser::T__27)
       | (1ULL << Verilog2001Parser::T__28))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -7205,66 +7316,66 @@ Ref<Verilog2001Parser::Task_port_typeContext> Verilog2001Parser::task_port_type(
 
 //----------------- Block_item_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Block_item_declarationContext::Block_item_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Block_item_declarationContext::Block_item_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::Block_item_declarationContext::block_reg_declaration() {
+Verilog2001Parser::Block_reg_declarationContext* Verilog2001Parser::Block_item_declarationContext::block_reg_declaration() {
   return getRuleContext<Verilog2001Parser::Block_reg_declarationContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Block_item_declarationContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Block_item_declarationContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Block_item_declarationContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Block_item_declarationContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Event_declarationContext> Verilog2001Parser::Block_item_declarationContext::event_declaration() {
+Verilog2001Parser::Event_declarationContext* Verilog2001Parser::Block_item_declarationContext::event_declaration() {
   return getRuleContext<Verilog2001Parser::Event_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Integer_declarationContext> Verilog2001Parser::Block_item_declarationContext::integer_declaration() {
+Verilog2001Parser::Integer_declarationContext* Verilog2001Parser::Block_item_declarationContext::integer_declaration() {
   return getRuleContext<Verilog2001Parser::Integer_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Local_parameter_declarationContext> Verilog2001Parser::Block_item_declarationContext::local_parameter_declaration() {
+Verilog2001Parser::Local_parameter_declarationContext* Verilog2001Parser::Block_item_declarationContext::local_parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Local_parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Parameter_declarationContext> Verilog2001Parser::Block_item_declarationContext::parameter_declaration() {
+Verilog2001Parser::Parameter_declarationContext* Verilog2001Parser::Block_item_declarationContext::parameter_declaration() {
   return getRuleContext<Verilog2001Parser::Parameter_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Real_declarationContext> Verilog2001Parser::Block_item_declarationContext::real_declaration() {
+Verilog2001Parser::Real_declarationContext* Verilog2001Parser::Block_item_declarationContext::real_declaration() {
   return getRuleContext<Verilog2001Parser::Real_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Realtime_declarationContext> Verilog2001Parser::Block_item_declarationContext::realtime_declaration() {
+Verilog2001Parser::Realtime_declarationContext* Verilog2001Parser::Block_item_declarationContext::realtime_declaration() {
   return getRuleContext<Verilog2001Parser::Realtime_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Time_declarationContext> Verilog2001Parser::Block_item_declarationContext::time_declaration() {
+Verilog2001Parser::Time_declarationContext* Verilog2001Parser::Block_item_declarationContext::time_declaration() {
   return getRuleContext<Verilog2001Parser::Time_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Block_item_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Block_item_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBlock_item_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Block_item_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBlock_item_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBlock_item_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::block_item_declaration() {
-  Ref<Block_item_declarationContext> _localctx = std::make_shared<Block_item_declarationContext>(_ctx, getState());
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::block_item_declaration() {
+  Block_item_declarationContext *_localctx = _tracker.createInstance<Block_item_declarationContext>(_ctx, getState());
   enterRule(_localctx, 164, Verilog2001Parser::RuleBlock_item_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7423,34 +7534,34 @@ Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::block_i
 
 //----------------- Block_reg_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Block_reg_declarationContext::Block_reg_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Block_reg_declarationContext::Block_reg_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_block_variable_identifiersContext> Verilog2001Parser::Block_reg_declarationContext::list_of_block_variable_identifiers() {
+Verilog2001Parser::List_of_block_variable_identifiersContext* Verilog2001Parser::Block_reg_declarationContext::list_of_block_variable_identifiers() {
   return getRuleContext<Verilog2001Parser::List_of_block_variable_identifiersContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Block_reg_declarationContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Block_reg_declarationContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Block_reg_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Block_reg_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBlock_reg_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Block_reg_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBlock_reg_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBlock_reg_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::block_reg_declaration() {
-  Ref<Block_reg_declarationContext> _localctx = std::make_shared<Block_reg_declarationContext>(_ctx, getState());
+Verilog2001Parser::Block_reg_declarationContext* Verilog2001Parser::block_reg_declaration() {
+  Block_reg_declarationContext *_localctx = _tracker.createInstance<Block_reg_declarationContext>(_ctx, getState());
   enterRule(_localctx, 166, Verilog2001Parser::RuleBlock_reg_declaration);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7460,6 +7571,7 @@ Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::block_re
     setState(1826);
     match(Verilog2001Parser::T__34);
     setState(1828);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__24) {
@@ -7467,6 +7579,7 @@ Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::block_re
       match(Verilog2001Parser::T__24);
     }
     setState(1831);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -7490,34 +7603,34 @@ Ref<Verilog2001Parser::Block_reg_declarationContext> Verilog2001Parser::block_re
 
 //----------------- List_of_block_variable_identifiersContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_block_variable_identifiersContext::List_of_block_variable_identifiersContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_block_variable_identifiersContext::List_of_block_variable_identifiersContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Block_variable_typeContext>> Verilog2001Parser::List_of_block_variable_identifiersContext::block_variable_type() {
+std::vector<Verilog2001Parser::Block_variable_typeContext *> Verilog2001Parser::List_of_block_variable_identifiersContext::block_variable_type() {
   return getRuleContexts<Verilog2001Parser::Block_variable_typeContext>();
 }
 
-Ref<Verilog2001Parser::Block_variable_typeContext> Verilog2001Parser::List_of_block_variable_identifiersContext::block_variable_type(int i) {
-  return getRuleContext<Verilog2001Parser::Block_variable_typeContext>((size_t)i);
+Verilog2001Parser::Block_variable_typeContext* Verilog2001Parser::List_of_block_variable_identifiersContext::block_variable_type(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_variable_typeContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_block_variable_identifiersContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_block_variable_identifiersContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_block_variable_identifiers;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_block_variable_identifiersContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_block_variable_identifiers(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_block_variable_identifiers(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_block_variable_identifiersContext> Verilog2001Parser::list_of_block_variable_identifiers() {
-  Ref<List_of_block_variable_identifiersContext> _localctx = std::make_shared<List_of_block_variable_identifiersContext>(_ctx, getState());
+Verilog2001Parser::List_of_block_variable_identifiersContext* Verilog2001Parser::list_of_block_variable_identifiers() {
+  List_of_block_variable_identifiersContext *_localctx = _tracker.createInstance<List_of_block_variable_identifiersContext>(_ctx, getState());
   enterRule(_localctx, 168, Verilog2001Parser::RuleList_of_block_variable_identifiers);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7551,38 +7664,38 @@ Ref<Verilog2001Parser::List_of_block_variable_identifiersContext> Verilog2001Par
 
 //----------------- Block_variable_typeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Block_variable_typeContext::Block_variable_typeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Block_variable_typeContext::Block_variable_typeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::Block_variable_typeContext::variable_identifier() {
+Verilog2001Parser::Variable_identifierContext* Verilog2001Parser::Block_variable_typeContext::variable_identifier() {
   return getRuleContext<Verilog2001Parser::Variable_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::DimensionContext>> Verilog2001Parser::Block_variable_typeContext::dimension() {
+std::vector<Verilog2001Parser::DimensionContext *> Verilog2001Parser::Block_variable_typeContext::dimension() {
   return getRuleContexts<Verilog2001Parser::DimensionContext>();
 }
 
-Ref<Verilog2001Parser::DimensionContext> Verilog2001Parser::Block_variable_typeContext::dimension(int i) {
-  return getRuleContext<Verilog2001Parser::DimensionContext>((size_t)i);
+Verilog2001Parser::DimensionContext* Verilog2001Parser::Block_variable_typeContext::dimension(size_t i) {
+  return getRuleContext<Verilog2001Parser::DimensionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Block_variable_typeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Block_variable_typeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBlock_variable_type;
 }
 
 antlrcpp::Any Verilog2001Parser::Block_variable_typeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBlock_variable_type(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBlock_variable_type(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Block_variable_typeContext> Verilog2001Parser::block_variable_type() {
-  Ref<Block_variable_typeContext> _localctx = std::make_shared<Block_variable_typeContext>(_ctx, getState());
+Verilog2001Parser::Block_variable_typeContext* Verilog2001Parser::block_variable_type() {
+  Block_variable_typeContext *_localctx = _tracker.createInstance<Block_variable_typeContext>(_ctx, getState());
   enterRule(_localctx, 170, Verilog2001Parser::RuleBlock_variable_type);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7631,138 +7744,138 @@ Ref<Verilog2001Parser::Block_variable_typeContext> Verilog2001Parser::block_vari
 
 //----------------- Gate_instantiationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Gate_instantiationContext::Gate_instantiationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Gate_instantiationContext::Gate_instantiationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Cmos_switchtypeContext> Verilog2001Parser::Gate_instantiationContext::cmos_switchtype() {
+Verilog2001Parser::Cmos_switchtypeContext* Verilog2001Parser::Gate_instantiationContext::cmos_switchtype() {
   return getRuleContext<Verilog2001Parser::Cmos_switchtypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Cmos_switch_instanceContext>> Verilog2001Parser::Gate_instantiationContext::cmos_switch_instance() {
+std::vector<Verilog2001Parser::Cmos_switch_instanceContext *> Verilog2001Parser::Gate_instantiationContext::cmos_switch_instance() {
   return getRuleContexts<Verilog2001Parser::Cmos_switch_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Cmos_switch_instanceContext> Verilog2001Parser::Gate_instantiationContext::cmos_switch_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Cmos_switch_instanceContext>((size_t)i);
+Verilog2001Parser::Cmos_switch_instanceContext* Verilog2001Parser::Gate_instantiationContext::cmos_switch_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Cmos_switch_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::Gate_instantiationContext::delay3() {
+Verilog2001Parser::Delay3Context* Verilog2001Parser::Gate_instantiationContext::delay3() {
   return getRuleContext<Verilog2001Parser::Delay3Context>(0);
 }
 
-Ref<Verilog2001Parser::Mos_switchtypeContext> Verilog2001Parser::Gate_instantiationContext::mos_switchtype() {
+Verilog2001Parser::Mos_switchtypeContext* Verilog2001Parser::Gate_instantiationContext::mos_switchtype() {
   return getRuleContext<Verilog2001Parser::Mos_switchtypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Mos_switch_instanceContext>> Verilog2001Parser::Gate_instantiationContext::mos_switch_instance() {
+std::vector<Verilog2001Parser::Mos_switch_instanceContext *> Verilog2001Parser::Gate_instantiationContext::mos_switch_instance() {
   return getRuleContexts<Verilog2001Parser::Mos_switch_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Mos_switch_instanceContext> Verilog2001Parser::Gate_instantiationContext::mos_switch_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Mos_switch_instanceContext>((size_t)i);
+Verilog2001Parser::Mos_switch_instanceContext* Verilog2001Parser::Gate_instantiationContext::mos_switch_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Mos_switch_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Pass_switchtypeContext> Verilog2001Parser::Gate_instantiationContext::pass_switchtype() {
+Verilog2001Parser::Pass_switchtypeContext* Verilog2001Parser::Gate_instantiationContext::pass_switchtype() {
   return getRuleContext<Verilog2001Parser::Pass_switchtypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Pass_switch_instanceContext>> Verilog2001Parser::Gate_instantiationContext::pass_switch_instance() {
+std::vector<Verilog2001Parser::Pass_switch_instanceContext *> Verilog2001Parser::Gate_instantiationContext::pass_switch_instance() {
   return getRuleContexts<Verilog2001Parser::Pass_switch_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Pass_switch_instanceContext> Verilog2001Parser::Gate_instantiationContext::pass_switch_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Pass_switch_instanceContext>((size_t)i);
+Verilog2001Parser::Pass_switch_instanceContext* Verilog2001Parser::Gate_instantiationContext::pass_switch_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Pass_switch_instanceContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Pull_gate_instanceContext>> Verilog2001Parser::Gate_instantiationContext::pull_gate_instance() {
+std::vector<Verilog2001Parser::Pull_gate_instanceContext *> Verilog2001Parser::Gate_instantiationContext::pull_gate_instance() {
   return getRuleContexts<Verilog2001Parser::Pull_gate_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Pull_gate_instanceContext> Verilog2001Parser::Gate_instantiationContext::pull_gate_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Pull_gate_instanceContext>((size_t)i);
+Verilog2001Parser::Pull_gate_instanceContext* Verilog2001Parser::Gate_instantiationContext::pull_gate_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Pull_gate_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Pulldown_strengthContext> Verilog2001Parser::Gate_instantiationContext::pulldown_strength() {
+Verilog2001Parser::Pulldown_strengthContext* Verilog2001Parser::Gate_instantiationContext::pulldown_strength() {
   return getRuleContext<Verilog2001Parser::Pulldown_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::Pullup_strengthContext> Verilog2001Parser::Gate_instantiationContext::pullup_strength() {
+Verilog2001Parser::Pullup_strengthContext* Verilog2001Parser::Gate_instantiationContext::pullup_strength() {
   return getRuleContext<Verilog2001Parser::Pullup_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::Enable_gatetypeContext> Verilog2001Parser::Gate_instantiationContext::enable_gatetype() {
+Verilog2001Parser::Enable_gatetypeContext* Verilog2001Parser::Gate_instantiationContext::enable_gatetype() {
   return getRuleContext<Verilog2001Parser::Enable_gatetypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Enable_gate_instanceContext>> Verilog2001Parser::Gate_instantiationContext::enable_gate_instance() {
+std::vector<Verilog2001Parser::Enable_gate_instanceContext *> Verilog2001Parser::Gate_instantiationContext::enable_gate_instance() {
   return getRuleContexts<Verilog2001Parser::Enable_gate_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Enable_gate_instanceContext> Verilog2001Parser::Gate_instantiationContext::enable_gate_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Enable_gate_instanceContext>((size_t)i);
+Verilog2001Parser::Enable_gate_instanceContext* Verilog2001Parser::Gate_instantiationContext::enable_gate_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Enable_gate_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::Gate_instantiationContext::drive_strength() {
+Verilog2001Parser::Drive_strengthContext* Verilog2001Parser::Gate_instantiationContext::drive_strength() {
   return getRuleContext<Verilog2001Parser::Drive_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::Gate_instantiationContext::n_input_gatetype() {
+Verilog2001Parser::N_input_gatetypeContext* Verilog2001Parser::Gate_instantiationContext::n_input_gatetype() {
   return getRuleContext<Verilog2001Parser::N_input_gatetypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::N_input_gate_instanceContext>> Verilog2001Parser::Gate_instantiationContext::n_input_gate_instance() {
+std::vector<Verilog2001Parser::N_input_gate_instanceContext *> Verilog2001Parser::Gate_instantiationContext::n_input_gate_instance() {
   return getRuleContexts<Verilog2001Parser::N_input_gate_instanceContext>();
 }
 
-Ref<Verilog2001Parser::N_input_gate_instanceContext> Verilog2001Parser::Gate_instantiationContext::n_input_gate_instance(int i) {
-  return getRuleContext<Verilog2001Parser::N_input_gate_instanceContext>((size_t)i);
+Verilog2001Parser::N_input_gate_instanceContext* Verilog2001Parser::Gate_instantiationContext::n_input_gate_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::N_input_gate_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Delay2Context> Verilog2001Parser::Gate_instantiationContext::delay2() {
+Verilog2001Parser::Delay2Context* Verilog2001Parser::Gate_instantiationContext::delay2() {
   return getRuleContext<Verilog2001Parser::Delay2Context>(0);
 }
 
-Ref<Verilog2001Parser::N_output_gatetypeContext> Verilog2001Parser::Gate_instantiationContext::n_output_gatetype() {
+Verilog2001Parser::N_output_gatetypeContext* Verilog2001Parser::Gate_instantiationContext::n_output_gatetype() {
   return getRuleContext<Verilog2001Parser::N_output_gatetypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::N_output_gate_instanceContext>> Verilog2001Parser::Gate_instantiationContext::n_output_gate_instance() {
+std::vector<Verilog2001Parser::N_output_gate_instanceContext *> Verilog2001Parser::Gate_instantiationContext::n_output_gate_instance() {
   return getRuleContexts<Verilog2001Parser::N_output_gate_instanceContext>();
 }
 
-Ref<Verilog2001Parser::N_output_gate_instanceContext> Verilog2001Parser::Gate_instantiationContext::n_output_gate_instance(int i) {
-  return getRuleContext<Verilog2001Parser::N_output_gate_instanceContext>((size_t)i);
+Verilog2001Parser::N_output_gate_instanceContext* Verilog2001Parser::Gate_instantiationContext::n_output_gate_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::N_output_gate_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Pass_en_switchtypeContext> Verilog2001Parser::Gate_instantiationContext::pass_en_switchtype() {
+Verilog2001Parser::Pass_en_switchtypeContext* Verilog2001Parser::Gate_instantiationContext::pass_en_switchtype() {
   return getRuleContext<Verilog2001Parser::Pass_en_switchtypeContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Pass_enable_switch_instanceContext>> Verilog2001Parser::Gate_instantiationContext::pass_enable_switch_instance() {
+std::vector<Verilog2001Parser::Pass_enable_switch_instanceContext *> Verilog2001Parser::Gate_instantiationContext::pass_enable_switch_instance() {
   return getRuleContexts<Verilog2001Parser::Pass_enable_switch_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Pass_enable_switch_instanceContext> Verilog2001Parser::Gate_instantiationContext::pass_enable_switch_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Pass_enable_switch_instanceContext>((size_t)i);
+Verilog2001Parser::Pass_enable_switch_instanceContext* Verilog2001Parser::Gate_instantiationContext::pass_enable_switch_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Pass_enable_switch_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Gate_instantiationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Gate_instantiationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGate_instantiation;
 }
 
 antlrcpp::Any Verilog2001Parser::Gate_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGate_instantiation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGate_instantiation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instantiation() {
-  Ref<Gate_instantiationContext> _localctx = std::make_shared<Gate_instantiationContext>(_ctx, getState());
+Verilog2001Parser::Gate_instantiationContext* Verilog2001Parser::gate_instantiation() {
+  Gate_instantiationContext *_localctx = _tracker.createInstance<Gate_instantiationContext>(_ctx, getState());
   enterRule(_localctx, 172, Verilog2001Parser::RuleGate_instantiation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -7777,6 +7890,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1855);
         cmos_switchtype();
         setState(1857);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -7810,6 +7924,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1869);
         mos_switchtype();
         setState(1871);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -7935,9 +8050,10 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1922);
         enable_gatetype();
         setState(1924);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
-        if ((((_la & ~(ssize_t)0x3f) == 0) &&
+        if ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
           | (1ULL << Verilog2001Parser::T__41)
           | (1ULL << Verilog2001Parser::T__51)
@@ -7952,6 +8068,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
           drive_strength();
         }
         setState(1927);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -7987,9 +8104,10 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1939);
         n_input_gatetype();
         setState(1941);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
-        if ((((_la & ~(ssize_t)0x3f) == 0) &&
+        if ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
           | (1ULL << Verilog2001Parser::T__41)
           | (1ULL << Verilog2001Parser::T__51)
@@ -8004,6 +8122,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
           drive_strength();
         }
         setState(1944);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -8035,9 +8154,10 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1956);
         n_output_gatetype();
         setState(1958);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
-        if ((((_la & ~(ssize_t)0x3f) == 0) &&
+        if ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
           | (1ULL << Verilog2001Parser::T__41)
           | (1ULL << Verilog2001Parser::T__51)
@@ -8052,6 +8172,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
           drive_strength();
         }
         setState(1961);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -8085,6 +8206,7 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
         setState(1973);
         pass_en_switchtype();
         setState(1975);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__14) {
@@ -8126,46 +8248,46 @@ Ref<Verilog2001Parser::Gate_instantiationContext> Verilog2001Parser::gate_instan
 
 //----------------- Cmos_switch_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Cmos_switch_instanceContext::Cmos_switch_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Cmos_switch_instanceContext::Cmos_switch_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::Cmos_switch_instanceContext::output_terminal() {
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::Cmos_switch_instanceContext::output_terminal() {
   return getRuleContext<Verilog2001Parser::Output_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::Cmos_switch_instanceContext::input_terminal() {
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::Cmos_switch_instanceContext::input_terminal() {
   return getRuleContext<Verilog2001Parser::Input_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Ncontrol_terminalContext> Verilog2001Parser::Cmos_switch_instanceContext::ncontrol_terminal() {
+Verilog2001Parser::Ncontrol_terminalContext* Verilog2001Parser::Cmos_switch_instanceContext::ncontrol_terminal() {
   return getRuleContext<Verilog2001Parser::Ncontrol_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Pcontrol_terminalContext> Verilog2001Parser::Cmos_switch_instanceContext::pcontrol_terminal() {
+Verilog2001Parser::Pcontrol_terminalContext* Verilog2001Parser::Cmos_switch_instanceContext::pcontrol_terminal() {
   return getRuleContext<Verilog2001Parser::Pcontrol_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Cmos_switch_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Cmos_switch_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Cmos_switch_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Cmos_switch_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCmos_switch_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Cmos_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCmos_switch_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCmos_switch_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Cmos_switch_instanceContext> Verilog2001Parser::cmos_switch_instance() {
-  Ref<Cmos_switch_instanceContext> _localctx = std::make_shared<Cmos_switch_instanceContext>(_ctx, getState());
+Verilog2001Parser::Cmos_switch_instanceContext* Verilog2001Parser::cmos_switch_instance() {
+  Cmos_switch_instanceContext *_localctx = _tracker.createInstance<Cmos_switch_instanceContext>(_ctx, getState());
   enterRule(_localctx, 174, Verilog2001Parser::RuleCmos_switch_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8173,6 +8295,7 @@ Ref<Verilog2001Parser::Cmos_switch_instanceContext> Verilog2001Parser::cmos_swit
   try {
     enterOuterAlt(_localctx, 1);
     setState(1990);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8212,42 +8335,42 @@ Ref<Verilog2001Parser::Cmos_switch_instanceContext> Verilog2001Parser::cmos_swit
 
 //----------------- Enable_gate_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Enable_gate_instanceContext::Enable_gate_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Enable_gate_instanceContext::Enable_gate_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::Enable_gate_instanceContext::output_terminal() {
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::Enable_gate_instanceContext::output_terminal() {
   return getRuleContext<Verilog2001Parser::Output_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::Enable_gate_instanceContext::input_terminal() {
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::Enable_gate_instanceContext::input_terminal() {
   return getRuleContext<Verilog2001Parser::Input_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::Enable_gate_instanceContext::enable_terminal() {
+Verilog2001Parser::Enable_terminalContext* Verilog2001Parser::Enable_gate_instanceContext::enable_terminal() {
   return getRuleContext<Verilog2001Parser::Enable_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Enable_gate_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Enable_gate_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Enable_gate_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Enable_gate_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEnable_gate_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Enable_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEnable_gate_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEnable_gate_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Enable_gate_instanceContext> Verilog2001Parser::enable_gate_instance() {
-  Ref<Enable_gate_instanceContext> _localctx = std::make_shared<Enable_gate_instanceContext>(_ctx, getState());
+Verilog2001Parser::Enable_gate_instanceContext* Verilog2001Parser::enable_gate_instance() {
+  Enable_gate_instanceContext *_localctx = _tracker.createInstance<Enable_gate_instanceContext>(_ctx, getState());
   enterRule(_localctx, 176, Verilog2001Parser::RuleEnable_gate_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8255,6 +8378,7 @@ Ref<Verilog2001Parser::Enable_gate_instanceContext> Verilog2001Parser::enable_ga
   try {
     enterOuterAlt(_localctx, 1);
     setState(2003);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8290,42 +8414,42 @@ Ref<Verilog2001Parser::Enable_gate_instanceContext> Verilog2001Parser::enable_ga
 
 //----------------- Mos_switch_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Mos_switch_instanceContext::Mos_switch_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Mos_switch_instanceContext::Mos_switch_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::Mos_switch_instanceContext::output_terminal() {
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::Mos_switch_instanceContext::output_terminal() {
   return getRuleContext<Verilog2001Parser::Output_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::Mos_switch_instanceContext::input_terminal() {
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::Mos_switch_instanceContext::input_terminal() {
   return getRuleContext<Verilog2001Parser::Input_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::Mos_switch_instanceContext::enable_terminal() {
+Verilog2001Parser::Enable_terminalContext* Verilog2001Parser::Mos_switch_instanceContext::enable_terminal() {
   return getRuleContext<Verilog2001Parser::Enable_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Mos_switch_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Mos_switch_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Mos_switch_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Mos_switch_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMos_switch_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Mos_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMos_switch_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMos_switch_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Mos_switch_instanceContext> Verilog2001Parser::mos_switch_instance() {
-  Ref<Mos_switch_instanceContext> _localctx = std::make_shared<Mos_switch_instanceContext>(_ctx, getState());
+Verilog2001Parser::Mos_switch_instanceContext* Verilog2001Parser::mos_switch_instance() {
+  Mos_switch_instanceContext *_localctx = _tracker.createInstance<Mos_switch_instanceContext>(_ctx, getState());
   enterRule(_localctx, 178, Verilog2001Parser::RuleMos_switch_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8333,6 +8457,7 @@ Ref<Verilog2001Parser::Mos_switch_instanceContext> Verilog2001Parser::mos_switch
   try {
     enterOuterAlt(_localctx, 1);
     setState(2014);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8368,42 +8493,42 @@ Ref<Verilog2001Parser::Mos_switch_instanceContext> Verilog2001Parser::mos_switch
 
 //----------------- N_input_gate_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::N_input_gate_instanceContext::N_input_gate_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::N_input_gate_instanceContext::N_input_gate_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::N_input_gate_instanceContext::output_terminal() {
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::N_input_gate_instanceContext::output_terminal() {
   return getRuleContext<Verilog2001Parser::Output_terminalContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Input_terminalContext>> Verilog2001Parser::N_input_gate_instanceContext::input_terminal() {
+std::vector<Verilog2001Parser::Input_terminalContext *> Verilog2001Parser::N_input_gate_instanceContext::input_terminal() {
   return getRuleContexts<Verilog2001Parser::Input_terminalContext>();
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::N_input_gate_instanceContext::input_terminal(int i) {
-  return getRuleContext<Verilog2001Parser::Input_terminalContext>((size_t)i);
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::N_input_gate_instanceContext::input_terminal(size_t i) {
+  return getRuleContext<Verilog2001Parser::Input_terminalContext>(i);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::N_input_gate_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::N_input_gate_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::N_input_gate_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::N_input_gate_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleN_input_gate_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::N_input_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitN_input_gate_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitN_input_gate_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::N_input_gate_instanceContext> Verilog2001Parser::n_input_gate_instance() {
-  Ref<N_input_gate_instanceContext> _localctx = std::make_shared<N_input_gate_instanceContext>(_ctx, getState());
+Verilog2001Parser::N_input_gate_instanceContext* Verilog2001Parser::n_input_gate_instance() {
+  N_input_gate_instanceContext *_localctx = _tracker.createInstance<N_input_gate_instanceContext>(_ctx, getState());
   enterRule(_localctx, 180, Verilog2001Parser::RuleN_input_gate_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8411,6 +8536,7 @@ Ref<Verilog2001Parser::N_input_gate_instanceContext> Verilog2001Parser::n_input_
   try {
     enterOuterAlt(_localctx, 1);
     setState(2025);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8454,50 +8580,51 @@ Ref<Verilog2001Parser::N_input_gate_instanceContext> Verilog2001Parser::n_input_
 
 //----------------- N_output_gate_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::N_output_gate_instanceContext::N_output_gate_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::N_output_gate_instanceContext::N_output_gate_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Output_terminalContext>> Verilog2001Parser::N_output_gate_instanceContext::output_terminal() {
+std::vector<Verilog2001Parser::Output_terminalContext *> Verilog2001Parser::N_output_gate_instanceContext::output_terminal() {
   return getRuleContexts<Verilog2001Parser::Output_terminalContext>();
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::N_output_gate_instanceContext::output_terminal(int i) {
-  return getRuleContext<Verilog2001Parser::Output_terminalContext>((size_t)i);
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::N_output_gate_instanceContext::output_terminal(size_t i) {
+  return getRuleContext<Verilog2001Parser::Output_terminalContext>(i);
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::N_output_gate_instanceContext::input_terminal() {
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::N_output_gate_instanceContext::input_terminal() {
   return getRuleContext<Verilog2001Parser::Input_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::N_output_gate_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::N_output_gate_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::N_output_gate_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::N_output_gate_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleN_output_gate_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::N_output_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitN_output_gate_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitN_output_gate_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::N_output_gate_instanceContext> Verilog2001Parser::n_output_gate_instance() {
-  Ref<N_output_gate_instanceContext> _localctx = std::make_shared<N_output_gate_instanceContext>(_ctx, getState());
+Verilog2001Parser::N_output_gate_instanceContext* Verilog2001Parser::n_output_gate_instance() {
+  N_output_gate_instanceContext *_localctx = _tracker.createInstance<N_output_gate_instanceContext>(_ctx, getState());
   enterRule(_localctx, 182, Verilog2001Parser::RuleN_output_gate_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2041);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8543,38 +8670,38 @@ Ref<Verilog2001Parser::N_output_gate_instanceContext> Verilog2001Parser::n_outpu
 
 //----------------- Pass_switch_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pass_switch_instanceContext::Pass_switch_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pass_switch_instanceContext::Pass_switch_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Inout_terminalContext>> Verilog2001Parser::Pass_switch_instanceContext::inout_terminal() {
+std::vector<Verilog2001Parser::Inout_terminalContext *> Verilog2001Parser::Pass_switch_instanceContext::inout_terminal() {
   return getRuleContexts<Verilog2001Parser::Inout_terminalContext>();
 }
 
-Ref<Verilog2001Parser::Inout_terminalContext> Verilog2001Parser::Pass_switch_instanceContext::inout_terminal(int i) {
-  return getRuleContext<Verilog2001Parser::Inout_terminalContext>((size_t)i);
+Verilog2001Parser::Inout_terminalContext* Verilog2001Parser::Pass_switch_instanceContext::inout_terminal(size_t i) {
+  return getRuleContext<Verilog2001Parser::Inout_terminalContext>(i);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Pass_switch_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Pass_switch_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pass_switch_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pass_switch_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RulePass_switch_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Pass_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPass_switch_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPass_switch_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pass_switch_instanceContext> Verilog2001Parser::pass_switch_instance() {
-  Ref<Pass_switch_instanceContext> _localctx = std::make_shared<Pass_switch_instanceContext>(_ctx, getState());
+Verilog2001Parser::Pass_switch_instanceContext* Verilog2001Parser::pass_switch_instance() {
+  Pass_switch_instanceContext *_localctx = _tracker.createInstance<Pass_switch_instanceContext>(_ctx, getState());
   enterRule(_localctx, 184, Verilog2001Parser::RulePass_switch_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8582,6 +8709,7 @@ Ref<Verilog2001Parser::Pass_switch_instanceContext> Verilog2001Parser::pass_swit
   try {
     enterOuterAlt(_localctx, 1);
     setState(2057);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8613,42 +8741,42 @@ Ref<Verilog2001Parser::Pass_switch_instanceContext> Verilog2001Parser::pass_swit
 
 //----------------- Pass_enable_switch_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pass_enable_switch_instanceContext::Pass_enable_switch_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pass_enable_switch_instanceContext::Pass_enable_switch_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Inout_terminalContext>> Verilog2001Parser::Pass_enable_switch_instanceContext::inout_terminal() {
+std::vector<Verilog2001Parser::Inout_terminalContext *> Verilog2001Parser::Pass_enable_switch_instanceContext::inout_terminal() {
   return getRuleContexts<Verilog2001Parser::Inout_terminalContext>();
 }
 
-Ref<Verilog2001Parser::Inout_terminalContext> Verilog2001Parser::Pass_enable_switch_instanceContext::inout_terminal(int i) {
-  return getRuleContext<Verilog2001Parser::Inout_terminalContext>((size_t)i);
+Verilog2001Parser::Inout_terminalContext* Verilog2001Parser::Pass_enable_switch_instanceContext::inout_terminal(size_t i) {
+  return getRuleContext<Verilog2001Parser::Inout_terminalContext>(i);
 }
 
-Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::Pass_enable_switch_instanceContext::enable_terminal() {
+Verilog2001Parser::Enable_terminalContext* Verilog2001Parser::Pass_enable_switch_instanceContext::enable_terminal() {
   return getRuleContext<Verilog2001Parser::Enable_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Pass_enable_switch_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Pass_enable_switch_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pass_enable_switch_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pass_enable_switch_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RulePass_enable_switch_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Pass_enable_switch_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPass_enable_switch_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPass_enable_switch_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pass_enable_switch_instanceContext> Verilog2001Parser::pass_enable_switch_instance() {
-  Ref<Pass_enable_switch_instanceContext> _localctx = std::make_shared<Pass_enable_switch_instanceContext>(_ctx, getState());
+Verilog2001Parser::Pass_enable_switch_instanceContext* Verilog2001Parser::pass_enable_switch_instance() {
+  Pass_enable_switch_instanceContext *_localctx = _tracker.createInstance<Pass_enable_switch_instanceContext>(_ctx, getState());
   enterRule(_localctx, 186, Verilog2001Parser::RulePass_enable_switch_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8656,6 +8784,7 @@ Ref<Verilog2001Parser::Pass_enable_switch_instanceContext> Verilog2001Parser::pa
   try {
     enterOuterAlt(_localctx, 1);
     setState(2066);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8691,34 +8820,34 @@ Ref<Verilog2001Parser::Pass_enable_switch_instanceContext> Verilog2001Parser::pa
 
 //----------------- Pull_gate_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pull_gate_instanceContext::Pull_gate_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pull_gate_instanceContext::Pull_gate_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::Pull_gate_instanceContext::output_terminal() {
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::Pull_gate_instanceContext::output_terminal() {
   return getRuleContext<Verilog2001Parser::Output_terminalContext>(0);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::Pull_gate_instanceContext::name_of_gate_instance() {
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::Pull_gate_instanceContext::name_of_gate_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_gate_instanceContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pull_gate_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pull_gate_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RulePull_gate_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Pull_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPull_gate_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPull_gate_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pull_gate_instanceContext> Verilog2001Parser::pull_gate_instance() {
-  Ref<Pull_gate_instanceContext> _localctx = std::make_shared<Pull_gate_instanceContext>(_ctx, getState());
+Verilog2001Parser::Pull_gate_instanceContext* Verilog2001Parser::pull_gate_instance() {
+  Pull_gate_instanceContext *_localctx = _tracker.createInstance<Pull_gate_instanceContext>(_ctx, getState());
   enterRule(_localctx, 188, Verilog2001Parser::RulePull_gate_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8726,6 +8855,7 @@ Ref<Verilog2001Parser::Pull_gate_instanceContext> Verilog2001Parser::pull_gate_i
   try {
     enterOuterAlt(_localctx, 1);
     setState(2077);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::Escaped_identifier
@@ -8753,34 +8883,34 @@ Ref<Verilog2001Parser::Pull_gate_instanceContext> Verilog2001Parser::pull_gate_i
 
 //----------------- Name_of_gate_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Name_of_gate_instanceContext::Name_of_gate_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Name_of_gate_instanceContext::Name_of_gate_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Gate_instance_identifierContext> Verilog2001Parser::Name_of_gate_instanceContext::gate_instance_identifier() {
+Verilog2001Parser::Gate_instance_identifierContext* Verilog2001Parser::Name_of_gate_instanceContext::gate_instance_identifier() {
   return getRuleContext<Verilog2001Parser::Gate_instance_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Name_of_gate_instanceContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Name_of_gate_instanceContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Name_of_gate_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Name_of_gate_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleName_of_gate_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Name_of_gate_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitName_of_gate_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitName_of_gate_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::name_of_gate_instance() {
-  Ref<Name_of_gate_instanceContext> _localctx = std::make_shared<Name_of_gate_instanceContext>(_ctx, getState());
+Verilog2001Parser::Name_of_gate_instanceContext* Verilog2001Parser::name_of_gate_instance() {
+  Name_of_gate_instanceContext *_localctx = _tracker.createInstance<Name_of_gate_instanceContext>(_ctx, getState());
   enterRule(_localctx, 190, Verilog2001Parser::RuleName_of_gate_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -8790,6 +8920,7 @@ Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::name_of_
     setState(2083);
     gate_instance_identifier();
     setState(2085);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -8809,32 +8940,32 @@ Ref<Verilog2001Parser::Name_of_gate_instanceContext> Verilog2001Parser::name_of_
 
 //----------------- Pulldown_strengthContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pulldown_strengthContext::Pulldown_strengthContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pulldown_strengthContext::Pulldown_strengthContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::Pulldown_strengthContext::strength0() {
+Verilog2001Parser::Strength0Context* Verilog2001Parser::Pulldown_strengthContext::strength0() {
   return getRuleContext<Verilog2001Parser::Strength0Context>(0);
 }
 
-Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::Pulldown_strengthContext::strength1() {
+Verilog2001Parser::Strength1Context* Verilog2001Parser::Pulldown_strengthContext::strength1() {
   return getRuleContext<Verilog2001Parser::Strength1Context>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pulldown_strengthContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pulldown_strengthContext::getRuleIndex() const {
   return Verilog2001Parser::RulePulldown_strength;
 }
 
 antlrcpp::Any Verilog2001Parser::Pulldown_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPulldown_strength(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPulldown_strength(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pulldown_strengthContext> Verilog2001Parser::pulldown_strength() {
-  Ref<Pulldown_strengthContext> _localctx = std::make_shared<Pulldown_strengthContext>(_ctx, getState());
+Verilog2001Parser::Pulldown_strengthContext* Verilog2001Parser::pulldown_strength() {
+  Pulldown_strengthContext *_localctx = _tracker.createInstance<Pulldown_strengthContext>(_ctx, getState());
   enterRule(_localctx, 192, Verilog2001Parser::RulePulldown_strength);
 
   auto onExit = finally([=] {
@@ -8899,32 +9030,32 @@ Ref<Verilog2001Parser::Pulldown_strengthContext> Verilog2001Parser::pulldown_str
 
 //----------------- Pullup_strengthContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pullup_strengthContext::Pullup_strengthContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pullup_strengthContext::Pullup_strengthContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Strength0Context> Verilog2001Parser::Pullup_strengthContext::strength0() {
+Verilog2001Parser::Strength0Context* Verilog2001Parser::Pullup_strengthContext::strength0() {
   return getRuleContext<Verilog2001Parser::Strength0Context>(0);
 }
 
-Ref<Verilog2001Parser::Strength1Context> Verilog2001Parser::Pullup_strengthContext::strength1() {
+Verilog2001Parser::Strength1Context* Verilog2001Parser::Pullup_strengthContext::strength1() {
   return getRuleContext<Verilog2001Parser::Strength1Context>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pullup_strengthContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pullup_strengthContext::getRuleIndex() const {
   return Verilog2001Parser::RulePullup_strength;
 }
 
 antlrcpp::Any Verilog2001Parser::Pullup_strengthContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPullup_strength(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPullup_strength(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pullup_strengthContext> Verilog2001Parser::pullup_strength() {
-  Ref<Pullup_strengthContext> _localctx = std::make_shared<Pullup_strengthContext>(_ctx, getState());
+Verilog2001Parser::Pullup_strengthContext* Verilog2001Parser::pullup_strength() {
+  Pullup_strengthContext *_localctx = _tracker.createInstance<Pullup_strengthContext>(_ctx, getState());
   enterRule(_localctx, 194, Verilog2001Parser::RulePullup_strength);
 
   auto onExit = finally([=] {
@@ -8989,28 +9120,28 @@ Ref<Verilog2001Parser::Pullup_strengthContext> Verilog2001Parser::pullup_strengt
 
 //----------------- Enable_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Enable_terminalContext::Enable_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Enable_terminalContext::Enable_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Enable_terminalContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Enable_terminalContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Enable_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Enable_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEnable_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Enable_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEnable_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEnable_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::enable_terminal() {
-  Ref<Enable_terminalContext> _localctx = std::make_shared<Enable_terminalContext>(_ctx, getState());
+Verilog2001Parser::Enable_terminalContext* Verilog2001Parser::enable_terminal() {
+  Enable_terminalContext *_localctx = _tracker.createInstance<Enable_terminalContext>(_ctx, getState());
   enterRule(_localctx, 196, Verilog2001Parser::RuleEnable_terminal);
 
   auto onExit = finally([=] {
@@ -9033,28 +9164,28 @@ Ref<Verilog2001Parser::Enable_terminalContext> Verilog2001Parser::enable_termina
 
 //----------------- Ncontrol_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Ncontrol_terminalContext::Ncontrol_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Ncontrol_terminalContext::Ncontrol_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Ncontrol_terminalContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Ncontrol_terminalContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Ncontrol_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Ncontrol_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNcontrol_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Ncontrol_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNcontrol_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNcontrol_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Ncontrol_terminalContext> Verilog2001Parser::ncontrol_terminal() {
-  Ref<Ncontrol_terminalContext> _localctx = std::make_shared<Ncontrol_terminalContext>(_ctx, getState());
+Verilog2001Parser::Ncontrol_terminalContext* Verilog2001Parser::ncontrol_terminal() {
+  Ncontrol_terminalContext *_localctx = _tracker.createInstance<Ncontrol_terminalContext>(_ctx, getState());
   enterRule(_localctx, 198, Verilog2001Parser::RuleNcontrol_terminal);
 
   auto onExit = finally([=] {
@@ -9077,28 +9208,28 @@ Ref<Verilog2001Parser::Ncontrol_terminalContext> Verilog2001Parser::ncontrol_ter
 
 //----------------- Pcontrol_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pcontrol_terminalContext::Pcontrol_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pcontrol_terminalContext::Pcontrol_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Pcontrol_terminalContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Pcontrol_terminalContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pcontrol_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pcontrol_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RulePcontrol_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Pcontrol_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPcontrol_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPcontrol_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pcontrol_terminalContext> Verilog2001Parser::pcontrol_terminal() {
-  Ref<Pcontrol_terminalContext> _localctx = std::make_shared<Pcontrol_terminalContext>(_ctx, getState());
+Verilog2001Parser::Pcontrol_terminalContext* Verilog2001Parser::pcontrol_terminal() {
+  Pcontrol_terminalContext *_localctx = _tracker.createInstance<Pcontrol_terminalContext>(_ctx, getState());
   enterRule(_localctx, 200, Verilog2001Parser::RulePcontrol_terminal);
 
   auto onExit = finally([=] {
@@ -9121,28 +9252,28 @@ Ref<Verilog2001Parser::Pcontrol_terminalContext> Verilog2001Parser::pcontrol_ter
 
 //----------------- Input_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Input_terminalContext::Input_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Input_terminalContext::Input_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Input_terminalContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Input_terminalContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Input_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Input_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInput_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Input_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInput_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInput_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::input_terminal() {
-  Ref<Input_terminalContext> _localctx = std::make_shared<Input_terminalContext>(_ctx, getState());
+Verilog2001Parser::Input_terminalContext* Verilog2001Parser::input_terminal() {
+  Input_terminalContext *_localctx = _tracker.createInstance<Input_terminalContext>(_ctx, getState());
   enterRule(_localctx, 202, Verilog2001Parser::RuleInput_terminal);
 
   auto onExit = finally([=] {
@@ -9165,28 +9296,28 @@ Ref<Verilog2001Parser::Input_terminalContext> Verilog2001Parser::input_terminal(
 
 //----------------- Inout_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Inout_terminalContext::Inout_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Inout_terminalContext::Inout_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::Inout_terminalContext::net_lvalue() {
+Verilog2001Parser::Net_lvalueContext* Verilog2001Parser::Inout_terminalContext::net_lvalue() {
   return getRuleContext<Verilog2001Parser::Net_lvalueContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Inout_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Inout_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInout_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Inout_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInout_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInout_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Inout_terminalContext> Verilog2001Parser::inout_terminal() {
-  Ref<Inout_terminalContext> _localctx = std::make_shared<Inout_terminalContext>(_ctx, getState());
+Verilog2001Parser::Inout_terminalContext* Verilog2001Parser::inout_terminal() {
+  Inout_terminalContext *_localctx = _tracker.createInstance<Inout_terminalContext>(_ctx, getState());
   enterRule(_localctx, 204, Verilog2001Parser::RuleInout_terminal);
 
   auto onExit = finally([=] {
@@ -9209,28 +9340,28 @@ Ref<Verilog2001Parser::Inout_terminalContext> Verilog2001Parser::inout_terminal(
 
 //----------------- Output_terminalContext ------------------------------------------------------------------
 
-Verilog2001Parser::Output_terminalContext::Output_terminalContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Output_terminalContext::Output_terminalContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::Output_terminalContext::net_lvalue() {
+Verilog2001Parser::Net_lvalueContext* Verilog2001Parser::Output_terminalContext::net_lvalue() {
   return getRuleContext<Verilog2001Parser::Net_lvalueContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Output_terminalContext::getRuleIndex() const {
+size_t Verilog2001Parser::Output_terminalContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOutput_terminal;
 }
 
 antlrcpp::Any Verilog2001Parser::Output_terminalContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOutput_terminal(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOutput_terminal(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::output_terminal() {
-  Ref<Output_terminalContext> _localctx = std::make_shared<Output_terminalContext>(_ctx, getState());
+Verilog2001Parser::Output_terminalContext* Verilog2001Parser::output_terminal() {
+  Output_terminalContext *_localctx = _tracker.createInstance<Output_terminalContext>(_ctx, getState());
   enterRule(_localctx, 206, Verilog2001Parser::RuleOutput_terminal);
 
   auto onExit = finally([=] {
@@ -9253,26 +9384,26 @@ Ref<Verilog2001Parser::Output_terminalContext> Verilog2001Parser::output_termina
 
 //----------------- Cmos_switchtypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Cmos_switchtypeContext::Cmos_switchtypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Cmos_switchtypeContext::Cmos_switchtypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Cmos_switchtypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Cmos_switchtypeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCmos_switchtype;
 }
 
 antlrcpp::Any Verilog2001Parser::Cmos_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCmos_switchtype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCmos_switchtype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Cmos_switchtypeContext> Verilog2001Parser::cmos_switchtype() {
-  Ref<Cmos_switchtypeContext> _localctx = std::make_shared<Cmos_switchtypeContext>(_ctx, getState());
+Verilog2001Parser::Cmos_switchtypeContext* Verilog2001Parser::cmos_switchtype() {
+  Cmos_switchtypeContext *_localctx = _tracker.createInstance<Cmos_switchtypeContext>(_ctx, getState());
   enterRule(_localctx, 208, Verilog2001Parser::RuleCmos_switchtype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9285,7 +9416,9 @@ Ref<Verilog2001Parser::Cmos_switchtypeContext> Verilog2001Parser::cmos_switchtyp
 
     || _la == Verilog2001Parser::T__73)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9301,26 +9434,26 @@ Ref<Verilog2001Parser::Cmos_switchtypeContext> Verilog2001Parser::cmos_switchtyp
 
 //----------------- Enable_gatetypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Enable_gatetypeContext::Enable_gatetypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Enable_gatetypeContext::Enable_gatetypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Enable_gatetypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Enable_gatetypeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEnable_gatetype;
 }
 
 antlrcpp::Any Verilog2001Parser::Enable_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEnable_gatetype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEnable_gatetype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Enable_gatetypeContext> Verilog2001Parser::enable_gatetype() {
-  Ref<Enable_gatetypeContext> _localctx = std::make_shared<Enable_gatetypeContext>(_ctx, getState());
+Verilog2001Parser::Enable_gatetypeContext* Verilog2001Parser::enable_gatetype() {
+  Enable_gatetypeContext *_localctx = _tracker.createInstance<Enable_gatetypeContext>(_ctx, getState());
   enterRule(_localctx, 210, Verilog2001Parser::RuleEnable_gatetype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9329,13 +9462,15 @@ Ref<Verilog2001Parser::Enable_gatetypeContext> Verilog2001Parser::enable_gatetyp
     enterOuterAlt(_localctx, 1);
     setState(2137);
     _la = _input->LA(1);
-    if (!(((((_la - 75) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 75) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 75)) & ((1ULL << (Verilog2001Parser::T__74 - 75))
       | (1ULL << (Verilog2001Parser::T__75 - 75))
       | (1ULL << (Verilog2001Parser::T__76 - 75))
       | (1ULL << (Verilog2001Parser::T__77 - 75)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9351,26 +9486,26 @@ Ref<Verilog2001Parser::Enable_gatetypeContext> Verilog2001Parser::enable_gatetyp
 
 //----------------- Mos_switchtypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Mos_switchtypeContext::Mos_switchtypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Mos_switchtypeContext::Mos_switchtypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Mos_switchtypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Mos_switchtypeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMos_switchtype;
 }
 
 antlrcpp::Any Verilog2001Parser::Mos_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMos_switchtype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMos_switchtype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Mos_switchtypeContext> Verilog2001Parser::mos_switchtype() {
-  Ref<Mos_switchtypeContext> _localctx = std::make_shared<Mos_switchtypeContext>(_ctx, getState());
+Verilog2001Parser::Mos_switchtypeContext* Verilog2001Parser::mos_switchtype() {
+  Mos_switchtypeContext *_localctx = _tracker.createInstance<Mos_switchtypeContext>(_ctx, getState());
   enterRule(_localctx, 212, Verilog2001Parser::RuleMos_switchtype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9379,13 +9514,15 @@ Ref<Verilog2001Parser::Mos_switchtypeContext> Verilog2001Parser::mos_switchtype(
     enterOuterAlt(_localctx, 1);
     setState(2139);
     _la = _input->LA(1);
-    if (!(((((_la - 79) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 79) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 79)) & ((1ULL << (Verilog2001Parser::T__78 - 79))
       | (1ULL << (Verilog2001Parser::T__79 - 79))
       | (1ULL << (Verilog2001Parser::T__80 - 79))
       | (1ULL << (Verilog2001Parser::T__81 - 79)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9401,26 +9538,26 @@ Ref<Verilog2001Parser::Mos_switchtypeContext> Verilog2001Parser::mos_switchtype(
 
 //----------------- N_input_gatetypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::N_input_gatetypeContext::N_input_gatetypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::N_input_gatetypeContext::N_input_gatetypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::N_input_gatetypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::N_input_gatetypeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleN_input_gatetype;
 }
 
 antlrcpp::Any Verilog2001Parser::N_input_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitN_input_gatetype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitN_input_gatetype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::n_input_gatetype() {
-  Ref<N_input_gatetypeContext> _localctx = std::make_shared<N_input_gatetypeContext>(_ctx, getState());
+Verilog2001Parser::N_input_gatetypeContext* Verilog2001Parser::n_input_gatetype() {
+  N_input_gatetypeContext *_localctx = _tracker.createInstance<N_input_gatetypeContext>(_ctx, getState());
   enterRule(_localctx, 214, Verilog2001Parser::RuleN_input_gatetype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9429,7 +9566,7 @@ Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::n_input_gatet
     enterOuterAlt(_localctx, 1);
     setState(2141);
     _la = _input->LA(1);
-    if (!(((((_la - 83) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 83) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 83)) & ((1ULL << (Verilog2001Parser::T__82 - 83))
       | (1ULL << (Verilog2001Parser::T__83 - 83))
       | (1ULL << (Verilog2001Parser::T__84 - 83))
@@ -9437,7 +9574,9 @@ Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::n_input_gatet
       | (1ULL << (Verilog2001Parser::T__86 - 83))
       | (1ULL << (Verilog2001Parser::T__87 - 83)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9453,26 +9592,26 @@ Ref<Verilog2001Parser::N_input_gatetypeContext> Verilog2001Parser::n_input_gatet
 
 //----------------- N_output_gatetypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::N_output_gatetypeContext::N_output_gatetypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::N_output_gatetypeContext::N_output_gatetypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::N_output_gatetypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::N_output_gatetypeContext::getRuleIndex() const {
   return Verilog2001Parser::RuleN_output_gatetype;
 }
 
 antlrcpp::Any Verilog2001Parser::N_output_gatetypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitN_output_gatetype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitN_output_gatetype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::N_output_gatetypeContext> Verilog2001Parser::n_output_gatetype() {
-  Ref<N_output_gatetypeContext> _localctx = std::make_shared<N_output_gatetypeContext>(_ctx, getState());
+Verilog2001Parser::N_output_gatetypeContext* Verilog2001Parser::n_output_gatetype() {
+  N_output_gatetypeContext *_localctx = _tracker.createInstance<N_output_gatetypeContext>(_ctx, getState());
   enterRule(_localctx, 216, Verilog2001Parser::RuleN_output_gatetype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9485,7 +9624,9 @@ Ref<Verilog2001Parser::N_output_gatetypeContext> Verilog2001Parser::n_output_gat
 
     || _la == Verilog2001Parser::T__89)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9501,26 +9642,26 @@ Ref<Verilog2001Parser::N_output_gatetypeContext> Verilog2001Parser::n_output_gat
 
 //----------------- Pass_en_switchtypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pass_en_switchtypeContext::Pass_en_switchtypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pass_en_switchtypeContext::Pass_en_switchtypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Pass_en_switchtypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pass_en_switchtypeContext::getRuleIndex() const {
   return Verilog2001Parser::RulePass_en_switchtype;
 }
 
 antlrcpp::Any Verilog2001Parser::Pass_en_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPass_en_switchtype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPass_en_switchtype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pass_en_switchtypeContext> Verilog2001Parser::pass_en_switchtype() {
-  Ref<Pass_en_switchtypeContext> _localctx = std::make_shared<Pass_en_switchtypeContext>(_ctx, getState());
+Verilog2001Parser::Pass_en_switchtypeContext* Verilog2001Parser::pass_en_switchtype() {
+  Pass_en_switchtypeContext *_localctx = _tracker.createInstance<Pass_en_switchtypeContext>(_ctx, getState());
   enterRule(_localctx, 218, Verilog2001Parser::RulePass_en_switchtype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9529,13 +9670,15 @@ Ref<Verilog2001Parser::Pass_en_switchtypeContext> Verilog2001Parser::pass_en_swi
     enterOuterAlt(_localctx, 1);
     setState(2145);
     _la = _input->LA(1);
-    if (!(((((_la - 91) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 91) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 91)) & ((1ULL << (Verilog2001Parser::T__90 - 91))
       | (1ULL << (Verilog2001Parser::T__91 - 91))
       | (1ULL << (Verilog2001Parser::T__92 - 91))
       | (1ULL << (Verilog2001Parser::T__93 - 91)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9551,26 +9694,26 @@ Ref<Verilog2001Parser::Pass_en_switchtypeContext> Verilog2001Parser::pass_en_swi
 
 //----------------- Pass_switchtypeContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pass_switchtypeContext::Pass_switchtypeContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pass_switchtypeContext::Pass_switchtypeContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Pass_switchtypeContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pass_switchtypeContext::getRuleIndex() const {
   return Verilog2001Parser::RulePass_switchtype;
 }
 
 antlrcpp::Any Verilog2001Parser::Pass_switchtypeContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPass_switchtype(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPass_switchtype(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pass_switchtypeContext> Verilog2001Parser::pass_switchtype() {
-  Ref<Pass_switchtypeContext> _localctx = std::make_shared<Pass_switchtypeContext>(_ctx, getState());
+Verilog2001Parser::Pass_switchtypeContext* Verilog2001Parser::pass_switchtype() {
+  Pass_switchtypeContext *_localctx = _tracker.createInstance<Pass_switchtypeContext>(_ctx, getState());
   enterRule(_localctx, 220, Verilog2001Parser::RulePass_switchtype);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9583,7 +9726,9 @@ Ref<Verilog2001Parser::Pass_switchtypeContext> Verilog2001Parser::pass_switchtyp
 
     || _la == Verilog2001Parser::T__95)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -9599,42 +9744,42 @@ Ref<Verilog2001Parser::Pass_switchtypeContext> Verilog2001Parser::pass_switchtyp
 
 //----------------- Module_instantiationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_instantiationContext::Module_instantiationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_instantiationContext::Module_instantiationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_identifierContext> Verilog2001Parser::Module_instantiationContext::module_identifier() {
+Verilog2001Parser::Module_identifierContext* Verilog2001Parser::Module_instantiationContext::module_identifier() {
   return getRuleContext<Verilog2001Parser::Module_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Module_instanceContext>> Verilog2001Parser::Module_instantiationContext::module_instance() {
+std::vector<Verilog2001Parser::Module_instanceContext *> Verilog2001Parser::Module_instantiationContext::module_instance() {
   return getRuleContexts<Verilog2001Parser::Module_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Module_instanceContext> Verilog2001Parser::Module_instantiationContext::module_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Module_instanceContext>((size_t)i);
+Verilog2001Parser::Module_instanceContext* Verilog2001Parser::Module_instantiationContext::module_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Parameter_value_assignmentContext> Verilog2001Parser::Module_instantiationContext::parameter_value_assignment() {
+Verilog2001Parser::Parameter_value_assignmentContext* Verilog2001Parser::Module_instantiationContext::parameter_value_assignment() {
   return getRuleContext<Verilog2001Parser::Parameter_value_assignmentContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_instantiationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_instantiationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_instantiation;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_instantiation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_instantiation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_instantiationContext> Verilog2001Parser::module_instantiation() {
-  Ref<Module_instantiationContext> _localctx = std::make_shared<Module_instantiationContext>(_ctx, getState());
+Verilog2001Parser::Module_instantiationContext* Verilog2001Parser::module_instantiation() {
+  Module_instantiationContext *_localctx = _tracker.createInstance<Module_instantiationContext>(_ctx, getState());
   enterRule(_localctx, 222, Verilog2001Parser::RuleModule_instantiation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9644,6 +9789,7 @@ Ref<Verilog2001Parser::Module_instantiationContext> Verilog2001Parser::module_in
     setState(2149);
     module_identifier();
     setState(2151);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__14) {
@@ -9679,28 +9825,28 @@ Ref<Verilog2001Parser::Module_instantiationContext> Verilog2001Parser::module_in
 
 //----------------- Parameter_value_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parameter_value_assignmentContext::Parameter_value_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parameter_value_assignmentContext::Parameter_value_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_parameter_assignmentsContext> Verilog2001Parser::Parameter_value_assignmentContext::list_of_parameter_assignments() {
+Verilog2001Parser::List_of_parameter_assignmentsContext* Verilog2001Parser::Parameter_value_assignmentContext::list_of_parameter_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_parameter_assignmentsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parameter_value_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parameter_value_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParameter_value_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Parameter_value_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParameter_value_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParameter_value_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parameter_value_assignmentContext> Verilog2001Parser::parameter_value_assignment() {
-  Ref<Parameter_value_assignmentContext> _localctx = std::make_shared<Parameter_value_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Parameter_value_assignmentContext* Verilog2001Parser::parameter_value_assignment() {
+  Parameter_value_assignmentContext *_localctx = _tracker.createInstance<Parameter_value_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 224, Verilog2001Parser::RuleParameter_value_assignment);
 
   auto onExit = finally([=] {
@@ -9729,42 +9875,42 @@ Ref<Verilog2001Parser::Parameter_value_assignmentContext> Verilog2001Parser::par
 
 //----------------- List_of_parameter_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_parameter_assignmentsContext::List_of_parameter_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_parameter_assignmentsContext::List_of_parameter_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Ordered_parameter_assignmentContext>> Verilog2001Parser::List_of_parameter_assignmentsContext::ordered_parameter_assignment() {
+std::vector<Verilog2001Parser::Ordered_parameter_assignmentContext *> Verilog2001Parser::List_of_parameter_assignmentsContext::ordered_parameter_assignment() {
   return getRuleContexts<Verilog2001Parser::Ordered_parameter_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Ordered_parameter_assignmentContext> Verilog2001Parser::List_of_parameter_assignmentsContext::ordered_parameter_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Ordered_parameter_assignmentContext>((size_t)i);
+Verilog2001Parser::Ordered_parameter_assignmentContext* Verilog2001Parser::List_of_parameter_assignmentsContext::ordered_parameter_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Ordered_parameter_assignmentContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Named_parameter_assignmentContext>> Verilog2001Parser::List_of_parameter_assignmentsContext::named_parameter_assignment() {
+std::vector<Verilog2001Parser::Named_parameter_assignmentContext *> Verilog2001Parser::List_of_parameter_assignmentsContext::named_parameter_assignment() {
   return getRuleContexts<Verilog2001Parser::Named_parameter_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Named_parameter_assignmentContext> Verilog2001Parser::List_of_parameter_assignmentsContext::named_parameter_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Named_parameter_assignmentContext>((size_t)i);
+Verilog2001Parser::Named_parameter_assignmentContext* Verilog2001Parser::List_of_parameter_assignmentsContext::named_parameter_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Named_parameter_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_parameter_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_parameter_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_parameter_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_parameter_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_parameter_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_parameter_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_parameter_assignmentsContext> Verilog2001Parser::list_of_parameter_assignments() {
-  Ref<List_of_parameter_assignmentsContext> _localctx = std::make_shared<List_of_parameter_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::List_of_parameter_assignmentsContext* Verilog2001Parser::list_of_parameter_assignments() {
+  List_of_parameter_assignmentsContext *_localctx = _tracker.createInstance<List_of_parameter_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 226, Verilog2001Parser::RuleList_of_parameter_assignments);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9848,28 +9994,28 @@ Ref<Verilog2001Parser::List_of_parameter_assignmentsContext> Verilog2001Parser::
 
 //----------------- Ordered_parameter_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Ordered_parameter_assignmentContext::Ordered_parameter_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Ordered_parameter_assignmentContext::Ordered_parameter_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Ordered_parameter_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Ordered_parameter_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Ordered_parameter_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Ordered_parameter_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOrdered_parameter_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Ordered_parameter_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOrdered_parameter_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOrdered_parameter_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Ordered_parameter_assignmentContext> Verilog2001Parser::ordered_parameter_assignment() {
-  Ref<Ordered_parameter_assignmentContext> _localctx = std::make_shared<Ordered_parameter_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Ordered_parameter_assignmentContext* Verilog2001Parser::ordered_parameter_assignment() {
+  Ordered_parameter_assignmentContext *_localctx = _tracker.createInstance<Ordered_parameter_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 228, Verilog2001Parser::RuleOrdered_parameter_assignment);
 
   auto onExit = finally([=] {
@@ -9892,34 +10038,34 @@ Ref<Verilog2001Parser::Ordered_parameter_assignmentContext> Verilog2001Parser::o
 
 //----------------- Named_parameter_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Named_parameter_assignmentContext::Named_parameter_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Named_parameter_assignmentContext::Named_parameter_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::Named_parameter_assignmentContext::parameter_identifier() {
+Verilog2001Parser::Parameter_identifierContext* Verilog2001Parser::Named_parameter_assignmentContext::parameter_identifier() {
   return getRuleContext<Verilog2001Parser::Parameter_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Named_parameter_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Named_parameter_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Named_parameter_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Named_parameter_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNamed_parameter_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Named_parameter_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNamed_parameter_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNamed_parameter_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Named_parameter_assignmentContext> Verilog2001Parser::named_parameter_assignment() {
-  Ref<Named_parameter_assignmentContext> _localctx = std::make_shared<Named_parameter_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Named_parameter_assignmentContext* Verilog2001Parser::named_parameter_assignment() {
+  Named_parameter_assignmentContext *_localctx = _tracker.createInstance<Named_parameter_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 230, Verilog2001Parser::RuleNamed_parameter_assignment);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -9933,11 +10079,12 @@ Ref<Verilog2001Parser::Named_parameter_assignmentContext> Verilog2001Parser::nam
     setState(2190);
     match(Verilog2001Parser::T__15);
     setState(2192);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -9976,32 +10123,32 @@ Ref<Verilog2001Parser::Named_parameter_assignmentContext> Verilog2001Parser::nam
 
 //----------------- Module_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_instanceContext::Module_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_instanceContext::Module_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Name_of_instanceContext> Verilog2001Parser::Module_instanceContext::name_of_instance() {
+Verilog2001Parser::Name_of_instanceContext* Verilog2001Parser::Module_instanceContext::name_of_instance() {
   return getRuleContext<Verilog2001Parser::Name_of_instanceContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_port_connectionsContext> Verilog2001Parser::Module_instanceContext::list_of_port_connections() {
+Verilog2001Parser::List_of_port_connectionsContext* Verilog2001Parser::Module_instanceContext::list_of_port_connections() {
   return getRuleContext<Verilog2001Parser::List_of_port_connectionsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_instanceContext> Verilog2001Parser::module_instance() {
-  Ref<Module_instanceContext> _localctx = std::make_shared<Module_instanceContext>(_ctx, getState());
+Verilog2001Parser::Module_instanceContext* Verilog2001Parser::module_instance() {
+  Module_instanceContext *_localctx = _tracker.createInstance<Module_instanceContext>(_ctx, getState());
   enterRule(_localctx, 232, Verilog2001Parser::RuleModule_instance);
 
   auto onExit = finally([=] {
@@ -10030,34 +10177,34 @@ Ref<Verilog2001Parser::Module_instanceContext> Verilog2001Parser::module_instanc
 
 //----------------- Name_of_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Name_of_instanceContext::Name_of_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Name_of_instanceContext::Name_of_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_instance_identifierContext> Verilog2001Parser::Name_of_instanceContext::module_instance_identifier() {
+Verilog2001Parser::Module_instance_identifierContext* Verilog2001Parser::Name_of_instanceContext::module_instance_identifier() {
   return getRuleContext<Verilog2001Parser::Module_instance_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Name_of_instanceContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Name_of_instanceContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Name_of_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Name_of_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleName_of_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Name_of_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitName_of_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitName_of_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Name_of_instanceContext> Verilog2001Parser::name_of_instance() {
-  Ref<Name_of_instanceContext> _localctx = std::make_shared<Name_of_instanceContext>(_ctx, getState());
+Verilog2001Parser::Name_of_instanceContext* Verilog2001Parser::name_of_instance() {
+  Name_of_instanceContext *_localctx = _tracker.createInstance<Name_of_instanceContext>(_ctx, getState());
   enterRule(_localctx, 234, Verilog2001Parser::RuleName_of_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -10067,6 +10214,7 @@ Ref<Verilog2001Parser::Name_of_instanceContext> Verilog2001Parser::name_of_insta
     setState(2201);
     module_instance_identifier();
     setState(2203);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__20) {
@@ -10086,42 +10234,42 @@ Ref<Verilog2001Parser::Name_of_instanceContext> Verilog2001Parser::name_of_insta
 
 //----------------- List_of_port_connectionsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_port_connectionsContext::List_of_port_connectionsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_port_connectionsContext::List_of_port_connectionsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Ordered_port_connectionContext>> Verilog2001Parser::List_of_port_connectionsContext::ordered_port_connection() {
+std::vector<Verilog2001Parser::Ordered_port_connectionContext *> Verilog2001Parser::List_of_port_connectionsContext::ordered_port_connection() {
   return getRuleContexts<Verilog2001Parser::Ordered_port_connectionContext>();
 }
 
-Ref<Verilog2001Parser::Ordered_port_connectionContext> Verilog2001Parser::List_of_port_connectionsContext::ordered_port_connection(int i) {
-  return getRuleContext<Verilog2001Parser::Ordered_port_connectionContext>((size_t)i);
+Verilog2001Parser::Ordered_port_connectionContext* Verilog2001Parser::List_of_port_connectionsContext::ordered_port_connection(size_t i) {
+  return getRuleContext<Verilog2001Parser::Ordered_port_connectionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Named_port_connectionContext>> Verilog2001Parser::List_of_port_connectionsContext::named_port_connection() {
+std::vector<Verilog2001Parser::Named_port_connectionContext *> Verilog2001Parser::List_of_port_connectionsContext::named_port_connection() {
   return getRuleContexts<Verilog2001Parser::Named_port_connectionContext>();
 }
 
-Ref<Verilog2001Parser::Named_port_connectionContext> Verilog2001Parser::List_of_port_connectionsContext::named_port_connection(int i) {
-  return getRuleContext<Verilog2001Parser::Named_port_connectionContext>((size_t)i);
+Verilog2001Parser::Named_port_connectionContext* Verilog2001Parser::List_of_port_connectionsContext::named_port_connection(size_t i) {
+  return getRuleContext<Verilog2001Parser::Named_port_connectionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_port_connectionsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_port_connectionsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_port_connections;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_port_connectionsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_port_connections(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_port_connections(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_port_connectionsContext> Verilog2001Parser::list_of_port_connections() {
-  Ref<List_of_port_connectionsContext> _localctx = std::make_shared<List_of_port_connectionsContext>(_ctx, getState());
+Verilog2001Parser::List_of_port_connectionsContext* Verilog2001Parser::list_of_port_connections() {
+  List_of_port_connectionsContext *_localctx = _tracker.createInstance<List_of_port_connectionsContext>(_ctx, getState());
   enterRule(_localctx, 236, Verilog2001Parser::RuleList_of_port_connections);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -10182,44 +10330,44 @@ Ref<Verilog2001Parser::List_of_port_connectionsContext> Verilog2001Parser::list_
 
 //----------------- Ordered_port_connectionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Ordered_port_connectionContext::Ordered_port_connectionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Ordered_port_connectionContext::Ordered_port_connectionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Ordered_port_connectionContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Ordered_port_connectionContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Ordered_port_connectionContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Ordered_port_connectionContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Ordered_port_connectionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Ordered_port_connectionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Ordered_port_connectionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Ordered_port_connectionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOrdered_port_connection;
 }
 
 antlrcpp::Any Verilog2001Parser::Ordered_port_connectionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOrdered_port_connection(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOrdered_port_connection(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Ordered_port_connectionContext> Verilog2001Parser::ordered_port_connection() {
-  Ref<Ordered_port_connectionContext> _localctx = std::make_shared<Ordered_port_connectionContext>(_ctx, getState());
+Verilog2001Parser::Ordered_port_connectionContext* Verilog2001Parser::ordered_port_connection() {
+  Ordered_port_connectionContext *_localctx = _tracker.createInstance<Ordered_port_connectionContext>(_ctx, getState());
   enterRule(_localctx, 238, Verilog2001Parser::RuleOrdered_port_connection);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2226);
     _errHandler->sync(this);
@@ -10234,11 +10382,12 @@ Ref<Verilog2001Parser::Ordered_port_connectionContext> Verilog2001Parser::ordere
       alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 238, _ctx);
     }
     setState(2230);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -10275,42 +10424,42 @@ Ref<Verilog2001Parser::Ordered_port_connectionContext> Verilog2001Parser::ordere
 
 //----------------- Named_port_connectionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Named_port_connectionContext::Named_port_connectionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Named_port_connectionContext::Named_port_connectionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::Named_port_connectionContext::port_identifier() {
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::Named_port_connectionContext::port_identifier() {
   return getRuleContext<Verilog2001Parser::Port_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Named_port_connectionContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Named_port_connectionContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Named_port_connectionContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Named_port_connectionContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Named_port_connectionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Named_port_connectionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Named_port_connectionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Named_port_connectionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNamed_port_connection;
 }
 
 antlrcpp::Any Verilog2001Parser::Named_port_connectionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNamed_port_connection(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNamed_port_connection(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Named_port_connectionContext> Verilog2001Parser::named_port_connection() {
-  Ref<Named_port_connectionContext> _localctx = std::make_shared<Named_port_connectionContext>(_ctx, getState());
+Verilog2001Parser::Named_port_connectionContext* Verilog2001Parser::named_port_connection() {
+  Named_port_connectionContext *_localctx = _tracker.createInstance<Named_port_connectionContext>(_ctx, getState());
   enterRule(_localctx, 240, Verilog2001Parser::RuleNamed_port_connection);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -10334,11 +10483,12 @@ Ref<Verilog2001Parser::Named_port_connectionContext> Verilog2001Parser::named_po
     setState(2240);
     match(Verilog2001Parser::T__15);
     setState(2242);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -10377,34 +10527,34 @@ Ref<Verilog2001Parser::Named_port_connectionContext> Verilog2001Parser::named_po
 
 //----------------- Generated_instantiationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generated_instantiationContext::Generated_instantiationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generated_instantiationContext::Generated_instantiationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Generate_itemContext>> Verilog2001Parser::Generated_instantiationContext::generate_item() {
+std::vector<Verilog2001Parser::Generate_itemContext *> Verilog2001Parser::Generated_instantiationContext::generate_item() {
   return getRuleContexts<Verilog2001Parser::Generate_itemContext>();
 }
 
-Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::Generated_instantiationContext::generate_item(int i) {
-  return getRuleContext<Verilog2001Parser::Generate_itemContext>((size_t)i);
+Verilog2001Parser::Generate_itemContext* Verilog2001Parser::Generated_instantiationContext::generate_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Generate_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Generated_instantiationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generated_instantiationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerated_instantiation;
 }
 
 antlrcpp::Any Verilog2001Parser::Generated_instantiationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerated_instantiation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerated_instantiation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::generated_instantiation() {
-  Ref<Generated_instantiationContext> _localctx = std::make_shared<Generated_instantiationContext>(_ctx, getState());
+Verilog2001Parser::Generated_instantiationContext* Verilog2001Parser::generated_instantiation() {
+  Generated_instantiationContext *_localctx = _tracker.createInstance<Generated_instantiationContext>(_ctx, getState());
   enterRule(_localctx, 242, Verilog2001Parser::RuleGenerated_instantiation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -10416,7 +10566,7 @@ Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::genera
     setState(2250);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__15)
       | (1ULL << Verilog2001Parser::T__22)
       | (1ULL << Verilog2001Parser::T__25)
@@ -10436,7 +10586,7 @@ Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::genera
       | (1ULL << Verilog2001Parser::T__46)
       | (1ULL << Verilog2001Parser::T__47)
       | (1ULL << Verilog2001Parser::T__48)
-      | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 66)) & ((1ULL << (Verilog2001Parser::T__65 - 66))
       | (1ULL << (Verilog2001Parser::T__68 - 66))
       | (1ULL << (Verilog2001Parser::T__70 - 66))
@@ -10495,28 +10645,28 @@ Ref<Verilog2001Parser::Generated_instantiationContext> Verilog2001Parser::genera
 
 //----------------- Generate_item_or_nullContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_item_or_nullContext::Generate_item_or_nullContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_item_or_nullContext::Generate_item_or_nullContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::Generate_item_or_nullContext::generate_item() {
+Verilog2001Parser::Generate_itemContext* Verilog2001Parser::Generate_item_or_nullContext::generate_item() {
   return getRuleContext<Verilog2001Parser::Generate_itemContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Generate_item_or_nullContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_item_or_nullContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_item_or_null;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_item_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_item_or_null(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_item_or_null(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_item_or_nullContext> Verilog2001Parser::generate_item_or_null() {
-  Ref<Generate_item_or_nullContext> _localctx = std::make_shared<Generate_item_or_nullContext>(_ctx, getState());
+Verilog2001Parser::Generate_item_or_nullContext* Verilog2001Parser::generate_item_or_null() {
+  Generate_item_or_nullContext *_localctx = _tracker.createInstance<Generate_item_or_nullContext>(_ctx, getState());
   enterRule(_localctx, 244, Verilog2001Parser::RuleGenerate_item_or_null);
 
   auto onExit = finally([=] {
@@ -10612,44 +10762,44 @@ Ref<Verilog2001Parser::Generate_item_or_nullContext> Verilog2001Parser::generate
 
 //----------------- Generate_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_itemContext::Generate_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_itemContext::Generate_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Generate_conditional_statementContext> Verilog2001Parser::Generate_itemContext::generate_conditional_statement() {
+Verilog2001Parser::Generate_conditional_statementContext* Verilog2001Parser::Generate_itemContext::generate_conditional_statement() {
   return getRuleContext<Verilog2001Parser::Generate_conditional_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Generate_case_statementContext> Verilog2001Parser::Generate_itemContext::generate_case_statement() {
+Verilog2001Parser::Generate_case_statementContext* Verilog2001Parser::Generate_itemContext::generate_case_statement() {
   return getRuleContext<Verilog2001Parser::Generate_case_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Generate_loop_statementContext> Verilog2001Parser::Generate_itemContext::generate_loop_statement() {
+Verilog2001Parser::Generate_loop_statementContext* Verilog2001Parser::Generate_itemContext::generate_loop_statement() {
   return getRuleContext<Verilog2001Parser::Generate_loop_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::Generate_itemContext::generate_block() {
+Verilog2001Parser::Generate_blockContext* Verilog2001Parser::Generate_itemContext::generate_block() {
   return getRuleContext<Verilog2001Parser::Generate_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_or_generate_itemContext> Verilog2001Parser::Generate_itemContext::module_or_generate_item() {
+Verilog2001Parser::Module_or_generate_itemContext* Verilog2001Parser::Generate_itemContext::module_or_generate_item() {
   return getRuleContext<Verilog2001Parser::Module_or_generate_itemContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Generate_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::generate_item() {
-  Ref<Generate_itemContext> _localctx = std::make_shared<Generate_itemContext>(_ctx, getState());
+Verilog2001Parser::Generate_itemContext* Verilog2001Parser::generate_item() {
+  Generate_itemContext *_localctx = _tracker.createInstance<Generate_itemContext>(_ctx, getState());
   enterRule(_localctx, 246, Verilog2001Parser::RuleGenerate_item);
 
   auto onExit = finally([=] {
@@ -10762,36 +10912,36 @@ Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::generate_item() 
 
 //----------------- Generate_conditional_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_conditional_statementContext::Generate_conditional_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_conditional_statementContext::Generate_conditional_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Generate_conditional_statementContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Generate_conditional_statementContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Generate_item_or_nullContext>> Verilog2001Parser::Generate_conditional_statementContext::generate_item_or_null() {
+std::vector<Verilog2001Parser::Generate_item_or_nullContext *> Verilog2001Parser::Generate_conditional_statementContext::generate_item_or_null() {
   return getRuleContexts<Verilog2001Parser::Generate_item_or_nullContext>();
 }
 
-Ref<Verilog2001Parser::Generate_item_or_nullContext> Verilog2001Parser::Generate_conditional_statementContext::generate_item_or_null(int i) {
-  return getRuleContext<Verilog2001Parser::Generate_item_or_nullContext>((size_t)i);
+Verilog2001Parser::Generate_item_or_nullContext* Verilog2001Parser::Generate_conditional_statementContext::generate_item_or_null(size_t i) {
+  return getRuleContext<Verilog2001Parser::Generate_item_or_nullContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Generate_conditional_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_conditional_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_conditional_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_conditional_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_conditional_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_conditional_statementContext> Verilog2001Parser::generate_conditional_statement() {
-  Ref<Generate_conditional_statementContext> _localctx = std::make_shared<Generate_conditional_statementContext>(_ctx, getState());
+Verilog2001Parser::Generate_conditional_statementContext* Verilog2001Parser::generate_conditional_statement() {
+  Generate_conditional_statementContext *_localctx = _tracker.createInstance<Generate_conditional_statementContext>(_ctx, getState());
   enterRule(_localctx, 248, Verilog2001Parser::RuleGenerate_conditional_statement);
 
   auto onExit = finally([=] {
@@ -10835,38 +10985,38 @@ Ref<Verilog2001Parser::Generate_conditional_statementContext> Verilog2001Parser:
 
 //----------------- Generate_case_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_case_statementContext::Generate_case_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_case_statementContext::Generate_case_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Generate_case_statementContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Generate_case_statementContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Genvar_case_itemContext>> Verilog2001Parser::Generate_case_statementContext::genvar_case_item() {
+std::vector<Verilog2001Parser::Genvar_case_itemContext *> Verilog2001Parser::Generate_case_statementContext::genvar_case_item() {
   return getRuleContexts<Verilog2001Parser::Genvar_case_itemContext>();
 }
 
-Ref<Verilog2001Parser::Genvar_case_itemContext> Verilog2001Parser::Generate_case_statementContext::genvar_case_item(int i) {
-  return getRuleContext<Verilog2001Parser::Genvar_case_itemContext>((size_t)i);
+Verilog2001Parser::Genvar_case_itemContext* Verilog2001Parser::Generate_case_statementContext::genvar_case_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Genvar_case_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Generate_case_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_case_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_case_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_case_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_case_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_case_statementContext> Verilog2001Parser::generate_case_statement() {
-  Ref<Generate_case_statementContext> _localctx = std::make_shared<Generate_case_statementContext>(_ctx, getState());
+Verilog2001Parser::Generate_case_statementContext* Verilog2001Parser::generate_case_statement() {
+  Generate_case_statementContext *_localctx = _tracker.createInstance<Generate_case_statementContext>(_ctx, getState());
   enterRule(_localctx, 250, Verilog2001Parser::RuleGenerate_case_statement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -10886,10 +11036,10 @@ Ref<Verilog2001Parser::Generate_case_statementContext> Verilog2001Parser::genera
     setState(2283);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
       | (1ULL << Verilog2001Parser::T__15)
-      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -10931,38 +11081,38 @@ Ref<Verilog2001Parser::Generate_case_statementContext> Verilog2001Parser::genera
 
 //----------------- Genvar_case_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_case_itemContext::Genvar_case_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_case_itemContext::Genvar_case_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Genvar_case_itemContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Genvar_case_itemContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Genvar_case_itemContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Genvar_case_itemContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Generate_item_or_nullContext> Verilog2001Parser::Genvar_case_itemContext::generate_item_or_null() {
+Verilog2001Parser::Generate_item_or_nullContext* Verilog2001Parser::Genvar_case_itemContext::generate_item_or_null() {
   return getRuleContext<Verilog2001Parser::Generate_item_or_nullContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_case_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_case_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_case_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_case_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_case_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_case_itemContext> Verilog2001Parser::genvar_case_item() {
-  Ref<Genvar_case_itemContext> _localctx = std::make_shared<Genvar_case_itemContext>(_ctx, getState());
+Verilog2001Parser::Genvar_case_itemContext* Verilog2001Parser::genvar_case_item() {
+  Genvar_case_itemContext *_localctx = _tracker.createInstance<Genvar_case_itemContext>(_ctx, getState());
   enterRule(_localctx, 252, Verilog2001Parser::RuleGenvar_case_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11020,6 +11170,7 @@ Ref<Verilog2001Parser::Genvar_case_itemContext> Verilog2001Parser::genvar_case_i
         setState(2299);
         match(Verilog2001Parser::T__5);
         setState(2301);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__64) {
@@ -11047,40 +11198,40 @@ Ref<Verilog2001Parser::Genvar_case_itemContext> Verilog2001Parser::genvar_case_i
 
 //----------------- Generate_loop_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_loop_statementContext::Generate_loop_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_loop_statementContext::Generate_loop_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Genvar_assignmentContext>> Verilog2001Parser::Generate_loop_statementContext::genvar_assignment() {
+std::vector<Verilog2001Parser::Genvar_assignmentContext *> Verilog2001Parser::Generate_loop_statementContext::genvar_assignment() {
   return getRuleContexts<Verilog2001Parser::Genvar_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Genvar_assignmentContext> Verilog2001Parser::Generate_loop_statementContext::genvar_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Genvar_assignmentContext>((size_t)i);
+Verilog2001Parser::Genvar_assignmentContext* Verilog2001Parser::Generate_loop_statementContext::genvar_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Genvar_assignmentContext>(i);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Generate_loop_statementContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Generate_loop_statementContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::Generate_loop_statementContext::generate_block() {
+Verilog2001Parser::Generate_blockContext* Verilog2001Parser::Generate_loop_statementContext::generate_block() {
   return getRuleContext<Verilog2001Parser::Generate_blockContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Generate_loop_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_loop_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_loop_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_loop_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_loop_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_loop_statementContext> Verilog2001Parser::generate_loop_statement() {
-  Ref<Generate_loop_statementContext> _localctx = std::make_shared<Generate_loop_statementContext>(_ctx, getState());
+Verilog2001Parser::Generate_loop_statementContext* Verilog2001Parser::generate_loop_statement() {
+  Generate_loop_statementContext *_localctx = _tracker.createInstance<Generate_loop_statementContext>(_ctx, getState());
   enterRule(_localctx, 254, Verilog2001Parser::RuleGenerate_loop_statement);
 
   auto onExit = finally([=] {
@@ -11119,32 +11270,32 @@ Ref<Verilog2001Parser::Generate_loop_statementContext> Verilog2001Parser::genera
 
 //----------------- Genvar_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_assignmentContext::Genvar_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_assignmentContext::Genvar_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::Genvar_assignmentContext::genvar_identifier() {
+Verilog2001Parser::Genvar_identifierContext* Verilog2001Parser::Genvar_assignmentContext::genvar_identifier() {
   return getRuleContext<Verilog2001Parser::Genvar_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Genvar_assignmentContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Genvar_assignmentContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_assignmentContext> Verilog2001Parser::genvar_assignment() {
-  Ref<Genvar_assignmentContext> _localctx = std::make_shared<Genvar_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Genvar_assignmentContext* Verilog2001Parser::genvar_assignment() {
+  Genvar_assignmentContext *_localctx = _tracker.createInstance<Genvar_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 256, Verilog2001Parser::RuleGenvar_assignment);
 
   auto onExit = finally([=] {
@@ -11171,38 +11322,38 @@ Ref<Verilog2001Parser::Genvar_assignmentContext> Verilog2001Parser::genvar_assig
 
 //----------------- Generate_blockContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_blockContext::Generate_blockContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_blockContext::Generate_blockContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Generate_block_identifierContext> Verilog2001Parser::Generate_blockContext::generate_block_identifier() {
+Verilog2001Parser::Generate_block_identifierContext* Verilog2001Parser::Generate_blockContext::generate_block_identifier() {
   return getRuleContext<Verilog2001Parser::Generate_block_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Generate_itemContext>> Verilog2001Parser::Generate_blockContext::generate_item() {
+std::vector<Verilog2001Parser::Generate_itemContext *> Verilog2001Parser::Generate_blockContext::generate_item() {
   return getRuleContexts<Verilog2001Parser::Generate_itemContext>();
 }
 
-Ref<Verilog2001Parser::Generate_itemContext> Verilog2001Parser::Generate_blockContext::generate_item(int i) {
-  return getRuleContext<Verilog2001Parser::Generate_itemContext>((size_t)i);
+Verilog2001Parser::Generate_itemContext* Verilog2001Parser::Generate_blockContext::generate_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Generate_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Generate_blockContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_blockContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_block;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_blockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_block(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_block(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block() {
-  Ref<Generate_blockContext> _localctx = std::make_shared<Generate_blockContext>(_ctx, getState());
+Verilog2001Parser::Generate_blockContext* Verilog2001Parser::generate_block() {
+  Generate_blockContext *_localctx = _tracker.createInstance<Generate_blockContext>(_ctx, getState());
   enterRule(_localctx, 258, Verilog2001Parser::RuleGenerate_block);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11212,6 +11363,7 @@ Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block(
     setState(2320);
     match(Verilog2001Parser::T__103);
     setState(2323);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -11223,7 +11375,7 @@ Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block(
     setState(2328);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__15)
       | (1ULL << Verilog2001Parser::T__22)
       | (1ULL << Verilog2001Parser::T__25)
@@ -11243,7 +11395,7 @@ Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block(
       | (1ULL << Verilog2001Parser::T__46)
       | (1ULL << Verilog2001Parser::T__47)
       | (1ULL << Verilog2001Parser::T__48)
-      | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << Verilog2001Parser::T__49))) != 0) || ((((_la - 66) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 66)) & ((1ULL << (Verilog2001Parser::T__65 - 66))
       | (1ULL << (Verilog2001Parser::T__68 - 66))
       | (1ULL << (Verilog2001Parser::T__70 - 66))
@@ -11302,38 +11454,38 @@ Ref<Verilog2001Parser::Generate_blockContext> Verilog2001Parser::generate_block(
 
 //----------------- Continuous_assignContext ------------------------------------------------------------------
 
-Verilog2001Parser::Continuous_assignContext::Continuous_assignContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Continuous_assignContext::Continuous_assignContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_net_assignmentsContext> Verilog2001Parser::Continuous_assignContext::list_of_net_assignments() {
+Verilog2001Parser::List_of_net_assignmentsContext* Verilog2001Parser::Continuous_assignContext::list_of_net_assignments() {
   return getRuleContext<Verilog2001Parser::List_of_net_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::Drive_strengthContext> Verilog2001Parser::Continuous_assignContext::drive_strength() {
+Verilog2001Parser::Drive_strengthContext* Verilog2001Parser::Continuous_assignContext::drive_strength() {
   return getRuleContext<Verilog2001Parser::Drive_strengthContext>(0);
 }
 
-Ref<Verilog2001Parser::Delay3Context> Verilog2001Parser::Continuous_assignContext::delay3() {
+Verilog2001Parser::Delay3Context* Verilog2001Parser::Continuous_assignContext::delay3() {
   return getRuleContext<Verilog2001Parser::Delay3Context>(0);
 }
 
 
-ssize_t Verilog2001Parser::Continuous_assignContext::getRuleIndex() const {
+size_t Verilog2001Parser::Continuous_assignContext::getRuleIndex() const {
   return Verilog2001Parser::RuleContinuous_assign;
 }
 
 antlrcpp::Any Verilog2001Parser::Continuous_assignContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitContinuous_assign(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitContinuous_assign(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::continuous_assign() {
-  Ref<Continuous_assignContext> _localctx = std::make_shared<Continuous_assignContext>(_ctx, getState());
+Verilog2001Parser::Continuous_assignContext* Verilog2001Parser::continuous_assign() {
+  Continuous_assignContext *_localctx = _tracker.createInstance<Continuous_assignContext>(_ctx, getState());
   enterRule(_localctx, 260, Verilog2001Parser::RuleContinuous_assign);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11343,9 +11495,10 @@ Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::continuous_a
     setState(2333);
     match(Verilog2001Parser::T__105);
     setState(2335);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
-    if ((((_la & ~(ssize_t)0x3f) == 0) &&
+    if ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__40)
       | (1ULL << Verilog2001Parser::T__41)
       | (1ULL << Verilog2001Parser::T__51)
@@ -11360,6 +11513,7 @@ Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::continuous_a
       drive_strength();
     }
     setState(2338);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__14) {
@@ -11383,34 +11537,34 @@ Ref<Verilog2001Parser::Continuous_assignContext> Verilog2001Parser::continuous_a
 
 //----------------- List_of_net_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_net_assignmentsContext::List_of_net_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_net_assignmentsContext::List_of_net_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Net_assignmentContext>> Verilog2001Parser::List_of_net_assignmentsContext::net_assignment() {
+std::vector<Verilog2001Parser::Net_assignmentContext *> Verilog2001Parser::List_of_net_assignmentsContext::net_assignment() {
   return getRuleContexts<Verilog2001Parser::Net_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Net_assignmentContext> Verilog2001Parser::List_of_net_assignmentsContext::net_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Net_assignmentContext>((size_t)i);
+Verilog2001Parser::Net_assignmentContext* Verilog2001Parser::List_of_net_assignmentsContext::net_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Net_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_net_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_net_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_net_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_net_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_net_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_net_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_net_assignmentsContext> Verilog2001Parser::list_of_net_assignments() {
-  Ref<List_of_net_assignmentsContext> _localctx = std::make_shared<List_of_net_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::List_of_net_assignmentsContext* Verilog2001Parser::list_of_net_assignments() {
+  List_of_net_assignmentsContext *_localctx = _tracker.createInstance<List_of_net_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 262, Verilog2001Parser::RuleList_of_net_assignments);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11444,32 +11598,32 @@ Ref<Verilog2001Parser::List_of_net_assignmentsContext> Verilog2001Parser::list_o
 
 //----------------- Net_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_assignmentContext::Net_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_assignmentContext::Net_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::Net_assignmentContext::net_lvalue() {
+Verilog2001Parser::Net_lvalueContext* Verilog2001Parser::Net_assignmentContext::net_lvalue() {
   return getRuleContext<Verilog2001Parser::Net_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Net_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Net_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_assignmentContext> Verilog2001Parser::net_assignment() {
-  Ref<Net_assignmentContext> _localctx = std::make_shared<Net_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Net_assignmentContext* Verilog2001Parser::net_assignment() {
+  Net_assignmentContext *_localctx = _tracker.createInstance<Net_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 264, Verilog2001Parser::RuleNet_assignment);
 
   auto onExit = finally([=] {
@@ -11496,28 +11650,28 @@ Ref<Verilog2001Parser::Net_assignmentContext> Verilog2001Parser::net_assignment(
 
 //----------------- Initial_constructContext ------------------------------------------------------------------
 
-Verilog2001Parser::Initial_constructContext::Initial_constructContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Initial_constructContext::Initial_constructContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Initial_constructContext::statement() {
+Verilog2001Parser::StatementContext* Verilog2001Parser::Initial_constructContext::statement() {
   return getRuleContext<Verilog2001Parser::StatementContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Initial_constructContext::getRuleIndex() const {
+size_t Verilog2001Parser::Initial_constructContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInitial_construct;
 }
 
 antlrcpp::Any Verilog2001Parser::Initial_constructContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInitial_construct(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInitial_construct(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Initial_constructContext> Verilog2001Parser::initial_construct() {
-  Ref<Initial_constructContext> _localctx = std::make_shared<Initial_constructContext>(_ctx, getState());
+Verilog2001Parser::Initial_constructContext* Verilog2001Parser::initial_construct() {
+  Initial_constructContext *_localctx = _tracker.createInstance<Initial_constructContext>(_ctx, getState());
   enterRule(_localctx, 266, Verilog2001Parser::RuleInitial_construct);
 
   auto onExit = finally([=] {
@@ -11542,28 +11696,28 @@ Ref<Verilog2001Parser::Initial_constructContext> Verilog2001Parser::initial_cons
 
 //----------------- Always_constructContext ------------------------------------------------------------------
 
-Verilog2001Parser::Always_constructContext::Always_constructContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Always_constructContext::Always_constructContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Always_constructContext::statement() {
+Verilog2001Parser::StatementContext* Verilog2001Parser::Always_constructContext::statement() {
   return getRuleContext<Verilog2001Parser::StatementContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Always_constructContext::getRuleIndex() const {
+size_t Verilog2001Parser::Always_constructContext::getRuleIndex() const {
   return Verilog2001Parser::RuleAlways_construct;
 }
 
 antlrcpp::Any Verilog2001Parser::Always_constructContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitAlways_construct(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitAlways_construct(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Always_constructContext> Verilog2001Parser::always_construct() {
-  Ref<Always_constructContext> _localctx = std::make_shared<Always_constructContext>(_ctx, getState());
+Verilog2001Parser::Always_constructContext* Verilog2001Parser::always_construct() {
+  Always_constructContext *_localctx = _tracker.createInstance<Always_constructContext>(_ctx, getState());
   enterRule(_localctx, 268, Verilog2001Parser::RuleAlways_construct);
 
   auto onExit = finally([=] {
@@ -11588,38 +11742,38 @@ Ref<Verilog2001Parser::Always_constructContext> Verilog2001Parser::always_constr
 
 //----------------- Blocking_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Blocking_assignmentContext::Blocking_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Blocking_assignmentContext::Blocking_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::Blocking_assignmentContext::variable_lvalue() {
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::Blocking_assignmentContext::variable_lvalue() {
   return getRuleContext<Verilog2001Parser::Variable_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Blocking_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Blocking_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::Blocking_assignmentContext::delay_or_event_control() {
+Verilog2001Parser::Delay_or_event_controlContext* Verilog2001Parser::Blocking_assignmentContext::delay_or_event_control() {
   return getRuleContext<Verilog2001Parser::Delay_or_event_controlContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Blocking_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Blocking_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBlocking_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Blocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBlocking_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBlocking_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Blocking_assignmentContext> Verilog2001Parser::blocking_assignment() {
-  Ref<Blocking_assignmentContext> _localctx = std::make_shared<Blocking_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Blocking_assignmentContext* Verilog2001Parser::blocking_assignment() {
+  Blocking_assignmentContext *_localctx = _tracker.createInstance<Blocking_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 270, Verilog2001Parser::RuleBlocking_assignment);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11631,6 +11785,7 @@ Ref<Verilog2001Parser::Blocking_assignmentContext> Verilog2001Parser::blocking_a
     setState(2362);
     match(Verilog2001Parser::T__50);
     setState(2364);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__14 || _la == Verilog2001Parser::T__114
@@ -11654,38 +11809,38 @@ Ref<Verilog2001Parser::Blocking_assignmentContext> Verilog2001Parser::blocking_a
 
 //----------------- Nonblocking_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Nonblocking_assignmentContext::Nonblocking_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Nonblocking_assignmentContext::Nonblocking_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::Nonblocking_assignmentContext::variable_lvalue() {
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::Nonblocking_assignmentContext::variable_lvalue() {
   return getRuleContext<Verilog2001Parser::Variable_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Nonblocking_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Nonblocking_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::Nonblocking_assignmentContext::delay_or_event_control() {
+Verilog2001Parser::Delay_or_event_controlContext* Verilog2001Parser::Nonblocking_assignmentContext::delay_or_event_control() {
   return getRuleContext<Verilog2001Parser::Delay_or_event_controlContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Nonblocking_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Nonblocking_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNonblocking_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Nonblocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNonblocking_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNonblocking_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Nonblocking_assignmentContext> Verilog2001Parser::nonblocking_assignment() {
-  Ref<Nonblocking_assignmentContext> _localctx = std::make_shared<Nonblocking_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Nonblocking_assignmentContext* Verilog2001Parser::nonblocking_assignment() {
+  Nonblocking_assignmentContext *_localctx = _tracker.createInstance<Nonblocking_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 272, Verilog2001Parser::RuleNonblocking_assignment);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11697,6 +11852,7 @@ Ref<Verilog2001Parser::Nonblocking_assignmentContext> Verilog2001Parser::nonbloc
     setState(2369);
     match(Verilog2001Parser::T__108);
     setState(2371);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__14 || _la == Verilog2001Parser::T__114
@@ -11720,40 +11876,40 @@ Ref<Verilog2001Parser::Nonblocking_assignmentContext> Verilog2001Parser::nonbloc
 
 //----------------- Procedural_continuous_assignmentsContext ------------------------------------------------------------------
 
-Verilog2001Parser::Procedural_continuous_assignmentsContext::Procedural_continuous_assignmentsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Procedural_continuous_assignmentsContext::Procedural_continuous_assignmentsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::Procedural_continuous_assignmentsContext::variable_assignment() {
+Verilog2001Parser::Variable_assignmentContext* Verilog2001Parser::Procedural_continuous_assignmentsContext::variable_assignment() {
   return getRuleContext<Verilog2001Parser::Variable_assignmentContext>(0);
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::Procedural_continuous_assignmentsContext::variable_lvalue() {
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::Procedural_continuous_assignmentsContext::variable_lvalue() {
   return getRuleContext<Verilog2001Parser::Variable_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_assignmentContext> Verilog2001Parser::Procedural_continuous_assignmentsContext::net_assignment() {
+Verilog2001Parser::Net_assignmentContext* Verilog2001Parser::Procedural_continuous_assignmentsContext::net_assignment() {
   return getRuleContext<Verilog2001Parser::Net_assignmentContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::Procedural_continuous_assignmentsContext::net_lvalue() {
+Verilog2001Parser::Net_lvalueContext* Verilog2001Parser::Procedural_continuous_assignmentsContext::net_lvalue() {
   return getRuleContext<Verilog2001Parser::Net_lvalueContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Procedural_continuous_assignmentsContext::getRuleIndex() const {
+size_t Verilog2001Parser::Procedural_continuous_assignmentsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleProcedural_continuous_assignments;
 }
 
 antlrcpp::Any Verilog2001Parser::Procedural_continuous_assignmentsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitProcedural_continuous_assignments(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitProcedural_continuous_assignments(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Procedural_continuous_assignmentsContext> Verilog2001Parser::procedural_continuous_assignments() {
-  Ref<Procedural_continuous_assignmentsContext> _localctx = std::make_shared<Procedural_continuous_assignmentsContext>(_ctx, getState());
+Verilog2001Parser::Procedural_continuous_assignmentsContext* Verilog2001Parser::procedural_continuous_assignments() {
+  Procedural_continuous_assignmentsContext *_localctx = _tracker.createInstance<Procedural_continuous_assignmentsContext>(_ctx, getState());
   enterRule(_localctx, 274, Verilog2001Parser::RuleProcedural_continuous_assignments);
 
   auto onExit = finally([=] {
@@ -11831,32 +11987,32 @@ Ref<Verilog2001Parser::Procedural_continuous_assignmentsContext> Verilog2001Pars
 
 //----------------- Function_blocking_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_blocking_assignmentContext::Function_blocking_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_blocking_assignmentContext::Function_blocking_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::Function_blocking_assignmentContext::variable_lvalue() {
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::Function_blocking_assignmentContext::variable_lvalue() {
   return getRuleContext<Verilog2001Parser::Variable_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_blocking_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_blocking_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_blocking_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_blocking_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_blocking_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_blocking_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_blocking_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_blocking_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_blocking_assignmentContext> Verilog2001Parser::function_blocking_assignment() {
-  Ref<Function_blocking_assignmentContext> _localctx = std::make_shared<Function_blocking_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Function_blocking_assignmentContext* Verilog2001Parser::function_blocking_assignment() {
+  Function_blocking_assignmentContext *_localctx = _tracker.createInstance<Function_blocking_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 276, Verilog2001Parser::RuleFunction_blocking_assignment);
 
   auto onExit = finally([=] {
@@ -11883,38 +12039,38 @@ Ref<Verilog2001Parser::Function_blocking_assignmentContext> Verilog2001Parser::f
 
 //----------------- Function_statement_or_nullContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_statement_or_nullContext::Function_statement_or_nullContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_statement_or_nullContext::Function_statement_or_nullContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::Function_statement_or_nullContext::function_statement() {
+Verilog2001Parser::Function_statementContext* Verilog2001Parser::Function_statement_or_nullContext::function_statement() {
   return getRuleContext<Verilog2001Parser::Function_statementContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Function_statement_or_nullContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Function_statement_or_nullContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Function_statement_or_nullContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Function_statement_or_nullContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_statement_or_nullContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_statement_or_nullContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_statement_or_null;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_statement_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_statement_or_null(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_statement_or_null(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::function_statement_or_null() {
-  Ref<Function_statement_or_nullContext> _localctx = std::make_shared<Function_statement_or_nullContext>(_ctx, getState());
+Verilog2001Parser::Function_statement_or_nullContext* Verilog2001Parser::function_statement_or_null() {
+  Function_statement_or_nullContext *_localctx = _tracker.createInstance<Function_statement_or_nullContext>(_ctx, getState());
   enterRule(_localctx, 278, Verilog2001Parser::RuleFunction_statement_or_null);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -11961,56 +12117,57 @@ Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::fun
 
 //----------------- Function_seq_blockContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_seq_blockContext::Function_seq_blockContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_seq_blockContext::Function_seq_blockContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::Function_seq_blockContext::block_identifier() {
+Verilog2001Parser::Block_identifierContext* Verilog2001Parser::Function_seq_blockContext::block_identifier() {
   return getRuleContext<Verilog2001Parser::Block_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Function_statementContext>> Verilog2001Parser::Function_seq_blockContext::function_statement() {
+std::vector<Verilog2001Parser::Function_statementContext *> Verilog2001Parser::Function_seq_blockContext::function_statement() {
   return getRuleContexts<Verilog2001Parser::Function_statementContext>();
 }
 
-Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::Function_seq_blockContext::function_statement(int i) {
-  return getRuleContext<Verilog2001Parser::Function_statementContext>((size_t)i);
+Verilog2001Parser::Function_statementContext* Verilog2001Parser::Function_seq_blockContext::function_statement(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_statementContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Block_item_declarationContext>> Verilog2001Parser::Function_seq_blockContext::block_item_declaration() {
+std::vector<Verilog2001Parser::Block_item_declarationContext *> Verilog2001Parser::Function_seq_blockContext::block_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Block_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Function_seq_blockContext::block_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>((size_t)i);
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Function_seq_blockContext::block_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_seq_blockContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_seq_blockContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_seq_block;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_seq_blockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_seq_block(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_seq_block(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::function_seq_block() {
-  Ref<Function_seq_blockContext> _localctx = std::make_shared<Function_seq_blockContext>(_ctx, getState());
+Verilog2001Parser::Function_seq_blockContext* Verilog2001Parser::function_seq_block() {
+  Function_seq_blockContext *_localctx = _tracker.createInstance<Function_seq_blockContext>(_ctx, getState());
   enterRule(_localctx, 280, Verilog2001Parser::RuleFunction_seq_block);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2403);
     match(Verilog2001Parser::T__103);
     setState(2412);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -12036,7 +12193,7 @@ Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::function_se
     _la = _input->LA(1);
     while (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 99) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
       | (1ULL << (Verilog2001Parser::T__100 - 99))
       | (1ULL << (Verilog2001Parser::T__102 - 99))
@@ -12046,7 +12203,7 @@ Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::function_se
       | (1ULL << (Verilog2001Parser::T__122 - 99))
       | (1ULL << (Verilog2001Parser::T__123 - 99))
       | (1ULL << (Verilog2001Parser::T__124 - 99))
-      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 176)) & ((1ULL << (Verilog2001Parser::Escaped_identifier - 176))
       | (1ULL << (Verilog2001Parser::Simple_identifier - 176))
       | (1ULL << (Verilog2001Parser::Dollar_Identifier - 176)))) != 0)) {
@@ -12071,32 +12228,32 @@ Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::function_se
 
 //----------------- Variable_assignmentContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_assignmentContext::Variable_assignmentContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_assignmentContext::Variable_assignmentContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::Variable_assignmentContext::variable_lvalue() {
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::Variable_assignmentContext::variable_lvalue() {
   return getRuleContext<Verilog2001Parser::Variable_lvalueContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Variable_assignmentContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Variable_assignmentContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Variable_assignmentContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_assignmentContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_assignment;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_assignmentContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_assignment(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_assignment(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::variable_assignment() {
-  Ref<Variable_assignmentContext> _localctx = std::make_shared<Variable_assignmentContext>(_ctx, getState());
+Verilog2001Parser::Variable_assignmentContext* Verilog2001Parser::variable_assignment() {
+  Variable_assignmentContext *_localctx = _tracker.createInstance<Variable_assignmentContext>(_ctx, getState());
   enterRule(_localctx, 282, Verilog2001Parser::RuleVariable_assignment);
 
   auto onExit = finally([=] {
@@ -12123,56 +12280,57 @@ Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::variable_a
 
 //----------------- Par_blockContext ------------------------------------------------------------------
 
-Verilog2001Parser::Par_blockContext::Par_blockContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Par_blockContext::Par_blockContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::Par_blockContext::block_identifier() {
+Verilog2001Parser::Block_identifierContext* Verilog2001Parser::Par_blockContext::block_identifier() {
   return getRuleContext<Verilog2001Parser::Block_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::StatementContext>> Verilog2001Parser::Par_blockContext::statement() {
+std::vector<Verilog2001Parser::StatementContext *> Verilog2001Parser::Par_blockContext::statement() {
   return getRuleContexts<Verilog2001Parser::StatementContext>();
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Par_blockContext::statement(int i) {
-  return getRuleContext<Verilog2001Parser::StatementContext>((size_t)i);
+Verilog2001Parser::StatementContext* Verilog2001Parser::Par_blockContext::statement(size_t i) {
+  return getRuleContext<Verilog2001Parser::StatementContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Block_item_declarationContext>> Verilog2001Parser::Par_blockContext::block_item_declaration() {
+std::vector<Verilog2001Parser::Block_item_declarationContext *> Verilog2001Parser::Par_blockContext::block_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Block_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Par_blockContext::block_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>((size_t)i);
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Par_blockContext::block_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Par_blockContext::getRuleIndex() const {
+size_t Verilog2001Parser::Par_blockContext::getRuleIndex() const {
   return Verilog2001Parser::RulePar_block;
 }
 
 antlrcpp::Any Verilog2001Parser::Par_blockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPar_block(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPar_block(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::par_block() {
-  Ref<Par_blockContext> _localctx = std::make_shared<Par_blockContext>(_ctx, getState());
+Verilog2001Parser::Par_blockContext* Verilog2001Parser::par_block() {
+  Par_blockContext *_localctx = _tracker.createInstance<Par_blockContext>(_ctx, getState());
   enterRule(_localctx, 284, Verilog2001Parser::RulePar_block);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2426);
     match(Verilog2001Parser::T__112);
     setState(2435);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -12196,10 +12354,10 @@ Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::par_block() {
     setState(2440);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__14)
       | (1ULL << Verilog2001Parser::T__15)
-      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 99) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
       | (1ULL << (Verilog2001Parser::T__100 - 99))
       | (1ULL << (Verilog2001Parser::T__102 - 99))
@@ -12217,7 +12375,7 @@ Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::par_block() {
       | (1ULL << (Verilog2001Parser::T__122 - 99))
       | (1ULL << (Verilog2001Parser::T__123 - 99))
       | (1ULL << (Verilog2001Parser::T__124 - 99))
-      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 176)) & ((1ULL << (Verilog2001Parser::Escaped_identifier - 176))
       | (1ULL << (Verilog2001Parser::Simple_identifier - 176))
       | (1ULL << (Verilog2001Parser::Dollar_Identifier - 176)))) != 0)) {
@@ -12242,56 +12400,57 @@ Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::par_block() {
 
 //----------------- Seq_blockContext ------------------------------------------------------------------
 
-Verilog2001Parser::Seq_blockContext::Seq_blockContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Seq_blockContext::Seq_blockContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::Seq_blockContext::block_identifier() {
+Verilog2001Parser::Block_identifierContext* Verilog2001Parser::Seq_blockContext::block_identifier() {
   return getRuleContext<Verilog2001Parser::Block_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::StatementContext>> Verilog2001Parser::Seq_blockContext::statement() {
+std::vector<Verilog2001Parser::StatementContext *> Verilog2001Parser::Seq_blockContext::statement() {
   return getRuleContexts<Verilog2001Parser::StatementContext>();
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Seq_blockContext::statement(int i) {
-  return getRuleContext<Verilog2001Parser::StatementContext>((size_t)i);
+Verilog2001Parser::StatementContext* Verilog2001Parser::Seq_blockContext::statement(size_t i) {
+  return getRuleContext<Verilog2001Parser::StatementContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Block_item_declarationContext>> Verilog2001Parser::Seq_blockContext::block_item_declaration() {
+std::vector<Verilog2001Parser::Block_item_declarationContext *> Verilog2001Parser::Seq_blockContext::block_item_declaration() {
   return getRuleContexts<Verilog2001Parser::Block_item_declarationContext>();
 }
 
-Ref<Verilog2001Parser::Block_item_declarationContext> Verilog2001Parser::Seq_blockContext::block_item_declaration(int i) {
-  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>((size_t)i);
+Verilog2001Parser::Block_item_declarationContext* Verilog2001Parser::Seq_blockContext::block_item_declaration(size_t i) {
+  return getRuleContext<Verilog2001Parser::Block_item_declarationContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Seq_blockContext::getRuleIndex() const {
+size_t Verilog2001Parser::Seq_blockContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSeq_block;
 }
 
 antlrcpp::Any Verilog2001Parser::Seq_blockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSeq_block(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSeq_block(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::seq_block() {
-  Ref<Seq_blockContext> _localctx = std::make_shared<Seq_blockContext>(_ctx, getState());
+Verilog2001Parser::Seq_blockContext* Verilog2001Parser::seq_block() {
+  Seq_blockContext *_localctx = _tracker.createInstance<Seq_blockContext>(_ctx, getState());
   enterRule(_localctx, 286, Verilog2001Parser::RuleSeq_block);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2445);
     match(Verilog2001Parser::T__103);
     setState(2454);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -12315,10 +12474,10 @@ Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::seq_block() {
     setState(2459);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~(ssize_t)0x3f) == 0) &&
+    while ((((_la & ~ 0x3fULL) == 0) &&
       ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__14)
       | (1ULL << Verilog2001Parser::T__15)
-      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 99) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
       | (1ULL << (Verilog2001Parser::T__100 - 99))
       | (1ULL << (Verilog2001Parser::T__102 - 99))
@@ -12336,7 +12495,7 @@ Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::seq_block() {
       | (1ULL << (Verilog2001Parser::T__122 - 99))
       | (1ULL << (Verilog2001Parser::T__123 - 99))
       | (1ULL << (Verilog2001Parser::T__124 - 99))
-      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~(ssize_t)0x3f) == 0) &&
+      | (1ULL << (Verilog2001Parser::T__125 - 99)))) != 0) || ((((_la - 176) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 176)) & ((1ULL << (Verilog2001Parser::Escaped_identifier - 176))
       | (1ULL << (Verilog2001Parser::Simple_identifier - 176))
       | (1ULL << (Verilog2001Parser::Dollar_Identifier - 176)))) != 0)) {
@@ -12361,90 +12520,90 @@ Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::seq_block() {
 
 //----------------- StatementContext ------------------------------------------------------------------
 
-Verilog2001Parser::StatementContext::StatementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::StatementContext::StatementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Blocking_assignmentContext> Verilog2001Parser::StatementContext::blocking_assignment() {
+Verilog2001Parser::Blocking_assignmentContext* Verilog2001Parser::StatementContext::blocking_assignment() {
   return getRuleContext<Verilog2001Parser::Blocking_assignmentContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::StatementContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::StatementContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::StatementContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::StatementContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::StatementContext::case_statement() {
+Verilog2001Parser::Case_statementContext* Verilog2001Parser::StatementContext::case_statement() {
   return getRuleContext<Verilog2001Parser::Case_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Conditional_statementContext> Verilog2001Parser::StatementContext::conditional_statement() {
+Verilog2001Parser::Conditional_statementContext* Verilog2001Parser::StatementContext::conditional_statement() {
   return getRuleContext<Verilog2001Parser::Conditional_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Disable_statementContext> Verilog2001Parser::StatementContext::disable_statement() {
+Verilog2001Parser::Disable_statementContext* Verilog2001Parser::StatementContext::disable_statement() {
   return getRuleContext<Verilog2001Parser::Disable_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Event_triggerContext> Verilog2001Parser::StatementContext::event_trigger() {
+Verilog2001Parser::Event_triggerContext* Verilog2001Parser::StatementContext::event_trigger() {
   return getRuleContext<Verilog2001Parser::Event_triggerContext>(0);
 }
 
-Ref<Verilog2001Parser::Loop_statementContext> Verilog2001Parser::StatementContext::loop_statement() {
+Verilog2001Parser::Loop_statementContext* Verilog2001Parser::StatementContext::loop_statement() {
   return getRuleContext<Verilog2001Parser::Loop_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Nonblocking_assignmentContext> Verilog2001Parser::StatementContext::nonblocking_assignment() {
+Verilog2001Parser::Nonblocking_assignmentContext* Verilog2001Parser::StatementContext::nonblocking_assignment() {
   return getRuleContext<Verilog2001Parser::Nonblocking_assignmentContext>(0);
 }
 
-Ref<Verilog2001Parser::Par_blockContext> Verilog2001Parser::StatementContext::par_block() {
+Verilog2001Parser::Par_blockContext* Verilog2001Parser::StatementContext::par_block() {
   return getRuleContext<Verilog2001Parser::Par_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::Procedural_continuous_assignmentsContext> Verilog2001Parser::StatementContext::procedural_continuous_assignments() {
+Verilog2001Parser::Procedural_continuous_assignmentsContext* Verilog2001Parser::StatementContext::procedural_continuous_assignments() {
   return getRuleContext<Verilog2001Parser::Procedural_continuous_assignmentsContext>(0);
 }
 
-Ref<Verilog2001Parser::Procedural_timing_control_statementContext> Verilog2001Parser::StatementContext::procedural_timing_control_statement() {
+Verilog2001Parser::Procedural_timing_control_statementContext* Verilog2001Parser::StatementContext::procedural_timing_control_statement() {
   return getRuleContext<Verilog2001Parser::Procedural_timing_control_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Seq_blockContext> Verilog2001Parser::StatementContext::seq_block() {
+Verilog2001Parser::Seq_blockContext* Verilog2001Parser::StatementContext::seq_block() {
   return getRuleContext<Verilog2001Parser::Seq_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::StatementContext::system_task_enable() {
+Verilog2001Parser::System_task_enableContext* Verilog2001Parser::StatementContext::system_task_enable() {
   return getRuleContext<Verilog2001Parser::System_task_enableContext>(0);
 }
 
-Ref<Verilog2001Parser::Task_enableContext> Verilog2001Parser::StatementContext::task_enable() {
+Verilog2001Parser::Task_enableContext* Verilog2001Parser::StatementContext::task_enable() {
   return getRuleContext<Verilog2001Parser::Task_enableContext>(0);
 }
 
-Ref<Verilog2001Parser::Wait_statementContext> Verilog2001Parser::StatementContext::wait_statement() {
+Verilog2001Parser::Wait_statementContext* Verilog2001Parser::StatementContext::wait_statement() {
   return getRuleContext<Verilog2001Parser::Wait_statementContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::StatementContext::getRuleIndex() const {
+size_t Verilog2001Parser::StatementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleStatement;
 }
 
 antlrcpp::Any Verilog2001Parser::StatementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStatement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStatement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::statement() {
-  Ref<StatementContext> _localctx = std::make_shared<StatementContext>(_ctx, getState());
+Verilog2001Parser::StatementContext* Verilog2001Parser::statement() {
+  StatementContext *_localctx = _tracker.createInstance<StatementContext>(_ctx, getState());
   enterRule(_localctx, 288, Verilog2001Parser::RuleStatement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -12711,38 +12870,38 @@ Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::statement() {
 
 //----------------- Statement_or_nullContext ------------------------------------------------------------------
 
-Verilog2001Parser::Statement_or_nullContext::Statement_or_nullContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Statement_or_nullContext::Statement_or_nullContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Statement_or_nullContext::statement() {
+Verilog2001Parser::StatementContext* Verilog2001Parser::Statement_or_nullContext::statement() {
   return getRuleContext<Verilog2001Parser::StatementContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Statement_or_nullContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Statement_or_nullContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Statement_or_nullContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Statement_or_nullContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Statement_or_nullContext::getRuleIndex() const {
+size_t Verilog2001Parser::Statement_or_nullContext::getRuleIndex() const {
   return Verilog2001Parser::RuleStatement_or_null;
 }
 
 antlrcpp::Any Verilog2001Parser::Statement_or_nullContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStatement_or_null(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStatement_or_null(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::statement_or_null() {
-  Ref<Statement_or_nullContext> _localctx = std::make_shared<Statement_or_nullContext>(_ctx, getState());
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::statement_or_null() {
+  Statement_or_nullContext *_localctx = _tracker.createInstance<Statement_or_nullContext>(_ctx, getState());
   enterRule(_localctx, 290, Verilog2001Parser::RuleStatement_or_null);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -12789,62 +12948,62 @@ Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::statement_or
 
 //----------------- Function_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_statementContext::Function_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_statementContext::Function_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Function_blocking_assignmentContext> Verilog2001Parser::Function_statementContext::function_blocking_assignment() {
+Verilog2001Parser::Function_blocking_assignmentContext* Verilog2001Parser::Function_statementContext::function_blocking_assignment() {
   return getRuleContext<Verilog2001Parser::Function_blocking_assignmentContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Function_statementContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Function_statementContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Function_statementContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Function_statementContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::Function_statementContext::function_case_statement() {
+Verilog2001Parser::Function_case_statementContext* Verilog2001Parser::Function_statementContext::function_case_statement() {
   return getRuleContext<Verilog2001Parser::Function_case_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_conditional_statementContext> Verilog2001Parser::Function_statementContext::function_conditional_statement() {
+Verilog2001Parser::Function_conditional_statementContext* Verilog2001Parser::Function_statementContext::function_conditional_statement() {
   return getRuleContext<Verilog2001Parser::Function_conditional_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_loop_statementContext> Verilog2001Parser::Function_statementContext::function_loop_statement() {
+Verilog2001Parser::Function_loop_statementContext* Verilog2001Parser::Function_statementContext::function_loop_statement() {
   return getRuleContext<Verilog2001Parser::Function_loop_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_seq_blockContext> Verilog2001Parser::Function_statementContext::function_seq_block() {
+Verilog2001Parser::Function_seq_blockContext* Verilog2001Parser::Function_statementContext::function_seq_block() {
   return getRuleContext<Verilog2001Parser::Function_seq_blockContext>(0);
 }
 
-Ref<Verilog2001Parser::Disable_statementContext> Verilog2001Parser::Function_statementContext::disable_statement() {
+Verilog2001Parser::Disable_statementContext* Verilog2001Parser::Function_statementContext::disable_statement() {
   return getRuleContext<Verilog2001Parser::Disable_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::Function_statementContext::system_task_enable() {
+Verilog2001Parser::System_task_enableContext* Verilog2001Parser::Function_statementContext::system_task_enable() {
   return getRuleContext<Verilog2001Parser::System_task_enableContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::function_statement() {
-  Ref<Function_statementContext> _localctx = std::make_shared<Function_statementContext>(_ctx, getState());
+Verilog2001Parser::Function_statementContext* Verilog2001Parser::function_statement() {
+  Function_statementContext *_localctx = _tracker.createInstance<Function_statementContext>(_ctx, getState());
   enterRule(_localctx, 292, Verilog2001Parser::RuleFunction_statement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -12988,36 +13147,36 @@ Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::function_st
 
 //----------------- Delay_or_event_controlContext ------------------------------------------------------------------
 
-Verilog2001Parser::Delay_or_event_controlContext::Delay_or_event_controlContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delay_or_event_controlContext::Delay_or_event_controlContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Delay_controlContext> Verilog2001Parser::Delay_or_event_controlContext::delay_control() {
+Verilog2001Parser::Delay_controlContext* Verilog2001Parser::Delay_or_event_controlContext::delay_control() {
   return getRuleContext<Verilog2001Parser::Delay_controlContext>(0);
 }
 
-Ref<Verilog2001Parser::Event_controlContext> Verilog2001Parser::Delay_or_event_controlContext::event_control() {
+Verilog2001Parser::Event_controlContext* Verilog2001Parser::Delay_or_event_controlContext::event_control() {
   return getRuleContext<Verilog2001Parser::Event_controlContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Delay_or_event_controlContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Delay_or_event_controlContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Delay_or_event_controlContext::getRuleIndex() const {
+size_t Verilog2001Parser::Delay_or_event_controlContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDelay_or_event_control;
 }
 
 antlrcpp::Any Verilog2001Parser::Delay_or_event_controlContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelay_or_event_control(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelay_or_event_control(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::delay_or_event_control() {
-  Ref<Delay_or_event_controlContext> _localctx = std::make_shared<Delay_or_event_controlContext>(_ctx, getState());
+Verilog2001Parser::Delay_or_event_controlContext* Verilog2001Parser::delay_or_event_control() {
+  Delay_or_event_controlContext *_localctx = _tracker.createInstance<Delay_or_event_controlContext>(_ctx, getState());
   enterRule(_localctx, 294, Verilog2001Parser::RuleDelay_or_event_control);
 
   auto onExit = finally([=] {
@@ -13072,32 +13231,32 @@ Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::delay_o
 
 //----------------- Delay_controlContext ------------------------------------------------------------------
 
-Verilog2001Parser::Delay_controlContext::Delay_controlContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delay_controlContext::Delay_controlContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Delay_valueContext> Verilog2001Parser::Delay_controlContext::delay_value() {
+Verilog2001Parser::Delay_valueContext* Verilog2001Parser::Delay_controlContext::delay_value() {
   return getRuleContext<Verilog2001Parser::Delay_valueContext>(0);
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::Delay_controlContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::Delay_controlContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Delay_controlContext::getRuleIndex() const {
+size_t Verilog2001Parser::Delay_controlContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDelay_control;
 }
 
 antlrcpp::Any Verilog2001Parser::Delay_controlContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelay_control(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelay_control(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delay_controlContext> Verilog2001Parser::delay_control() {
-  Ref<Delay_controlContext> _localctx = std::make_shared<Delay_controlContext>(_ctx, getState());
+Verilog2001Parser::Delay_controlContext* Verilog2001Parser::delay_control() {
+  Delay_controlContext *_localctx = _tracker.createInstance<Delay_controlContext>(_ctx, getState());
   enterRule(_localctx, 296, Verilog2001Parser::RuleDelay_control);
 
   auto onExit = finally([=] {
@@ -13143,32 +13302,32 @@ Ref<Verilog2001Parser::Delay_controlContext> Verilog2001Parser::delay_control() 
 
 //----------------- Disable_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Disable_statementContext::Disable_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Disable_statementContext::Disable_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_task_identifierContext> Verilog2001Parser::Disable_statementContext::hierarchical_task_identifier() {
+Verilog2001Parser::Hierarchical_task_identifierContext* Verilog2001Parser::Disable_statementContext::hierarchical_task_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_task_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Hierarchical_block_identifierContext> Verilog2001Parser::Disable_statementContext::hierarchical_block_identifier() {
+Verilog2001Parser::Hierarchical_block_identifierContext* Verilog2001Parser::Disable_statementContext::hierarchical_block_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_block_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Disable_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Disable_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDisable_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Disable_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDisable_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDisable_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Disable_statementContext> Verilog2001Parser::disable_statement() {
-  Ref<Disable_statementContext> _localctx = std::make_shared<Disable_statementContext>(_ctx, getState());
+Verilog2001Parser::Disable_statementContext* Verilog2001Parser::disable_statement() {
+  Disable_statementContext *_localctx = _tracker.createInstance<Disable_statementContext>(_ctx, getState());
   enterRule(_localctx, 298, Verilog2001Parser::RuleDisable_statement);
 
   auto onExit = finally([=] {
@@ -13214,32 +13373,32 @@ Ref<Verilog2001Parser::Disable_statementContext> Verilog2001Parser::disable_stat
 
 //----------------- Event_controlContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_controlContext::Event_controlContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_controlContext::Event_controlContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Event_identifierContext> Verilog2001Parser::Event_controlContext::event_identifier() {
+Verilog2001Parser::Event_identifierContext* Verilog2001Parser::Event_controlContext::event_identifier() {
   return getRuleContext<Verilog2001Parser::Event_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Event_expressionContext> Verilog2001Parser::Event_controlContext::event_expression() {
+Verilog2001Parser::Event_expressionContext* Verilog2001Parser::Event_controlContext::event_expression() {
   return getRuleContext<Verilog2001Parser::Event_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_controlContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_controlContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_control;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_controlContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_control(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_control(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_controlContext> Verilog2001Parser::event_control() {
-  Ref<Event_controlContext> _localctx = std::make_shared<Event_controlContext>(_ctx, getState());
+Verilog2001Parser::Event_controlContext* Verilog2001Parser::event_control() {
+  Event_controlContext *_localctx = _tracker.createInstance<Event_controlContext>(_ctx, getState());
   enterRule(_localctx, 300, Verilog2001Parser::RuleEvent_control);
 
   auto onExit = finally([=] {
@@ -13307,28 +13466,28 @@ Ref<Verilog2001Parser::Event_controlContext> Verilog2001Parser::event_control() 
 
 //----------------- Event_triggerContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_triggerContext::Event_triggerContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_triggerContext::Event_triggerContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_event_identifierContext> Verilog2001Parser::Event_triggerContext::hierarchical_event_identifier() {
+Verilog2001Parser::Hierarchical_event_identifierContext* Verilog2001Parser::Event_triggerContext::hierarchical_event_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_event_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_triggerContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_triggerContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_trigger;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_triggerContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_trigger(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_trigger(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_triggerContext> Verilog2001Parser::event_trigger() {
-  Ref<Event_triggerContext> _localctx = std::make_shared<Event_triggerContext>(_ctx, getState());
+Verilog2001Parser::Event_triggerContext* Verilog2001Parser::event_trigger() {
+  Event_triggerContext *_localctx = _tracker.createInstance<Event_triggerContext>(_ctx, getState());
   enterRule(_localctx, 302, Verilog2001Parser::RuleEvent_trigger);
 
   auto onExit = finally([=] {
@@ -13355,34 +13514,34 @@ Ref<Verilog2001Parser::Event_triggerContext> Verilog2001Parser::event_trigger() 
 
 //----------------- Event_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_expressionContext::Event_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_expressionContext::Event_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Event_primaryContext>> Verilog2001Parser::Event_expressionContext::event_primary() {
+std::vector<Verilog2001Parser::Event_primaryContext *> Verilog2001Parser::Event_expressionContext::event_primary() {
   return getRuleContexts<Verilog2001Parser::Event_primaryContext>();
 }
 
-Ref<Verilog2001Parser::Event_primaryContext> Verilog2001Parser::Event_expressionContext::event_primary(int i) {
-  return getRuleContext<Verilog2001Parser::Event_primaryContext>((size_t)i);
+Verilog2001Parser::Event_primaryContext* Verilog2001Parser::Event_expressionContext::event_primary(size_t i) {
+  return getRuleContext<Verilog2001Parser::Event_primaryContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Event_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_expressionContext> Verilog2001Parser::event_expression() {
-  Ref<Event_expressionContext> _localctx = std::make_shared<Event_expressionContext>(_ctx, getState());
+Verilog2001Parser::Event_expressionContext* Verilog2001Parser::event_expression() {
+  Event_expressionContext *_localctx = _tracker.createInstance<Event_expressionContext>(_ctx, getState());
   enterRule(_localctx, 304, Verilog2001Parser::RuleEvent_expression);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -13434,28 +13593,28 @@ Ref<Verilog2001Parser::Event_expressionContext> Verilog2001Parser::event_express
 
 //----------------- Event_primaryContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_primaryContext::Event_primaryContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_primaryContext::Event_primaryContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Event_primaryContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Event_primaryContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_primaryContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_primaryContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_primary;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_primary(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_primary(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_primaryContext> Verilog2001Parser::event_primary() {
-  Ref<Event_primaryContext> _localctx = std::make_shared<Event_primaryContext>(_ctx, getState());
+Verilog2001Parser::Event_primaryContext* Verilog2001Parser::event_primary() {
+  Event_primaryContext *_localctx = _tracker.createInstance<Event_primaryContext>(_ctx, getState());
   enterRule(_localctx, 306, Verilog2001Parser::RuleEvent_primary);
 
   auto onExit = finally([=] {
@@ -13525,32 +13684,32 @@ Ref<Verilog2001Parser::Event_primaryContext> Verilog2001Parser::event_primary() 
 
 //----------------- Procedural_timing_control_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Procedural_timing_control_statementContext::Procedural_timing_control_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Procedural_timing_control_statementContext::Procedural_timing_control_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Delay_or_event_controlContext> Verilog2001Parser::Procedural_timing_control_statementContext::delay_or_event_control() {
+Verilog2001Parser::Delay_or_event_controlContext* Verilog2001Parser::Procedural_timing_control_statementContext::delay_or_event_control() {
   return getRuleContext<Verilog2001Parser::Delay_or_event_controlContext>(0);
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::Procedural_timing_control_statementContext::statement_or_null() {
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::Procedural_timing_control_statementContext::statement_or_null() {
   return getRuleContext<Verilog2001Parser::Statement_or_nullContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Procedural_timing_control_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Procedural_timing_control_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleProcedural_timing_control_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Procedural_timing_control_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitProcedural_timing_control_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitProcedural_timing_control_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Procedural_timing_control_statementContext> Verilog2001Parser::procedural_timing_control_statement() {
-  Ref<Procedural_timing_control_statementContext> _localctx = std::make_shared<Procedural_timing_control_statementContext>(_ctx, getState());
+Verilog2001Parser::Procedural_timing_control_statementContext* Verilog2001Parser::procedural_timing_control_statement() {
+  Procedural_timing_control_statementContext *_localctx = _tracker.createInstance<Procedural_timing_control_statementContext>(_ctx, getState());
   enterRule(_localctx, 308, Verilog2001Parser::RuleProcedural_timing_control_statement);
 
   auto onExit = finally([=] {
@@ -13575,32 +13734,32 @@ Ref<Verilog2001Parser::Procedural_timing_control_statementContext> Verilog2001Pa
 
 //----------------- Wait_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Wait_statementContext::Wait_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Wait_statementContext::Wait_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Wait_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Wait_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::Wait_statementContext::statement_or_null() {
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::Wait_statementContext::statement_or_null() {
   return getRuleContext<Verilog2001Parser::Statement_or_nullContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Wait_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Wait_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleWait_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Wait_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitWait_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitWait_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Wait_statementContext> Verilog2001Parser::wait_statement() {
-  Ref<Wait_statementContext> _localctx = std::make_shared<Wait_statementContext>(_ctx, getState());
+Verilog2001Parser::Wait_statementContext* Verilog2001Parser::wait_statement() {
+  Wait_statementContext *_localctx = _tracker.createInstance<Wait_statementContext>(_ctx, getState());
   enterRule(_localctx, 310, Verilog2001Parser::RuleWait_statement);
 
   auto onExit = finally([=] {
@@ -13631,40 +13790,40 @@ Ref<Verilog2001Parser::Wait_statementContext> Verilog2001Parser::wait_statement(
 
 //----------------- Conditional_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Conditional_statementContext::Conditional_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Conditional_statementContext::Conditional_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Conditional_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Conditional_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Statement_or_nullContext>> Verilog2001Parser::Conditional_statementContext::statement_or_null() {
+std::vector<Verilog2001Parser::Statement_or_nullContext *> Verilog2001Parser::Conditional_statementContext::statement_or_null() {
   return getRuleContexts<Verilog2001Parser::Statement_or_nullContext>();
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::Conditional_statementContext::statement_or_null(int i) {
-  return getRuleContext<Verilog2001Parser::Statement_or_nullContext>((size_t)i);
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::Conditional_statementContext::statement_or_null(size_t i) {
+  return getRuleContext<Verilog2001Parser::Statement_or_nullContext>(i);
 }
 
-Ref<Verilog2001Parser::If_else_if_statementContext> Verilog2001Parser::Conditional_statementContext::if_else_if_statement() {
+Verilog2001Parser::If_else_if_statementContext* Verilog2001Parser::Conditional_statementContext::if_else_if_statement() {
   return getRuleContext<Verilog2001Parser::If_else_if_statementContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Conditional_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Conditional_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConditional_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConditional_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConditional_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Conditional_statementContext> Verilog2001Parser::conditional_statement() {
-  Ref<Conditional_statementContext> _localctx = std::make_shared<Conditional_statementContext>(_ctx, getState());
+Verilog2001Parser::Conditional_statementContext* Verilog2001Parser::conditional_statement() {
+  Conditional_statementContext *_localctx = _tracker.createInstance<Conditional_statementContext>(_ctx, getState());
   enterRule(_localctx, 312, Verilog2001Parser::RuleConditional_statement);
 
   auto onExit = finally([=] {
@@ -13723,47 +13882,47 @@ Ref<Verilog2001Parser::Conditional_statementContext> Verilog2001Parser::conditio
 
 //----------------- If_else_if_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::If_else_if_statementContext::If_else_if_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::If_else_if_statementContext::If_else_if_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::If_else_if_statementContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::If_else_if_statementContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::If_else_if_statementContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::If_else_if_statementContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Statement_or_nullContext>> Verilog2001Parser::If_else_if_statementContext::statement_or_null() {
+std::vector<Verilog2001Parser::Statement_or_nullContext *> Verilog2001Parser::If_else_if_statementContext::statement_or_null() {
   return getRuleContexts<Verilog2001Parser::Statement_or_nullContext>();
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::If_else_if_statementContext::statement_or_null(int i) {
-  return getRuleContext<Verilog2001Parser::Statement_or_nullContext>((size_t)i);
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::If_else_if_statementContext::statement_or_null(size_t i) {
+  return getRuleContext<Verilog2001Parser::Statement_or_nullContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::If_else_if_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::If_else_if_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleIf_else_if_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::If_else_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitIf_else_if_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitIf_else_if_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::If_else_if_statementContext> Verilog2001Parser::if_else_if_statement() {
-  Ref<If_else_if_statementContext> _localctx = std::make_shared<If_else_if_statementContext>(_ctx, getState());
+Verilog2001Parser::If_else_if_statementContext* Verilog2001Parser::if_else_if_statement() {
+  If_else_if_statementContext *_localctx = _tracker.createInstance<If_else_if_statementContext>(_ctx, getState());
   enterRule(_localctx, 314, Verilog2001Parser::RuleIf_else_if_statement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2719);
     match(Verilog2001Parser::T__98);
@@ -13823,40 +13982,40 @@ Ref<Verilog2001Parser::If_else_if_statementContext> Verilog2001Parser::if_else_i
 
 //----------------- Function_conditional_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_conditional_statementContext::Function_conditional_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_conditional_statementContext::Function_conditional_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_conditional_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_conditional_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Function_statement_or_nullContext>> Verilog2001Parser::Function_conditional_statementContext::function_statement_or_null() {
+std::vector<Verilog2001Parser::Function_statement_or_nullContext *> Verilog2001Parser::Function_conditional_statementContext::function_statement_or_null() {
   return getRuleContexts<Verilog2001Parser::Function_statement_or_nullContext>();
 }
 
-Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::Function_conditional_statementContext::function_statement_or_null(int i) {
-  return getRuleContext<Verilog2001Parser::Function_statement_or_nullContext>((size_t)i);
+Verilog2001Parser::Function_statement_or_nullContext* Verilog2001Parser::Function_conditional_statementContext::function_statement_or_null(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_statement_or_nullContext>(i);
 }
 
-Ref<Verilog2001Parser::Function_if_else_if_statementContext> Verilog2001Parser::Function_conditional_statementContext::function_if_else_if_statement() {
+Verilog2001Parser::Function_if_else_if_statementContext* Verilog2001Parser::Function_conditional_statementContext::function_if_else_if_statement() {
   return getRuleContext<Verilog2001Parser::Function_if_else_if_statementContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_conditional_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_conditional_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_conditional_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_conditional_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_conditional_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_conditional_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_conditional_statementContext> Verilog2001Parser::function_conditional_statement() {
-  Ref<Function_conditional_statementContext> _localctx = std::make_shared<Function_conditional_statementContext>(_ctx, getState());
+Verilog2001Parser::Function_conditional_statementContext* Verilog2001Parser::function_conditional_statement() {
+  Function_conditional_statementContext *_localctx = _tracker.createInstance<Function_conditional_statementContext>(_ctx, getState());
   enterRule(_localctx, 316, Verilog2001Parser::RuleFunction_conditional_statement);
 
   auto onExit = finally([=] {
@@ -13915,47 +14074,47 @@ Ref<Verilog2001Parser::Function_conditional_statementContext> Verilog2001Parser:
 
 //----------------- Function_if_else_if_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_if_else_if_statementContext::Function_if_else_if_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_if_else_if_statementContext::Function_if_else_if_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Function_if_else_if_statementContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Function_if_else_if_statementContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_if_else_if_statementContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_if_else_if_statementContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Function_statement_or_nullContext>> Verilog2001Parser::Function_if_else_if_statementContext::function_statement_or_null() {
+std::vector<Verilog2001Parser::Function_statement_or_nullContext *> Verilog2001Parser::Function_if_else_if_statementContext::function_statement_or_null() {
   return getRuleContexts<Verilog2001Parser::Function_statement_or_nullContext>();
 }
 
-Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::Function_if_else_if_statementContext::function_statement_or_null(int i) {
-  return getRuleContext<Verilog2001Parser::Function_statement_or_nullContext>((size_t)i);
+Verilog2001Parser::Function_statement_or_nullContext* Verilog2001Parser::Function_if_else_if_statementContext::function_statement_or_null(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_statement_or_nullContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_if_else_if_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_if_else_if_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_if_else_if_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_if_else_if_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_if_else_if_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_if_else_if_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_if_else_if_statementContext> Verilog2001Parser::function_if_else_if_statement() {
-  Ref<Function_if_else_if_statementContext> _localctx = std::make_shared<Function_if_else_if_statementContext>(_ctx, getState());
+Verilog2001Parser::Function_if_else_if_statementContext* Verilog2001Parser::function_if_else_if_statement() {
+  Function_if_else_if_statementContext *_localctx = _tracker.createInstance<Function_if_else_if_statementContext>(_ctx, getState());
   enterRule(_localctx, 318, Verilog2001Parser::RuleFunction_if_else_if_statement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(2752);
     match(Verilog2001Parser::T__98);
@@ -14015,38 +14174,38 @@ Ref<Verilog2001Parser::Function_if_else_if_statementContext> Verilog2001Parser::
 
 //----------------- Case_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Case_statementContext::Case_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Case_statementContext::Case_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Case_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Case_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Case_itemContext>> Verilog2001Parser::Case_statementContext::case_item() {
+std::vector<Verilog2001Parser::Case_itemContext *> Verilog2001Parser::Case_statementContext::case_item() {
   return getRuleContexts<Verilog2001Parser::Case_itemContext>();
 }
 
-Ref<Verilog2001Parser::Case_itemContext> Verilog2001Parser::Case_statementContext::case_item(int i) {
-  return getRuleContext<Verilog2001Parser::Case_itemContext>((size_t)i);
+Verilog2001Parser::Case_itemContext* Verilog2001Parser::Case_statementContext::case_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Case_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Case_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Case_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCase_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCase_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCase_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement() {
-  Ref<Case_statementContext> _localctx = std::make_shared<Case_statementContext>(_ctx, getState());
+Verilog2001Parser::Case_statementContext* Verilog2001Parser::case_statement() {
+  Case_statementContext *_localctx = _tracker.createInstance<Case_statementContext>(_ctx, getState());
   enterRule(_localctx, 320, Verilog2001Parser::RuleCase_statement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -14070,10 +14229,10 @@ Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement(
         setState(2781);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14120,10 +14279,10 @@ Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement(
         setState(2794);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14170,10 +14329,10 @@ Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement(
         setState(2807);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14221,38 +14380,38 @@ Ref<Verilog2001Parser::Case_statementContext> Verilog2001Parser::case_statement(
 
 //----------------- Case_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Case_itemContext::Case_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Case_itemContext::Case_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Case_itemContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Case_itemContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Case_itemContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Case_itemContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Statement_or_nullContext> Verilog2001Parser::Case_itemContext::statement_or_null() {
+Verilog2001Parser::Statement_or_nullContext* Verilog2001Parser::Case_itemContext::statement_or_null() {
   return getRuleContext<Verilog2001Parser::Statement_or_nullContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Case_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Case_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCase_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCase_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCase_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Case_itemContext> Verilog2001Parser::case_item() {
-  Ref<Case_itemContext> _localctx = std::make_shared<Case_itemContext>(_ctx, getState());
+Verilog2001Parser::Case_itemContext* Verilog2001Parser::case_item() {
+  Case_itemContext *_localctx = _tracker.createInstance<Case_itemContext>(_ctx, getState());
   enterRule(_localctx, 322, Verilog2001Parser::RuleCase_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -14310,6 +14469,7 @@ Ref<Verilog2001Parser::Case_itemContext> Verilog2001Parser::case_item() {
         setState(2825);
         match(Verilog2001Parser::T__5);
         setState(2827);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__64) {
@@ -14337,38 +14497,38 @@ Ref<Verilog2001Parser::Case_itemContext> Verilog2001Parser::case_item() {
 
 //----------------- Function_case_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_case_statementContext::Function_case_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_case_statementContext::Function_case_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_case_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_case_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Function_case_itemContext>> Verilog2001Parser::Function_case_statementContext::function_case_item() {
+std::vector<Verilog2001Parser::Function_case_itemContext *> Verilog2001Parser::Function_case_statementContext::function_case_item() {
   return getRuleContexts<Verilog2001Parser::Function_case_itemContext>();
 }
 
-Ref<Verilog2001Parser::Function_case_itemContext> Verilog2001Parser::Function_case_statementContext::function_case_item(int i) {
-  return getRuleContext<Verilog2001Parser::Function_case_itemContext>((size_t)i);
+Verilog2001Parser::Function_case_itemContext* Verilog2001Parser::Function_case_statementContext::function_case_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Function_case_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_case_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_case_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_case_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_case_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_case_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_case_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::function_case_statement() {
-  Ref<Function_case_statementContext> _localctx = std::make_shared<Function_case_statementContext>(_ctx, getState());
+Verilog2001Parser::Function_case_statementContext* Verilog2001Parser::function_case_statement() {
+  Function_case_statementContext *_localctx = _tracker.createInstance<Function_case_statementContext>(_ctx, getState());
   enterRule(_localctx, 324, Verilog2001Parser::RuleFunction_case_statement);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -14392,10 +14552,10 @@ Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::functi
         setState(2840);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14442,10 +14602,10 @@ Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::functi
         setState(2853);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14492,10 +14652,10 @@ Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::functi
         setState(2866);
         _errHandler->sync(this);
         _la = _input->LA(1);
-        while ((((_la & ~(ssize_t)0x3f) == 0) &&
+        while ((((_la & ~ 0x3fULL) == 0) &&
           ((1ULL << _la) & ((1ULL << Verilog2001Parser::T__5)
           | (1ULL << Verilog2001Parser::T__15)
-          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+          | (1ULL << Verilog2001Parser::T__18))) != 0) || ((((_la - 136) & ~ 0x3fULL) == 0) &&
           ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
           | (1ULL << (Verilog2001Parser::T__136 - 136))
           | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -14543,38 +14703,38 @@ Ref<Verilog2001Parser::Function_case_statementContext> Verilog2001Parser::functi
 
 //----------------- Function_case_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_case_itemContext::Function_case_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_case_itemContext::Function_case_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Function_case_itemContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Function_case_itemContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_case_itemContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_case_itemContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Function_statement_or_nullContext> Verilog2001Parser::Function_case_itemContext::function_statement_or_null() {
+Verilog2001Parser::Function_statement_or_nullContext* Verilog2001Parser::Function_case_itemContext::function_statement_or_null() {
   return getRuleContext<Verilog2001Parser::Function_statement_or_nullContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_case_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_case_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_case_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_case_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_case_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_case_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_case_itemContext> Verilog2001Parser::function_case_item() {
-  Ref<Function_case_itemContext> _localctx = std::make_shared<Function_case_itemContext>(_ctx, getState());
+Verilog2001Parser::Function_case_itemContext* Verilog2001Parser::function_case_item() {
+  Function_case_itemContext *_localctx = _tracker.createInstance<Function_case_itemContext>(_ctx, getState());
   enterRule(_localctx, 326, Verilog2001Parser::RuleFunction_case_item);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -14632,6 +14792,7 @@ Ref<Verilog2001Parser::Function_case_itemContext> Verilog2001Parser::function_ca
         setState(2884);
         match(Verilog2001Parser::T__5);
         setState(2886);
+        _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == Verilog2001Parser::T__64) {
@@ -14659,40 +14820,40 @@ Ref<Verilog2001Parser::Function_case_itemContext> Verilog2001Parser::function_ca
 
 //----------------- Function_loop_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_loop_statementContext::Function_loop_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_loop_statementContext::Function_loop_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Function_statementContext> Verilog2001Parser::Function_loop_statementContext::function_statement() {
+Verilog2001Parser::Function_statementContext* Verilog2001Parser::Function_loop_statementContext::function_statement() {
   return getRuleContext<Verilog2001Parser::Function_statementContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_loop_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_loop_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Variable_assignmentContext>> Verilog2001Parser::Function_loop_statementContext::variable_assignment() {
+std::vector<Verilog2001Parser::Variable_assignmentContext *> Verilog2001Parser::Function_loop_statementContext::variable_assignment() {
   return getRuleContexts<Verilog2001Parser::Variable_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::Function_loop_statementContext::variable_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Variable_assignmentContext>((size_t)i);
+Verilog2001Parser::Variable_assignmentContext* Verilog2001Parser::Function_loop_statementContext::variable_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Variable_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_loop_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_loop_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_loop_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_loop_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_loop_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_loop_statementContext> Verilog2001Parser::function_loop_statement() {
-  Ref<Function_loop_statementContext> _localctx = std::make_shared<Function_loop_statementContext>(_ctx, getState());
+Verilog2001Parser::Function_loop_statementContext* Verilog2001Parser::function_loop_statement() {
+  Function_loop_statementContext *_localctx = _tracker.createInstance<Function_loop_statementContext>(_ctx, getState());
   enterRule(_localctx, 328, Verilog2001Parser::RuleFunction_loop_statement);
 
   auto onExit = finally([=] {
@@ -14780,40 +14941,40 @@ Ref<Verilog2001Parser::Function_loop_statementContext> Verilog2001Parser::functi
 
 //----------------- Loop_statementContext ------------------------------------------------------------------
 
-Verilog2001Parser::Loop_statementContext::Loop_statementContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Loop_statementContext::Loop_statementContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::StatementContext> Verilog2001Parser::Loop_statementContext::statement() {
+Verilog2001Parser::StatementContext* Verilog2001Parser::Loop_statementContext::statement() {
   return getRuleContext<Verilog2001Parser::StatementContext>(0);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Loop_statementContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Loop_statementContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Variable_assignmentContext>> Verilog2001Parser::Loop_statementContext::variable_assignment() {
+std::vector<Verilog2001Parser::Variable_assignmentContext *> Verilog2001Parser::Loop_statementContext::variable_assignment() {
   return getRuleContexts<Verilog2001Parser::Variable_assignmentContext>();
 }
 
-Ref<Verilog2001Parser::Variable_assignmentContext> Verilog2001Parser::Loop_statementContext::variable_assignment(int i) {
-  return getRuleContext<Verilog2001Parser::Variable_assignmentContext>((size_t)i);
+Verilog2001Parser::Variable_assignmentContext* Verilog2001Parser::Loop_statementContext::variable_assignment(size_t i) {
+  return getRuleContext<Verilog2001Parser::Variable_assignmentContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Loop_statementContext::getRuleIndex() const {
+size_t Verilog2001Parser::Loop_statementContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLoop_statement;
 }
 
 antlrcpp::Any Verilog2001Parser::Loop_statementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLoop_statement(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLoop_statement(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Loop_statementContext> Verilog2001Parser::loop_statement() {
-  Ref<Loop_statementContext> _localctx = std::make_shared<Loop_statementContext>(_ctx, getState());
+Verilog2001Parser::Loop_statementContext* Verilog2001Parser::loop_statement() {
+  Loop_statementContext *_localctx = _tracker.createInstance<Loop_statementContext>(_ctx, getState());
   enterRule(_localctx, 330, Verilog2001Parser::RuleLoop_statement);
 
   auto onExit = finally([=] {
@@ -14901,38 +15062,38 @@ Ref<Verilog2001Parser::Loop_statementContext> Verilog2001Parser::loop_statement(
 
 //----------------- System_task_enableContext ------------------------------------------------------------------
 
-Verilog2001Parser::System_task_enableContext::System_task_enableContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::System_task_enableContext::System_task_enableContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::System_task_identifierContext> Verilog2001Parser::System_task_enableContext::system_task_identifier() {
+Verilog2001Parser::System_task_identifierContext* Verilog2001Parser::System_task_enableContext::system_task_identifier() {
   return getRuleContext<Verilog2001Parser::System_task_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::System_task_enableContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::System_task_enableContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::System_task_enableContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::System_task_enableContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::System_task_enableContext::getRuleIndex() const {
+size_t Verilog2001Parser::System_task_enableContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSystem_task_enable;
 }
 
 antlrcpp::Any Verilog2001Parser::System_task_enableContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSystem_task_enable(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSystem_task_enable(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::system_task_enable() {
-  Ref<System_task_enableContext> _localctx = std::make_shared<System_task_enableContext>(_ctx, getState());
+Verilog2001Parser::System_task_enableContext* Verilog2001Parser::system_task_enable() {
+  System_task_enableContext *_localctx = _tracker.createInstance<System_task_enableContext>(_ctx, getState());
   enterRule(_localctx, 332, Verilog2001Parser::RuleSystem_task_enable);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -14942,17 +15103,19 @@ Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::system_task
     setState(2943);
     system_task_identifier();
     setState(2956);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15) {
       setState(2944);
       match(Verilog2001Parser::T__15);
       setState(2953);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15
 
-      || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+      || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
         | (1ULL << (Verilog2001Parser::T__136 - 136))
         | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -15006,38 +15169,38 @@ Ref<Verilog2001Parser::System_task_enableContext> Verilog2001Parser::system_task
 
 //----------------- Task_enableContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_enableContext::Task_enableContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_enableContext::Task_enableContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_task_identifierContext> Verilog2001Parser::Task_enableContext::hierarchical_task_identifier() {
+Verilog2001Parser::Hierarchical_task_identifierContext* Verilog2001Parser::Task_enableContext::hierarchical_task_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_task_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Task_enableContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Task_enableContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Task_enableContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Task_enableContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Task_enableContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_enableContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_enable;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_enableContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_enable(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_enable(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_enableContext> Verilog2001Parser::task_enable() {
-  Ref<Task_enableContext> _localctx = std::make_shared<Task_enableContext>(_ctx, getState());
+Verilog2001Parser::Task_enableContext* Verilog2001Parser::task_enable() {
+  Task_enableContext *_localctx = _tracker.createInstance<Task_enableContext>(_ctx, getState());
   enterRule(_localctx, 334, Verilog2001Parser::RuleTask_enable);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15047,17 +15210,19 @@ Ref<Verilog2001Parser::Task_enableContext> Verilog2001Parser::task_enable() {
     setState(2960);
     hierarchical_task_identifier();
     setState(2973);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15) {
       setState(2961);
       match(Verilog2001Parser::T__15);
       setState(2970);
+      _errHandler->sync(this);
 
       _la = _input->LA(1);
       if (_la == Verilog2001Parser::T__15
 
-      || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+      || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
         ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
         | (1ULL << (Verilog2001Parser::T__136 - 136))
         | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -15111,34 +15276,34 @@ Ref<Verilog2001Parser::Task_enableContext> Verilog2001Parser::task_enable() {
 
 //----------------- Specify_blockContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specify_blockContext::Specify_blockContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specify_blockContext::Specify_blockContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Specify_itemContext>> Verilog2001Parser::Specify_blockContext::specify_item() {
+std::vector<Verilog2001Parser::Specify_itemContext *> Verilog2001Parser::Specify_blockContext::specify_item() {
   return getRuleContexts<Verilog2001Parser::Specify_itemContext>();
 }
 
-Ref<Verilog2001Parser::Specify_itemContext> Verilog2001Parser::Specify_blockContext::specify_item(int i) {
-  return getRuleContext<Verilog2001Parser::Specify_itemContext>((size_t)i);
+Verilog2001Parser::Specify_itemContext* Verilog2001Parser::Specify_blockContext::specify_item(size_t i) {
+  return getRuleContext<Verilog2001Parser::Specify_itemContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Specify_blockContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specify_blockContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecify_block;
 }
 
 antlrcpp::Any Verilog2001Parser::Specify_blockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecify_block(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecify_block(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::specify_block() {
-  Ref<Specify_blockContext> _localctx = std::make_shared<Specify_blockContext>(_ctx, getState());
+Verilog2001Parser::Specify_blockContext* Verilog2001Parser::specify_block() {
+  Specify_blockContext *_localctx = _tracker.createInstance<Specify_blockContext>(_ctx, getState());
   enterRule(_localctx, 336, Verilog2001Parser::RuleSpecify_block);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15152,7 +15317,7 @@ Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::specify_block() 
     _la = _input->LA(1);
     while (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__30 || ((((_la - 99) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__30 || ((((_la - 99) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 99)) & ((1ULL << (Verilog2001Parser::T__98 - 99))
       | (1ULL << (Verilog2001Parser::T__128 - 99))
       | (1ULL << (Verilog2001Parser::T__129 - 99))
@@ -15182,40 +15347,40 @@ Ref<Verilog2001Parser::Specify_blockContext> Verilog2001Parser::specify_block() 
 
 //----------------- Specify_itemContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specify_itemContext::Specify_itemContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specify_itemContext::Specify_itemContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Specparam_declarationContext> Verilog2001Parser::Specify_itemContext::specparam_declaration() {
+Verilog2001Parser::Specparam_declarationContext* Verilog2001Parser::Specify_itemContext::specparam_declaration() {
   return getRuleContext<Verilog2001Parser::Specparam_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Pulsestyle_declarationContext> Verilog2001Parser::Specify_itemContext::pulsestyle_declaration() {
+Verilog2001Parser::Pulsestyle_declarationContext* Verilog2001Parser::Specify_itemContext::pulsestyle_declaration() {
   return getRuleContext<Verilog2001Parser::Pulsestyle_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Showcancelled_declarationContext> Verilog2001Parser::Specify_itemContext::showcancelled_declaration() {
+Verilog2001Parser::Showcancelled_declarationContext* Verilog2001Parser::Specify_itemContext::showcancelled_declaration() {
   return getRuleContext<Verilog2001Parser::Showcancelled_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Path_declarationContext> Verilog2001Parser::Specify_itemContext::path_declaration() {
+Verilog2001Parser::Path_declarationContext* Verilog2001Parser::Specify_itemContext::path_declaration() {
   return getRuleContext<Verilog2001Parser::Path_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specify_itemContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specify_itemContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecify_item;
 }
 
 antlrcpp::Any Verilog2001Parser::Specify_itemContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecify_item(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecify_item(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specify_itemContext> Verilog2001Parser::specify_item() {
-  Ref<Specify_itemContext> _localctx = std::make_shared<Specify_itemContext>(_ctx, getState());
+Verilog2001Parser::Specify_itemContext* Verilog2001Parser::specify_item() {
+  Specify_itemContext *_localctx = _tracker.createInstance<Specify_itemContext>(_ctx, getState());
   enterRule(_localctx, 338, Verilog2001Parser::RuleSpecify_item);
 
   auto onExit = finally([=] {
@@ -15275,28 +15440,28 @@ Ref<Verilog2001Parser::Specify_itemContext> Verilog2001Parser::specify_item() {
 
 //----------------- Pulsestyle_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Pulsestyle_declarationContext::Pulsestyle_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Pulsestyle_declarationContext::Pulsestyle_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::Pulsestyle_declarationContext::list_of_path_outputs() {
+Verilog2001Parser::List_of_path_outputsContext* Verilog2001Parser::Pulsestyle_declarationContext::list_of_path_outputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_outputsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Pulsestyle_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Pulsestyle_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RulePulsestyle_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Pulsestyle_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPulsestyle_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPulsestyle_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Pulsestyle_declarationContext> Verilog2001Parser::pulsestyle_declaration() {
-  Ref<Pulsestyle_declarationContext> _localctx = std::make_shared<Pulsestyle_declarationContext>(_ctx, getState());
+Verilog2001Parser::Pulsestyle_declarationContext* Verilog2001Parser::pulsestyle_declaration() {
+  Pulsestyle_declarationContext *_localctx = _tracker.createInstance<Pulsestyle_declarationContext>(_ctx, getState());
   enterRule(_localctx, 340, Verilog2001Parser::RulePulsestyle_declaration);
 
   auto onExit = finally([=] {
@@ -15344,28 +15509,28 @@ Ref<Verilog2001Parser::Pulsestyle_declarationContext> Verilog2001Parser::pulsest
 
 //----------------- Showcancelled_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Showcancelled_declarationContext::Showcancelled_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Showcancelled_declarationContext::Showcancelled_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::Showcancelled_declarationContext::list_of_path_outputs() {
+Verilog2001Parser::List_of_path_outputsContext* Verilog2001Parser::Showcancelled_declarationContext::list_of_path_outputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_outputsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Showcancelled_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Showcancelled_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleShowcancelled_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Showcancelled_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitShowcancelled_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitShowcancelled_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Showcancelled_declarationContext> Verilog2001Parser::showcancelled_declaration() {
-  Ref<Showcancelled_declarationContext> _localctx = std::make_shared<Showcancelled_declarationContext>(_ctx, getState());
+Verilog2001Parser::Showcancelled_declarationContext* Verilog2001Parser::showcancelled_declaration() {
+  Showcancelled_declarationContext *_localctx = _tracker.createInstance<Showcancelled_declarationContext>(_ctx, getState());
   enterRule(_localctx, 342, Verilog2001Parser::RuleShowcancelled_declaration);
 
   auto onExit = finally([=] {
@@ -15413,36 +15578,36 @@ Ref<Verilog2001Parser::Showcancelled_declarationContext> Verilog2001Parser::show
 
 //----------------- Path_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Path_declarationContext::Path_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Path_declarationContext::Path_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Simple_path_declarationContext> Verilog2001Parser::Path_declarationContext::simple_path_declaration() {
+Verilog2001Parser::Simple_path_declarationContext* Verilog2001Parser::Path_declarationContext::simple_path_declaration() {
   return getRuleContext<Verilog2001Parser::Simple_path_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Edge_sensitive_path_declarationContext> Verilog2001Parser::Path_declarationContext::edge_sensitive_path_declaration() {
+Verilog2001Parser::Edge_sensitive_path_declarationContext* Verilog2001Parser::Path_declarationContext::edge_sensitive_path_declaration() {
   return getRuleContext<Verilog2001Parser::Edge_sensitive_path_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::State_dependent_path_declarationContext> Verilog2001Parser::Path_declarationContext::state_dependent_path_declaration() {
+Verilog2001Parser::State_dependent_path_declarationContext* Verilog2001Parser::Path_declarationContext::state_dependent_path_declaration() {
   return getRuleContext<Verilog2001Parser::State_dependent_path_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Path_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Path_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RulePath_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPath_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPath_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Path_declarationContext> Verilog2001Parser::path_declaration() {
-  Ref<Path_declarationContext> _localctx = std::make_shared<Path_declarationContext>(_ctx, getState());
+Verilog2001Parser::Path_declarationContext* Verilog2001Parser::path_declaration() {
+  Path_declarationContext *_localctx = _tracker.createInstance<Path_declarationContext>(_ctx, getState());
   enterRule(_localctx, 344, Verilog2001Parser::RulePath_declaration);
 
   auto onExit = finally([=] {
@@ -15493,36 +15658,36 @@ Ref<Verilog2001Parser::Path_declarationContext> Verilog2001Parser::path_declarat
 
 //----------------- Simple_path_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Simple_path_declarationContext::Simple_path_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Simple_path_declarationContext::Simple_path_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Parallel_path_descriptionContext> Verilog2001Parser::Simple_path_declarationContext::parallel_path_description() {
+Verilog2001Parser::Parallel_path_descriptionContext* Verilog2001Parser::Simple_path_declarationContext::parallel_path_description() {
   return getRuleContext<Verilog2001Parser::Parallel_path_descriptionContext>(0);
 }
 
-Ref<Verilog2001Parser::Path_delay_valueContext> Verilog2001Parser::Simple_path_declarationContext::path_delay_value() {
+Verilog2001Parser::Path_delay_valueContext* Verilog2001Parser::Simple_path_declarationContext::path_delay_value() {
   return getRuleContext<Verilog2001Parser::Path_delay_valueContext>(0);
 }
 
-Ref<Verilog2001Parser::Full_path_descriptionContext> Verilog2001Parser::Simple_path_declarationContext::full_path_description() {
+Verilog2001Parser::Full_path_descriptionContext* Verilog2001Parser::Simple_path_declarationContext::full_path_description() {
   return getRuleContext<Verilog2001Parser::Full_path_descriptionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Simple_path_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Simple_path_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSimple_path_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Simple_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSimple_path_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSimple_path_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Simple_path_declarationContext> Verilog2001Parser::simple_path_declaration() {
-  Ref<Simple_path_declarationContext> _localctx = std::make_shared<Simple_path_declarationContext>(_ctx, getState());
+Verilog2001Parser::Simple_path_declarationContext* Verilog2001Parser::simple_path_declaration() {
+  Simple_path_declarationContext *_localctx = _tracker.createInstance<Simple_path_declarationContext>(_ctx, getState());
   enterRule(_localctx, 346, Verilog2001Parser::RuleSimple_path_declaration);
 
   auto onExit = finally([=] {
@@ -15571,38 +15736,38 @@ Ref<Verilog2001Parser::Simple_path_declarationContext> Verilog2001Parser::simple
 
 //----------------- Parallel_path_descriptionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parallel_path_descriptionContext::Parallel_path_descriptionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parallel_path_descriptionContext::Parallel_path_descriptionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::Parallel_path_descriptionContext::specify_input_terminal_descriptor() {
+Verilog2001Parser::Specify_input_terminal_descriptorContext* Verilog2001Parser::Parallel_path_descriptionContext::specify_input_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_input_terminal_descriptorContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::Parallel_path_descriptionContext::specify_output_terminal_descriptor() {
+Verilog2001Parser::Specify_output_terminal_descriptorContext* Verilog2001Parser::Parallel_path_descriptionContext::specify_output_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_output_terminal_descriptorContext>(0);
 }
 
-Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::Parallel_path_descriptionContext::polarity_operator() {
+Verilog2001Parser::Polarity_operatorContext* Verilog2001Parser::Parallel_path_descriptionContext::polarity_operator() {
   return getRuleContext<Verilog2001Parser::Polarity_operatorContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parallel_path_descriptionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parallel_path_descriptionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParallel_path_description;
 }
 
 antlrcpp::Any Verilog2001Parser::Parallel_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParallel_path_description(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParallel_path_description(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parallel_path_descriptionContext> Verilog2001Parser::parallel_path_description() {
-  Ref<Parallel_path_descriptionContext> _localctx = std::make_shared<Parallel_path_descriptionContext>(_ctx, getState());
+Verilog2001Parser::Parallel_path_descriptionContext* Verilog2001Parser::parallel_path_description() {
+  Parallel_path_descriptionContext *_localctx = _tracker.createInstance<Parallel_path_descriptionContext>(_ctx, getState());
   enterRule(_localctx, 348, Verilog2001Parser::RuleParallel_path_description);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15612,6 +15777,7 @@ Ref<Verilog2001Parser::Parallel_path_descriptionContext> Verilog2001Parser::para
     setState(3033);
     specify_input_terminal_descriptor();
     setState(3035);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__135
@@ -15637,38 +15803,38 @@ Ref<Verilog2001Parser::Parallel_path_descriptionContext> Verilog2001Parser::para
 
 //----------------- Full_path_descriptionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Full_path_descriptionContext::Full_path_descriptionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Full_path_descriptionContext::Full_path_descriptionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_path_inputsContext> Verilog2001Parser::Full_path_descriptionContext::list_of_path_inputs() {
+Verilog2001Parser::List_of_path_inputsContext* Verilog2001Parser::Full_path_descriptionContext::list_of_path_inputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_inputsContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::Full_path_descriptionContext::list_of_path_outputs() {
+Verilog2001Parser::List_of_path_outputsContext* Verilog2001Parser::Full_path_descriptionContext::list_of_path_outputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_outputsContext>(0);
 }
 
-Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::Full_path_descriptionContext::polarity_operator() {
+Verilog2001Parser::Polarity_operatorContext* Verilog2001Parser::Full_path_descriptionContext::polarity_operator() {
   return getRuleContext<Verilog2001Parser::Polarity_operatorContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Full_path_descriptionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Full_path_descriptionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFull_path_description;
 }
 
 antlrcpp::Any Verilog2001Parser::Full_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFull_path_description(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFull_path_description(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Full_path_descriptionContext> Verilog2001Parser::full_path_description() {
-  Ref<Full_path_descriptionContext> _localctx = std::make_shared<Full_path_descriptionContext>(_ctx, getState());
+Verilog2001Parser::Full_path_descriptionContext* Verilog2001Parser::full_path_description() {
+  Full_path_descriptionContext *_localctx = _tracker.createInstance<Full_path_descriptionContext>(_ctx, getState());
   enterRule(_localctx, 350, Verilog2001Parser::RuleFull_path_description);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15680,6 +15846,7 @@ Ref<Verilog2001Parser::Full_path_descriptionContext> Verilog2001Parser::full_pat
     setState(3041);
     list_of_path_inputs();
     setState(3043);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__135
@@ -15707,34 +15874,34 @@ Ref<Verilog2001Parser::Full_path_descriptionContext> Verilog2001Parser::full_pat
 
 //----------------- List_of_path_inputsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_path_inputsContext::List_of_path_inputsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_path_inputsContext::List_of_path_inputsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext>> Verilog2001Parser::List_of_path_inputsContext::specify_input_terminal_descriptor() {
+std::vector<Verilog2001Parser::Specify_input_terminal_descriptorContext *> Verilog2001Parser::List_of_path_inputsContext::specify_input_terminal_descriptor() {
   return getRuleContexts<Verilog2001Parser::Specify_input_terminal_descriptorContext>();
 }
 
-Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::List_of_path_inputsContext::specify_input_terminal_descriptor(int i) {
-  return getRuleContext<Verilog2001Parser::Specify_input_terminal_descriptorContext>((size_t)i);
+Verilog2001Parser::Specify_input_terminal_descriptorContext* Verilog2001Parser::List_of_path_inputsContext::specify_input_terminal_descriptor(size_t i) {
+  return getRuleContext<Verilog2001Parser::Specify_input_terminal_descriptorContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_path_inputsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_path_inputsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_path_inputs;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_path_inputsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_path_inputs(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_path_inputs(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_path_inputsContext> Verilog2001Parser::list_of_path_inputs() {
-  Ref<List_of_path_inputsContext> _localctx = std::make_shared<List_of_path_inputsContext>(_ctx, getState());
+Verilog2001Parser::List_of_path_inputsContext* Verilog2001Parser::list_of_path_inputs() {
+  List_of_path_inputsContext *_localctx = _tracker.createInstance<List_of_path_inputsContext>(_ctx, getState());
   enterRule(_localctx, 352, Verilog2001Parser::RuleList_of_path_inputs);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15768,34 +15935,34 @@ Ref<Verilog2001Parser::List_of_path_inputsContext> Verilog2001Parser::list_of_pa
 
 //----------------- List_of_path_outputsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_path_outputsContext::List_of_path_outputsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_path_outputsContext::List_of_path_outputsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext>> Verilog2001Parser::List_of_path_outputsContext::specify_output_terminal_descriptor() {
+std::vector<Verilog2001Parser::Specify_output_terminal_descriptorContext *> Verilog2001Parser::List_of_path_outputsContext::specify_output_terminal_descriptor() {
   return getRuleContexts<Verilog2001Parser::Specify_output_terminal_descriptorContext>();
 }
 
-Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::List_of_path_outputsContext::specify_output_terminal_descriptor(int i) {
-  return getRuleContext<Verilog2001Parser::Specify_output_terminal_descriptorContext>((size_t)i);
+Verilog2001Parser::Specify_output_terminal_descriptorContext* Verilog2001Parser::List_of_path_outputsContext::specify_output_terminal_descriptor(size_t i) {
+  return getRuleContext<Verilog2001Parser::Specify_output_terminal_descriptorContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::List_of_path_outputsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_path_outputsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_path_outputs;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_path_outputsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_path_outputs(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_path_outputs(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::list_of_path_outputs() {
-  Ref<List_of_path_outputsContext> _localctx = std::make_shared<List_of_path_outputsContext>(_ctx, getState());
+Verilog2001Parser::List_of_path_outputsContext* Verilog2001Parser::list_of_path_outputs() {
+  List_of_path_outputsContext *_localctx = _tracker.createInstance<List_of_path_outputsContext>(_ctx, getState());
   enterRule(_localctx, 354, Verilog2001Parser::RuleList_of_path_outputs);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -15829,36 +15996,36 @@ Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::list_of_p
 
 //----------------- Specify_input_terminal_descriptorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specify_input_terminal_descriptorContext::Specify_input_terminal_descriptorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specify_input_terminal_descriptorContext::Specify_input_terminal_descriptorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Input_identifierContext> Verilog2001Parser::Specify_input_terminal_descriptorContext::input_identifier() {
+Verilog2001Parser::Input_identifierContext* Verilog2001Parser::Specify_input_terminal_descriptorContext::input_identifier() {
   return getRuleContext<Verilog2001Parser::Input_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Specify_input_terminal_descriptorContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Specify_input_terminal_descriptorContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Specify_input_terminal_descriptorContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Specify_input_terminal_descriptorContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specify_input_terminal_descriptorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specify_input_terminal_descriptorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecify_input_terminal_descriptor;
 }
 
 antlrcpp::Any Verilog2001Parser::Specify_input_terminal_descriptorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecify_input_terminal_descriptor(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecify_input_terminal_descriptor(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::specify_input_terminal_descriptor() {
-  Ref<Specify_input_terminal_descriptorContext> _localctx = std::make_shared<Specify_input_terminal_descriptorContext>(_ctx, getState());
+Verilog2001Parser::Specify_input_terminal_descriptorContext* Verilog2001Parser::specify_input_terminal_descriptor() {
+  Specify_input_terminal_descriptorContext *_localctx = _tracker.createInstance<Specify_input_terminal_descriptorContext>(_ctx, getState());
   enterRule(_localctx, 356, Verilog2001Parser::RuleSpecify_input_terminal_descriptor);
 
   auto onExit = finally([=] {
@@ -15915,36 +16082,36 @@ Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Pars
 
 //----------------- Specify_output_terminal_descriptorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specify_output_terminal_descriptorContext::Specify_output_terminal_descriptorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specify_output_terminal_descriptorContext::Specify_output_terminal_descriptorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_identifierContext> Verilog2001Parser::Specify_output_terminal_descriptorContext::output_identifier() {
+Verilog2001Parser::Output_identifierContext* Verilog2001Parser::Specify_output_terminal_descriptorContext::output_identifier() {
   return getRuleContext<Verilog2001Parser::Output_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Specify_output_terminal_descriptorContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Specify_output_terminal_descriptorContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Specify_output_terminal_descriptorContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Specify_output_terminal_descriptorContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specify_output_terminal_descriptorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specify_output_terminal_descriptorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecify_output_terminal_descriptor;
 }
 
 antlrcpp::Any Verilog2001Parser::Specify_output_terminal_descriptorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecify_output_terminal_descriptor(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecify_output_terminal_descriptor(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::specify_output_terminal_descriptor() {
-  Ref<Specify_output_terminal_descriptorContext> _localctx = std::make_shared<Specify_output_terminal_descriptorContext>(_ctx, getState());
+Verilog2001Parser::Specify_output_terminal_descriptorContext* Verilog2001Parser::specify_output_terminal_descriptor() {
+  Specify_output_terminal_descriptorContext *_localctx = _tracker.createInstance<Specify_output_terminal_descriptorContext>(_ctx, getState());
   enterRule(_localctx, 358, Verilog2001Parser::RuleSpecify_output_terminal_descriptor);
 
   auto onExit = finally([=] {
@@ -16001,32 +16168,32 @@ Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Par
 
 //----------------- Input_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Input_identifierContext::Input_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Input_identifierContext::Input_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Input_port_identifierContext> Verilog2001Parser::Input_identifierContext::input_port_identifier() {
+Verilog2001Parser::Input_port_identifierContext* Verilog2001Parser::Input_identifierContext::input_port_identifier() {
   return getRuleContext<Verilog2001Parser::Input_port_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Inout_port_identifierContext> Verilog2001Parser::Input_identifierContext::inout_port_identifier() {
+Verilog2001Parser::Inout_port_identifierContext* Verilog2001Parser::Input_identifierContext::inout_port_identifier() {
   return getRuleContext<Verilog2001Parser::Inout_port_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Input_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Input_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInput_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Input_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInput_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInput_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Input_identifierContext> Verilog2001Parser::input_identifier() {
-  Ref<Input_identifierContext> _localctx = std::make_shared<Input_identifierContext>(_ctx, getState());
+Verilog2001Parser::Input_identifierContext* Verilog2001Parser::input_identifier() {
+  Input_identifierContext *_localctx = _tracker.createInstance<Input_identifierContext>(_ctx, getState());
   enterRule(_localctx, 360, Verilog2001Parser::RuleInput_identifier);
 
   auto onExit = finally([=] {
@@ -16064,32 +16231,32 @@ Ref<Verilog2001Parser::Input_identifierContext> Verilog2001Parser::input_identif
 
 //----------------- Output_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Output_identifierContext::Output_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Output_identifierContext::Output_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Output_port_identifierContext> Verilog2001Parser::Output_identifierContext::output_port_identifier() {
+Verilog2001Parser::Output_port_identifierContext* Verilog2001Parser::Output_identifierContext::output_port_identifier() {
   return getRuleContext<Verilog2001Parser::Output_port_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Inout_port_identifierContext> Verilog2001Parser::Output_identifierContext::inout_port_identifier() {
+Verilog2001Parser::Inout_port_identifierContext* Verilog2001Parser::Output_identifierContext::inout_port_identifier() {
   return getRuleContext<Verilog2001Parser::Inout_port_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Output_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Output_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOutput_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Output_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOutput_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOutput_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Output_identifierContext> Verilog2001Parser::output_identifier() {
-  Ref<Output_identifierContext> _localctx = std::make_shared<Output_identifierContext>(_ctx, getState());
+Verilog2001Parser::Output_identifierContext* Verilog2001Parser::output_identifier() {
+  Output_identifierContext *_localctx = _tracker.createInstance<Output_identifierContext>(_ctx, getState());
   enterRule(_localctx, 362, Verilog2001Parser::RuleOutput_identifier);
 
   auto onExit = finally([=] {
@@ -16127,28 +16294,28 @@ Ref<Verilog2001Parser::Output_identifierContext> Verilog2001Parser::output_ident
 
 //----------------- Path_delay_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Path_delay_valueContext::Path_delay_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Path_delay_valueContext::Path_delay_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_path_delay_expressionsContext> Verilog2001Parser::Path_delay_valueContext::list_of_path_delay_expressions() {
+Verilog2001Parser::List_of_path_delay_expressionsContext* Verilog2001Parser::Path_delay_valueContext::list_of_path_delay_expressions() {
   return getRuleContext<Verilog2001Parser::List_of_path_delay_expressionsContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Path_delay_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Path_delay_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RulePath_delay_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Path_delay_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPath_delay_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPath_delay_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Path_delay_valueContext> Verilog2001Parser::path_delay_value() {
-  Ref<Path_delay_valueContext> _localctx = std::make_shared<Path_delay_valueContext>(_ctx, getState());
+Verilog2001Parser::Path_delay_valueContext* Verilog2001Parser::path_delay_value() {
+  Path_delay_valueContext *_localctx = _tracker.createInstance<Path_delay_valueContext>(_ctx, getState());
   enterRule(_localctx, 364, Verilog2001Parser::RulePath_delay_value);
 
   auto onExit = finally([=] {
@@ -16190,88 +16357,88 @@ Ref<Verilog2001Parser::Path_delay_valueContext> Verilog2001Parser::path_delay_va
 
 //----------------- List_of_path_delay_expressionsContext ------------------------------------------------------------------
 
-Verilog2001Parser::List_of_path_delay_expressionsContext::List_of_path_delay_expressionsContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::List_of_path_delay_expressionsContext::List_of_path_delay_expressionsContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::T_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t_path_delay_expression() {
+Verilog2001Parser::T_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Trise_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::trise_path_delay_expression() {
+Verilog2001Parser::Trise_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::trise_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Trise_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tfall_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tfall_path_delay_expression() {
+Verilog2001Parser::Tfall_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tfall_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tfall_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tz_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tz_path_delay_expression() {
+Verilog2001Parser::Tz_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tz_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tz_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T01_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t01_path_delay_expression() {
+Verilog2001Parser::T01_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t01_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T01_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T10_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t10_path_delay_expression() {
+Verilog2001Parser::T10_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t10_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T10_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T0z_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t0z_path_delay_expression() {
+Verilog2001Parser::T0z_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t0z_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T0z_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tz1_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tz1_path_delay_expression() {
+Verilog2001Parser::Tz1_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tz1_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tz1_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T1z_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t1z_path_delay_expression() {
+Verilog2001Parser::T1z_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t1z_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T1z_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tz0_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tz0_path_delay_expression() {
+Verilog2001Parser::Tz0_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tz0_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tz0_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T0x_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t0x_path_delay_expression() {
+Verilog2001Parser::T0x_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t0x_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T0x_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tx1_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tx1_path_delay_expression() {
+Verilog2001Parser::Tx1_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tx1_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tx1_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::T1x_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::t1x_path_delay_expression() {
+Verilog2001Parser::T1x_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::t1x_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::T1x_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tx0_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tx0_path_delay_expression() {
+Verilog2001Parser::Tx0_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tx0_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tx0_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Txz_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::txz_path_delay_expression() {
+Verilog2001Parser::Txz_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::txz_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Txz_path_delay_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Tzx_path_delay_expressionContext> Verilog2001Parser::List_of_path_delay_expressionsContext::tzx_path_delay_expression() {
+Verilog2001Parser::Tzx_path_delay_expressionContext* Verilog2001Parser::List_of_path_delay_expressionsContext::tzx_path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Tzx_path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::List_of_path_delay_expressionsContext::getRuleIndex() const {
+size_t Verilog2001Parser::List_of_path_delay_expressionsContext::getRuleIndex() const {
   return Verilog2001Parser::RuleList_of_path_delay_expressions;
 }
 
 antlrcpp::Any Verilog2001Parser::List_of_path_delay_expressionsContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitList_of_path_delay_expressions(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitList_of_path_delay_expressions(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::List_of_path_delay_expressionsContext> Verilog2001Parser::list_of_path_delay_expressions() {
-  Ref<List_of_path_delay_expressionsContext> _localctx = std::make_shared<List_of_path_delay_expressionsContext>(_ctx, getState());
+Verilog2001Parser::List_of_path_delay_expressionsContext* Verilog2001Parser::list_of_path_delay_expressions() {
+  List_of_path_delay_expressionsContext *_localctx = _tracker.createInstance<List_of_path_delay_expressionsContext>(_ctx, getState());
   enterRule(_localctx, 366, Verilog2001Parser::RuleList_of_path_delay_expressions);
 
   auto onExit = finally([=] {
@@ -16406,28 +16573,28 @@ Ref<Verilog2001Parser::List_of_path_delay_expressionsContext> Verilog2001Parser:
 
 //----------------- T_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T_path_delay_expressionContext::T_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T_path_delay_expressionContext::T_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T_path_delay_expressionContext> Verilog2001Parser::t_path_delay_expression() {
-  Ref<T_path_delay_expressionContext> _localctx = std::make_shared<T_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T_path_delay_expressionContext* Verilog2001Parser::t_path_delay_expression() {
+  T_path_delay_expressionContext *_localctx = _tracker.createInstance<T_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 368, Verilog2001Parser::RuleT_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16450,28 +16617,28 @@ Ref<Verilog2001Parser::T_path_delay_expressionContext> Verilog2001Parser::t_path
 
 //----------------- Trise_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Trise_path_delay_expressionContext::Trise_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Trise_path_delay_expressionContext::Trise_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Trise_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Trise_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Trise_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Trise_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTrise_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Trise_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTrise_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTrise_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Trise_path_delay_expressionContext> Verilog2001Parser::trise_path_delay_expression() {
-  Ref<Trise_path_delay_expressionContext> _localctx = std::make_shared<Trise_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Trise_path_delay_expressionContext* Verilog2001Parser::trise_path_delay_expression() {
+  Trise_path_delay_expressionContext *_localctx = _tracker.createInstance<Trise_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 370, Verilog2001Parser::RuleTrise_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16494,28 +16661,28 @@ Ref<Verilog2001Parser::Trise_path_delay_expressionContext> Verilog2001Parser::tr
 
 //----------------- Tfall_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tfall_path_delay_expressionContext::Tfall_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tfall_path_delay_expressionContext::Tfall_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tfall_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tfall_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tfall_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tfall_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTfall_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tfall_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTfall_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTfall_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tfall_path_delay_expressionContext> Verilog2001Parser::tfall_path_delay_expression() {
-  Ref<Tfall_path_delay_expressionContext> _localctx = std::make_shared<Tfall_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tfall_path_delay_expressionContext* Verilog2001Parser::tfall_path_delay_expression() {
+  Tfall_path_delay_expressionContext *_localctx = _tracker.createInstance<Tfall_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 372, Verilog2001Parser::RuleTfall_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16538,28 +16705,28 @@ Ref<Verilog2001Parser::Tfall_path_delay_expressionContext> Verilog2001Parser::tf
 
 //----------------- Tz_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tz_path_delay_expressionContext::Tz_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tz_path_delay_expressionContext::Tz_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tz_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tz_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tz_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tz_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTz_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tz_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTz_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTz_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tz_path_delay_expressionContext> Verilog2001Parser::tz_path_delay_expression() {
-  Ref<Tz_path_delay_expressionContext> _localctx = std::make_shared<Tz_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tz_path_delay_expressionContext* Verilog2001Parser::tz_path_delay_expression() {
+  Tz_path_delay_expressionContext *_localctx = _tracker.createInstance<Tz_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 374, Verilog2001Parser::RuleTz_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16582,28 +16749,28 @@ Ref<Verilog2001Parser::Tz_path_delay_expressionContext> Verilog2001Parser::tz_pa
 
 //----------------- T01_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T01_path_delay_expressionContext::T01_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T01_path_delay_expressionContext::T01_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T01_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T01_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T01_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T01_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT01_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T01_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT01_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT01_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T01_path_delay_expressionContext> Verilog2001Parser::t01_path_delay_expression() {
-  Ref<T01_path_delay_expressionContext> _localctx = std::make_shared<T01_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T01_path_delay_expressionContext* Verilog2001Parser::t01_path_delay_expression() {
+  T01_path_delay_expressionContext *_localctx = _tracker.createInstance<T01_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 376, Verilog2001Parser::RuleT01_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16626,28 +16793,28 @@ Ref<Verilog2001Parser::T01_path_delay_expressionContext> Verilog2001Parser::t01_
 
 //----------------- T10_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T10_path_delay_expressionContext::T10_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T10_path_delay_expressionContext::T10_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T10_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T10_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T10_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T10_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT10_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T10_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT10_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT10_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T10_path_delay_expressionContext> Verilog2001Parser::t10_path_delay_expression() {
-  Ref<T10_path_delay_expressionContext> _localctx = std::make_shared<T10_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T10_path_delay_expressionContext* Verilog2001Parser::t10_path_delay_expression() {
+  T10_path_delay_expressionContext *_localctx = _tracker.createInstance<T10_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 378, Verilog2001Parser::RuleT10_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16670,28 +16837,28 @@ Ref<Verilog2001Parser::T10_path_delay_expressionContext> Verilog2001Parser::t10_
 
 //----------------- T0z_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T0z_path_delay_expressionContext::T0z_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T0z_path_delay_expressionContext::T0z_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T0z_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T0z_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T0z_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T0z_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT0z_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T0z_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT0z_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT0z_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T0z_path_delay_expressionContext> Verilog2001Parser::t0z_path_delay_expression() {
-  Ref<T0z_path_delay_expressionContext> _localctx = std::make_shared<T0z_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T0z_path_delay_expressionContext* Verilog2001Parser::t0z_path_delay_expression() {
+  T0z_path_delay_expressionContext *_localctx = _tracker.createInstance<T0z_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 380, Verilog2001Parser::RuleT0z_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16714,28 +16881,28 @@ Ref<Verilog2001Parser::T0z_path_delay_expressionContext> Verilog2001Parser::t0z_
 
 //----------------- Tz1_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tz1_path_delay_expressionContext::Tz1_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tz1_path_delay_expressionContext::Tz1_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tz1_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tz1_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tz1_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tz1_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTz1_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tz1_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTz1_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTz1_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tz1_path_delay_expressionContext> Verilog2001Parser::tz1_path_delay_expression() {
-  Ref<Tz1_path_delay_expressionContext> _localctx = std::make_shared<Tz1_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tz1_path_delay_expressionContext* Verilog2001Parser::tz1_path_delay_expression() {
+  Tz1_path_delay_expressionContext *_localctx = _tracker.createInstance<Tz1_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 382, Verilog2001Parser::RuleTz1_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16758,28 +16925,28 @@ Ref<Verilog2001Parser::Tz1_path_delay_expressionContext> Verilog2001Parser::tz1_
 
 //----------------- T1z_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T1z_path_delay_expressionContext::T1z_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T1z_path_delay_expressionContext::T1z_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T1z_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T1z_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T1z_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T1z_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT1z_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T1z_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT1z_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT1z_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T1z_path_delay_expressionContext> Verilog2001Parser::t1z_path_delay_expression() {
-  Ref<T1z_path_delay_expressionContext> _localctx = std::make_shared<T1z_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T1z_path_delay_expressionContext* Verilog2001Parser::t1z_path_delay_expression() {
+  T1z_path_delay_expressionContext *_localctx = _tracker.createInstance<T1z_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 384, Verilog2001Parser::RuleT1z_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16802,28 +16969,28 @@ Ref<Verilog2001Parser::T1z_path_delay_expressionContext> Verilog2001Parser::t1z_
 
 //----------------- Tz0_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tz0_path_delay_expressionContext::Tz0_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tz0_path_delay_expressionContext::Tz0_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tz0_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tz0_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tz0_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tz0_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTz0_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tz0_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTz0_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTz0_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tz0_path_delay_expressionContext> Verilog2001Parser::tz0_path_delay_expression() {
-  Ref<Tz0_path_delay_expressionContext> _localctx = std::make_shared<Tz0_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tz0_path_delay_expressionContext* Verilog2001Parser::tz0_path_delay_expression() {
+  Tz0_path_delay_expressionContext *_localctx = _tracker.createInstance<Tz0_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 386, Verilog2001Parser::RuleTz0_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16846,28 +17013,28 @@ Ref<Verilog2001Parser::Tz0_path_delay_expressionContext> Verilog2001Parser::tz0_
 
 //----------------- T0x_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T0x_path_delay_expressionContext::T0x_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T0x_path_delay_expressionContext::T0x_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T0x_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T0x_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T0x_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T0x_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT0x_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T0x_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT0x_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT0x_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T0x_path_delay_expressionContext> Verilog2001Parser::t0x_path_delay_expression() {
-  Ref<T0x_path_delay_expressionContext> _localctx = std::make_shared<T0x_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T0x_path_delay_expressionContext* Verilog2001Parser::t0x_path_delay_expression() {
+  T0x_path_delay_expressionContext *_localctx = _tracker.createInstance<T0x_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 388, Verilog2001Parser::RuleT0x_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16890,28 +17057,28 @@ Ref<Verilog2001Parser::T0x_path_delay_expressionContext> Verilog2001Parser::t0x_
 
 //----------------- Tx1_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tx1_path_delay_expressionContext::Tx1_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tx1_path_delay_expressionContext::Tx1_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tx1_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tx1_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tx1_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tx1_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTx1_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tx1_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTx1_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTx1_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tx1_path_delay_expressionContext> Verilog2001Parser::tx1_path_delay_expression() {
-  Ref<Tx1_path_delay_expressionContext> _localctx = std::make_shared<Tx1_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tx1_path_delay_expressionContext* Verilog2001Parser::tx1_path_delay_expression() {
+  Tx1_path_delay_expressionContext *_localctx = _tracker.createInstance<Tx1_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 390, Verilog2001Parser::RuleTx1_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16934,28 +17101,28 @@ Ref<Verilog2001Parser::Tx1_path_delay_expressionContext> Verilog2001Parser::tx1_
 
 //----------------- T1x_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::T1x_path_delay_expressionContext::T1x_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::T1x_path_delay_expressionContext::T1x_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::T1x_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::T1x_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::T1x_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::T1x_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleT1x_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::T1x_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitT1x_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitT1x_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::T1x_path_delay_expressionContext> Verilog2001Parser::t1x_path_delay_expression() {
-  Ref<T1x_path_delay_expressionContext> _localctx = std::make_shared<T1x_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::T1x_path_delay_expressionContext* Verilog2001Parser::t1x_path_delay_expression() {
+  T1x_path_delay_expressionContext *_localctx = _tracker.createInstance<T1x_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 392, Verilog2001Parser::RuleT1x_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -16978,28 +17145,28 @@ Ref<Verilog2001Parser::T1x_path_delay_expressionContext> Verilog2001Parser::t1x_
 
 //----------------- Tx0_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tx0_path_delay_expressionContext::Tx0_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tx0_path_delay_expressionContext::Tx0_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tx0_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tx0_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tx0_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tx0_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTx0_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tx0_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTx0_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTx0_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tx0_path_delay_expressionContext> Verilog2001Parser::tx0_path_delay_expression() {
-  Ref<Tx0_path_delay_expressionContext> _localctx = std::make_shared<Tx0_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tx0_path_delay_expressionContext* Verilog2001Parser::tx0_path_delay_expression() {
+  Tx0_path_delay_expressionContext *_localctx = _tracker.createInstance<Tx0_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 394, Verilog2001Parser::RuleTx0_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -17022,28 +17189,28 @@ Ref<Verilog2001Parser::Tx0_path_delay_expressionContext> Verilog2001Parser::tx0_
 
 //----------------- Txz_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Txz_path_delay_expressionContext::Txz_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Txz_path_delay_expressionContext::Txz_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Txz_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Txz_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Txz_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Txz_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTxz_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Txz_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTxz_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTxz_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Txz_path_delay_expressionContext> Verilog2001Parser::txz_path_delay_expression() {
-  Ref<Txz_path_delay_expressionContext> _localctx = std::make_shared<Txz_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Txz_path_delay_expressionContext* Verilog2001Parser::txz_path_delay_expression() {
+  Txz_path_delay_expressionContext *_localctx = _tracker.createInstance<Txz_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 396, Verilog2001Parser::RuleTxz_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -17066,28 +17233,28 @@ Ref<Verilog2001Parser::Txz_path_delay_expressionContext> Verilog2001Parser::txz_
 
 //----------------- Tzx_path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Tzx_path_delay_expressionContext::Tzx_path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Tzx_path_delay_expressionContext::Tzx_path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::Tzx_path_delay_expressionContext::path_delay_expression() {
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::Tzx_path_delay_expressionContext::path_delay_expression() {
   return getRuleContext<Verilog2001Parser::Path_delay_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Tzx_path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Tzx_path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTzx_path_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Tzx_path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTzx_path_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTzx_path_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Tzx_path_delay_expressionContext> Verilog2001Parser::tzx_path_delay_expression() {
-  Ref<Tzx_path_delay_expressionContext> _localctx = std::make_shared<Tzx_path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Tzx_path_delay_expressionContext* Verilog2001Parser::tzx_path_delay_expression() {
+  Tzx_path_delay_expressionContext *_localctx = _tracker.createInstance<Tzx_path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 398, Verilog2001Parser::RuleTzx_path_delay_expression);
 
   auto onExit = finally([=] {
@@ -17110,28 +17277,28 @@ Ref<Verilog2001Parser::Tzx_path_delay_expressionContext> Verilog2001Parser::tzx_
 
 //----------------- Path_delay_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Path_delay_expressionContext::Path_delay_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Path_delay_expressionContext::Path_delay_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Path_delay_expressionContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Path_delay_expressionContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Path_delay_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Path_delay_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RulePath_delay_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Path_delay_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPath_delay_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPath_delay_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::path_delay_expression() {
-  Ref<Path_delay_expressionContext> _localctx = std::make_shared<Path_delay_expressionContext>(_ctx, getState());
+Verilog2001Parser::Path_delay_expressionContext* Verilog2001Parser::path_delay_expression() {
+  Path_delay_expressionContext *_localctx = _tracker.createInstance<Path_delay_expressionContext>(_ctx, getState());
   enterRule(_localctx, 400, Verilog2001Parser::RulePath_delay_expression);
 
   auto onExit = finally([=] {
@@ -17154,36 +17321,36 @@ Ref<Verilog2001Parser::Path_delay_expressionContext> Verilog2001Parser::path_del
 
 //----------------- Edge_sensitive_path_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Edge_sensitive_path_declarationContext::Edge_sensitive_path_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Edge_sensitive_path_declarationContext::Edge_sensitive_path_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2001Parser::Edge_sensitive_path_declarationContext::parallel_edge_sensitive_path_description() {
+Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext* Verilog2001Parser::Edge_sensitive_path_declarationContext::parallel_edge_sensitive_path_description() {
   return getRuleContext<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext>(0);
 }
 
-Ref<Verilog2001Parser::Path_delay_valueContext> Verilog2001Parser::Edge_sensitive_path_declarationContext::path_delay_value() {
+Verilog2001Parser::Path_delay_valueContext* Verilog2001Parser::Edge_sensitive_path_declarationContext::path_delay_value() {
   return getRuleContext<Verilog2001Parser::Path_delay_valueContext>(0);
 }
 
-Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001Parser::Edge_sensitive_path_declarationContext::full_edge_sensitive_path_description() {
+Verilog2001Parser::Full_edge_sensitive_path_descriptionContext* Verilog2001Parser::Edge_sensitive_path_declarationContext::full_edge_sensitive_path_description() {
   return getRuleContext<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Edge_sensitive_path_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Edge_sensitive_path_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEdge_sensitive_path_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::Edge_sensitive_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEdge_sensitive_path_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEdge_sensitive_path_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Edge_sensitive_path_declarationContext> Verilog2001Parser::edge_sensitive_path_declaration() {
-  Ref<Edge_sensitive_path_declarationContext> _localctx = std::make_shared<Edge_sensitive_path_declarationContext>(_ctx, getState());
+Verilog2001Parser::Edge_sensitive_path_declarationContext* Verilog2001Parser::edge_sensitive_path_declaration() {
+  Edge_sensitive_path_declarationContext *_localctx = _tracker.createInstance<Edge_sensitive_path_declarationContext>(_ctx, getState());
   enterRule(_localctx, 402, Verilog2001Parser::RuleEdge_sensitive_path_declaration);
 
   auto onExit = finally([=] {
@@ -17229,46 +17396,46 @@ Ref<Verilog2001Parser::Edge_sensitive_path_declarationContext> Verilog2001Parser
 
 //----------------- Parallel_edge_sensitive_path_descriptionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::Parallel_edge_sensitive_path_descriptionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::Parallel_edge_sensitive_path_descriptionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Specify_input_terminal_descriptorContext> Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::specify_input_terminal_descriptor() {
+Verilog2001Parser::Specify_input_terminal_descriptorContext* Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::specify_input_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_input_terminal_descriptorContext>(0);
 }
 
-Ref<Verilog2001Parser::Specify_output_terminal_descriptorContext> Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::specify_output_terminal_descriptor() {
+Verilog2001Parser::Specify_output_terminal_descriptorContext* Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::specify_output_terminal_descriptor() {
   return getRuleContext<Verilog2001Parser::Specify_output_terminal_descriptorContext>(0);
 }
 
-Ref<Verilog2001Parser::Data_source_expressionContext> Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::data_source_expression() {
+Verilog2001Parser::Data_source_expressionContext* Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::data_source_expression() {
   return getRuleContext<Verilog2001Parser::Data_source_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::edge_identifier() {
+Verilog2001Parser::Edge_identifierContext* Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::edge_identifier() {
   return getRuleContext<Verilog2001Parser::Edge_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::polarity_operator() {
+Verilog2001Parser::Polarity_operatorContext* Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::polarity_operator() {
   return getRuleContext<Verilog2001Parser::Polarity_operatorContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParallel_edge_sensitive_path_description;
 }
 
 antlrcpp::Any Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParallel_edge_sensitive_path_description(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParallel_edge_sensitive_path_description(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2001Parser::parallel_edge_sensitive_path_description() {
-  Ref<Parallel_edge_sensitive_path_descriptionContext> _localctx = std::make_shared<Parallel_edge_sensitive_path_descriptionContext>(_ctx, getState());
+Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext* Verilog2001Parser::parallel_edge_sensitive_path_description() {
+  Parallel_edge_sensitive_path_descriptionContext *_localctx = _tracker.createInstance<Parallel_edge_sensitive_path_descriptionContext>(_ctx, getState());
   enterRule(_localctx, 404, Verilog2001Parser::RuleParallel_edge_sensitive_path_description);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -17278,6 +17445,7 @@ Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2
     setState(3199);
     match(Verilog2001Parser::T__15);
     setState(3201);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__119
@@ -17293,6 +17461,7 @@ Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2
     setState(3205);
     specify_output_terminal_descriptor();
     setState(3207);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__135
@@ -17320,46 +17489,46 @@ Ref<Verilog2001Parser::Parallel_edge_sensitive_path_descriptionContext> Verilog2
 
 //----------------- Full_edge_sensitive_path_descriptionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::Full_edge_sensitive_path_descriptionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::Full_edge_sensitive_path_descriptionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::List_of_path_inputsContext> Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::list_of_path_inputs() {
+Verilog2001Parser::List_of_path_inputsContext* Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::list_of_path_inputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_inputsContext>(0);
 }
 
-Ref<Verilog2001Parser::List_of_path_outputsContext> Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::list_of_path_outputs() {
+Verilog2001Parser::List_of_path_outputsContext* Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::list_of_path_outputs() {
   return getRuleContext<Verilog2001Parser::List_of_path_outputsContext>(0);
 }
 
-Ref<Verilog2001Parser::Data_source_expressionContext> Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::data_source_expression() {
+Verilog2001Parser::Data_source_expressionContext* Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::data_source_expression() {
   return getRuleContext<Verilog2001Parser::Data_source_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::edge_identifier() {
+Verilog2001Parser::Edge_identifierContext* Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::edge_identifier() {
   return getRuleContext<Verilog2001Parser::Edge_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::polarity_operator() {
+Verilog2001Parser::Polarity_operatorContext* Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::polarity_operator() {
   return getRuleContext<Verilog2001Parser::Polarity_operatorContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFull_edge_sensitive_path_description;
 }
 
 antlrcpp::Any Verilog2001Parser::Full_edge_sensitive_path_descriptionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFull_edge_sensitive_path_description(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFull_edge_sensitive_path_description(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001Parser::full_edge_sensitive_path_description() {
-  Ref<Full_edge_sensitive_path_descriptionContext> _localctx = std::make_shared<Full_edge_sensitive_path_descriptionContext>(_ctx, getState());
+Verilog2001Parser::Full_edge_sensitive_path_descriptionContext* Verilog2001Parser::full_edge_sensitive_path_description() {
+  Full_edge_sensitive_path_descriptionContext *_localctx = _tracker.createInstance<Full_edge_sensitive_path_descriptionContext>(_ctx, getState());
   enterRule(_localctx, 406, Verilog2001Parser::RuleFull_edge_sensitive_path_description);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -17369,6 +17538,7 @@ Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001P
     setState(3213);
     match(Verilog2001Parser::T__15);
     setState(3215);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__119
@@ -17384,6 +17554,7 @@ Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001P
     setState(3219);
     list_of_path_outputs();
     setState(3221);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__135
@@ -17411,28 +17582,28 @@ Ref<Verilog2001Parser::Full_edge_sensitive_path_descriptionContext> Verilog2001P
 
 //----------------- Data_source_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Data_source_expressionContext::Data_source_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Data_source_expressionContext::Data_source_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Data_source_expressionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Data_source_expressionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Data_source_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Data_source_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleData_source_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Data_source_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitData_source_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitData_source_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Data_source_expressionContext> Verilog2001Parser::data_source_expression() {
-  Ref<Data_source_expressionContext> _localctx = std::make_shared<Data_source_expressionContext>(_ctx, getState());
+Verilog2001Parser::Data_source_expressionContext* Verilog2001Parser::data_source_expression() {
+  Data_source_expressionContext *_localctx = _tracker.createInstance<Data_source_expressionContext>(_ctx, getState());
   enterRule(_localctx, 408, Verilog2001Parser::RuleData_source_expression);
 
   auto onExit = finally([=] {
@@ -17455,26 +17626,26 @@ Ref<Verilog2001Parser::Data_source_expressionContext> Verilog2001Parser::data_so
 
 //----------------- Edge_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Edge_identifierContext::Edge_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Edge_identifierContext::Edge_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Edge_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Edge_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEdge_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Edge_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEdge_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEdge_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::edge_identifier() {
-  Ref<Edge_identifierContext> _localctx = std::make_shared<Edge_identifierContext>(_ctx, getState());
+Verilog2001Parser::Edge_identifierContext* Verilog2001Parser::edge_identifier() {
+  Edge_identifierContext *_localctx = _tracker.createInstance<Edge_identifierContext>(_ctx, getState());
   enterRule(_localctx, 410, Verilog2001Parser::RuleEdge_identifier);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -17487,7 +17658,9 @@ Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::edge_identifie
 
     || _la == Verilog2001Parser::T__120)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -17503,36 +17676,36 @@ Ref<Verilog2001Parser::Edge_identifierContext> Verilog2001Parser::edge_identifie
 
 //----------------- State_dependent_path_declarationContext ------------------------------------------------------------------
 
-Verilog2001Parser::State_dependent_path_declarationContext::State_dependent_path_declarationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::State_dependent_path_declarationContext::State_dependent_path_declarationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::State_dependent_path_declarationContext::module_path_expression() {
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::State_dependent_path_declarationContext::module_path_expression() {
   return getRuleContext<Verilog2001Parser::Module_path_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Simple_path_declarationContext> Verilog2001Parser::State_dependent_path_declarationContext::simple_path_declaration() {
+Verilog2001Parser::Simple_path_declarationContext* Verilog2001Parser::State_dependent_path_declarationContext::simple_path_declaration() {
   return getRuleContext<Verilog2001Parser::Simple_path_declarationContext>(0);
 }
 
-Ref<Verilog2001Parser::Edge_sensitive_path_declarationContext> Verilog2001Parser::State_dependent_path_declarationContext::edge_sensitive_path_declaration() {
+Verilog2001Parser::Edge_sensitive_path_declarationContext* Verilog2001Parser::State_dependent_path_declarationContext::edge_sensitive_path_declaration() {
   return getRuleContext<Verilog2001Parser::Edge_sensitive_path_declarationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::State_dependent_path_declarationContext::getRuleIndex() const {
+size_t Verilog2001Parser::State_dependent_path_declarationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleState_dependent_path_declaration;
 }
 
 antlrcpp::Any Verilog2001Parser::State_dependent_path_declarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitState_dependent_path_declaration(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitState_dependent_path_declaration(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::State_dependent_path_declarationContext> Verilog2001Parser::state_dependent_path_declaration() {
-  Ref<State_dependent_path_declarationContext> _localctx = std::make_shared<State_dependent_path_declarationContext>(_ctx, getState());
+Verilog2001Parser::State_dependent_path_declarationContext* Verilog2001Parser::state_dependent_path_declaration() {
+  State_dependent_path_declarationContext *_localctx = _tracker.createInstance<State_dependent_path_declarationContext>(_ctx, getState());
   enterRule(_localctx, 412, Verilog2001Parser::RuleState_dependent_path_declaration);
 
   auto onExit = finally([=] {
@@ -17595,26 +17768,26 @@ Ref<Verilog2001Parser::State_dependent_path_declarationContext> Verilog2001Parse
 
 //----------------- Polarity_operatorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Polarity_operatorContext::Polarity_operatorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Polarity_operatorContext::Polarity_operatorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Polarity_operatorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Polarity_operatorContext::getRuleIndex() const {
   return Verilog2001Parser::RulePolarity_operator;
 }
 
 antlrcpp::Any Verilog2001Parser::Polarity_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPolarity_operator(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPolarity_operator(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::polarity_operator() {
-  Ref<Polarity_operatorContext> _localctx = std::make_shared<Polarity_operatorContext>(_ctx, getState());
+Verilog2001Parser::Polarity_operatorContext* Verilog2001Parser::polarity_operator() {
+  Polarity_operatorContext *_localctx = _tracker.createInstance<Polarity_operatorContext>(_ctx, getState());
   enterRule(_localctx, 414, Verilog2001Parser::RulePolarity_operator);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -17627,7 +17800,9 @@ Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::polarity_ope
 
     || _la == Verilog2001Parser::T__136)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -17643,28 +17818,28 @@ Ref<Verilog2001Parser::Polarity_operatorContext> Verilog2001Parser::polarity_ope
 
 //----------------- Checktime_conditionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Checktime_conditionContext::Checktime_conditionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Checktime_conditionContext::Checktime_conditionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::Checktime_conditionContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::Checktime_conditionContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Checktime_conditionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Checktime_conditionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleChecktime_condition;
 }
 
 antlrcpp::Any Verilog2001Parser::Checktime_conditionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitChecktime_condition(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitChecktime_condition(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Checktime_conditionContext> Verilog2001Parser::checktime_condition() {
-  Ref<Checktime_conditionContext> _localctx = std::make_shared<Checktime_conditionContext>(_ctx, getState());
+Verilog2001Parser::Checktime_conditionContext* Verilog2001Parser::checktime_condition() {
+  Checktime_conditionContext *_localctx = _tracker.createInstance<Checktime_conditionContext>(_ctx, getState());
   enterRule(_localctx, 416, Verilog2001Parser::RuleChecktime_condition);
 
   auto onExit = finally([=] {
@@ -17687,32 +17862,32 @@ Ref<Verilog2001Parser::Checktime_conditionContext> Verilog2001Parser::checktime_
 
 //----------------- Delayed_dataContext ------------------------------------------------------------------
 
-Verilog2001Parser::Delayed_dataContext::Delayed_dataContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delayed_dataContext::Delayed_dataContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Terminal_identifierContext> Verilog2001Parser::Delayed_dataContext::terminal_identifier() {
+Verilog2001Parser::Terminal_identifierContext* Verilog2001Parser::Delayed_dataContext::terminal_identifier() {
   return getRuleContext<Verilog2001Parser::Terminal_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Delayed_dataContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Delayed_dataContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Delayed_dataContext::getRuleIndex() const {
+size_t Verilog2001Parser::Delayed_dataContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDelayed_data;
 }
 
 antlrcpp::Any Verilog2001Parser::Delayed_dataContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelayed_data(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelayed_data(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delayed_dataContext> Verilog2001Parser::delayed_data() {
-  Ref<Delayed_dataContext> _localctx = std::make_shared<Delayed_dataContext>(_ctx, getState());
+Verilog2001Parser::Delayed_dataContext* Verilog2001Parser::delayed_data() {
+  Delayed_dataContext *_localctx = _tracker.createInstance<Delayed_dataContext>(_ctx, getState());
   enterRule(_localctx, 418, Verilog2001Parser::RuleDelayed_data);
 
   auto onExit = finally([=] {
@@ -17756,32 +17931,32 @@ Ref<Verilog2001Parser::Delayed_dataContext> Verilog2001Parser::delayed_data() {
 
 //----------------- Delayed_referenceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Delayed_referenceContext::Delayed_referenceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Delayed_referenceContext::Delayed_referenceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Terminal_identifierContext> Verilog2001Parser::Delayed_referenceContext::terminal_identifier() {
+Verilog2001Parser::Terminal_identifierContext* Verilog2001Parser::Delayed_referenceContext::terminal_identifier() {
   return getRuleContext<Verilog2001Parser::Terminal_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Delayed_referenceContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Delayed_referenceContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Delayed_referenceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Delayed_referenceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDelayed_reference;
 }
 
 antlrcpp::Any Verilog2001Parser::Delayed_referenceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDelayed_reference(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDelayed_reference(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Delayed_referenceContext> Verilog2001Parser::delayed_reference() {
-  Ref<Delayed_referenceContext> _localctx = std::make_shared<Delayed_referenceContext>(_ctx, getState());
+Verilog2001Parser::Delayed_referenceContext* Verilog2001Parser::delayed_reference() {
+  Delayed_referenceContext *_localctx = _tracker.createInstance<Delayed_referenceContext>(_ctx, getState());
   enterRule(_localctx, 420, Verilog2001Parser::RuleDelayed_reference);
 
   auto onExit = finally([=] {
@@ -17825,28 +18000,28 @@ Ref<Verilog2001Parser::Delayed_referenceContext> Verilog2001Parser::delayed_refe
 
 //----------------- End_edge_offsetContext ------------------------------------------------------------------
 
-Verilog2001Parser::End_edge_offsetContext::End_edge_offsetContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::End_edge_offsetContext::End_edge_offsetContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::End_edge_offsetContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::End_edge_offsetContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::End_edge_offsetContext::getRuleIndex() const {
+size_t Verilog2001Parser::End_edge_offsetContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEnd_edge_offset;
 }
 
 antlrcpp::Any Verilog2001Parser::End_edge_offsetContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEnd_edge_offset(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEnd_edge_offset(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::End_edge_offsetContext> Verilog2001Parser::end_edge_offset() {
-  Ref<End_edge_offsetContext> _localctx = std::make_shared<End_edge_offsetContext>(_ctx, getState());
+Verilog2001Parser::End_edge_offsetContext* Verilog2001Parser::end_edge_offset() {
+  End_edge_offsetContext *_localctx = _tracker.createInstance<End_edge_offsetContext>(_ctx, getState());
   enterRule(_localctx, 422, Verilog2001Parser::RuleEnd_edge_offset);
 
   auto onExit = finally([=] {
@@ -17869,28 +18044,28 @@ Ref<Verilog2001Parser::End_edge_offsetContext> Verilog2001Parser::end_edge_offse
 
 //----------------- Event_based_flagContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_based_flagContext::Event_based_flagContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_based_flagContext::Event_based_flagContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Event_based_flagContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Event_based_flagContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_based_flagContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_based_flagContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_based_flag;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_based_flagContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_based_flag(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_based_flag(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_based_flagContext> Verilog2001Parser::event_based_flag() {
-  Ref<Event_based_flagContext> _localctx = std::make_shared<Event_based_flagContext>(_ctx, getState());
+Verilog2001Parser::Event_based_flagContext* Verilog2001Parser::event_based_flag() {
+  Event_based_flagContext *_localctx = _tracker.createInstance<Event_based_flagContext>(_ctx, getState());
   enterRule(_localctx, 424, Verilog2001Parser::RuleEvent_based_flag);
 
   auto onExit = finally([=] {
@@ -17913,28 +18088,28 @@ Ref<Verilog2001Parser::Event_based_flagContext> Verilog2001Parser::event_based_f
 
 //----------------- Notify_regContext ------------------------------------------------------------------
 
-Verilog2001Parser::Notify_regContext::Notify_regContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Notify_regContext::Notify_regContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::Notify_regContext::variable_identifier() {
+Verilog2001Parser::Variable_identifierContext* Verilog2001Parser::Notify_regContext::variable_identifier() {
   return getRuleContext<Verilog2001Parser::Variable_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Notify_regContext::getRuleIndex() const {
+size_t Verilog2001Parser::Notify_regContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNotify_reg;
 }
 
 antlrcpp::Any Verilog2001Parser::Notify_regContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNotify_reg(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNotify_reg(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Notify_regContext> Verilog2001Parser::notify_reg() {
-  Ref<Notify_regContext> _localctx = std::make_shared<Notify_regContext>(_ctx, getState());
+Verilog2001Parser::Notify_regContext* Verilog2001Parser::notify_reg() {
+  Notify_regContext *_localctx = _tracker.createInstance<Notify_regContext>(_ctx, getState());
   enterRule(_localctx, 426, Verilog2001Parser::RuleNotify_reg);
 
   auto onExit = finally([=] {
@@ -17957,28 +18132,28 @@ Ref<Verilog2001Parser::Notify_regContext> Verilog2001Parser::notify_reg() {
 
 //----------------- Remain_active_flagContext ------------------------------------------------------------------
 
-Verilog2001Parser::Remain_active_flagContext::Remain_active_flagContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Remain_active_flagContext::Remain_active_flagContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Remain_active_flagContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Remain_active_flagContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Remain_active_flagContext::getRuleIndex() const {
+size_t Verilog2001Parser::Remain_active_flagContext::getRuleIndex() const {
   return Verilog2001Parser::RuleRemain_active_flag;
 }
 
 antlrcpp::Any Verilog2001Parser::Remain_active_flagContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitRemain_active_flag(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitRemain_active_flag(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Remain_active_flagContext> Verilog2001Parser::remain_active_flag() {
-  Ref<Remain_active_flagContext> _localctx = std::make_shared<Remain_active_flagContext>(_ctx, getState());
+Verilog2001Parser::Remain_active_flagContext* Verilog2001Parser::remain_active_flag() {
+  Remain_active_flagContext *_localctx = _tracker.createInstance<Remain_active_flagContext>(_ctx, getState());
   enterRule(_localctx, 428, Verilog2001Parser::RuleRemain_active_flag);
 
   auto onExit = finally([=] {
@@ -18001,28 +18176,28 @@ Ref<Verilog2001Parser::Remain_active_flagContext> Verilog2001Parser::remain_acti
 
 //----------------- Stamptime_conditionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Stamptime_conditionContext::Stamptime_conditionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Stamptime_conditionContext::Stamptime_conditionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::Stamptime_conditionContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::Stamptime_conditionContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Stamptime_conditionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Stamptime_conditionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleStamptime_condition;
 }
 
 antlrcpp::Any Verilog2001Parser::Stamptime_conditionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStamptime_condition(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStamptime_condition(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Stamptime_conditionContext> Verilog2001Parser::stamptime_condition() {
-  Ref<Stamptime_conditionContext> _localctx = std::make_shared<Stamptime_conditionContext>(_ctx, getState());
+Verilog2001Parser::Stamptime_conditionContext* Verilog2001Parser::stamptime_condition() {
+  Stamptime_conditionContext *_localctx = _tracker.createInstance<Stamptime_conditionContext>(_ctx, getState());
   enterRule(_localctx, 430, Verilog2001Parser::RuleStamptime_condition);
 
   auto onExit = finally([=] {
@@ -18045,28 +18220,28 @@ Ref<Verilog2001Parser::Stamptime_conditionContext> Verilog2001Parser::stamptime_
 
 //----------------- Start_edge_offsetContext ------------------------------------------------------------------
 
-Verilog2001Parser::Start_edge_offsetContext::Start_edge_offsetContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Start_edge_offsetContext::Start_edge_offsetContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::Start_edge_offsetContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::Start_edge_offsetContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Start_edge_offsetContext::getRuleIndex() const {
+size_t Verilog2001Parser::Start_edge_offsetContext::getRuleIndex() const {
   return Verilog2001Parser::RuleStart_edge_offset;
 }
 
 antlrcpp::Any Verilog2001Parser::Start_edge_offsetContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitStart_edge_offset(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitStart_edge_offset(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Start_edge_offsetContext> Verilog2001Parser::start_edge_offset() {
-  Ref<Start_edge_offsetContext> _localctx = std::make_shared<Start_edge_offsetContext>(_ctx, getState());
+Verilog2001Parser::Start_edge_offsetContext* Verilog2001Parser::start_edge_offset() {
+  Start_edge_offsetContext *_localctx = _tracker.createInstance<Start_edge_offsetContext>(_ctx, getState());
   enterRule(_localctx, 432, Verilog2001Parser::RuleStart_edge_offset);
 
   auto onExit = finally([=] {
@@ -18089,28 +18264,28 @@ Ref<Verilog2001Parser::Start_edge_offsetContext> Verilog2001Parser::start_edge_o
 
 //----------------- ThresholdContext ------------------------------------------------------------------
 
-Verilog2001Parser::ThresholdContext::ThresholdContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::ThresholdContext::ThresholdContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::ThresholdContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::ThresholdContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::ThresholdContext::getRuleIndex() const {
+size_t Verilog2001Parser::ThresholdContext::getRuleIndex() const {
   return Verilog2001Parser::RuleThreshold;
 }
 
 antlrcpp::Any Verilog2001Parser::ThresholdContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitThreshold(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitThreshold(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::ThresholdContext> Verilog2001Parser::threshold() {
-  Ref<ThresholdContext> _localctx = std::make_shared<ThresholdContext>(_ctx, getState());
+Verilog2001Parser::ThresholdContext* Verilog2001Parser::threshold() {
+  ThresholdContext *_localctx = _tracker.createInstance<ThresholdContext>(_ctx, getState());
   enterRule(_localctx, 434, Verilog2001Parser::RuleThreshold);
 
   auto onExit = finally([=] {
@@ -18133,28 +18308,28 @@ Ref<Verilog2001Parser::ThresholdContext> Verilog2001Parser::threshold() {
 
 //----------------- Timing_check_limitContext ------------------------------------------------------------------
 
-Verilog2001Parser::Timing_check_limitContext::Timing_check_limitContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Timing_check_limitContext::Timing_check_limitContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Timing_check_limitContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Timing_check_limitContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Timing_check_limitContext::getRuleIndex() const {
+size_t Verilog2001Parser::Timing_check_limitContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTiming_check_limit;
 }
 
 antlrcpp::Any Verilog2001Parser::Timing_check_limitContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTiming_check_limit(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTiming_check_limit(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Timing_check_limitContext> Verilog2001Parser::timing_check_limit() {
-  Ref<Timing_check_limitContext> _localctx = std::make_shared<Timing_check_limitContext>(_ctx, getState());
+Verilog2001Parser::Timing_check_limitContext* Verilog2001Parser::timing_check_limit() {
+  Timing_check_limitContext *_localctx = _tracker.createInstance<Timing_check_limitContext>(_ctx, getState());
   enterRule(_localctx, 436, Verilog2001Parser::RuleTiming_check_limit);
 
   auto onExit = finally([=] {
@@ -18177,34 +18352,34 @@ Ref<Verilog2001Parser::Timing_check_limitContext> Verilog2001Parser::timing_chec
 
 //----------------- ConcatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::ConcatenationContext::ConcatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::ConcatenationContext::ConcatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::ConcatenationContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::ConcatenationContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::ConcatenationContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::ConcatenationContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::ConcatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::ConcatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConcatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::ConcatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConcatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConcatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::ConcatenationContext> Verilog2001Parser::concatenation() {
-  Ref<ConcatenationContext> _localctx = std::make_shared<ConcatenationContext>(_ctx, getState());
+Verilog2001Parser::ConcatenationContext* Verilog2001Parser::concatenation() {
+  ConcatenationContext *_localctx = _tracker.createInstance<ConcatenationContext>(_ctx, getState());
   enterRule(_localctx, 438, Verilog2001Parser::RuleConcatenation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -18242,34 +18417,34 @@ Ref<Verilog2001Parser::ConcatenationContext> Verilog2001Parser::concatenation() 
 
 //----------------- Constant_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_concatenationContext::Constant_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_concatenationContext::Constant_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Constant_concatenationContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Constant_concatenationContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_concatenationContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_concatenationContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Constant_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_concatenationContext> Verilog2001Parser::constant_concatenation() {
-  Ref<Constant_concatenationContext> _localctx = std::make_shared<Constant_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Constant_concatenationContext* Verilog2001Parser::constant_concatenation() {
+  Constant_concatenationContext *_localctx = _tracker.createInstance<Constant_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 440, Verilog2001Parser::RuleConstant_concatenation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -18307,32 +18482,32 @@ Ref<Verilog2001Parser::Constant_concatenationContext> Verilog2001Parser::constan
 
 //----------------- Constant_multiple_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_multiple_concatenationContext::Constant_multiple_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_multiple_concatenationContext::Constant_multiple_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_multiple_concatenationContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_multiple_concatenationContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_concatenationContext> Verilog2001Parser::Constant_multiple_concatenationContext::constant_concatenation() {
+Verilog2001Parser::Constant_concatenationContext* Verilog2001Parser::Constant_multiple_concatenationContext::constant_concatenation() {
   return getRuleContext<Verilog2001Parser::Constant_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Constant_multiple_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_multiple_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_multiple_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_multiple_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_multiple_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_multiple_concatenationContext> Verilog2001Parser::constant_multiple_concatenation() {
-  Ref<Constant_multiple_concatenationContext> _localctx = std::make_shared<Constant_multiple_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Constant_multiple_concatenationContext* Verilog2001Parser::constant_multiple_concatenation() {
+  Constant_multiple_concatenationContext *_localctx = _tracker.createInstance<Constant_multiple_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 442, Verilog2001Parser::RuleConstant_multiple_concatenation);
 
   auto onExit = finally([=] {
@@ -18361,34 +18536,34 @@ Ref<Verilog2001Parser::Constant_multiple_concatenationContext> Verilog2001Parser
 
 //----------------- Module_path_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_concatenationContext::Module_path_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_concatenationContext::Module_path_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Module_path_expressionContext>> Verilog2001Parser::Module_path_concatenationContext::module_path_expression() {
+std::vector<Verilog2001Parser::Module_path_expressionContext *> Verilog2001Parser::Module_path_concatenationContext::module_path_expression() {
   return getRuleContexts<Verilog2001Parser::Module_path_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::Module_path_concatenationContext::module_path_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>((size_t)i);
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::Module_path_concatenationContext::module_path_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_concatenationContext> Verilog2001Parser::module_path_concatenation() {
-  Ref<Module_path_concatenationContext> _localctx = std::make_shared<Module_path_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Module_path_concatenationContext* Verilog2001Parser::module_path_concatenation() {
+  Module_path_concatenationContext *_localctx = _tracker.createInstance<Module_path_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 444, Verilog2001Parser::RuleModule_path_concatenation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -18426,32 +18601,32 @@ Ref<Verilog2001Parser::Module_path_concatenationContext> Verilog2001Parser::modu
 
 //----------------- Module_path_multiple_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_multiple_concatenationContext::Module_path_multiple_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_multiple_concatenationContext::Module_path_multiple_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Module_path_multiple_concatenationContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Module_path_multiple_concatenationContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_path_concatenationContext> Verilog2001Parser::Module_path_multiple_concatenationContext::module_path_concatenation() {
+Verilog2001Parser::Module_path_concatenationContext* Verilog2001Parser::Module_path_multiple_concatenationContext::module_path_concatenation() {
   return getRuleContext<Verilog2001Parser::Module_path_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_multiple_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_multiple_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_multiple_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_multiple_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_multiple_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_multiple_concatenationContext> Verilog2001Parser::module_path_multiple_concatenation() {
-  Ref<Module_path_multiple_concatenationContext> _localctx = std::make_shared<Module_path_multiple_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Module_path_multiple_concatenationContext* Verilog2001Parser::module_path_multiple_concatenation() {
+  Module_path_multiple_concatenationContext *_localctx = _tracker.createInstance<Module_path_multiple_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 446, Verilog2001Parser::RuleModule_path_multiple_concatenation);
 
   auto onExit = finally([=] {
@@ -18480,32 +18655,32 @@ Ref<Verilog2001Parser::Module_path_multiple_concatenationContext> Verilog2001Par
 
 //----------------- Multiple_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Multiple_concatenationContext::Multiple_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Multiple_concatenationContext::Multiple_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Multiple_concatenationContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Multiple_concatenationContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::ConcatenationContext> Verilog2001Parser::Multiple_concatenationContext::concatenation() {
+Verilog2001Parser::ConcatenationContext* Verilog2001Parser::Multiple_concatenationContext::concatenation() {
   return getRuleContext<Verilog2001Parser::ConcatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Multiple_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Multiple_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMultiple_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Multiple_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMultiple_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMultiple_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Multiple_concatenationContext> Verilog2001Parser::multiple_concatenation() {
-  Ref<Multiple_concatenationContext> _localctx = std::make_shared<Multiple_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Multiple_concatenationContext* Verilog2001Parser::multiple_concatenation() {
+  Multiple_concatenationContext *_localctx = _tracker.createInstance<Multiple_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 448, Verilog2001Parser::RuleMultiple_concatenation);
 
   auto onExit = finally([=] {
@@ -18534,34 +18709,34 @@ Ref<Verilog2001Parser::Multiple_concatenationContext> Verilog2001Parser::multipl
 
 //----------------- Net_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_concatenationContext::Net_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_concatenationContext::Net_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Net_concatenation_valueContext>> Verilog2001Parser::Net_concatenationContext::net_concatenation_value() {
+std::vector<Verilog2001Parser::Net_concatenation_valueContext *> Verilog2001Parser::Net_concatenationContext::net_concatenation_value() {
   return getRuleContexts<Verilog2001Parser::Net_concatenation_valueContext>();
 }
 
-Ref<Verilog2001Parser::Net_concatenation_valueContext> Verilog2001Parser::Net_concatenationContext::net_concatenation_value(int i) {
-  return getRuleContext<Verilog2001Parser::Net_concatenation_valueContext>((size_t)i);
+Verilog2001Parser::Net_concatenation_valueContext* Verilog2001Parser::Net_concatenationContext::net_concatenation_value(size_t i) {
+  return getRuleContext<Verilog2001Parser::Net_concatenation_valueContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Net_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_concatenationContext> Verilog2001Parser::net_concatenation() {
-  Ref<Net_concatenationContext> _localctx = std::make_shared<Net_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Net_concatenationContext* Verilog2001Parser::net_concatenation() {
+  Net_concatenationContext *_localctx = _tracker.createInstance<Net_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 450, Verilog2001Parser::RuleNet_concatenation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -18599,52 +18774,52 @@ Ref<Verilog2001Parser::Net_concatenationContext> Verilog2001Parser::net_concaten
 
 //----------------- Net_concatenation_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_concatenation_valueContext::Net_concatenation_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_concatenation_valueContext::Net_concatenation_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_net_identifierContext> Verilog2001Parser::Net_concatenation_valueContext::hierarchical_net_identifier() {
+Verilog2001Parser::Hierarchical_net_identifierContext* Verilog2001Parser::Net_concatenation_valueContext::hierarchical_net_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_net_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Net_concatenation_valueContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Net_concatenation_valueContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Net_concatenation_valueContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Net_concatenation_valueContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Net_concatenation_valueContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Net_concatenation_valueContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_concatenationContext> Verilog2001Parser::Net_concatenation_valueContext::net_concatenation() {
+Verilog2001Parser::Net_concatenationContext* Verilog2001Parser::Net_concatenation_valueContext::net_concatenation() {
   return getRuleContext<Verilog2001Parser::Net_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_concatenation_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_concatenation_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_concatenation_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_concatenation_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_concatenation_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_concatenation_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_concatenation_valueContext> Verilog2001Parser::net_concatenation_value() {
-  Ref<Net_concatenation_valueContext> _localctx = std::make_shared<Net_concatenation_valueContext>(_ctx, getState());
+Verilog2001Parser::Net_concatenation_valueContext* Verilog2001Parser::net_concatenation_value() {
+  Net_concatenation_valueContext *_localctx = _tracker.createInstance<Net_concatenation_valueContext>(_ctx, getState());
   enterRule(_localctx, 452, Verilog2001Parser::RuleNet_concatenation_value);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3379);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 361, _ctx)) {
@@ -18751,34 +18926,34 @@ Ref<Verilog2001Parser::Net_concatenation_valueContext> Verilog2001Parser::net_co
 
 //----------------- Variable_concatenationContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_concatenationContext::Variable_concatenationContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_concatenationContext::Variable_concatenationContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Variable_concatenation_valueContext>> Verilog2001Parser::Variable_concatenationContext::variable_concatenation_value() {
+std::vector<Verilog2001Parser::Variable_concatenation_valueContext *> Verilog2001Parser::Variable_concatenationContext::variable_concatenation_value() {
   return getRuleContexts<Verilog2001Parser::Variable_concatenation_valueContext>();
 }
 
-Ref<Verilog2001Parser::Variable_concatenation_valueContext> Verilog2001Parser::Variable_concatenationContext::variable_concatenation_value(int i) {
-  return getRuleContext<Verilog2001Parser::Variable_concatenation_valueContext>((size_t)i);
+Verilog2001Parser::Variable_concatenation_valueContext* Verilog2001Parser::Variable_concatenationContext::variable_concatenation_value(size_t i) {
+  return getRuleContext<Verilog2001Parser::Variable_concatenation_valueContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Variable_concatenationContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_concatenationContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_concatenation;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_concatenationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_concatenation(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_concatenation(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_concatenationContext> Verilog2001Parser::variable_concatenation() {
-  Ref<Variable_concatenationContext> _localctx = std::make_shared<Variable_concatenationContext>(_ctx, getState());
+Verilog2001Parser::Variable_concatenationContext* Verilog2001Parser::variable_concatenation() {
+  Variable_concatenationContext *_localctx = _tracker.createInstance<Variable_concatenationContext>(_ctx, getState());
   enterRule(_localctx, 454, Verilog2001Parser::RuleVariable_concatenation);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -18816,52 +18991,52 @@ Ref<Verilog2001Parser::Variable_concatenationContext> Verilog2001Parser::variabl
 
 //----------------- Variable_concatenation_valueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_concatenation_valueContext::Variable_concatenation_valueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_concatenation_valueContext::Variable_concatenation_valueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_variable_identifierContext> Verilog2001Parser::Variable_concatenation_valueContext::hierarchical_variable_identifier() {
+Verilog2001Parser::Hierarchical_variable_identifierContext* Verilog2001Parser::Variable_concatenation_valueContext::hierarchical_variable_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_variable_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Variable_concatenation_valueContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Variable_concatenation_valueContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Variable_concatenation_valueContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Variable_concatenation_valueContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Variable_concatenation_valueContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Variable_concatenation_valueContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Variable_concatenationContext> Verilog2001Parser::Variable_concatenation_valueContext::variable_concatenation() {
+Verilog2001Parser::Variable_concatenationContext* Verilog2001Parser::Variable_concatenation_valueContext::variable_concatenation() {
   return getRuleContext<Verilog2001Parser::Variable_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Variable_concatenation_valueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_concatenation_valueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_concatenation_value;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_concatenation_valueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_concatenation_value(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_concatenation_value(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_concatenation_valueContext> Verilog2001Parser::variable_concatenation_value() {
-  Ref<Variable_concatenation_valueContext> _localctx = std::make_shared<Variable_concatenation_valueContext>(_ctx, getState());
+Verilog2001Parser::Variable_concatenation_valueContext* Verilog2001Parser::variable_concatenation_value() {
+  Variable_concatenation_valueContext *_localctx = _tracker.createInstance<Variable_concatenation_valueContext>(_ctx, getState());
   enterRule(_localctx, 456, Verilog2001Parser::RuleVariable_concatenation_value);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3429);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 365, _ctx)) {
@@ -18968,52 +19143,52 @@ Ref<Verilog2001Parser::Variable_concatenation_valueContext> Verilog2001Parser::v
 
 //----------------- Constant_function_callContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_function_callContext::Constant_function_callContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_function_callContext::Constant_function_callContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Function_identifierContext> Verilog2001Parser::Constant_function_callContext::function_identifier() {
+Verilog2001Parser::Function_identifierContext* Verilog2001Parser::Constant_function_callContext::function_identifier() {
   return getRuleContext<Verilog2001Parser::Function_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Constant_function_callContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Constant_function_callContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Constant_function_callContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Constant_function_callContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Constant_function_callContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Constant_function_callContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_function_callContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_function_callContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Constant_function_callContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_function_callContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_function_call;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_function_call(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_function_call(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::constant_function_call() {
-  Ref<Constant_function_callContext> _localctx = std::make_shared<Constant_function_callContext>(_ctx, getState());
+Verilog2001Parser::Constant_function_callContext* Verilog2001Parser::constant_function_call() {
+  Constant_function_callContext *_localctx = _tracker.createInstance<Constant_function_callContext>(_ctx, getState());
   enterRule(_localctx, 458, Verilog2001Parser::RuleConstant_function_call);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3431);
     function_identifier();
@@ -19032,11 +19207,12 @@ Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::constan
     setState(3438);
     match(Verilog2001Parser::T__15);
     setState(3447);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -19087,52 +19263,52 @@ Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::constan
 
 //----------------- Function_callContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_callContext::Function_callContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_callContext::Function_callContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_function_identifierContext> Verilog2001Parser::Function_callContext::hierarchical_function_identifier() {
+Verilog2001Parser::Hierarchical_function_identifierContext* Verilog2001Parser::Function_callContext::hierarchical_function_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_function_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Function_callContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Function_callContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Function_callContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Function_callContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Function_callContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Function_callContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Function_callContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Function_callContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Function_callContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_callContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_call;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_callContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_call(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_call(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::function_call() {
-  Ref<Function_callContext> _localctx = std::make_shared<Function_callContext>(_ctx, getState());
+Verilog2001Parser::Function_callContext* Verilog2001Parser::function_call() {
+  Function_callContext *_localctx = _tracker.createInstance<Function_callContext>(_ctx, getState());
   enterRule(_localctx, 460, Verilog2001Parser::RuleFunction_call);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3451);
     hierarchical_function_identifier();
@@ -19151,11 +19327,12 @@ Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::function_call() 
     setState(3458);
     match(Verilog2001Parser::T__15);
     setState(3467);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -19206,43 +19383,43 @@ Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::function_call() 
 
 //----------------- System_function_callContext ------------------------------------------------------------------
 
-Verilog2001Parser::System_function_callContext::System_function_callContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::System_function_callContext::System_function_callContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::System_function_identifierContext> Verilog2001Parser::System_function_callContext::system_function_identifier() {
+Verilog2001Parser::System_function_identifierContext* Verilog2001Parser::System_function_callContext::system_function_identifier() {
   return getRuleContext<Verilog2001Parser::System_function_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::System_function_callContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::System_function_callContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::System_function_callContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::System_function_callContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::System_function_callContext::getRuleIndex() const {
+size_t Verilog2001Parser::System_function_callContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSystem_function_call;
 }
 
 antlrcpp::Any Verilog2001Parser::System_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSystem_function_call(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSystem_function_call(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::System_function_callContext> Verilog2001Parser::system_function_call() {
-  Ref<System_function_callContext> _localctx = std::make_shared<System_function_callContext>(_ctx, getState());
+Verilog2001Parser::System_function_callContext* Verilog2001Parser::system_function_call() {
+  System_function_callContext *_localctx = _tracker.createInstance<System_function_callContext>(_ctx, getState());
   enterRule(_localctx, 462, Verilog2001Parser::RuleSystem_function_call);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3471);
     system_function_identifier();
@@ -19284,52 +19461,52 @@ Ref<Verilog2001Parser::System_function_callContext> Verilog2001Parser::system_fu
 
 //----------------- Genvar_function_callContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_function_callContext::Genvar_function_callContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_function_callContext::Genvar_function_callContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Genvar_function_identifierContext> Verilog2001Parser::Genvar_function_callContext::genvar_function_identifier() {
+Verilog2001Parser::Genvar_function_identifierContext* Verilog2001Parser::Genvar_function_callContext::genvar_function_identifier() {
   return getRuleContext<Verilog2001Parser::Genvar_function_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Genvar_function_callContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Genvar_function_callContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Genvar_function_callContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Genvar_function_callContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Genvar_function_callContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Genvar_function_callContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Genvar_function_callContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Genvar_function_callContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_function_callContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_function_callContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_function_call;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_function_callContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_function_call(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_function_call(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_function_callContext> Verilog2001Parser::genvar_function_call() {
-  Ref<Genvar_function_callContext> _localctx = std::make_shared<Genvar_function_callContext>(_ctx, getState());
+Verilog2001Parser::Genvar_function_callContext* Verilog2001Parser::genvar_function_call() {
+  Genvar_function_callContext *_localctx = _tracker.createInstance<Genvar_function_callContext>(_ctx, getState());
   enterRule(_localctx, 464, Verilog2001Parser::RuleGenvar_function_call);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3482);
     genvar_function_identifier();
@@ -19348,11 +19525,12 @@ Ref<Verilog2001Parser::Genvar_function_callContext> Verilog2001Parser::genvar_fu
     setState(3489);
     match(Verilog2001Parser::T__15);
     setState(3498);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__15
 
-    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    || _la == Verilog2001Parser::T__18 || ((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -19403,28 +19581,28 @@ Ref<Verilog2001Parser::Genvar_function_callContext> Verilog2001Parser::genvar_fu
 
 //----------------- Base_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Base_expressionContext::Base_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Base_expressionContext::Base_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Base_expressionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Base_expressionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Base_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Base_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBase_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Base_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBase_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBase_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Base_expressionContext> Verilog2001Parser::base_expression() {
-  Ref<Base_expressionContext> _localctx = std::make_shared<Base_expressionContext>(_ctx, getState());
+Verilog2001Parser::Base_expressionContext* Verilog2001Parser::base_expression() {
+  Base_expressionContext *_localctx = _tracker.createInstance<Base_expressionContext>(_ctx, getState());
   enterRule(_localctx, 466, Verilog2001Parser::RuleBase_expression);
 
   auto onExit = finally([=] {
@@ -19447,28 +19625,28 @@ Ref<Verilog2001Parser::Base_expressionContext> Verilog2001Parser::base_expressio
 
 //----------------- Constant_base_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_base_expressionContext::Constant_base_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_base_expressionContext::Constant_base_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_base_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_base_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Constant_base_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_base_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_base_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_base_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_base_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_base_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_base_expressionContext> Verilog2001Parser::constant_base_expression() {
-  Ref<Constant_base_expressionContext> _localctx = std::make_shared<Constant_base_expressionContext>(_ctx, getState());
+Verilog2001Parser::Constant_base_expressionContext* Verilog2001Parser::constant_base_expression() {
+  Constant_base_expressionContext *_localctx = _tracker.createInstance<Constant_base_expressionContext>(_ctx, getState());
   enterRule(_localctx, 468, Verilog2001Parser::RuleConstant_base_expression);
 
   auto onExit = finally([=] {
@@ -19491,28 +19669,28 @@ Ref<Verilog2001Parser::Constant_base_expressionContext> Verilog2001Parser::const
 
 //----------------- Constant_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_expressionContext::Constant_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_expressionContext::Constant_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Constant_expressionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Constant_expressionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Constant_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::constant_expression() {
-  Ref<Constant_expressionContext> _localctx = std::make_shared<Constant_expressionContext>(_ctx, getState());
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::constant_expression() {
+  Constant_expressionContext *_localctx = _tracker.createInstance<Constant_expressionContext>(_ctx, getState());
   enterRule(_localctx, 470, Verilog2001Parser::RuleConstant_expression);
 
   auto onExit = finally([=] {
@@ -19535,32 +19713,32 @@ Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::constant_e
 
 //----------------- Constant_mintypmax_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_mintypmax_expressionContext::Constant_mintypmax_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_mintypmax_expressionContext::Constant_mintypmax_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Constant_mintypmax_expressionContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Constant_mintypmax_expressionContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_mintypmax_expressionContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_mintypmax_expressionContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Constant_mintypmax_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_mintypmax_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_mintypmax_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_mintypmax_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_mintypmax_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::constant_mintypmax_expression() {
-  Ref<Constant_mintypmax_expressionContext> _localctx = std::make_shared<Constant_mintypmax_expressionContext>(_ctx, getState());
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::constant_mintypmax_expression() {
+  Constant_mintypmax_expressionContext *_localctx = _tracker.createInstance<Constant_mintypmax_expressionContext>(_ctx, getState());
   enterRule(_localctx, 472, Verilog2001Parser::RuleConstant_mintypmax_expression);
 
   auto onExit = finally([=] {
@@ -19606,44 +19784,44 @@ Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::
 
 //----------------- Constant_range_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_range_expressionContext::Constant_range_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_range_expressionContext::Constant_range_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Constant_range_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Constant_range_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::Constant_range_expressionContext::msb_constant_expression() {
+Verilog2001Parser::Msb_constant_expressionContext* Verilog2001Parser::Constant_range_expressionContext::msb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Msb_constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::Constant_range_expressionContext::lsb_constant_expression() {
+Verilog2001Parser::Lsb_constant_expressionContext* Verilog2001Parser::Constant_range_expressionContext::lsb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Lsb_constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_base_expressionContext> Verilog2001Parser::Constant_range_expressionContext::constant_base_expression() {
+Verilog2001Parser::Constant_base_expressionContext* Verilog2001Parser::Constant_range_expressionContext::constant_base_expression() {
   return getRuleContext<Verilog2001Parser::Constant_base_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Width_constant_expressionContext> Verilog2001Parser::Constant_range_expressionContext::width_constant_expression() {
+Verilog2001Parser::Width_constant_expressionContext* Verilog2001Parser::Constant_range_expressionContext::width_constant_expression() {
   return getRuleContext<Verilog2001Parser::Width_constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Constant_range_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_range_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_range_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_range_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_range_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_range_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_range_expressionContext> Verilog2001Parser::constant_range_expression() {
-  Ref<Constant_range_expressionContext> _localctx = std::make_shared<Constant_range_expressionContext>(_ctx, getState());
+Verilog2001Parser::Constant_range_expressionContext* Verilog2001Parser::constant_range_expression() {
+  Constant_range_expressionContext *_localctx = _tracker.createInstance<Constant_range_expressionContext>(_ctx, getState());
   enterRule(_localctx, 474, Verilog2001Parser::RuleConstant_range_expression);
 
   auto onExit = finally([=] {
@@ -19707,28 +19885,28 @@ Ref<Verilog2001Parser::Constant_range_expressionContext> Verilog2001Parser::cons
 
 //----------------- Dimension_constant_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Dimension_constant_expressionContext::Dimension_constant_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Dimension_constant_expressionContext::Dimension_constant_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Dimension_constant_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Dimension_constant_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Dimension_constant_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Dimension_constant_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDimension_constant_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Dimension_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDimension_constant_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDimension_constant_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Dimension_constant_expressionContext> Verilog2001Parser::dimension_constant_expression() {
-  Ref<Dimension_constant_expressionContext> _localctx = std::make_shared<Dimension_constant_expressionContext>(_ctx, getState());
+Verilog2001Parser::Dimension_constant_expressionContext* Verilog2001Parser::dimension_constant_expression() {
+  Dimension_constant_expressionContext *_localctx = _tracker.createInstance<Dimension_constant_expressionContext>(_ctx, getState());
   enterRule(_localctx, 476, Verilog2001Parser::RuleDimension_constant_expression);
 
   auto onExit = finally([=] {
@@ -19751,63 +19929,63 @@ Ref<Verilog2001Parser::Dimension_constant_expressionContext> Verilog2001Parser::
 
 //----------------- ExpressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::ExpressionContext::ExpressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::ExpressionContext::ExpressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::TermContext>> Verilog2001Parser::ExpressionContext::term() {
+std::vector<Verilog2001Parser::TermContext *> Verilog2001Parser::ExpressionContext::term() {
   return getRuleContexts<Verilog2001Parser::TermContext>();
 }
 
-Ref<Verilog2001Parser::TermContext> Verilog2001Parser::ExpressionContext::term(int i) {
-  return getRuleContext<Verilog2001Parser::TermContext>((size_t)i);
+Verilog2001Parser::TermContext* Verilog2001Parser::ExpressionContext::term(size_t i) {
+  return getRuleContext<Verilog2001Parser::TermContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Binary_operatorContext>> Verilog2001Parser::ExpressionContext::binary_operator() {
+std::vector<Verilog2001Parser::Binary_operatorContext *> Verilog2001Parser::ExpressionContext::binary_operator() {
   return getRuleContexts<Verilog2001Parser::Binary_operatorContext>();
 }
 
-Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::ExpressionContext::binary_operator(int i) {
-  return getRuleContext<Verilog2001Parser::Binary_operatorContext>((size_t)i);
+Verilog2001Parser::Binary_operatorContext* Verilog2001Parser::ExpressionContext::binary_operator(size_t i) {
+  return getRuleContext<Verilog2001Parser::Binary_operatorContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::ExpressionContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::ExpressionContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::ExpressionContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::ExpressionContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::ExpressionContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::ExpressionContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::ExpressionContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::ExpressionContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::ExpressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::ExpressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleExpression;
 }
 
 antlrcpp::Any Verilog2001Parser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitExpression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitExpression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::expression() {
-  Ref<ExpressionContext> _localctx = std::make_shared<ExpressionContext>(_ctx, getState());
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::expression() {
+  ExpressionContext *_localctx = _tracker.createInstance<ExpressionContext>(_ctx, getState());
   enterRule(_localctx, 478, Verilog2001Parser::RuleExpression);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3534);
     term();
@@ -19908,51 +20086,51 @@ Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::expression() {
 
 //----------------- TermContext ------------------------------------------------------------------
 
-Verilog2001Parser::TermContext::TermContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::TermContext::TermContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::TermContext::unary_operator() {
+Verilog2001Parser::Unary_operatorContext* Verilog2001Parser::TermContext::unary_operator() {
   return getRuleContext<Verilog2001Parser::Unary_operatorContext>(0);
 }
 
-Ref<Verilog2001Parser::PrimaryContext> Verilog2001Parser::TermContext::primary() {
+Verilog2001Parser::PrimaryContext* Verilog2001Parser::TermContext::primary() {
   return getRuleContext<Verilog2001Parser::PrimaryContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::TermContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::TermContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::TermContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::TermContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::TermContext::String() {
+tree::TerminalNode* Verilog2001Parser::TermContext::String() {
   return getToken(Verilog2001Parser::String, 0);
 }
 
 
-ssize_t Verilog2001Parser::TermContext::getRuleIndex() const {
+size_t Verilog2001Parser::TermContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTerm;
 }
 
 antlrcpp::Any Verilog2001Parser::TermContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTerm(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTerm(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::TermContext> Verilog2001Parser::term() {
-  Ref<TermContext> _localctx = std::make_shared<TermContext>(_ctx, getState());
+Verilog2001Parser::TermContext* Verilog2001Parser::term() {
+  TermContext *_localctx = _tracker.createInstance<TermContext>(_ctx, getState());
   enterRule(_localctx, 480, Verilog2001Parser::RuleTerm);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3571);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
@@ -20026,28 +20204,28 @@ Ref<Verilog2001Parser::TermContext> Verilog2001Parser::term() {
 
 //----------------- Lsb_constant_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Lsb_constant_expressionContext::Lsb_constant_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Lsb_constant_expressionContext::Lsb_constant_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Lsb_constant_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Lsb_constant_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Lsb_constant_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Lsb_constant_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLsb_constant_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Lsb_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLsb_constant_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLsb_constant_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::lsb_constant_expression() {
-  Ref<Lsb_constant_expressionContext> _localctx = std::make_shared<Lsb_constant_expressionContext>(_ctx, getState());
+Verilog2001Parser::Lsb_constant_expressionContext* Verilog2001Parser::lsb_constant_expression() {
+  Lsb_constant_expressionContext *_localctx = _tracker.createInstance<Lsb_constant_expressionContext>(_ctx, getState());
   enterRule(_localctx, 482, Verilog2001Parser::RuleLsb_constant_expression);
 
   auto onExit = finally([=] {
@@ -20070,34 +20248,34 @@ Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::lsb_co
 
 //----------------- Mintypmax_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Mintypmax_expressionContext::Mintypmax_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Mintypmax_expressionContext::Mintypmax_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Mintypmax_expressionContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Mintypmax_expressionContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Mintypmax_expressionContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Mintypmax_expressionContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Mintypmax_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Mintypmax_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMintypmax_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMintypmax_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMintypmax_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::mintypmax_expression() {
-  Ref<Mintypmax_expressionContext> _localctx = std::make_shared<Mintypmax_expressionContext>(_ctx, getState());
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::mintypmax_expression() {
+  Mintypmax_expressionContext *_localctx = _tracker.createInstance<Mintypmax_expressionContext>(_ctx, getState());
   enterRule(_localctx, 484, Verilog2001Parser::RuleMintypmax_expression);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -20107,6 +20285,7 @@ Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::mintypmax
     setState(3575);
     expression();
     setState(3581);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -20132,47 +20311,47 @@ Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::mintypmax
 
 //----------------- Module_path_conditional_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_conditional_expressionContext::Module_path_conditional_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_conditional_expressionContext::Module_path_conditional_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Module_path_expressionContext>> Verilog2001Parser::Module_path_conditional_expressionContext::module_path_expression() {
+std::vector<Verilog2001Parser::Module_path_expressionContext *> Verilog2001Parser::Module_path_conditional_expressionContext::module_path_expression() {
   return getRuleContexts<Verilog2001Parser::Module_path_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::Module_path_conditional_expressionContext::module_path_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>((size_t)i);
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::Module_path_conditional_expressionContext::module_path_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Module_path_conditional_expressionContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Module_path_conditional_expressionContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Module_path_conditional_expressionContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Module_path_conditional_expressionContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_conditional_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_conditional_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_conditional_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_conditional_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_conditional_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_conditional_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_conditional_expressionContext> Verilog2001Parser::module_path_conditional_expression() {
-  Ref<Module_path_conditional_expressionContext> _localctx = std::make_shared<Module_path_conditional_expressionContext>(_ctx, getState());
+Verilog2001Parser::Module_path_conditional_expressionContext* Verilog2001Parser::module_path_conditional_expression() {
+  Module_path_conditional_expressionContext *_localctx = _tracker.createInstance<Module_path_conditional_expressionContext>(_ctx, getState());
   enterRule(_localctx, 486, Verilog2001Parser::RuleModule_path_conditional_expression);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3583);
     module_path_expression();
@@ -20209,63 +20388,63 @@ Ref<Verilog2001Parser::Module_path_conditional_expressionContext> Verilog2001Par
 
 //----------------- Module_path_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_expressionContext::Module_path_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_expressionContext::Module_path_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Module_path_primaryContext> Verilog2001Parser::Module_path_expressionContext::module_path_primary() {
+Verilog2001Parser::Module_path_primaryContext* Verilog2001Parser::Module_path_expressionContext::module_path_primary() {
   return getRuleContext<Verilog2001Parser::Module_path_primaryContext>(0);
 }
 
-Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::Module_path_expressionContext::unary_module_path_operator() {
+Verilog2001Parser::Unary_module_path_operatorContext* Verilog2001Parser::Module_path_expressionContext::unary_module_path_operator() {
   return getRuleContext<Verilog2001Parser::Unary_module_path_operatorContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Binary_module_path_operatorContext>> Verilog2001Parser::Module_path_expressionContext::binary_module_path_operator() {
+std::vector<Verilog2001Parser::Binary_module_path_operatorContext *> Verilog2001Parser::Module_path_expressionContext::binary_module_path_operator() {
   return getRuleContexts<Verilog2001Parser::Binary_module_path_operatorContext>();
 }
 
-Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::Module_path_expressionContext::binary_module_path_operator(int i) {
-  return getRuleContext<Verilog2001Parser::Binary_module_path_operatorContext>((size_t)i);
+Verilog2001Parser::Binary_module_path_operatorContext* Verilog2001Parser::Module_path_expressionContext::binary_module_path_operator(size_t i) {
+  return getRuleContext<Verilog2001Parser::Binary_module_path_operatorContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Module_path_expressionContext>> Verilog2001Parser::Module_path_expressionContext::module_path_expression() {
+std::vector<Verilog2001Parser::Module_path_expressionContext *> Verilog2001Parser::Module_path_expressionContext::module_path_expression() {
   return getRuleContexts<Verilog2001Parser::Module_path_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::Module_path_expressionContext::module_path_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>((size_t)i);
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::Module_path_expressionContext::module_path_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Attribute_instanceContext>> Verilog2001Parser::Module_path_expressionContext::attribute_instance() {
+std::vector<Verilog2001Parser::Attribute_instanceContext *> Verilog2001Parser::Module_path_expressionContext::attribute_instance() {
   return getRuleContexts<Verilog2001Parser::Attribute_instanceContext>();
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::Module_path_expressionContext::attribute_instance(int i) {
-  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>((size_t)i);
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::Module_path_expressionContext::attribute_instance(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attribute_instanceContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::module_path_expression() {
-  Ref<Module_path_expressionContext> _localctx = std::make_shared<Module_path_expressionContext>(_ctx, getState());
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::module_path_expression() {
+  Module_path_expressionContext *_localctx = _tracker.createInstance<Module_path_expressionContext>(_ctx, getState());
   enterRule(_localctx, 488, Verilog2001Parser::RuleModule_path_expression);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3605);
     _errHandler->sync(this);
@@ -20397,34 +20576,34 @@ Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::module_
 
 //----------------- Module_path_mintypmax_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_mintypmax_expressionContext::Module_path_mintypmax_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_mintypmax_expressionContext::Module_path_mintypmax_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Module_path_expressionContext>> Verilog2001Parser::Module_path_mintypmax_expressionContext::module_path_expression() {
+std::vector<Verilog2001Parser::Module_path_expressionContext *> Verilog2001Parser::Module_path_mintypmax_expressionContext::module_path_expression() {
   return getRuleContexts<Verilog2001Parser::Module_path_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Module_path_expressionContext> Verilog2001Parser::Module_path_mintypmax_expressionContext::module_path_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>((size_t)i);
+Verilog2001Parser::Module_path_expressionContext* Verilog2001Parser::Module_path_mintypmax_expressionContext::module_path_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Module_path_expressionContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_mintypmax_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_mintypmax_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_mintypmax_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_mintypmax_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_mintypmax_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_mintypmax_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_mintypmax_expressionContext> Verilog2001Parser::module_path_mintypmax_expression() {
-  Ref<Module_path_mintypmax_expressionContext> _localctx = std::make_shared<Module_path_mintypmax_expressionContext>(_ctx, getState());
+Verilog2001Parser::Module_path_mintypmax_expressionContext* Verilog2001Parser::module_path_mintypmax_expression() {
+  Module_path_mintypmax_expressionContext *_localctx = _tracker.createInstance<Module_path_mintypmax_expressionContext>(_ctx, getState());
   enterRule(_localctx, 490, Verilog2001Parser::RuleModule_path_mintypmax_expression);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -20434,6 +20613,7 @@ Ref<Verilog2001Parser::Module_path_mintypmax_expressionContext> Verilog2001Parse
     setState(3632);
     module_path_expression();
     setState(3638);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__64) {
@@ -20459,28 +20639,28 @@ Ref<Verilog2001Parser::Module_path_mintypmax_expressionContext> Verilog2001Parse
 
 //----------------- Msb_constant_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Msb_constant_expressionContext::Msb_constant_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Msb_constant_expressionContext::Msb_constant_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Msb_constant_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Msb_constant_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Msb_constant_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Msb_constant_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMsb_constant_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Msb_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMsb_constant_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMsb_constant_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::msb_constant_expression() {
-  Ref<Msb_constant_expressionContext> _localctx = std::make_shared<Msb_constant_expressionContext>(_ctx, getState());
+Verilog2001Parser::Msb_constant_expressionContext* Verilog2001Parser::msb_constant_expression() {
+  Msb_constant_expressionContext *_localctx = _tracker.createInstance<Msb_constant_expressionContext>(_ctx, getState());
   enterRule(_localctx, 492, Verilog2001Parser::RuleMsb_constant_expression);
 
   auto onExit = finally([=] {
@@ -20503,44 +20683,44 @@ Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::msb_co
 
 //----------------- Range_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Range_expressionContext::Range_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Range_expressionContext::Range_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Range_expressionContext::expression() {
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Range_expressionContext::expression() {
   return getRuleContext<Verilog2001Parser::ExpressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Msb_constant_expressionContext> Verilog2001Parser::Range_expressionContext::msb_constant_expression() {
+Verilog2001Parser::Msb_constant_expressionContext* Verilog2001Parser::Range_expressionContext::msb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Msb_constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Lsb_constant_expressionContext> Verilog2001Parser::Range_expressionContext::lsb_constant_expression() {
+Verilog2001Parser::Lsb_constant_expressionContext* Verilog2001Parser::Range_expressionContext::lsb_constant_expression() {
   return getRuleContext<Verilog2001Parser::Lsb_constant_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Base_expressionContext> Verilog2001Parser::Range_expressionContext::base_expression() {
+Verilog2001Parser::Base_expressionContext* Verilog2001Parser::Range_expressionContext::base_expression() {
   return getRuleContext<Verilog2001Parser::Base_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Width_constant_expressionContext> Verilog2001Parser::Range_expressionContext::width_constant_expression() {
+Verilog2001Parser::Width_constant_expressionContext* Verilog2001Parser::Range_expressionContext::width_constant_expression() {
   return getRuleContext<Verilog2001Parser::Width_constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Range_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Range_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleRange_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Range_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitRange_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitRange_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::range_expression() {
-  Ref<Range_expressionContext> _localctx = std::make_shared<Range_expressionContext>(_ctx, getState());
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::range_expression() {
+  Range_expressionContext *_localctx = _tracker.createInstance<Range_expressionContext>(_ctx, getState());
   enterRule(_localctx, 494, Verilog2001Parser::RuleRange_expression);
 
   auto onExit = finally([=] {
@@ -20604,28 +20784,28 @@ Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::range_express
 
 //----------------- Width_constant_expressionContext ------------------------------------------------------------------
 
-Verilog2001Parser::Width_constant_expressionContext::Width_constant_expressionContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Width_constant_expressionContext::Width_constant_expressionContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Width_constant_expressionContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Width_constant_expressionContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Width_constant_expressionContext::getRuleIndex() const {
+size_t Verilog2001Parser::Width_constant_expressionContext::getRuleIndex() const {
   return Verilog2001Parser::RuleWidth_constant_expression;
 }
 
 antlrcpp::Any Verilog2001Parser::Width_constant_expressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitWidth_constant_expression(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitWidth_constant_expression(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Width_constant_expressionContext> Verilog2001Parser::width_constant_expression() {
-  Ref<Width_constant_expressionContext> _localctx = std::make_shared<Width_constant_expressionContext>(_ctx, getState());
+Verilog2001Parser::Width_constant_expressionContext* Verilog2001Parser::width_constant_expression() {
+  Width_constant_expressionContext *_localctx = _tracker.createInstance<Width_constant_expressionContext>(_ctx, getState());
   enterRule(_localctx, 496, Verilog2001Parser::RuleWidth_constant_expression);
 
   auto onExit = finally([=] {
@@ -20648,56 +20828,56 @@ Ref<Verilog2001Parser::Width_constant_expressionContext> Verilog2001Parser::widt
 
 //----------------- Constant_primaryContext ------------------------------------------------------------------
 
-Verilog2001Parser::Constant_primaryContext::Constant_primaryContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Constant_primaryContext::Constant_primaryContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Constant_concatenationContext> Verilog2001Parser::Constant_primaryContext::constant_concatenation() {
+Verilog2001Parser::Constant_concatenationContext* Verilog2001Parser::Constant_primaryContext::constant_concatenation() {
   return getRuleContext<Verilog2001Parser::Constant_concatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::Constant_primaryContext::constant_function_call() {
+Verilog2001Parser::Constant_function_callContext* Verilog2001Parser::Constant_primaryContext::constant_function_call() {
   return getRuleContext<Verilog2001Parser::Constant_function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_mintypmax_expressionContext> Verilog2001Parser::Constant_primaryContext::constant_mintypmax_expression() {
+Verilog2001Parser::Constant_mintypmax_expressionContext* Verilog2001Parser::Constant_primaryContext::constant_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Constant_mintypmax_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_multiple_concatenationContext> Verilog2001Parser::Constant_primaryContext::constant_multiple_concatenation() {
+Verilog2001Parser::Constant_multiple_concatenationContext* Verilog2001Parser::Constant_primaryContext::constant_multiple_concatenation() {
   return getRuleContext<Verilog2001Parser::Constant_multiple_concatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::Constant_primaryContext::genvar_identifier() {
+Verilog2001Parser::Genvar_identifierContext* Verilog2001Parser::Constant_primaryContext::genvar_identifier() {
   return getRuleContext<Verilog2001Parser::Genvar_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::Constant_primaryContext::number() {
+Verilog2001Parser::NumberContext* Verilog2001Parser::Constant_primaryContext::number() {
   return getRuleContext<Verilog2001Parser::NumberContext>(0);
 }
 
-Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::Constant_primaryContext::parameter_identifier() {
+Verilog2001Parser::Parameter_identifierContext* Verilog2001Parser::Constant_primaryContext::parameter_identifier() {
   return getRuleContext<Verilog2001Parser::Parameter_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::Constant_primaryContext::specparam_identifier() {
+Verilog2001Parser::Specparam_identifierContext* Verilog2001Parser::Constant_primaryContext::specparam_identifier() {
   return getRuleContext<Verilog2001Parser::Specparam_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Constant_primaryContext::getRuleIndex() const {
+size_t Verilog2001Parser::Constant_primaryContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConstant_primary;
 }
 
 antlrcpp::Any Verilog2001Parser::Constant_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConstant_primary(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConstant_primary(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Constant_primaryContext> Verilog2001Parser::constant_primary() {
-  Ref<Constant_primaryContext> _localctx = std::make_shared<Constant_primaryContext>(_ctx, getState());
+Verilog2001Parser::Constant_primaryContext* Verilog2001Parser::constant_primary() {
+  Constant_primaryContext *_localctx = _tracker.createInstance<Constant_primaryContext>(_ctx, getState());
   enterRule(_localctx, 498, Verilog2001Parser::RuleConstant_primary);
 
   auto onExit = finally([=] {
@@ -20781,56 +20961,56 @@ Ref<Verilog2001Parser::Constant_primaryContext> Verilog2001Parser::constant_prim
 
 //----------------- Module_path_primaryContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_path_primaryContext::Module_path_primaryContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_path_primaryContext::Module_path_primaryContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::Module_path_primaryContext::number() {
+Verilog2001Parser::NumberContext* Verilog2001Parser::Module_path_primaryContext::number() {
   return getRuleContext<Verilog2001Parser::NumberContext>(0);
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Module_path_primaryContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Module_path_primaryContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_path_concatenationContext> Verilog2001Parser::Module_path_primaryContext::module_path_concatenation() {
+Verilog2001Parser::Module_path_concatenationContext* Verilog2001Parser::Module_path_primaryContext::module_path_concatenation() {
   return getRuleContext<Verilog2001Parser::Module_path_concatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_path_multiple_concatenationContext> Verilog2001Parser::Module_path_primaryContext::module_path_multiple_concatenation() {
+Verilog2001Parser::Module_path_multiple_concatenationContext* Verilog2001Parser::Module_path_primaryContext::module_path_multiple_concatenation() {
   return getRuleContext<Verilog2001Parser::Module_path_multiple_concatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::Module_path_primaryContext::function_call() {
+Verilog2001Parser::Function_callContext* Verilog2001Parser::Module_path_primaryContext::function_call() {
   return getRuleContext<Verilog2001Parser::Function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::System_function_callContext> Verilog2001Parser::Module_path_primaryContext::system_function_call() {
+Verilog2001Parser::System_function_callContext* Verilog2001Parser::Module_path_primaryContext::system_function_call() {
   return getRuleContext<Verilog2001Parser::System_function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::Module_path_primaryContext::constant_function_call() {
+Verilog2001Parser::Constant_function_callContext* Verilog2001Parser::Module_path_primaryContext::constant_function_call() {
   return getRuleContext<Verilog2001Parser::Constant_function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::Module_path_mintypmax_expressionContext> Verilog2001Parser::Module_path_primaryContext::module_path_mintypmax_expression() {
+Verilog2001Parser::Module_path_mintypmax_expressionContext* Verilog2001Parser::Module_path_primaryContext::module_path_mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Module_path_mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_path_primaryContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_path_primaryContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_path_primary;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_path_primaryContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_path_primary(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_path_primary(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_path_primaryContext> Verilog2001Parser::module_path_primary() {
-  Ref<Module_path_primaryContext> _localctx = std::make_shared<Module_path_primaryContext>(_ctx, getState());
+Verilog2001Parser::Module_path_primaryContext* Verilog2001Parser::module_path_primary() {
+  Module_path_primaryContext *_localctx = _tracker.createInstance<Module_path_primaryContext>(_ctx, getState());
   enterRule(_localctx, 500, Verilog2001Parser::RuleModule_path_primary);
 
   auto onExit = finally([=] {
@@ -20914,76 +21094,76 @@ Ref<Verilog2001Parser::Module_path_primaryContext> Verilog2001Parser::module_pat
 
 //----------------- PrimaryContext ------------------------------------------------------------------
 
-Verilog2001Parser::PrimaryContext::PrimaryContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::PrimaryContext::PrimaryContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::PrimaryContext::number() {
+Verilog2001Parser::NumberContext* Verilog2001Parser::PrimaryContext::number() {
   return getRuleContext<Verilog2001Parser::NumberContext>(0);
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::PrimaryContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::PrimaryContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::PrimaryContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::PrimaryContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::PrimaryContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::PrimaryContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::PrimaryContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::PrimaryContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::ConcatenationContext> Verilog2001Parser::PrimaryContext::concatenation() {
+Verilog2001Parser::ConcatenationContext* Verilog2001Parser::PrimaryContext::concatenation() {
   return getRuleContext<Verilog2001Parser::ConcatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Multiple_concatenationContext> Verilog2001Parser::PrimaryContext::multiple_concatenation() {
+Verilog2001Parser::Multiple_concatenationContext* Verilog2001Parser::PrimaryContext::multiple_concatenation() {
   return getRuleContext<Verilog2001Parser::Multiple_concatenationContext>(0);
 }
 
-Ref<Verilog2001Parser::Function_callContext> Verilog2001Parser::PrimaryContext::function_call() {
+Verilog2001Parser::Function_callContext* Verilog2001Parser::PrimaryContext::function_call() {
   return getRuleContext<Verilog2001Parser::Function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::System_function_callContext> Verilog2001Parser::PrimaryContext::system_function_call() {
+Verilog2001Parser::System_function_callContext* Verilog2001Parser::PrimaryContext::system_function_call() {
   return getRuleContext<Verilog2001Parser::System_function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_function_callContext> Verilog2001Parser::PrimaryContext::constant_function_call() {
+Verilog2001Parser::Constant_function_callContext* Verilog2001Parser::PrimaryContext::constant_function_call() {
   return getRuleContext<Verilog2001Parser::Constant_function_callContext>(0);
 }
 
-Ref<Verilog2001Parser::Mintypmax_expressionContext> Verilog2001Parser::PrimaryContext::mintypmax_expression() {
+Verilog2001Parser::Mintypmax_expressionContext* Verilog2001Parser::PrimaryContext::mintypmax_expression() {
   return getRuleContext<Verilog2001Parser::Mintypmax_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::PrimaryContext::getRuleIndex() const {
+size_t Verilog2001Parser::PrimaryContext::getRuleIndex() const {
   return Verilog2001Parser::RulePrimary;
 }
 
 antlrcpp::Any Verilog2001Parser::PrimaryContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPrimary(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPrimary(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::PrimaryContext> Verilog2001Parser::primary() {
-  Ref<PrimaryContext> _localctx = std::make_shared<PrimaryContext>(_ctx, getState());
+Verilog2001Parser::PrimaryContext* Verilog2001Parser::primary() {
+  PrimaryContext *_localctx = _tracker.createInstance<PrimaryContext>(_ctx, getState());
   enterRule(_localctx, 502, Verilog2001Parser::RulePrimary);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3723);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 399, _ctx)) {
@@ -21130,52 +21310,52 @@ Ref<Verilog2001Parser::PrimaryContext> Verilog2001Parser::primary() {
 
 //----------------- Net_lvalueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_lvalueContext::Net_lvalueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_lvalueContext::Net_lvalueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_net_identifierContext> Verilog2001Parser::Net_lvalueContext::hierarchical_net_identifier() {
+Verilog2001Parser::Hierarchical_net_identifierContext* Verilog2001Parser::Net_lvalueContext::hierarchical_net_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_net_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::Constant_expressionContext>> Verilog2001Parser::Net_lvalueContext::constant_expression() {
+std::vector<Verilog2001Parser::Constant_expressionContext *> Verilog2001Parser::Net_lvalueContext::constant_expression() {
   return getRuleContexts<Verilog2001Parser::Constant_expressionContext>();
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Net_lvalueContext::constant_expression(int i) {
-  return getRuleContext<Verilog2001Parser::Constant_expressionContext>((size_t)i);
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Net_lvalueContext::constant_expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::Constant_expressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Constant_range_expressionContext> Verilog2001Parser::Net_lvalueContext::constant_range_expression() {
+Verilog2001Parser::Constant_range_expressionContext* Verilog2001Parser::Net_lvalueContext::constant_range_expression() {
   return getRuleContext<Verilog2001Parser::Constant_range_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Net_concatenationContext> Verilog2001Parser::Net_lvalueContext::net_concatenation() {
+Verilog2001Parser::Net_concatenationContext* Verilog2001Parser::Net_lvalueContext::net_concatenation() {
   return getRuleContext<Verilog2001Parser::Net_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_lvalueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_lvalueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_lvalue;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_lvalueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_lvalue(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_lvalue(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::net_lvalue() {
-  Ref<Net_lvalueContext> _localctx = std::make_shared<Net_lvalueContext>(_ctx, getState());
+Verilog2001Parser::Net_lvalueContext* Verilog2001Parser::net_lvalue() {
+  Net_lvalueContext *_localctx = _tracker.createInstance<Net_lvalueContext>(_ctx, getState());
   enterRule(_localctx, 504, Verilog2001Parser::RuleNet_lvalue);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3762);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 402, _ctx)) {
@@ -21282,52 +21462,52 @@ Ref<Verilog2001Parser::Net_lvalueContext> Verilog2001Parser::net_lvalue() {
 
 //----------------- Variable_lvalueContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_lvalueContext::Variable_lvalueContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_lvalueContext::Variable_lvalueContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_variable_identifierContext> Verilog2001Parser::Variable_lvalueContext::hierarchical_variable_identifier() {
+Verilog2001Parser::Hierarchical_variable_identifierContext* Verilog2001Parser::Variable_lvalueContext::hierarchical_variable_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_variable_identifierContext>(0);
 }
 
-std::vector<Ref<Verilog2001Parser::ExpressionContext>> Verilog2001Parser::Variable_lvalueContext::expression() {
+std::vector<Verilog2001Parser::ExpressionContext *> Verilog2001Parser::Variable_lvalueContext::expression() {
   return getRuleContexts<Verilog2001Parser::ExpressionContext>();
 }
 
-Ref<Verilog2001Parser::ExpressionContext> Verilog2001Parser::Variable_lvalueContext::expression(int i) {
-  return getRuleContext<Verilog2001Parser::ExpressionContext>((size_t)i);
+Verilog2001Parser::ExpressionContext* Verilog2001Parser::Variable_lvalueContext::expression(size_t i) {
+  return getRuleContext<Verilog2001Parser::ExpressionContext>(i);
 }
 
-Ref<Verilog2001Parser::Range_expressionContext> Verilog2001Parser::Variable_lvalueContext::range_expression() {
+Verilog2001Parser::Range_expressionContext* Verilog2001Parser::Variable_lvalueContext::range_expression() {
   return getRuleContext<Verilog2001Parser::Range_expressionContext>(0);
 }
 
-Ref<Verilog2001Parser::Variable_concatenationContext> Verilog2001Parser::Variable_lvalueContext::variable_concatenation() {
+Verilog2001Parser::Variable_concatenationContext* Verilog2001Parser::Variable_lvalueContext::variable_concatenation() {
   return getRuleContext<Verilog2001Parser::Variable_concatenationContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Variable_lvalueContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_lvalueContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_lvalue;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_lvalueContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_lvalue(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_lvalue(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::variable_lvalue() {
-  Ref<Variable_lvalueContext> _localctx = std::make_shared<Variable_lvalueContext>(_ctx, getState());
+Verilog2001Parser::Variable_lvalueContext* Verilog2001Parser::variable_lvalue() {
+  Variable_lvalueContext *_localctx = _tracker.createInstance<Variable_lvalueContext>(_ctx, getState());
   enterRule(_localctx, 506, Verilog2001Parser::RuleVariable_lvalue);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     setState(3801);
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 405, _ctx)) {
@@ -21434,26 +21614,26 @@ Ref<Verilog2001Parser::Variable_lvalueContext> Verilog2001Parser::variable_lvalu
 
 //----------------- Unary_operatorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Unary_operatorContext::Unary_operatorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Unary_operatorContext::Unary_operatorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Unary_operatorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Unary_operatorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleUnary_operator;
 }
 
 antlrcpp::Any Verilog2001Parser::Unary_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitUnary_operator(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitUnary_operator(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::unary_operator() {
-  Ref<Unary_operatorContext> _localctx = std::make_shared<Unary_operatorContext>(_ctx, getState());
+Verilog2001Parser::Unary_operatorContext* Verilog2001Parser::unary_operator() {
+  Unary_operatorContext *_localctx = _tracker.createInstance<Unary_operatorContext>(_ctx, getState());
   enterRule(_localctx, 508, Verilog2001Parser::RuleUnary_operator);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21462,7 +21642,7 @@ Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::unary_operator(
     enterOuterAlt(_localctx, 1);
     setState(3803);
     _la = _input->LA(1);
-    if (!(((((_la - 136) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 136) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 136)) & ((1ULL << (Verilog2001Parser::T__135 - 136))
       | (1ULL << (Verilog2001Parser::T__136 - 136))
       | (1ULL << (Verilog2001Parser::T__140 - 136))
@@ -21475,7 +21655,9 @@ Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::unary_operator(
       | (1ULL << (Verilog2001Parser::T__147 - 136))
       | (1ULL << (Verilog2001Parser::T__148 - 136)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -21491,26 +21673,26 @@ Ref<Verilog2001Parser::Unary_operatorContext> Verilog2001Parser::unary_operator(
 
 //----------------- Binary_operatorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Binary_operatorContext::Binary_operatorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Binary_operatorContext::Binary_operatorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Binary_operatorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Binary_operatorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBinary_operator;
 }
 
 antlrcpp::Any Verilog2001Parser::Binary_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBinary_operator(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBinary_operator(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::binary_operator() {
-  Ref<Binary_operatorContext> _localctx = std::make_shared<Binary_operatorContext>(_ctx, getState());
+Verilog2001Parser::Binary_operatorContext* Verilog2001Parser::binary_operator() {
+  Binary_operatorContext *_localctx = _tracker.createInstance<Binary_operatorContext>(_ctx, getState());
   enterRule(_localctx, 510, Verilog2001Parser::RuleBinary_operator);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21519,7 +21701,7 @@ Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::binary_operato
     enterOuterAlt(_localctx, 1);
     setState(3805);
     _la = _input->LA(1);
-    if (!(((((_la - 109) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 109) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 109)) & ((1ULL << (Verilog2001Parser::T__108 - 109))
       | (1ULL << (Verilog2001Parser::T__117 - 109))
       | (1ULL << (Verilog2001Parser::T__135 - 109))
@@ -21546,7 +21728,9 @@ Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::binary_operato
       | (1ULL << (Verilog2001Parser::T__163 - 109))
       | (1ULL << (Verilog2001Parser::T__164 - 109)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -21562,26 +21746,26 @@ Ref<Verilog2001Parser::Binary_operatorContext> Verilog2001Parser::binary_operato
 
 //----------------- Unary_module_path_operatorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Unary_module_path_operatorContext::Unary_module_path_operatorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Unary_module_path_operatorContext::Unary_module_path_operatorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Unary_module_path_operatorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Unary_module_path_operatorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleUnary_module_path_operator;
 }
 
 antlrcpp::Any Verilog2001Parser::Unary_module_path_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitUnary_module_path_operator(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitUnary_module_path_operator(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::unary_module_path_operator() {
-  Ref<Unary_module_path_operatorContext> _localctx = std::make_shared<Unary_module_path_operatorContext>(_ctx, getState());
+Verilog2001Parser::Unary_module_path_operatorContext* Verilog2001Parser::unary_module_path_operator() {
+  Unary_module_path_operatorContext *_localctx = _tracker.createInstance<Unary_module_path_operatorContext>(_ctx, getState());
   enterRule(_localctx, 512, Verilog2001Parser::RuleUnary_module_path_operator);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21590,7 +21774,7 @@ Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::una
     enterOuterAlt(_localctx, 1);
     setState(3807);
     _la = _input->LA(1);
-    if (!(((((_la - 141) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 141) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 141)) & ((1ULL << (Verilog2001Parser::T__140 - 141))
       | (1ULL << (Verilog2001Parser::T__141 - 141))
       | (1ULL << (Verilog2001Parser::T__142 - 141))
@@ -21601,7 +21785,9 @@ Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::una
       | (1ULL << (Verilog2001Parser::T__147 - 141))
       | (1ULL << (Verilog2001Parser::T__148 - 141)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -21617,26 +21803,26 @@ Ref<Verilog2001Parser::Unary_module_path_operatorContext> Verilog2001Parser::una
 
 //----------------- Binary_module_path_operatorContext ------------------------------------------------------------------
 
-Verilog2001Parser::Binary_module_path_operatorContext::Binary_module_path_operatorContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Binary_module_path_operatorContext::Binary_module_path_operatorContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
 
-ssize_t Verilog2001Parser::Binary_module_path_operatorContext::getRuleIndex() const {
+size_t Verilog2001Parser::Binary_module_path_operatorContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBinary_module_path_operator;
 }
 
 antlrcpp::Any Verilog2001Parser::Binary_module_path_operatorContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBinary_module_path_operator(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBinary_module_path_operator(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::binary_module_path_operator() {
-  Ref<Binary_module_path_operatorContext> _localctx = std::make_shared<Binary_module_path_operatorContext>(_ctx, getState());
+Verilog2001Parser::Binary_module_path_operatorContext* Verilog2001Parser::binary_module_path_operator() {
+  Binary_module_path_operatorContext *_localctx = _tracker.createInstance<Binary_module_path_operatorContext>(_ctx, getState());
   enterRule(_localctx, 514, Verilog2001Parser::RuleBinary_module_path_operator);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21645,7 +21831,7 @@ Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::bi
     enterOuterAlt(_localctx, 1);
     setState(3809);
     _la = _input->LA(1);
-    if (!(((((_la - 143) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 143) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 143)) & ((1ULL << (Verilog2001Parser::T__142 - 143))
       | (1ULL << (Verilog2001Parser::T__144 - 143))
       | (1ULL << (Verilog2001Parser::T__146 - 143))
@@ -21656,7 +21842,9 @@ Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::bi
       | (1ULL << (Verilog2001Parser::T__155 - 143))
       | (1ULL << (Verilog2001Parser::T__156 - 143)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -21672,46 +21860,46 @@ Ref<Verilog2001Parser::Binary_module_path_operatorContext> Verilog2001Parser::bi
 
 //----------------- NumberContext ------------------------------------------------------------------
 
-Verilog2001Parser::NumberContext::NumberContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::NumberContext::NumberContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::NumberContext::Decimal_number() {
+tree::TerminalNode* Verilog2001Parser::NumberContext::Decimal_number() {
   return getToken(Verilog2001Parser::Decimal_number, 0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::NumberContext::Octal_number() {
+tree::TerminalNode* Verilog2001Parser::NumberContext::Octal_number() {
   return getToken(Verilog2001Parser::Octal_number, 0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::NumberContext::Binary_number() {
+tree::TerminalNode* Verilog2001Parser::NumberContext::Binary_number() {
   return getToken(Verilog2001Parser::Binary_number, 0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::NumberContext::Hex_number() {
+tree::TerminalNode* Verilog2001Parser::NumberContext::Hex_number() {
   return getToken(Verilog2001Parser::Hex_number, 0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::NumberContext::Real_number() {
+tree::TerminalNode* Verilog2001Parser::NumberContext::Real_number() {
   return getToken(Verilog2001Parser::Real_number, 0);
 }
 
 
-ssize_t Verilog2001Parser::NumberContext::getRuleIndex() const {
+size_t Verilog2001Parser::NumberContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNumber;
 }
 
 antlrcpp::Any Verilog2001Parser::NumberContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNumber(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNumber(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::number() {
-  Ref<NumberContext> _localctx = std::make_shared<NumberContext>(_ctx, getState());
+Verilog2001Parser::NumberContext* Verilog2001Parser::number() {
+  NumberContext *_localctx = _tracker.createInstance<NumberContext>(_ctx, getState());
   enterRule(_localctx, 516, Verilog2001Parser::RuleNumber);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21720,14 +21908,16 @@ Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::number() {
     enterOuterAlt(_localctx, 1);
     setState(3811);
     _la = _input->LA(1);
-    if (!(((((_la - 168) & ~(ssize_t)0x3f) == 0) &&
+    if (!(((((_la - 168) & ~ 0x3fULL) == 0) &&
       ((1ULL << (_la - 168)) & ((1ULL << (Verilog2001Parser::Real_number - 168))
       | (1ULL << (Verilog2001Parser::Decimal_number - 168))
       | (1ULL << (Verilog2001Parser::Binary_number - 168))
       | (1ULL << (Verilog2001Parser::Octal_number - 168))
       | (1ULL << (Verilog2001Parser::Hex_number - 168)))) != 0))) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -21743,28 +21933,28 @@ Ref<Verilog2001Parser::NumberContext> Verilog2001Parser::number() {
 
 //----------------- Default_nettype_specContext ------------------------------------------------------------------
 
-Verilog2001Parser::Default_nettype_specContext::Default_nettype_specContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Default_nettype_specContext::Default_nettype_specContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Default_nettype_specContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Default_nettype_specContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Default_nettype_specContext::getRuleIndex() const {
+size_t Verilog2001Parser::Default_nettype_specContext::getRuleIndex() const {
   return Verilog2001Parser::RuleDefault_nettype_spec;
 }
 
 antlrcpp::Any Verilog2001Parser::Default_nettype_specContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitDefault_nettype_spec(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitDefault_nettype_spec(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Default_nettype_specContext> Verilog2001Parser::default_nettype_spec() {
-  Ref<Default_nettype_specContext> _localctx = std::make_shared<Default_nettype_specContext>(_ctx, getState());
+Verilog2001Parser::Default_nettype_specContext* Verilog2001Parser::default_nettype_spec() {
+  Default_nettype_specContext *_localctx = _tracker.createInstance<Default_nettype_specContext>(_ctx, getState());
   enterRule(_localctx, 518, Verilog2001Parser::RuleDefault_nettype_spec);
 
   auto onExit = finally([=] {
@@ -21789,32 +21979,32 @@ Ref<Verilog2001Parser::Default_nettype_specContext> Verilog2001Parser::default_n
 
 //----------------- Timing_specContext ------------------------------------------------------------------
 
-Verilog2001Parser::Timing_specContext::Timing_specContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Timing_specContext::Timing_specContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<tree::TerminalNode>> Verilog2001Parser::Timing_specContext::Time_Identifier() {
+std::vector<tree::TerminalNode *> Verilog2001Parser::Timing_specContext::Time_Identifier() {
   return getTokens(Verilog2001Parser::Time_Identifier);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Timing_specContext::Time_Identifier(int i) {
-  return getToken(Verilog2001Parser::Time_Identifier, (size_t)i);
+tree::TerminalNode* Verilog2001Parser::Timing_specContext::Time_Identifier(size_t i) {
+  return getToken(Verilog2001Parser::Time_Identifier, i);
 }
 
 
-ssize_t Verilog2001Parser::Timing_specContext::getRuleIndex() const {
+size_t Verilog2001Parser::Timing_specContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTiming_spec;
 }
 
 antlrcpp::Any Verilog2001Parser::Timing_specContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTiming_spec(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTiming_spec(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Timing_specContext> Verilog2001Parser::timing_spec() {
-  Ref<Timing_specContext> _localctx = std::make_shared<Timing_specContext>(_ctx, getState());
+Verilog2001Parser::Timing_specContext* Verilog2001Parser::timing_spec() {
+  Timing_specContext *_localctx = _tracker.createInstance<Timing_specContext>(_ctx, getState());
   enterRule(_localctx, 520, Verilog2001Parser::RuleTiming_spec);
 
   auto onExit = finally([=] {
@@ -21843,34 +22033,34 @@ Ref<Verilog2001Parser::Timing_specContext> Verilog2001Parser::timing_spec() {
 
 //----------------- Attribute_instanceContext ------------------------------------------------------------------
 
-Verilog2001Parser::Attribute_instanceContext::Attribute_instanceContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Attribute_instanceContext::Attribute_instanceContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Attr_specContext>> Verilog2001Parser::Attribute_instanceContext::attr_spec() {
+std::vector<Verilog2001Parser::Attr_specContext *> Verilog2001Parser::Attribute_instanceContext::attr_spec() {
   return getRuleContexts<Verilog2001Parser::Attr_specContext>();
 }
 
-Ref<Verilog2001Parser::Attr_specContext> Verilog2001Parser::Attribute_instanceContext::attr_spec(int i) {
-  return getRuleContext<Verilog2001Parser::Attr_specContext>((size_t)i);
+Verilog2001Parser::Attr_specContext* Verilog2001Parser::Attribute_instanceContext::attr_spec(size_t i) {
+  return getRuleContext<Verilog2001Parser::Attr_specContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Attribute_instanceContext::getRuleIndex() const {
+size_t Verilog2001Parser::Attribute_instanceContext::getRuleIndex() const {
   return Verilog2001Parser::RuleAttribute_instance;
 }
 
 antlrcpp::Any Verilog2001Parser::Attribute_instanceContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitAttribute_instance(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitAttribute_instance(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::attribute_instance() {
-  Ref<Attribute_instanceContext> _localctx = std::make_shared<Attribute_instanceContext>(_ctx, getState());
+Verilog2001Parser::Attribute_instanceContext* Verilog2001Parser::attribute_instance() {
+  Attribute_instanceContext *_localctx = _tracker.createInstance<Attribute_instanceContext>(_ctx, getState());
   enterRule(_localctx, 522, Verilog2001Parser::RuleAttribute_instance);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -21912,32 +22102,32 @@ Ref<Verilog2001Parser::Attribute_instanceContext> Verilog2001Parser::attribute_i
 
 //----------------- Attr_specContext ------------------------------------------------------------------
 
-Verilog2001Parser::Attr_specContext::Attr_specContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Attr_specContext::Attr_specContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Attr_nameContext> Verilog2001Parser::Attr_specContext::attr_name() {
+Verilog2001Parser::Attr_nameContext* Verilog2001Parser::Attr_specContext::attr_name() {
   return getRuleContext<Verilog2001Parser::Attr_nameContext>(0);
 }
 
-Ref<Verilog2001Parser::Constant_expressionContext> Verilog2001Parser::Attr_specContext::constant_expression() {
+Verilog2001Parser::Constant_expressionContext* Verilog2001Parser::Attr_specContext::constant_expression() {
   return getRuleContext<Verilog2001Parser::Constant_expressionContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Attr_specContext::getRuleIndex() const {
+size_t Verilog2001Parser::Attr_specContext::getRuleIndex() const {
   return Verilog2001Parser::RuleAttr_spec;
 }
 
 antlrcpp::Any Verilog2001Parser::Attr_specContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitAttr_spec(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitAttr_spec(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Attr_specContext> Verilog2001Parser::attr_spec() {
-  Ref<Attr_specContext> _localctx = std::make_shared<Attr_specContext>(_ctx, getState());
+Verilog2001Parser::Attr_specContext* Verilog2001Parser::attr_spec() {
+  Attr_specContext *_localctx = _tracker.createInstance<Attr_specContext>(_ctx, getState());
   enterRule(_localctx, 524, Verilog2001Parser::RuleAttr_spec);
 
   auto onExit = finally([=] {
@@ -21979,28 +22169,28 @@ Ref<Verilog2001Parser::Attr_specContext> Verilog2001Parser::attr_spec() {
 
 //----------------- Attr_nameContext ------------------------------------------------------------------
 
-Verilog2001Parser::Attr_nameContext::Attr_nameContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Attr_nameContext::Attr_nameContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Attr_nameContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Attr_nameContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Attr_nameContext::getRuleIndex() const {
+size_t Verilog2001Parser::Attr_nameContext::getRuleIndex() const {
   return Verilog2001Parser::RuleAttr_name;
 }
 
 antlrcpp::Any Verilog2001Parser::Attr_nameContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitAttr_name(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitAttr_name(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Attr_nameContext> Verilog2001Parser::attr_name() {
-  Ref<Attr_nameContext> _localctx = std::make_shared<Attr_nameContext>(_ctx, getState());
+Verilog2001Parser::Attr_nameContext* Verilog2001Parser::attr_name() {
+  Attr_nameContext *_localctx = _tracker.createInstance<Attr_nameContext>(_ctx, getState());
   enterRule(_localctx, 526, Verilog2001Parser::RuleAttr_name);
 
   auto onExit = finally([=] {
@@ -22023,32 +22213,32 @@ Ref<Verilog2001Parser::Attr_nameContext> Verilog2001Parser::attr_name() {
 
 //----------------- Arrayed_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Arrayed_identifierContext::Arrayed_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Arrayed_identifierContext::Arrayed_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Simple_arrayed_identifierContext> Verilog2001Parser::Arrayed_identifierContext::simple_arrayed_identifier() {
+Verilog2001Parser::Simple_arrayed_identifierContext* Verilog2001Parser::Arrayed_identifierContext::simple_arrayed_identifier() {
   return getRuleContext<Verilog2001Parser::Simple_arrayed_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Escaped_arrayed_identifierContext> Verilog2001Parser::Arrayed_identifierContext::escaped_arrayed_identifier() {
+Verilog2001Parser::Escaped_arrayed_identifierContext* Verilog2001Parser::Arrayed_identifierContext::escaped_arrayed_identifier() {
   return getRuleContext<Verilog2001Parser::Escaped_arrayed_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Arrayed_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Arrayed_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleArrayed_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitArrayed_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitArrayed_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::arrayed_identifier() {
-  Ref<Arrayed_identifierContext> _localctx = std::make_shared<Arrayed_identifierContext>(_ctx, getState());
+Verilog2001Parser::Arrayed_identifierContext* Verilog2001Parser::arrayed_identifier() {
+  Arrayed_identifierContext *_localctx = _tracker.createInstance<Arrayed_identifierContext>(_ctx, getState());
   enterRule(_localctx, 528, Verilog2001Parser::RuleArrayed_identifier);
 
   auto onExit = finally([=] {
@@ -22088,28 +22278,28 @@ Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::arrayed_ide
 
 //----------------- Block_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Block_identifierContext::Block_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Block_identifierContext::Block_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Block_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Block_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Block_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Block_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleBlock_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitBlock_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitBlock_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::block_identifier() {
-  Ref<Block_identifierContext> _localctx = std::make_shared<Block_identifierContext>(_ctx, getState());
+Verilog2001Parser::Block_identifierContext* Verilog2001Parser::block_identifier() {
+  Block_identifierContext *_localctx = _tracker.createInstance<Block_identifierContext>(_ctx, getState());
   enterRule(_localctx, 530, Verilog2001Parser::RuleBlock_identifier);
 
   auto onExit = finally([=] {
@@ -22132,28 +22322,28 @@ Ref<Verilog2001Parser::Block_identifierContext> Verilog2001Parser::block_identif
 
 //----------------- Cell_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Cell_identifierContext::Cell_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Cell_identifierContext::Cell_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Cell_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Cell_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Cell_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Cell_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleCell_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Cell_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitCell_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitCell_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::cell_identifier() {
-  Ref<Cell_identifierContext> _localctx = std::make_shared<Cell_identifierContext>(_ctx, getState());
+Verilog2001Parser::Cell_identifierContext* Verilog2001Parser::cell_identifier() {
+  Cell_identifierContext *_localctx = _tracker.createInstance<Cell_identifierContext>(_ctx, getState());
   enterRule(_localctx, 532, Verilog2001Parser::RuleCell_identifier);
 
   auto onExit = finally([=] {
@@ -22176,28 +22366,28 @@ Ref<Verilog2001Parser::Cell_identifierContext> Verilog2001Parser::cell_identifie
 
 //----------------- Config_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Config_identifierContext::Config_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Config_identifierContext::Config_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Config_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Config_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Config_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Config_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleConfig_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Config_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitConfig_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitConfig_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Config_identifierContext> Verilog2001Parser::config_identifier() {
-  Ref<Config_identifierContext> _localctx = std::make_shared<Config_identifierContext>(_ctx, getState());
+Verilog2001Parser::Config_identifierContext* Verilog2001Parser::config_identifier() {
+  Config_identifierContext *_localctx = _tracker.createInstance<Config_identifierContext>(_ctx, getState());
   enterRule(_localctx, 534, Verilog2001Parser::RuleConfig_identifier);
 
   auto onExit = finally([=] {
@@ -22220,32 +22410,32 @@ Ref<Verilog2001Parser::Config_identifierContext> Verilog2001Parser::config_ident
 
 //----------------- Escaped_arrayed_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Escaped_arrayed_identifierContext::Escaped_arrayed_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Escaped_arrayed_identifierContext::Escaped_arrayed_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Escaped_arrayed_identifierContext::Escaped_identifier() {
+tree::TerminalNode* Verilog2001Parser::Escaped_arrayed_identifierContext::Escaped_identifier() {
   return getToken(Verilog2001Parser::Escaped_identifier, 0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Escaped_arrayed_identifierContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Escaped_arrayed_identifierContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Escaped_arrayed_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Escaped_arrayed_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEscaped_arrayed_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Escaped_arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEscaped_arrayed_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEscaped_arrayed_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Escaped_arrayed_identifierContext> Verilog2001Parser::escaped_arrayed_identifier() {
-  Ref<Escaped_arrayed_identifierContext> _localctx = std::make_shared<Escaped_arrayed_identifierContext>(_ctx, getState());
+Verilog2001Parser::Escaped_arrayed_identifierContext* Verilog2001Parser::escaped_arrayed_identifier() {
+  Escaped_arrayed_identifierContext *_localctx = _tracker.createInstance<Escaped_arrayed_identifierContext>(_ctx, getState());
   enterRule(_localctx, 536, Verilog2001Parser::RuleEscaped_arrayed_identifier);
 
   auto onExit = finally([=] {
@@ -22279,42 +22469,42 @@ Ref<Verilog2001Parser::Escaped_arrayed_identifierContext> Verilog2001Parser::esc
 
 //----------------- Escaped_hierarchical_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Escaped_hierarchical_identifierContext::Escaped_hierarchical_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Escaped_hierarchical_identifierContext::Escaped_hierarchical_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<Verilog2001Parser::Escaped_hierarchical_branchContext>> Verilog2001Parser::Escaped_hierarchical_identifierContext::escaped_hierarchical_branch() {
+std::vector<Verilog2001Parser::Escaped_hierarchical_branchContext *> Verilog2001Parser::Escaped_hierarchical_identifierContext::escaped_hierarchical_branch() {
   return getRuleContexts<Verilog2001Parser::Escaped_hierarchical_branchContext>();
 }
 
-Ref<Verilog2001Parser::Escaped_hierarchical_branchContext> Verilog2001Parser::Escaped_hierarchical_identifierContext::escaped_hierarchical_branch(int i) {
-  return getRuleContext<Verilog2001Parser::Escaped_hierarchical_branchContext>((size_t)i);
+Verilog2001Parser::Escaped_hierarchical_branchContext* Verilog2001Parser::Escaped_hierarchical_identifierContext::escaped_hierarchical_branch(size_t i) {
+  return getRuleContext<Verilog2001Parser::Escaped_hierarchical_branchContext>(i);
 }
 
-std::vector<Ref<Verilog2001Parser::Simple_hierarchical_branchContext>> Verilog2001Parser::Escaped_hierarchical_identifierContext::simple_hierarchical_branch() {
+std::vector<Verilog2001Parser::Simple_hierarchical_branchContext *> Verilog2001Parser::Escaped_hierarchical_identifierContext::simple_hierarchical_branch() {
   return getRuleContexts<Verilog2001Parser::Simple_hierarchical_branchContext>();
 }
 
-Ref<Verilog2001Parser::Simple_hierarchical_branchContext> Verilog2001Parser::Escaped_hierarchical_identifierContext::simple_hierarchical_branch(int i) {
-  return getRuleContext<Verilog2001Parser::Simple_hierarchical_branchContext>((size_t)i);
+Verilog2001Parser::Simple_hierarchical_branchContext* Verilog2001Parser::Escaped_hierarchical_identifierContext::simple_hierarchical_branch(size_t i) {
+  return getRuleContext<Verilog2001Parser::Simple_hierarchical_branchContext>(i);
 }
 
 
-ssize_t Verilog2001Parser::Escaped_hierarchical_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Escaped_hierarchical_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEscaped_hierarchical_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Escaped_hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEscaped_hierarchical_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEscaped_hierarchical_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Escaped_hierarchical_identifierContext> Verilog2001Parser::escaped_hierarchical_identifier() {
-  Ref<Escaped_hierarchical_identifierContext> _localctx = std::make_shared<Escaped_hierarchical_identifierContext>(_ctx, getState());
+Verilog2001Parser::Escaped_hierarchical_identifierContext* Verilog2001Parser::escaped_hierarchical_identifier() {
+  Escaped_hierarchical_identifierContext *_localctx = _tracker.createInstance<Escaped_hierarchical_identifierContext>(_ctx, getState());
   enterRule(_localctx, 538, Verilog2001Parser::RuleEscaped_hierarchical_identifier);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -22364,28 +22554,28 @@ Ref<Verilog2001Parser::Escaped_hierarchical_identifierContext> Verilog2001Parser
 
 //----------------- Event_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Event_identifierContext::Event_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Event_identifierContext::Event_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Event_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Event_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Event_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Event_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEvent_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Event_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEvent_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEvent_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Event_identifierContext> Verilog2001Parser::event_identifier() {
-  Ref<Event_identifierContext> _localctx = std::make_shared<Event_identifierContext>(_ctx, getState());
+Verilog2001Parser::Event_identifierContext* Verilog2001Parser::event_identifier() {
+  Event_identifierContext *_localctx = _tracker.createInstance<Event_identifierContext>(_ctx, getState());
   enterRule(_localctx, 540, Verilog2001Parser::RuleEvent_identifier);
 
   auto onExit = finally([=] {
@@ -22408,28 +22598,28 @@ Ref<Verilog2001Parser::Event_identifierContext> Verilog2001Parser::event_identif
 
 //----------------- Function_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Function_identifierContext::Function_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Function_identifierContext::Function_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Function_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Function_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Function_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Function_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleFunction_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitFunction_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitFunction_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Function_identifierContext> Verilog2001Parser::function_identifier() {
-  Ref<Function_identifierContext> _localctx = std::make_shared<Function_identifierContext>(_ctx, getState());
+Verilog2001Parser::Function_identifierContext* Verilog2001Parser::function_identifier() {
+  Function_identifierContext *_localctx = _tracker.createInstance<Function_identifierContext>(_ctx, getState());
   enterRule(_localctx, 542, Verilog2001Parser::RuleFunction_identifier);
 
   auto onExit = finally([=] {
@@ -22452,28 +22642,28 @@ Ref<Verilog2001Parser::Function_identifierContext> Verilog2001Parser::function_i
 
 //----------------- Gate_instance_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Gate_instance_identifierContext::Gate_instance_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Gate_instance_identifierContext::Gate_instance_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::Gate_instance_identifierContext::arrayed_identifier() {
+Verilog2001Parser::Arrayed_identifierContext* Verilog2001Parser::Gate_instance_identifierContext::arrayed_identifier() {
   return getRuleContext<Verilog2001Parser::Arrayed_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Gate_instance_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Gate_instance_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGate_instance_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Gate_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGate_instance_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGate_instance_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Gate_instance_identifierContext> Verilog2001Parser::gate_instance_identifier() {
-  Ref<Gate_instance_identifierContext> _localctx = std::make_shared<Gate_instance_identifierContext>(_ctx, getState());
+Verilog2001Parser::Gate_instance_identifierContext* Verilog2001Parser::gate_instance_identifier() {
+  Gate_instance_identifierContext *_localctx = _tracker.createInstance<Gate_instance_identifierContext>(_ctx, getState());
   enterRule(_localctx, 544, Verilog2001Parser::RuleGate_instance_identifier);
 
   auto onExit = finally([=] {
@@ -22496,28 +22686,28 @@ Ref<Verilog2001Parser::Gate_instance_identifierContext> Verilog2001Parser::gate_
 
 //----------------- Generate_block_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Generate_block_identifierContext::Generate_block_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Generate_block_identifierContext::Generate_block_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Generate_block_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Generate_block_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Generate_block_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Generate_block_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenerate_block_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Generate_block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenerate_block_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenerate_block_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Generate_block_identifierContext> Verilog2001Parser::generate_block_identifier() {
-  Ref<Generate_block_identifierContext> _localctx = std::make_shared<Generate_block_identifierContext>(_ctx, getState());
+Verilog2001Parser::Generate_block_identifierContext* Verilog2001Parser::generate_block_identifier() {
+  Generate_block_identifierContext *_localctx = _tracker.createInstance<Generate_block_identifierContext>(_ctx, getState());
   enterRule(_localctx, 546, Verilog2001Parser::RuleGenerate_block_identifier);
 
   auto onExit = finally([=] {
@@ -22540,28 +22730,28 @@ Ref<Verilog2001Parser::Generate_block_identifierContext> Verilog2001Parser::gene
 
 //----------------- Genvar_function_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_function_identifierContext::Genvar_function_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_function_identifierContext::Genvar_function_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Genvar_function_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Genvar_function_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_function_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_function_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_function_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_function_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_function_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_function_identifierContext> Verilog2001Parser::genvar_function_identifier() {
-  Ref<Genvar_function_identifierContext> _localctx = std::make_shared<Genvar_function_identifierContext>(_ctx, getState());
+Verilog2001Parser::Genvar_function_identifierContext* Verilog2001Parser::genvar_function_identifier() {
+  Genvar_function_identifierContext *_localctx = _tracker.createInstance<Genvar_function_identifierContext>(_ctx, getState());
   enterRule(_localctx, 548, Verilog2001Parser::RuleGenvar_function_identifier);
 
   auto onExit = finally([=] {
@@ -22584,28 +22774,28 @@ Ref<Verilog2001Parser::Genvar_function_identifierContext> Verilog2001Parser::gen
 
 //----------------- Genvar_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Genvar_identifierContext::Genvar_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Genvar_identifierContext::Genvar_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Genvar_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Genvar_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Genvar_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Genvar_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleGenvar_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Genvar_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitGenvar_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitGenvar_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::genvar_identifier() {
-  Ref<Genvar_identifierContext> _localctx = std::make_shared<Genvar_identifierContext>(_ctx, getState());
+Verilog2001Parser::Genvar_identifierContext* Verilog2001Parser::genvar_identifier() {
+  Genvar_identifierContext *_localctx = _tracker.createInstance<Genvar_identifierContext>(_ctx, getState());
   enterRule(_localctx, 550, Verilog2001Parser::RuleGenvar_identifier);
 
   auto onExit = finally([=] {
@@ -22628,28 +22818,28 @@ Ref<Verilog2001Parser::Genvar_identifierContext> Verilog2001Parser::genvar_ident
 
 //----------------- Hierarchical_block_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_block_identifierContext::Hierarchical_block_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_block_identifierContext::Hierarchical_block_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_block_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_block_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_block_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_block_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_block_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_block_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_block_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_block_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_block_identifierContext> Verilog2001Parser::hierarchical_block_identifier() {
-  Ref<Hierarchical_block_identifierContext> _localctx = std::make_shared<Hierarchical_block_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_block_identifierContext* Verilog2001Parser::hierarchical_block_identifier() {
+  Hierarchical_block_identifierContext *_localctx = _tracker.createInstance<Hierarchical_block_identifierContext>(_ctx, getState());
   enterRule(_localctx, 552, Verilog2001Parser::RuleHierarchical_block_identifier);
 
   auto onExit = finally([=] {
@@ -22672,28 +22862,28 @@ Ref<Verilog2001Parser::Hierarchical_block_identifierContext> Verilog2001Parser::
 
 //----------------- Hierarchical_event_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_event_identifierContext::Hierarchical_event_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_event_identifierContext::Hierarchical_event_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_event_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_event_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_event_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_event_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_event_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_event_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_event_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_event_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_event_identifierContext> Verilog2001Parser::hierarchical_event_identifier() {
-  Ref<Hierarchical_event_identifierContext> _localctx = std::make_shared<Hierarchical_event_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_event_identifierContext* Verilog2001Parser::hierarchical_event_identifier() {
+  Hierarchical_event_identifierContext *_localctx = _tracker.createInstance<Hierarchical_event_identifierContext>(_ctx, getState());
   enterRule(_localctx, 554, Verilog2001Parser::RuleHierarchical_event_identifier);
 
   auto onExit = finally([=] {
@@ -22716,28 +22906,28 @@ Ref<Verilog2001Parser::Hierarchical_event_identifierContext> Verilog2001Parser::
 
 //----------------- Hierarchical_function_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_function_identifierContext::Hierarchical_function_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_function_identifierContext::Hierarchical_function_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_function_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_function_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_function_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_function_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_function_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_function_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_function_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_function_identifierContext> Verilog2001Parser::hierarchical_function_identifier() {
-  Ref<Hierarchical_function_identifierContext> _localctx = std::make_shared<Hierarchical_function_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_function_identifierContext* Verilog2001Parser::hierarchical_function_identifier() {
+  Hierarchical_function_identifierContext *_localctx = _tracker.createInstance<Hierarchical_function_identifierContext>(_ctx, getState());
   enterRule(_localctx, 556, Verilog2001Parser::RuleHierarchical_function_identifier);
 
   auto onExit = finally([=] {
@@ -22760,32 +22950,32 @@ Ref<Verilog2001Parser::Hierarchical_function_identifierContext> Verilog2001Parse
 
 //----------------- Hierarchical_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_identifierContext::Hierarchical_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_identifierContext::Hierarchical_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Simple_hierarchical_identifierContext> Verilog2001Parser::Hierarchical_identifierContext::simple_hierarchical_identifier() {
+Verilog2001Parser::Simple_hierarchical_identifierContext* Verilog2001Parser::Hierarchical_identifierContext::simple_hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Simple_hierarchical_identifierContext>(0);
 }
 
-Ref<Verilog2001Parser::Escaped_hierarchical_identifierContext> Verilog2001Parser::Hierarchical_identifierContext::escaped_hierarchical_identifier() {
+Verilog2001Parser::Escaped_hierarchical_identifierContext* Verilog2001Parser::Hierarchical_identifierContext::escaped_hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Escaped_hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::hierarchical_identifier() {
-  Ref<Hierarchical_identifierContext> _localctx = std::make_shared<Hierarchical_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::hierarchical_identifier() {
+  Hierarchical_identifierContext *_localctx = _tracker.createInstance<Hierarchical_identifierContext>(_ctx, getState());
   enterRule(_localctx, 558, Verilog2001Parser::RuleHierarchical_identifier);
 
   auto onExit = finally([=] {
@@ -22825,28 +23015,28 @@ Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::hierar
 
 //----------------- Hierarchical_net_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_net_identifierContext::Hierarchical_net_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_net_identifierContext::Hierarchical_net_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_net_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_net_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_net_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_net_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_net_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_net_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_net_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_net_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_net_identifierContext> Verilog2001Parser::hierarchical_net_identifier() {
-  Ref<Hierarchical_net_identifierContext> _localctx = std::make_shared<Hierarchical_net_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_net_identifierContext* Verilog2001Parser::hierarchical_net_identifier() {
+  Hierarchical_net_identifierContext *_localctx = _tracker.createInstance<Hierarchical_net_identifierContext>(_ctx, getState());
   enterRule(_localctx, 560, Verilog2001Parser::RuleHierarchical_net_identifier);
 
   auto onExit = finally([=] {
@@ -22869,28 +23059,28 @@ Ref<Verilog2001Parser::Hierarchical_net_identifierContext> Verilog2001Parser::hi
 
 //----------------- Hierarchical_variable_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_variable_identifierContext::Hierarchical_variable_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_variable_identifierContext::Hierarchical_variable_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_variable_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_variable_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_variable_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_variable_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_variable_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_variable_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_variable_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_variable_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_variable_identifierContext> Verilog2001Parser::hierarchical_variable_identifier() {
-  Ref<Hierarchical_variable_identifierContext> _localctx = std::make_shared<Hierarchical_variable_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_variable_identifierContext* Verilog2001Parser::hierarchical_variable_identifier() {
+  Hierarchical_variable_identifierContext *_localctx = _tracker.createInstance<Hierarchical_variable_identifierContext>(_ctx, getState());
   enterRule(_localctx, 562, Verilog2001Parser::RuleHierarchical_variable_identifier);
 
   auto onExit = finally([=] {
@@ -22913,28 +23103,28 @@ Ref<Verilog2001Parser::Hierarchical_variable_identifierContext> Verilog2001Parse
 
 //----------------- Hierarchical_task_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Hierarchical_task_identifierContext::Hierarchical_task_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Hierarchical_task_identifierContext::Hierarchical_task_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Hierarchical_identifierContext> Verilog2001Parser::Hierarchical_task_identifierContext::hierarchical_identifier() {
+Verilog2001Parser::Hierarchical_identifierContext* Verilog2001Parser::Hierarchical_task_identifierContext::hierarchical_identifier() {
   return getRuleContext<Verilog2001Parser::Hierarchical_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Hierarchical_task_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Hierarchical_task_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleHierarchical_task_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Hierarchical_task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitHierarchical_task_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitHierarchical_task_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Hierarchical_task_identifierContext> Verilog2001Parser::hierarchical_task_identifier() {
-  Ref<Hierarchical_task_identifierContext> _localctx = std::make_shared<Hierarchical_task_identifierContext>(_ctx, getState());
+Verilog2001Parser::Hierarchical_task_identifierContext* Verilog2001Parser::hierarchical_task_identifier() {
+  Hierarchical_task_identifierContext *_localctx = _tracker.createInstance<Hierarchical_task_identifierContext>(_ctx, getState());
   enterRule(_localctx, 564, Verilog2001Parser::RuleHierarchical_task_identifier);
 
   auto onExit = finally([=] {
@@ -22957,34 +23147,34 @@ Ref<Verilog2001Parser::Hierarchical_task_identifierContext> Verilog2001Parser::h
 
 //----------------- IdentifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::IdentifierContext::IdentifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::IdentifierContext::IdentifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::IdentifierContext::Simple_identifier() {
+tree::TerminalNode* Verilog2001Parser::IdentifierContext::Simple_identifier() {
   return getToken(Verilog2001Parser::Simple_identifier, 0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::IdentifierContext::Escaped_identifier() {
+tree::TerminalNode* Verilog2001Parser::IdentifierContext::Escaped_identifier() {
   return getToken(Verilog2001Parser::Escaped_identifier, 0);
 }
 
 
-ssize_t Verilog2001Parser::IdentifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::IdentifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleIdentifier;
 }
 
 antlrcpp::Any Verilog2001Parser::IdentifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitIdentifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitIdentifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::identifier() {
-  Ref<IdentifierContext> _localctx = std::make_shared<IdentifierContext>(_ctx, getState());
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::identifier() {
+  IdentifierContext *_localctx = _tracker.createInstance<IdentifierContext>(_ctx, getState());
   enterRule(_localctx, 566, Verilog2001Parser::RuleIdentifier);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -22997,7 +23187,9 @@ Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::identifier() {
 
     || _la == Verilog2001Parser::Simple_identifier)) {
     _errHandler->recoverInline(this);
-    } else {
+    }
+    else {
+      _errHandler->reportMatch(this);
       consume();
     }
    
@@ -23013,28 +23205,28 @@ Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::identifier() {
 
 //----------------- Inout_port_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Inout_port_identifierContext::Inout_port_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Inout_port_identifierContext::Inout_port_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Inout_port_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Inout_port_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Inout_port_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Inout_port_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInout_port_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Inout_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInout_port_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInout_port_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Inout_port_identifierContext> Verilog2001Parser::inout_port_identifier() {
-  Ref<Inout_port_identifierContext> _localctx = std::make_shared<Inout_port_identifierContext>(_ctx, getState());
+Verilog2001Parser::Inout_port_identifierContext* Verilog2001Parser::inout_port_identifier() {
+  Inout_port_identifierContext *_localctx = _tracker.createInstance<Inout_port_identifierContext>(_ctx, getState());
   enterRule(_localctx, 568, Verilog2001Parser::RuleInout_port_identifier);
 
   auto onExit = finally([=] {
@@ -23057,28 +23249,28 @@ Ref<Verilog2001Parser::Inout_port_identifierContext> Verilog2001Parser::inout_po
 
 //----------------- Input_port_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Input_port_identifierContext::Input_port_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Input_port_identifierContext::Input_port_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Input_port_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Input_port_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Input_port_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Input_port_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInput_port_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Input_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInput_port_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInput_port_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Input_port_identifierContext> Verilog2001Parser::input_port_identifier() {
-  Ref<Input_port_identifierContext> _localctx = std::make_shared<Input_port_identifierContext>(_ctx, getState());
+Verilog2001Parser::Input_port_identifierContext* Verilog2001Parser::input_port_identifier() {
+  Input_port_identifierContext *_localctx = _tracker.createInstance<Input_port_identifierContext>(_ctx, getState());
   enterRule(_localctx, 570, Verilog2001Parser::RuleInput_port_identifier);
 
   auto onExit = finally([=] {
@@ -23101,28 +23293,28 @@ Ref<Verilog2001Parser::Input_port_identifierContext> Verilog2001Parser::input_po
 
 //----------------- Instance_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Instance_identifierContext::Instance_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Instance_identifierContext::Instance_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Instance_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Instance_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Instance_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Instance_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleInstance_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitInstance_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitInstance_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Instance_identifierContext> Verilog2001Parser::instance_identifier() {
-  Ref<Instance_identifierContext> _localctx = std::make_shared<Instance_identifierContext>(_ctx, getState());
+Verilog2001Parser::Instance_identifierContext* Verilog2001Parser::instance_identifier() {
+  Instance_identifierContext *_localctx = _tracker.createInstance<Instance_identifierContext>(_ctx, getState());
   enterRule(_localctx, 572, Verilog2001Parser::RuleInstance_identifier);
 
   auto onExit = finally([=] {
@@ -23145,28 +23337,28 @@ Ref<Verilog2001Parser::Instance_identifierContext> Verilog2001Parser::instance_i
 
 //----------------- Library_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Library_identifierContext::Library_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Library_identifierContext::Library_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Library_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Library_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Library_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Library_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleLibrary_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Library_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitLibrary_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitLibrary_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::library_identifier() {
-  Ref<Library_identifierContext> _localctx = std::make_shared<Library_identifierContext>(_ctx, getState());
+Verilog2001Parser::Library_identifierContext* Verilog2001Parser::library_identifier() {
+  Library_identifierContext *_localctx = _tracker.createInstance<Library_identifierContext>(_ctx, getState());
   enterRule(_localctx, 574, Verilog2001Parser::RuleLibrary_identifier);
 
   auto onExit = finally([=] {
@@ -23189,28 +23381,28 @@ Ref<Verilog2001Parser::Library_identifierContext> Verilog2001Parser::library_ide
 
 //----------------- Memory_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Memory_identifierContext::Memory_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Memory_identifierContext::Memory_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Memory_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Memory_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Memory_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Memory_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleMemory_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Memory_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitMemory_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitMemory_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Memory_identifierContext> Verilog2001Parser::memory_identifier() {
-  Ref<Memory_identifierContext> _localctx = std::make_shared<Memory_identifierContext>(_ctx, getState());
+Verilog2001Parser::Memory_identifierContext* Verilog2001Parser::memory_identifier() {
+  Memory_identifierContext *_localctx = _tracker.createInstance<Memory_identifierContext>(_ctx, getState());
   enterRule(_localctx, 576, Verilog2001Parser::RuleMemory_identifier);
 
   auto onExit = finally([=] {
@@ -23233,28 +23425,28 @@ Ref<Verilog2001Parser::Memory_identifierContext> Verilog2001Parser::memory_ident
 
 //----------------- Module_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_identifierContext::Module_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_identifierContext::Module_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Module_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Module_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_identifierContext> Verilog2001Parser::module_identifier() {
-  Ref<Module_identifierContext> _localctx = std::make_shared<Module_identifierContext>(_ctx, getState());
+Verilog2001Parser::Module_identifierContext* Verilog2001Parser::module_identifier() {
+  Module_identifierContext *_localctx = _tracker.createInstance<Module_identifierContext>(_ctx, getState());
   enterRule(_localctx, 578, Verilog2001Parser::RuleModule_identifier);
 
   auto onExit = finally([=] {
@@ -23277,28 +23469,28 @@ Ref<Verilog2001Parser::Module_identifierContext> Verilog2001Parser::module_ident
 
 //----------------- Module_instance_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Module_instance_identifierContext::Module_instance_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Module_instance_identifierContext::Module_instance_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::Module_instance_identifierContext::arrayed_identifier() {
+Verilog2001Parser::Arrayed_identifierContext* Verilog2001Parser::Module_instance_identifierContext::arrayed_identifier() {
   return getRuleContext<Verilog2001Parser::Arrayed_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Module_instance_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Module_instance_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleModule_instance_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Module_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitModule_instance_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitModule_instance_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Module_instance_identifierContext> Verilog2001Parser::module_instance_identifier() {
-  Ref<Module_instance_identifierContext> _localctx = std::make_shared<Module_instance_identifierContext>(_ctx, getState());
+Verilog2001Parser::Module_instance_identifierContext* Verilog2001Parser::module_instance_identifier() {
+  Module_instance_identifierContext *_localctx = _tracker.createInstance<Module_instance_identifierContext>(_ctx, getState());
   enterRule(_localctx, 580, Verilog2001Parser::RuleModule_instance_identifier);
 
   auto onExit = finally([=] {
@@ -23321,28 +23513,28 @@ Ref<Verilog2001Parser::Module_instance_identifierContext> Verilog2001Parser::mod
 
 //----------------- Net_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Net_identifierContext::Net_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Net_identifierContext::Net_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Net_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Net_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Net_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Net_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleNet_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Net_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitNet_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitNet_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Net_identifierContext> Verilog2001Parser::net_identifier() {
-  Ref<Net_identifierContext> _localctx = std::make_shared<Net_identifierContext>(_ctx, getState());
+Verilog2001Parser::Net_identifierContext* Verilog2001Parser::net_identifier() {
+  Net_identifierContext *_localctx = _tracker.createInstance<Net_identifierContext>(_ctx, getState());
   enterRule(_localctx, 582, Verilog2001Parser::RuleNet_identifier);
 
   auto onExit = finally([=] {
@@ -23365,28 +23557,28 @@ Ref<Verilog2001Parser::Net_identifierContext> Verilog2001Parser::net_identifier(
 
 //----------------- Output_port_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Output_port_identifierContext::Output_port_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Output_port_identifierContext::Output_port_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Output_port_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Output_port_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Output_port_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Output_port_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleOutput_port_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Output_port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitOutput_port_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitOutput_port_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Output_port_identifierContext> Verilog2001Parser::output_port_identifier() {
-  Ref<Output_port_identifierContext> _localctx = std::make_shared<Output_port_identifierContext>(_ctx, getState());
+Verilog2001Parser::Output_port_identifierContext* Verilog2001Parser::output_port_identifier() {
+  Output_port_identifierContext *_localctx = _tracker.createInstance<Output_port_identifierContext>(_ctx, getState());
   enterRule(_localctx, 584, Verilog2001Parser::RuleOutput_port_identifier);
 
   auto onExit = finally([=] {
@@ -23409,28 +23601,28 @@ Ref<Verilog2001Parser::Output_port_identifierContext> Verilog2001Parser::output_
 
 //----------------- Parameter_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Parameter_identifierContext::Parameter_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Parameter_identifierContext::Parameter_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Parameter_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Parameter_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Parameter_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Parameter_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleParameter_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Parameter_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitParameter_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitParameter_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::parameter_identifier() {
-  Ref<Parameter_identifierContext> _localctx = std::make_shared<Parameter_identifierContext>(_ctx, getState());
+Verilog2001Parser::Parameter_identifierContext* Verilog2001Parser::parameter_identifier() {
+  Parameter_identifierContext *_localctx = _tracker.createInstance<Parameter_identifierContext>(_ctx, getState());
   enterRule(_localctx, 586, Verilog2001Parser::RuleParameter_identifier);
 
   auto onExit = finally([=] {
@@ -23453,28 +23645,28 @@ Ref<Verilog2001Parser::Parameter_identifierContext> Verilog2001Parser::parameter
 
 //----------------- Port_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Port_identifierContext::Port_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Port_identifierContext::Port_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Port_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Port_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Port_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Port_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RulePort_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Port_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitPort_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitPort_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::port_identifier() {
-  Ref<Port_identifierContext> _localctx = std::make_shared<Port_identifierContext>(_ctx, getState());
+Verilog2001Parser::Port_identifierContext* Verilog2001Parser::port_identifier() {
+  Port_identifierContext *_localctx = _tracker.createInstance<Port_identifierContext>(_ctx, getState());
   enterRule(_localctx, 588, Verilog2001Parser::RulePort_identifier);
 
   auto onExit = finally([=] {
@@ -23497,28 +23689,28 @@ Ref<Verilog2001Parser::Port_identifierContext> Verilog2001Parser::port_identifie
 
 //----------------- Real_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Real_identifierContext::Real_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Real_identifierContext::Real_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Real_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Real_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Real_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Real_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleReal_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Real_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitReal_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitReal_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Real_identifierContext> Verilog2001Parser::real_identifier() {
-  Ref<Real_identifierContext> _localctx = std::make_shared<Real_identifierContext>(_ctx, getState());
+Verilog2001Parser::Real_identifierContext* Verilog2001Parser::real_identifier() {
+  Real_identifierContext *_localctx = _tracker.createInstance<Real_identifierContext>(_ctx, getState());
   enterRule(_localctx, 590, Verilog2001Parser::RuleReal_identifier);
 
   auto onExit = finally([=] {
@@ -23541,32 +23733,32 @@ Ref<Verilog2001Parser::Real_identifierContext> Verilog2001Parser::real_identifie
 
 //----------------- Simple_arrayed_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Simple_arrayed_identifierContext::Simple_arrayed_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Simple_arrayed_identifierContext::Simple_arrayed_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Simple_arrayed_identifierContext::Simple_identifier() {
+tree::TerminalNode* Verilog2001Parser::Simple_arrayed_identifierContext::Simple_identifier() {
   return getToken(Verilog2001Parser::Simple_identifier, 0);
 }
 
-Ref<Verilog2001Parser::RangeContext> Verilog2001Parser::Simple_arrayed_identifierContext::range() {
+Verilog2001Parser::RangeContext* Verilog2001Parser::Simple_arrayed_identifierContext::range() {
   return getRuleContext<Verilog2001Parser::RangeContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Simple_arrayed_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Simple_arrayed_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSimple_arrayed_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Simple_arrayed_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSimple_arrayed_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSimple_arrayed_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Simple_arrayed_identifierContext> Verilog2001Parser::simple_arrayed_identifier() {
-  Ref<Simple_arrayed_identifierContext> _localctx = std::make_shared<Simple_arrayed_identifierContext>(_ctx, getState());
+Verilog2001Parser::Simple_arrayed_identifierContext* Verilog2001Parser::simple_arrayed_identifier() {
+  Simple_arrayed_identifierContext *_localctx = _tracker.createInstance<Simple_arrayed_identifierContext>(_ctx, getState());
   enterRule(_localctx, 592, Verilog2001Parser::RuleSimple_arrayed_identifier);
 
   auto onExit = finally([=] {
@@ -23600,34 +23792,34 @@ Ref<Verilog2001Parser::Simple_arrayed_identifierContext> Verilog2001Parser::simp
 
 //----------------- Simple_hierarchical_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Simple_hierarchical_identifierContext::Simple_hierarchical_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Simple_hierarchical_identifierContext::Simple_hierarchical_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Simple_hierarchical_branchContext> Verilog2001Parser::Simple_hierarchical_identifierContext::simple_hierarchical_branch() {
+Verilog2001Parser::Simple_hierarchical_branchContext* Verilog2001Parser::Simple_hierarchical_identifierContext::simple_hierarchical_branch() {
   return getRuleContext<Verilog2001Parser::Simple_hierarchical_branchContext>(0);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Simple_hierarchical_identifierContext::Escaped_identifier() {
+tree::TerminalNode* Verilog2001Parser::Simple_hierarchical_identifierContext::Escaped_identifier() {
   return getToken(Verilog2001Parser::Escaped_identifier, 0);
 }
 
 
-ssize_t Verilog2001Parser::Simple_hierarchical_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Simple_hierarchical_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSimple_hierarchical_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Simple_hierarchical_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSimple_hierarchical_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSimple_hierarchical_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Simple_hierarchical_identifierContext> Verilog2001Parser::simple_hierarchical_identifier() {
-  Ref<Simple_hierarchical_identifierContext> _localctx = std::make_shared<Simple_hierarchical_identifierContext>(_ctx, getState());
+Verilog2001Parser::Simple_hierarchical_identifierContext* Verilog2001Parser::simple_hierarchical_identifier() {
+  Simple_hierarchical_identifierContext *_localctx = _tracker.createInstance<Simple_hierarchical_identifierContext>(_ctx, getState());
   enterRule(_localctx, 594, Verilog2001Parser::RuleSimple_hierarchical_identifier);
-  ssize_t _la;
+  size_t _la = 0;
 
   auto onExit = finally([=] {
     exitRule();
@@ -23637,6 +23829,7 @@ Ref<Verilog2001Parser::Simple_hierarchical_identifierContext> Verilog2001Parser:
     setState(3925);
     simple_hierarchical_branch();
     setState(3928);
+    _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Verilog2001Parser::T__4) {
@@ -23658,28 +23851,28 @@ Ref<Verilog2001Parser::Simple_hierarchical_identifierContext> Verilog2001Parser:
 
 //----------------- Specparam_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Specparam_identifierContext::Specparam_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Specparam_identifierContext::Specparam_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Specparam_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Specparam_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Specparam_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Specparam_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSpecparam_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Specparam_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSpecparam_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSpecparam_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::specparam_identifier() {
-  Ref<Specparam_identifierContext> _localctx = std::make_shared<Specparam_identifierContext>(_ctx, getState());
+Verilog2001Parser::Specparam_identifierContext* Verilog2001Parser::specparam_identifier() {
+  Specparam_identifierContext *_localctx = _tracker.createInstance<Specparam_identifierContext>(_ctx, getState());
   enterRule(_localctx, 596, Verilog2001Parser::RuleSpecparam_identifier);
 
   auto onExit = finally([=] {
@@ -23702,28 +23895,28 @@ Ref<Verilog2001Parser::Specparam_identifierContext> Verilog2001Parser::specparam
 
 //----------------- System_function_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::System_function_identifierContext::System_function_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::System_function_identifierContext::System_function_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::System_function_identifierContext::Dollar_Identifier() {
+tree::TerminalNode* Verilog2001Parser::System_function_identifierContext::Dollar_Identifier() {
   return getToken(Verilog2001Parser::Dollar_Identifier, 0);
 }
 
 
-ssize_t Verilog2001Parser::System_function_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::System_function_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSystem_function_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::System_function_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSystem_function_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSystem_function_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::System_function_identifierContext> Verilog2001Parser::system_function_identifier() {
-  Ref<System_function_identifierContext> _localctx = std::make_shared<System_function_identifierContext>(_ctx, getState());
+Verilog2001Parser::System_function_identifierContext* Verilog2001Parser::system_function_identifier() {
+  System_function_identifierContext *_localctx = _tracker.createInstance<System_function_identifierContext>(_ctx, getState());
   enterRule(_localctx, 598, Verilog2001Parser::RuleSystem_function_identifier);
 
   auto onExit = finally([=] {
@@ -23746,28 +23939,28 @@ Ref<Verilog2001Parser::System_function_identifierContext> Verilog2001Parser::sys
 
 //----------------- System_task_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::System_task_identifierContext::System_task_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::System_task_identifierContext::System_task_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::System_task_identifierContext::Dollar_Identifier() {
+tree::TerminalNode* Verilog2001Parser::System_task_identifierContext::Dollar_Identifier() {
   return getToken(Verilog2001Parser::Dollar_Identifier, 0);
 }
 
 
-ssize_t Verilog2001Parser::System_task_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::System_task_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSystem_task_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::System_task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSystem_task_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSystem_task_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::System_task_identifierContext> Verilog2001Parser::system_task_identifier() {
-  Ref<System_task_identifierContext> _localctx = std::make_shared<System_task_identifierContext>(_ctx, getState());
+Verilog2001Parser::System_task_identifierContext* Verilog2001Parser::system_task_identifier() {
+  System_task_identifierContext *_localctx = _tracker.createInstance<System_task_identifierContext>(_ctx, getState());
   enterRule(_localctx, 600, Verilog2001Parser::RuleSystem_task_identifier);
 
   auto onExit = finally([=] {
@@ -23790,28 +23983,28 @@ Ref<Verilog2001Parser::System_task_identifierContext> Verilog2001Parser::system_
 
 //----------------- Task_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Task_identifierContext::Task_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Task_identifierContext::Task_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Task_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Task_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Task_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Task_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTask_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Task_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTask_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTask_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Task_identifierContext> Verilog2001Parser::task_identifier() {
-  Ref<Task_identifierContext> _localctx = std::make_shared<Task_identifierContext>(_ctx, getState());
+Verilog2001Parser::Task_identifierContext* Verilog2001Parser::task_identifier() {
+  Task_identifierContext *_localctx = _tracker.createInstance<Task_identifierContext>(_ctx, getState());
   enterRule(_localctx, 602, Verilog2001Parser::RuleTask_identifier);
 
   auto onExit = finally([=] {
@@ -23834,28 +24027,28 @@ Ref<Verilog2001Parser::Task_identifierContext> Verilog2001Parser::task_identifie
 
 //----------------- Terminal_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Terminal_identifierContext::Terminal_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Terminal_identifierContext::Terminal_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Terminal_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Terminal_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Terminal_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Terminal_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTerminal_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Terminal_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTerminal_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTerminal_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Terminal_identifierContext> Verilog2001Parser::terminal_identifier() {
-  Ref<Terminal_identifierContext> _localctx = std::make_shared<Terminal_identifierContext>(_ctx, getState());
+Verilog2001Parser::Terminal_identifierContext* Verilog2001Parser::terminal_identifier() {
+  Terminal_identifierContext *_localctx = _tracker.createInstance<Terminal_identifierContext>(_ctx, getState());
   enterRule(_localctx, 604, Verilog2001Parser::RuleTerminal_identifier);
 
   auto onExit = finally([=] {
@@ -23878,28 +24071,28 @@ Ref<Verilog2001Parser::Terminal_identifierContext> Verilog2001Parser::terminal_i
 
 //----------------- Text_macro_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Text_macro_identifierContext::Text_macro_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Text_macro_identifierContext::Text_macro_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Text_macro_identifierContext::Simple_identifier() {
+tree::TerminalNode* Verilog2001Parser::Text_macro_identifierContext::Simple_identifier() {
   return getToken(Verilog2001Parser::Simple_identifier, 0);
 }
 
 
-ssize_t Verilog2001Parser::Text_macro_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Text_macro_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleText_macro_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Text_macro_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitText_macro_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitText_macro_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Text_macro_identifierContext> Verilog2001Parser::text_macro_identifier() {
-  Ref<Text_macro_identifierContext> _localctx = std::make_shared<Text_macro_identifierContext>(_ctx, getState());
+Verilog2001Parser::Text_macro_identifierContext* Verilog2001Parser::text_macro_identifier() {
+  Text_macro_identifierContext *_localctx = _tracker.createInstance<Text_macro_identifierContext>(_ctx, getState());
   enterRule(_localctx, 606, Verilog2001Parser::RuleText_macro_identifier);
 
   auto onExit = finally([=] {
@@ -23922,28 +24115,28 @@ Ref<Verilog2001Parser::Text_macro_identifierContext> Verilog2001Parser::text_mac
 
 //----------------- Topmodule_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Topmodule_identifierContext::Topmodule_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Topmodule_identifierContext::Topmodule_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Topmodule_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Topmodule_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Topmodule_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Topmodule_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleTopmodule_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Topmodule_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitTopmodule_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitTopmodule_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Topmodule_identifierContext> Verilog2001Parser::topmodule_identifier() {
-  Ref<Topmodule_identifierContext> _localctx = std::make_shared<Topmodule_identifierContext>(_ctx, getState());
+Verilog2001Parser::Topmodule_identifierContext* Verilog2001Parser::topmodule_identifier() {
+  Topmodule_identifierContext *_localctx = _tracker.createInstance<Topmodule_identifierContext>(_ctx, getState());
   enterRule(_localctx, 608, Verilog2001Parser::RuleTopmodule_identifier);
 
   auto onExit = finally([=] {
@@ -23966,28 +24159,28 @@ Ref<Verilog2001Parser::Topmodule_identifierContext> Verilog2001Parser::topmodule
 
 //----------------- Udp_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Udp_identifierContext::Udp_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Udp_identifierContext::Udp_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Udp_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Udp_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Udp_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Udp_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleUdp_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Udp_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitUdp_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitUdp_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Udp_identifierContext> Verilog2001Parser::udp_identifier() {
-  Ref<Udp_identifierContext> _localctx = std::make_shared<Udp_identifierContext>(_ctx, getState());
+Verilog2001Parser::Udp_identifierContext* Verilog2001Parser::udp_identifier() {
+  Udp_identifierContext *_localctx = _tracker.createInstance<Udp_identifierContext>(_ctx, getState());
   enterRule(_localctx, 610, Verilog2001Parser::RuleUdp_identifier);
 
   auto onExit = finally([=] {
@@ -24010,28 +24203,28 @@ Ref<Verilog2001Parser::Udp_identifierContext> Verilog2001Parser::udp_identifier(
 
 //----------------- Udp_instance_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Udp_instance_identifierContext::Udp_instance_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Udp_instance_identifierContext::Udp_instance_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::Arrayed_identifierContext> Verilog2001Parser::Udp_instance_identifierContext::arrayed_identifier() {
+Verilog2001Parser::Arrayed_identifierContext* Verilog2001Parser::Udp_instance_identifierContext::arrayed_identifier() {
   return getRuleContext<Verilog2001Parser::Arrayed_identifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Udp_instance_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Udp_instance_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleUdp_instance_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Udp_instance_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitUdp_instance_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitUdp_instance_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Udp_instance_identifierContext> Verilog2001Parser::udp_instance_identifier() {
-  Ref<Udp_instance_identifierContext> _localctx = std::make_shared<Udp_instance_identifierContext>(_ctx, getState());
+Verilog2001Parser::Udp_instance_identifierContext* Verilog2001Parser::udp_instance_identifier() {
+  Udp_instance_identifierContext *_localctx = _tracker.createInstance<Udp_instance_identifierContext>(_ctx, getState());
   enterRule(_localctx, 612, Verilog2001Parser::RuleUdp_instance_identifier);
 
   auto onExit = finally([=] {
@@ -24054,28 +24247,28 @@ Ref<Verilog2001Parser::Udp_instance_identifierContext> Verilog2001Parser::udp_in
 
 //----------------- Variable_identifierContext ------------------------------------------------------------------
 
-Verilog2001Parser::Variable_identifierContext::Variable_identifierContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Variable_identifierContext::Variable_identifierContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-Ref<Verilog2001Parser::IdentifierContext> Verilog2001Parser::Variable_identifierContext::identifier() {
+Verilog2001Parser::IdentifierContext* Verilog2001Parser::Variable_identifierContext::identifier() {
   return getRuleContext<Verilog2001Parser::IdentifierContext>(0);
 }
 
 
-ssize_t Verilog2001Parser::Variable_identifierContext::getRuleIndex() const {
+size_t Verilog2001Parser::Variable_identifierContext::getRuleIndex() const {
   return Verilog2001Parser::RuleVariable_identifier;
 }
 
 antlrcpp::Any Verilog2001Parser::Variable_identifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitVariable_identifier(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitVariable_identifier(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::variable_identifier() {
-  Ref<Variable_identifierContext> _localctx = std::make_shared<Variable_identifierContext>(_ctx, getState());
+Verilog2001Parser::Variable_identifierContext* Verilog2001Parser::variable_identifier() {
+  Variable_identifierContext *_localctx = _tracker.createInstance<Variable_identifierContext>(_ctx, getState());
   enterRule(_localctx, 614, Verilog2001Parser::RuleVariable_identifier);
 
   auto onExit = finally([=] {
@@ -24098,47 +24291,47 @@ Ref<Verilog2001Parser::Variable_identifierContext> Verilog2001Parser::variable_i
 
 //----------------- Simple_hierarchical_branchContext ------------------------------------------------------------------
 
-Verilog2001Parser::Simple_hierarchical_branchContext::Simple_hierarchical_branchContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Simple_hierarchical_branchContext::Simple_hierarchical_branchContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<tree::TerminalNode>> Verilog2001Parser::Simple_hierarchical_branchContext::Simple_identifier() {
+std::vector<tree::TerminalNode *> Verilog2001Parser::Simple_hierarchical_branchContext::Simple_identifier() {
   return getTokens(Verilog2001Parser::Simple_identifier);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Simple_hierarchical_branchContext::Simple_identifier(int i) {
-  return getToken(Verilog2001Parser::Simple_identifier, (size_t)i);
+tree::TerminalNode* Verilog2001Parser::Simple_hierarchical_branchContext::Simple_identifier(size_t i) {
+  return getToken(Verilog2001Parser::Simple_identifier, i);
 }
 
-std::vector<Ref<tree::TerminalNode>> Verilog2001Parser::Simple_hierarchical_branchContext::Decimal_number() {
+std::vector<tree::TerminalNode *> Verilog2001Parser::Simple_hierarchical_branchContext::Decimal_number() {
   return getTokens(Verilog2001Parser::Decimal_number);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Simple_hierarchical_branchContext::Decimal_number(int i) {
-  return getToken(Verilog2001Parser::Decimal_number, (size_t)i);
+tree::TerminalNode* Verilog2001Parser::Simple_hierarchical_branchContext::Decimal_number(size_t i) {
+  return getToken(Verilog2001Parser::Decimal_number, i);
 }
 
 
-ssize_t Verilog2001Parser::Simple_hierarchical_branchContext::getRuleIndex() const {
+size_t Verilog2001Parser::Simple_hierarchical_branchContext::getRuleIndex() const {
   return Verilog2001Parser::RuleSimple_hierarchical_branch;
 }
 
 antlrcpp::Any Verilog2001Parser::Simple_hierarchical_branchContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitSimple_hierarchical_branch(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitSimple_hierarchical_branch(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Simple_hierarchical_branchContext> Verilog2001Parser::simple_hierarchical_branch() {
-  Ref<Simple_hierarchical_branchContext> _localctx = std::make_shared<Simple_hierarchical_branchContext>(_ctx, getState());
+Verilog2001Parser::Simple_hierarchical_branchContext* Verilog2001Parser::simple_hierarchical_branch() {
+  Simple_hierarchical_branchContext *_localctx = _tracker.createInstance<Simple_hierarchical_branchContext>(_ctx, getState());
   enterRule(_localctx, 616, Verilog2001Parser::RuleSimple_hierarchical_branch);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3950);
     match(Verilog2001Parser::Simple_identifier);
@@ -24199,47 +24392,47 @@ Ref<Verilog2001Parser::Simple_hierarchical_branchContext> Verilog2001Parser::sim
 
 //----------------- Escaped_hierarchical_branchContext ------------------------------------------------------------------
 
-Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_hierarchical_branchContext(std::weak_ptr<ParserRuleContext> parent, int invokingState)
+Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_hierarchical_branchContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Ref<tree::TerminalNode>> Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_identifier() {
+std::vector<tree::TerminalNode *> Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_identifier() {
   return getTokens(Verilog2001Parser::Escaped_identifier);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_identifier(int i) {
-  return getToken(Verilog2001Parser::Escaped_identifier, (size_t)i);
+tree::TerminalNode* Verilog2001Parser::Escaped_hierarchical_branchContext::Escaped_identifier(size_t i) {
+  return getToken(Verilog2001Parser::Escaped_identifier, i);
 }
 
-std::vector<Ref<tree::TerminalNode>> Verilog2001Parser::Escaped_hierarchical_branchContext::Decimal_number() {
+std::vector<tree::TerminalNode *> Verilog2001Parser::Escaped_hierarchical_branchContext::Decimal_number() {
   return getTokens(Verilog2001Parser::Decimal_number);
 }
 
-Ref<tree::TerminalNode> Verilog2001Parser::Escaped_hierarchical_branchContext::Decimal_number(int i) {
-  return getToken(Verilog2001Parser::Decimal_number, (size_t)i);
+tree::TerminalNode* Verilog2001Parser::Escaped_hierarchical_branchContext::Decimal_number(size_t i) {
+  return getToken(Verilog2001Parser::Decimal_number, i);
 }
 
 
-ssize_t Verilog2001Parser::Escaped_hierarchical_branchContext::getRuleIndex() const {
+size_t Verilog2001Parser::Escaped_hierarchical_branchContext::getRuleIndex() const {
   return Verilog2001Parser::RuleEscaped_hierarchical_branch;
 }
 
 antlrcpp::Any Verilog2001Parser::Escaped_hierarchical_branchContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (dynamic_cast<Verilog2001Visitor*>(visitor) != nullptr)
-    return ((Verilog2001Visitor *)visitor)->visitEscaped_hierarchical_branch(this);
+  if (auto parserVisitor = dynamic_cast<Verilog2001Visitor*>(visitor))
+    return parserVisitor->visitEscaped_hierarchical_branch(this);
   else
     return visitor->visitChildren(this);
 }
 
-Ref<Verilog2001Parser::Escaped_hierarchical_branchContext> Verilog2001Parser::escaped_hierarchical_branch() {
-  Ref<Escaped_hierarchical_branchContext> _localctx = std::make_shared<Escaped_hierarchical_branchContext>(_ctx, getState());
+Verilog2001Parser::Escaped_hierarchical_branchContext* Verilog2001Parser::escaped_hierarchical_branch() {
+  Escaped_hierarchical_branchContext *_localctx = _tracker.createInstance<Escaped_hierarchical_branchContext>(_ctx, getState());
   enterRule(_localctx, 618, Verilog2001Parser::RuleEscaped_hierarchical_branch);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    int alt;
+    size_t alt;
     enterOuterAlt(_localctx, 1);
     setState(3968);
     match(Verilog2001Parser::Escaped_identifier);
@@ -27443,8 +27636,10 @@ Verilog2001Parser::Initializer::Initializer() {
   atn::ATNDeserializer deserializer;
   _atn = deserializer.deserialize(_serializedATN);
 
-  for (int i = 0; i < _atn.getNumberOfDecisions(); i++) { 
-    _decisionToDFA.push_back(dfa::DFA(_atn.getDecisionState(i), i));
+  size_t count = _atn.getNumberOfDecisions();
+  _decisionToDFA.reserve(count);
+  for (size_t i = 0; i < count; i++) { 
+    _decisionToDFA.emplace_back(_atn.getDecisionState(i), i);
   }
 }
 

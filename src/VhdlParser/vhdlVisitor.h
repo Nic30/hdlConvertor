@@ -1,5 +1,5 @@
 
-// Generated from vhdl.g4 by ANTLR 4.5.3
+// Generated from vhdl.g4 by ANTLR 4.6
 
 #pragma once
 
@@ -14,7 +14,7 @@ namespace vhdl {
  * This class defines an abstract visitor for a parse tree
  * produced by vhdlParser.
  */
-class vhdlVisitor : public antlr4::tree::AbstractParseTreeVisitor {
+class  vhdlVisitor : public antlr4::tree::AbstractParseTreeVisitor {
 public:
 
   /**

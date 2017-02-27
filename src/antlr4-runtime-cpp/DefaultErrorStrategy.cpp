@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "NoViableAltException.h"
@@ -46,6 +20,8 @@
 #include "DefaultErrorStrategy.h"
 
 using namespace antlr4;
+using namespace antlr4::atn;
+
 using namespace antlrcpp;
 
 DefaultErrorStrategy::DefaultErrorStrategy() {
@@ -56,6 +32,7 @@ DefaultErrorStrategy::~DefaultErrorStrategy() {
 }
 
 void DefaultErrorStrategy::reset(Parser *recognizer) {
+  _errorSymbols.clear();
   endErrorCondition(recognizer);
 }
 
@@ -112,7 +89,7 @@ void DefaultErrorStrategy::recover(Parser *recognizer, std::exception_ptr /*e*/)
 }
 
 void DefaultErrorStrategy::sync(Parser *recognizer) {
-  atn::ATNState *s = recognizer->getInterpreter<atn::ATNSimulator>()->atn.states[(size_t)recognizer->getState()];
+  atn::ATNState *s = recognizer->getInterpreter<atn::ATNSimulator>()->atn.states[recognizer->getState()];
 
   // If already recovering, don't try to sync
   if (inErrorRecoveryMode(recognizer)) {
@@ -120,15 +97,11 @@ void DefaultErrorStrategy::sync(Parser *recognizer) {
   }
 
   TokenStream *tokens = recognizer->getTokenStream();
-  ssize_t la = tokens->LA(1);
+  size_t la = tokens->LA(1);
 
   // try cheaper subset first; might get lucky. seems to shave a wee bit off
-  if (recognizer->getATN().nextTokens(s).contains((int)la) || la == Token::EOF) {
-    return;
-  }
-
-  // Return but don't end recovery. only do that upon valid token match
-  if (recognizer->isExpectedToken((int)la)) {
+  auto nextTokens = recognizer->getATN().nextTokens(s);
+  if (nextTokens.contains(Token::EPSILON) || nextTokens.contains(la)) {
     return;
   }
 
@@ -182,9 +155,9 @@ void DefaultErrorStrategy::reportInputMismatch(Parser *recognizer, const InputMi
 }
 
 void DefaultErrorStrategy::reportFailedPredicate(Parser *recognizer, const FailedPredicateException &e) {
-  const std::string& ruleName = recognizer->getRuleNames()[(size_t)recognizer->getContext()->getRuleIndex()];
+  const std::string& ruleName = recognizer->getRuleNames()[recognizer->getContext()->getRuleIndex()];
   std::string msg = "rule " + ruleName + " " + e.what();
-  recognizer->notifyErrorListeners(e.getOffendingToken(), escapeWSAndQuote(msg), std::make_exception_ptr(e));
+  recognizer->notifyErrorListeners(e.getOffendingToken(), msg, std::make_exception_ptr(e));
 }
 
 void DefaultErrorStrategy::reportUnwantedToken(Parser *recognizer) {
@@ -198,8 +171,7 @@ void DefaultErrorStrategy::reportUnwantedToken(Parser *recognizer) {
   std::string tokenName = getTokenErrorDisplay(t);
   misc::IntervalSet expecting = getExpectedTokens(recognizer);
 
-  std::string expectedText = expecting.toString(recognizer->getVocabulary());
-  std::string msg = "extraneous input " + tokenName + " expecting " + escapeWSAndQuote(expectedText);
+  std::string msg = "extraneous input " + tokenName + " expecting " + expecting.toString(recognizer->getVocabulary());
   recognizer->notifyErrorListeners(t, msg, nullptr);
 }
 
@@ -213,7 +185,7 @@ void DefaultErrorStrategy::reportMissingToken(Parser *recognizer) {
   Token *t = recognizer->getCurrentToken();
   misc::IntervalSet expecting = getExpectedTokens(recognizer);
   std::string expectedText = expecting.toString(recognizer->getVocabulary());
-  std::string msg = "missing " + escapeWSAndQuote(expectedText) + " at " + getTokenErrorDisplay(t);
+  std::string msg = "missing " + expectedText + " at " + getTokenErrorDisplay(t);
 
   recognizer->notifyErrorListeners(t, msg, nullptr);
 }
@@ -243,11 +215,11 @@ bool DefaultErrorStrategy::singleTokenInsertion(Parser *recognizer) {
   // if current token is consistent with what could come after current
   // ATN state, then we know we're missing a token; error recovery
   // is free to conjure up and insert the missing token
-  atn::ATNState *currentState = recognizer->getInterpreter<atn::ATNSimulator>()->atn.states[(size_t)recognizer->getState()];
-  atn::ATNState *next = currentState->transition(0)->target;
+  atn::ATNState *currentState = recognizer->getInterpreter<atn::ATNSimulator>()->atn.states[recognizer->getState()];
+  atn::ATNState *next = currentState->transitions[0]->target;
   const atn::ATN &atn = recognizer->getInterpreter<atn::ATNSimulator>()->atn;
   misc::IntervalSet expectingAtLL2 = atn.nextTokens(next, recognizer->getContext());
-  if (expectingAtLL2.contains((int)currentSymbolType)) {
+  if (expectingAtLL2.contains(currentSymbolType)) {
     reportMissingToken(recognizer);
     return true;
   }
@@ -255,9 +227,9 @@ bool DefaultErrorStrategy::singleTokenInsertion(Parser *recognizer) {
 }
 
 Token* DefaultErrorStrategy::singleTokenDeletion(Parser *recognizer) {
-  ssize_t nextTokenType = recognizer->getInputStream()->LA(2);
+  size_t nextTokenType = recognizer->getInputStream()->LA(2);
   misc::IntervalSet expecting = getExpectedTokens(recognizer);
-  if (expecting.contains((int)nextTokenType)) {
+  if (expecting.contains(nextTokenType)) {
     reportUnwantedToken(recognizer);
     recognizer->consume(); // simply delete extra token
                            // we want to return the token we're actually matching
@@ -271,7 +243,7 @@ Token* DefaultErrorStrategy::singleTokenDeletion(Parser *recognizer) {
 Token* DefaultErrorStrategy::getMissingSymbol(Parser *recognizer) {
   Token *currentSymbol = recognizer->getCurrentToken();
   misc::IntervalSet expecting = getExpectedTokens(recognizer);
-  ssize_t expectedTokenType = expecting.getMinElement(); // get any element
+  size_t expectedTokenType = expecting.getMinElement(); // get any element
   std::string tokenText;
   if (expectedTokenType == Token::EOF) {
     tokenText = "<missing EOF>";
@@ -284,12 +256,12 @@ Token* DefaultErrorStrategy::getMissingSymbol(Parser *recognizer) {
     current = lookback;
   }
 
-  _missingSymbol = recognizer->getTokenFactory()->create(
+  _errorSymbols.push_back(recognizer->getTokenFactory()->create(
     { current->getTokenSource(), current->getTokenSource()->getInputStream() },
-    (int)expectedTokenType, tokenText, Token::DEFAULT_CHANNEL, -1, -1,
-    current->getLine(), current->getCharPositionInLine());
-  
-  return _missingSymbol.get();
+    expectedTokenType, tokenText, Token::DEFAULT_CHANNEL, INVALID_INDEX, INVALID_INDEX,
+    current->getLine(), current->getCharPositionInLine()));
+
+  return _errorSymbols.back().get();
 }
 
 misc::IntervalSet DefaultErrorStrategy::getExpectedTokens(Parser *recognizer) {
@@ -315,31 +287,32 @@ std::string DefaultErrorStrategy::getSymbolText(Token *symbol) {
   return symbol->getText();
 }
 
-int DefaultErrorStrategy::getSymbolType(Token *symbol) {
+size_t DefaultErrorStrategy::getSymbolType(Token *symbol) {
   return symbol->getType();
 }
 
-std::string DefaultErrorStrategy::escapeWSAndQuote(std::string &s) {
-  antlrcpp::replaceAll(s, "\n", "\\n");
-  antlrcpp::replaceAll(s, "\r","\\r");
-  antlrcpp::replaceAll(s, "\t","\\t");
-  return "'" + s + "'";
+std::string DefaultErrorStrategy::escapeWSAndQuote(const std::string &s) const {
+  std::string result = s;
+  antlrcpp::replaceAll(result, "\n", "\\n");
+  antlrcpp::replaceAll(result, "\r","\\r");
+  antlrcpp::replaceAll(result, "\t","\\t");
+  return "'" + result + "'";
 }
 
 misc::IntervalSet DefaultErrorStrategy::getErrorRecoverySet(Parser *recognizer) {
   const atn::ATN &atn = recognizer->getInterpreter<atn::ATNSimulator>()->atn;
-  Ref<RuleContext> ctx = recognizer->getContext();
+  RuleContext *ctx = recognizer->getContext();
   misc::IntervalSet recoverSet;
-  while (ctx->invokingState >= 0) {
+  while (ctx->invokingState != ATNState::INVALID_STATE_NUMBER) {
     // compute what follows who invoked us
-    atn::ATNState *invokingState = atn.states[(size_t)ctx->invokingState];
-    atn::RuleTransition *rt = dynamic_cast<atn::RuleTransition*>(invokingState->transition(0));
+    atn::ATNState *invokingState = atn.states[ctx->invokingState];
+    atn::RuleTransition *rt = dynamic_cast<atn::RuleTransition*>(invokingState->transitions[0]);
     misc::IntervalSet follow = atn.nextTokens(rt->followState);
     recoverSet.addAll(follow);
 
-    if (ctx->parent.expired())
+    if (ctx->parent == nullptr)
       break;
-    ctx = ctx->parent.lock();
+    ctx = (RuleContext *)ctx->parent;
   }
   recoverSet.remove(Token::EPSILON);
 
@@ -347,8 +320,8 @@ misc::IntervalSet DefaultErrorStrategy::getErrorRecoverySet(Parser *recognizer) 
 }
 
 void DefaultErrorStrategy::consumeUntil(Parser *recognizer, const misc::IntervalSet &set) {
-  ssize_t ttype = recognizer->getInputStream()->LA(1);
-  while (ttype != Token::EOF && !set.contains((int)ttype)) {
+  size_t ttype = recognizer->getInputStream()->LA(1);
+  while (ttype != Token::EOF && !set.contains(ttype)) {
     recognizer->consume();
     ttype = recognizer->getInputStream()->LA(1);
   }
@@ -357,5 +330,4 @@ void DefaultErrorStrategy::consumeUntil(Parser *recognizer, const misc::Interval
 void DefaultErrorStrategy::InitializeInstanceFields() {
   errorRecoveryMode = false;
   lastErrorIndex = -1;
-  _missingSymbol = nullptr;
 }

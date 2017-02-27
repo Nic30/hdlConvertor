@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "atn/LexerATNSimulator.h"
@@ -59,12 +33,14 @@ void Lexer::reset() {
   // wack Lexer state variables
   _input->seek(0); // rewind the input
 
+  _syntaxErrors = 0;
   token.reset();
   type = Token::INVALID_TYPE;
   channel = Token::DEFAULT_CHANNEL;
-  tokenStartCharIndex = -1;
+  tokenStartCharIndex = INVALID_INDEX;
   tokenStartCharPositionInLine = 0;
   tokenStartLine = 0;
+  type = 0;
   _text = "";
 
   hitEOF = false;
@@ -94,13 +70,13 @@ std::unique_ptr<Token> Lexer::nextToken() {
 
     token.reset();
     channel = Token::DEFAULT_CHANNEL;
-    tokenStartCharIndex = (int)_input->index();
+    tokenStartCharIndex = _input->index();
     tokenStartCharPositionInLine = getInterpreter<atn::LexerATNSimulator>()->getCharPositionInLine();
-    tokenStartLine = (int)getInterpreter<atn::LexerATNSimulator>()->getLine();
+    tokenStartLine = getInterpreter<atn::LexerATNSimulator>()->getLine();
     _text = "";
     do {
       type = Token::INVALID_TYPE;
-      int ttype;
+      size_t ttype;
       try {
         ttype = getInterpreter<atn::LexerATNSimulator>()->match(_input, mode);
       } catch (LexerNoViableAltException &e) {
@@ -182,16 +158,15 @@ void Lexer::emit(std::unique_ptr<Token> newToken) {
 }
 
 Token* Lexer::emit() {
-  emit(_factory->create({ this, _input }, (int)type, _text, channel,
-    tokenStartCharIndex, getCharIndex() - 1, (int)tokenStartLine, tokenStartCharPositionInLine));
+  emit(_factory->create({ this, _input }, type, _text, channel,
+    tokenStartCharIndex, getCharIndex() - 1, tokenStartLine, tokenStartCharPositionInLine));
   return token.get();
 }
 
 Token* Lexer::emitEOF() {
-  int cpos = getCharPositionInLine();
+  size_t cpos = getCharPositionInLine();
   size_t line = getLine();
-  emit(_factory->create({ this, _input }, EOF, "", Token::DEFAULT_CHANNEL, (int)_input->index(),
-    (int)_input->index() - 1, (int)line, cpos));
+  emit(_factory->create({ this, _input }, EOF, "", Token::DEFAULT_CHANNEL, _input->index(), _input->index() - 1, line, cpos));
   return token.get();
 }
 
@@ -199,7 +174,7 @@ size_t Lexer::getLine() const {
   return getInterpreter<atn::LexerATNSimulator>()->getLine();
 }
 
-int Lexer::getCharPositionInLine() {
+size_t Lexer::getCharPositionInLine() {
   return getInterpreter<atn::LexerATNSimulator>()->getCharPositionInLine();
 }
 
@@ -207,12 +182,12 @@ void Lexer::setLine(size_t line) {
   getInterpreter<atn::LexerATNSimulator>()->setLine(line);
 }
 
-void Lexer::setCharPositionInLine(int charPositionInLine) {
+void Lexer::setCharPositionInLine(size_t charPositionInLine) {
   getInterpreter<atn::LexerATNSimulator>()->setCharPositionInLine(charPositionInLine);
 }
 
-int Lexer::getCharIndex() {
-  return (int)_input->index();
+size_t Lexer::getCharIndex() {
+  return _input->index();
 }
 
 std::string Lexer::getText() {
@@ -234,19 +209,19 @@ void Lexer::setToken(std::unique_ptr<Token> newToken) {
   token = std::move(newToken);
 }
 
-void Lexer::setType(ssize_t ttype) {
+void Lexer::setType(size_t ttype) {
   type = ttype;
 }
 
-ssize_t Lexer::getType() {
+size_t Lexer::getType() {
   return type;
 }
 
-void Lexer::setChannel(int newChannel) {
+void Lexer::setChannel(size_t newChannel) {
   channel = newChannel;
 }
 
-int Lexer::getChannel() {
+size_t Lexer::getChannel() {
   return channel;
 }
 
@@ -268,7 +243,8 @@ void Lexer::recover(const LexerNoViableAltException &/*e*/) {
 }
 
 void Lexer::notifyListeners(const LexerNoViableAltException & /*e*/) {
-  std::string text = _input->getText(misc::Interval(tokenStartCharIndex, (int)_input->index()));
+  ++_syntaxErrors;
+  std::string text = _input->getText(misc::Interval(tokenStartCharIndex, _input->index()));
   std::string msg = std::string("token recognition error at: '") + getErrorDisplay(text) + std::string("'");
 
   ProxyErrorListener &listener = getErrorListenerDispatch();
@@ -301,10 +277,15 @@ void Lexer::recover(RecognitionException * /*re*/) {
   _input->consume();
 }
 
+size_t Lexer::getNumberOfSyntaxErrors() {
+  return _syntaxErrors;
+}
+
 void Lexer::InitializeInstanceFields() {
+  _syntaxErrors = 0;
   token = nullptr;
   _factory = CommonTokenFactory::DEFAULT;
-  tokenStartCharIndex = -1;
+  tokenStartCharIndex = INVALID_INDEX;
   tokenStartLine = 0;
   tokenStartCharPositionInLine = 0;
   hitEOF = false;

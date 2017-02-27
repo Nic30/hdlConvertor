@@ -1,5 +1,5 @@
 
-// Generated from Verilog2001.g4 by ANTLR 4.5.3
+// Generated from Verilog2001.g4 by ANTLR 4.6
 
 #pragma once
 
@@ -14,7 +14,7 @@ namespace verilog {
  * This class defines an abstract visitor for a parse tree
  * produced by Verilog2001Parser.
  */
-class Verilog2001Visitor : public antlr4::tree::AbstractParseTreeVisitor {
+class  Verilog2001Visitor : public antlr4::tree::AbstractParseTreeVisitor {
 public:
 
   /**

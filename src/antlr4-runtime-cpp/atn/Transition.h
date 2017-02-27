@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -52,17 +26,18 @@ namespace atn {
   class ANTLR4CPP_PUBLIC Transition {
   public:
     // constants for serialization
-    static const int EPSILON = 1;
-    static const int RANGE = 2;
-    static const int RULE = 3;
-    static const int PREDICATE = 4; // e.g., {isType(input.LT(1))}?
-    static const int ATOM = 5;
-    static const int ACTION = 6;
-    static const int SET = 7; // ~(A|B) or ~atom, wildcard, which convert to next 2
-    static const int NOT_SET = 8;
-    static const int WILDCARD = 9;
-    static const int PRECEDENCE = 10;
-
+    enum SerializationType {
+      EPSILON = 1,
+      RANGE = 2,
+      RULE = 3,
+      PREDICATE = 4, // e.g., {isType(input.LT(1))}?
+      ATOM = 5,
+      ACTION = 6,
+      SET = 7, // ~(A|B) or ~atom, wildcard, which convert to next 2
+      NOT_SET = 8,
+      WILDCARD = 9,
+      PRECEDENCE = 10,
+    };
 
     static const std::vector<std::string> serializationNames;
 
@@ -71,12 +46,12 @@ namespace atn {
     ATNState *target;
 
     virtual ~Transition() {};
-    
+
   protected:
     Transition(ATNState *target);
 
   public:
-    virtual int getSerializationType() const = 0;
+    virtual SerializationType getSerializationType() const = 0;
 
     /**
      * Determines if the transition is an "epsilon" transition.
@@ -89,7 +64,7 @@ namespace atn {
      */
     virtual bool isEpsilon() const;
     virtual misc::IntervalSet label() const;
-    virtual bool matches(ssize_t symbol, ssize_t minVocabSymbol, ssize_t maxVocabSymbol) const = 0;
+    virtual bool matches(size_t symbol, size_t minVocabSymbol, size_t maxVocabSymbol) const = 0;
 
     virtual std::string toString() const;
   };

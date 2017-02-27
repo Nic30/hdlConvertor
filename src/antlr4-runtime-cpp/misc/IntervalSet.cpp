@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "misc/MurmurHash.h"
@@ -72,11 +46,11 @@ IntervalSet::IntervalSet(int n, ...) : IntervalSet() {
   }
 }
 
-IntervalSet IntervalSet::of(int a) {
+IntervalSet IntervalSet::of(ssize_t a) {
   return IntervalSet({ Interval(a, a) });
 }
 
-IntervalSet IntervalSet::of(int a, int b) {
+IntervalSet IntervalSet::of(ssize_t a, ssize_t b) {
   return IntervalSet({ Interval(a, b) });
 }
 
@@ -87,14 +61,14 @@ void IntervalSet::clear() {
   _intervals.clear();
 }
 
-void IntervalSet::add(int el) {
+void IntervalSet::add(ssize_t el) {
   if (_readonly) {
     throw IllegalStateException("can't alter read only IntervalSet");
   }
   add(el, el);
 }
 
-void IntervalSet::add(int a, int b) {
+void IntervalSet::add(ssize_t a, ssize_t b) {
   add(Interval(a, b));
 }
 
@@ -167,7 +141,7 @@ IntervalSet& IntervalSet::addAll(const IntervalSet &set) {
   return *this;
 }
 
-IntervalSet IntervalSet::complement(int minElement, int maxElement) const {
+IntervalSet IntervalSet::complement(ssize_t minElement, ssize_t maxElement) const {
   return complement(IntervalSet::of(minElement, maxElement));
 }
 
@@ -301,9 +275,14 @@ IntervalSet IntervalSet::And(const IntervalSet &other) const {
   return intersection;
 }
 
-bool IntervalSet::contains(int el) const {
+bool IntervalSet::contains(size_t el) const {
+  return contains(symbolToNumeric(el));
+}
+
+bool IntervalSet::contains(ssize_t el) const {
   if (_intervals.empty())
     return false;
+
   if (el < _intervals[0].a) // list is sorted and el is before first interval; not here
     return false;
 
@@ -319,7 +298,7 @@ bool IntervalSet::isEmpty() const {
   return _intervals.empty();
 }
 
-int IntervalSet::getSingleElement() const {
+ssize_t IntervalSet::getSingleElement() const {
   if (_intervals.size() == 1) {
     if (_intervals[0].a == _intervals[0].b) {
       return _intervals[0].a;
@@ -329,7 +308,7 @@ int IntervalSet::getSingleElement() const {
   return Token::INVALID_TYPE; // XXX: this value is 0, but 0 is a valid interval range, how can that work?
 }
 
-int IntervalSet::getMaxElement() const {
+ssize_t IntervalSet::getMaxElement() const {
   if (_intervals.empty()) {
     return Token::INVALID_TYPE;
   }
@@ -337,7 +316,7 @@ int IntervalSet::getMaxElement() const {
   return _intervals.back().b;
 }
 
-int IntervalSet::getMinElement() const {
+ssize_t IntervalSet::getMinElement() const {
   if (_intervals.empty()) {
     return Token::INVALID_TYPE;
   }
@@ -352,8 +331,8 @@ std::vector<Interval> IntervalSet::getIntervals() const {
 size_t IntervalSet::hashCode() const {
   size_t hash = MurmurHash::initialize();
   for (auto &interval : _intervals) {
-    hash = MurmurHash::update(hash, (size_t)interval.a);
-    hash = MurmurHash::update(hash, (size_t)interval.b);
+    hash = MurmurHash::update(hash, interval.a);
+    hash = MurmurHash::update(hash, interval.b);
   }
 
   return MurmurHash::finish(hash, _intervals.size() * 2);
@@ -390,10 +369,10 @@ std::string IntervalSet::toString(bool elemAreChar) const {
       ss << ", ";
     firstEntry = false;
 
-    int a = interval.a;
-    int b = interval.b;
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
     if (a == b) {
-      if (a == Token::EOF) {
+      if (a == -1) {
         ss << "<EOF>";
       } else if (elemAreChar) {
         ss << "'" << static_cast<char>(a) << "'";
@@ -436,8 +415,8 @@ std::string IntervalSet::toString(const dfa::Vocabulary &vocabulary) const {
       ss << ", ";
     firstEntry = false;
 
-    ssize_t a = (ssize_t)interval.a;
-    ssize_t b = (ssize_t)interval.b;
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
     if (a == b) {
       ss << elementName(vocabulary, a);
     } else {
@@ -461,9 +440,9 @@ std::string IntervalSet::elementName(const std::vector<std::string> &tokenNames,
 }
 
 std::string IntervalSet::elementName(const dfa::Vocabulary &vocabulary, ssize_t a) const {
-  if (a == Token::EOF) {
+  if (a == -1) {
     return "<EOF>";
-  } else if (a == Token::EPSILON) {
+  } else if (a == -2) {
     return "<EPSILON>";
   } else {
     return vocabulary.getDisplayName(a);
@@ -473,43 +452,43 @@ std::string IntervalSet::elementName(const dfa::Vocabulary &vocabulary, ssize_t 
 size_t IntervalSet::size() const {
   size_t result = 0;
   for (auto &interval : _intervals) {
-    result += (size_t)(interval.b - interval.a + 1);
+    result += size_t(interval.b - interval.a + 1);
   }
   return result;
 }
 
-std::vector<int> IntervalSet::toList() const {
-  std::vector<int> result;
+std::vector<ssize_t> IntervalSet::toList() const {
+  std::vector<ssize_t> result;
   for (auto &interval : _intervals) {
-    size_t a = (size_t)interval.a;
-    size_t b = (size_t)interval.b;
-    for (size_t v = a; v <= b; v++) {
-      result.push_back((int)v);
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
+    for (ssize_t v = a; v <= b; v++) {
+      result.push_back(v);
     }
   }
   return result;
 }
 
-std::set<int> IntervalSet::toSet() const {
-  std::set<int> result;
+std::set<ssize_t> IntervalSet::toSet() const {
+  std::set<ssize_t> result;
   for (auto &interval : _intervals) {
-    size_t a = (size_t)interval.a;
-    size_t b = (size_t)interval.b;
-    for (size_t v = a; v <= b; v++) {
-      result.insert((int)v);
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
+    for (ssize_t v = a; v <= b; v++) {
+      result.insert(v);
     }
   }
   return result;
 }
 
-int IntervalSet::get(int i) const {
+ssize_t IntervalSet::get(size_t i) const {
   size_t index = 0;
   for (auto &interval : _intervals) {
-    size_t a = (size_t)interval.a;
-    size_t b = (size_t)interval.b;
-    for (size_t v = a; v <= b; v++) {
-      if (index == (size_t)i) {
-        return (int)v;
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
+    for (ssize_t v = a; v <= b; v++) {
+      if (index == i) {
+        return v;
       }
       index++;
     }
@@ -517,39 +496,43 @@ int IntervalSet::get(int i) const {
   return -1;
 }
 
-void IntervalSet::remove(int el) {
+void IntervalSet::remove(size_t el) {
+  remove(symbolToNumeric(el));
+}
+
+void IntervalSet::remove(ssize_t el) {
   if (_readonly) {
     throw IllegalStateException("can't alter read only IntervalSet");
   }
 
   for (size_t i = 0; i < _intervals.size(); ++i) {
     Interval &interval = _intervals[i];
-    size_t a = (size_t)interval.a;
-    size_t b = (size_t)interval.b;
-    if ((size_t)el < a) {
+    ssize_t a = interval.a;
+    ssize_t b = interval.b;
+    if (el < a) {
       break; // list is sorted and el is before this interval; not here
     }
 
     // if whole interval x..x, rm
-    if ((size_t)el == a && (size_t)el == b) {
+    if (el == a && el == b) {
       _intervals.erase(_intervals.begin() + (long)i);
       break;
     }
     // if on left edge x..b, adjust left
-    if ((size_t)el == a) {
+    if (el == a) {
       interval.a++;
       break;
     }
     // if on right edge a..x, adjust right
-    if ((size_t)el == b) {
+    if (el == b) {
       interval.b--;
       break;
     }
     // if in middle a..x..b, split interval
-    if ((size_t)el > a && (size_t)el < b) { // found in this interval
-      size_t oldb = (size_t)interval.b;
+    if (el > a && el < b) { // found in this interval
+      ssize_t oldb = interval.b;
       interval.b = el - 1; // [a..x-1]
-      add(el + 1, (int)oldb); // add [x+1..b]
+      add(el + 1, oldb); // add [x+1..b]
 
       break; // ml: not in the Java code but I believe we also should stop searching here, as we found x.
     }

@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -273,15 +247,14 @@ namespace atn {
     Parser *const parser;
 
   public:
+    static const bool TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT;
+
     std::vector<dfa::DFA> &decisionToDFA;
 
     /// <summary>
     /// SLL, LL, or LL + exact ambig detection? </summary>
   private:
     PredictionMode mode;
-
-    // Mutex to manage synchronized access for multithreading in the parser atn simulator.
-    std::recursive_mutex _lock;
 
     /// <summary>
     /// Each prediction operation uses a cache for merge of prediction contexts.
@@ -293,12 +266,12 @@ namespace atn {
     ///  also be examined during cache lookup.
     /// </summary>
   protected:
-    PredictionContextMergeCache * mergeCache;
+    PredictionContextMergeCache mergeCache;
 
     // LAME globals to avoid parameters!!!!! I need these down deep in predTransition
     TokenStream *_input;
-    int _startIndex;
-    Ref<ParserRuleContext> _outerContext;
+    size_t _startIndex;
+    ParserRuleContext *_outerContext;
     dfa::DFA *_dfa; // Reference into the decisionToDFA vector.
 
   public:
@@ -311,7 +284,7 @@ namespace atn {
 
     virtual void reset() override;
     virtual void clearDFA() override;
-    virtual int adaptivePredict(TokenStream *input, int decision, Ref<ParserRuleContext> const& outerContext);
+    virtual size_t adaptivePredict(TokenStream *input, size_t decision, ParserRuleContext *outerContext);
 
     /// <summary>
     /// Performs ATN simulation to compute a predicted alternative based
@@ -345,8 +318,8 @@ namespace atn {
     ///    conflict + preds
     /// </summary>
   protected:
-    virtual int execATN(dfa::DFA &dfa, dfa::DFAState *s0, TokenStream *input, size_t startIndex,
-                        Ref<ParserRuleContext> outerContext);
+    virtual size_t execATN(dfa::DFA &dfa, dfa::DFAState *s0, TokenStream *input, size_t startIndex,
+                           ParserRuleContext *outerContext);
 
     /// <summary>
     /// Get an existing target state for an edge in the DFA. If the target state
@@ -358,7 +331,7 @@ namespace atn {
     /// <returns> The existing target DFA state for the given input symbol
     /// {@code t}, or {@code null} if the target state for this edge is not
     /// already cached </returns>
-    virtual dfa::DFAState* getExistingTargetState(dfa::DFAState *previousD, ssize_t t);
+    virtual dfa::DFAState* getExistingTargetState(dfa::DFAState *previousD, size_t t);
 
     /// <summary>
     /// Compute a target state for an edge in the DFA, and attempt to add the
@@ -371,15 +344,15 @@ namespace atn {
     /// <returns> The computed target DFA state for the given input symbol
     /// {@code t}. If {@code t} does not lead to a valid DFA state, this method
     /// returns <seealso cref="#ERROR"/>. </returns>
-    virtual dfa::DFAState *computeTargetState(dfa::DFA &dfa, dfa::DFAState *previousD, ssize_t t);
+    virtual dfa::DFAState *computeTargetState(dfa::DFA &dfa, dfa::DFAState *previousD, size_t t);
 
     virtual void predicateDFAState(dfa::DFAState *dfaState, DecisionState *decisionState);
 
     // comes back with reach.uniqueAlt set to a valid alt
-    virtual int execATNWithFullContext(dfa::DFA &dfa, dfa::DFAState *D, ATNConfigSet *s0,
-      TokenStream *input, size_t startIndex, Ref<ParserRuleContext> const& outerContext); // how far we got before failing over
+    virtual size_t execATNWithFullContext(dfa::DFA &dfa, dfa::DFAState *D, ATNConfigSet *s0,
+      TokenStream *input, size_t startIndex, ParserRuleContext *outerContext); // how far we got before failing over
 
-    virtual std::unique_ptr<ATNConfigSet> computeReachSet(ATNConfigSet *closure, ssize_t t, bool fullCtx);
+    virtual std::unique_ptr<ATNConfigSet> computeReachSet(ATNConfigSet *closure, size_t t, bool fullCtx);
 
     /// <summary>
     /// Return a configuration set containing only the configurations from
@@ -402,7 +375,7 @@ namespace atn {
     /// the configurations from {@code configs} which are in a rule stop state </returns>
     virtual ATNConfigSet* removeAllConfigsNotInRuleStopState(ATNConfigSet *configs, bool lookToEndOfRule);
 
-    virtual std::unique_ptr<ATNConfigSet> computeStartState(ATNState *p, Ref<RuleContext> const& ctx, bool fullCtx);
+    virtual std::unique_ptr<ATNConfigSet> computeStartState(ATNState *p, RuleContext *ctx, bool fullCtx);
 
     /* parrt internal source braindump that doesn't mess up
      * external API spec.
@@ -572,8 +545,8 @@ namespace atn {
      * calling {@link Parser#getPrecedence}).
      */
     std::unique_ptr<ATNConfigSet> applyPrecedenceFilter(ATNConfigSet *configs);
-    
-    virtual ATNState *getReachableTarget(Transition *trans, int ttype);
+
+    virtual ATNState *getReachableTarget(Transition *trans, size_t ttype);
 
     virtual std::vector<Ref<SemanticContext>> getPredsForAmbigAlts(const antlrcpp::BitSet &ambigAlts,
       ATNConfigSet *configs, size_t nalts);
@@ -627,10 +600,10 @@ namespace atn {
      * {@link ATN#INVALID_ALT_NUMBER} if a suitable alternative was not
      * identified and {@link #adaptivePredict} should report an error instead.
      */
-    int getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(ATNConfigSet *configs,
-                                                                Ref<ParserRuleContext> const& outerContext);
+    size_t getSynValidOrSemInvalidAltThatFinishedDecisionEntryRule(ATNConfigSet *configs,
+      ParserRuleContext *outerContext);
 
-    virtual int getAltThatFinishedDecisionEntryRule(ATNConfigSet *configs);
+    virtual size_t getAltThatFinishedDecisionEntryRule(ATNConfigSet *configs);
 
     /** Walk the list of configurations and split them according to
      *  those that have preds evaluating to true/false.  If no pred, assume
@@ -642,7 +615,7 @@ namespace atn {
      *  prediction, which is where predicates need to evaluate.
      */
     std::pair<ATNConfigSet *, ATNConfigSet *> splitAccordingToSemanticValidity(ATNConfigSet *configs,
-      Ref<ParserRuleContext> const& outerContext);
+      ParserRuleContext *outerContext);
 
     /// <summary>
     /// Look through a list of predicate/alt pairs, returning alts for the
@@ -652,7 +625,7 @@ namespace atn {
     ///  includes pairs with null predicates.
     /// </summary>
     virtual antlrcpp::BitSet evalSemanticContext(std::vector<dfa::DFAState::PredPrediction*> predPredictions,
-                                                 Ref<ParserRuleContext> const& outerContext, bool complete);
+                                                 ParserRuleContext *outerContext, bool complete);
 
 
     /**
@@ -685,8 +658,8 @@ namespace atn {
      *
      * @since 4.3
      */
-    virtual bool evalSemanticContext(Ref<SemanticContext> const& pred, Ref<ParserRuleContext> const& parserCallStack,
-                                     int alt, bool fullCtx);
+    virtual bool evalSemanticContext(Ref<SemanticContext> const& pred, ParserRuleContext *parserCallStack,
+                                     size_t alt, bool fullCtx);
 
     /* TO_DO: If we are doing predicates, there is no point in pursuing
      closure operations if we reach a DFA state that uniquely predicts
@@ -705,6 +678,93 @@ namespace atn {
                           bool collectPredicates, bool fullCtx, int depth, bool treatEofAsEpsilon);
 
   public:
+    /** Implements first-edge (loop entry) elimination as an optimization
+     *  during closure operations.  See antlr/antlr4#1398.
+     *
+     * The optimization is to avoid adding the loop entry config when
+     * the exit path can only lead back to the same
+     * StarLoopEntryState after popping context at the rule end state
+     * (traversing only epsilon edges, so we're still in closure, in
+     * this same rule).
+     *
+     * We need to detect any state that can reach loop entry on
+     * epsilon w/o exiting rule. We don't have to look at FOLLOW
+     * links, just ensure that all stack tops for config refer to key
+     * states in LR rule.
+     *
+     * To verify we are in the right situation we must first check
+     * closure is at a StarLoopEntryState generated during LR removal.
+     * Then we check that each stack top of context is a return state
+     * from one of these cases:
+     *
+     *   1. 'not' expr, '(' type ')' expr. The return state points at loop entry state
+     *   2. expr op expr. The return state is the block end of internal block of (...)*
+     *   3. 'between' expr 'and' expr. The return state of 2nd expr reference.
+     *      That state points at block end of internal block of (...)*.
+     *   4. expr '?' expr ':' expr. The return state points at block end,
+     *      which points at loop entry state.
+     *
+     * If any is true for each stack top, then closure does not add a
+     * config to the current config set for edge[0], the loop entry branch.
+     *
+     *  Conditions fail if any context for the current config is:
+     *
+     *   a. empty (we'd fall out of expr to do a global FOLLOW which could
+     *      even be to some weird spot in expr) or,
+     *   b. lies outside of expr or,
+     *   c. lies within expr but at a state not the BlockEndState
+     *   generated during LR removal
+     *
+     * Do we need to evaluate predicates ever in closure for this case?
+     *
+     * No. Predicates, including precedence predicates, are only
+     * evaluated when computing a DFA start state. I.e., only before
+     * the lookahead (but not parser) consumes a token.
+     *
+     * There are no epsilon edges allowed in LR rule alt blocks or in
+     * the "primary" part (ID here). If closure is in
+     * StarLoopEntryState any lookahead operation will have consumed a
+     * token as there are no epsilon-paths that lead to
+     * StarLoopEntryState. We do not have to evaluate predicates
+     * therefore if we are in the generated StarLoopEntryState of a LR
+     * rule. Note that when making a prediction starting at that
+     * decision point, decision d=2, compute-start-state performs
+     * closure starting at edges[0], edges[1] emanating from
+     * StarLoopEntryState. That means it is not performing closure on
+     * StarLoopEntryState during compute-start-state.
+     *
+     * How do we know this always gives same prediction answer?
+     *
+     * Without predicates, loop entry and exit paths are ambiguous
+     * upon remaining input +b (in, say, a+b). Either paths lead to
+     * valid parses. Closure can lead to consuming + immediately or by
+     * falling out of this call to expr back into expr and loop back
+     * again to StarLoopEntryState to match +b. In this special case,
+     * we choose the more efficient path, which is to take the bypass
+     * path.
+     *
+     * The lookahead language has not changed because closure chooses
+     * one path over the other. Both paths lead to consuming the same
+     * remaining input during a lookahead operation. If the next token
+     * is an operator, lookahead will enter the choice block with
+     * operators. If it is not, lookahead will exit expr. Same as if
+     * closure had chosen to enter the choice block immediately.
+     *
+     * Closure is examining one config (some loopentrystate, some alt,
+     * context) which means it is considering exactly one alt. Closure
+     * always copies the same alt to any derived configs.
+     *
+     * How do we know this optimization doesn't mess up precedence in
+     * our parse trees?
+     *
+     * Looking through expr from left edge of stat only has to confirm
+     * that an input, say, a+b+c; begins with any valid interpretation
+     * of an expression. The precedence actually doesn't matter when
+     * making a decision in stat seeing through expr. It is only when
+     * parsing rule expr that we must use the precedence to get the
+     * right interpretation and, hence, parse tree.
+     */
+    bool canDropLoopEntryEdgeInLeftRecursiveRule(ATNConfig *config) const;
     virtual std::string getRuleName(size_t index);
 
   protected:
@@ -773,7 +833,7 @@ namespace atn {
     virtual antlrcpp::BitSet getConflictingAltsOrUniqueAlt(ATNConfigSet *configs);
 
   public:
-    virtual std::string getTokenName(ssize_t t);
+    virtual std::string getTokenName(size_t t);
 
     virtual std::string getLookaheadName(TokenStream *input);
 
@@ -785,10 +845,10 @@ namespace atn {
     virtual void dumpDeadEndConfigs(NoViableAltException &nvae);
 
   protected:
-    virtual NoViableAltException noViableAlt(TokenStream *input, Ref<ParserRuleContext> const& outerContext,
+    virtual NoViableAltException noViableAlt(TokenStream *input, ParserRuleContext *outerContext,
                                               ATNConfigSet *configs, size_t startIndex);
 
-    static int getUniqueAlt(ATNConfigSet *configs);
+    static size_t getUniqueAlt(ATNConfigSet *configs);
 
     /// <summary>
     /// Add an edge to the DFA, if possible. This method calls
@@ -830,7 +890,7 @@ namespace atn {
     virtual void reportAttemptingFullContext(dfa::DFA &dfa, const antlrcpp::BitSet &conflictingAlts,
       ATNConfigSet *configs, size_t startIndex, size_t stopIndex);
 
-    virtual void reportContextSensitivity(dfa::DFA &dfa, int prediction, ATNConfigSet *configs,
+    virtual void reportContextSensitivity(dfa::DFA &dfa, size_t prediction, ATNConfigSet *configs,
                                           size_t startIndex, size_t stopIndex);
 
     /// If context sensitive parsing, we know it's ambiguity not conflict.
@@ -848,6 +908,7 @@ namespace atn {
     Parser* getParser();
 
   private:
+    static bool getLrLoopSetting();
     void InitializeInstanceFields();
   };
 

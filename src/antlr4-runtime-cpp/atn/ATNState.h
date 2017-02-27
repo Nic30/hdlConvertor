@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -99,11 +73,11 @@ namespace atn {
   class ANTLR4CPP_PUBLIC ATNState {
   public:
     ATNState();
-    
+
     virtual ~ATNState();
 
-    static const int INITIAL_NUM_TRANSITIONS;
-    static const int INVALID_STATE_NUMBER;
+    static const size_t INITIAL_NUM_TRANSITIONS = 4;
+    static const size_t INVALID_STATE_NUMBER = (size_t)-1;
 
     enum {
       ATN_INVALID_TYPE = 0,
@@ -123,16 +97,9 @@ namespace atn {
 
     static const std::vector<std::string> serializationNames;
 
-    /// Which ATN are we in?
-    // ml: just a reference to the owner. Set when the state gets added to an ATN.
-    //const ATN *atn = nullptr;
-    int stateNumber = INVALID_STATE_NUMBER;
-    int ruleIndex = 0; // at runtime, we don't have Rule objects
+    size_t stateNumber = INVALID_STATE_NUMBER;
+    size_t ruleIndex = 0; // at runtime, we don't have Rule objects
     bool epsilonOnlyTransitions = false;
-
-  protected:
-    /// Track the transitions emanating from this ATN state.
-    std::vector<Transition*> transitions;
 
   public:
     /// Used to cache lookahead during parsing, not used during construction.
@@ -141,20 +108,15 @@ namespace atn {
     virtual size_t hashCode();
     bool operator == (const ATNState &other);
 
+    /// Track the transitions emanating from this ATN state.
+    std::vector<Transition*> transitions;
+
     virtual bool isNonGreedyExitState();
     virtual std::string toString() const;
-    virtual std::string toStringJavaLike() const;
-    virtual  std::vector<Transition*> getTransitions();
-    virtual size_t getNumberOfTransitions();
     virtual void addTransition(Transition *e);
-    virtual void addTransition(int index, Transition *e);
-    virtual Transition *transition(size_t i);
-    virtual void setTransition(size_t i, Transition *e);
-    virtual Transition *removeTransition(int index);
-    virtual int getStateType() = 0;
-    bool onlyHasEpsilonTransitions();
-    virtual void setRuleIndex(int index);
-
+    virtual void addTransition(size_t index, Transition *e);
+    virtual Transition* removeTransition(size_t index);
+    virtual size_t getStateType() = 0;
   };
 
 } // namespace atn

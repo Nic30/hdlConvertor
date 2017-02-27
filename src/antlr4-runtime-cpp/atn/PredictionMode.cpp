@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "atn/RuleStopState.h"
@@ -49,7 +23,7 @@ struct AltAndContextConfigHasher
    */
   size_t operator () (ATNConfig *o) const {
     size_t hashCode = misc::MurmurHash::initialize(7);
-    hashCode = misc::MurmurHash::update(hashCode, (size_t)o->state->stateNumber);
+    hashCode = misc::MurmurHash::update(hashCode, o->state->stateNumber);
     hashCode = misc::MurmurHash::update(hashCode, o->context);
     return misc::MurmurHash::finish(hashCode, 2);
   }
@@ -61,7 +35,7 @@ struct AltAndContextConfigComparer {
     if (a == b) {
       return true;
     }
-    return a->state->stateNumber == b->state->stateNumber && a->context == b->context;
+    return a->state->stateNumber == b->state->stateNumber && *a->context == *b->context;
   }
 };
 
@@ -118,7 +92,7 @@ bool PredictionModeClass::allConfigsInRuleStopStates(ATNConfigSet *configs) {
   return true;
 }
 
-int PredictionModeClass::resolvesToJustOneViableAlt(const std::vector<antlrcpp::BitSet>& altsets) {
+size_t PredictionModeClass::resolvesToJustOneViableAlt(const std::vector<antlrcpp::BitSet>& altsets) {
   return getSingleViableAlt(altsets);
 }
 
@@ -158,7 +132,7 @@ bool PredictionModeClass::allSubsetsEqual(const std::vector<antlrcpp::BitSet>& a
   return true;
 }
 
-int PredictionModeClass::getUniqueAlt(const std::vector<antlrcpp::BitSet>& altsets) {
+size_t PredictionModeClass::getUniqueAlt(const std::vector<antlrcpp::BitSet>& altsets) {
   antlrcpp::BitSet all = getAlts(altsets);
   if (all.count() == 1) {
     return all.nextSetBit(0);
@@ -185,7 +159,6 @@ antlrcpp::BitSet PredictionModeClass::getAlts(ATNConfigSet *configs) {
 
 std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNConfigSet *configs) {
   std::unordered_map<ATNConfig *, antlrcpp::BitSet, AltAndContextConfigHasher, AltAndContextConfigComparer> configToAlts;
-  //std::cout<< configs->toString() << std::endl;
   for (auto &config : configs->configs) {
     configToAlts[config.get()].set(config->alt);
   }
@@ -193,14 +166,13 @@ std::vector<antlrcpp::BitSet> PredictionModeClass::getConflictingAltSubsets(ATNC
   for (auto it : configToAlts) {
     values.push_back(it.second);
   }
-  //std::cout<< "getConflictingAltSubsets: configs.size():"<< values.size() << std::endl;
   return values;
 }
 
 std::map<ATNState*, antlrcpp::BitSet> PredictionModeClass::getStateToAltMap(ATNConfigSet *configs) {
   std::map<ATNState*, antlrcpp::BitSet> m;
   for (auto &c : configs->configs) {
-    m[c->state].set((size_t)c->alt);
+    m[c->state].set(c->alt);
   }
   return m;
 }
@@ -213,12 +185,12 @@ bool PredictionModeClass::hasStateAssociatedWithOneAlt(ATNConfigSet *configs) {
   return false;
 }
 
-int PredictionModeClass::getSingleViableAlt(const std::vector<antlrcpp::BitSet>& altsets) {
+size_t PredictionModeClass::getSingleViableAlt(const std::vector<antlrcpp::BitSet>& altsets) {
   antlrcpp::BitSet viableAlts;
   for (antlrcpp::BitSet alts : altsets) {
-    int minAlt = alts.nextSetBit(0);
+    size_t minAlt = alts.nextSetBit(0);
 
-    viableAlts.set((size_t)minAlt);
+    viableAlts.set(minAlt);
     if (viableAlts.count() > 1)  // more than 1 viable alt
     {
       return ATN::INVALID_ALT_NUMBER;

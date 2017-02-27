@@ -1,5 +1,5 @@
 
-// Generated from vhdl.g4 by ANTLR 4.5.3
+// Generated from vhdl.g4 by ANTLR 4.6
 
 #pragma once
 
@@ -14,7 +14,7 @@ namespace vhdl {
  * This class provides an empty implementation of vhdlVisitor, which can be
  * extended to create a visitor which only needs to handle a subset of the available methods.
  */
-class vhdlBaseVisitor : public vhdlVisitor {
+class  vhdlBaseVisitor : public vhdlVisitor {
 public:
 
   virtual antlrcpp::Any visitAbstract_literal(vhdlParser::Abstract_literalContext *ctx) override {

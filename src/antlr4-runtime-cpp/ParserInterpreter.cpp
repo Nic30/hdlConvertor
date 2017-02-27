@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- * Copyright (c) 2016 Mike Lischke
- * Copyright (c) 2013 Terence Parr
- * Copyright (c) 2013 Dan McLaughlin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "dfa/DFA.h"
@@ -44,6 +18,7 @@
 #include "atn/ActionTransition.h"
 #include "atn/ATN.h"
 #include "atn/RuleStopState.h"
+#include "Lexer.h"
 #include "Token.h"
 #include "Vocabulary.h"
 #include "InputMismatchException.h"
@@ -55,6 +30,8 @@
 
 using namespace antlr4;
 using namespace antlr4::atn;
+using namespace antlr4::misc;
+
 using namespace antlrcpp;
 
 ParserInterpreter::ParserInterpreter(const std::string &grammarFileName, const std::vector<std::string>& tokenNames,
@@ -71,7 +48,7 @@ ParserInterpreter::ParserInterpreter(const std::string &grammarFileName, const d
   }
 
   // init decision DFA
-  for (int i = 0; i < atn.getNumberOfDecisions(); ++i) {
+  for (size_t i = 0; i < atn.getNumberOfDecisions(); ++i) {
     atn::DecisionState *decisionState = atn.getDecisionState(i);
     _decisionToDFA.push_back(dfa::DFA(decisionState, i));
   }
@@ -110,11 +87,11 @@ std::string ParserInterpreter::getGrammarFileName() const {
   return _grammarFileName;
 }
 
-Ref<ParserRuleContext> ParserInterpreter::parse(int startRuleIndex) {
-  atn::RuleStartState *startRuleStartState = _atn.ruleToStartState[(size_t)startRuleIndex];
+ParserRuleContext* ParserInterpreter::parse(size_t startRuleIndex) {
+  atn::RuleStartState *startRuleStartState = _atn.ruleToStartState[startRuleIndex];
 
-  _rootContext = createInterpreterRuleContext(std::weak_ptr<ParserRuleContext>(), atn::ATNState::INVALID_STATE_NUMBER, startRuleIndex);
-  
+  _rootContext = createInterpreterRuleContext(nullptr, atn::ATNState::INVALID_STATE_NUMBER, startRuleIndex);
+
   if (startRuleStartState->isLeftRecursiveRule) {
     enterRecursionRule(_rootContext, startRuleStartState->stateNumber, startRuleIndex, 0);
   } else {
@@ -128,7 +105,7 @@ Ref<ParserRuleContext> ParserInterpreter::parse(int startRuleIndex) {
         // pop; return from rule
         if (_ctx->isEmpty()) {
           if (startRuleStartState->isLeftRecursiveRule) {
-            Ref<ParserRuleContext> result = _ctx;
+            ParserRuleContext *result = _ctx;
             auto parentContext = _parentContextStack.top();
             _parentContextStack.pop();
             unrollRecursionContexts(parentContext.first);
@@ -138,7 +115,7 @@ Ref<ParserRuleContext> ParserInterpreter::parse(int startRuleIndex) {
             return _rootContext;
           }
         }
-        
+
         visitRuleStopState(p);
         break;
 
@@ -152,13 +129,13 @@ Ref<ParserRuleContext> ParserInterpreter::parse(int startRuleIndex) {
           getContext()->exception = std::current_exception();
           recover(e);
         }
-        
+
         break;
     }
   }
 }
 
-void ParserInterpreter::enterRecursionRule(Ref<ParserRuleContext> const& localctx, int state, int ruleIndex, int precedence) {
+void ParserInterpreter::enterRecursionRule(ParserRuleContext *localctx, size_t state, size_t ruleIndex, int precedence) {
   _parentContextStack.push({ _ctx, localctx->invokingState });
   Parser::enterRecursionRule(localctx, state, ruleIndex, precedence);
 }
@@ -173,21 +150,21 @@ Ref<InterpreterRuleContext> ParserInterpreter::getOverrideDecisionRoot() const {
   return _overrideDecisionRoot;
 }
 
-Ref<InterpreterRuleContext> ParserInterpreter::getRootContext() {
+InterpreterRuleContext* ParserInterpreter::getRootContext() {
   return _rootContext;
 }
 
 atn::ATNState* ParserInterpreter::getATNState() {
-  return _atn.states[(size_t)getState()];
+  return _atn.states[getState()];
 }
 
 void ParserInterpreter::visitState(atn::ATNState *p) {
-  int predictedAlt = 1;
+  size_t predictedAlt = 1;
   if (is<DecisionState *>(p)) {
     predictedAlt = visitDecisionState(dynamic_cast<DecisionState *>(p));
   }
 
-  atn::Transition *transition = p->transition(predictedAlt - 1);
+  atn::Transition *transition = p->transitions[predictedAlt - 1];
   switch (transition->getSerializationType()) {
     case atn::Transition::EPSILON:
       if (p->getStateType() == ATNState::STAR_LOOP_ENTRY &&
@@ -195,7 +172,7 @@ void ParserInterpreter::visitState(atn::ATNState *p) {
         !is<LoopEndState *>(transition->target)) {
         // We are at the start of a left recursive rule's (...)* loop
         // and we're not taking the exit branch of loop.
-        Ref<InterpreterRuleContext> localctx = createInterpreterRuleContext(_parentContextStack.top().first,
+        InterpreterRuleContext *localctx = createInterpreterRuleContext(_parentContextStack.top().first,
           _parentContextStack.top().second, (int)_ctx->getRuleIndex());
         pushNewRecursionContext(localctx, _atn.ruleToStartState[p->ruleIndex]->stateNumber, (int)_ctx->getRuleIndex());
       }
@@ -208,7 +185,7 @@ void ParserInterpreter::visitState(atn::ATNState *p) {
     case atn::Transition::RANGE:
     case atn::Transition::SET:
     case atn::Transition::NOT_SET:
-      if (!transition->matches((int)_input->LA(1), Token::MIN_USER_TOKEN_TYPE, 65535)) {
+      if (!transition->matches((int)_input->LA(1), Token::MIN_USER_TOKEN_TYPE, Lexer::MAX_CHAR_VALUE)) {
         recoverInline();
       }
       matchWildcard();
@@ -221,8 +198,8 @@ void ParserInterpreter::visitState(atn::ATNState *p) {
     case atn::Transition::RULE:
     {
       atn::RuleStartState *ruleStartState = (atn::RuleStartState*)(transition->target);
-      int ruleIndex = ruleStartState->ruleIndex;
-      Ref<InterpreterRuleContext> newctx = createInterpreterRuleContext(_ctx, p->stateNumber, ruleIndex);
+      size_t ruleIndex = ruleStartState->ruleIndex;
+      InterpreterRuleContext *newctx = createInterpreterRuleContext(_ctx, p->stateNumber, ruleIndex);
       if (ruleStartState->isLeftRecursiveRule) {
         enterRecursionRule(newctx, ruleStartState->stateNumber, ruleIndex, ((atn::RuleTransition*)(transition))->precedence);
       } else {
@@ -262,12 +239,12 @@ void ParserInterpreter::visitState(atn::ATNState *p) {
   setState(transition->target->stateNumber);
 }
 
-int ParserInterpreter::visitDecisionState(DecisionState *p) {
-  int predictedAlt = 1;
-  if (p->getNumberOfTransitions() > 1) {
+size_t ParserInterpreter::visitDecisionState(DecisionState *p) {
+  size_t predictedAlt = 1;
+  if (p->transitions.size() > 1) {
     getErrorHandler()->sync(this);
     int decision = p->decision;
-    if (decision == _overrideDecision && (int)_input->index() == _overrideDecisionInputIndex && !_overrideDecisionReached) {
+    if (decision == _overrideDecision && _input->index() == _overrideDecisionInputIndex && !_overrideDecisionReached) {
       predictedAlt = _overrideDecisionAlt;
       _overrideDecisionReached = true;
     } else {
@@ -277,15 +254,15 @@ int ParserInterpreter::visitDecisionState(DecisionState *p) {
   return predictedAlt;
 }
 
-Ref<InterpreterRuleContext> ParserInterpreter::createInterpreterRuleContext(std::weak_ptr<ParserRuleContext> parent,
-  int invokingStateNumber, int ruleIndex) {
-  return std::make_shared<InterpreterRuleContext>(parent, invokingStateNumber, ruleIndex);
+InterpreterRuleContext* ParserInterpreter::createInterpreterRuleContext(ParserRuleContext *parent,
+  size_t invokingStateNumber, size_t ruleIndex) {
+  return _tracker.createInstance<InterpreterRuleContext>(parent, invokingStateNumber, ruleIndex);
 }
 
 void ParserInterpreter::visitRuleStopState(atn::ATNState *p) {
-  atn::RuleStartState *ruleStartState = _atn.ruleToStartState[(size_t)p->ruleIndex];
+  atn::RuleStartState *ruleStartState = _atn.ruleToStartState[p->ruleIndex];
   if (ruleStartState->isLeftRecursiveRule) {
-    std::pair<Ref<ParserRuleContext>, int> parentContext = _parentContextStack.top();
+    std::pair<ParserRuleContext *, size_t> parentContext = _parentContextStack.top();
     _parentContextStack.pop();
 
     unrollRecursionContexts(parentContext.first);
@@ -294,7 +271,7 @@ void ParserInterpreter::visitRuleStopState(atn::ATNState *p) {
     exitRule();
   }
 
-  atn::RuleTransition *ruleTransition = static_cast<atn::RuleTransition*>(_atn.states[(size_t)getState()]->transition(0));
+  atn::RuleTransition *ruleTransition = static_cast<atn::RuleTransition*>(_atn.states[getState()]->transitions[0]);
   setState(ruleTransition->followState->stateNumber);
 }
 
@@ -307,18 +284,18 @@ void ParserInterpreter::recover(RecognitionException &e) {
     if (is<InputMismatchException *>(&e)) {
       InputMismatchException &ime = (InputMismatchException&)e;
       Token *tok = e.getOffendingToken();
-      int expectedTokenType = ime.getExpectedTokens().getMinElement(); // get any element
+      size_t expectedTokenType = ime.getExpectedTokens().getMinElement(); // get any element
       _errorToken = getTokenFactory()->create({ tok->getTokenSource(), tok->getTokenSource()->getInputStream() },
-        expectedTokenType, tok->getText(), Token::DEFAULT_CHANNEL, -1, -1, // invalid start/stop
+        expectedTokenType, tok->getText(), Token::DEFAULT_CHANNEL, INVALID_INDEX, INVALID_INDEX, // invalid start/stop
         tok->getLine(), tok->getCharPositionInLine());
-      _ctx->addErrorNode(_errorToken.get());
+      _ctx->addErrorNode(_tracker, _errorToken.get());
     }
     else { // NoViableAlt
       Token *tok = e.getOffendingToken();
       _errorToken = getTokenFactory()->create({ tok->getTokenSource(), tok->getTokenSource()->getInputStream() },
-        Token::INVALID_TYPE, tok->getText(), Token::DEFAULT_CHANNEL, -1, -1, // invalid start/stop
+        Token::INVALID_TYPE, tok->getText(), Token::DEFAULT_CHANNEL, INVALID_INDEX, INVALID_INDEX, // invalid start/stop
         tok->getLine(), tok->getCharPositionInLine());
-      _ctx->addErrorNode(_errorToken.get());
+      _ctx->addErrorNode(_tracker, _errorToken.get());
     }
   }
 }

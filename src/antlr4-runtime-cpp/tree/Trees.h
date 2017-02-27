@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -44,61 +18,58 @@ namespace tree {
     /// Print out a whole tree in LISP form. getNodeText is used on the
     /// node payloads to get the text for the nodes.  Detect
     /// parse trees and extract data appropriately.
-    static std::string toStringTree(Ref<Tree> const& t);
+    static std::string toStringTree(ParseTree *t);
 
     /// Print out a whole tree in LISP form. getNodeText is used on the
     ///  node payloads to get the text for the nodes.  Detect
     ///  parse trees and extract data appropriately.
-    static std::string toStringTree(Ref<Tree> const& t, Parser *recog);
+    static std::string toStringTree(ParseTree *t, Parser *recog);
 
     /// Print out a whole tree in LISP form. getNodeText is used on the
     /// node payloads to get the text for the nodes.  Detect
     /// parse trees and extract data appropriately.
-    static std::string toStringTree(Ref<Tree> const& t, const std::vector<std::string> &ruleNames);
-    static std::string getNodeText(Ref<Tree> const& t, Parser *recog);
-    static std::string getNodeText(Ref<Tree> const& t, const std::vector<std::string> &ruleNames);
-
-    /// Return ordered list of all children of this node.
-    static std::vector<Ref<Tree>> getChildren(Ref<Tree> const& t);
+    static std::string toStringTree(ParseTree *t, const std::vector<std::string> &ruleNames);
+    static std::string getNodeText(ParseTree *t, Parser *recog);
+    static std::string getNodeText(ParseTree *t, const std::vector<std::string> &ruleNames);
 
     /// Return a list of all ancestors of this node.  The first node of
     ///  list is the root and the last is the parent of this node.
-    static std::vector<std::weak_ptr<Tree>> getAncestors(Ref<Tree> const& t);
+    static std::vector<ParseTree *> getAncestors(ParseTree *t);
 
     /** Return true if t is u's parent or a node on path to root from u.
      *  Use == not equals().
      *
      *  @since 4.5.1
      */
-    static bool isAncestorOf(Ref<Tree> const& t, Ref<Tree> const& u);
-    static std::vector<Ref<ParseTree>> findAllTokenNodes(Ref<ParseTree> const& t, int ttype);
-    static std::vector<Ref<ParseTree>> findAllRuleNodes(Ref<ParseTree> const& t, int ruleIndex);
-    static std::vector<Ref<ParseTree>> findAllNodes(Ref<ParseTree> const& t, int index, bool findTokens);
+    static bool isAncestorOf(ParseTree *t, ParseTree *u);
+    static std::vector<ParseTree *> findAllTokenNodes(ParseTree *t, size_t ttype);
+    static std::vector<ParseTree *> findAllRuleNodes(ParseTree *t, size_t ruleIndex);
+    static std::vector<ParseTree *> findAllNodes(ParseTree *t, size_t index, bool findTokens);
 
     /** Get all descendents; includes t itself.
      *
      * @since 4.5.1
      */
-    static std::vector<Ref<ParseTree>> getDescendants(Ref<ParseTree> const& t);
+    static std::vector<ParseTree *> getDescendants(ParseTree *t);
 
     /** @deprecated */
-    static std::vector<Ref<ParseTree>> descendants(Ref<ParseTree> const& t);
-    
+    static std::vector<ParseTree *> descendants(ParseTree *t);
+
     /** Find smallest subtree of t enclosing range startTokenIndex..stopTokenIndex
      *  inclusively using postorder traversal.  Recursive depth-first-search.
      *
      *  @since 4.5.1
      */
-    static Ref<ParserRuleContext> getRootOfSubtreeEnclosingRegion(Ref<ParseTree> const& t,
-                                                                  size_t startTokenIndex, // inclusive
-                                                                  size_t stopTokenIndex); // inclusive
-   
+    static ParserRuleContext* getRootOfSubtreeEnclosingRegion(ParseTree *t,
+                                                              size_t startTokenIndex, // inclusive
+                                                              size_t stopTokenIndex); // inclusive
+
     /** Return first node satisfying the pred
      *
      *  @since 4.5.1
      */
-    static Ref<Tree> findNodeSuchThat(Ref<Tree> const& t, Ref<misc::Predicate<Tree>> const& pred);
-    
+    static ParseTree* findNodeSuchThat(ParseTree *t, Ref<misc::Predicate> const& pred);
+
   private:
     Trees();
   };

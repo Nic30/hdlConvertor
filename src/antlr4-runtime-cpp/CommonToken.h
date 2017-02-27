@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -46,18 +20,18 @@ namespace antlr4 {
     /**
      * This is the backing field for {@link #getType} and {@link #setType}.
      */
-    int _type;
+    size_t _type;
 
     /**
      * This is the backing field for {@link #getLine} and {@link #setLine}.
      */
-    int _line;
+    size_t _line;
 
     /**
      * This is the backing field for {@link #getCharPositionInLine} and
      * {@link #setCharPositionInLine}.
      */
-    int _charPositionInLine; // set to invalid position
+    size_t _charPositionInLine; // set to invalid position
 
     /**
      * This is the backing field for {@link #getChannel} and
@@ -75,7 +49,7 @@ namespace antlr4 {
      * the same source and input stream share a reference to the same
      * {@link Pair} containing these values.</p>
      */
-    
+
     std::pair<TokenSource *, CharStream *> _source; // ml: pure references, usually from statically allocated classes.
 
     /**
@@ -90,19 +64,19 @@ namespace antlr4 {
      * This is the backing field for {@link #getTokenIndex} and
      * {@link #setTokenIndex}.
      */
-    int _index;
+    size_t _index;
 
     /**
      * This is the backing field for {@link #getStartIndex} and
      * {@link #setStartIndex}.
      */
-    int _start;
+    size_t _start;
 
     /**
      * This is the backing field for {@link #getStopIndex} and
      * {@link #setStopIndex}.
      */
-    int _stop;
+    size_t _stop;
 
   public:
     /**
@@ -110,8 +84,8 @@ namespace antlr4 {
      *
      * @param type The token type.
      */
-    CommonToken(int type);
-    CommonToken(std::pair<TokenSource*, CharStream*> source, int type, int channel, int start, int stop);
+    CommonToken(size_t type);
+    CommonToken(std::pair<TokenSource*, CharStream*> source, size_t type, size_t channel, size_t start, size_t stop);
 
     /**
      * Constructs a new {@link CommonToken} with the specified token type and
@@ -120,7 +94,7 @@ namespace antlr4 {
      * @param type The token type.
      * @param text The text of the token.
      */
-    CommonToken(int type, const std::string &text);
+    CommonToken(size_t type, const std::string &text);
 
     /**
      * Constructs a new {@link CommonToken} as a copy of another {@link Token}.
@@ -137,7 +111,7 @@ namespace antlr4 {
      */
     CommonToken(Token *oldToken);
 
-    virtual int getType() const override;
+    virtual size_t getType() const override;
 
     /**
      * Explicitly set the text for this token. If {code text} is not
@@ -151,31 +125,32 @@ namespace antlr4 {
     virtual void setText(const std::string &text) override;
     virtual std::string getText() const override;
 
-    virtual void setLine(int line) override;
-    virtual int getLine() const override;
+    virtual void setLine(size_t line) override;
+    virtual size_t getLine() const override;
 
-    virtual int getCharPositionInLine() const override;
-    virtual void setCharPositionInLine(int charPositionInLine) override;
+    virtual size_t getCharPositionInLine() const override;
+    virtual void setCharPositionInLine(size_t charPositionInLine) override;
 
     virtual size_t getChannel() const override;
-    virtual void setChannel(int channel) override;
+    virtual void setChannel(size_t channel) override;
 
-    virtual void setType(int type) override;
+    virtual void setType(size_t type) override;
 
-    virtual int getStartIndex() const override;
-    virtual void setStartIndex(int start);
+    virtual size_t getStartIndex() const override;
+    virtual void setStartIndex(size_t start);
 
-    virtual int getStopIndex() const override;
-    virtual void setStopIndex(int stop);
+    virtual size_t getStopIndex() const override;
+    virtual void setStopIndex(size_t stop);
 
-    virtual int getTokenIndex() const override;
-    virtual void setTokenIndex(int index) override;
+    virtual size_t getTokenIndex() const override;
+    virtual void setTokenIndex(size_t index) override;
 
     virtual TokenSource *getTokenSource() const override;
     virtual CharStream *getInputStream() const override;
 
     virtual std::string toString() const override;
-    
+
+    virtual std::string toString(Recognizer *r) const;
   private:
     void InitializeInstanceFields();
   };

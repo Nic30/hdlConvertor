@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -40,11 +14,10 @@ namespace atn {
 
   struct PredictionContextHasher;
   struct PredictionContextComparer;
+  class PredictionContextMergeCache;
 
   typedef std::unordered_set<Ref<PredictionContext>, PredictionContextHasher, PredictionContextComparer> PredictionContextCache;
-
-  // For the keys we use raw pointers, as we don't need to access them.
-  typedef std::map<std::pair<Ref<PredictionContext>, Ref<PredictionContext>>, Ref<PredictionContext>> PredictionContextMergeCache;
+  //typedef std::map<std::pair<Ref<PredictionContext>, Ref<PredictionContext>>, Ref<PredictionContext>> PredictionContextMergeCache;
 
   class ANTLR4CPP_PUBLIC PredictionContext {
   public:
@@ -55,14 +28,17 @@ namespace atn {
     /// Represents $ in an array in full context mode, when $
     /// doesn't mean wildcard: $ + x = [$,x]. Here,
     /// $ = EMPTY_RETURN_STATE.
-    static const int EMPTY_RETURN_STATE = INT_MAX;
+    // ml: originally Integer.MAX_VALUE, which would be (size_t)-1 for us, but this is already used in places where
+    //     -1 is converted to unsigned, so we use a different value here. Any value does the job provided it doesn't
+    //     conflict with real return states.
+    static const size_t EMPTY_RETURN_STATE = (size_t)-10;
 
   private:
-    static const int INITIAL_HASH = 1;
+    static const size_t INITIAL_HASH = 1;
 
   public:
-    static int globalNodeCount;
-    const int id;
+    static size_t globalNodeCount;
+    const size_t id;
 
     /// <summary>
     /// Stores the computed hash code of this <seealso cref="PredictionContext"/>. The hash
@@ -94,31 +70,29 @@ namespace atn {
   public:
     /// Convert a RuleContext tree to a PredictionContext graph.
     /// Return EMPTY if outerContext is empty.
-    static Ref<PredictionContext> fromRuleContext(const ATN &atn, const Ref<RuleContext> &outerContext);
+    static Ref<PredictionContext> fromRuleContext(const ATN &atn, RuleContext *outerContext);
 
     virtual size_t size() const = 0;
-    virtual std::weak_ptr<PredictionContext> getParent(size_t index) const = 0;
-    virtual int getReturnState(size_t index) const = 0;
+    virtual Ref<PredictionContext> getParent(size_t index) const = 0;
+    virtual size_t getReturnState(size_t index) const = 0;
 
     virtual bool operator == (const PredictionContext &o) const = 0;
-    virtual bool operator != (const PredictionContext &o) const;
 
-    /// This means only the EMPTY context is in set.
+    /// This means only the EMPTY (wildcard? not sure) context is in set.
     virtual bool isEmpty() const;
     virtual bool hasEmptyPath() const;
     virtual size_t hashCode() const;
-    //static void dumpMergeCache(
-    //		std::string scope,
-    //		PredictionContextMergeCache * mergeCache);
+
   protected:
     static size_t calculateEmptyHashCode();
-    static size_t calculateHashCode(std::weak_ptr<PredictionContext> parent, int returnState);
-    static size_t calculateHashCode(const std::vector<std::weak_ptr<PredictionContext>> &parents, const std::vector<int> &returnStates);
+    static size_t calculateHashCode(Ref<PredictionContext> parent, size_t returnState);
+    static size_t calculateHashCode(const std::vector<Ref<PredictionContext>> &parents,
+                                    const std::vector<size_t> &returnStates);
 
   public:
     // dispatch
-    static Ref<PredictionContext> merge(const Ref<PredictionContext> &a,
-      const Ref<PredictionContext> &b, bool rootIsWildcard, PredictionContextMergeCache *mergeCache);
+    static Ref<PredictionContext> merge(const Ref<PredictionContext> &a, const Ref<PredictionContext> &b,
+                                        bool rootIsWildcard, PredictionContextMergeCache *mergeCache);
 
     /// <summary>
     /// Merge two <seealso cref="SingletonPredictionContext"/> instances.
@@ -253,8 +227,27 @@ namespace atn {
   struct PredictionContextComparer {
     bool operator () (const Ref<PredictionContext> &lhs, const Ref<PredictionContext> &rhs) const
     {
-      return *lhs == *rhs;
+      if (lhs == rhs) // Object identity.
+        return true;
+      return (lhs->hashCode() == rhs->hashCode()) && (*lhs == *rhs);
     }
+  };
+
+  class PredictionContextMergeCache {
+  public:
+    Ref<PredictionContext> put(Ref<PredictionContext> const& key1, Ref<PredictionContext> const& key2,
+                               Ref<PredictionContext> const& value);
+    Ref<PredictionContext> get(Ref<PredictionContext> const& key1, Ref<PredictionContext> const& key2);
+
+    void clear();
+    std::string toString() const;
+    size_t count() const;
+    
+  private:
+    std::unordered_map<Ref<PredictionContext>,
+      std::unordered_map<Ref<PredictionContext>, Ref<PredictionContext>, PredictionContextHasher, PredictionContextComparer>,
+      PredictionContextHasher, PredictionContextComparer> _data;
+
   };
 
 } // namespace atn

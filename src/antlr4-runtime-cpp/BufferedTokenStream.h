@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -70,21 +44,21 @@ namespace antlr4 {
     /// Get all tokens from start..stop inclusively.
     virtual std::vector<Token *> get(size_t start, size_t stop);
 
-    virtual ssize_t LA(ssize_t i) override;
+    virtual size_t LA(ssize_t i) override;
     virtual Token* LT(ssize_t k) override;
 
     /// Reset this token stream by setting its token source.
     virtual void setTokenSource(TokenSource *tokenSource);
     virtual std::vector<Token *> getTokens();
-    virtual std::vector<Token *> getTokens(int start, int stop);
+    virtual std::vector<Token *> getTokens(size_t start, size_t stop);
 
     /// <summary>
     /// Given a start and stop index, return a List of all tokens in
     ///  the token type BitSet.  Return null if no tokens were found.  This
     ///  method looks at both on and off channel tokens.
     /// </summary>
-    virtual std::vector<Token *> getTokens(int start, int stop, const std::vector<int> &types);
-    virtual std::vector<Token *> getTokens(int start, int stop, int ttype);
+    virtual std::vector<Token *> getTokens(size_t start, size_t stop, const std::vector<size_t> &types);
+    virtual std::vector<Token *> getTokens(size_t start, size_t stop, size_t ttype);
 
     /// Collect all tokens on specified channel to the right of
     ///  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL or
@@ -94,7 +68,7 @@ namespace antlr4 {
     /// <summary>
     /// Collect all hidden tokens (any off-default channel) to the right of
     ///  the current token up until we see a token on DEFAULT_TOKEN_CHANNEL
-    ///  of EOF.
+    ///  or EOF.
     /// </summary>
     virtual std::vector<Token *> getHiddenTokensToRight(size_t tokenIndex);
 
@@ -117,8 +91,7 @@ namespace antlr4 {
     virtual std::string getText(RuleContext *ctx) override;
     virtual std::string getText(Token *start, Token *stop) override;
 
-    /// <summary>
-    /// Get all tokens from lexer until EOF </summary>
+    /// Get all tokens from lexer until EOF.
     virtual void fill();
 
   protected:
@@ -163,7 +136,7 @@ namespace antlr4 {
      * <ul>
      */
     bool _fetchedEOF;
-    
+
     /// <summary>
     /// Make sure index {@code i} in tokens has a token.
     /// </summary>
@@ -177,7 +150,7 @@ namespace antlr4 {
     /// </summary>
     /// <returns> The actual number of elements added to the buffer. </returns>
     virtual size_t fetch(size_t n);
-    
+
     virtual Token* LB(size_t k);
 
     /// Allowed derived classes to modify the behavior of operations which change
@@ -214,7 +187,7 @@ namespace antlr4 {
      * as though it were on every channel.</p>
      */
     virtual ssize_t previousTokenOnChannel(size_t i, size_t channel);
-    
+
     virtual std::vector<Token *> filterForChannel(size_t from, size_t to, ssize_t channel);
 
     bool isInitialized() const;

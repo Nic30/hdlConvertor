@@ -1,32 +1,6 @@
-/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2014 Terence Parr
- *  Copyright (c) 2014 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -41,7 +15,7 @@ namespace dfa {
   class ANTLR4CPP_PUBLIC Vocabulary {
   public:
     virtual ~Vocabulary() {};
-    
+
     /// Gets an empty <seealso cref="Vocabulary"/> instance.
     ///
     /// <para>
@@ -49,6 +23,8 @@ namespace dfa {
     /// <seealso cref="#getDisplayName(int)"/> returns the numeric value for all tokens
     /// except <seealso cref="Token#EOF"/>.</para>
     static const Vocabulary EMPTY_VOCABULARY;
+
+    Vocabulary() {};
 
     /// <summary>
     /// Constructs a new instance of <seealso cref="Vocabulary"/> from the specified
@@ -101,7 +77,7 @@ namespace dfa {
     /// Returns the highest token type value. It can be used to iterate from
     /// zero to that number, inclusively, thus querying all stored entries. </summary>
     /// <returns> the highest token type value </returns>
-    virtual int getMaxTokenType() const;
+    virtual size_t getMaxTokenType() const;
 
     /// <summary>
     /// Gets the string literal associated with a token type. The string returned
@@ -138,7 +114,7 @@ namespace dfa {
     /// </param>
     /// <returns> The string literal associated with the specified token type, or
     /// {@code null} if no string literal is associated with the type. </returns>
-    virtual std::string getLiteralName(ssize_t tokenType) const;
+    virtual std::string getLiteralName(size_t tokenType) const;
 
     /// <summary>
     /// Gets the symbolic name associated with a token type. The string returned
@@ -182,7 +158,7 @@ namespace dfa {
     /// </param>
     /// <returns> The symbolic name associated with the specified token type, or
     /// {@code null} if no symbolic name is associated with the type. </returns>
-    virtual std::string getSymbolicName(ssize_t tokenType) const;
+    virtual std::string getSymbolicName(size_t tokenType) const;
 
     /// <summary>
     /// Gets the display name of a token type.
@@ -203,16 +179,14 @@ namespace dfa {
     /// </param>
     /// <returns> The display name of the token type, for use in error reporting or
     /// other user-visible messages which reference specific token types. </returns>
-    virtual std::string getDisplayName(ssize_t tokenType) const;
+    virtual std::string getDisplayName(size_t tokenType) const;
 
   private:
-    static std::vector<std::string> const EMPTY_NAMES;
-
     std::vector<std::string> const _literalNames;
     std::vector<std::string> const _symbolicNames;
     std::vector<std::string> const _displayNames;
-    const int _maxTokenType;
+    const size_t _maxTokenType = 0;
   };
-  
+
 } // namespace atn
 } // namespace antlr4

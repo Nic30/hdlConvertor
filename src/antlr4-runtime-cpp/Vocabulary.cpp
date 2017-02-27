@@ -1,32 +1,6 @@
-/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2014 Terence Parr
- *  Copyright (c) 2014 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #include "Token.h"
@@ -35,8 +9,7 @@
 
 using namespace antlr4::dfa;
 
-const std::vector<std::string> Vocabulary::EMPTY_NAMES;
-const Vocabulary Vocabulary::EMPTY_VOCABULARY = Vocabulary(EMPTY_NAMES, EMPTY_NAMES, EMPTY_NAMES);
+const Vocabulary Vocabulary::EMPTY_VOCABULARY;
 
 Vocabulary::Vocabulary(const std::vector<std::string> &literalNames, const std::vector<std::string> &symbolicNames)
 : Vocabulary(literalNames, symbolicNames, {}) {
@@ -44,10 +17,8 @@ Vocabulary::Vocabulary(const std::vector<std::string> &literalNames, const std::
 
 Vocabulary::Vocabulary(const std::vector<std::string> &literalNames,
   const std::vector<std::string> &symbolicNames, const std::vector<std::string> &displayNames)
-  : _literalNames(!literalNames.empty() ? literalNames : EMPTY_NAMES),
-    _symbolicNames(!symbolicNames.empty() ? symbolicNames : EMPTY_NAMES),
-    _displayNames(!displayNames.empty() ? displayNames : EMPTY_NAMES),
-    _maxTokenType(std::max((int)_displayNames.size(), std::max((int)_literalNames.size(), (int)_symbolicNames.size())) - 1) {
+  : _literalNames(literalNames), _symbolicNames(symbolicNames), _displayNames(displayNames),
+    _maxTokenType(std::max(_displayNames.size(), std::max(_literalNames.size(), _symbolicNames.size())) - 1) {
   // See note here on -1 part: https://github.com/antlr/antlr4/pull/1146
 }
 
@@ -84,32 +55,32 @@ Vocabulary Vocabulary::fromTokenNames(const std::vector<std::string> &tokenNames
   return Vocabulary(literalNames, symbolicNames, tokenNames);
 }
 
-int Vocabulary::getMaxTokenType() const {
+size_t Vocabulary::getMaxTokenType() const {
   return _maxTokenType;
 }
 
-std::string Vocabulary::getLiteralName(ssize_t tokenType) const {
-  if (tokenType >= 0 && tokenType < (int)_literalNames.size()) {
+std::string Vocabulary::getLiteralName(size_t tokenType) const {
+  if (tokenType < _literalNames.size()) {
     return _literalNames[tokenType];
   }
 
   return "";
 }
 
-std::string Vocabulary::getSymbolicName(ssize_t tokenType) const {
-  if (tokenType >= 0 && tokenType < (int)_symbolicNames.size()) {
-    return _symbolicNames[tokenType];
-  }
-
+std::string Vocabulary::getSymbolicName(size_t tokenType) const {
   if (tokenType == Token::EOF) {
     return "EOF";
+  }
+
+  if (tokenType < _symbolicNames.size()) {
+    return _symbolicNames[tokenType];
   }
 
   return "";
 }
 
-std::string Vocabulary::getDisplayName(ssize_t tokenType) const {
-  if (tokenType >= 0 && tokenType < (int)_displayNames.size()) {
+std::string Vocabulary::getDisplayName(size_t tokenType) const {
+  if (tokenType < _displayNames.size()) {
     std::string displayName = _displayNames[tokenType];
     if (!displayName.empty()) {
       return displayName;

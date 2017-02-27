@@ -1,32 +1,6 @@
-﻿/*
- * [The "BSD license"]
- *  Copyright (c) 2016 Mike Lischke
- *  Copyright (c) 2013 Terence Parr
- *  Copyright (c) 2013 Dan McLaughlin
- *  All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. The name of the author may not be used to endorse or promote products
- *     derived from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
- *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+ * Use of this file is governed by the BSD 3-clause license that
+ * can be found in the LICENSE.txt file in the project root.
  */
 
 #pragma once
@@ -112,27 +86,24 @@ namespace antlr4 {
   class ANTLR4CPP_PUBLIC TokenStreamRewriter {
   public:
     static const std::string DEFAULT_PROGRAM_NAME;
-    static const int PROGRAM_INIT_SIZE = 100;
-    static const int MIN_TOKEN_INDEX = 0;
+    static const size_t PROGRAM_INIT_SIZE = 100;
+    static const size_t MIN_TOKEN_INDEX = 0;
 
     TokenStreamRewriter(TokenStream *tokens);
     virtual ~TokenStreamRewriter();
 
     TokenStream *getTokenStream();
 
-    virtual void rollback(int instructionIndex);
+    virtual void rollback(size_t instructionIndex);
 
-    /// <summary>
     /// Rollback the instruction stream for a program so that
-    ///  the indicated instruction (via instructionIndex) is no
-    ///  longer in the stream.  UNTESTED!
-    /// </summary>
-    virtual void rollback(const std::string &programName, int instructionIndex);
+    /// the indicated instruction (via instructionIndex) is no
+    /// longer in the stream.  UNTESTED!
+    virtual void rollback(const std::string &programName, size_t instructionIndex);
 
     virtual void deleteProgram();
 
-    /// <summary>
-    /// Reset the program so that no instructions exist </summary>
+    /// Reset the program so that no instructions exist.
     virtual void deleteProgram(const std::string &programName);
     virtual void insertAfter(Token *t, const std::string& text);
     virtual void insertAfter(size_t index, const std::string& text);
@@ -158,59 +129,51 @@ namespace antlr4 {
     virtual void Delete(const std::string &programName, size_t from, size_t to);
     virtual void Delete(const std::string &programName, Token *from, Token *to);
 
-    virtual int getLastRewriteTokenIndex();
-    
+    virtual size_t getLastRewriteTokenIndex();
+
     /// Return the text from the original tokens altered per the
-    ///  instructions given to this rewriter.
+    /// instructions given to this rewriter.
     virtual std::string getText();
 
     /** Return the text from the original tokens altered per the
      *  instructions given to this rewriter in programName.
      */
     std::string getText(std::string programName);
-    
-    /// <summary>
+
     /// Return the text associated with the tokens in the interval from the
-    ///  original token stream but with the alterations given to this rewriter.
-    ///  The interval refers to the indexes in the original token stream.
-    ///  We do not alter the token stream in any way, so the indexes
-    ///  and intervals are still consistent. Includes any operations done
-    ///  to the first and last token in the interval. So, if you did an
-    ///  insertBefore on the first token, you would get that insertion.
-    ///  The same is true if you do an insertAfter the stop token.
-    /// </summary>
+    /// original token stream but with the alterations given to this rewriter.
+    /// The interval refers to the indexes in the original token stream.
+    /// We do not alter the token stream in any way, so the indexes
+    /// and intervals are still consistent. Includes any operations done
+    /// to the first and last token in the interval. So, if you did an
+    /// insertBefore on the first token, you would get that insertion.
+    /// The same is true if you do an insertAfter the stop token.
     virtual std::string getText(const misc::Interval &interval);
 
     virtual std::string getText(const std::string &programName, const misc::Interval &interval);
 
   protected:
     class RewriteOperation {
-    private:
-      TokenStreamRewriter *const outerInstance;
-
     public:
-      /// <summary>
-      /// What index into rewrites List are we? </summary>
-      virtual ~RewriteOperation() {};
-      /// <summary>
-      /// Token buffer index. </summary>
+      /// What index into rewrites List are we?
       size_t index;
       std::string text;
 
-      RewriteOperation(TokenStreamRewriter *outerInstance, size_t index);
+      /// Token buffer index.
+      size_t instructionIndex;
 
+      RewriteOperation(TokenStreamRewriter *outerInstance, size_t index);
       RewriteOperation(TokenStreamRewriter *outerInstance, size_t index, const std::string& text);
-      /// <summary>
+      virtual ~RewriteOperation() {};
+
       /// Execute the rewrite operation by possibly adding to the buffer.
-      ///  Return the index of the next token to operate on.
-      /// </summary>
-      int instructionIndex;
+      /// Return the index of the next token to operate on.
 
       virtual size_t execute(std::string *buf);
-
       virtual std::string toString();
 
     private:
+      TokenStreamRewriter *const outerInstance;
       void InitializeInstanceFields();
     };
 
@@ -249,9 +212,9 @@ namespace antlr4 {
 
     /// <summary>
     /// Map String (program name) -> Integer index </summary>
-    std::map<std::string, int> _lastRewriteTokenIndexes;
-    virtual int getLastRewriteTokenIndex(const std::string &programName);
-    virtual void setLastRewriteTokenIndex(const std::string &programName, int i);
+    std::map<std::string, size_t> _lastRewriteTokenIndexes;
+    virtual size_t getLastRewriteTokenIndex(const std::string &programName);
+    virtual void setLastRewriteTokenIndex(const std::string &programName, size_t i);
     virtual std::vector<RewriteOperation*>& getProgram(const std::string &name);
 
     /// <summary>
@@ -304,29 +267,26 @@ namespace antlr4 {
     ///
     ///  Return a map from token index to operation.
     /// </summary>
-    virtual std::unordered_map<size_t, RewriteOperation*> reduceToSingleOperationPerIndex(std::vector<RewriteOperation*> rewrites);
+    virtual std::unordered_map<size_t, RewriteOperation*> reduceToSingleOperationPerIndex(std::vector<RewriteOperation*> &rewrites);
 
     virtual std::string catOpText(std::string *a, std::string *b);
 
-    /// <summary>
-    /// Get all operations before an index of a particular kind </summary>
-    template <typename T, typename T1>
-    std::vector<T*> getKindOfOps(std::vector<T1*> rewrites, T * /*kind*/, size_t before) {
-      std::vector<T*> ops = std::vector<T*>();
+    /// Get all operations before an index of a particular kind.
+    template <typename T>
+    std::vector<T *> getKindOfOps(std::vector<RewriteOperation *> rewrites, size_t before) {
+      std::vector<T *> ops;
       for (size_t i = 0; i < before && i < rewrites.size(); i++) {
-        TokenStreamRewriter::RewriteOperation *op = dynamic_cast<RewriteOperation*>(rewrites[i]);
-        if (op == nullptr) { // ignore deleted
+        T *op = dynamic_cast<T *>(rewrites[i]);
+        if (op == nullptr) { // ignore deleted or non matching entries
           continue;
         }
-        if (op != nullptr) {
-          ops.push_back(dynamic_cast<T*>(op));
-        }
+        ops.push_back(op);
       }
       return ops;
     }
 
   private:
-    std::vector<RewriteOperation*> initializeProgram(const std::string &name);
+    std::vector<RewriteOperation *>& initializeProgram(const std::string &name);
 
   };
 
