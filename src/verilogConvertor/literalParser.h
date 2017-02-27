@@ -15,8 +15,8 @@ using namespace verilog;
 
 class VerLiteralParser {
 public:
-	static Expr * visitNumber(Ref<Verilog2001Parser::NumberContext> ctx);
-	static Expr * parseSimple_identifier(Ref<antlr4::tree::TerminalNode> n);
-	static Expr * parseIntNumber(Ref<antlr4::tree::TerminalNode> n, int radix);
-	static Expr * visitString(Ref<antlr4::tree::TerminalNode> n);
+	static Expr * visitNumber(Verilog2001Parser::NumberContext * ctx);
+	static Expr * parseSimple_identifier(antlr4::tree::TerminalNode * n);
+	static Expr * parseIntNumber(antlr4::tree::TerminalNode * n, int radix);
+	static Expr * visitString(antlr4::tree::TerminalNode * n);
 };

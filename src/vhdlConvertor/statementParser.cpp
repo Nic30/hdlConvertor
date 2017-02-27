@@ -1,7 +1,7 @@
 #include "statementParser.h"
 
 Statement * StatementParser::visitSequential_statement(
-		Ref<vhdlParser::Sequential_statementContext> ctx) {
+		vhdlParser::Sequential_statementContext* ctx) {
 	// sequential_statement :
 	// wait_statement
 	// | assertion_statement
@@ -64,7 +64,7 @@ Statement * StatementParser::visitSequential_statement(
 
 }
 Statement * StatementParser::visitSignal_assignment_statement(
-		Ref<vhdlParser::Signal_assignment_statementContext> ctx) {
+		vhdlParser::Signal_assignment_statementContext* ctx) {
 	// signal_assignment_statement :
 	// ( label_colon )?
 	// target LE ( delay_mechanism )? waveform SEMI
@@ -81,7 +81,7 @@ Statement * StatementParser::visitSignal_assignment_statement(
 
 }
 Statement * StatementParser::visitVariable_assignment_statement(
-		Ref<vhdlParser::Variable_assignment_statementContext> ctx) {
+		vhdlParser::Variable_assignment_statementContext* ctx) {
 	// variable_assignment_statement :
 	// ( label_colon )? target VARASGN expression SEMI
 	// ;
@@ -93,7 +93,7 @@ Statement * StatementParser::visitVariable_assignment_statement(
 			ExprParser::visitExpression(ctx->expression()));
 }
 Statement * StatementParser::visitIf_statement(
-		Ref<vhdlParser::If_statementContext> ctx) {
+		vhdlParser::If_statementContext* ctx) {
 	// if_statement :
 	// ( label_colon )? IF condition THEN
 	// sequence_of_statements
@@ -125,7 +125,7 @@ Statement * StatementParser::visitIf_statement(
 	}
 }
 Statement * StatementParser::visitReturn_statement(
-		Ref<vhdlParser::Return_statementContext> ctx) {
+		vhdlParser::Return_statementContext* ctx) {
 	// return_statement
 	// : ( label_colon )? RETURN ( expression )? SEMI
 	// ;
@@ -142,7 +142,7 @@ Statement * StatementParser::visitReturn_statement(
 
 }
 Statement * StatementParser::visitLoop_statement(
-		Ref<vhdlParser::Loop_statementContext> ctx) {
+		vhdlParser::Loop_statementContext* ctx) {
 	// loop_statement :
 	// ( label_colon )? ( iteration_scheme )?
 	// LOOP
@@ -164,14 +164,14 @@ Statement * StatementParser::visitLoop_statement(
 	}
 	return loop;
 }
-Expr * StatementParser::visitCondition(Ref<vhdlParser::ConditionContext> ctx) {
+Expr * StatementParser::visitCondition(vhdlParser::ConditionContext* ctx) {
 	// condition
 	// : expression
 	// ;
 	return ExprParser::visitExpression(ctx->expression());
 }
 Statement * StatementParser::visitIteration_scheme(
-		Ref<vhdlParser::Iteration_schemeContext> ctx) {
+		vhdlParser::Iteration_schemeContext* ctx) {
 	// iteration_scheme
 	// : WHILE condition
 	// | FOR parameter_specification
@@ -186,7 +186,7 @@ Statement * StatementParser::visitIteration_scheme(
 
 }
 std::vector<Statement*> * StatementParser::visitSequence_of_statements(
-		Ref<vhdlParser::Sequence_of_statementsContext> ctx) {
+		vhdlParser::Sequence_of_statementsContext* ctx) {
 // sequence_of_statements
 // : ( sequential_statement )*
 // ;

@@ -18,25 +18,25 @@ using namespace verilog;
 class PortParser {
 public:
 	static std::vector<Port*>* addTypeSpecToPorts(Direction direction,
-			Ref<Verilog2001Parser::Net_typeContext> net_type, bool _signed,
-			Ref<Verilog2001Parser::RangeContext> range,
+			Verilog2001Parser::Net_typeContext * net_type, bool _signed,
+			Verilog2001Parser::RangeContext * range,
 			std::vector<Port*> * ports);
 	static std::vector<Port*>* visitList_of_ports(
-			Ref<Verilog2001Parser::List_of_portsContext> ctx);
+			Verilog2001Parser::List_of_portsContext* ctx);
 	static std::vector<Port*> * visitPort(
-			Ref<Verilog2001Parser::PortContext> ctx);
+			Verilog2001Parser::PortContext* ctx);
 	static std::vector<Port*> *visitPort_expression(
-			Ref<Verilog2001Parser::Port_expressionContext> ctx);
+			Verilog2001Parser::Port_expressionContext* ctx);
 	static Port * visitPort_reference(
-			Ref<Verilog2001Parser::Port_referenceContext> ctx);
+			Verilog2001Parser::Port_referenceContext* ctx);
 	static std::vector<Port*>* visitList_of_port_declarations(
-			Ref<Verilog2001Parser::List_of_port_declarationsContext> ctx);
+			Verilog2001Parser::List_of_port_declarationsContext* ctx);
 	static std::vector<Port*> * visitPort_declaration(
-			Ref<Verilog2001Parser::Port_declarationContext> ctx);
+			Verilog2001Parser::Port_declarationContext* ctx);
 	static std::vector<Port*> * visitList_of_port_identifiers(
-			Ref<Verilog2001Parser::List_of_port_identifiersContext> ctx);
+			Verilog2001Parser::List_of_port_identifiersContext* ctx);
 	static Port * visitPort_identifier(
-			Ref<Verilog2001Parser::Port_identifierContext> ctx);
+			Verilog2001Parser::Port_identifierContext * ctx);
 	static std::vector<Port*> *visitList_of_variable_port_identifiers(
-			Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> ctx);
+			Verilog2001Parser::List_of_variable_port_identifiersContext * ctx);
 };

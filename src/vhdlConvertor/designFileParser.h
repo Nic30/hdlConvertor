@@ -16,12 +16,12 @@ using namespace vhdl;
 class DesignFileParser : public BaseHdlParser {
 public:
 	DesignFileParser(bool _hierarchyOnly);
-	void visitDesign_file(Ref<vhdlParser::Design_fileContext> ctx);
-	void visitDesign_unit(Ref<vhdlParser::Design_unitContext> ctx);
-	void visitLibrary_unit(Ref<vhdlParser::Library_unitContext> ctx);
-	void visitSecondary_unit(Ref<vhdlParser::Secondary_unitContext> ctx);
-	void visitContext_clause(Ref<vhdlParser::Context_clauseContext> ctx);
-	void visitPrimary_unit(Ref<vhdlParser::Primary_unitContext> ctx);
-	void visitContext_item(Ref<vhdlParser::Context_itemContext> ctx);
-	std::vector<Expr*> visitUse_clause(Ref<vhdlParser::Use_clauseContext> ctx);
+	void visitDesign_file(vhdlParser::Design_fileContext* ctx);
+	void visitDesign_unit(vhdlParser::Design_unitContext* ctx);
+	void visitLibrary_unit(vhdlParser::Library_unitContext* ctx);
+	void visitSecondary_unit(vhdlParser::Secondary_unitContext* ctx);
+	void visitContext_clause(vhdlParser::Context_clauseContext* ctx);
+	void visitPrimary_unit(vhdlParser::Primary_unitContext* ctx);
+	void visitContext_item(vhdlParser::Context_itemContext* ctx);
+	std::vector<Expr*> visitUse_clause(vhdlParser::Use_clauseContext* ctx);
 };

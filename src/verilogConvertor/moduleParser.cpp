@@ -7,7 +7,7 @@ ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
 }
 
 void ModuleParser::visitModule_declaration(
-		Ref<Verilog2001Parser::Module_declarationContext> ctx) {
+		Verilog2001Parser::Module_declarationContext* ctx) {
 	// module_declaration
 	// : attribute_instance* module_keyword module_identifier
 	// ( module_parameter_port_list )? ( list_of_ports )? ';' module_item*
@@ -58,7 +58,7 @@ void ModuleParser::visitModule_declaration(
 }
 
 std::vector<Variable*>* ModuleParser::visitModule_parameter_port_list(
-		Ref<Verilog2001Parser::Module_parameter_port_listContext> ctx) {
+		Verilog2001Parser::Module_parameter_port_listContext* ctx) {
 	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','
 	// parameter_declaration_ )* ')' ;
 	std::vector<Variable*>* vars = new std::vector<Variable*>();
@@ -73,7 +73,7 @@ std::vector<Variable*>* ModuleParser::visitModule_parameter_port_list(
 }
 
 std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
-		Ref<Verilog2001Parser::Parameter_declaration_Context> ctx) {
+		Verilog2001Parser::Parameter_declaration_Context* ctx) {
 	//// split out semi on end. spec grammar is wrong. It won't allow
 	//// #(parameter B=8) since it wants a ';' in (...). Rule
 	//// module_parameter_port_list calls this one.
@@ -89,8 +89,8 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 	// [TODO] signed
 
 	Expr * t = Utils::mkStringT();
-	auto typeStr = ctx->getChild(1);
-	auto term = dynamic_cast<antlr4::tree::TerminalNodeImpl*>(typeStr.get());
+	auto typeStr = ctx->children[1];
+	auto term = dynamic_cast<antlr4::tree::TerminalNodeImpl*>(typeStr);
 	if (term) {
 		t = Expr::ID(term->getText());
 	}
@@ -109,7 +109,7 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 	return params;
 }
 std::vector<Variable*> *ModuleParser::visitList_of_param_assignments(
-		Ref<Verilog2001Parser::List_of_param_assignmentsContext> ctx) {
+		Verilog2001Parser::List_of_param_assignmentsContext * ctx) {
 	// list_of_param_assignments :
 	// param_assignment ( ',' param_assignment )*
 	// ;
@@ -120,7 +120,7 @@ std::vector<Variable*> *ModuleParser::visitList_of_param_assignments(
 
 }
 Variable * ModuleParser::visitParam_assignment(
-		Ref<Verilog2001Parser::Param_assignmentContext> ctx) {
+		Verilog2001Parser::Param_assignmentContext* ctx) {
 	// param_assignment : parameter_identifier '=' constant_expression ;
 	auto value = VerExprParser::visitConstant_expression(
 			ctx->constant_expression());
@@ -130,7 +130,7 @@ Variable * ModuleParser::visitParam_assignment(
 }
 
 void ModuleParser::visitModule_item(
-		Ref<Verilog2001Parser::Module_itemContext> ctx) {
+		Verilog2001Parser::Module_itemContext* ctx) {
 	// module_item :
 	// module_or_generate_item
 	// | port_declaration ';'
@@ -155,7 +155,7 @@ void ModuleParser::visitModule_item(
 	NotImplementedLogger::print("ModuleParser.visitModule_item");
 }
 void ModuleParser::visitNon_port_module_item(
-		Ref<Verilog2001Parser::Non_port_module_itemContext> ctx) {
+		Verilog2001Parser::Non_port_module_itemContext* ctx) {
 	NotImplementedLogger::print("ModuleParser.visitNon_port_module_item");
 	// non_port_module_item :
 	// attribute_instance* generated_instantiation

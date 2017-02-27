@@ -3,7 +3,7 @@
 DesignFileParser::DesignFileParser(bool _hierarchyOnly) : BaseHdlParser(_hierarchyOnly) {}
 
 void DesignFileParser::visitDesign_file(
-		Ref<vhdlParser::Design_fileContext> ctx) {
+		vhdlParser::Design_fileContext* ctx) {
 	if (!ctx)
 		return;
 	// design_file
@@ -15,7 +15,7 @@ void DesignFileParser::visitDesign_file(
 }
 
 void DesignFileParser::visitDesign_unit(
-		Ref<vhdlParser::Design_unitContext> ctx) {
+		vhdlParser::Design_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// design_unit
@@ -25,7 +25,7 @@ void DesignFileParser::visitDesign_unit(
 	DesignFileParser::visitLibrary_unit(ctx->library_unit());
 }
 void DesignFileParser::visitLibrary_unit(
-		Ref<vhdlParser::Library_unitContext> ctx) {
+		vhdlParser::Library_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// library_unit
@@ -36,7 +36,7 @@ void DesignFileParser::visitLibrary_unit(
 	DesignFileParser::visitPrimary_unit(ctx->primary_unit());
 }
 void DesignFileParser::visitSecondary_unit(
-		Ref<vhdlParser::Secondary_unitContext> ctx) {
+		vhdlParser::Secondary_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// secondary_unit
@@ -60,7 +60,7 @@ void DesignFileParser::visitSecondary_unit(
 	}
 }
 void DesignFileParser::visitContext_clause(
-		Ref<vhdlParser::Context_clauseContext> ctx) {
+		vhdlParser::Context_clauseContext* ctx) {
 	if (!ctx)
 		return;
 	// context_clause
@@ -71,7 +71,7 @@ void DesignFileParser::visitContext_clause(
 	}
 }
 void DesignFileParser::visitPrimary_unit(
-		Ref<vhdlParser::Primary_unitContext> ctx) {
+		vhdlParser::Primary_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// primary_unit
@@ -103,7 +103,7 @@ void DesignFileParser::visitPrimary_unit(
 
 }
 void DesignFileParser::visitContext_item(
-		Ref<vhdlParser::Context_itemContext> ctx) {
+		vhdlParser::Context_itemContext* ctx) {
 	// context_item
 	// : library_clause
 	// | use_clause
@@ -121,7 +121,7 @@ void DesignFileParser::visitContext_item(
 }
 
 std::vector<Expr*> DesignFileParser::visitUse_clause(
-		Ref<vhdlParser::Use_clauseContext> ctx) {
+		vhdlParser::Use_clauseContext* ctx) {
 	// use_clause
 	// : USE selected_name ( COMMA selected_name )* SEMI
 	// ;

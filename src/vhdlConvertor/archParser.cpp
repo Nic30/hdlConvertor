@@ -5,7 +5,7 @@ ArchParser::ArchParser(bool _hierarchyOnly) {
 	a = new Arch();
 }
 Arch * ArchParser::visitArchitecture_body(
-		Ref<vhdlParser::Architecture_bodyContext> ctx) {
+		vhdlParser::Architecture_bodyContext * ctx) {
 	a = new Arch();
 	// architecture_body
 	// : ARCHITECTURE identifier OF identifier IS
@@ -34,7 +34,7 @@ Arch * ArchParser::visitArchitecture_body(
 	return a;
 }
 void ArchParser::visitBlock_declarative_item(
-		Ref<vhdlParser::Block_declarative_itemContext> ctx) {
+		vhdlParser::Block_declarative_itemContext * ctx) {
 	// block_declarative_item
 	// : subprogram_declaration
 	// | subprogram_body
@@ -63,7 +63,7 @@ void ArchParser::visitBlock_declarative_item(
 			"ArchParser.visitArchitecture_declarative_part");
 }
 void ArchParser::visitArchitecture_statement(
-		Ref<vhdlParser::Architecture_statementContext> ctx) {
+		vhdlParser::Architecture_statementContext * ctx) {
 	// architecture_statement
 	// : block_statement
 	// | process_statement

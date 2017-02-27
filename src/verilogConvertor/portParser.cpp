@@ -2,9 +2,9 @@
 
 std::vector<Port*>* PortParser::addTypeSpecToPorts(
 		Direction direction,
-		Ref<Verilog2001Parser::Net_typeContext> net_type,
+		Verilog2001Parser::Net_typeContext* net_type,
 		bool _signed,
-		Ref<Verilog2001Parser::RangeContext> range,
+		Verilog2001Parser::RangeContext* range,
 		std::vector<Port*> * ports) {
 	// [TODO] signed, net_type
 	Expr* t = Utils::mkWireT(range);
@@ -18,7 +18,7 @@ std::vector<Port*>* PortParser::addTypeSpecToPorts(
 }
 
 std::vector<Port*>* PortParser::visitList_of_ports(
-		Ref<Verilog2001Parser::List_of_portsContext> ctx) {
+		Verilog2001Parser::List_of_portsContext* ctx) {
 	// list_of_ports : '(' port ( ',' port )* ')' ;
 	std::vector<Port*>* ports = new std::vector<Port*>();
 	for (auto p : ctx->port()) {
@@ -31,7 +31,7 @@ std::vector<Port*>* PortParser::visitList_of_ports(
 	return ports;
 }
 std::vector<Port*> * PortParser::visitPort(
-		Ref<Verilog2001Parser::PortContext> ctx) {
+		Verilog2001Parser::PortContext* ctx) {
 	// port: port_expression?
 	// | '.' port_identifier '(' ( port_expression )? ')'
 	// ;
@@ -45,7 +45,7 @@ std::vector<Port*> * PortParser::visitPort(
 	}
 }
 std::vector<Port*> *PortParser::visitPort_expression(
-		Ref<Verilog2001Parser::Port_expressionContext> ctx) {
+		Verilog2001Parser::Port_expressionContext* ctx) {
 	// port_expression :
 	// port_reference
 	// | '{' port_reference ( ',' port_reference )* '}'
@@ -57,7 +57,7 @@ std::vector<Port*> *PortParser::visitPort_expression(
 	return ports;
 }
 Port * PortParser::visitPort_reference(
-		Ref<Verilog2001Parser::Port_referenceContext> ctx) {
+		Verilog2001Parser::Port_referenceContext* ctx) {
 	// port_reference :
 	// port_identifier
 	// | port_identifier '[' constant_expression ']'
@@ -81,7 +81,7 @@ Port * PortParser::visitPort_reference(
 
 }
 std::vector<Port*>* PortParser::visitList_of_port_declarations(
-		Ref<Verilog2001Parser::List_of_port_declarationsContext> ctx) {
+		Verilog2001Parser::List_of_port_declarationsContext* ctx) {
 	// list_of_port_declarations
 	// : '(' port_declaration ( ',' port_declaration )* ')'
 	// | '(' ')'
@@ -96,7 +96,7 @@ std::vector<Port*>* PortParser::visitList_of_port_declarations(
 	return ports;
 }
 std::vector<Port*> * PortParser::visitPort_declaration(
-		Ref<Verilog2001Parser::Port_declarationContext> ctx) {
+		Verilog2001Parser::Port_declarationContext* ctx) {
 	// port_declaration :
 	// attribute_instance* inout_declaration
 	// | attribute_instance* input_declaration
@@ -151,7 +151,7 @@ std::vector<Port*> * PortParser::visitPort_declaration(
 			ports);
 }
 std::vector<Port*> * PortParser::visitList_of_port_identifiers(
-		Ref<Verilog2001Parser::List_of_port_identifiersContext> ctx) {
+		Verilog2001Parser::List_of_port_identifiersContext* ctx) {
 	// list_of_port_identifiers :
 	// port_identifier ( ',' port_identifier )*
 	// ;
@@ -162,7 +162,7 @@ std::vector<Port*> * PortParser::visitList_of_port_identifiers(
 	return ports;
 }
 Port * PortParser::visitPort_identifier(
-		Ref<Verilog2001Parser::Port_identifierContext> ctx) {
+		Verilog2001Parser::Port_identifierContext* ctx) {
 	// port_identifier : identifier ;
 	Variable * v = new Variable(ctx->identifier()->getText(), NULL, NULL);
 	Port * p = new Port();
@@ -170,21 +170,21 @@ Port * PortParser::visitPort_identifier(
 	return p;
 }
 std::vector<Port*> *PortParser::visitList_of_variable_port_identifiers(
-		Ref<Verilog2001Parser::List_of_variable_port_identifiersContext> ctx) {
+		Verilog2001Parser::List_of_variable_port_identifiersContext* ctx) {
 	// list_of_variable_port_identifiers :
 	// port_identifier ( '=' constant_expression )? ( ',' port_identifier (
 	// '=' constant_expression )? )* ;
 	std::vector<Port*>* ports = new std::vector<Port*>();
 	Port * last = NULL;
 	for (auto n : ctx->children) {
-		auto cec = std::dynamic_pointer_cast<
-				Verilog2001Parser::Constant_expressionContext>(n);
+		auto cec = dynamic_cast<
+				Verilog2001Parser::Constant_expressionContext*>(n);
 		if (cec) {
 			last->variable->value = VerExprParser::visitConstant_expression(
 					cec);
 		} else {
-			auto pic = std::dynamic_pointer_cast<
-					Verilog2001Parser::Port_identifierContext>(n);
+			auto pic = dynamic_cast<
+					Verilog2001Parser::Port_identifierContext*>(n);
 			last = visitPort_identifier(pic);
 			ports->push_back(last);
 		}

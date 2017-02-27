@@ -1,7 +1,7 @@
 #include "exprParser.h"
 
 std::vector<Expr*> * ExprParser::visitActual_parameter_part(
-		Ref<vhdlParser::Actual_parameter_partContext> ctx) {
+		vhdlParser::Actual_parameter_partContext* ctx) {
 	std::vector<Expr*> * l = new std::vector<Expr*>();
 	if (!ctx)
 		return l;
@@ -17,7 +17,7 @@ std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 	return l;
 }
 Expr* ExprParser::visitAssociation_element(
-		Ref<vhdlParser::Association_elementContext> ctx) {
+		vhdlParser::Association_elementContext* ctx) {
 	// association_element
 	// : ( formal_part ARROW )? actual_part
 	// ;
@@ -28,7 +28,7 @@ Expr* ExprParser::visitAssociation_element(
 	}
 	return ap;
 }
-Expr* ExprParser::visitFormal_part(Ref<vhdlParser::Formal_partContext> ctx) {
+Expr* ExprParser::visitFormal_part(vhdlParser::Formal_partContext* ctx) {
 	// formal_part
 	// : identifier
 	// | identifier LPAREN explicit_range RPAREN
@@ -42,7 +42,7 @@ Expr* ExprParser::visitFormal_part(Ref<vhdlParser::Formal_partContext> ctx) {
 }
 
 Expr* ExprParser::visitExplicit_range(
-		Ref<vhdlParser::Explicit_rangeContext> ctx) {
+		vhdlParser::Explicit_rangeContext* ctx) {
 	// explicit_range
 	// : simple_expression direction simple_expression
 	// ;
@@ -55,7 +55,7 @@ Expr* ExprParser::visitExplicit_range(
 	return new Expr(visitSimple_expression(ctx->simple_expression(0)), op,
 			visitSimple_expression(ctx->simple_expression(1)));
 }
-Expr* ExprParser::visitRange(Ref<vhdlParser::RangeContext> ctx) {
+Expr* ExprParser::visitRange(vhdlParser::RangeContext* ctx) {
 	// range
 	// : explicit_range
 	// | name
@@ -67,7 +67,7 @@ Expr* ExprParser::visitRange(Ref<vhdlParser::RangeContext> ctx) {
 
 	return ReferenceParser::visitName(ctx->name());
 }
-Expr* ExprParser::visitActual_part(Ref<vhdlParser::Actual_partContext> ctx) {
+Expr* ExprParser::visitActual_part(vhdlParser::Actual_partContext* ctx) {
 	// actual_part
 	// : name LPAREN actual_designator RPAREN
 	// | actual_designator
@@ -82,7 +82,7 @@ Expr* ExprParser::visitActual_part(Ref<vhdlParser::Actual_partContext> ctx) {
 	return ad;
 }
 Expr* ExprParser::visitActual_designator(
-		Ref<vhdlParser::Actual_designatorContext> ctx) {
+		vhdlParser::Actual_designatorContext* ctx) {
 	// actual_designator
 	// : expression
 	// | OPEN
@@ -93,7 +93,7 @@ Expr* ExprParser::visitActual_designator(
 	return visitExpression(ctx->expression());
 }
 Expr* ExprParser::visitSubtype_indication(
-		Ref<vhdlParser::Subtype_indicationContext> ctx) {
+		vhdlParser::Subtype_indicationContext* ctx) {
 	// subtype_indication
 	// : selected_name ( selected_name )? ( constraint )? ( tolerance_aspect
 	// )?
@@ -118,8 +118,8 @@ Expr* ExprParser::visitSubtype_indication(
 }
 
 Expr* ExprParser::visitConstraint(
-		Ref<vhdlParser::Selected_nameContext> selectedName,
-		Ref<vhdlParser::ConstraintContext> ctx) {
+		vhdlParser::Selected_nameContext* selectedName,
+		vhdlParser::ConstraintContext* ctx) {
 	// constraint
 	// : range_constraint
 	// | index_constraint
@@ -143,7 +143,7 @@ Expr* ExprParser::visitConstraint(
 
 }
 Expr* ExprParser::visitIndex_constraint(
-		Ref<vhdlParser::Index_constraintContext> ctx) {
+		vhdlParser::Index_constraintContext* ctx) {
 	// index_constraint
 	// : LPAREN discrete_range ( COMMA discrete_range )* RPAREN
 	// ;
@@ -154,7 +154,7 @@ Expr* ExprParser::visitIndex_constraint(
 	return visitDiscrete_range(ctx->discrete_range(0));
 }
 Expr* ExprParser::visitDiscrete_range(
-		Ref<vhdlParser::Discrete_rangeContext> ctx) {
+		vhdlParser::Discrete_rangeContext* ctx) {
 	// discrete_range
 	// : range
 	// | subtype_indication
@@ -165,7 +165,7 @@ Expr* ExprParser::visitDiscrete_range(
 	return visitSubtype_indication(ctx->subtype_indication());
 }
 Expr* ExprParser::visitSimple_expression(
-		Ref<vhdlParser::Simple_expressionContext> ctx) {
+		vhdlParser::Simple_expressionContext* ctx) {
 	// simple_expression
 	// : ( PLUS | MINUS )? term ( : adding_operator term )*
 	// ;
@@ -203,7 +203,7 @@ Expr* ExprParser::visitSimple_expression(
 	}
 	return op0;
 }
-Expr* ExprParser::visitExpression(Ref<vhdlParser::ExpressionContext> ctx) {
+Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
 	// expression
 	// : relation ( : logical_operator relation )*
 	// ;
@@ -221,7 +221,7 @@ Expr* ExprParser::visitExpression(Ref<vhdlParser::ExpressionContext> ctx) {
 	}
 	return op0;
 }
-Expr* ExprParser::visitRelation(Ref<vhdlParser::RelationContext> ctx) {
+Expr* ExprParser::visitRelation(vhdlParser::RelationContext* ctx) {
 	// relation
 	// : shift_expression
 	// ( : relational_operator shift_expression )?
@@ -240,7 +240,7 @@ Expr* ExprParser::visitRelation(Ref<vhdlParser::RelationContext> ctx) {
 
 }
 Expr* ExprParser::visitShift_expression(
-		Ref<vhdlParser::Shift_expressionContext> ctx) {
+		vhdlParser::Shift_expressionContext* ctx) {
 	// shift_expression
 	// : simple_expression
 	// ( : shift_operator simple_expression )?
@@ -253,7 +253,7 @@ Expr* ExprParser::visitShift_expression(
 	}
 	return op0;
 }
-Expr * ExprParser::visitTerm(Ref<vhdlParser::TermContext> ctx) {
+Expr * ExprParser::visitTerm(vhdlParser::TermContext* ctx) {
 	// term
 	// : factor ( : multiplying_operator factor )*
 	// ;
@@ -293,7 +293,7 @@ Expr * ExprParser::visitTerm(Ref<vhdlParser::TermContext> ctx) {
 	}
 	return op0;
 }
-Expr* ExprParser::visitFactor(Ref<vhdlParser::FactorContext> ctx) {
+Expr* ExprParser::visitFactor(vhdlParser::FactorContext* ctx) {
 	// factor
 	// : primary ( : DOUBLESTAR primary )?
 	// | ABS primary
@@ -309,7 +309,7 @@ Expr* ExprParser::visitFactor(Ref<vhdlParser::FactorContext> ctx) {
 		return new Expr(op0, NOT, NULL);
 	return op0;
 }
-Expr * ExprParser::visitPrimary(Ref<vhdlParser::PrimaryContext> ctx) {
+Expr * ExprParser::visitPrimary(vhdlParser::PrimaryContext* ctx) {
 	// primary
 	// : literal
 	// | qualified_expression
@@ -337,7 +337,7 @@ Expr * ExprParser::visitPrimary(Ref<vhdlParser::PrimaryContext> ctx) {
 	return ReferenceParser::visitName(n);
 }
 Expr* ExprParser::visitQualified_expression(
-		Ref<vhdlParser::Qualified_expressionContext> ctx) {
+		vhdlParser::Qualified_expressionContext* ctx) {
 	// qualified_expression
 	// : subtype_indication APOSTROPHE ( aggregate | LPAREN expression
 	// RPAREN )
@@ -345,7 +345,7 @@ Expr* ExprParser::visitQualified_expression(
 	NotImplementedLogger::print("ExprParser visitQualified_expression");
 	return NULL;
 }
-Expr* ExprParser::visitAllocator(Ref<vhdlParser::AllocatorContext> ctx) {
+Expr* ExprParser::visitAllocator(vhdlParser::AllocatorContext* ctx) {
 	// allocator
 	// : NEW ( qualified_expression | subtype_indication )
 	// ;
@@ -353,7 +353,7 @@ Expr* ExprParser::visitAllocator(Ref<vhdlParser::AllocatorContext> ctx) {
 	return NULL;
 
 }
-Expr* ExprParser::visitAggregate(Ref<vhdlParser::AggregateContext> ctx) {
+Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
 	// aggregate
 	// : LPAREN element_association ( COMMA element_association )* RPAREN
 	// ;
@@ -361,7 +361,7 @@ Expr* ExprParser::visitAggregate(Ref<vhdlParser::AggregateContext> ctx) {
 	return NULL;
 }
 
-Expr* ExprParser::visitTarget(Ref<vhdlParser::TargetContext> ctx) {
+Expr* ExprParser::visitTarget(vhdlParser::TargetContext* ctx) {
 	// target
 	// : name
 	// | aggregate
@@ -374,7 +374,7 @@ Expr* ExprParser::visitTarget(Ref<vhdlParser::TargetContext> ctx) {
 	}
 
 }
-Expr * ExprParser::visitWaveform(Ref<vhdlParser::WaveformContext> ctx) {
+Expr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 	// waveform :
 	// waveform_element ( COMMA waveform_element )*
 	// | UNAFFECTED
@@ -396,7 +396,7 @@ Expr * ExprParser::visitWaveform(Ref<vhdlParser::WaveformContext> ctx) {
 }
 
 Expr *ExprParser::visitWaveform_element(
-		Ref<vhdlParser::Waveform_elementContext> ctx) {
+		vhdlParser::Waveform_elementContext* ctx) {
 	// waveform_element :
 	// expression ( AFTER expression )?
 	// ;

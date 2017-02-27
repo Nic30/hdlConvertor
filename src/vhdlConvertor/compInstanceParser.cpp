@@ -1,7 +1,7 @@
 #include "compInstanceParser.h"
 
 CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
-		Ref<vhdlParser::Component_instantiation_statementContext> ctx) {
+		vhdlParser::Component_instantiation_statementContext * ctx) {
 	// component_instantiation_statement
 	// : label_colon instantiated_unit
 	// ( generic_map_aspect )?
@@ -30,12 +30,12 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 	return ci;
 }
 std::vector<Expr*> * CompInstanceParser::visitPort_map_aspect(
-		Ref<vhdlParser::Port_map_aspectContext> ctx) {
+		vhdlParser::Port_map_aspectContext * ctx) {
 	NotImplementedLogger::print("CompInstanceParser.visitPort_map_aspect");
 	return new std::vector<Expr*>();
 }
 char * CompInstanceParser::visitLabel_colon(
-		Ref<vhdlParser::Label_colonContext> ctx) {
+		vhdlParser::Label_colonContext * ctx) {
 	// label_colon
 	// : identifier COLON
 	// ;
@@ -45,7 +45,7 @@ char * CompInstanceParser::visitLabel_colon(
 	return s;
 }
 CompInstance * CompInstanceParser::visitInstantiated_unit(
-		Ref<vhdlParser::Instantiated_unitContext> ctx) {
+		vhdlParser::Instantiated_unitContext* ctx) {
 	// instantiated_unit
 	// : ( COMPONENT )? name
 	// | ENTITY name ( LPAREN identifier RPAREN )?
@@ -66,7 +66,7 @@ CompInstance * CompInstanceParser::visitInstantiated_unit(
 	return ci;
 }
 std::vector<Expr*> * CompInstanceParser::visitGeneric_map_aspect(
-		Ref<vhdlParser::Generic_map_aspectContext> ctx) {
+		vhdlParser::Generic_map_aspectContext* ctx) {
 	NotImplementedLogger::print("CompInstanceParser.visitGeneric_map_aspect");
 	return new std::vector<Expr*>();
 }

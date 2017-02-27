@@ -17,17 +17,17 @@ using namespace vhdl;
 class LiteralParser {
 
 public:
-	static Expr * visitLiteral(Ref<vhdlParser::LiteralContext> ctx);
+	static Expr * visitLiteral(vhdlParser::LiteralContext* ctx);
 	static Expr * visitNumeric_literal(
-			Ref<vhdlParser::Numeric_literalContext> ctx);
-	static Expr * visitPhysical_literal(Ref<vhdlParser::Physical_literalContext> ctx);
+			vhdlParser::Numeric_literalContext* ctx);
+	static Expr * visitPhysical_literal(vhdlParser::Physical_literalContext* ctx);
 	static Expr * visitAbstract_literal(
-			Ref<vhdlParser::Abstract_literalContext> ctx);
+			vhdlParser::Abstract_literalContext* ctx);
 	static Expr * visitEnumeration_literal(
-			Ref<vhdlParser::Enumeration_literalContext> ctx);
-	static Expr * visitSTRING_LITERAL(Ref<tree::TerminalNode> n);
-	static Expr * visitCHARACTER_LITERAL(Ref<tree::TerminalNode> ctx);
-	static Expr * visitIdentifier(Ref<vhdlParser::IdentifierContext> ctx);
-	static bool isStrDesignator(Ref<vhdlParser::DesignatorContext> ctx);
-	static char * visitDesignator(Ref<vhdlParser::DesignatorContext> ctx);
+			vhdlParser::Enumeration_literalContext* ctx);
+	static Expr * visitSTRING_LITERAL(tree::TerminalNode* n);
+	static Expr * visitCHARACTER_LITERAL(tree::TerminalNode* ctx);
+	static Expr * visitIdentifier(vhdlParser::IdentifierContext* ctx);
+	static bool isStrDesignator(vhdlParser::DesignatorContext* ctx);
+	static char * visitDesignator(vhdlParser::DesignatorContext* ctx);
 };

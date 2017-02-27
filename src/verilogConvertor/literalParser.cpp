@@ -1,7 +1,7 @@
 #include "literalParser.h"
 
 Expr * VerLiteralParser::visitNumber(
-		Ref<Verilog2001Parser::NumberContext> ctx) {
+		Verilog2001Parser::NumberContext* ctx) {
 	// number :
 	// Decimal_number
 	// | Octal_number
@@ -30,11 +30,11 @@ Expr * VerLiteralParser::visitNumber(
 
 }
 Expr * VerLiteralParser::parseSimple_identifier(
-		Ref<antlr4::tree::TerminalNode> n) {
+		antlr4::tree::TerminalNode* n) {
 	return Expr::ID(n->getText());
 }
 Expr * VerLiteralParser::parseIntNumber(
-		Ref<antlr4::tree::TerminalNode> n,
+		antlr4::tree::TerminalNode* n,
 		int radix) {
 	// Decimal_number :
 	// Unsigned_number
@@ -85,7 +85,7 @@ Expr * VerLiteralParser::parseIntNumber(
 // Binary_number : ( Size )? Binary_base Binary_value ;
 // Octal_number : ( Size )? Octal_base Octal_value ;
 // Hex_number : ( Size )? Hex_base Hex_value ;
-Expr * VerLiteralParser::visitString(Ref<antlr4::tree::TerminalNode> n) {
+Expr * VerLiteralParser::visitString(antlr4::tree::TerminalNode* n) {
 	std::string s = n->getText();
 	return Expr::STR(s.substr(1, s.length() - 2)); // skipping " at the end
 }

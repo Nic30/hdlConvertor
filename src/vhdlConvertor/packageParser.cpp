@@ -5,7 +5,7 @@ PackageParser::PackageParser(bool _hierarchyOnly) {
 	p = new Package();
 }
 Package * PackageParser::visitPackage_body(
-		Ref<vhdlParser::Package_bodyContext> ctx) {
+		vhdlParser::Package_bodyContext* ctx) {
 	// package_body
 	// : PACKAGE BODY identifier IS
 	// package_body_declarative_part
@@ -24,7 +24,7 @@ Package * PackageParser::visitPackage_body(
 }
 void PackageParser::visitPackage_body_declarative_part(
 		aPackage * p,
-		Ref<vhdlParser::Package_body_declarative_partContext> ctx) {
+		vhdlParser::Package_body_declarative_partContext* ctx) {
 	// package_body_declarative_part
 	// : ( package_body_declarative_item )*
 	// ;
@@ -34,7 +34,7 @@ void PackageParser::visitPackage_body_declarative_part(
 	}
 }
 void PackageParser::visitPackage_body_declarative_item(
-		Ref<vhdlParser::Package_body_declarative_itemContext> ctx) {
+		vhdlParser::Package_body_declarative_itemContext* ctx) {
 	// package_body_declarative_item
 	// : subprogram_declaration
 	// | subprogram_body
@@ -65,7 +65,7 @@ void PackageParser::visitPackage_body_declarative_item(
 			"PackageParser.visitPackage_body_declarative_item");
 }
 Function * PackageParser::visitSubprogram_body(
-		Ref<vhdlParser::Subprogram_bodyContext> ctx) {
+		vhdlParser::Subprogram_bodyContext* ctx) {
 	// subprogram_body :
 	// subprogram_specification IS
 	// subprogram_declarative_part
@@ -93,7 +93,7 @@ Function * PackageParser::visitSubprogram_body(
 	return f;
 }
 std::vector<Variable*>* PackageParser::PackageParser::visitSubprogram_declarative_part(
-		Ref<vhdlParser::Subprogram_declarative_partContext> ctx) {
+		vhdlParser::Subprogram_declarative_partContext* ctx) {
 	// subprogram_declarative_part
 	// : ( subprogram_declarative_item )*
 	// ;
@@ -108,7 +108,7 @@ std::vector<Variable*>* PackageParser::PackageParser::visitSubprogram_declarativ
 	return vars;
 }
 std::vector<Variable *> * PackageParser::visitSubprogram_declarative_item(
-		Ref<vhdlParser::Subprogram_declarative_itemContext> ctx) {
+		vhdlParser::Subprogram_declarative_itemContext* ctx) {
 	// subprogram_declarative_item
 	// : subprogram_declaration
 	// | subprogram_body
@@ -135,7 +135,7 @@ std::vector<Variable *> * PackageParser::visitSubprogram_declarative_item(
 }
 
 std::vector<Variable*> * PackageParser::visitVariable_declaration(
-		Ref<vhdlParser::Variable_declarationContext> ctx) {
+		vhdlParser::Variable_declarationContext* ctx) {
 	// variable_declaration :
 	// ( SHARED )? VARIABLE identifier_list COLON
 	// subtype_indication ( VARASGN expression )? SEMI
@@ -151,7 +151,7 @@ std::vector<Variable*> * PackageParser::visitVariable_declaration(
 }
 
 void PackageParser::visitSubprogram_declaration(
-		Ref<vhdlParser::Subprogram_declarationContext> ctx) {
+		vhdlParser::Subprogram_declarationContext* ctx) {
 	// subprogram_declaration
 	// : subprogram_specification SEMI
 	// ;
@@ -159,7 +159,7 @@ void PackageParser::visitSubprogram_declaration(
 }
 
 std::vector<Statement *> * PackageParser::visitSubprogram_statement_part(
-		Ref<vhdlParser::Subprogram_statement_partContext> ctx) {
+		vhdlParser::Subprogram_statement_partContext* ctx) {
 	// subprogram_statement_part
 	// : ( sequential_statement )*
 	// ;

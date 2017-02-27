@@ -16,7 +16,7 @@ using namespace verilog;
 class Source_textParser : public BaseHdlParser {
 public:
 	Source_textParser(bool _hierarchyOnly);
-	void visitSource_text(Ref<Verilog2001Parser::Source_textContext> ctx);
-	void visitTiming_spec(Ref<Verilog2001Parser::Timing_specContext> ctx);
-	void visitDescription(Ref<Verilog2001Parser::DescriptionContext> ctx);
+	void visitSource_text(Verilog2001Parser::Source_textContext * ctx);
+	void visitTiming_spec(Verilog2001Parser::Timing_specContext* ctx);
+	void visitDescription(Verilog2001Parser::DescriptionContext* ctx);
 };

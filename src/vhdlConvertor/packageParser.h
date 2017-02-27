@@ -25,23 +25,23 @@ public:
 	Package * p;
 	bool hierarchyOnly;
 	PackageParser(bool _hierarchyOnly);
-	Package * visitPackage_body(Ref<vhdlParser::Package_bodyContext> ctx);
+	Package * visitPackage_body(vhdlParser::Package_bodyContext* ctx);
 	void visitPackage_body_declarative_part(
 			aPackage * p,
-			Ref<vhdlParser::Package_body_declarative_partContext> ctx);
+			vhdlParser::Package_body_declarative_partContext* ctx);
 	void visitPackage_body_declarative_item(
-			Ref<vhdlParser::Package_body_declarative_itemContext> ctx);
+			vhdlParser::Package_body_declarative_itemContext* ctx);
 	static Function * visitSubprogram_body(
-			Ref<vhdlParser::Subprogram_bodyContext> ctx);
+			vhdlParser::Subprogram_bodyContext* ctx);
 	static std::vector<Variable*>* visitSubprogram_declarative_part(
-			Ref<vhdlParser::Subprogram_declarative_partContext> ctx);
+			vhdlParser::Subprogram_declarative_partContext* ctx);
 	static std::vector<Variable *> * visitSubprogram_declarative_item(
-			Ref<vhdlParser::Subprogram_declarative_itemContext> ctx);
+			vhdlParser::Subprogram_declarative_itemContext* ctx);
 	static std::vector<Variable*> * visitVariable_declaration(
-			Ref<vhdlParser::Variable_declarationContext> ctx);
+			vhdlParser::Variable_declarationContext* ctx);
 	void visitSubprogram_declaration(
-			Ref<vhdlParser::Subprogram_declarationContext> ctx);
+			vhdlParser::Subprogram_declarationContext* ctx);
 	static std::vector<Statement *> * visitSubprogram_statement_part(
-			Ref<vhdlParser::Subprogram_statement_partContext> ctx);
+			vhdlParser::Subprogram_statement_partContext* ctx);
 
 };

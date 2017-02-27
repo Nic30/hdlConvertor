@@ -12,6 +12,5 @@ using namespace verilog;
 
 class AttributeParser {
 public:
-	static std::vector<Variable*>* visitAttribute_instance(Ref<
-			Verilog2001Parser::Attribute_instanceContext> ctx);
+	static std::vector<Variable*>* visitAttribute_instance(Verilog2001Parser::Attribute_instanceContext * ctx);
 };

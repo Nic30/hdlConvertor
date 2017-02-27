@@ -8,5 +8,5 @@ using namespace sv;
 class Library_textParser: public BaseHdlParser {
 public:
 	Library_textParser(bool _hierarchyOnly);
-	void visitLibrary_text(Ref<sv2012Parser::Library_textContext> ctx);
+	void visitLibrary_text(sv2012Parser::Library_textContext * ctx);
 };

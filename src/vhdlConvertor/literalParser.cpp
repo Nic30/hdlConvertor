@@ -1,6 +1,6 @@
 #include "literalParser.h"
 
-Expr * LiteralParser::visitLiteral(Ref<vhdlParser::LiteralContext> ctx) {
+Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal
 	// : NULL
 	// | BIT_STRING_LITERAL
@@ -50,7 +50,7 @@ Expr * LiteralParser::visitLiteral(Ref<vhdlParser::LiteralContext> ctx) {
 	return visitNumeric_literal(nl);
 }
 Expr * LiteralParser::visitNumeric_literal(
-		Ref<vhdlParser::Numeric_literalContext> ctx) {
+		vhdlParser::Numeric_literalContext* ctx) {
 	// numeric_literal
 	// : abstract_literal
 	// | physical_literal
@@ -62,7 +62,7 @@ Expr * LiteralParser::visitNumeric_literal(
 		return visitPhysical_literal(ctx->physical_literal());
 }
 Expr * LiteralParser::visitPhysical_literal(
-		Ref<vhdlParser::Physical_literalContext> ctx) {
+		vhdlParser::Physical_literalContext* ctx) {
 	// physical_literal
 	// : abstract_literal (: identifier)
 	// ;
@@ -70,7 +70,7 @@ Expr * LiteralParser::visitPhysical_literal(
 	return NULL;
 }
 Expr * LiteralParser::visitAbstract_literal(
-		Ref<vhdlParser::Abstract_literalContext> ctx) {
+		vhdlParser::Abstract_literalContext* ctx) {
 	// abstract_literal
 	// : INTEGER
 	// | REAL_LITERAL
@@ -96,13 +96,13 @@ Expr * LiteralParser::visitAbstract_literal(
 	// ;
 	// [TODO] exponent
 	n = ctx->BASE_LITERAL();
-	int base = atoi(n->getChild(0)->getText().c_str());
-	BigInteger val = BigInteger_fromStr(n->getChild(2)->getText().c_str(),
+	int base = atoi(n->children[0]->getText().c_str());
+	BigInteger val = BigInteger_fromStr(n->children[2]->getText().c_str(),
 			base);
 	return new Expr(val);
 }
 Expr * LiteralParser::visitEnumeration_literal(
-		Ref<vhdlParser::Enumeration_literalContext> ctx) {
+		vhdlParser::Enumeration_literalContext* ctx) {
 	// enumeration_literal
 	// : identifier
 	// | CHARACTER_LITERAL
@@ -116,27 +116,27 @@ Expr * LiteralParser::visitEnumeration_literal(
 
 	return visitCHARACTER_LITERAL(ctx->CHARACTER_LITERAL());
 }
-Expr * LiteralParser::visitSTRING_LITERAL(Ref<tree::TerminalNode> n) {
+Expr * LiteralParser::visitSTRING_LITERAL(tree::TerminalNode * n) {
 	std::string s = n->getText();
 	std::string str = s.substr(1, s.length() - 2);
 	return Expr::STR(str);
 
 }
-Expr * LiteralParser::visitCHARACTER_LITERAL(Ref<tree::TerminalNode> ctx) {
+Expr * LiteralParser::visitCHARACTER_LITERAL(tree::TerminalNode* ctx) {
 	return Expr::INT(ctx->getText()[1] - '0');
 }
-Expr * LiteralParser::visitIdentifier(Ref<vhdlParser::IdentifierContext> ctx) {
+Expr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
 	std::string s = ctx->getText();
 	return Expr::ID(s);
 }
-bool LiteralParser::isStrDesignator(Ref<vhdlParser::DesignatorContext> ctx) {
+bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator
 	// : identifier
 	// | STRING_LITERAL
 	// ;
 	return ctx->STRING_LITERAL() != NULL;
 }
-char * LiteralParser::visitDesignator(Ref<vhdlParser::DesignatorContext> ctx) {
+char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator
 	// : identifier
 	// | STRING_LITERAL

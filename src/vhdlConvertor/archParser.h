@@ -16,10 +16,10 @@ public:
 	bool hierarchyOnly;
 	ArchParser(bool _hierarchyOnly);
 	Arch * visitArchitecture_body(
-			Ref<vhdlParser::Architecture_bodyContext> ctx);
+			vhdlParser::Architecture_bodyContext * ctx);
 	void visitBlock_declarative_item(
-			Ref<vhdlParser::Block_declarative_itemContext> ctx);
+			vhdlParser::Block_declarative_itemContext * ctx);
 	void visitArchitecture_statement(
-			Ref<vhdlParser::Architecture_statementContext> ctx);
+			vhdlParser::Architecture_statementContext * ctx);
 
 };

@@ -12,7 +12,7 @@ Expr *Utils::mkWireT(Expr * range) {
 	operands->push_back(range);
 	return Expr::call(mkWireT(), operands);
 }
-Expr *Utils::mkWireT(Ref<Verilog2001Parser::RangeContext> range) {
+Expr *Utils::mkWireT(Verilog2001Parser::RangeContext * range) {
 	if (range)
 		return mkWireT(VerExprParser::visitRange(range));
 	else

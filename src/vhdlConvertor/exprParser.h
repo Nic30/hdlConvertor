@@ -18,38 +18,38 @@ using namespace vhdl;
 class ExprParser {
 public:
 	static std::vector<Expr*> * visitActual_parameter_part(
-			Ref<vhdlParser::Actual_parameter_partContext> ctx);
+			vhdlParser::Actual_parameter_partContext* ctx);
 	static Expr* visitAssociation_element(
-			Ref<vhdlParser::Association_elementContext> ctx);
-	static Expr* visitFormal_part(Ref<vhdlParser::Formal_partContext> ctx);
-	static Expr* visitExplicit_range(Ref<vhdlParser::Explicit_rangeContext> ctx);
-	static Expr* visitRange(Ref<vhdlParser::RangeContext> ctx);
-	static Expr* visitActual_part(Ref<vhdlParser::Actual_partContext> ctx);
+			vhdlParser::Association_elementContext* ctx);
+	static Expr* visitFormal_part(vhdlParser::Formal_partContext* ctx);
+	static Expr* visitExplicit_range(vhdlParser::Explicit_rangeContext* ctx);
+	static Expr* visitRange(vhdlParser::RangeContext* ctx);
+	static Expr* visitActual_part(vhdlParser::Actual_partContext* ctx);
 	static Expr* visitActual_designator(
-			Ref<vhdlParser::Actual_designatorContext> ctx);
+			vhdlParser::Actual_designatorContext* ctx);
 	static Expr* visitSubtype_indication(
-			Ref<vhdlParser::Subtype_indicationContext> ctx);
+			vhdlParser::Subtype_indicationContext* ctx);
 	static Expr* visitConstraint(
-			Ref<vhdlParser::Selected_nameContext> selectedName,
-			Ref<vhdlParser::ConstraintContext> ctx);
+			vhdlParser::Selected_nameContext * selectedName,
+			vhdlParser::ConstraintContext* ctx);
 	static Expr* visitIndex_constraint(
-			Ref<vhdlParser::Index_constraintContext> ctx);
-	static Expr* visitDiscrete_range(Ref<vhdlParser::Discrete_rangeContext> ctx);
+			vhdlParser::Index_constraintContext* ctx);
+	static Expr* visitDiscrete_range(vhdlParser::Discrete_rangeContext* ctx);
 	static Expr* visitSimple_expression(
-			Ref<vhdlParser::Simple_expressionContext> ctx);
-	static Expr* visitExpression(Ref<vhdlParser::ExpressionContext> ctx);
-	static Expr* visitRelation(Ref<vhdlParser::RelationContext> ctx);
+			vhdlParser::Simple_expressionContext* ctx);
+	static Expr* visitExpression(vhdlParser::ExpressionContext* ctx);
+	static Expr* visitRelation(vhdlParser::RelationContext* ctx);
 	static Expr* visitShift_expression(
-			Ref<vhdlParser::Shift_expressionContext> ctx);
-	static Expr* visitTerm(Ref<vhdlParser::TermContext> ctx);
-	static Expr* visitFactor(Ref<vhdlParser::FactorContext> ctx);
-	static Expr* visitPrimary(Ref<vhdlParser::PrimaryContext> ctx);
+			vhdlParser::Shift_expressionContext* ctx);
+	static Expr* visitTerm(vhdlParser::TermContext* ctx);
+	static Expr* visitFactor(vhdlParser::FactorContext* ctx);
+	static Expr* visitPrimary(vhdlParser::PrimaryContext* ctx);
 	static Expr* visitQualified_expression(
-			Ref<vhdlParser::Qualified_expressionContext> ctx);
-	static Expr* visitAllocator(Ref<vhdlParser::AllocatorContext> ctx);
-	static Expr* visitAggregate(Ref<vhdlParser::AggregateContext> ctx);
-	static Expr* visitTarget(Ref<vhdlParser::TargetContext> ctx);
-	static Expr* visitWaveform(Ref<vhdlParser::WaveformContext> ctx);
+			vhdlParser::Qualified_expressionContext* ctx);
+	static Expr* visitAllocator(vhdlParser::AllocatorContext* ctx);
+	static Expr* visitAggregate(vhdlParser::AggregateContext* ctx);
+	static Expr* visitTarget(vhdlParser::TargetContext* ctx);
+	static Expr* visitWaveform(vhdlParser::WaveformContext* ctx);
 	static Expr* visitWaveform_element(
-			Ref<vhdlParser::Waveform_elementContext> ctx);
+			vhdlParser::Waveform_elementContext* ctx);
 };

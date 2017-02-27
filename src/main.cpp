@@ -6,7 +6,6 @@
 #include "antlr4-runtime.h"
 #include "VhdlParser/vhdlLexer.h"
 #include "VhdlParser/vhdlParser.h"
-#include "VhdlParser/vhdlListener.h"
 #include "VhdlParser/vhdlVisitor.h"
 
 #include "support/StringUtils.h"

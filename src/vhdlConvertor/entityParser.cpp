@@ -4,7 +4,7 @@ EntityParser::EntityParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
 Entity * EntityParser::visitEntity_declaration(
-		Ref<vhdlParser::Entity_declarationContext> ctx) {
+		vhdlParser::Entity_declarationContext* ctx) {
 
 	// entity_declaration
 	// : ENTITY identifier IS entity_header
@@ -27,7 +27,7 @@ Entity * EntityParser::visitEntity_declaration(
 }
 
 void EntityParser::visitEntity_declarative_item(
-		Ref<vhdlParser::Entity_declarative_itemContext> ctx) {
+		vhdlParser::Entity_declarative_itemContext* ctx) {
 	// entity_declarative_item
 	// : subprogram_declaration
 	// | subprogram_body
@@ -54,7 +54,7 @@ void EntityParser::visitEntity_declarative_item(
 	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item");
 }
 void EntityParser::visitGeneric_clause(
-		Ref<vhdlParser::Generic_clauseContext> ctx,
+		vhdlParser::Generic_clauseContext* ctx,
 		std::vector<Variable*> * generics) {
 	if (ctx) {
 		// generic_clause
@@ -77,7 +77,7 @@ void EntityParser::visitGeneric_clause(
 	}
 }
 void EntityParser::visitPort_clause(
-		Ref<vhdlParser::Port_clauseContext> ctx,
+		vhdlParser::Port_clauseContext* ctx,
 		std::vector<Port*> * ports) {
 	if (ctx) {
 		// port_clause
@@ -102,7 +102,7 @@ void EntityParser::visitPort_clause(
 }
 void EntityParser::visitEntity_header(
 		Entity * e,
-		Ref<vhdlParser::Entity_headerContext> ctx) {
+		vhdlParser::Entity_headerContext* ctx) {
 // entity_header
 // : ( generic_clause )?
 // ( port_clause )?
@@ -114,7 +114,7 @@ void EntityParser::visitEntity_header(
 	visitPort_clause(pc, &e->ports);
 }
 void EntityParser::visitEntity_statement_part(
-		Ref<vhdlParser::Entity_statement_partContext> ctx) {
+		vhdlParser::Entity_statement_partContext* ctx) {
 	if (!ctx)
 		return;
 // entity_statement_part

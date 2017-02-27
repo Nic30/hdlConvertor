@@ -6,7 +6,7 @@
 using namespace antlr4;
 using namespace vhdl;
 
-inline Direction Direction_from(Ref<vhdlParser::Signal_modeContext> sm) {
+inline Direction Direction_from(vhdlParser::Signal_modeContext * sm) {
 	if (sm->IN())
 		return IN;
 	else if (sm->OUT())

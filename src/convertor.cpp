@@ -11,21 +11,21 @@ ParserErrors Convertor::err = PERR_OK;
 
 void parseFnVerilog(Verilog2001Parser * antlrParser,
 		Source_textParser * hdlParser) {
-	Ref<Verilog2001Parser::Source_textContext> tree =
+	Verilog2001Parser::Source_textContext * tree =
 			antlrParser->source_text();
 	hdlParser->visitSource_text(tree);
 	tree.reset();
 }
 
 void parseFnVHDL(vhdlParser * antlrParser, DesignFileParser * hdlParser) {
-	Ref<vhdlParser::Design_fileContext> tree = antlrParser->design_file();
+	vhdlParser::Design_fileContext* tree = antlrParser->design_file();
 	hdlParser->visitDesign_file(tree);
 	tree.reset();
 }
 
 void parseFnSystemVerilog(sv::sv2012Parser * antlrParser,
 		Library_textParser * hdlParser) {
-	Ref<sv::sv2012Parser::Library_textContext> tree =
+	sv::sv2012Parser::Library_textContext* tree =
 				antlrParser->library_text();
 		hdlParser->visitLibrary_text(tree);
 		tree.reset();

@@ -6,7 +6,7 @@ PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
 }
 
 PackageHeader * PackageHeaderParser::visitPackage_declaration(
-		Ref<vhdlParser::Package_declarationContext> ctx) {
+		vhdlParser::Package_declarationContext* ctx) {
 	// package_declaration
 	// : PACKAGE identifier IS
 	// package_declarative_part
@@ -19,7 +19,7 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 }
 void PackageHeaderParser::visitPackage_declarative_part(
 		PackageHeader * ph,
-		Ref<vhdlParser::Package_declarative_partContext> ctx) {
+		vhdlParser::Package_declarative_partContext* ctx) {
 	// package_declarative_part
 	// : ( package_declarative_item )*
 	// ;
@@ -28,14 +28,14 @@ void PackageHeaderParser::visitPackage_declarative_part(
 	}
 }
 Function * PackageHeaderParser::visitSubprogram_declaration(
-		Ref<vhdlParser::Subprogram_declarationContext> ctx) {
+		vhdlParser::Subprogram_declarationContext* ctx) {
 	// subprogram_declaration
 	// : subprogram_specification SEMI
 	// ;
 	return visitSubprogram_specification(ctx->subprogram_specification());
 }
 Function * PackageHeaderParser::visitSubprogram_specification(
-		Ref<vhdlParser::Subprogram_specificationContext> ctx) {
+		vhdlParser::Subprogram_specificationContext* ctx) {
 	// subprogram_specification
 	// : procedure_specification
 	// | function_specification
@@ -49,7 +49,7 @@ Function * PackageHeaderParser::visitSubprogram_specification(
 }
 
 Function * PackageHeaderParser::visitProcedure_specification(
-		Ref<vhdlParser::Procedure_specificationContext> ctx) {
+		vhdlParser::Procedure_specificationContext* ctx) {
 	// procedure_specification
 	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
 	// ;
@@ -63,7 +63,7 @@ Function * PackageHeaderParser::visitProcedure_specification(
 	return new Function(name, isOperator, returnT, paramList);
 }
 Function * PackageHeaderParser::visitFunction_specification(
-		Ref<vhdlParser::Function_specificationContext> ctx) {
+		vhdlParser::Function_specificationContext* ctx) {
 	// function_specification
 	// : ( PURE | IMPURE )? FUNCTION designator
 	// ( LPAREN formal_parameter_list RPAREN )? RETURN subtype_indication
@@ -82,7 +82,7 @@ Function * PackageHeaderParser::visitFunction_specification(
 }
 
 std::vector<Variable*> * PackageHeaderParser::visitFormal_parameter_list(
-		Ref<vhdlParser::Formal_parameter_listContext> ctx) {
+		vhdlParser::Formal_parameter_listContext* ctx) {
 	// formal_parameter_list
 	// : interface_list
 	// ;
@@ -90,7 +90,7 @@ std::vector<Variable*> * PackageHeaderParser::visitFormal_parameter_list(
 }
 
 std::vector<Variable*> * PackageHeaderParser::visitConstant_declaration(
-		Ref<vhdlParser::Constant_declarationContext> ctx) {
+		vhdlParser::Constant_declarationContext* ctx) {
 	//constant_declaration :
 	//    CONSTANT identifier_list COLON subtype_indication
 	//    ( VARASGN expression )? SEMI
@@ -100,7 +100,7 @@ std::vector<Variable*> * PackageHeaderParser::visitConstant_declaration(
 }
 
 Variable * PackageHeaderParser::visitSubtype_declaration(
-		Ref<vhdlParser::Subtype_declarationContext> ctx) {
+		vhdlParser::Subtype_declarationContext* ctx) {
 	//subtype_declaration
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
@@ -111,7 +111,7 @@ Variable * PackageHeaderParser::visitSubtype_declaration(
 }
 
 void PackageHeaderParser::visitPackage_declarative_item(
-		Ref<vhdlParser::Package_declarative_itemContext> ctx) {
+		vhdlParser::Package_declarative_itemContext* ctx) {
 	// package_declarative_item
 	// : subprogram_declaration
 	// | type_declaration
@@ -225,7 +225,7 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	}
 }
 Entity * PackageHeaderParser::visitComponent_declaration(
-		Ref<vhdlParser::Component_declarationContext> ctx) {
+		vhdlParser::Component_declarationContext* ctx) {
 	// component_declaration
 	// : COMPONENT identifier ( IS )?
 	// ( generic_clause )?

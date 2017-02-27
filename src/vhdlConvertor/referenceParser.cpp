@@ -1,7 +1,7 @@
 #include "referenceParser.h"
 
 Expr * ReferenceParser::visitSelected_name(
-		Ref<vhdlParser::Selected_nameContext> ctx) {
+		vhdlParser::Selected_nameContext* ctx) {
 	// selected_name
 	// : identifier (DOT suffix)*
 	// ;
@@ -12,7 +12,7 @@ Expr * ReferenceParser::visitSelected_name(
 	assert(top);
 	return top;
 }
-Expr * ReferenceParser::visitSuffix(Ref<vhdlParser::SuffixContext> ctx) {
+Expr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
 	// suffix
 	// : identifier
 	// | CHARACTER_LITERAL
@@ -33,7 +33,7 @@ Expr * ReferenceParser::visitSuffix(Ref<vhdlParser::SuffixContext> ctx) {
 	return Expr::all();
 }
 
-Expr * ReferenceParser::visitName(Ref<vhdlParser::NameContext> ctx) {
+Expr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
 	// name
 	// : selected_name
 	// | name_part ( DOT name_part)*
@@ -58,7 +58,7 @@ Expr * ReferenceParser::visitName(Ref<vhdlParser::NameContext> ctx) {
 }
 Expr * ReferenceParser::visitAttribute_designator(
 		Expr * selectedName,
-		Ref<vhdlParser::Attribute_designatorContext> ctx) {
+		vhdlParser::Attribute_designatorContext* ctx) {
 // attribute_designator
 // : identifier
 // | RANGE
@@ -79,7 +79,7 @@ Expr * ReferenceParser::visitAttribute_designator(
 }
 Expr * ReferenceParser::visitName_attribute_part(
 		Expr * selectedName,
-		Ref<vhdlParser::Name_attribute_partContext> ctx) {
+		vhdlParser::Name_attribute_partContext* ctx) {
 // name_attribute_part
 // : APOSTROPHE attribute_designator ( expression ( COMMA expression
 // )* )?
@@ -92,7 +92,7 @@ Expr * ReferenceParser::visitName_attribute_part(
 }
 Expr * ReferenceParser::visitName_part_specificator(
 		Expr * selectedName,
-		Ref<vhdlParser::Name_part_specificatorContext> ctx) {
+		vhdlParser::Name_part_specificatorContext* ctx) {
 // name_part_specificator
 // : name_attribute_part
 // | name_function_call_or_indexed_part
@@ -117,7 +117,7 @@ Expr * ReferenceParser::visitName_part_specificator(
 	return NULL;
 }
 
-Expr * ReferenceParser::visitName_part(Ref<vhdlParser::Name_partContext> ctx) {
+Expr * ReferenceParser::visitName_part(vhdlParser::Name_partContext* ctx) {
 // name_part
 // : selected_name (name_part_specificator)*
 // ;
