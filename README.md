@@ -1,5 +1,7 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
+(!!! Note that because of system verilog support it requires 3GB of RAM to build this and build tooks ~3min !!!)
+
 
 verilog and vhdl parser module for python
 
