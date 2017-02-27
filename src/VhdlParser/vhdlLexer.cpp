@@ -1,5 +1,5 @@
 
-// Generated from vhdl.g4 by ANTLR 4.6
+// Generated from vhdl.g4 by ANTLR 4.7
 
 
 #include "vhdlLexer.h"
@@ -23,6 +23,10 @@ std::string vhdlLexer::getGrammarFileName() const {
 
 const std::vector<std::string>& vhdlLexer::getRuleNames() const {
   return _ruleNames;
+}
+
+const std::vector<std::string>& vhdlLexer::getChannelNames() const {
+  return _channelNames;
 }
 
 const std::vector<std::string>& vhdlLexer::getModeNames() const {
@@ -57,35 +61,44 @@ atn::ATN vhdlLexer::_atn;
 std::vector<uint16_t> vhdlLexer::_serializedATN;
 
 std::vector<std::string> vhdlLexer::_ruleNames = {
-  "ABS", "ACCESS", "ACROSS", "AFTER", "ALIAS", "ALL", "AND", "ARCHITECTURE", 
-  "ARRAY", "ASSERT", "ATTRIBUTE", "BEGIN", "BLOCK", "BODY", "BREAK", "BUFFER", 
-  "BUS", "CASE", "COMPONENT", "CONFIGURATION", "CONSTANT", "DISCONNECT", 
-  "DOWNTO", "END", "ENTITY", "ELSE", "ELSIF", "EXIT", "FILE", "FOR", "FUNCTION", 
-  "GENERATE", "GENERIC", "GROUP", "GUARDED", "IF", "IMPURE", "IN", "INERTIAL", 
-  "INOUT", "IS", "LABEL", "LIBRARY", "LIMIT", "LINKAGE", "LITERAL", "LOOP", 
-  "MAP", "MOD", "NAND", "NATURE", "NEW", "NEXT", "NOISE", "NOR", "NOT", 
-  "NULL_SYM", "OF", "ON", "OPEN", "OR", "OTHERS", "OUT", "PACKAGE", "PORT", 
-  "POSTPONED", "PROCESS", "PROCEDURE", "PROCEDURAL", "PURE", "QUANTITY", 
-  "RANGE", "REVERSE_RANGE", "REJECT", "REM", "RECORD", "REFERENCE", "REGISTER", 
-  "REPORT", "RETURN", "ROL", "ROR", "SELECT", "SEVERITY", "SHARED", "SIGNAL", 
-  "SLA", "SLL", "SPECTRUM", "SRA", "SRL", "SUBNATURE", "SUBTYPE", "TERMINAL", 
-  "THEN", "THROUGH", "TO", "TOLERANCE", "TRANSPORT", "TYPE", "UNAFFECTED", 
-  "UNITS", "UNTIL", "USE", "VARIABLE", "WAIT", "WITH", "WHEN", "WHILE", 
-  "XNOR", "XOR", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
-  "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", 
-  "Z", "BASE_LITERAL", "BIT_STRING_LITERAL", "BIT_STRING_LITERAL_BINARY", 
-  "BIT_STRING_LITERAL_OCTAL", "BIT_STRING_LITERAL_HEX", "REAL_LITERAL", 
-  "BASIC_IDENTIFIER", "EXTENDED_IDENTIFIER", "LETTER", "COMMENT", "TAB", 
-  "SPACE", "NEWLINE", "CR", "CHARACTER_LITERAL", "STRING_LITERAL", "OTHER_SPECIAL_CHARACTER", 
-  "DOUBLESTAR", "ASSIGN", "LE", "GE", "ARROW", "NEQ", "VARASGN", "BOX", 
-  "DBLQUOTE", "SEMI", "COMMA", "AMPERSAND", "LPAREN", "RPAREN", "LBRACKET", 
-  "RBRACKET", "COLON", "MUL", "DIV", "PLUS", "MINUS", "LOWERTHAN", "GREATERTHAN", 
-  "EQ", "BAR", "DOT", "BACKSLASH", "EXPONENT", "HEXDIGIT", "INTEGER", "DIGIT", 
-  "BASED_INTEGER", "EXTENDED_DIGIT", "APOSTROPHE"
+  u8"ABS", u8"ACCESS", u8"ACROSS", u8"AFTER", u8"ALIAS", u8"ALL", u8"AND", 
+  u8"ARCHITECTURE", u8"ARRAY", u8"ASSERT", u8"ATTRIBUTE", u8"BEGIN", u8"BLOCK", 
+  u8"BODY", u8"BREAK", u8"BUFFER", u8"BUS", u8"CASE", u8"COMPONENT", u8"CONFIGURATION", 
+  u8"CONSTANT", u8"DISCONNECT", u8"DOWNTO", u8"END", u8"ENTITY", u8"ELSE", 
+  u8"ELSIF", u8"EXIT", u8"FILE", u8"FOR", u8"FUNCTION", u8"GENERATE", u8"GENERIC", 
+  u8"GROUP", u8"GUARDED", u8"IF", u8"IMPURE", u8"IN", u8"INERTIAL", u8"INOUT", 
+  u8"IS", u8"LABEL", u8"LIBRARY", u8"LIMIT", u8"LINKAGE", u8"LITERAL", u8"LOOP", 
+  u8"MAP", u8"MOD", u8"NAND", u8"NATURE", u8"NEW", u8"NEXT", u8"NOISE", 
+  u8"NOR", u8"NOT", u8"NULL_SYM", u8"OF", u8"ON", u8"OPEN", u8"OR", u8"OTHERS", 
+  u8"OUT", u8"PACKAGE", u8"PORT", u8"POSTPONED", u8"PROCESS", u8"PROCEDURE", 
+  u8"PROCEDURAL", u8"PURE", u8"QUANTITY", u8"RANGE", u8"REVERSE_RANGE", 
+  u8"REJECT", u8"REM", u8"RECORD", u8"REFERENCE", u8"REGISTER", u8"REPORT", 
+  u8"RETURN", u8"ROL", u8"ROR", u8"SELECT", u8"SEVERITY", u8"SHARED", u8"SIGNAL", 
+  u8"SLA", u8"SLL", u8"SPECTRUM", u8"SRA", u8"SRL", u8"SUBNATURE", u8"SUBTYPE", 
+  u8"TERMINAL", u8"THEN", u8"THROUGH", u8"TO", u8"TOLERANCE", u8"TRANSPORT", 
+  u8"TYPE", u8"UNAFFECTED", u8"UNITS", u8"UNTIL", u8"USE", u8"VARIABLE", 
+  u8"WAIT", u8"WITH", u8"WHEN", u8"WHILE", u8"XNOR", u8"XOR", u8"A", u8"B", 
+  u8"C", u8"D", u8"E", u8"F", u8"G", u8"H", u8"I", u8"J", u8"K", u8"L", 
+  u8"M", u8"N", u8"O", u8"P", u8"Q", u8"R", u8"S", u8"T", u8"U", u8"V", 
+  u8"W", u8"X", u8"Y", u8"Z", u8"BASE_LITERAL", u8"BIT_STRING_LITERAL", 
+  u8"BIT_STRING_LITERAL_BINARY", u8"BIT_STRING_LITERAL_OCTAL", u8"BIT_STRING_LITERAL_HEX", 
+  u8"REAL_LITERAL", u8"BASIC_IDENTIFIER", u8"EXTENDED_IDENTIFIER", u8"LETTER", 
+  u8"COMMENT", u8"TAB", u8"SPACE", u8"NEWLINE", u8"CR", u8"CHARACTER_LITERAL", 
+  u8"STRING_LITERAL", u8"OTHER_SPECIAL_CHARACTER", u8"DOUBLESTAR", u8"ASSIGN", 
+  u8"LE", u8"GE", u8"ARROW", u8"NEQ", u8"VARASGN", u8"BOX", u8"DBLQUOTE", 
+  u8"SEMI", u8"COMMA", u8"AMPERSAND", u8"LPAREN", u8"RPAREN", u8"LBRACKET", 
+  u8"RBRACKET", u8"COLON", u8"MUL", u8"DIV", u8"PLUS", u8"MINUS", u8"LOWERTHAN", 
+  u8"GREATERTHAN", u8"EQ", u8"BAR", u8"DOT", u8"BACKSLASH", u8"EXPONENT", 
+  u8"HEXDIGIT", u8"INTEGER", u8"DIGIT", u8"BASED_INTEGER", u8"EXTENDED_DIGIT", 
+  u8"APOSTROPHE"
+};
+
+std::vector<std::string> vhdlLexer::_channelNames = {
+  "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 };
 
 std::vector<std::string> vhdlLexer::_modeNames = {
-  "DEFAULT_MODE"
+  u8"DEFAULT_MODE"
 };
 
 std::vector<std::string> vhdlLexer::_literalNames = {
@@ -95,37 +108,42 @@ std::vector<std::string> vhdlLexer::_literalNames = {
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
-  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "'\n'", 
-  "'\r'", "", "", "", "'**'", "'=='", "'<='", "'>='", "'=>'", "'/='", "':='", 
-  "'<>'", "'\"'", "';'", "','", "'&'", "'('", "')'", "'['", "']'", "':'", 
-  "'*'", "'/'", "'+'", "'-'", "'<'", "'>'", "'='", "'|'", "'.'", "'\\'", 
-  "", "", "", "", "", "", "'''"
+  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", u8"'\n'", 
+  u8"'\r'", "", "", "", u8"'**'", u8"'=='", u8"'<='", u8"'>='", u8"'=>'", 
+  u8"'/='", u8"':='", u8"'<>'", u8"'\"'", u8"';'", u8"','", u8"'&'", u8"'('", 
+  u8"')'", u8"'['", u8"']'", u8"':'", u8"'*'", u8"'/'", u8"'+'", u8"'-'", 
+  u8"'<'", u8"'>'", u8"'='", u8"'|'", u8"'.'", u8"'\\'", "", "", "", "", 
+  "", "", u8"'''"
 };
 
 std::vector<std::string> vhdlLexer::_symbolicNames = {
-  "", "ABS", "ACCESS", "ACROSS", "AFTER", "ALIAS", "ALL", "AND", "ARCHITECTURE", 
-  "ARRAY", "ASSERT", "ATTRIBUTE", "BEGIN", "BLOCK", "BODY", "BREAK", "BUFFER", 
-  "BUS", "CASE", "COMPONENT", "CONFIGURATION", "CONSTANT", "DISCONNECT", 
-  "DOWNTO", "END", "ENTITY", "ELSE", "ELSIF", "EXIT", "FILE", "FOR", "FUNCTION", 
-  "GENERATE", "GENERIC", "GROUP", "GUARDED", "IF", "IMPURE", "IN", "INERTIAL", 
-  "INOUT", "IS", "LABEL", "LIBRARY", "LIMIT", "LINKAGE", "LITERAL", "LOOP", 
-  "MAP", "MOD", "NAND", "NATURE", "NEW", "NEXT", "NOISE", "NOR", "NOT", 
-  "NULL_SYM", "OF", "ON", "OPEN", "OR", "OTHERS", "OUT", "PACKAGE", "PORT", 
-  "POSTPONED", "PROCESS", "PROCEDURE", "PROCEDURAL", "PURE", "QUANTITY", 
-  "RANGE", "REVERSE_RANGE", "REJECT", "REM", "RECORD", "REFERENCE", "REGISTER", 
-  "REPORT", "RETURN", "ROL", "ROR", "SELECT", "SEVERITY", "SHARED", "SIGNAL", 
-  "SLA", "SLL", "SPECTRUM", "SRA", "SRL", "SUBNATURE", "SUBTYPE", "TERMINAL", 
-  "THEN", "THROUGH", "TO", "TOLERANCE", "TRANSPORT", "TYPE", "UNAFFECTED", 
-  "UNITS", "UNTIL", "USE", "VARIABLE", "WAIT", "WITH", "WHEN", "WHILE", 
-  "XNOR", "XOR", "BASE_LITERAL", "BIT_STRING_LITERAL", "BIT_STRING_LITERAL_BINARY", 
-  "BIT_STRING_LITERAL_OCTAL", "BIT_STRING_LITERAL_HEX", "REAL_LITERAL", 
-  "BASIC_IDENTIFIER", "EXTENDED_IDENTIFIER", "LETTER", "COMMENT", "TAB", 
-  "SPACE", "NEWLINE", "CR", "CHARACTER_LITERAL", "STRING_LITERAL", "OTHER_SPECIAL_CHARACTER", 
-  "DOUBLESTAR", "ASSIGN", "LE", "GE", "ARROW", "NEQ", "VARASGN", "BOX", 
-  "DBLQUOTE", "SEMI", "COMMA", "AMPERSAND", "LPAREN", "RPAREN", "LBRACKET", 
-  "RBRACKET", "COLON", "MUL", "DIV", "PLUS", "MINUS", "LOWERTHAN", "GREATERTHAN", 
-  "EQ", "BAR", "DOT", "BACKSLASH", "EXPONENT", "HEXDIGIT", "INTEGER", "DIGIT", 
-  "BASED_INTEGER", "EXTENDED_DIGIT", "APOSTROPHE"
+  "", u8"ABS", u8"ACCESS", u8"ACROSS", u8"AFTER", u8"ALIAS", u8"ALL", u8"AND", 
+  u8"ARCHITECTURE", u8"ARRAY", u8"ASSERT", u8"ATTRIBUTE", u8"BEGIN", u8"BLOCK", 
+  u8"BODY", u8"BREAK", u8"BUFFER", u8"BUS", u8"CASE", u8"COMPONENT", u8"CONFIGURATION", 
+  u8"CONSTANT", u8"DISCONNECT", u8"DOWNTO", u8"END", u8"ENTITY", u8"ELSE", 
+  u8"ELSIF", u8"EXIT", u8"FILE", u8"FOR", u8"FUNCTION", u8"GENERATE", u8"GENERIC", 
+  u8"GROUP", u8"GUARDED", u8"IF", u8"IMPURE", u8"IN", u8"INERTIAL", u8"INOUT", 
+  u8"IS", u8"LABEL", u8"LIBRARY", u8"LIMIT", u8"LINKAGE", u8"LITERAL", u8"LOOP", 
+  u8"MAP", u8"MOD", u8"NAND", u8"NATURE", u8"NEW", u8"NEXT", u8"NOISE", 
+  u8"NOR", u8"NOT", u8"NULL_SYM", u8"OF", u8"ON", u8"OPEN", u8"OR", u8"OTHERS", 
+  u8"OUT", u8"PACKAGE", u8"PORT", u8"POSTPONED", u8"PROCESS", u8"PROCEDURE", 
+  u8"PROCEDURAL", u8"PURE", u8"QUANTITY", u8"RANGE", u8"REVERSE_RANGE", 
+  u8"REJECT", u8"REM", u8"RECORD", u8"REFERENCE", u8"REGISTER", u8"REPORT", 
+  u8"RETURN", u8"ROL", u8"ROR", u8"SELECT", u8"SEVERITY", u8"SHARED", u8"SIGNAL", 
+  u8"SLA", u8"SLL", u8"SPECTRUM", u8"SRA", u8"SRL", u8"SUBNATURE", u8"SUBTYPE", 
+  u8"TERMINAL", u8"THEN", u8"THROUGH", u8"TO", u8"TOLERANCE", u8"TRANSPORT", 
+  u8"TYPE", u8"UNAFFECTED", u8"UNITS", u8"UNTIL", u8"USE", u8"VARIABLE", 
+  u8"WAIT", u8"WITH", u8"WHEN", u8"WHILE", u8"XNOR", u8"XOR", u8"BASE_LITERAL", 
+  u8"BIT_STRING_LITERAL", u8"BIT_STRING_LITERAL_BINARY", u8"BIT_STRING_LITERAL_OCTAL", 
+  u8"BIT_STRING_LITERAL_HEX", u8"REAL_LITERAL", u8"BASIC_IDENTIFIER", u8"EXTENDED_IDENTIFIER", 
+  u8"LETTER", u8"COMMENT", u8"TAB", u8"SPACE", u8"NEWLINE", u8"CR", u8"CHARACTER_LITERAL", 
+  u8"STRING_LITERAL", u8"OTHER_SPECIAL_CHARACTER", u8"DOUBLESTAR", u8"ASSIGN", 
+  u8"LE", u8"GE", u8"ARROW", u8"NEQ", u8"VARASGN", u8"BOX", u8"DBLQUOTE", 
+  u8"SEMI", u8"COMMA", u8"AMPERSAND", u8"LPAREN", u8"RPAREN", u8"LBRACKET", 
+  u8"RBRACKET", u8"COLON", u8"MUL", u8"DIV", u8"PLUS", u8"MINUS", u8"LOWERTHAN", 
+  u8"GREATERTHAN", u8"EQ", u8"BAR", u8"DOT", u8"BACKSLASH", u8"EXPONENT", 
+  u8"HEXDIGIT", u8"INTEGER", u8"DIGIT", u8"BASED_INTEGER", u8"EXTENDED_DIGIT", 
+  u8"APOSTROPHE"
 };
 
 dfa::Vocabulary vhdlLexer::_vocabulary(_literalNames, _symbolicNames);
@@ -148,7 +166,7 @@ vhdlLexer::Initializer::Initializer() {
 	}
 
   _serializedATN = {
-    0x3, 0x430, 0xd6d1, 0x8206, 0xad2d, 0x4417, 0xaef1, 0x8d80, 0xaadd, 
+    0x3, 0x608b, 0xa72a, 0x8133, 0xb9ed, 0x417c, 0x3be7, 0x7786, 0x5964, 
     0x2, 0xa4, 0x558, 0x8, 0x1, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 
     0x4, 0x4, 0x9, 0x4, 0x4, 0x5, 0x9, 0x5, 0x4, 0x6, 0x9, 0x6, 0x4, 0x7, 
     0x9, 0x7, 0x4, 0x8, 0x9, 0x8, 0x4, 0x9, 0x9, 0x9, 0x4, 0xa, 0x9, 0xa, 
@@ -416,11 +434,11 @@ vhdlLexer::Initializer::Initializer() {
     0xb0, 0xb2, 0xb3, 0xb7, 0xb9, 0xbd, 0xbd, 0x403, 0x403, 0x406, 0x40a, 
     0x410, 0x410, 0x412, 0x451, 0x453, 0x453, 0x456, 0x45a, 0x460, 0x460, 
     0x492, 0x493, 0x2118, 0x2118, 0x4, 0x2, 0x2d, 0x2d, 0x2f, 0x2f, 0x4, 
-    0x2, 0x43, 0x48, 0x63, 0x68, 0x557, 0x2, 0x3, 0x3, 0x2, 0x2, 0x2, 0x2, 
-    0x5, 0x3, 0x2, 0x2, 0x2, 0x2, 0x7, 0x3, 0x2, 0x2, 0x2, 0x2, 0x9, 0x3, 
-    0x2, 0x2, 0x2, 0x2, 0xb, 0x3, 0x2, 0x2, 0x2, 0x2, 0xd, 0x3, 0x2, 0x2, 
-    0x2, 0x2, 0xf, 0x3, 0x2, 0x2, 0x2, 0x2, 0x11, 0x3, 0x2, 0x2, 0x2, 0x2, 
-    0x13, 0x3, 0x2, 0x2, 0x2, 0x2, 0x15, 0x3, 0x2, 0x2, 0x2, 0x2, 0x17, 
+    0x2, 0x43, 0x48, 0x63, 0x68, 0x2, 0x557, 0x2, 0x3, 0x3, 0x2, 0x2, 0x2, 
+    0x2, 0x5, 0x3, 0x2, 0x2, 0x2, 0x2, 0x7, 0x3, 0x2, 0x2, 0x2, 0x2, 0x9, 
+    0x3, 0x2, 0x2, 0x2, 0x2, 0xb, 0x3, 0x2, 0x2, 0x2, 0x2, 0xd, 0x3, 0x2, 
+    0x2, 0x2, 0x2, 0xf, 0x3, 0x2, 0x2, 0x2, 0x2, 0x11, 0x3, 0x2, 0x2, 0x2, 
+    0x2, 0x13, 0x3, 0x2, 0x2, 0x2, 0x2, 0x15, 0x3, 0x2, 0x2, 0x2, 0x2, 0x17, 
     0x3, 0x2, 0x2, 0x2, 0x2, 0x19, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1b, 0x3, 0x2, 
     0x2, 0x2, 0x2, 0x1d, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1f, 0x3, 0x2, 0x2, 0x2, 
     0x2, 0x21, 0x3, 0x2, 0x2, 0x2, 0x2, 0x23, 0x3, 0x2, 0x2, 0x2, 0x2, 0x25, 

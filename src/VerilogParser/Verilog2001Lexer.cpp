@@ -1,5 +1,5 @@
 
-// Generated from Verilog2001.g4 by ANTLR 4.6
+// Generated from Verilog2001.g4 by ANTLR 4.7
 
 
 #include "Verilog2001Lexer.h"
@@ -23,6 +23,10 @@ std::string Verilog2001Lexer::getGrammarFileName() const {
 
 const std::vector<std::string>& Verilog2001Lexer::getRuleNames() const {
   return _ruleNames;
+}
+
+const std::vector<std::string>& Verilog2001Lexer::getChannelNames() const {
+  return _channelNames;
 }
 
 const std::vector<std::string>& Verilog2001Lexer::getModeNames() const {
@@ -57,66 +61,79 @@ atn::ATN Verilog2001Lexer::_atn;
 std::vector<uint16_t> Verilog2001Lexer::_serializedATN;
 
 std::vector<std::string> Verilog2001Lexer::_ruleNames = {
-  "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-  "T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16", 
-  "T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
-  "T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
-  "T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40", 
-  "T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48", 
-  "T__49", "T__50", "T__51", "T__52", "T__53", "T__54", "T__55", "T__56", 
-  "T__57", "T__58", "T__59", "T__60", "T__61", "T__62", "T__63", "T__64", 
-  "T__65", "T__66", "T__67", "T__68", "T__69", "T__70", "T__71", "T__72", 
-  "T__73", "T__74", "T__75", "T__76", "T__77", "T__78", "T__79", "T__80", 
-  "T__81", "T__82", "T__83", "T__84", "T__85", "T__86", "T__87", "T__88", 
-  "T__89", "T__90", "T__91", "T__92", "T__93", "T__94", "T__95", "T__96", 
-  "T__97", "T__98", "T__99", "T__100", "T__101", "T__102", "T__103", "T__104", 
-  "T__105", "T__106", "T__107", "T__108", "T__109", "T__110", "T__111", 
-  "T__112", "T__113", "T__114", "T__115", "T__116", "T__117", "T__118", 
-  "T__119", "T__120", "T__121", "T__122", "T__123", "T__124", "T__125", 
-  "T__126", "T__127", "T__128", "T__129", "T__130", "T__131", "T__132", 
-  "T__133", "T__134", "T__135", "T__136", "T__137", "T__138", "T__139", 
-  "T__140", "T__141", "T__142", "T__143", "T__144", "T__145", "T__146", 
-  "T__147", "T__148", "T__149", "T__150", "T__151", "T__152", "T__153", 
-  "T__154", "T__155", "T__156", "T__157", "T__158", "T__159", "T__160", 
-  "T__161", "T__162", "T__163", "T__164", "T__165", "T__166", "Real_number", 
-  "Decimal_number", "Binary_number", "Octal_number", "Hex_number", "Sign", 
-  "Size", "Non_zero_unsigned_number", "Unsigned_number", "Binary_value", 
-  "Octal_value", "Hex_value", "Decimal_base", "Binary_base", "Octal_base", 
-  "Hex_base", "Non_zero_decimal_digit", "Decimal_digit", "Binary_digit", 
-  "Octal_digit", "Hex_digit", "X_digit", "Z_digit", "String", "One_line_comment", 
-  "Block_comment", "Escaped_identifier", "Simple_identifier", "Dollar_Identifier", 
-  "Time_Identifier", "White_space"
+  u8"T__0", u8"T__1", u8"T__2", u8"T__3", u8"T__4", u8"T__5", u8"T__6", 
+  u8"T__7", u8"T__8", u8"T__9", u8"T__10", u8"T__11", u8"T__12", u8"T__13", 
+  u8"T__14", u8"T__15", u8"T__16", u8"T__17", u8"T__18", u8"T__19", u8"T__20", 
+  u8"T__21", u8"T__22", u8"T__23", u8"T__24", u8"T__25", u8"T__26", u8"T__27", 
+  u8"T__28", u8"T__29", u8"T__30", u8"T__31", u8"T__32", u8"T__33", u8"T__34", 
+  u8"T__35", u8"T__36", u8"T__37", u8"T__38", u8"T__39", u8"T__40", u8"T__41", 
+  u8"T__42", u8"T__43", u8"T__44", u8"T__45", u8"T__46", u8"T__47", u8"T__48", 
+  u8"T__49", u8"T__50", u8"T__51", u8"T__52", u8"T__53", u8"T__54", u8"T__55", 
+  u8"T__56", u8"T__57", u8"T__58", u8"T__59", u8"T__60", u8"T__61", u8"T__62", 
+  u8"T__63", u8"T__64", u8"T__65", u8"T__66", u8"T__67", u8"T__68", u8"T__69", 
+  u8"T__70", u8"T__71", u8"T__72", u8"T__73", u8"T__74", u8"T__75", u8"T__76", 
+  u8"T__77", u8"T__78", u8"T__79", u8"T__80", u8"T__81", u8"T__82", u8"T__83", 
+  u8"T__84", u8"T__85", u8"T__86", u8"T__87", u8"T__88", u8"T__89", u8"T__90", 
+  u8"T__91", u8"T__92", u8"T__93", u8"T__94", u8"T__95", u8"T__96", u8"T__97", 
+  u8"T__98", u8"T__99", u8"T__100", u8"T__101", u8"T__102", u8"T__103", 
+  u8"T__104", u8"T__105", u8"T__106", u8"T__107", u8"T__108", u8"T__109", 
+  u8"T__110", u8"T__111", u8"T__112", u8"T__113", u8"T__114", u8"T__115", 
+  u8"T__116", u8"T__117", u8"T__118", u8"T__119", u8"T__120", u8"T__121", 
+  u8"T__122", u8"T__123", u8"T__124", u8"T__125", u8"T__126", u8"T__127", 
+  u8"T__128", u8"T__129", u8"T__130", u8"T__131", u8"T__132", u8"T__133", 
+  u8"T__134", u8"T__135", u8"T__136", u8"T__137", u8"T__138", u8"T__139", 
+  u8"T__140", u8"T__141", u8"T__142", u8"T__143", u8"T__144", u8"T__145", 
+  u8"T__146", u8"T__147", u8"T__148", u8"T__149", u8"T__150", u8"T__151", 
+  u8"T__152", u8"T__153", u8"T__154", u8"T__155", u8"T__156", u8"T__157", 
+  u8"T__158", u8"T__159", u8"T__160", u8"T__161", u8"T__162", u8"T__163", 
+  u8"T__164", u8"T__165", u8"T__166", u8"Real_number", u8"Decimal_number", 
+  u8"Binary_number", u8"Octal_number", u8"Hex_number", u8"Sign", u8"Size", 
+  u8"Non_zero_unsigned_number", u8"Unsigned_number", u8"Binary_value", u8"Octal_value", 
+  u8"Hex_value", u8"Decimal_base", u8"Binary_base", u8"Octal_base", u8"Hex_base", 
+  u8"Non_zero_decimal_digit", u8"Decimal_digit", u8"Binary_digit", u8"Octal_digit", 
+  u8"Hex_digit", u8"X_digit", u8"Z_digit", u8"String", u8"One_line_comment", 
+  u8"Block_comment", u8"Escaped_identifier", u8"Simple_identifier", u8"Dollar_Identifier", 
+  u8"Time_Identifier", u8"White_space"
+};
+
+std::vector<std::string> Verilog2001Lexer::_channelNames = {
+  "DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 };
 
 std::vector<std::string> Verilog2001Lexer::_modeNames = {
-  "DEFAULT_MODE"
+  u8"DEFAULT_MODE"
 };
 
 std::vector<std::string> Verilog2001Lexer::_literalNames = {
-  "", "'config'", "';'", "'endconfig'", "'design'", "'.'", "'default'", 
-  "'instance'", "'liblist'", "'cell'", "'use'", "':config'", "'endmodule'", 
-  "'module'", "'macromodule'", "'#'", "'('", "','", "')'", "'{'", "'}'", 
-  "'['", "']'", "'defparam'", "'localparam'", "'signed'", "'integer'", "'real'", 
-  "'realtime'", "'time'", "'parameter'", "'specparam'", "'inout'", "'input'", 
-  "'output'", "'reg'", "'event'", "'genvar'", "'trireg'", "'vectored'", 
-  "'scalared'", "'supply0'", "'supply1'", "'tri'", "'triand'", "'trior'", 
-  "'tri0'", "'tri1'", "'wire'", "'wand'", "'wor'", "'='", "'highz1'", "'highz0'", 
-  "'strong0'", "'pull0'", "'weak0'", "'strong1'", "'pull1'", "'weak1'", 
-  "'small'", "'medium'", "'large'", "'PATHPULSE$'", "'$'", "':'", "'function'", 
-  "'automatic'", "'endfunction'", "'task'", "'endtask'", "'pulldown'", "'pullup'", 
-  "'cmos'", "'rcmos'", "'bufif0'", "'bufif1'", "'notif0'", "'notif1'", "'nmos'", 
-  "'pmos'", "'rnmos'", "'rpmos'", "'and'", "'nand'", "'or'", "'nor'", "'xor'", 
-  "'xnor'", "'buf'", "'not'", "'tranif0'", "'tranif1'", "'rtranif1'", "'rtranif0'", 
-  "'tran'", "'rtran'", "'generate'", "'endgenerate'", "'if'", "'else'", 
-  "'case'", "'endcase'", "'for'", "'begin'", "'end'", "'assign'", "'initial'", 
-  "'always'", "'<='", "'deassign'", "'force'", "'release'", "'fork'", "'join'", 
-  "'repeat'", "'disable'", "'@'", "'*'", "'->'", "'posedge'", "'negedge'", 
-  "'wait'", "'casez'", "'casex'", "'forever'", "'while'", "'specify'", "'endspecify'", 
-  "'pulsestyle_onevent'", "'pulsestyle_ondetect'", "'showcancelled'", "'noshowcancelled'", 
-  "'=>'", "'*>'", "'ifnone'", "'+'", "'-'", "'+:'", "'-:'", "'?'", "'!'", 
-  "'~'", "'&'", "'~&'", "'|'", "'~|'", "'^'", "'~^'", "'^~'", "'/'", "'%'", 
-  "'=='", "'!='", "'==='", "'!=='", "'&&'", "'||'", "'**'", "'<'", "'>'", 
-  "'>='", "'>>'", "'<<'", "'>>>'", "'<<<'", "'`default_nettype'", "'`timescale'"
+  "", u8"'config'", u8"';'", u8"'endconfig'", u8"'design'", u8"'.'", u8"'default'", 
+  u8"'instance'", u8"'liblist'", u8"'cell'", u8"'use'", u8"':config'", u8"'endmodule'", 
+  u8"'module'", u8"'macromodule'", u8"'#'", u8"'('", u8"','", u8"')'", u8"'{'", 
+  u8"'}'", u8"'['", u8"']'", u8"'defparam'", u8"'localparam'", u8"'signed'", 
+  u8"'integer'", u8"'real'", u8"'realtime'", u8"'time'", u8"'parameter'", 
+  u8"'specparam'", u8"'inout'", u8"'input'", u8"'output'", u8"'reg'", u8"'event'", 
+  u8"'genvar'", u8"'trireg'", u8"'vectored'", u8"'scalared'", u8"'supply0'", 
+  u8"'supply1'", u8"'tri'", u8"'triand'", u8"'trior'", u8"'tri0'", u8"'tri1'", 
+  u8"'wire'", u8"'wand'", u8"'wor'", u8"'='", u8"'highz1'", u8"'highz0'", 
+  u8"'strong0'", u8"'pull0'", u8"'weak0'", u8"'strong1'", u8"'pull1'", u8"'weak1'", 
+  u8"'small'", u8"'medium'", u8"'large'", u8"'PATHPULSE$'", u8"'$'", u8"':'", 
+  u8"'function'", u8"'automatic'", u8"'endfunction'", u8"'task'", u8"'endtask'", 
+  u8"'pulldown'", u8"'pullup'", u8"'cmos'", u8"'rcmos'", u8"'bufif0'", u8"'bufif1'", 
+  u8"'notif0'", u8"'notif1'", u8"'nmos'", u8"'pmos'", u8"'rnmos'", u8"'rpmos'", 
+  u8"'and'", u8"'nand'", u8"'or'", u8"'nor'", u8"'xor'", u8"'xnor'", u8"'buf'", 
+  u8"'not'", u8"'tranif0'", u8"'tranif1'", u8"'rtranif1'", u8"'rtranif0'", 
+  u8"'tran'", u8"'rtran'", u8"'generate'", u8"'endgenerate'", u8"'if'", 
+  u8"'else'", u8"'case'", u8"'endcase'", u8"'for'", u8"'begin'", u8"'end'", 
+  u8"'assign'", u8"'initial'", u8"'always'", u8"'<='", u8"'deassign'", u8"'force'", 
+  u8"'release'", u8"'fork'", u8"'join'", u8"'repeat'", u8"'disable'", u8"'@'", 
+  u8"'*'", u8"'->'", u8"'posedge'", u8"'negedge'", u8"'wait'", u8"'casez'", 
+  u8"'casex'", u8"'forever'", u8"'while'", u8"'specify'", u8"'endspecify'", 
+  u8"'pulsestyle_onevent'", u8"'pulsestyle_ondetect'", u8"'showcancelled'", 
+  u8"'noshowcancelled'", u8"'=>'", u8"'*>'", u8"'ifnone'", u8"'+'", u8"'-'", 
+  u8"'+:'", u8"'-:'", u8"'?'", u8"'!'", u8"'~'", u8"'&'", u8"'~&'", u8"'|'", 
+  u8"'~|'", u8"'^'", u8"'~^'", u8"'^~'", u8"'/'", u8"'%'", u8"'=='", u8"'!='", 
+  u8"'==='", u8"'!=='", u8"'&&'", u8"'||'", u8"'**'", u8"'<'", u8"'>'", 
+  u8"'>='", u8"'>>'", u8"'<<'", u8"'>>>'", u8"'<<<'", u8"'`default_nettype'", 
+  u8"'`timescale'"
 };
 
 std::vector<std::string> Verilog2001Lexer::_symbolicNames = {
@@ -129,10 +146,10 @@ std::vector<std::string> Verilog2001Lexer::_symbolicNames = {
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
-  "", "", "", "", "", "", "Real_number", "Decimal_number", "Binary_number", 
-  "Octal_number", "Hex_number", "String", "One_line_comment", "Block_comment", 
-  "Escaped_identifier", "Simple_identifier", "Dollar_Identifier", "Time_Identifier", 
-  "White_space"
+  "", "", "", "", "", "", u8"Real_number", u8"Decimal_number", u8"Binary_number", 
+  u8"Octal_number", u8"Hex_number", u8"String", u8"One_line_comment", u8"Block_comment", 
+  u8"Escaped_identifier", u8"Simple_identifier", u8"Dollar_Identifier", 
+  u8"Time_Identifier", u8"White_space"
 };
 
 dfa::Vocabulary Verilog2001Lexer::_vocabulary(_literalNames, _symbolicNames);
@@ -155,7 +172,7 @@ Verilog2001Lexer::Initializer::Initializer() {
 	}
 
   _serializedATN = {
-    0x3, 0x430, 0xd6d1, 0x8206, 0xad2d, 0x4417, 0xaef1, 0x8d80, 0xaadd, 
+    0x3, 0x608b, 0xa72a, 0x8133, 0xb9ed, 0x417c, 0x3be7, 0x7786, 0x5964, 
     0x2, 0xb6, 0x656, 0x8, 0x1, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 
     0x4, 0x4, 0x9, 0x4, 0x4, 0x5, 0x9, 0x5, 0x4, 0x6, 0x9, 0x6, 0x4, 0x7, 
     0x9, 0x7, 0x4, 0x8, 0x9, 0x8, 0x4, 0x9, 0x9, 0x9, 0x4, 0xa, 0x9, 0xa, 
@@ -453,12 +470,12 @@ Verilog2001Lexer::Initializer::Initializer() {
     0xf, 0xf, 0x5, 0x2, 0xb, 0xc, 0xf, 0xf, 0x22, 0x22, 0x5, 0x2, 0x43, 
     0x5c, 0x61, 0x61, 0x63, 0x7c, 0x7, 0x2, 0x26, 0x26, 0x32, 0x3b, 0x43, 
     0x5c, 0x61, 0x61, 0x63, 0x7c, 0x5, 0x2, 0x68, 0x68, 0x6f, 0x70, 0x72, 
-    0x72, 0x66e, 0x2, 0x3, 0x3, 0x2, 0x2, 0x2, 0x2, 0x5, 0x3, 0x2, 0x2, 
-    0x2, 0x2, 0x7, 0x3, 0x2, 0x2, 0x2, 0x2, 0x9, 0x3, 0x2, 0x2, 0x2, 0x2, 
-    0xb, 0x3, 0x2, 0x2, 0x2, 0x2, 0xd, 0x3, 0x2, 0x2, 0x2, 0x2, 0xf, 0x3, 
-    0x2, 0x2, 0x2, 0x2, 0x11, 0x3, 0x2, 0x2, 0x2, 0x2, 0x13, 0x3, 0x2, 0x2, 
-    0x2, 0x2, 0x15, 0x3, 0x2, 0x2, 0x2, 0x2, 0x17, 0x3, 0x2, 0x2, 0x2, 0x2, 
-    0x19, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1b, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1d, 
+    0x72, 0x2, 0x66e, 0x2, 0x3, 0x3, 0x2, 0x2, 0x2, 0x2, 0x5, 0x3, 0x2, 
+    0x2, 0x2, 0x2, 0x7, 0x3, 0x2, 0x2, 0x2, 0x2, 0x9, 0x3, 0x2, 0x2, 0x2, 
+    0x2, 0xb, 0x3, 0x2, 0x2, 0x2, 0x2, 0xd, 0x3, 0x2, 0x2, 0x2, 0x2, 0xf, 
+    0x3, 0x2, 0x2, 0x2, 0x2, 0x11, 0x3, 0x2, 0x2, 0x2, 0x2, 0x13, 0x3, 0x2, 
+    0x2, 0x2, 0x2, 0x15, 0x3, 0x2, 0x2, 0x2, 0x2, 0x17, 0x3, 0x2, 0x2, 0x2, 
+    0x2, 0x19, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1b, 0x3, 0x2, 0x2, 0x2, 0x2, 0x1d, 
     0x3, 0x2, 0x2, 0x2, 0x2, 0x1f, 0x3, 0x2, 0x2, 0x2, 0x2, 0x21, 0x3, 0x2, 
     0x2, 0x2, 0x2, 0x23, 0x3, 0x2, 0x2, 0x2, 0x2, 0x25, 0x3, 0x2, 0x2, 0x2, 
     0x2, 0x27, 0x3, 0x2, 0x2, 0x2, 0x2, 0x29, 0x3, 0x2, 0x2, 0x2, 0x2, 0x2b, 

@@ -112,7 +112,7 @@ Expr * ReferenceParser::visitName_part_specificator(
 				ExprParser::visitActual_parameter_part(
 						callOrIndx->actual_parameter_part()));
 	}
-	auto ns = ctx->name_slice_part();
+	//auto ns = ctx->name_slice_part();
 	NotImplementedLogger::print("ExprParser.visitName_slice_partContext");
 	return NULL;
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -o errexit
 
-antlr4_createParser="java -Xmx500M -cp \"./lib/antlr-4.6-complete.jar:$CLASSPATH\" org.antlr.v4.Tool -Dlanguage=Cpp -visitor -no-listener"
+antlr4_createParser="java -Xmx500M -cp \"./lib/antlr4-4.7-SNAPSHOT-complete.jar:$CLASSPATH\" org.antlr.v4.Tool -Dlanguage=Cpp -visitor -no-listener"
 eval "$antlr4_createParser vhdl.g4 -o VhdlParser -package vhdl"
 eval "$antlr4_createParser Verilog2001.g4 -o VerilogParser -package verilog"
 eval "$antlr4_createParser sv2012.g4 -o SVParser -package sv"
