@@ -14,13 +14,11 @@ void parseFnVerilog(Verilog2001Parser * antlrParser,
 	Verilog2001Parser::Source_textContext * tree =
 			antlrParser->source_text();
 	hdlParser->visitSource_text(tree);
-	tree.reset();
 }
 
 void parseFnVHDL(vhdlParser * antlrParser, DesignFileParser * hdlParser) {
 	vhdlParser::Design_fileContext* tree = antlrParser->design_file();
 	hdlParser->visitDesign_file(tree);
-	tree.reset();
 }
 
 void parseFnSystemVerilog(sv::sv2012Parser * antlrParser,
@@ -28,7 +26,6 @@ void parseFnSystemVerilog(sv::sv2012Parser * antlrParser,
 	sv::sv2012Parser::Library_textContext* tree =
 				antlrParser->library_text();
 		hdlParser->visitLibrary_text(tree);
-		tree.reset();
 }
 
 Context * Convertor::parse(const char * _fileName, Langue _lang,
