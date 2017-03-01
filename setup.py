@@ -58,7 +58,7 @@ def collectSourceFiles(baseDir, excludeDirs=[]):
             yield file
 
 BASE = "src/"
-ANTLR4_BASE = BASE + "antlr4-runitime-cpp/"
+ANTLR4_BASE = BASE + "antlr4-runtime-cpp/"
 ALL_SOURCE = list(collectSourceFiles(BASE, excludeDirs=[ANTLR4_BASE]))
 
 
