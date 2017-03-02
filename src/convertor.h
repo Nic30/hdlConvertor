@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
 
 #include "hdlObjects/context.h"
 #include "antlr4-runtime.h"

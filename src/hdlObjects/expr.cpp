@@ -2,7 +2,7 @@
 #include "symbol.h"
 #include "operator.h"
 
-LiteralVal __v ={._str= NULL};
+LiteralVal __v ={NULL};
 static Symbol Type_t(symbol_T, __v); // symbol representing that expr is type of type;
 
 Expr::Expr() {

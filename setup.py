@@ -58,7 +58,7 @@ def collectSourceFiles(baseDir, excludeDirs=[]):
             yield file
 
 BASE = "src/"
-ANTLR4_BASE = BASE + "antlr4-runitime-cpp/"
+ANTLR4_BASE = BASE + "antlr4-runtime-cpp/"
 ALL_SOURCE = list(collectSourceFiles(BASE, excludeDirs=[ANTLR4_BASE]))
 
 
@@ -68,10 +68,13 @@ hdlConvertor = Extension('hdlConvertor',
                     extra_compile_args=['-std=c++11'],
                     sources=ALL_SOURCE,
                     language="c++",
+                    define_macros=[('ANTLR4CPP_STATIC',None)]
                     )
 
 antlr4 = ('antlr4',
-          {'sources': list(collectSourceFiles(ANTLR4_BASE))
+          {'sources': list(collectSourceFiles(ANTLR4_BASE)),
+          'macros': [('ANTLR4CPP_STATIC', None)],
+          'include_dirs': [ANTLR4_BASE]
           }
          )
 
