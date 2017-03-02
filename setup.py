@@ -64,19 +64,19 @@ ALL_SOURCE = list(collectSourceFiles(BASE, excludeDirs=[ANTLR4_BASE]))
 
 distutils.ccompiler.CCompiler.compile = parallelCCompile
 hdlConvertor = Extension('hdlConvertor',
-                    include_dirs=[BASE + "antlr4-runtime-cpp/"],
+                    include_dirs=[ANTLR4_BASE],
                     extra_compile_args=['-std=c++11'],
                     sources=ALL_SOURCE,
                     language="c++",
-                    define_macros=[('ANTLR4CPP_STATIC',None)]
+#                   define_macros=[('ANTLR4CPP_STATIC',None)]
                     )
 
-antlr4 = ('antlr4',
-          {'sources': list(collectSourceFiles(ANTLR4_BASE)),
-          'macros': [('ANTLR4CPP_STATIC', None)],
-          'include_dirs': [ANTLR4_BASE]
-          }
-         )
+#antlr4 = ('antlr4',
+#          {'sources': list(collectSourceFiles(ANTLR4_BASE)),
+#          'macros': [('ANTLR4CPP_STATIC', None)],
+#          'include_dirs': [ANTLR4_BASE]
+#          }
+#         )
 
 setup (cmdclass={'build_ext': buildWithoutStrictPrototypes},
        name='hdlConvertor',
@@ -85,7 +85,7 @@ setup (cmdclass={'build_ext': buildWithoutStrictPrototypes},
        url='https://github.com/Nic30/hdlConvertor',
        author='Michal Orsak',
        author_email='michal.o.socials@gmail.com',
-       libraries=[antlr4],
+       #libraries=[antlr4],
        ext_modules=[hdlConvertor],
        keywords=['vhdl', 'verilog', 'parser', 'hdl'],
 )
