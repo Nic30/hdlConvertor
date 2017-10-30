@@ -1,7 +1,23 @@
 #!/bin/bash
 set -o errexit
 
-antlr4_createParser="java -Xmx500M -cp \"./lib/antlr4-4.7-SNAPSHOT-complete.jar:$CLASSPATH\" org.antlr.v4.Tool -Dlanguage=Cpp -visitor -no-listener"
+ANTLR_VERSION="4.7"
+ANTLR_JAR="antlr-$ANTLR_VERSION-complete.jar":
+ANTLR_RUNTIME="antlr4-cpp-runtime-$ANTLR_VERSION-source.zip"
+
+if [ ! -f $ANTLR_JAR ]; then
+   # download if not exists
+   wget http://www.antlr.org/download/$ANTLR_JAR
+fi
+
+# update antlr4 cpp runtime
+# wget http://www.antlr.org/download/$ANTLR_RUNTIME
+# rm src/antlr4-runtime-cpp/* -r
+# unzip $ANTLR_RUNTIME "runtime/src/*" -d  src/antlr4-runtime-cpp
+# mv src/antlr4-runtime-cpp/runtime/src/* src/antlr4-runtime-cpp
+# rm -r src/antlr4-runtime-cpp/runtime
+
+antlr4_createParser="java -Xmx500M -cp \"$ANTLR_JAR:$CLASSPATH\" org.antlr.v4.Tool -Dlanguage=Cpp -visitor -no-listener"
 eval "$antlr4_createParser vhdl.g4 -o VhdlParser -package vhdl"
 eval "$antlr4_createParser Verilog2001.g4 -o VerilogParser -package verilog"
 eval "$antlr4_createParser sv2012.g4 -o SVParser -package sv"
