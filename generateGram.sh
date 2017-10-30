@@ -22,11 +22,15 @@ eval "$antlr4_createParser grammars/vhdl.g4 -o VhdlParser -package vhdl"
 eval "$antlr4_createParser grammars/Verilog2001.g4 -o VerilogParser -package verilog"
 eval "$antlr4_createParser grammars/sv2012.g4 -o SVParser -package sv"
 
-rm -rf src/VhdlParser 
-mv  VhdlParser src/
+rm -f src/VhdlParser/* 
+mv  VhdlParser/grammars/* src/VhdlParser/
+rm -r VhdlParser/
 
-rm -rf src/VerilogParser 
-mv  VerilogParser src/
+rm -f src/VerilogParser/*
+mv  VerilogParser/grammars/* src/VerilogParser/
+rm -r VerilogParser/
 
-rm -rf src/SVParser 
-mv  SVParser src/
+rm -f src/SVParser/*
+mv  SVParser/grammars/* src/SVParser/
+rm -r SVParser/
+
