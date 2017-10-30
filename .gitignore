@@ -38,3 +38,7 @@ dist/
 #SVParser/
 #VerilogParser/
 #VhdlParser/
+
+# devel archives
+*.zip
+*.jar
