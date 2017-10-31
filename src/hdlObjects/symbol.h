@@ -11,9 +11,12 @@ public:
 	SymbolType type;
 	int bits;
 	LiteralVal value;
+	const std::vector<Symbol> * value_arr;
 
 	Symbol(SymbolType type, LiteralVal value);
 	Symbol(BigInteger value, int bits);
+	Symbol(const std::vector<Symbol> * arr);
+
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif

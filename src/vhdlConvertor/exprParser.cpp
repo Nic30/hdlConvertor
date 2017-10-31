@@ -41,8 +41,7 @@ Expr* ExprParser::visitFormal_part(vhdlParser::Formal_partContext* ctx) {
 	return id;
 }
 
-Expr* ExprParser::visitExplicit_range(
-		vhdlParser::Explicit_rangeContext* ctx) {
+Expr* ExprParser::visitExplicit_range(vhdlParser::Explicit_rangeContext* ctx) {
 	// explicit_range
 	// : simple_expression direction simple_expression
 	// ;
@@ -153,8 +152,7 @@ Expr* ExprParser::visitIndex_constraint(
 	}
 	return visitDiscrete_range(ctx->discrete_range(0));
 }
-Expr* ExprParser::visitDiscrete_range(
-		vhdlParser::Discrete_rangeContext* ctx) {
+Expr* ExprParser::visitDiscrete_range(vhdlParser::Discrete_rangeContext* ctx) {
 	// discrete_range
 	// : range
 	// | subtype_indication
@@ -357,8 +355,24 @@ Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
 	// aggregate
 	// : LPAREN element_association ( COMMA element_association )* RPAREN
 	// ;
-	NotImplementedLogger::print("ExprParser visitAggregate");
-	return NULL;
+	std::vector<Expr*> elements;
+	for (auto & elm : ctx->element_association()) {
+		Expr * e = visitElement_association(elm);
+		elements.push_back(e);
+	}
+
+	return Expr::ARRAY(elements);
+}
+
+Expr* ExprParser::visitElement_association(
+		vhdlParser::Element_associationContext* ctx) {
+	// ement_association
+	//   : (  choices ARROW )? expression
+	//   ;
+	if (ctx->choices()) {
+		NotImplementedLogger::print("ExprParser ement_association.choices");
+	}
+	return visitExpression(ctx->expression());
 }
 
 Expr* ExprParser::visitTarget(vhdlParser::TargetContext* ctx) {

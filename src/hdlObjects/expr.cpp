@@ -2,7 +2,7 @@
 #include "symbol.h"
 #include "operator.h"
 
-LiteralVal __v ={NULL};
+LiteralVal __v = { NULL };
 static Symbol Type_t(symbol_T, __v); // symbol representing that expr is type of type;
 
 Expr::Expr() {
@@ -16,6 +16,10 @@ Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
 Expr::Expr(SymbolType type, LiteralVal value) {
 	data = new Symbol(type, value);
 }
+Expr::Expr(SymbolType type, Symbol * value) {
+	data = value;
+}
+
 Expr::Expr(BigInteger value, int bits) {
 	data = new Symbol(value, bits);
 }
@@ -55,6 +59,14 @@ Expr * Expr::STR(std::string strVal) {
 	LiteralVal v;
 	v._str = strdup(strVal.c_str());
 	return new Expr(symb_STRING, v);
+}
+
+Expr * Expr::ARRAY(std::vector<Expr*> arr) {
+	auto _arr = new std::vector<Symbol>();
+	for (auto item : arr)
+		_arr->push_back(*dynamic_cast<Symbol*>(item->data));
+
+	return new Expr(symb_ARRAY, new Symbol(_arr));
 }
 
 Expr * Expr::OPEN() {

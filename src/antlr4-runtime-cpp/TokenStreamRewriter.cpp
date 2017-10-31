@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2012-2016 The ANTLR Project. All rights reserved.
+﻿/* Copyright (c) 2012-2017 The ANTLR Project. All rights reserved.
  * Use of this file is governed by the BSD 3-clause license that
  * can be found in the LICENSE.txt file in the project root.
  */
@@ -203,11 +203,13 @@ void TokenStreamRewriter::Delete(Token *from, Token *to) {
 }
 
 void TokenStreamRewriter::Delete(const std::string &programName, size_t from, size_t to) {
-  replace(programName, from, to, nullptr);
+  std::string nullString;
+  replace(programName, from, to, nullString);
 }
 
 void TokenStreamRewriter::Delete(const std::string &programName, Token *from, Token *to) {
-  replace(programName, from, to, nullptr);
+  std::string nullString;
+  replace(programName, from, to, nullString);
 }
 
 size_t TokenStreamRewriter::getLastRewriteTokenIndex() {
@@ -403,7 +405,7 @@ std::unordered_map<size_t, TokenStreamRewriter::RewriteOperation*> TokenStreamRe
     }
     m[op->index] = op;
   }
-  
+
   return m;
 }
 

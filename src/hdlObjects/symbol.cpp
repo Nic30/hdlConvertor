@@ -4,17 +4,31 @@ Symbol::Symbol(SymbolType type, LiteralVal value) {
 	this->type = type;
 	this->value = value;
 	bits = -1;
+	value_arr = NULL;
 }
+
 Symbol::Symbol(BigInteger value, int bits) {
 	type = symb_INT;
 	this->value._int = value;
 	this->bits = bits;
+	value_arr = NULL;
 }
+
+Symbol::Symbol(const std::vector<Symbol> * arr) {
+	this->type = symb_ARRAY;
+	this->value._str = NULL;
+	this->bits = -1;
+	value_arr = arr;
+}
+
 Symbol::~Symbol() {
 	switch (type) {
 #ifdef USE_PYTHON
-	case symb_INT:
-		free(value._int);
+	//case symb_INT:
+	//	free(value._int);
+	//	break;
+	case symb_ARRAY:
+		delete[] value_arr;
 		break;
 #endif
 	case symb_ID:
@@ -25,6 +39,7 @@ Symbol::~Symbol() {
 		break;
 	}
 }
+
 #ifdef USE_PYTHON
 PyObject * Symbol::toJson() const {
 	PyObject * d = PyDict_New();
@@ -33,6 +48,8 @@ PyObject * Symbol::toJson() const {
 			PyUnicode_FromString(SymbolType_toString(type)));
 
 	PyObject * val;
+	size_t indx = 0;
+
 	switch (type) {
 	case symb_ID:
 	case symb_STRING:
@@ -46,6 +63,14 @@ PyObject * Symbol::toJson() const {
 		val = value._int;
 		if (bits > 0)
 			PyDict_SetItemString(d, "bits", PyLong_FromLong(bits));
+		break;
+	case symb_ARRAY:
+		assert(value_arr);
+		val = PyList_New(value_arr->size());
+		for (auto symb : *value_arr) {
+			PyList_SetItem(val, indx, symb.toJson());
+			indx++;
+		}
 		break;
 	case symb_OPEN:
 	default:
@@ -72,6 +97,9 @@ void Symbol::dump(int indent) const {
 		break;
 	case symb_FLOAT:
 		dumpVal("value", indent, value._float) << "\n";
+		break;
+	case symb_ARRAY:
+		assert(0 && "not implemented");
 		break;
 	case symb_INT:
 		if (bits > 0)

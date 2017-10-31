@@ -5,7 +5,7 @@ using namespace antlr4;
 
 class SyntaxErrorLogger: public ANTLRErrorListener {
 public:
-	void syntaxError(IRecognizer *recognizer, Token *offendingSymbol,
+	void syntaxError(Recognizer *recognizer, Token *offendingSymbol,
 			size_t line, size_t charPositionInLine, const std::string &msg,
 			std::exception_ptr e);
 

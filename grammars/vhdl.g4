@@ -1573,7 +1573,7 @@ BASE_LITERAL
 // A Based fractional number with a . i.e. 3.0 may have a negative exponent
 // These should be checked in the Visitor/Listener whereby an appropriate error message
 // should be given
-   :  INTEGER '#' BASED_INTEGER ('.'BASED_INTEGER)? '#' (EXPONENT)?
+   : INTEGER '#' BASED_INTEGER ( '.' BASED_INTEGER )? '#' (EXPONENT)?
    ;
 
 BIT_STRING_LITERAL
@@ -1583,15 +1583,15 @@ BIT_STRING_LITERAL
   ;
 
 BIT_STRING_LITERAL_BINARY
-    :   ('b'|'B') '\"' ('1' | '0' | '_')+ '\"'
+    :   ('b'|'B') '"' ('1' | '0' | '_')+ '"'
     ;
 
 BIT_STRING_LITERAL_OCTAL
-    :   ('o'|'O') '\"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
+    :   ('o'|'O') '"' ('7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
     ;
 
 BIT_STRING_LITERAL_HEX
-    :   ('x'|'X') '\"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '\"'
+    :   ('x'|'X') '"' ( 'f' |'e' |'d' |'c' |'b' |'a' | 'F' |'E' |'D' |'C' |'B' |'A' | '9' | '8' | '7' |'6' |'5' |'4' |'3' |'2' |'1' | '0' | '_')+ '"'
     ;
 
 REAL_LITERAL
@@ -1666,7 +1666,7 @@ ARROW         : '=>'  ;
 NEQ           : '/='  ;
 VARASGN       : ':='  ;
 BOX           : '<>'  ;
-DBLQUOTE      : '\"'  ;
+DBLQUOTE      : '"'  ;
 SEMI          : ';'   ;
 COMMA         : ','   ;
 AMPERSAND     : '&'   ;

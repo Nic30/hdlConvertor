@@ -9,7 +9,8 @@ union LiteralVal {
 };
 
 enum SymbolType {
-	symb_ID, symb_INT, symb_FLOAT, symb_STRING, symb_OPEN, symb_ALL, symb_NULL, symbol_T
+	symb_ID, symb_INT, symb_FLOAT, symb_STRING, symb_OPEN,
+	symb_ARRAY, symb_ALL, symb_NULL, symbol_T
 };
 
 inline const char * SymbolType_toString(SymbolType t) {
@@ -24,6 +25,8 @@ inline const char * SymbolType_toString(SymbolType t) {
 		return "STRING";
 	case symb_OPEN:
 		return "OPEN";
+	case symb_ARRAY:
+		return "ARRAY";
 	case symb_ALL:
 		return "ALL";
 	case symbol_T:

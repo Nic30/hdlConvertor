@@ -48,6 +48,8 @@ public:
 			vhdlParser::Qualified_expressionContext* ctx);
 	static Expr* visitAllocator(vhdlParser::AllocatorContext* ctx);
 	static Expr* visitAggregate(vhdlParser::AggregateContext* ctx);
+	static Expr* visitElement_association(
+			vhdlParser::Element_associationContext* ctx);
 	static Expr* visitTarget(vhdlParser::TargetContext* ctx);
 	static Expr* visitWaveform(vhdlParser::WaveformContext* ctx);
 	static Expr* visitWaveform_element(

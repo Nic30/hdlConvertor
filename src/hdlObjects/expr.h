@@ -9,6 +9,7 @@
 #include "symbolType.h"
 #include "operatorType.h"
 #include "exprItem.h"
+#include "symbol.h"
 #include "../debugConfig.h"
 
 class Expr {
@@ -18,6 +19,7 @@ public:
 
 	Expr(Expr * op0, OperatorType operatorType, Expr * op1);
 	Expr(SymbolType type, LiteralVal value);
+	Expr(SymbolType type, Symbol * value);
 	Expr(BigInteger value, int bits);
 	Expr(BigInteger value);
 
@@ -35,6 +37,7 @@ public:
 
 	static Expr * FLOAT(double val);
 	static Expr * STR(std::string strVal);
+	static Expr * ARRAY(std::vector<Expr*> arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
 	static Expr * call(Expr * fnId, std::vector<Expr*> * operands);
 
