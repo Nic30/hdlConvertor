@@ -84,7 +84,8 @@ int main(int argc, char *argv[]) {
 	//const char * f = "tests/mux.vhd";
 	//const char * f = "tests/uart.v";
 	//const char * f = "tests/mem_base_object.sv";
-	const char * f = "tests/package_example.vhd";
+	//const char * f = "tests/package_example.vhd";
+	const char * f = "tests/stcu_integr_pkg.vhd";
 
 #ifdef USE_PYTHON
 	Py_SetProgramName((wchar_t*) "test"); /* optional but recommended */
