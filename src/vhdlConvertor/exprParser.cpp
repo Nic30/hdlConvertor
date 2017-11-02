@@ -370,7 +370,7 @@ Expr* ExprParser::visitElement_association(
 	//   : (  choices ARROW )? expression
 	//   ;
 	if (ctx->choices()) {
-		NotImplementedLogger::print("ExprParser ement_association.choices");
+		NotImplementedLogger::print("ExprParser.visitElement_association.choices");
 	}
 	return visitExpression(ctx->expression());
 }
