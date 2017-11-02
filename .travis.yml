@@ -4,6 +4,12 @@ dist: trusty
 
 language: python
 
+python:
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - "nightly"
+
 git:
   depth: 1
 
@@ -12,8 +18,7 @@ cache:
 
 # clang is required because there is not enought ram for gcc
 compiler: gcc
-python:
-  - "3.5"
+
 addons:
    apt:
       sources:

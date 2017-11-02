@@ -18,16 +18,39 @@ system_verilog_files = ["mem_base_object.sv"]
 def dumpFile(fname, language):
     f = path.join(BASE_DIR, "tests/", fname)
     res = hdlConvertor.parse(f, language, debug=True)
-    print(f)
-    pprint(res)
+    return f, res
+
+
+def parseAndPrint(printNow=True):
+    if not printNow:
+        data = []
+    for fname in vhdl_files:
+        d = dumpFile(fname, "vhdl")
+        if printNow:
+            f, res = d
+            print(f)
+            pprint(res)
+        else:
+            data.append(d)
+
+    for fname in verilog_files:
+        d = dumpFile(fname,  "verilog")
+        if printNow:
+            f, res = d
+            print(f)
+            pprint(res)
+        else:
+            data.append(d)
+
+    if not printNow:
+        for f, res in data:
+            print(f)
+            pprint(res)
 
 
 if __name__ == "__main__":
-    for fname in vhdl_files:
-        dumpFile(fname, "vhdl")
-
-    for fname in verilog_files:
-        dumpFile(fname,  "verilog")
+    for i in range(3):
+        parseAndPrint(printNow=not (i % 2))
 
     # for fname in system_verilog_files:
     #    dumpFile(fname,  "system_verilog")
