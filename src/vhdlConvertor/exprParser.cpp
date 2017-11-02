@@ -360,8 +360,9 @@ Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
 		Expr * e = visitElement_association(elm);
 		elements.push_back(e);
 	}
+	Expr * arr  = Expr::ARRAY(elements);
 
-	return Expr::ARRAY(elements);
+	return arr;
 }
 
 Expr* ExprParser::visitElement_association(

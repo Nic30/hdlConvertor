@@ -24,11 +24,13 @@ Symbol::Symbol(const std::vector<Symbol> * arr) {
 Symbol::~Symbol() {
 	switch (type) {
 #ifdef USE_PYTHON
-	//case symb_INT:
-	//	free(value._int);
-	//	break;
+	case symb_INT:
+		if (value._int)
+			Py_DECREF(value._int);
+		break;
 	case symb_ARRAY:
-		delete[] value_arr;
+		if (value_arr)
+			delete[] value_arr;
 		break;
 #endif
 	case symb_ID:
@@ -43,7 +45,7 @@ Symbol::~Symbol() {
 #ifdef USE_PYTHON
 PyObject * Symbol::toJson() const {
 	PyObject * d = PyDict_New();
-
+	PyObject * tmp = NULL;
 	PyDict_SetItemString(d, "type",
 			PyUnicode_FromString(SymbolType_toString(type)));
 
@@ -62,14 +64,17 @@ PyObject * Symbol::toJson() const {
 	case symb_INT:
 		val = value._int;
 		if (bits > 0)
-			PyDict_SetItemString(d, "bits", PyLong_FromLong(bits));
+			Py_IncRef(val);
+		PyDict_SetItemString(d, "bits", PyLong_FromLong(bits));
 		break;
 	case symb_ARRAY:
 		assert(value_arr);
 		val = PyList_New(value_arr->size());
-		Py_IncRef(val);
+		//Py_IncRef(val);
 		for (auto symb : *value_arr) {
-			PyList_SetItem(val, indx, symb.toJson());
+			tmp = symb.toJson();
+			Py_IncRef(tmp);
+			PyList_SetItem(val, indx, tmp);
 			indx++;
 		}
 		break;
@@ -80,7 +85,7 @@ PyObject * Symbol::toJson() const {
 		break;
 	}
 	PyDict_SetItemString(d, "value", val);
-	Py_INCREF(d);
+	//Py_INCREF(d);
 	return d;
 }
 #endif
