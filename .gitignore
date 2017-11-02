@@ -1,4 +1,5 @@
 # Compiled Object files
+*.pyc
 *.slo
 *.lo
 *.o
