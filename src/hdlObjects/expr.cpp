@@ -65,7 +65,7 @@ Expr * Expr::ARRAY(std::vector<Expr*> arr) {
 	auto _arr = new std::vector<Symbol>();
 	for (auto item : arr) {
 		_arr->push_back(*dynamic_cast<Symbol*>(item->data));
-		item->data = null;
+		item->data = NULL;
 		delete item;
 	}
 
