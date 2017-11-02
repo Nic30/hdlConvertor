@@ -67,6 +67,7 @@ PyObject * Symbol::toJson() const {
 	case symb_ARRAY:
 		assert(value_arr);
 		val = PyList_New(value_arr->size());
+		Py_IncRef(val);
 		for (auto symb : *value_arr) {
 			PyList_SetItem(val, indx, symb.toJson());
 			indx++;

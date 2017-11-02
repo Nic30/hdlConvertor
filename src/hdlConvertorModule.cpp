@@ -56,19 +56,18 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 
 	//toLowercase((char *) langue);
 	MOD_DEBUG("hierarchyOnly: " << hierarchyOnly);
-
 	MOD_DEBUG("debug: " << debug);
-
 	MOD_DEBUG("langue:" << langue);
 
 	if (strcmp(langue, "vhdl") == 0) {
 		_lang = VHDL;
-
 	} else if (strcmp(langue, "verilog") == 0) {
 		_lang = VERILOG;
+	} else if (strcmp(langue, "system_verilog") == 0) {
+		_lang = SYSTEM_VERILOG;
 	} else {
 		PyErr_SetString(PyExc_TypeError,
-				"Invalid language specified, only vhdl and verilog is available");
+				"Invalid language specified, only vhdl, verilog and system_verilog is available");
 		return NULL;
 	}
 	Context * c = Convertor::parse(filename, _lang, hierarchyOnly, debug);
