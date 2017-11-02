@@ -1,18 +1,13 @@
 import sys
 from os import path
 from pprint import pprint
+import unittest
 
 BASE_DIR = path.join(path.dirname(__file__), "..")
 sys.path.insert(1, path.join(BASE_DIR, "build/lib.linux-x86_64-%d.%d"
                              % (sys.version_info.major, sys.version_info.minor)))
 
 import hdlConvertor
-
-vhdl_files = ["mux.vhd",
-              "package_example.vhd",
-              "stcu_integr_pkg.vhd"]
-verilog_files = ["uart.v"]
-system_verilog_files = ["mem_base_object.sv"]
 
 
 def dumpFile(fname, language):
@@ -21,31 +16,26 @@ def dumpFile(fname, language):
     return f, res
 
 
-def parseAndPrint(printNow=True):
-    if not printNow:
-        data = []
-    for fname in vhdl_files:
-        d = dumpFile(fname, "vhdl")
-        if printNow:
-            f, res = d
-            print(f)
-            pprint(res)
-        else:
-            data.append(d)
+class BasicTC(unittest.TestCase):
+    def test_vhld_dump_mux(self):
+        f, res = dumpFile("mux.vhd", "vhdl")
+        str(res)
 
-    for fname in verilog_files:
-        d = dumpFile(fname,  "verilog")
-        if printNow:
-            f, res = d
-            print(f)
-            pprint(res)
-        else:
-            data.append(d)
+    def test_vhdl_package_example(self):
+        f, res = dumpFile("package_example.vhd", "vhdl")
+        str(res)
 
-    if not printNow:
-        for f, res in data:
-            print(f)
-            pprint(res)
+    def test_vhdl_stcu_integr_pkg(self):
+        f, res = dumpFile("stcu_integr_pkg.vhd", "vhdl")
+        str(res)
+
+    def test_verilog_uart(self):
+        f, res = dumpFile("uart.v", "verilog")
+        str(res)
+
+    def test_system_verilog_mem_base_object(self):
+        f, res = dumpFile("mem_base_object.sv",  "system_verilog")
+        str(res)
 
 
 if __name__ == "__main__":
