@@ -356,7 +356,7 @@ Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
 	// : LPAREN element_association ( COMMA element_association )* RPAREN
 	// ;
 	std::vector<Expr*> elements;
-	for (auto & elm : ctx->element_association()) {
+	for (auto elm : ctx->element_association()) {
 		Expr * e = visitElement_association(elm);
 		elements.push_back(e);
 	}

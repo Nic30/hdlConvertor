@@ -63,8 +63,11 @@ Expr * Expr::STR(std::string strVal) {
 
 Expr * Expr::ARRAY(std::vector<Expr*> arr) {
 	auto _arr = new std::vector<Symbol>();
-	for (auto item : arr)
+	for (auto item : arr) {
 		_arr->push_back(*dynamic_cast<Symbol*>(item->data));
+		item->data = null;
+		delete item;
+	}
 
 	return new Expr(symb_ARRAY, new Symbol(_arr));
 }
@@ -124,7 +127,8 @@ char * Expr::extractStr() {
 }
 
 Expr::~Expr() {
-	delete data;
+	if (data)
+		delete data;
 }
 #ifdef USE_PYTHON
 PyObject * Expr::toJson() const {
