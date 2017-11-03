@@ -4,10 +4,11 @@ Entity::Entity() :
 		Named() {
 }
 Port * Entity::getPortByName(const char * name) {
-	for (auto p : ports)
+	for (auto p : ports) {
+		assert(p->variable->name);
 		if (strcmp(p->variable->name, name) == 0)
 			return p;
-
+	}
 	return NULL;
 }
 

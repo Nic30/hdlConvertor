@@ -150,6 +150,7 @@ void ModuleParser::visitModule_item(
 			Port * p = ent->getPortByName(declr->variable->name);
 			p->direction = declr->direction;
 			p->variable = declr->variable;
+			declr->variable = NULL;
 			delete declr;
 		}
 		delete portsDeclr;
@@ -159,7 +160,6 @@ void ModuleParser::visitModule_item(
 }
 void ModuleParser::visitNon_port_module_item(
 		Verilog2001Parser::Non_port_module_itemContext* ctx) {
-	NotImplementedLogger::print("ModuleParser.visitNon_port_module_item");
 	// non_port_module_item :
 	// attribute_instance* generated_instantiation
 	// | attribute_instance* local_parameter_declaration
@@ -168,4 +168,5 @@ void ModuleParser::visitNon_port_module_item(
 	// | attribute_instance* specify_block
 	// | attribute_instance* specparam_declaration
 	// ;
+	NotImplementedLogger::print("ModuleParser.visitNon_port_module_item");
 }
