@@ -13,7 +13,7 @@ public:
 	OperatorType op;
 	Expr* op1;
 	std::vector<Expr*> * operands;
-
+	Operator(const Operator & o);
 	Operator(Expr* op0, OperatorType operatorType, Expr* op1);
 
 	static Operator * call(Expr* fn, std::vector<Expr*> * operands);
@@ -21,6 +21,7 @@ public:
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif
+	ExprItem * clone() const;
 	void dump(int indent) const;
 	~Operator();
 };

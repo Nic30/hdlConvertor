@@ -1,9 +1,6 @@
 #include "function.h"
 
-Function::Function(
-		char * name,
-		bool isOperator,
-		Expr * returnT,
+Function::Function(char * name, bool isOperator, Expr * returnT,
 		std::vector<Variable*> * params) {
 	this->name = name;
 	this->isOperator = isOperator;
@@ -18,13 +15,25 @@ PyObject * Function::toJson() const {
 	if (returnT) {
 		PyDict_SetItemString(d, "returnT", returnT->toJson());
 	} else {
-		Py_IncRef(Py_None);
+		Py_IncRef (Py_None);
 		PyDict_SetItemString(d, "returnT", Py_None);
 	}
 	addJsonArrP(d, "params", *params);
 	addJsonArrP(d, "locals", locals);
 	addJsonArrP(d, "body", body);
-	Py_IncRef(d);
 	return d;
 }
 #endif
+
+Function::~Function() {
+	for (auto p : *params)
+		delete p;
+	delete params;
+
+	for (auto l : locals)
+		delete l;
+
+	for (auto b : body)
+		delete b;
+
+}

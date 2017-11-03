@@ -37,9 +37,7 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
 
 	return s;
 }
-Statement* Statement::IF(
-		Expr * cond,
-		std::vector<Statement*>* ifTrue,
+Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 		std::vector<Statement*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->op0 = cond;
@@ -109,7 +107,25 @@ PyObject * Statement::toJson() const {
 	default:
 		throw "Invalid StatementType ";
 	}
-	Py_IncRef(d);
 	return d;
 }
 #endif
+
+Statement::~Statement() {
+	if (ops) {
+		for (auto sl : *ops) {
+			for (auto stm : *sl) {
+				delete stm;
+			}
+			delete sl;
+		}
+		delete ops;
+	}
+
+	if (op0)
+		delete op0;
+
+	if (op1)
+		delete op1;
+
+}

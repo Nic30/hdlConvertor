@@ -13,4 +13,5 @@ public:
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif
+	~CompInstance();
 };

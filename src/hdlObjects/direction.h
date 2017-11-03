@@ -1,20 +1,20 @@
 #pragma once
 
 enum Direction {
-	IN, OUT, INOUT, BUFFER, LINKAGE
+	DIR_IN, DIR_OUT, DIR_INOUT, DIR_BUFFER, DIR_LINKAGE, DIR_UNKNOWN,
 };
 
 inline const char * Direction_toString(Direction d) {
 	switch (d) {
-	case IN:
+	case DIR_IN:
 		return "IN";
-	case OUT:
+	case DIR_OUT:
 		return "OUT";
-	case INOUT:
+	case DIR_INOUT:
 		return "INOUT";
-	case BUFFER:
+	case DIR_BUFFER:
 		return "BUFFER";
-	case LINKAGE:
+	case DIR_LINKAGE:
 		return "LINKAGE";
 	default:
 		throw "Invalid direction value";

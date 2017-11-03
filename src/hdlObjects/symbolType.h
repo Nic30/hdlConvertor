@@ -1,6 +1,8 @@
 #pragma once
 
 #include "bigInteger.h"
+#include <string.h>
+#include <assert.h>
 
 union LiteralVal {
 	BigInteger _int;
@@ -35,3 +37,5 @@ inline const char * SymbolType_toString(SymbolType t) {
 		return "NULL";
 	}
 }
+
+LiteralVal LiteralVal_clone(const LiteralVal & val, enum SymbolType t);

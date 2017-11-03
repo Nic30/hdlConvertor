@@ -13,4 +13,5 @@ public:
 	PyObject * toJson() const;
 #endif
 	void dump(int indent) const;
+	~Entity();
 };

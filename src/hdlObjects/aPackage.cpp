@@ -27,11 +27,11 @@ void aPackage::dump(int indent) const {
 }
 
 aPackage::~aPackage() {
-
 	for (auto c : components)
 		delete c;
 
 	for (auto f : functions)
 		delete f;
-
+	for (auto f : variables)
+		delete f;
 }

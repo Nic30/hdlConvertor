@@ -148,5 +148,7 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 		e = visitIdentifier(ctx->identifier());
 	}
 	Symbol* s = dynamic_cast<Symbol*>(e->data);
+	e->data = NULL;
+	delete e;
 	return s->value._str;
 }

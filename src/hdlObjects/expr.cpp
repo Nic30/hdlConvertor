@@ -9,6 +9,10 @@ Expr::Expr() {
 	data = NULL;
 }
 
+Expr::Expr(const Expr & expr) {
+	data = expr.data->clone();
+}
+
 Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
 	assert(op0);
 	data = new Operator(op0, operatorType, op1);
@@ -127,7 +131,7 @@ char * Expr::extractStr() {
 }
 
 Expr::~Expr() {
-	if (data)
+	if (data && data != &Type_t)
 		delete data;
 }
 #ifdef USE_PYTHON
@@ -140,10 +144,12 @@ PyObject * Expr::toJson() const {
 		Symbol * literal = dynamic_cast<Symbol*>(data);
 		if (literal)
 			PyDict_SetItemString(d, "literal", literal->toJson());
+		else if (data)
+			throw "Expr is improperly initialized";
 		else
-			throw "vhdlExpr is improperly initialized";
+			throw "Expr has NULL data";
 	}
-	Py_INCREF(d);
+	//Py_INCREF(d);
 	return d;
 }
 #endif
@@ -157,7 +163,7 @@ void Expr::dump(int indent) const {
 		if (literal) {
 			dumpItemP("literal", indent + INDENT_INCR, literal) << "\n";
 		} else
-			throw "vhdlExpr is improperly initialized";
+			throw "Expr is improperly initialized";
 	}
 	mkIndent(indent) << "}";
 }

@@ -7,6 +7,29 @@ Operator::Operator() {
 	op = ARROW;
 }
 
+Operator::Operator(const Operator & o){
+	if (o.operands) {
+		auto ops = new std::vector<Expr*>();
+		for (auto op : *o.operands) {
+			ops->push_back(new Expr(*op));
+		}
+		operands = ops;
+	} else {
+		operands = NULL;
+	}
+	if (o.op0) {
+		op0 = new Expr(*o.op0);
+	} else {
+		op0 = NULL;
+	}
+	if (o.op1) {
+		op1 = new Expr(*o.op1);
+	} else {
+		op1 = NULL;
+	}
+	op = o.op;
+}
+
 Operator::Operator(Expr* op0, OperatorType operatorType, Expr* op1) {
 	this->op0 = op0;
 	this->op = operatorType;
@@ -66,10 +89,13 @@ PyObject * Operator::toJson() const {
 	default:
 		throw "Invalid arity of operator";
 	}
-	Py_IncRef(d);
 	return d;
 }
 #endif
+
+ExprItem * Operator::clone() const {
+	return new Operator(*this);
+}
 
 void Operator::dump(int indent) const {
 	std::cout << "{\n";

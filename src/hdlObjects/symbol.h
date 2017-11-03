@@ -13,6 +13,7 @@ public:
 	LiteralVal value;
 	const std::vector<Symbol> * value_arr;
 
+	Symbol(const Symbol & s);
 	Symbol(SymbolType type, LiteralVal value);
 	Symbol(BigInteger value, int bits);
 	Symbol(const std::vector<Symbol> * arr);
@@ -21,6 +22,7 @@ public:
 	PyObject * toJson() const;
 #endif
 	void dump(int indent) const;
+	ExprItem * clone() const;
 
 	~Symbol();
 };

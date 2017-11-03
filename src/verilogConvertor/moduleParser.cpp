@@ -104,8 +104,11 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 
 	std::vector<Variable*> * params = visitList_of_param_assignments(
 			ctx->list_of_param_assignments());
+
+	std::shared_ptr<Expr> _t(t);
 	for (auto v : *params)
-		v->type = t;
+		v->type = _t;
+
 	return params;
 }
 std::vector<Variable*> *ModuleParser::visitList_of_param_assignments(
@@ -141,9 +144,9 @@ void ModuleParser::visitModule_item(
 	// | attribute_instance* specparam_declaration
 	// ;
 	auto pd = ctx->port_declaration();
-	if (pd){
+	if (pd) {
 		auto portsDeclr = PortParser::visitPort_declaration(pd);
-		for (auto declr: *portsDeclr){
+		for (auto declr : *portsDeclr) {
 			Port * p = ent->getPortByName(declr->variable->name);
 			p->direction = declr->direction;
 			p->variable = declr->variable;

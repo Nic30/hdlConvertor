@@ -11,7 +11,11 @@ PyObject * Arch::toJson() const {
 
 	JSN_DEBUG("Arch - componentInstances")
 	addJsonArrP(o, "componentInstances", componentInstances);
-	Py_INCREF(o);
 	return o;
 }
 #endif
+
+Arch::~Arch() {
+	for (auto c : componentInstances)
+		delete c;
+}

@@ -15,13 +15,14 @@ Symbol::Symbol(BigInteger value, int bits) {
 }
 
 Symbol::Symbol(const std::vector<Symbol> * arr) {
-	this->type = symb_ARRAY;
-	this->value._str = NULL;
-	this->bits = -1;
+	type = symb_ARRAY;
+	value._str = NULL;
+	bits = -1;
 	value_arr = arr;
 }
 
 Symbol::~Symbol() {
+
 	switch (type) {
 #ifdef USE_PYTHON
 	case symb_INT:
@@ -30,12 +31,13 @@ Symbol::~Symbol() {
 		break;
 	case symb_ARRAY:
 		if (value_arr)
-			delete[] value_arr;
+			delete value_arr;
 		break;
 #endif
 	case symb_ID:
 	case symb_STRING:
-		free((char *) value._str);
+		if (value._str)
+			free((char *) value._str);
 		break;
 	default:
 		break;
@@ -85,10 +87,23 @@ PyObject * Symbol::toJson() const {
 		break;
 	}
 	PyDict_SetItemString(d, "value", val);
-	//Py_INCREF(d);
 	return d;
 }
 #endif
+
+Symbol::Symbol(const Symbol & s) {
+	bits = s.bits;
+	type = s.type;
+	value = LiteralVal_clone(s.value, s.type);
+	if (s.value_arr) {
+		value_arr = new std::vector<Symbol>(*s.value_arr);
+	} else {
+		value_arr = NULL;
+	}
+}
+ExprItem * Symbol::clone() const {
+	return new Symbol(*this);
+}
 
 void Symbol::dump(int indent) const {
 	std::cout << "{\n";

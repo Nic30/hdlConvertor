@@ -16,6 +16,7 @@ class Expr {
 public:
 	ExprItem * data;
 	Expr();
+	Expr(const Expr & expr);
 
 	Expr(Expr * op0, OperatorType operatorType, Expr * op1);
 	Expr(SymbolType type, LiteralVal value);

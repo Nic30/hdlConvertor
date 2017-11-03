@@ -11,3 +11,11 @@ PyObject * CompInstance::toJson() const {
 	return d;
 }
 #endif
+
+CompInstance::~CompInstance() {
+	for (auto gm : genericMap)
+		delete gm;
+
+	for (auto pm : portMap)
+		delete pm;
+}

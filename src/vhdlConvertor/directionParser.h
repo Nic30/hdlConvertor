@@ -8,15 +8,15 @@ using namespace vhdl;
 
 inline Direction Direction_from(vhdlParser::Signal_modeContext * sm) {
 	if (sm->IN())
-		return IN;
+		return DIR_IN;
 	else if (sm->OUT())
-		return OUT;
+		return DIR_OUT;
 	else if (sm->INOUT())
-		return INOUT;
+		return DIR_INOUT;
 	else if (sm->BUFFER())
-		return BUFFER;
+		return DIR_BUFFER;
 	else {
 		//assert (sm->LINKAGE());
-		return LINKAGE;
+		return DIR_LINKAGE;
 	}
 }

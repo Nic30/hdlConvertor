@@ -5,15 +5,27 @@ std::vector<Variable*> * InterfaceParser::extractVariables(
 		vhdlParser::Subtype_indicationContext* subType,
 		vhdlParser::ExpressionContext* _expr) {
 	std::vector<Variable*> * vl = new std::vector<Variable*>();
-	Expr * type = ExprParser::visitSubtype_indication(subType);
+	Expr * _type = ExprParser::visitSubtype_indication(subType);
 	Expr * expr = NULL;
 	if (_expr)
 		expr = ExprParser::visitExpression(_expr);
+	std::shared_ptr<Expr> type(_type);
+	bool firstIt = true;
+
 	for (auto i : identifier_list->identifier()) {
 		// identifier_list
 		// : identifier ( COMMA identifier )*
 		// ;
-		Variable * v = new Variable(i->getText(), type, expr);
+		Expr * __expr;
+		if (!expr) {
+			__expr = NULL;
+		} else if (firstIt) {
+			firstIt = false;
+			__expr = expr;
+		} else {
+			__expr = new Expr(*expr);
+		}
+		Variable * v = new Variable(i->getText(), type, __expr);
 		vl->push_back(v);
 	}
 	return vl;
@@ -36,9 +48,7 @@ std::vector<Port*> * InterfaceParser::visitInterface_port_declaration(
 	// ;
 	Direction d = Direction_from(ctx->signal_mode());
 	for (auto v : *vl) {
-		Port * p = new Port();
-		p->direction = d;
-		p->variable = v;
+		Port * p = new Port(d, v);
 		pl->push_back(p);
 	}
 	delete vl;

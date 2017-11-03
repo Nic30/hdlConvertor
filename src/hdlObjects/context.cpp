@@ -21,7 +21,6 @@ PyObject * Context::toJson() const {
 
 	JSN_DEBUG("Context - variables")
 	addJsonArrP(c, "variables", variables);
-	Py_IncRef(c);
 	return c;
 }
 #endif
@@ -40,19 +39,21 @@ void Context::dump(int indent) const {
 }
 
 Context::~Context() {
-	for (auto i : imports) {
+	for (auto i : imports)
 		delete i;
-	}
-	for (auto i : entities) {
+
+	for (auto i : entities)
 		delete i;
-	}
-	for (auto i : architectures) {
+
+	for (auto i : architectures)
 		delete i;
-	}
-	for (auto i : packages) {
+
+	for (auto i : packages)
 		delete i;
-	}
-	for (auto i : packageHeaders) {
+
+	for (auto i : packageHeaders)
 		delete i;
-	}
+
+	for (auto i : variables)
+		delete i;
 }

@@ -17,8 +17,7 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 	visitPackage_declarative_part(ph, ctx->package_declarative_part());
 	return ph;
 }
-void PackageHeaderParser::visitPackage_declarative_part(
-		PackageHeader * ph,
+void PackageHeaderParser::visitPackage_declarative_part(PackageHeader * ph,
 		vhdlParser::Package_declarative_partContext* ctx) {
 	// package_declarative_part
 	// : ( package_declarative_item )*
@@ -105,8 +104,8 @@ Variable * PackageHeaderParser::visitSubtype_declaration(
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
 	auto t = ExprParser::visitSubtype_indication(ctx->subtype_indication());
-	Variable * v = new Variable(ctx->identifier()->getText(), Expr::TYPE_T(),
-			t);
+	std::shared_ptr<Expr> tt(Expr::TYPE_T());
+	Variable * v = new Variable(ctx->identifier()->getText(), tt, t);
 	return v;
 }
 

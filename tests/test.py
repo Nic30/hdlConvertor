@@ -33,14 +33,15 @@ class BasicTC(unittest.TestCase):
         f, res = dumpFile("uart.v", "verilog")
         str(res)
 
-    def test_system_verilog_mem_base_object(self):
-        f, res = dumpFile("mem_base_object.sv",  "system_verilog")
-        str(res)
+#    def test_system_verilog_mem_base_object(self):
+#        f, res = dumpFile("mem_base_object.sv",  "system_verilog")
+#        str(res)
 
 
 if __name__ == "__main__":
-    for i in range(3):
-        parseAndPrint(printNow=not (i % 2))
+    suite = unittest.TestSuite()
+    # suite.addTest(BasicTC('test_read'))
+    suite.addTest(unittest.makeSuite(BasicTC))
 
-    # for fname in system_verilog_files:
-    #    dumpFile(fname,  "system_verilog")
+    runner = unittest.TextTestRunner(verbosity=3)
+    runner.run(suite)
