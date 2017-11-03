@@ -51,7 +51,7 @@ PyObject * Symbol::toJson() const {
 	PyDict_SetItemString(d, "type",
 			PyUnicode_FromString(SymbolType_toString(type)));
 
-	PyObject * val;
+	PyObject * val = NULL;
 	size_t indx = 0;
 
 	switch (type) {
@@ -72,7 +72,6 @@ PyObject * Symbol::toJson() const {
 	case symb_ARRAY:
 		assert(value_arr);
 		val = PyList_New(value_arr->size());
-		//Py_IncRef(val);
 		for (auto symb : *value_arr) {
 			tmp = symb.toJson();
 			Py_IncRef(tmp);
@@ -85,6 +84,10 @@ PyObject * Symbol::toJson() const {
 		val = Py_None;
 		Py_INCREF(val);
 		break;
+	}
+	if (!val) {
+		val = Py_None;
+		Py_INCREF(val);
 	}
 	PyDict_SetItemString(d, "value", val);
 	return d;
