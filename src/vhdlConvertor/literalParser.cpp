@@ -33,6 +33,7 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 		}
 
 		s[s.length() - 1] = 0; // cut of "
+		s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
 		char * strVal = (char*) s.c_str() + 2; // cut off radix"
 		BigInteger val = BigInteger_fromStr(strVal, radix);
 		return new Expr(val, strlen(strVal) * bitRatio);
