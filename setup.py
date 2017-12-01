@@ -1,8 +1,8 @@
-import os
-from distutils.core import setup, Extension
-from distutils.command.build_ext import build_ext
+import distutils
 from distutils.sysconfig import customize_compiler
-import distutils.ccompiler
+import os
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 
 def path_is_parent(parent_path, child_path):
@@ -16,7 +16,8 @@ def path_is_parent(parent_path, child_path):
     # parent path will regularise the path name in the same way as the
     # comparison that deals with both paths, removing any trailing path
     # separator
-    return os.path.commonpath([parent_path]) == os.path.commonpath([parent_path, child_path])
+    return (os.path.commonpath([parent_path]) ==
+            os.path.commonpath([parent_path, child_path]))
 
 
 class buildWithoutStrictPrototypes(build_ext):
@@ -26,15 +27,21 @@ class buildWithoutStrictPrototypes(build_ext):
 
     def build_extensions(self):
         customize_compiler(self.compiler)
+        # remove strict prototypes (useless for C++)
         try:
             self.compiler.compiler_so.remove("-Wstrict-prototypes")
         except (AttributeError, ValueError):
             pass
+
+        # choose extra_compile_args for specified compiler
+        compiler = self.compiler.compiler_type
+        for ext in self.extensions:
+            ext.extra_compile_args = ext.extra_compile_args.get(compiler, [])
+
         build_ext.build_extensions(self)
 
+
 # monkey-patch for parallel compilation
-
-
 def parallelCCompile(self, sources, output_dir=None, macros=None, include_dirs=None,
                      debug=0, extra_preargs=None, extra_postargs=None, depends=None):
     # those lines are copied from distutils.ccompiler.CCompiler directly
@@ -54,6 +61,9 @@ def parallelCCompile(self, sources, output_dir=None, macros=None, include_dirs=N
     # convert to list, imap is evaluated on-demand
     list(multiprocessing.pool.ThreadPool(N).imap(_single_compile, objects))
     return objects
+
+
+distutils.ccompiler.CCompiler.compile = parallelCCompile
 
 
 def listFiles(baseDir):
@@ -76,24 +86,24 @@ def collectSourceFiles(baseDir, excludeDirs=[]):
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 BASE = os.path.join(BASE_DIR, "src/")
 ANTLR4_BASE = BASE + "antlr4-runtime-cpp/"
-ALL_SOURCE = list(collectSourceFiles(BASE, excludeDirs=[ANTLR4_BASE]))
+ALL_SOURCE = list(collectSourceFiles(BASE,
+                                     excludeDirs=[ANTLR4_BASE]))
 
 
-distutils.ccompiler.CCompiler.compile = parallelCCompile
 hdlConvertor = Extension('hdlConvertor',
                          include_dirs=[ANTLR4_BASE],
-                         extra_compile_args=['-std=c++11'],
+                         # extra_compile_args=['-std=c++11'],
+                         extra_compile_args={
+                             #'msvc': [],
+                             'gcc': ['-std=c++11'],
+                             'g++': ['-std=c++11']
+                         },
+                         define_macros=[("ANTLR4CPP_EXPORTS", 1),
+                                        ],
                          sources=ALL_SOURCE,
                          language="c++",
-                         #                   define_macros=[('ANTLR4CPP_STATIC',None)]
                          )
 
-# antlr4 = ('antlr4',
-#          {'sources': list(collectSourceFiles(ANTLR4_BASE)),
-#          'macros': [('ANTLR4CPP_STATIC', None)],
-#          'include_dirs': [ANTLR4_BASE]
-#          }
-#         )
 
 setup(cmdclass={'build_ext': buildWithoutStrictPrototypes},
       name='hdlConvertor',
@@ -104,5 +114,14 @@ setup(cmdclass={'build_ext': buildWithoutStrictPrototypes},
       author_email='michal.o.socials@gmail.com',
       # libraries=[antlr4],
       ext_modules=[hdlConvertor],
-      keywords=['vhdl', 'verilog', 'parser', 'hdl'],
-      )
+      keywords=['vhdl', 'verilog', 'system verilog', 'parser', 'hdl'],
+      classifiers=[
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'Operating System :: OS Independent',
+    'Topic :: Software Development :: Build Tools',
+    'Programming Language :: C++',
+    'Programming Language :: Python :: 3',
+],
+)
