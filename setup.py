@@ -35,6 +35,7 @@ class buildWithoutStrictPrototypes(build_ext):
 
         # choose extra_compile_args for specified compiler
         compiler = self.compiler.compiler_type
+        print("compiler:", compiler)
         for ext in self.extensions:
             extra_args = []
             for compilerPrefix, compilerArgs in ext.extra_compile_args.items():
