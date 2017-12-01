@@ -35,7 +35,6 @@ class buildWithoutStrictPrototypes(build_ext):
 
         # choose extra_compile_args for specified compiler
         compiler = self.compiler.compiler_type
-        print("compiler:", compiler)
         for ext in self.extensions:
             extra_args = []
             for compilerPrefix, compilerArgs in ext.extra_compile_args.items():
@@ -101,8 +100,7 @@ hdlConvertor = Extension('hdlConvertor',
                          # extra_compile_args=['-std=c++11'],
                          extra_compile_args={
                              #'msvc': [],
-                             'gcc': ['-std=c++11'],
-                             'g++': ['-std=c++11']
+                             'unix': ['-std=c++11'],
                          },
                          define_macros=[("ANTLR4CPP_EXPORTS", 1),
                                         ],
