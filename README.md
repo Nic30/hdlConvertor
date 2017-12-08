@@ -42,4 +42,14 @@ Currently package is testet only for python3.5 under linux but should work with 
 
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
 
+
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html)
+
+
+### Similar projects:
+
+* https://github.com/Paebbels/pyVHDLParser - python vhdl parser with 2008 support
+
+* https://github.com/kevinpt/hdlparse/ - vhdl/verilgo parser in python 
+
+* https://github.com/denisgav/v2sc - vhdl to systemc
