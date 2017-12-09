@@ -35,5 +35,13 @@ install:
   - python3 setup.py install
   #- travis_wait "python3 setup.py install"
 
+deploy:
+  provider: pypi
+  user: nic30
+  password:
+    secure: FCgfqecSK9R3htAFosBdQyXVTmocJZVvGgvwSLI6++AVFQ60b3l9erGZmTT+L0E2vCDCVmCG0uH/QNjdna16AAhDHjt4CUx6DN11OXy9Z2suBFb2yW7XcAEI2p7m3mJnBkqRRWUURwgwn9UH7p/kJg3kCN43/wvnNuTdmE+OHuTcwrYi8J9J4yrcmGn5uGtrXbo7vWK5Y/C5hzt1XqqbLZQl4ad2UEIj5EoU41yakNN+zeDnf88rqyup4FbNeJUT46YzHd8k2TkwGvoX7p8wHJoy1kfXWtdqtenT7kfDHqVf4yO9docZbgg/2DVKheVuOxnH2HjlE4P6EJHbN/LzvZM7OKzuKFwytoYvedQivGi1bNbr7cfogXx2xf2iU+MR5IX8JQ50VTmh5BsDHofYALNKSBSrtGaQfHfihF8OKANL7AH5Qjuc1lc6hWDyioenMAo5abUcYq5bry5ZrT1NP5eCuPmLltFG2zLiYWlmr/AOjP709mI6ys519ocX4Ga2U4WDnhsyyTv8H1eSvu71e5afXgIY+Zf2rVTbImBk4NyuGMezRfcwZJWnjvYHanfQ62uFkaBQIRhM8iwf+hfpI+S4pQ/jx04pJxSLYrmQLQZnq76dNnUJUqTZotsut5EsUOG+cIqa9xT8INpde/h+cYqlpgeykvge5PmM8LDSkh0=
+  on:
+    branch: master
+
 # command to run tests
 script: nosetests
