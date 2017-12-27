@@ -35,7 +35,7 @@ for e in res['entities']:
 ```
 
 
-Currently package is testet only for python3.5 under linux but should work with every python3.x on any system where is compiler with c++11 support.
+Currently package is tested only for python3.5+ (python3.6 or latest recomended) under Linux but should work with every python3.x on any system where is compiler with c++11 support (=on Windows/Mac as well). 
 
 ### Supported languages:
 
@@ -51,6 +51,6 @@ Currently package is testet only for python3.5 under linux but should work with 
 
 * https://github.com/Paebbels/pyVHDLParser - python vhdl parser with 2008 support
 
-* https://github.com/kevinpt/hdlparse/ - vhdl/verilgo parser in python 
+* https://github.com/kevinpt/hdlparse/ - vhdl/verilog parser in python 
 
 * https://github.com/denisgav/v2sc - vhdl to systemc
