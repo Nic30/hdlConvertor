@@ -15,7 +15,7 @@ In python all parsed stuff are just dictionaries and values.
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 This project was extracted from https://github.com/Nic30/HWToolkit.
-There is also Java version. But it seems that there is no use for it when there is a C++ version.
+There is also Java version. But it seems that there is no use for it.
 
 This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library known to me.
 To make your live easier I included it to this package for you.
