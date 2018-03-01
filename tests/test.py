@@ -21,12 +21,16 @@ class BasicTC(unittest.TestCase):
         f, res = dumpFile("mux.vhd", "vhdl")
         str(res)
 
-    def test_vhdl_package_example(self):
-        f, res = dumpFile("package_example.vhd", "vhdl")
+    def test_vhdl_package_array_const(self):
+        f, res = dumpFile("package_array_const.vhd", "vhdl")
         str(res)
 
-    def test_vhdl_stcu_integr_pkg(self):
-        f, res = dumpFile("stcu_integr_pkg.vhd", "vhdl")
+    def test_vhdl_package_component(self):
+        f, res = dumpFile("package_component.vhd", "vhdl")
+        str(res)
+
+    def test_vhdl_package_constants(self):
+        f, res = dumpFile("package_constants.vhd", "vhdl")
         str(res)
 
     def test_verilog_uart(self):
