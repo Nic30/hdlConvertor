@@ -1,9 +1,6 @@
-# if trusty is not used compilation is killed (out or mem)
 sudo: required
 dist: trusty
-
 language: python
-
 python:
   - '3.5'
   - '3.6'
@@ -32,8 +29,12 @@ env: CC=g++-5 CXX=g++-5
 
 # command to install dependencies
 install:
-  - python3 setup.py install
-  #- travis_wait "python3 setup.py install"
-
-# command to run tests
+- python3 setup.py install
+deploy:
+  provider: pypi
+  user: nic30
+  password:
+    secure: jMuoFXUX5kopaE0ezjl6NUtxAmr8SyKpRyqZQtv3TISOCCmyenqeMR3EVckEsslC5NpQOVDQHagevooo2Ysfpu6WaFll+QJgkvB7yvt3ZHNcXj9YITTpjJNmPF58jch5cjb+kFvMvPnvOnbasBtB+KRiV4tmGRXrgP0Qg7mamVnafo3Krq0OY5hAE+fK2WhFfkyZ8xdo1M794mHf9fIRcmT9c9D8cMatYjjbq724g3OJ8wlIWxDfoa012D+G2IdZOd5+aMkNMOPd504ZnUj40T39kVsgXv0kIx42Y/Wz4Om53UT2GwTBllERq4u5nDB6A4NiVTwpx4g9+r6rCjIBtX11bRgMaDCp7Jdn6KWOsKhvQtU4u2ZGUdIRCrIoJj0NInCfedKnF0FqYA4BC7HgbFCIUnpyKxR/uU0Vz7tD/jW4vP5tr4PcgQ2eTRM5eVJZ3dYoxzlFh2MzmjXA4+MamFVCRjmzDdvaBafEvYlyUUq0D2MQ2hMwjyNlcEIKW4eOi2LaVgdwJsKbDQHc66oVDQRRYu77yFW9XGhwFoTEn0km5TTVah0d9JwvqVzWo4R33FexuthR7pHQbIe7Shw6HKpV6JfbLtvYSLLBXK8UGlW7PXYQtAZN81fwZzXd+2RwCr8otJeGzNIHug0HjK4S0CYCx4HNi0qHXOl5B+DiPuw=
+  on:
+    branch: master
 script: nosetests

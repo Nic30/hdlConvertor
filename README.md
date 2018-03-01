@@ -1,5 +1,6 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
+[![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor) 
 (!!! Note that because of system verilog support it requires 3GB of RAM to build this and build tooks ~3min !!!)
 
 
@@ -14,7 +15,7 @@ In python all parsed stuff are just dictionaries and values.
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 This project was extracted from https://github.com/Nic30/HWToolkit.
-There is also Java version. But it seems that there is no use for it when there is a C++ version.
+There is also Java version. But it seems that there is no use for it.
 
 This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library known to me.
 To make your live easier I included it to this package for you.
@@ -34,7 +35,7 @@ for e in res['entities']:
 ```
 
 
-Currently package is testet only for python3.5 under linux but should work with every python3.x on any system where is compiler with c++11 support.
+Currently package is tested only for python3.5+ (python3.6 or latest recomended) under Linux but should work with every python3.x on any system where is compiler with c++11 support (=on Windows/Mac as well). 
 
 ### Supported languages:
 
@@ -42,4 +43,14 @@ Currently package is testet only for python3.5 under linux but should work with 
 
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
 
+
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html)
+
+
+### Similar projects:
+
+* https://github.com/Paebbels/pyVHDLParser - python vhdl parser with 2008 support
+
+* https://github.com/kevinpt/hdlparse/ - vhdl/verilog parser in python 
+
+* https://github.com/denisgav/v2sc - vhdl to systemc
