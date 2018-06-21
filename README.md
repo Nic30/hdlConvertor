@@ -1,6 +1,7 @@
 # hdlConvertor
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
-[![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor) 
+[![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
+
 (!!! Note that because of system verilog support it requires 3GB of RAM to build this and build tooks ~3min !!!)
 
 
