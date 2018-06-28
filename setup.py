@@ -22,7 +22,7 @@ def path_is_parent(parent_path, child_path):
 
 class buildWithoutStrictPrototypes(build_ext):
     """
-    Sorce code of this library is written in c++ strict-prototypes does not make sence for c++ compilation
+    Source code of this library is written in c++ strict-prototypes does not make sense for c++ compilation
     """
 
     def build_extensions(self):
