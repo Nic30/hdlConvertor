@@ -61,32 +61,6 @@ add_custom_target(generateParsers
   ${PROJECT_SOURCE_DIR}/src/vpp/vppListener.cpp
 )
 
-#add_custom_target(generateParsers
-#	#	COMMAND
-#	#${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/src/VerilogParser
-#	#COMMAND
-#	#${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/src/VhdlParser
-#	COMMAND
-#	${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/src/vpp
-#	#COMMAND
-#	#"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -no-listener -package vhdl -o ${PROJECT_SOURCE_DIR}/src/VhdlParser ${PROJECT_SOURCE_DIR}/vhdl.g4
-#	#WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-#	#DEPENDS ${PROJECT_SOURCE_DIR}/vhdl.g4
-#	#COMMAND
-#	#"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -no-listener -package verilog -o ${PROJECT_SOURCE_DIR}/src/VerilogParser ${PROJECT_SOURCE_DIR}/Verilog2001.g4
-#	#WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-#	#DEPENDS ${PROJECT_SOURCE_DIR}/Verilog2001.g4
-#	COMMAND
-#	"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -o ${PROJECT_SOURCE_DIR}/src/vpp ${PROJECT_SOURCE_DIR}/vpp.g4
-#   	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-#   	DEPENDS ${PROJECT_SOURCE_DIR}/vpp.g4
-#	COMMAND
-#	"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -o ${PROJECT_SOURCE_DIR}/src/vpp ${PROJECT_SOURCE_DIR}/symbol.g4
-#   	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-#   	DEPENDS ${PROJECT_SOURCE_DIR}/symbol.g4
-#)
-
-
 
 file(GLOB libhdlconvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/hdlObjects/*.cpp"
@@ -108,11 +82,7 @@ cython_add_module(
   ${generateParsers_GENERATED_SRC}
 	)
 
-#add_library(antlr4-runtime SHARED IMPORTED)
-#target_link_libraries(hdlConvertor antlr4-runtime)
 add_dependencies(hdlConvertor generateParsers)
-#target_link_libraries(hdlConvertor ${LIBANTLR4_RUNTIME} ${LIBPARSERSV_RUNTIME})
-#target_link_libraries(hdlConvertor antlr4-runtime parsesv)
 target_link_libraries(hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
 set_target_properties(hdlConvertor
 	PROPERTIES VERSION "1.0.0"
