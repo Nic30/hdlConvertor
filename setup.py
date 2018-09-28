@@ -3,6 +3,7 @@ from distutils.sysconfig import customize_compiler
 import os
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
+import multiprocessing.pool
 
 
 def path_is_parent(parent_path, child_path):
@@ -54,7 +55,6 @@ def parallelCCompile(self, sources, output_dir=None, macros=None, include_dirs=N
         output_dir, macros, include_dirs, sources, depends, extra_postargs)
     cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
     # parallel code
-    import multiprocessing.pool
     N = multiprocessing.cpu_count()  # number of parallel compilations
 
     def _single_compile(obj):
@@ -79,8 +79,9 @@ def listFiles(baseDir):
 
 def collectSourceFiles(baseDir, excludeDirs=[]):
     for file in listFiles(baseDir):
-        if (file.endswith(".c") or file.endswith(".cpp"))\
-                and not file.endswith("main.c"):
+        if file.endswith(".c") or file.endswith(".cpp"):
+            if file.endswith("main.cpp"):
+                continue
             # skip all files in exclude dirs
             for d in excludeDirs:
                 if path_is_parent(d, file):
@@ -97,7 +98,6 @@ ALL_SOURCE = list(collectSourceFiles(BASE,
 
 hdlConvertor = Extension('hdlConvertor',
                          include_dirs=[ANTLR4_BASE],
-                         # extra_compile_args=['-std=c++11'],
                          extra_compile_args={
                              #'msvc': [],
                              'unix': ['-std=c++11'],
