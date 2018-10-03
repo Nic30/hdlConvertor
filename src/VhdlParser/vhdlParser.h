@@ -1,5 +1,5 @@
 
-// Generated from grammars/vhdl.g4 by ANTLR 4.7
+// Generated from /home/tom/prog/git/hdlConvertor/grammars/vhdl.g4 by ANTLR 4.7.1
 
 #pragma once
 

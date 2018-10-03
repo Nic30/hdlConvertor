@@ -1,10 +1,10 @@
+
 ##############################################################################################
 
 find_library( LIBANTLR4_RUNTIME NAMES antlr4-runtime PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
 find_library( LIBPARSERSV_RUNTIME NAMES parsesv PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
 find_library( LIBPARSERVERILOG_RUNTIME NAMES parseVerilog PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
 find_library( LIBPARSERVHDL_RUNTIME NAMES parseVhdl PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
-
 include_directories(
   ${HDLCONVERTOR_SOURCE_DIR}/src
 )
@@ -61,7 +61,6 @@ add_custom_target(generateParsers
   ${PROJECT_SOURCE_DIR}/src/vpp/vppListener.cpp
 )
 
-
 file(GLOB libhdlconvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/hdlObjects/*.cpp"
   "${HDLCONVERTOR_SOURCE_DIR}/src/baseHdlParser/*.cpp"
@@ -70,27 +69,19 @@ file(GLOB libhdlconvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/*.cpp"
 )
 
-set_source_files_properties(
-	${HDLCONVERTOR_SOURCE_DIR}/src/hdlConvertor.pyx
-	PROPERTIES CYTHON_IS_CXX TRUE
-	)
+add_cython_target(_hdlConvertor CXX)
+add_library(_hdlConvertor MODULE ${_hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
+add_dependencies(_hdlConvertor generateParsers)
+python_extension_module(_hdlConvertor)
 
-cython_add_module(
-  hdlConvertor
-  ${HDLCONVERTOR_SOURCE_DIR}/src/hdlConvertor.pyx
-  ${libhdlconvertor_SRC}
-  ${generateParsers_GENERATED_SRC}
-	)
-
-add_dependencies(hdlConvertor generateParsers)
-target_link_libraries(hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
-set_target_properties(hdlConvertor
+target_link_libraries(_hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
+#target_link_libraries(_hdlConvertor antlr4_shared parsersVerilog_shared )
+set_target_properties(_hdlConvertor
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME hdlConvertor
         LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
 	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
 )
-
 add_subdirectory(svConverter)
 add_subdirectory(verilogConvertor)
 add_subdirectory(vhdlConvertor)
