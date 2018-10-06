@@ -70,8 +70,7 @@ file(GLOB libhdlconvertor_SRC
 )
 
 add_cython_target(hdlConvertor CXX)
-#add_library(hdlConvertor MODULE ${hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
-add_library(hdlConvertor SHARED ${hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
+add_library(hdlConvertor MODULE ${hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
 add_dependencies(hdlConvertor generateParsers)
 python_extension_module(hdlConvertor)
 
