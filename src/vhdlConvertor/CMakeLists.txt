@@ -49,12 +49,12 @@ set(parseVhdl_SRC
   ${generateParsersVhdl_GENERATED_SRC}
 )
 
-add_library(parsersVhdl_shared SHARED ${parseVhdl_SRC})
-add_dependencies(parsersVhdl_shared generateParsersVhdl)
-set_target_properties(parsersVhdl_shared
+add_library(parsersVhdl_static STATIC ${parseVhdl_SRC})
+add_dependencies(parsersVhdl_static generateParsersVhdl)
+#target_link_libraries(parsersVhdl_static antlr4_shared)
+set_target_properties(parsersVhdl_static
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME parseVhdl
-        LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+	POSITION_INDEPENDENT_CODE ON
 )
 

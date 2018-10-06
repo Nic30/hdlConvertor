@@ -49,11 +49,11 @@ set(parseVerilog_SRC
   ${libparserVerilog_SRC}
   ${generateParsersVerilog_GENERATED_SRC}
 )
-add_library(parsersVerilog_shared SHARED ${parseVerilog_SRC})
-add_dependencies(parsersVerilog_shared generateParsersVerilog)
-set_target_properties(parsersVerilog_shared
+add_library(parsersVerilog_static STATIC ${parseVerilog_SRC})
+add_dependencies(parsersVerilog_static generateParsersVerilog)
+#target_link_libraries(parsersVerilog_static antlr4_shared)
+set_target_properties(parsersVerilog_static
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME parseVerilog
-        LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+	POSITION_INDEPENDENT_CODE ON
 )

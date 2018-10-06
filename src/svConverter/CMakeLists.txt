@@ -47,11 +47,11 @@ set(parseSV_SRC
   ${libparserSV_SRC}
   ${generateParsersSV_GENERATED_SRC}
 )
-add_library(parsersSV_shared SHARED ${parseSV_SRC})
-add_dependencies(parsersSV_shared generateParsersSV)
-set_target_properties(parsersSV_shared
+add_library(parsersSV_static STATIC ${parseSV_SRC})
+add_dependencies(parsersSV_static generateParsersSV)
+#target_link_libraries(parsersSV_static antlr4_shared)
+set_target_properties(parsersSV_static
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME parsesv
-        LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+	POSITION_INDEPENDENT_CODE ON
 )

@@ -1,10 +1,6 @@
 
 ##############################################################################################
 
-find_library( LIBANTLR4_RUNTIME NAMES antlr4-runtime PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
-find_library( LIBPARSERSV_RUNTIME NAMES parsesv PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
-find_library( LIBPARSERVERILOG_RUNTIME NAMES parseVerilog PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
-find_library( LIBPARSERVHDL_RUNTIME NAMES parseVhdl PATHS "${HDLCONVERTOR_SOURCE_DIR}/dist")
 include_directories(
   ${HDLCONVERTOR_SOURCE_DIR}/src
 )
@@ -74,14 +70,18 @@ add_library(hdlConvertor MODULE ${hdlConvertor} ${libhdlconvertor_SRC} ${generat
 add_dependencies(hdlConvertor generateParsers)
 python_extension_module(hdlConvertor)
 
-target_link_libraries(hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
+target_link_libraries(hdlConvertor antlr4_static parsersSV_static parsersVerilog_static parsersVhdl_static)
 #target_link_libraries(hdlConvertor antlr4_shared parsersVerilog_shared )
 set_target_properties(hdlConvertor
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME hdlConvertor
-        LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/hdlConvertor"
+	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/hdlConvertor"
 )
+
+install(FILES $<TARGET_FILE:hdlConvertor>
+	DESTINATION .)
+
 add_subdirectory(svConverter)
 add_subdirectory(verilogConvertor)
 add_subdirectory(vhdlConvertor)

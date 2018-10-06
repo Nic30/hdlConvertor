@@ -89,5 +89,5 @@ install(FILES ../../LICENSE.txt
     DESTINATION "share/doc/libantlr4")
 endif()
 
-install(FILES README.md VERSION 
-    DESTINATION "share/doc/libantlr4")
+#install(FILES README.md VERSION 
+#    DESTINATION "share/doc/libantlr4")

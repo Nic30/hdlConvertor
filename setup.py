@@ -21,5 +21,6 @@ cmake_args= [
         'Programming Language :: C++',
         'Programming Language :: Python :: 3',
     ],
-    packages=['hdlConvertor']
+    packages=['hdlConvertor'],
+    #package_dir={'hdlConvertor':['hdlConvertor']}
 )
