@@ -2871,9 +2871,8 @@ conditional_expression : cond_predicate '?'  ( attribute_instance )*  expression
 ;
 
 constant_expression :
-//constant_primary [TODO]
-//|
- unary_operator  ( attribute_instance )*  constant_primary
+constant_primary
+| unary_operator  ( attribute_instance )*  constant_primary
 | constant_expression binary_operator  ( attribute_instance )*  constant_expression
 | constant_expression '?'  ( attribute_instance )*  constant_expression ':' constant_expression
 ;
@@ -2972,9 +2971,8 @@ genvar_expression : constant_expression
 // A.8.4 Primaries
 
 constant_primary :
-//primary_literal  // [TODO]
-//|
- ps_parameter_identifier constant_select
+primary_literal
+| ps_parameter_identifier constant_select
 | specparam_identifier ( '[' constant_range_expression ']' )?
 | genvar_identifier
 | formal_port_identifier constant_select
