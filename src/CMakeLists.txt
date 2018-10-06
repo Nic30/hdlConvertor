@@ -69,14 +69,15 @@ file(GLOB libhdlconvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/*.cpp"
 )
 
-add_cython_target(_hdlConvertor CXX)
-add_library(_hdlConvertor MODULE ${_hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
-add_dependencies(_hdlConvertor generateParsers)
-python_extension_module(_hdlConvertor)
+add_cython_target(hdlConvertor CXX)
+#add_library(hdlConvertor MODULE ${hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
+add_library(hdlConvertor SHARED ${hdlConvertor} ${libhdlconvertor_SRC} ${generateParsers_GENERATED_SRC} )
+add_dependencies(hdlConvertor generateParsers)
+python_extension_module(hdlConvertor)
 
-target_link_libraries(_hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
-#target_link_libraries(_hdlConvertor antlr4_shared parsersVerilog_shared )
-set_target_properties(_hdlConvertor
+target_link_libraries(hdlConvertor antlr4_shared parsersSV_shared parsersVerilog_shared parsersVhdl_shared)
+#target_link_libraries(hdlConvertor antlr4_shared parsersVerilog_shared )
+set_target_properties(hdlConvertor
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME hdlConvertor
         LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
