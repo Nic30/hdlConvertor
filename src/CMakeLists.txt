@@ -75,8 +75,8 @@ target_link_libraries(hdlConvertor antlr4_static parsersSV_static parsersVerilog
 set_target_properties(hdlConvertor
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME hdlConvertor
-	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/hdlConvertor"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/hdlConvertor"
+	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
 )
 
 install(FILES $<TARGET_FILE:hdlConvertor>
