@@ -1,5 +1,5 @@
 
-// Generated from grammars/Verilog2001.g4 by ANTLR 4.7
+// Generated from /home/tom/prog/git/hdlConvertor/grammars/Verilog2001.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -158,7 +158,7 @@ public:
 
     virtual antlrcpp::Any visitDimension(Verilog2001Parser::DimensionContext *context) = 0;
 
-    virtual antlrcpp::Any visitRange(Verilog2001Parser::RangeContext *context) = 0;
+    virtual antlrcpp::Any visitRange_(Verilog2001Parser::Range_Context *context) = 0;
 
     virtual antlrcpp::Any visitFunction_declaration(Verilog2001Parser::Function_declarationContext *context) = 0;
 
@@ -537,8 +537,6 @@ public:
     virtual antlrcpp::Any visitBinary_module_path_operator(Verilog2001Parser::Binary_module_path_operatorContext *context) = 0;
 
     virtual antlrcpp::Any visitNumber(Verilog2001Parser::NumberContext *context) = 0;
-
-    virtual antlrcpp::Any visitDefault_nettype_spec(Verilog2001Parser::Default_nettype_specContext *context) = 0;
 
     virtual antlrcpp::Any visitTiming_spec(Verilog2001Parser::Timing_specContext *context) = 0;
 

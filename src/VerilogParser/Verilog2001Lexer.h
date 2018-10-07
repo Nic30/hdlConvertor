@@ -1,5 +1,5 @@
 
-// Generated from grammars/Verilog2001.g4 by ANTLR 4.7
+// Generated from /home/tom/prog/git/hdlConvertor/grammars/Verilog2001.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -42,11 +42,11 @@ public:
     T__149 = 150, T__150 = 151, T__151 = 152, T__152 = 153, T__153 = 154, 
     T__154 = 155, T__155 = 156, T__156 = 157, T__157 = 158, T__158 = 159, 
     T__159 = 160, T__160 = 161, T__161 = 162, T__162 = 163, T__163 = 164, 
-    T__164 = 165, T__165 = 166, T__166 = 167, Real_number = 168, Decimal_number = 169, 
-    Binary_number = 170, Octal_number = 171, Hex_number = 172, String = 173, 
-    One_line_comment = 174, Block_comment = 175, Escaped_identifier = 176, 
-    Simple_identifier = 177, Dollar_Identifier = 178, Time_Identifier = 179, 
-    White_space = 180
+    T__164 = 165, T__165 = 166, Real_number = 167, Decimal_number = 168, 
+    Binary_number = 169, Octal_number = 170, Hex_number = 171, String = 172, 
+    One_line_comment = 173, Block_comment = 174, Escaped_identifier = 175, 
+    Simple_identifier = 176, Dollar_Identifier = 177, Time_Identifier = 178, 
+    White_space = 179
   };
 
   Verilog2001Lexer(antlr4::CharStream *input);

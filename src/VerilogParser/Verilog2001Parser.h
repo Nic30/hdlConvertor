@@ -1,5 +1,5 @@
 
-// Generated from grammars/Verilog2001.g4 by ANTLR 4.7
+// Generated from /home/tom/prog/git/hdlConvertor/grammars/Verilog2001.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -42,11 +42,11 @@ public:
     T__149 = 150, T__150 = 151, T__151 = 152, T__152 = 153, T__153 = 154, 
     T__154 = 155, T__155 = 156, T__156 = 157, T__157 = 158, T__158 = 159, 
     T__159 = 160, T__160 = 161, T__161 = 162, T__162 = 163, T__163 = 164, 
-    T__164 = 165, T__165 = 166, T__166 = 167, Real_number = 168, Decimal_number = 169, 
-    Binary_number = 170, Octal_number = 171, Hex_number = 172, String = 173, 
-    One_line_comment = 174, Block_comment = 175, Escaped_identifier = 176, 
-    Simple_identifier = 177, Dollar_Identifier = 178, Time_Identifier = 179, 
-    White_space = 180
+    T__164 = 165, T__165 = 166, Real_number = 167, Decimal_number = 168, 
+    Binary_number = 169, Octal_number = 170, Hex_number = 171, String = 172, 
+    One_line_comment = 173, Block_comment = 174, Escaped_identifier = 175, 
+    Simple_identifier = 176, Dollar_Identifier = 177, Time_Identifier = 178, 
+    White_space = 179
   };
 
   enum {
@@ -74,15 +74,15 @@ public:
     RuleList_of_variable_port_identifiers = 60, RuleNet_decl_assignment = 61, 
     RuleParam_assignment = 62, RuleSpecparam_assignment = 63, RulePulse_control_specparam = 64, 
     RuleError_limit_value = 65, RuleReject_limit_value = 66, RuleLimit_value = 67, 
-    RuleDimension = 68, RuleRange = 69, RuleFunction_declaration = 70, RuleFunction_item_declaration = 71, 
-    RuleFunction_port_list = 72, RuleFunction_port = 73, RuleRange_or_type = 74, 
-    RuleTask_declaration = 75, RuleTask_item_declaration = 76, RuleTask_port_list = 77, 
-    RuleTask_port_item = 78, RuleTf_decl_header = 79, RuleTf_declaration = 80, 
-    RuleTask_port_type = 81, RuleBlock_item_declaration = 82, RuleBlock_reg_declaration = 83, 
-    RuleList_of_block_variable_identifiers = 84, RuleBlock_variable_type = 85, 
-    RuleGate_instantiation = 86, RuleCmos_switch_instance = 87, RuleEnable_gate_instance = 88, 
-    RuleMos_switch_instance = 89, RuleN_input_gate_instance = 90, RuleN_output_gate_instance = 91, 
-    RulePass_switch_instance = 92, RulePass_enable_switch_instance = 93, 
+    RuleDimension = 68, RuleRange_ = 69, RuleFunction_declaration = 70, 
+    RuleFunction_item_declaration = 71, RuleFunction_port_list = 72, RuleFunction_port = 73, 
+    RuleRange_or_type = 74, RuleTask_declaration = 75, RuleTask_item_declaration = 76, 
+    RuleTask_port_list = 77, RuleTask_port_item = 78, RuleTf_decl_header = 79, 
+    RuleTf_declaration = 80, RuleTask_port_type = 81, RuleBlock_item_declaration = 82, 
+    RuleBlock_reg_declaration = 83, RuleList_of_block_variable_identifiers = 84, 
+    RuleBlock_variable_type = 85, RuleGate_instantiation = 86, RuleCmos_switch_instance = 87, 
+    RuleEnable_gate_instance = 88, RuleMos_switch_instance = 89, RuleN_input_gate_instance = 90, 
+    RuleN_output_gate_instance = 91, RulePass_switch_instance = 92, RulePass_enable_switch_instance = 93, 
     RulePull_gate_instance = 94, RuleName_of_gate_instance = 95, RulePulldown_strength = 96, 
     RulePullup_strength = 97, RuleEnable_terminal = 98, RuleNcontrol_terminal = 99, 
     RulePcontrol_terminal = 100, RuleInput_terminal = 101, RuleInout_terminal = 102, 
@@ -146,26 +146,26 @@ public:
     RuleConstant_primary = 249, RuleModule_path_primary = 250, RulePrimary = 251, 
     RuleNet_lvalue = 252, RuleVariable_lvalue = 253, RuleUnary_operator = 254, 
     RuleBinary_operator = 255, RuleUnary_module_path_operator = 256, RuleBinary_module_path_operator = 257, 
-    RuleNumber = 258, RuleDefault_nettype_spec = 259, RuleTiming_spec = 260, 
-    RuleAttribute_instance = 261, RuleAttr_spec = 262, RuleAttr_name = 263, 
-    RuleArrayed_identifier = 264, RuleBlock_identifier = 265, RuleCell_identifier = 266, 
-    RuleConfig_identifier = 267, RuleEscaped_arrayed_identifier = 268, RuleEscaped_hierarchical_identifier = 269, 
-    RuleEvent_identifier = 270, RuleFunction_identifier = 271, RuleGate_instance_identifier = 272, 
-    RuleGenerate_block_identifier = 273, RuleGenvar_function_identifier = 274, 
-    RuleGenvar_identifier = 275, RuleHierarchical_block_identifier = 276, 
-    RuleHierarchical_event_identifier = 277, RuleHierarchical_function_identifier = 278, 
-    RuleHierarchical_identifier = 279, RuleHierarchical_net_identifier = 280, 
-    RuleHierarchical_variable_identifier = 281, RuleHierarchical_task_identifier = 282, 
-    RuleIdentifier = 283, RuleInout_port_identifier = 284, RuleInput_port_identifier = 285, 
-    RuleInstance_identifier = 286, RuleLibrary_identifier = 287, RuleMemory_identifier = 288, 
-    RuleModule_identifier = 289, RuleModule_instance_identifier = 290, RuleNet_identifier = 291, 
-    RuleOutput_port_identifier = 292, RuleParameter_identifier = 293, RulePort_identifier = 294, 
-    RuleReal_identifier = 295, RuleSimple_arrayed_identifier = 296, RuleSimple_hierarchical_identifier = 297, 
-    RuleSpecparam_identifier = 298, RuleSystem_function_identifier = 299, 
-    RuleSystem_task_identifier = 300, RuleTask_identifier = 301, RuleTerminal_identifier = 302, 
-    RuleText_macro_identifier = 303, RuleTopmodule_identifier = 304, RuleUdp_identifier = 305, 
-    RuleUdp_instance_identifier = 306, RuleVariable_identifier = 307, RuleSimple_hierarchical_branch = 308, 
-    RuleEscaped_hierarchical_branch = 309
+    RuleNumber = 258, RuleTiming_spec = 259, RuleAttribute_instance = 260, 
+    RuleAttr_spec = 261, RuleAttr_name = 262, RuleArrayed_identifier = 263, 
+    RuleBlock_identifier = 264, RuleCell_identifier = 265, RuleConfig_identifier = 266, 
+    RuleEscaped_arrayed_identifier = 267, RuleEscaped_hierarchical_identifier = 268, 
+    RuleEvent_identifier = 269, RuleFunction_identifier = 270, RuleGate_instance_identifier = 271, 
+    RuleGenerate_block_identifier = 272, RuleGenvar_function_identifier = 273, 
+    RuleGenvar_identifier = 274, RuleHierarchical_block_identifier = 275, 
+    RuleHierarchical_event_identifier = 276, RuleHierarchical_function_identifier = 277, 
+    RuleHierarchical_identifier = 278, RuleHierarchical_net_identifier = 279, 
+    RuleHierarchical_variable_identifier = 280, RuleHierarchical_task_identifier = 281, 
+    RuleIdentifier = 282, RuleInout_port_identifier = 283, RuleInput_port_identifier = 284, 
+    RuleInstance_identifier = 285, RuleLibrary_identifier = 286, RuleMemory_identifier = 287, 
+    RuleModule_identifier = 288, RuleModule_instance_identifier = 289, RuleNet_identifier = 290, 
+    RuleOutput_port_identifier = 291, RuleParameter_identifier = 292, RulePort_identifier = 293, 
+    RuleReal_identifier = 294, RuleSimple_arrayed_identifier = 295, RuleSimple_hierarchical_identifier = 296, 
+    RuleSpecparam_identifier = 297, RuleSystem_function_identifier = 298, 
+    RuleSystem_task_identifier = 299, RuleTask_identifier = 300, RuleTerminal_identifier = 301, 
+    RuleText_macro_identifier = 302, RuleTopmodule_identifier = 303, RuleUdp_identifier = 304, 
+    RuleUdp_instance_identifier = 305, RuleVariable_identifier = 306, RuleSimple_hierarchical_branch = 307, 
+    RuleEscaped_hierarchical_branch = 308
   };
 
   Verilog2001Parser(antlr4::TokenStream *input);
@@ -247,7 +247,7 @@ public:
   class Reject_limit_valueContext;
   class Limit_valueContext;
   class DimensionContext;
-  class RangeContext;
+  class Range_Context;
   class Function_declarationContext;
   class Function_item_declarationContext;
   class Function_port_listContext;
@@ -437,7 +437,6 @@ public:
   class Unary_module_path_operatorContext;
   class Binary_module_path_operatorContext;
   class NumberContext;
-  class Default_nettype_specContext;
   class Timing_specContext;
   class Attribute_instanceContext;
   class Attr_specContext;
@@ -617,8 +616,6 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EOF();
     Timing_specContext *timing_spec();
-    std::vector<Default_nettype_specContext *> default_nettype_spec();
-    Default_nettype_specContext* default_nettype_spec(size_t i);
     std::vector<DescriptionContext *> description();
     DescriptionContext* description(size_t i);
 
@@ -865,7 +862,7 @@ public:
     Local_parameter_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     List_of_param_assignmentsContext *list_of_param_assignments();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -890,7 +887,7 @@ public:
     Parameter_declaration_Context(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     List_of_param_assignmentsContext *list_of_param_assignments();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -903,7 +900,7 @@ public:
     Specparam_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     List_of_specparam_assignmentsContext *list_of_specparam_assignments();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -917,7 +914,7 @@ public:
     virtual size_t getRuleIndex() const override;
     List_of_port_identifiersContext *list_of_port_identifiers();
     Net_typeContext *net_type();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -931,7 +928,7 @@ public:
     virtual size_t getRuleIndex() const override;
     List_of_port_identifiersContext *list_of_port_identifiers();
     Net_typeContext *net_type();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -945,7 +942,7 @@ public:
     virtual size_t getRuleIndex() const override;
     List_of_port_identifiersContext *list_of_port_identifiers();
     Net_typeContext *net_type();
-    RangeContext *range();
+    Range_Context *range_();
     List_of_variable_port_identifiersContext *list_of_variable_port_identifiers();
     Output_variable_typeContext *output_variable_type();
 
@@ -1032,7 +1029,7 @@ public:
     Reg_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     List_of_variable_identifiersContext *list_of_variable_identifiers();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -1050,7 +1047,7 @@ public:
     List_of_net_decl_assignmentsContext *list_of_net_decl_assignments();
     Drive_strengthContext *drive_strength();
     Charge_strengthContext *charge_strength();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -1437,9 +1434,9 @@ public:
 
   DimensionContext* dimension();
 
-  class  RangeContext : public antlr4::ParserRuleContext {
+  class  Range_Context : public antlr4::ParserRuleContext {
   public:
-    RangeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    Range_Context(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Msb_constant_expressionContext *msb_constant_expression();
     Lsb_constant_expressionContext *lsb_constant_expression();
@@ -1448,7 +1445,7 @@ public:
    
   };
 
-  RangeContext* range();
+  Range_Context* range_();
 
   class  Function_declarationContext : public antlr4::ParserRuleContext {
   public:
@@ -1513,7 +1510,7 @@ public:
   public:
     Range_or_typeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -1586,7 +1583,7 @@ public:
     Tf_decl_headerContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Net_typeContext *net_type();
-    RangeContext *range();
+    Range_Context *range_();
     Task_port_typeContext *task_port_type();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -1645,7 +1642,7 @@ public:
     Block_reg_declarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     List_of_block_variable_identifiersContext *list_of_block_variable_identifiers();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -1842,7 +1839,7 @@ public:
     Name_of_gate_instanceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Gate_instance_identifierContext *gate_instance_identifier();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -2110,7 +2107,7 @@ public:
     Name_of_instanceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     Module_instance_identifierContext *module_instance_identifier();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -4066,18 +4063,6 @@ public:
 
   NumberContext* number();
 
-  class  Default_nettype_specContext : public antlr4::ParserRuleContext {
-  public:
-    Default_nettype_specContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    IdentifierContext *identifier();
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  Default_nettype_specContext* default_nettype_spec();
-
   class  Timing_specContext : public antlr4::ParserRuleContext {
   public:
     Timing_specContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -4183,7 +4168,7 @@ public:
     Escaped_arrayed_identifierContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Escaped_identifier();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -4525,7 +4510,7 @@ public:
     Simple_arrayed_identifierContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Simple_identifier();
-    RangeContext *range();
+    Range_Context *range_();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
