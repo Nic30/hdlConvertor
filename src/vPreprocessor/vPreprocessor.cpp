@@ -75,7 +75,7 @@ void vPreprocessor::enterToken_id(vppParser::Token_idContext * ctx) {
 	misc::Interval token = ctx->getSourceInterval();
 
 	_rewriter->replace(
-				token.a-1,
+				token.a,
 				token.b,
 				replacement);
 }
