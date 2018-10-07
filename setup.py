@@ -3,7 +3,7 @@ from os import path
 
 setup(
 cmake_args= [
-'-DANTLR_JAR_LOCATION='+path.abspath('antlr4/antlr-4.7-complete.jar')
+'-DANTLR_JAR_LOCATION='+path.abspath('antlr4/antlr-4.7.1-complete.jar')
 ],
     name='hdlConvertor',
     version='1.1',
