@@ -111,7 +111,7 @@ hdlConvertor = Extension('hdlConvertor',
 
 setup(
     name='hdlConvertor',
-    version='1.1',
+    version='1.2',
     description='Vhdl and verilog parser written in c++, this module is primary used for hw_toolkit library for hdl manipulation',
     url='https://github.com/Nic30/hdlConvertor',
     author='Michal Orsak',
