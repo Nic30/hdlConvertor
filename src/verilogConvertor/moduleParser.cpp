@@ -79,7 +79,7 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 	//// module_parameter_port_list calls this one.
 
 	// parameter_declaration_ :
-	// 'parameter' ( 'signed' )? ( range )? list_of_param_assignments
+	// 'parameter' ( 'signed' )? ( range_ )? list_of_param_assignments
 	// |'parameter' 'integer' list_of_param_assignments
 	// |'parameter' 'real' list_of_param_assignments
 	// |'parameter' 'realtime' list_of_param_assignments
@@ -95,10 +95,10 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 		t = Expr::ID(term->getText());
 	}
 
-	auto r = ctx->range();
+	auto r = ctx->range_();
 	if (r) {
 		std::vector<Expr*> * operands = new std::vector<Expr*>();
-		operands->push_back(VerExprParser::visitRange(r));
+		operands->push_back(VerExprParser::visitRange_(r));
 		t = Expr::call(Utils::mkWireT(), operands);
 	}
 
