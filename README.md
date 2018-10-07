@@ -56,3 +56,5 @@ Currently package is tested only for python3.5+ (python3.6 or latest recomended)
 
 * https://github.com/denisgav/v2sc - vhdl to systemc
 
+* https://github.com/ben-marshall/verilog-parser - verilog parser, c 
+

@@ -21,7 +21,7 @@ Expr * VerExprParser::visitRange_expression(
 	NotImplementedLogger::print("ExpressionParser.visitRange_expression");
 	return NULL;
 }
-Expr * VerExprParser::visitRange(Verilog2001Parser::RangeContext * ctx) {
+Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
 	// range : '[' msb_constant_expression ':' lsb_constant_expression ']' ;
 	// msb_constant_expression : constant_expression ;
 	// lsb_constant_expression : constant_expression ;
