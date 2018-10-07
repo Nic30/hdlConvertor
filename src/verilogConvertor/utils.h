@@ -16,5 +16,5 @@ public:
 	static Expr* mkStringT();
 	static Expr* mkWireT();
 	static Expr* mkWireT(Expr * range);
-	static Expr* mkWireT(Verilog2001Parser::RangeContext * range);
+	static Expr* mkWireT(Verilog2001Parser::Range_Context * range);
 };
