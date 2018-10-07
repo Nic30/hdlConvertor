@@ -5,7 +5,7 @@ from libc.errno cimport errno
 from libcpp cimport bool
 from libcpp cimport string
 from cpython.ref cimport PyObject
-
+from cpython.version cimport PY_MAJOR_VERSION
 from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Convertor
 
 class parseException(Exception):
@@ -22,7 +22,6 @@ cdef class hdlConvertor:
     def __dealloc__(self):
         del self.thisptr
 
-
     def parse(self,filename,langue,incdir,hierarchyOnly,debug):
 
         cdef Context* c
@@ -34,6 +33,10 @@ cdef class hdlConvertor:
             langue_value = SYSTEM_VERILOG
         else:
             raise ValueError(langue +  " is not reconnized")
+
+        if PY_MAJOR_VERSION == 3 :
+            filename = filename.encode('utf8')
+            incdir = [item.encode('utf8') for item in incdir ]
 
         c = self.thisptr.parse(filename,langue_value,incdir,hierarchyOnly,debug)
 
