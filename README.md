@@ -42,19 +42,15 @@ Currently package is tested only for python3.5+ (python3.6 or latest recomended)
 ### Supported languages:
 
 * VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
-
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html)
 
 
 ### Similar projects:
 
-* https://github.com/Paebbels/pyVHDLParser - python vhdl parser with 2008 support
-
-* https://github.com/kevinpt/hdlparse/ - vhdl/verilog parser in python 
-
-* https://github.com/denisgav/v2sc - vhdl to systemc
-
-* https://github.com/ben-marshall/verilog-parser - verilog parser, c 
+* [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
+* [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python 
+* [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
+* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
+* [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 
