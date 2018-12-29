@@ -23,7 +23,8 @@ addons:
          - ubuntu-toolchain-r-test
          #- llvm-toolchain-precise-3.9
       packages:
-         - build-essential
+         - build-essential 
+         - cython
          #- g++-5
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
