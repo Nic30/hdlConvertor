@@ -1958,7 +1958,6 @@ Simple_identifier
    : [a-zA-Z_] [a-zA-Z0-9_$]*
    ;
 
-
 Dollar_Identifier
    : '$' [a-zA-Z0-9_$] [a-zA-Z0-9_$]*
    ;
