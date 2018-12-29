@@ -23,10 +23,11 @@ addons:
          - ubuntu-toolchain-r-test
          #- llvm-toolchain-precise-3.9
       packages:
-         - g++-5 build-essential
+         - build-essential
+         #- g++-5
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
-env: CC=g++-5 CXX=g++-5 
+#env: CC=g++-5 CXX=g++-5 
 
 
 # command to install dependencies
