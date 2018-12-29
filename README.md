@@ -15,11 +15,13 @@ To make your live easier I included it to this package for you.
 ## Installation and usage
 
 Package is stored in pip respository you can install it by:
-`pip3 install hdlConvertor`
-or download repository and run `python3 setup.py install`
+`sudo pip3 install hdlConvertor`
+or download repository and run `sudo python3 setup.py install`
+Pip <10.0.0 can not install skbuild automatically, if this is a case just install it `sudo pip3 install scikit-build`.
+
 
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.
-There are classes which are recognized in HDL langue and there are also toJson() for them.
+There are classes for objects in HDL langues and there are also toJson() for them.
 This function is used for conversion to Python objects.
 
 In python all parsed stuff are just dictionaries and values (str, int).
