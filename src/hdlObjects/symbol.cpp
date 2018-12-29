@@ -129,7 +129,11 @@ void Symbol::dump(int indent) const {
 		if (bits > 0)
 			dumpVal("bits", indent, bits) << ",\n";
 #ifdef USE_PYTHON
+#if PY_MAJOR_VERSION < 3
+		_v = PyString_AsString(PyObject_Str(value._int));
+#else
 		_v = PyUnicode_AsUTF8(PyObject_Str(value._int));
+#endif
 #else
 		_v = std::to_string(value._int).c_str();
 #endif

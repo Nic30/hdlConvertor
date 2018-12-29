@@ -4,8 +4,7 @@ from pprint import pprint
 import unittest
 
 BASE_DIR = path.join(path.dirname(__file__), "..")
-sys.path.insert(1, path.join(BASE_DIR, "build/lib.linux-x86_64-%d.%d"
-                             % (sys.version_info.major, sys.version_info.minor)))
+sys.path.insert(1, path.join(BASE_DIR, "dist"))
 
 import hdlConvertor
 
@@ -38,7 +37,7 @@ class BasicTC(unittest.TestCase):
         str(res)
 
 #    def test_system_verilog_mem_base_object(self):
-#        f, res = dumpFile("mem_base_object.sv",  "system_verilog")
+#        f, res = dumpFile("mem_base_object.sv",  "systemVerilog")
 #        str(res)
 
 
