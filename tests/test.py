@@ -36,6 +36,18 @@ class BasicTC(unittest.TestCase):
         f, res = dumpFile("uart.v", "verilog")
         str(res)
 
+    def test_verilog_arbiter(self):
+        f, res = dumpFile("arbiter.v", "verilog")
+        str(res)
+
+    def test_verilog_include(self):
+        f, res = dumpFile("include.v", "verilog")
+        str(res)
+
+    def test_verilog_include(self):
+        f, res = dumpFile("define.v", "verilog")
+        str(res)
+
 #    def test_system_verilog_mem_base_object(self):
 #        f, res = dumpFile("mem_base_object.sv",  "systemVerilog")
 #        str(res)
