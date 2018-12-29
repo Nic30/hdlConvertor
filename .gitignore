@@ -36,9 +36,17 @@ MANIFEST
 Debug/
 target/
 dist/
+_skbuild/
+
+# parser soruce build dirs
+src/svConverter/sv2012Parser
+src/verilogConvertor/Verilog2001Parser
+src/verilogPreproc/verilogPreprocParser
+src/vhdlConvertor/vhdlParser
 #SVParser/
 #VerilogParser/
 #VhdlParser/
+hdlConvertor.egg-info
 
 # devel archives
 *.zip

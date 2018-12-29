@@ -1,8 +1,9 @@
 #pragma once
 
-#include "macro_replace.h"
 #include <string>
 #include <map>
+
+#include "../verilogPreproc/macro_replace.h"
 class macroSymbol : public std::map<std::string,macro_replace*> {
 
 	public:

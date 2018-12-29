@@ -1,9 +1,9 @@
 #pragma once
 #include "../baseHdlParser/baseHdlParser.h"
-#include "../SVParser/sv2012Parser.h"
+#include "sv2012Parser/sv2012Parser.h"
 #include "../notImplementedLogger.h"
 
-using namespace sv;
+using namespace sv2012;
 
 class Library_textParser: public BaseHdlParser {
 public:

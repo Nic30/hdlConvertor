@@ -1,4 +1,4 @@
-#include "macro_replace.h"
+#include "../verilogPreproc/macro_replace.h"
 
 
 macro_replace::macro_replace(std::string replace, std::vector<std::string> arg){

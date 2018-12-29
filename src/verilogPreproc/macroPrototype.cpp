@@ -1,14 +1,15 @@
 
-#include "macroPrototype.h"
-#include "symbol.h"
+#include "../verilogPreproc/macroPrototype.h"
+
+#include "./symbol.h"
 
 macroPrototype return_prototype(std::string input_token) {
 
   ANTLRInputStream input(input_token);
 
-  symbolLexer * lexer = new symbolLexer(&input);
+  verilogPreprocSymbolLexer * lexer = new verilogPreprocSymbolLexer(&input);
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
-  symbolParser * parser = new symbolParser(tokens);
+  verilogPreprocSymbolParser * parser = new verilogPreprocSymbolParser(tokens);
   tree::ParseTree *tree = parser->pattern();
 
   tree::ParseTreeWalker walker = tree::ParseTreeWalker();

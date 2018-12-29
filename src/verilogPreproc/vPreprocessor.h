@@ -2,19 +2,20 @@
 #pragma once
 
 #include "antlr4-runtime.h"
-#include "../vpp/vppLexer.h"
-#include "../vpp/vppParser.h"
-#include "../vpp/vppBaseListener.h"
-#include "macroSymbol.h"
-#include "macroPrototype.h"
+#include "verilogPreprocParser/verilogPreprocLexer.h"
+#include "verilogPreprocParser/verilogPreprocParser.h"
+#include "verilogPreprocParser/verilogPreprocBaseListener.h"
 #include <string>
 #include <map>
 #include <sys/stat.h>
+
+#include "../verilogPreproc/macroPrototype.h"
+#include "../verilogPreproc/macroSymbol.h"
 #include "exception.h"
 
 using namespace antlr4;
 
-class vPreprocessor : public  vppBaseListener {
+class vPreprocessor : public  verilogPreprocBaseListener {
 
 		static macroSymbol _defineDB;
 		CommonTokenStream * _tokens;
@@ -30,15 +31,15 @@ class vPreprocessor : public  vppBaseListener {
 				bool eraseDB);
 		~vPreprocessor();
 
-  		void enterDefine(vppParser::DefineContext * ctx);
-  		void enterUndef(vppParser::UndefContext * ctx);
+  		void enterDefine(verilogPreprocParser::DefineContext * ctx);
+  		void enterUndef(verilogPreprocParser::UndefContext * ctx);
 
-		void enterToken_id(vppParser::Token_idContext * ctx);
+		void enterToken_id(verilogPreprocParser::Token_idContext * ctx);
 
-  		void exitIfdef_directive(vppParser::Ifdef_directiveContext * ctx);
-  		void exitIfndef_directive(vppParser::Ifndef_directiveContext * ctx);
+  		void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
+  		void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
 
-		void enterInclude(vppParser::IncludeContext * ctx);
+		void enterInclude(verilogPreprocParser::IncludeContext * ctx);
 };
 
 std::string return_preprocessed(const std::string input_token,

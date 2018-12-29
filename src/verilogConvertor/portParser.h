@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "../VerilogParser/Verilog2001Parser.h"
+#include "Verilog2001Parser/Verilog2001Parser.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/port.h"
 #include "../hdlObjects/direction.h"
@@ -13,7 +13,7 @@
 #include "exprParser.h"
 
 using namespace antlr4;
-using namespace verilog;
+using namespace Verilog2001;
 
 class PortParser {
 public:

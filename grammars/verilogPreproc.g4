@@ -1,4 +1,4 @@
-grammar vpp;
+grammar verilogPreproc;
 
 /* Process #define statements in a C file using fuzzy parsing.
 */

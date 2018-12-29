@@ -1,2 +1,2 @@
 [build-system]
-requires = ["setuptools", "wheel", "scikit-build"]
+requires = ["setuptools", "wheel", "scikit-build", "Cython"]

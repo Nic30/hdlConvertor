@@ -3,12 +3,12 @@
 #include <antlr4-runtime.h>
 #include <vector>
 
-#include "../VerilogParser/Verilog2001Parser.h"
+#include "Verilog2001Parser/Verilog2001Parser.h"
 #include "../hdlObjects/variable.h"
 #include "../notImplementedLogger.h"
 
 using namespace antlr4;
-using namespace verilog;
+using namespace Verilog2001;
 
 class AttributeParser {
 public:

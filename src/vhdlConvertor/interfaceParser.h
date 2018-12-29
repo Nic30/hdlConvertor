@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <stdlib.h>
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/operatorType.h"
 #include "../hdlObjects/symbolType.h"

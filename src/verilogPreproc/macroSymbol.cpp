@@ -1,5 +1,6 @@
-#include "vPreprocessor.h"
-#include "macroSymbol.h"
+#include "../verilogPreproc/macroSymbol.h"
+
+#include "../verilogPreproc/vPreprocessor.h"
 
 void macroSymbol::insert(const std::pair<std::string,macro_replace* > item, std::vector<std::string> &incdir) {
 

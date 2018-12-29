@@ -13,11 +13,15 @@ To make your live easier I included it to this package for you.
 
 
 ## Installation and usage
+```
+sudo apt install uuid-dev
+sudo pip3 install -r requirements.txt
 
-Package is stored in pip respository you can install it by:
-`sudo pip3 install hdlConvertor`
-or download repository and run `sudo python3 setup.py install`
-Pip <10.0.0 can not install skbuild automatically, if this is a case just install it `sudo pip3 install scikit-build`.
+sudo pip3 install hdlConvertor
+#or download repository and run
+sudo python3 setup.py install
+
+```
 
 
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.

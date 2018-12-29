@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/context.h"
 #include "../notImplementedLogger.h"
 #include "referenceParser.h"

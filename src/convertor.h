@@ -10,23 +10,23 @@
 #include "hdlObjects/context.h"
 #include "antlr4-runtime.h"
 
-#include "VhdlParser/vhdlLexer.h"
-#include "VhdlParser/vhdlParser.h"
+#include "vhdlConvertor/vhdlParser/vhdlLexer.h"
+#include "vhdlConvertor/vhdlParser/vhdlParser.h"
 #include "vhdlConvertor/designFileParser.h"
 
-#include "VerilogParser/Verilog2001Lexer.h"
-#include "VerilogParser/Verilog2001Parser.h"
+#include "verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h"
+#include "verilogConvertor/Verilog2001Parser/Verilog2001Parser.h"
 #include "verilogConvertor/source_textParser.h"
 
 #define SV_PARSER
 
 #ifdef SV_PARSER
-#include "SVParser/sv2012Lexer.h"
-#include "SVParser/sv2012Parser.h"
+#include "svConverter/sv2012Parser/sv2012Lexer.h"
+#include "svConverter/sv2012Parser/sv2012Parser.h"
 #include "svConverter/source_textParser.h"
 #endif
 
-#include "vPreprocessor/vPreprocessor.h"
+#include "verilogPreproc/vPreprocessor.h"
 
 #include "exception.h"
 #include "syntaxErrorLogger.h"

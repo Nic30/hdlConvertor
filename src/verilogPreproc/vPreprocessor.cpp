@@ -1,4 +1,4 @@
-#include "vPreprocessor.h"
+#include "../verilogPreproc/vPreprocessor.h"
 
 macroSymbol vPreprocessor::_defineDB;
 std::vector<std::string> vPreprocessor::_stack_incfile;
@@ -25,7 +25,7 @@ std::string vPreprocessor::genBlank(size_t n) {
 	return a_string;
 }
 
-void vPreprocessor::enterDefine(vppParser::DefineContext * ctx){
+void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx){
 	std::string macroName = ctx->macro_id()->getText();
 	if (ctx->ID().size() !=0 ) {
 		std::vector<std::string> data;
@@ -59,11 +59,11 @@ void vPreprocessor::enterDefine(vppParser::DefineContext * ctx){
 				std::string(""));
 }
 
-void vPreprocessor::enterUndef(vppParser::UndefContext * ctx) {
+void vPreprocessor::enterUndef(verilogPreprocParser::UndefContext * ctx) {
 	_defineDB.erase(ctx->ID()->getText());
 }
 
-void vPreprocessor::enterToken_id(vppParser::Token_idContext * ctx) {
+void vPreprocessor::enterToken_id(verilogPreprocParser::Token_idContext * ctx) {
 	macroPrototype macro = return_prototype(ctx->getText().substr(1,std::string::npos));
 
 	if (_defineDB.find(macro.macroName) == _defineDB.end()) {
@@ -81,7 +81,7 @@ void vPreprocessor::enterToken_id(vppParser::Token_idContext * ctx) {
 }
 
 
-void vPreprocessor::exitIfdef_directive(vppParser::Ifdef_directiveContext * ctx) {
+void vPreprocessor::exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx) {
 
 	uint32_t ID_cpt = 0;
 	macroSymbol::iterator search;
@@ -117,7 +117,7 @@ void vPreprocessor::exitIfdef_directive(vppParser::Ifdef_directiveContext * ctx)
 
 }
 
-void vPreprocessor::exitIfndef_directive(vppParser::Ifndef_directiveContext * ctx) {
+void vPreprocessor::exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx) {
 
 	uint32_t ID_cpt = 0;
 	macroSymbol::iterator search;
@@ -152,7 +152,7 @@ void vPreprocessor::exitIfndef_directive(vppParser::Ifndef_directiveContext * ct
 	_rewriter->replace(token.a,token.b,replacement);
 }
 
-void vPreprocessor::enterInclude(vppParser::IncludeContext * ctx) {
+void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
 
 	struct stat buffer;
 
@@ -201,9 +201,9 @@ void vPreprocessor::enterInclude(vppParser::IncludeContext * ctx) {
 std::string return_preprocessed(const std::string input_token,std::vector<std::string> &incdir , bool eraseDB) {
 
   ANTLRInputStream input(input_token);
-  vppLexer * lexer = new vppLexer(&input);
+  verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
-  vppParser * parser = new vppParser(tokens);
+  verilogPreprocParser * parser = new verilogPreprocParser(tokens);
   tree::ParseTree *tree = parser->file();
 
   tree::ParseTreeWalker walker = tree::ParseTreeWalker();

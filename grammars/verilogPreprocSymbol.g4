@@ -1,4 +1,4 @@
-grammar symbol;
+grammar verilogPreprocSymbol;
 
 pattern : 
     SYMBOL ('(' SYMBOL ( ',' SYMBOL )* ')' )? EOF;

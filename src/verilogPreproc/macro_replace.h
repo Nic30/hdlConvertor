@@ -1,6 +1,6 @@
 #pragma once
 
-#include  "macroPrototype.h"
+#include "../verilogPreproc/macroPrototype.h"
 
 class macro_replace_data {
 

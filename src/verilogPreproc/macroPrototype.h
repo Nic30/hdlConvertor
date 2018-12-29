@@ -1,8 +1,8 @@
 #pragma once
 
-#include "antlr4-runtime.h"
-#include "../vpp/symbolLexer.h"
-#include "../vpp/symbolParser.h"
+#include <antlr4-runtime.h>
+#include "verilogPreprocParser/verilogPreprocSymbolLexer.h"
+#include "verilogPreprocParser/verilogPreprocSymbolParser.h"
 #include <string>
 #include <vector>
 

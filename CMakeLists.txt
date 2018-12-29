@@ -7,7 +7,9 @@ project( HDLCONVERTOR )
 # Java is not necessary if building without demos.
 find_package(Java COMPONENTS Runtime REQUIRED)
 find_package(PythonExtensions REQUIRED)
+find_package(PythonLibs REQUIRED)
 find_package(Cython REQUIRED)
+
 
 if (NOT ANTLR_JAR_LOCATION)
   message(FATAL_ERROR "Missing antlr4.jar location. You can specify it's path using: -DANTLR_JAR_LOCATION=<path>")
@@ -21,6 +23,10 @@ else()
 endif()
 
 include_directories( ${HDLCONVERTOR_SOURCE_DIR}/antlr4/runtime/src )
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(MY_CXX_WARNING_FLAGS "  -Wall -pedantic -W")
 
 add_subdirectory( antlr4 )
 add_subdirectory( src )

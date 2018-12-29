@@ -13,8 +13,8 @@ void parseFnVHDL(vhdlParser * antlrParser, DesignFileParser * hdlParser) {
 }
 
 #ifdef SV_PARSER
-void parseFnSystemVerilog(sv::sv2012Parser * antlrParser, source_textParser * hdlParser) {
-	sv::sv2012Parser::Source_textContext *tree = antlrParser->source_text();
+void parseFnSystemVerilog(sv2012::sv2012Parser * antlrParser, source_textParser * hdlParser) {
+	sv2012::sv2012Parser::Source_textContext *tree = antlrParser->source_text();
 	hdlParser->visitSource_text(tree);
 }
 #endif
@@ -63,7 +63,7 @@ Context * Convertor::parse(std::string _fileName, Langue _lang,std::vector<std::
 
 #ifdef SV_PARSER
 	} else if (lang == SYSTEM_VERILOG) {
-		auto pc = new ParserContainer<sv::sv2012Lexer, sv::sv2012Parser,
+		auto pc = new ParserContainer<sv2012::sv2012Lexer, sv2012::sv2012Parser,
 				source_textParser>();
 		
 		str = return_preprocessed(str,incdir,true);
