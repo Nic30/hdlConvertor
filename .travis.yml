@@ -1,7 +1,8 @@
 sudo: required
-dist: trusty
+dist: xenial
 language: python
 python:
+  - '2.7'
   - '3.5'
   - '3.6'
 # - "nightly"
@@ -10,7 +11,8 @@ git:
   depth: 1
 
 cache:
-  apt: true
+  - apt: true
+  - pip : true
 
 # clang is required because there is not enought ram for gcc
 compiler: gcc
@@ -21,15 +23,19 @@ addons:
          - ubuntu-toolchain-r-test
          #- llvm-toolchain-precise-3.9
       packages:
-         - g++-5
+         - build-essential 
+         - cython
+         #- g++-5
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
-env: CC=g++-5 CXX=g++-5 
+#env: CC=g++-5 CXX=g++-5 
 
 
 # command to install dependencies
 install:
-- python3 setup.py install
+- pip install -r requirements.txt
+- python setup.py install
+
 deploy:
   provider: pypi
   user: nic30
