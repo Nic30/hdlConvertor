@@ -33,6 +33,15 @@ In python all parsed stuff are just dictionaries and values (str, int).
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 
+Installer also supports other commands.
+```
+export PYTHONPATH=/tmp/python_install/lib/python2.7/site-packages/
+python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=../../../antlr4/antlr-4.7.1-complete.jar -- VERBOSE=1
+
+Other commands:
+python setup.py --help-commands
+```
+
 Example of usage:
 ```python
 import hdlConvertor
@@ -60,14 +69,6 @@ Currently package is tested only for python3.5+ (python3.6 or latest recomended)
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 
-
-### Installation 
-
-export PYTHONPATH=/tmp/python_install/lib/python2.7/site-packages/
-python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=../../../antlr4/antlr-4.7.1-complete.jar -- VERBOSE=1
-
-Other commands:
-python setup.py --help-commands
 
 
 ### License
