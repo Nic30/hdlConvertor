@@ -12,7 +12,7 @@ This project use a ANTLR4. Currently, there is no universal way of distributing 
 To make your live easier I included it to this package for you.
 
 
-## Installation and usage
+## Installation
 ```
 sudo apt install uuid-dev
 sudo pip3 install -r requirements.txt
@@ -20,18 +20,8 @@ sudo pip3 install -r requirements.txt
 sudo pip3 install hdlConvertor
 #or download repository and run
 sudo python3 setup.py install
-
 ```
-
-
-In the meantime when there is no wiki yet you can take look at src/hdlObjects.
-There are classes for objects in HDL langues and there are also toJson() for them.
-This function is used for conversion to Python objects.
-
-In python all parsed stuff are just dictionaries and values (str, int).
-
-Top class of hdlObjects is Context, wich is container of all other hdl objects.
-
+Or the same using python and pip for python 2.7.
 
 Installer also supports other commands.
 ```
@@ -41,6 +31,18 @@ python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug --
 Other commands:
 python setup.py --help-commands
 ```
+
+## Usage
+In the meantime when there is no wiki yet you can take look at src/hdlObjects.
+There are classes for objects in HDL langues and there are also toJson() for them.
+This function is used for conversion to Python objects.
+
+In python all parsed stuff are just dictionaries and values (str, int).
+
+Top class of hdlObjects is Context, wich is container of all other hdl objects.
+
+
+
 
 Example of usage:
 ```python
