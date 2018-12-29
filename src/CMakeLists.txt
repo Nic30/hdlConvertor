@@ -1,6 +1,19 @@
 
 ##############################################################################################
 
+set(MY_CXX_WARNING_FLAGS "  -Wall -pedantic -W")
+
+if("${CMAKE_VERSION}" VERSION_GREATER 3.1.0)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+else()
+  set(CMAKE_CXX_FLAGS                "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL     "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++11")
+  set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11")
+endif()
+
 include_directories(
   ${HDLCONVERTOR_SOURCE_DIR}/src
 )
