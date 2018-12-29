@@ -3,7 +3,8 @@ from os import path
 from pprint import pprint
 import unittest
 
-BASE_DIR = path.join(path.dirname(__file__), "..")
+TEST_DIR = path.dirname(__file__)
+BASE_DIR = path.join(TEST_DIR, "..")
 sys.path.insert(1, path.join(BASE_DIR, "dist"))
 
 import hdlConvertor
@@ -11,7 +12,7 @@ import hdlConvertor
 
 def dumpFile(fname, language):
     f = path.join(BASE_DIR, "tests/", fname)
-    res = hdlConvertor.parse(f, language, debug=True)
+    res = hdlConvertor.parse(f, language, [TEST_DIR], debug=True)
     return f, res
 
 
