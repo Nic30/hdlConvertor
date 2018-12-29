@@ -2,6 +2,7 @@ sudo: required
 dist: trusty
 language: python
 python:
+  - '2.7'
   - '3.5'
   - '3.6'
 # - "nightly"
@@ -10,7 +11,8 @@ git:
   depth: 1
 
 cache:
-  apt: true
+  - apt: true
+  - pip : true
 
 # clang is required because there is not enought ram for gcc
 compiler: gcc
@@ -29,7 +31,9 @@ env: CC=g++-5 CXX=g++-5
 
 # command to install dependencies
 install:
-- python3 setup.py install
+- python pip install -user -r requirements.txt
+- python setup.py install
+
 deploy:
   provider: pypi
   user: nic30
