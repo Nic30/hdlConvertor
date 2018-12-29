@@ -68,3 +68,12 @@ python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug --
 
 Other commands:
 python setup.py --help-commands
+
+
+### License
+
+License in top folder applays to this project only.
+In this repository there is also ANTRLR4 library (BSD 3-clause license) and some grammars (.g4 files - BSD 3, GPL-3, GPL).
+This library is for now distributed in this package as a temporary solution until proper package for ANTLR4 library will be present in linux prepositories.
+
+
