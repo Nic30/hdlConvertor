@@ -39,6 +39,28 @@ class BasicTC(unittest.TestCase):
     def test_verilog_arbiter(self):
         f, res = dumpFile("arbiter.v", "verilog")
         str(res)
+        e = res["entities"]
+        self.assertEqual(len(e), 1)
+        a = e[0]
+        self.assertEqual(a["name"], "arbiter")
+        self.assertEqual(len(a["generics"]), 0)
+        self.assertEqual(len(a["ports"]), 10)
+        ports ={
+            "clk" :"IN" ,   
+            "rst" :"IN" ,   
+            "req3":"IN" ,   
+            "req2":"IN" ,   
+            "req1":"IN" ,   
+            "req0":"IN" ,   
+            "gnt3":"OUT",   
+            "gnt2":"OUT",   
+            "gnt1":"OUT",   
+            "gnt0":"OUT",  
+        }
+        
+        _ports = { p["variable"]["name"]: p['direction'] for p in a["ports"]}
+        self.assertDictEqual(_ports, ports)
+
 
     def test_verilog_include(self):
         f, res = dumpFile("include.v", "verilog")
