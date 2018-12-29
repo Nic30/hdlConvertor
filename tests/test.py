@@ -65,8 +65,14 @@ class BasicTC(unittest.TestCase):
     def test_verilog_include(self):
         f, res = dumpFile("include.v", "verilog")
         str(res)
+        e = res["entities"]
+        self.assertEqual(len(e), 2)
+        a = e[0]
+        self.assertEqual(a["name"], "arbiter")
+        u = e[1]
+        self.assertEqual(u["name"], "uart")
 
-    def test_verilog_include(self):
+    def test_verilog_define(self):
         f, res = dumpFile("define.v", "verilog")
         str(res)
 
