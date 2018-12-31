@@ -2,6 +2,11 @@
 
 static const char* const opTypeToStr[] = {
 	"RANGE",
+	"REVERSE_RANGE",
+	"ACROSS",
+	"THROUGH",
+	"REFERENCE",
+	"TOLERANCE",
 	"INDEX",
 	"DOWNTO",
 	"TO",
@@ -58,7 +63,7 @@ int OperatorType_arity(OperatorType opt) {
 	case UN_MINUS:
 	case UN_PLUS:
 	case ABS:
-	case RANGE:
+	case RANGE || REVERSE_RANGE || ACROSS || THROUGH || REFERENCE || TOLERANCE:
 		return 1;
 	case TERNARY:
 		return 3;

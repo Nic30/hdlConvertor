@@ -43,6 +43,13 @@ Operator * Operator::call(Expr* fn, std::vector<Expr*> * operands) {
 	o->operands = operands;
 	return o;
 }
+Operator * Operator::slice(Expr* fn, std::vector<Expr*> * operands) {
+	Operator * o = new Operator();
+	o->op0 = fn;
+	o->op = INDEX;
+	o->operands = operands;
+	return o;
+}
 Operator * Operator::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	Operator * op = new Operator();
 	op->op = TERNARY;
@@ -71,9 +78,9 @@ Operator::~Operator() {
 #ifdef USE_PYTHON
 PyObject * Operator::toJson() const {
 	PyObject *d = PyDict_New();
-	PyDict_SetItemString(d, "op0", op0->toJson());
+	PyDict_SetItemString(d, "op0", op0->toJson());		
 	PyDict_SetItemString(d, "operator",
-			PyUnicode_FromString(OperatorType_toString(op)));
+		PyUnicode_FromString(OperatorType_toString(op)));		
 
 	int arity = OperatorType_arity(op);
 	switch (arity) {
@@ -84,7 +91,8 @@ PyObject * Operator::toJson() const {
 	case 1:
 		break;
 	case 2:
-		PyDict_SetItemString(d, "op1", op1->toJson());
+		if (op1)
+			PyDict_SetItemString(d, "op1", op1->toJson());
 		break;
 	default:
 		throw "Invalid arity of operator";

@@ -29,4 +29,5 @@ public:
 			Expr * selectedName,
 			vhdlParser::Name_part_specificatorContext* ctx);
 	static Expr * visitName_part(vhdlParser::Name_partContext* ctx);
+	static std::vector<Expr*> * visitName_slice_part(vhdlParser::Name_slice_partContext *ctx);
 };

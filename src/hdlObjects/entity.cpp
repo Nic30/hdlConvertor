@@ -16,6 +16,14 @@ Port * Entity::getPortByName(const char * name) {
 PyObject * Entity::toJson() const {
 	PyObject * d = Named::toJson();
 	addJsonArrP(d, "generics", generics);
+
+	if (position) {
+		JSN_DEBUG("Entity - position")
+		PyDict_SetItemString(d, "position", position->toJson());
+	} else {
+		Py_IncRef (Py_None);
+		PyDict_SetItemString(d, "position", Py_None);
+	}
 	addJsonArrP(d, "ports", ports);
 	return d;
 }

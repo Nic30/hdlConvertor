@@ -8,14 +8,24 @@ std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 	// actual_parameter_part
 	// : association_list
 	// ;
+
+	return visitAssociation_list(ctx->association_list());
+}
+
+std::vector<Expr*> * ExprParser::visitAssociation_list(
+		vhdlParser::Association_listContext *ctx) {
 	// association_list
 	// : association_element ( COMMA association_element )*
 	// ;
-	for (auto e : ctx->association_list()->association_element()) {
-		l->push_back(visitAssociation_element(e));
+
+	std::vector<Expr*> * ae = new std::vector<Expr*>();
+	for (auto e : ctx->association_element()) {
+		ae->push_back(visitAssociation_element(e));
 	}
-	return l;
+	return ae;
 }
+
+
 Expr* ExprParser::visitAssociation_element(
 		vhdlParser::Association_elementContext* ctx) {
 	// association_element
@@ -24,20 +34,29 @@ Expr* ExprParser::visitAssociation_element(
 	Expr * ap = visitActual_part(ctx->actual_part());
 	auto fp = ctx->formal_part();
 	if (fp) {
-		return new Expr(visitFormal_part(fp), ARROW, ap);
+		auto vfp = new Expr(visitFormal_part(fp), ARROW, ap);
+		vfp->position = new Position(ctx->getStart()->getLine(), ctx->getStop()->getLine(), NULL, NULL);
+		return vfp;
 	}
+	ap->position = new Position(ctx->getStart()->getLine(), ctx->getStop()->getLine(), NULL, NULL);
 	return ap;
 }
 Expr* ExprParser::visitFormal_part(vhdlParser::Formal_partContext* ctx) {
-	// formal_part
-	// : identifier
-	// | identifier LPAREN explicit_range RPAREN
-	// ;
+//formal_part
+//  : identifier
+//  | identifier LPAREN (expression | explicit_range)  RPAREN
+//  ;
+	//TODO: explicit_range and expression not quite right implementation.
 	Expr * id = LiteralParser::visitIdentifier(ctx->identifier());
-	auto er = ctx->explicit_range();
-	if (er) {
-		return new Expr(id, RANGE, visitExplicit_range(er));
+	auto e = ctx->expression();
+	if (e) {
+		return new Expr(id, INDEX, visitExpression(e));
 	}
+	auto er =ctx-> explicit_range();
+	if (er) {
+		return new Expr(id, INDEX, visitExplicit_range(er));
+	}
+
 	return id;
 }
 
@@ -94,10 +113,12 @@ Expr* ExprParser::visitActual_designator(
 Expr* ExprParser::visitSubtype_indication(
 		vhdlParser::Subtype_indicationContext* ctx) {
 	// subtype_indication
-	// : selected_name ( selected_name )? ( constraint )? ( tolerance_aspect
+	// : selected_name ( selected_name )? ( constraint )* ( tolerance_aspect
 	// )?
 	// ;
-	auto c = ctx->constraint();
+
+    // TODO: Support more than just the constraint.
+	auto c = ctx->constraint(0);
 	assert(ctx->tolerance_aspect() == NULL);
 	auto snames = ctx->selected_name();
 	auto mainSelName = snames[0];
@@ -202,9 +223,32 @@ Expr* ExprParser::visitSimple_expression(
 	return op0;
 }
 Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
-	// expression
-	// : relation ( : logical_operator relation )*
-	// ;
+	//expression
+	//	: CONDITION_OPERATOR primary
+	//	| logical_expression
+	//	;
+	auto le = ctx->logical_expression();
+	if (le)
+	{
+		auto vle = visitLogical_expression(le);
+		vle->raw = strdup(ctx->getText().c_str());
+		return vle;
+	}
+
+	auto p = ctx->primary();
+	if (p)
+	{
+		auto vp = visitPrimary(p);
+		vp->raw = strdup(ctx->getText().c_str());
+		return vp;
+	}
+}
+
+Expr* ExprParser::visitLogical_expression(
+		vhdlParser::Logical_expressionContext *ctx) {
+	//logical_expression
+	//  : relation ( : logical_operator relation )*
+	//  ;
 	auto rel = ctx->relation();
 	auto relIt = rel.begin();
 	auto ops = ctx->logical_operator();
@@ -218,7 +262,9 @@ Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
 		++opIt;
 	}
 	return op0;
+
 }
+
 Expr* ExprParser::visitRelation(vhdlParser::RelationContext* ctx) {
 	// relation
 	// : shift_expression
@@ -387,8 +433,8 @@ Expr* ExprParser::visitTarget(vhdlParser::TargetContext* ctx) {
 	} else {
 		return visitAggregate(ctx->aggregate());
 	}
-
 }
+
 Expr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 	// waveform :
 	// waveform_element ( COMMA waveform_element )*
@@ -407,6 +453,8 @@ Expr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 		top = new Expr(top, DOT, visitWaveform_element(*weIt));
 		++weIt;
 	}
+
+	top->raw = strdup(ctx->getText().c_str());
 	return top;
 }
 

@@ -93,7 +93,11 @@ Expr * Expr::call(Expr * fnId, std::vector<Expr*> * operands) {
 	e->data = Operator::call(fnId, operands);
 	return e;
 }
-
+Expr * Expr::slice(Expr * fnId, std::vector<Expr*> * operands) {
+	Expr * e = new Expr();
+	e->data = Operator::slice(fnId, operands);
+	return e;
+}
 Expr * Expr::ID(const char * value) {
 	LiteralVal v;
 	v._str = strdup(value);
@@ -138,6 +142,23 @@ Expr::~Expr() {
 PyObject * Expr::toJson() const {
 	PyObject *d = PyDict_New();
 	Operator * op = dynamic_cast<Operator*>(data);
+
+	if (strlen(raw) != 0) {	
+		PyDict_SetItemString(d, "raw", PyUnicode_FromString(raw));
+	} else {
+		Py_IncRef (Py_None);
+		PyDict_SetItemString(d, "raw", Py_None);
+	}
+
+
+	if (position) {
+		JSN_DEBUG("Process - position")
+		PyDict_SetItemString(d, "position", position->toJson());
+	} else {
+		Py_IncRef (Py_None);
+		PyDict_SetItemString(d, "position", Py_None);
+	}
+
 	if (op) {
 		PyDict_SetItemString(d, "binOperator", op->toJson());
 	} else {

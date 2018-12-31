@@ -18,32 +18,33 @@ public:
     BLOCK = 13, BODY = 14, BREAK = 15, BUFFER = 16, BUS = 17, CASE = 18, 
     COMPONENT = 19, CONFIGURATION = 20, CONSTANT = 21, DISCONNECT = 22, 
     DOWNTO = 23, END = 24, ENTITY = 25, ELSE = 26, ELSIF = 27, EXIT = 28, 
-    FILE = 29, FOR = 30, FUNCTION = 31, GENERATE = 32, GENERIC = 33, GROUP = 34, 
-    GUARDED = 35, IF = 36, IMPURE = 37, IN = 38, INERTIAL = 39, INOUT = 40, 
-    IS = 41, LABEL = 42, LIBRARY = 43, LIMIT = 44, LINKAGE = 45, LITERAL = 46, 
-    LOOP = 47, MAP = 48, MOD = 49, NAND = 50, NATURE = 51, NEW = 52, NEXT = 53, 
-    NOISE = 54, NOR = 55, NOT = 56, NULL_SYM = 57, OF = 58, ON = 59, OPEN = 60, 
-    OR = 61, OTHERS = 62, OUT = 63, PACKAGE = 64, PORT = 65, POSTPONED = 66, 
-    PROCESS = 67, PROCEDURE = 68, PROCEDURAL = 69, PURE = 70, QUANTITY = 71, 
-    RANGE = 72, REVERSE_RANGE = 73, REJECT = 74, REM = 75, RECORD = 76, 
-    REFERENCE = 77, REGISTER = 78, REPORT = 79, RETURN = 80, ROL = 81, ROR = 82, 
-    SELECT = 83, SEVERITY = 84, SHARED = 85, SIGNAL = 86, SLA = 87, SLL = 88, 
-    SPECTRUM = 89, SRA = 90, SRL = 91, SUBNATURE = 92, SUBTYPE = 93, TERMINAL = 94, 
-    THEN = 95, THROUGH = 96, TO = 97, TOLERANCE = 98, TRANSPORT = 99, TYPE = 100, 
-    UNAFFECTED = 101, UNITS = 102, UNTIL = 103, USE = 104, VARIABLE = 105, 
-    WAIT = 106, WITH = 107, WHEN = 108, WHILE = 109, XNOR = 110, XOR = 111, 
-    BASE_LITERAL = 112, BIT_STRING_LITERAL = 113, BIT_STRING_LITERAL_BINARY = 114, 
-    BIT_STRING_LITERAL_OCTAL = 115, BIT_STRING_LITERAL_HEX = 116, REAL_LITERAL = 117, 
-    BASIC_IDENTIFIER = 118, EXTENDED_IDENTIFIER = 119, LETTER = 120, COMMENT = 121, 
-    TAB = 122, SPACE = 123, NEWLINE = 124, CR = 125, CHARACTER_LITERAL = 126, 
-    STRING_LITERAL = 127, OTHER_SPECIAL_CHARACTER = 128, DOUBLESTAR = 129, 
-    ASSIGN = 130, LE = 131, GE = 132, ARROW = 133, NEQ = 134, VARASGN = 135, 
-    BOX = 136, DBLQUOTE = 137, SEMI = 138, COMMA = 139, AMPERSAND = 140, 
-    LPAREN = 141, RPAREN = 142, LBRACKET = 143, RBRACKET = 144, COLON = 145, 
-    MUL = 146, DIV = 147, PLUS = 148, MINUS = 149, LOWERTHAN = 150, GREATERTHAN = 151, 
-    EQ = 152, BAR = 153, DOT = 154, BACKSLASH = 155, EXPONENT = 156, HEXDIGIT = 157, 
-    INTEGER = 158, DIGIT = 159, BASED_INTEGER = 160, EXTENDED_DIGIT = 161, 
-    APOSTROPHE = 162
+    FILE = 29, FOR = 30, FORCE = 31, FUNCTION = 32, GENERATE = 33, GENERIC = 34, 
+    GROUP = 35, GUARDED = 36, IF = 37, IMPURE = 38, IN = 39, INERTIAL = 40, 
+    INOUT = 41, IS = 42, LABEL = 43, LIBRARY = 44, LIMIT = 45, LINKAGE = 46, 
+    LITERAL = 47, LOOP = 48, MAP = 49, MOD = 50, NAND = 51, NATURE = 52, 
+    NEW = 53, NEXT = 54, NOISE = 55, NOR = 56, NOT = 57, NULL_SYM = 58, 
+    OF = 59, ON = 60, OPEN = 61, OR = 62, OTHERS = 63, OUT = 64, PACKAGE = 65, 
+    PORT = 66, POSTPONED = 67, PROCESS = 68, PROCEDURE = 69, PROCEDURAL = 70, 
+    PURE = 71, QUANTITY = 72, RANGE = 73, REVERSE_RANGE = 74, REJECT = 75, 
+    REM = 76, RECORD = 77, REFERENCE = 78, REGISTER = 79, RELEASE = 80, 
+    REPORT = 81, RETURN = 82, ROL = 83, ROR = 84, SELECT = 85, SEVERITY = 86, 
+    SHARED = 87, SIGNAL = 88, SLA = 89, SLL = 90, SPECTRUM = 91, SRA = 92, 
+    SRL = 93, SUBNATURE = 94, SUBTYPE = 95, TERMINAL = 96, THEN = 97, THROUGH = 98, 
+    TO = 99, TOLERANCE = 100, TRANSPORT = 101, TYPE = 102, UNAFFECTED = 103, 
+    UNITS = 104, UNTIL = 105, USE = 106, VARIABLE = 107, WAIT = 108, WITH = 109, 
+    WHEN = 110, WHILE = 111, XNOR = 112, XOR = 113, BASE_LITERAL = 114, 
+    BIT_STRING_LITERAL = 115, BIT_STRING_LITERAL_BINARY = 116, BIT_STRING_LITERAL_OCTAL = 117, 
+    BIT_STRING_LITERAL_HEX = 118, BIT_STRING_LITERAL_DEC = 119, REAL_LITERAL = 120, 
+    BASIC_IDENTIFIER = 121, EXTENDED_IDENTIFIER = 122, LETTER = 123, LOWER_CASE_LETTER = 124, 
+    UPPER_CASE_LETTER = 125, COMMENT = 126, TAB = 127, SPACE = 128, NEWLINE = 129, 
+    CR = 130, CHARACTER_LITERAL = 131, STRING_LITERAL = 132, OTHER_SPECIAL_CHARACTER = 133, 
+    DOUBLESTAR = 134, ASSIGN = 135, LE = 136, GE = 137, ARROW = 138, NEQ = 139, 
+    VARASGN = 140, BOX = 141, DBLQUOTE = 142, SEMI = 143, COMMA = 144, AMPERSAND = 145, 
+    LPAREN = 146, RPAREN = 147, LBRACKET = 148, RBRACKET = 149, COLON = 150, 
+    MUL = 151, DIV = 152, PLUS = 153, MINUS = 154, LOWERTHAN = 155, GREATERTHAN = 156, 
+    EQ = 157, BAR = 158, DOT = 159, BACKSLASH = 160, TERNARY = 161, CONDITION_OPERATOR = 162, 
+    EXPONENT = 163, HEXDIGIT = 164, INTEGER = 165, DIGIT = 166, BASED_INTEGER = 167, 
+    EXTENDED_DIGIT = 168, APOSTROPHE = 169
   };
 
   enum {
@@ -66,79 +67,86 @@ public:
     RuleComponent_specification = 46, RuleComposite_nature_definition = 47, 
     RuleComposite_type_definition = 48, RuleConcurrent_assertion_statement = 49, 
     RuleConcurrent_break_statement = 50, RuleConcurrent_procedure_call_statement = 51, 
-    RuleConcurrent_signal_assignment_statement = 52, RuleCondition = 53, 
-    RuleCondition_clause = 54, RuleConditional_signal_assignment = 55, RuleConditional_waveforms = 56, 
-    RuleConfiguration_declaration = 57, RuleConfiguration_declarative_item = 58, 
-    RuleConfiguration_declarative_part = 59, RuleConfiguration_item = 60, 
-    RuleConfiguration_specification = 61, RuleConstant_declaration = 62, 
-    RuleConstrained_array_definition = 63, RuleConstrained_nature_definition = 64, 
-    RuleConstraint = 65, RuleContext_clause = 66, RuleContext_item = 67, 
-    RuleDelay_mechanism = 68, RuleDesign_file = 69, RuleDesign_unit = 70, 
-    RuleDesignator = 71, RuleDirection = 72, RuleDisconnection_specification = 73, 
-    RuleDiscrete_range = 74, RuleElement_association = 75, RuleElement_declaration = 76, 
-    RuleElement_subnature_definition = 77, RuleElement_subtype_definition = 78, 
-    RuleEntity_aspect = 79, RuleEntity_class = 80, RuleEntity_class_entry = 81, 
-    RuleEntity_class_entry_list = 82, RuleEntity_declaration = 83, RuleEntity_declarative_item = 84, 
-    RuleEntity_declarative_part = 85, RuleEntity_designator = 86, RuleEntity_header = 87, 
-    RuleEntity_name_list = 88, RuleEntity_specification = 89, RuleEntity_statement = 90, 
-    RuleEntity_statement_part = 91, RuleEntity_tag = 92, RuleEnumeration_literal = 93, 
-    RuleEnumeration_type_definition = 94, RuleExit_statement = 95, RuleExpression = 96, 
-    RuleFactor = 97, RuleFile_declaration = 98, RuleFile_logical_name = 99, 
-    RuleFile_open_information = 100, RuleFile_type_definition = 101, RuleFormal_parameter_list = 102, 
-    RuleFormal_part = 103, RuleFree_quantity_declaration = 104, RuleGenerate_statement = 105, 
-    RuleGeneration_scheme = 106, RuleGeneric_clause = 107, RuleGeneric_list = 108, 
-    RuleGeneric_map_aspect = 109, RuleGroup_constituent = 110, RuleGroup_constituent_list = 111, 
-    RuleGroup_declaration = 112, RuleGroup_template_declaration = 113, RuleGuarded_signal_specification = 114, 
-    RuleIdentifier = 115, RuleIdentifier_list = 116, RuleIf_statement = 117, 
-    RuleIndex_constraint = 118, RuleIndex_specification = 119, RuleIndex_subtype_definition = 120, 
-    RuleInstantiated_unit = 121, RuleInstantiation_list = 122, RuleInterface_constant_declaration = 123, 
-    RuleInterface_declaration = 124, RuleInterface_element = 125, RuleInterface_file_declaration = 126, 
-    RuleInterface_signal_list = 127, RuleInterface_port_list = 128, RuleInterface_list = 129, 
-    RuleInterface_quantity_declaration = 130, RuleInterface_port_declaration = 131, 
-    RuleInterface_signal_declaration = 132, RuleInterface_terminal_declaration = 133, 
-    RuleInterface_variable_declaration = 134, RuleIteration_scheme = 135, 
-    RuleLabel_colon = 136, RuleLibrary_clause = 137, RuleLibrary_unit = 138, 
-    RuleLiteral = 139, RuleLogical_name = 140, RuleLogical_name_list = 141, 
-    RuleLogical_operator = 142, RuleLoop_statement = 143, RuleSignal_mode = 144, 
-    RuleMultiplying_operator = 145, RuleName = 146, RuleName_part = 147, 
-    RuleName_part_specificator = 148, RuleName_attribute_part = 149, RuleName_function_call_or_indexed_part = 150, 
-    RuleName_slice_part = 151, RuleSelected_name = 152, RuleNature_declaration = 153, 
-    RuleNature_definition = 154, RuleNature_element_declaration = 155, RuleNext_statement = 156, 
-    RuleNumeric_literal = 157, RuleObject_declaration = 158, RuleOpts = 159, 
-    RulePackage_body = 160, RulePackage_body_declarative_item = 161, RulePackage_body_declarative_part = 162, 
-    RulePackage_declaration = 163, RulePackage_declarative_item = 164, RulePackage_declarative_part = 165, 
-    RuleParameter_specification = 166, RulePhysical_literal = 167, RulePhysical_type_definition = 168, 
-    RulePort_clause = 169, RulePort_list = 170, RulePort_map_aspect = 171, 
-    RulePrimary = 172, RulePrimary_unit = 173, RuleProcedural_declarative_item = 174, 
-    RuleProcedural_declarative_part = 175, RuleProcedural_statement_part = 176, 
-    RuleProcedure_call = 177, RuleProcedure_call_statement = 178, RuleProcess_declarative_item = 179, 
-    RuleProcess_declarative_part = 180, RuleProcess_statement = 181, RuleProcess_statement_part = 182, 
-    RuleQualified_expression = 183, RuleQuantity_declaration = 184, RuleQuantity_list = 185, 
-    RuleQuantity_specification = 186, RuleRange = 187, RuleExplicit_range = 188, 
-    RuleRange_constraint = 189, RuleRecord_nature_definition = 190, RuleRecord_type_definition = 191, 
-    RuleRelation = 192, RuleRelational_operator = 193, RuleReport_statement = 194, 
-    RuleReturn_statement = 195, RuleScalar_nature_definition = 196, RuleScalar_type_definition = 197, 
-    RuleSecondary_unit = 198, RuleSecondary_unit_declaration = 199, RuleSelected_signal_assignment = 200, 
-    RuleSelected_waveforms = 201, RuleSensitivity_clause = 202, RuleSensitivity_list = 203, 
-    RuleSequence_of_statements = 204, RuleSequential_statement = 205, RuleShift_expression = 206, 
-    RuleShift_operator = 207, RuleSignal_assignment_statement = 208, RuleSignal_declaration = 209, 
-    RuleSignal_kind = 210, RuleSignal_list = 211, RuleSignature = 212, RuleSimple_expression = 213, 
-    RuleSimple_simultaneous_statement = 214, RuleSimultaneous_alternative = 215, 
-    RuleSimultaneous_case_statement = 216, RuleSimultaneous_if_statement = 217, 
-    RuleSimultaneous_procedural_statement = 218, RuleSimultaneous_statement = 219, 
-    RuleSimultaneous_statement_part = 220, RuleSource_aspect = 221, RuleSource_quantity_declaration = 222, 
-    RuleStep_limit_specification = 223, RuleSubnature_declaration = 224, 
-    RuleSubnature_indication = 225, RuleSubprogram_body = 226, RuleSubprogram_declaration = 227, 
-    RuleSubprogram_declarative_item = 228, RuleSubprogram_declarative_part = 229, 
-    RuleSubprogram_kind = 230, RuleSubprogram_specification = 231, RuleProcedure_specification = 232, 
-    RuleFunction_specification = 233, RuleSubprogram_statement_part = 234, 
-    RuleSubtype_declaration = 235, RuleSubtype_indication = 236, RuleSuffix = 237, 
-    RuleTarget = 238, RuleTerm = 239, RuleTerminal_aspect = 240, RuleTerminal_declaration = 241, 
-    RuleThrough_aspect = 242, RuleTimeout_clause = 243, RuleTolerance_aspect = 244, 
-    RuleType_declaration = 245, RuleType_definition = 246, RuleUnconstrained_array_definition = 247, 
-    RuleUnconstrained_nature_definition = 248, RuleUse_clause = 249, RuleVariable_assignment_statement = 250, 
-    RuleVariable_declaration = 251, RuleWait_statement = 252, RuleWaveform = 253, 
-    RuleWaveform_element = 254
+    RuleConcurrent_signal_assignment_statement = 52, RuleConcurrent_simple_signal_assignment = 53, 
+    RuleConcurrent_conditional_signal_assignment = 54, RuleConcurrent_selected_signal_assignment = 55, 
+    RuleCondition = 56, RuleCondition_clause = 57, RuleConditional_signal_assignment = 58, 
+    RuleConditional_waveform_assignment = 59, RuleConditional_force_assignment = 60, 
+    RuleConditional_waveforms = 61, RuleConditional_expression = 62, RuleConfiguration_declaration = 63, 
+    RuleConfiguration_declarative_item = 64, RuleConfiguration_declarative_part = 65, 
+    RuleConfiguration_item = 66, RuleConfiguration_specification = 67, RuleConstant_declaration = 68, 
+    RuleConstrained_array_definition = 69, RuleConstrained_nature_definition = 70, 
+    RuleConstraint = 71, RuleContext_clause = 72, RuleContext_item = 73, 
+    RuleDelay_mechanism = 74, RuleDesign_file = 75, RuleDesign_unit = 76, 
+    RuleDesignator = 77, RuleDirection = 78, RuleDisconnection_specification = 79, 
+    RuleDiscrete_range = 80, RuleElement_association = 81, RuleElement_declaration = 82, 
+    RuleElement_subnature_definition = 83, RuleElement_subtype_definition = 84, 
+    RuleEntity_aspect = 85, RuleEntity_class = 86, RuleEntity_class_entry = 87, 
+    RuleEntity_class_entry_list = 88, RuleEntity_declaration = 89, RuleEntity_declarative_item = 90, 
+    RuleEntity_declarative_part = 91, RuleEntity_designator = 92, RuleEntity_header = 93, 
+    RuleEntity_name_list = 94, RuleEntity_specification = 95, RuleEntity_statement = 96, 
+    RuleEntity_statement_part = 97, RuleEntity_tag = 98, RuleEnumeration_literal = 99, 
+    RuleEnumeration_type_definition = 100, RuleExit_statement = 101, RuleExpression = 102, 
+    RuleLogical_expression = 103, RuleFactor = 104, RuleFile_declaration = 105, 
+    RuleFile_logical_name = 106, RuleFile_open_information = 107, RuleFile_type_definition = 108, 
+    RuleFormal_parameter_list = 109, RuleFormal_part = 110, RuleFree_quantity_declaration = 111, 
+    RuleGenerate_statement = 112, RuleFor_generate_statement = 113, RuleIf_generate_statement = 114, 
+    RuleCase_generate_statement = 115, RuleCase_generate_alternative = 116, 
+    RuleGenerate_statement_body = 117, RuleGeneration_scheme = 118, RuleGeneric_clause = 119, 
+    RuleGeneric_list = 120, RuleGeneric_map_aspect = 121, RuleGroup_constituent = 122, 
+    RuleGroup_constituent_list = 123, RuleGroup_declaration = 124, RuleGroup_template_declaration = 125, 
+    RuleGuarded_signal_specification = 126, RuleIdentifier = 127, RuleIdentifier_list = 128, 
+    RuleIf_statement = 129, RuleIndex_constraint = 130, RuleIndex_specification = 131, 
+    RuleIndex_subtype_definition = 132, RuleInstantiated_unit = 133, RuleInstantiation_list = 134, 
+    RuleInterface_constant_declaration = 135, RuleInterface_declaration = 136, 
+    RuleInterface_element = 137, RuleInterface_file_declaration = 138, RuleInterface_signal_list = 139, 
+    RuleInterface_port_list = 140, RuleInterface_list = 141, RuleInterface_quantity_declaration = 142, 
+    RuleInterface_port_declaration = 143, RuleInterface_signal_declaration = 144, 
+    RuleInterface_terminal_declaration = 145, RuleInterface_variable_declaration = 146, 
+    RuleIteration_scheme = 147, RuleLabel_colon = 148, RuleLibrary_clause = 149, 
+    RuleLibrary_unit = 150, RuleLiteral = 151, RuleLogical_name = 152, RuleLogical_name_list = 153, 
+    RuleLogical_operator = 154, RuleLoop_statement = 155, RuleSignal_mode = 156, 
+    RuleMultiplying_operator = 157, RuleName = 158, RuleName_part = 159, 
+    RuleName_part_specificator = 160, RuleName_attribute_part = 161, RuleName_function_call_or_indexed_part = 162, 
+    RuleName_slice_part = 163, RuleSelected_name = 164, RuleNature_declaration = 165, 
+    RuleNature_definition = 166, RuleNature_element_declaration = 167, RuleNext_statement = 168, 
+    RuleNumeric_literal = 169, RuleObject_declaration = 170, RuleOpts = 171, 
+    RulePackage_body = 172, RulePackage_body_declarative_item = 173, RulePackage_body_declarative_part = 174, 
+    RulePackage_declaration = 175, RulePackage_declarative_item = 176, RulePackage_declarative_part = 177, 
+    RuleParameter_specification = 178, RulePhysical_literal = 179, RulePhysical_type_definition = 180, 
+    RulePort_clause = 181, RulePort_list = 182, RulePort_map_aspect = 183, 
+    RulePrimary = 184, RulePrimary_unit = 185, RuleProcedural_declarative_item = 186, 
+    RuleProcedural_declarative_part = 187, RuleProcedural_statement_part = 188, 
+    RuleProcedure_call = 189, RuleProcedure_call_statement = 190, RuleProcess_declarative_item = 191, 
+    RuleProcess_declarative_part = 192, RuleProcess_statement = 193, RuleProcess_statement_part = 194, 
+    RuleQualified_expression = 195, RuleQuantity_declaration = 196, RuleQuantity_list = 197, 
+    RuleQuantity_specification = 198, RuleRange = 199, RuleExplicit_range = 200, 
+    RuleRange_constraint = 201, RuleRecord_nature_definition = 202, RuleRecord_type_definition = 203, 
+    RuleRelation = 204, RuleRelational_operator = 205, RuleReport_statement = 206, 
+    RuleReturn_statement = 207, RuleScalar_nature_definition = 208, RuleScalar_type_definition = 209, 
+    RuleSecondary_unit = 210, RuleSecondary_unit_declaration = 211, RuleSelected_signal_assignment = 212, 
+    RuleSelected_waveforms = 213, RuleSensitivity_clause = 214, RuleSensitivity_list = 215, 
+    RuleSequence_of_statements = 216, RuleSequential_statement = 217, RuleShift_expression = 218, 
+    RuleShift_operator = 219, RuleSignal_assignment_statement = 220, RuleSimple_signal_assignment = 221, 
+    RuleSimple_waveform_assignment = 222, RuleSimple_force_assignment = 223, 
+    RuleSimple_release_assignment = 224, RuleForce_mode = 225, RuleSignal_declaration = 226, 
+    RuleSignal_kind = 227, RuleSignal_list = 228, RuleSignature = 229, RuleSimple_expression = 230, 
+    RuleSimple_simultaneous_statement = 231, RuleSimultaneous_alternative = 232, 
+    RuleSimultaneous_case_statement = 233, RuleSimultaneous_if_statement = 234, 
+    RuleSimultaneous_procedural_statement = 235, RuleSimultaneous_statement = 236, 
+    RuleSimultaneous_statement_part = 237, RuleSource_aspect = 238, RuleSource_quantity_declaration = 239, 
+    RuleStep_limit_specification = 240, RuleSubnature_declaration = 241, 
+    RuleSubnature_indication = 242, RuleSubprogram_body = 243, RuleSubprogram_declaration = 244, 
+    RuleSubprogram_declarative_item = 245, RuleSubprogram_declarative_part = 246, 
+    RuleSubprogram_kind = 247, RuleSubprogram_specification = 248, RuleProcedure_specification = 249, 
+    RuleFunction_specification = 250, RuleSubprogram_statement_part = 251, 
+    RuleSubtype_declaration = 252, RuleSubtype_indication = 253, RuleSuffix = 254, 
+    RuleTarget = 255, RuleTerm = 256, RuleTerminal_aspect = 257, RuleTerminal_declaration = 258, 
+    RuleThrough_aspect = 259, RuleTimeout_clause = 260, RuleTolerance_aspect = 261, 
+    RuleType_declaration = 262, RuleType_definition = 263, RuleUnconstrained_array_definition = 264, 
+    RuleUnconstrained_nature_definition = 265, RuleUse_clause = 266, RuleVariable_assignment_statement = 267, 
+    RuleSimple_variable_assignment = 268, RuleConditional_variable_assignment = 269, 
+    RuleSelected_variable_assignment = 270, RuleVariable_declaration = 271, 
+    RuleWait_statement = 272, RuleWaveform = 273, RuleWaveform_element = 274
   };
 
   vhdlParser(antlr4::TokenStream *input);
@@ -204,10 +212,16 @@ public:
   class Concurrent_break_statementContext;
   class Concurrent_procedure_call_statementContext;
   class Concurrent_signal_assignment_statementContext;
+  class Concurrent_simple_signal_assignmentContext;
+  class Concurrent_conditional_signal_assignmentContext;
+  class Concurrent_selected_signal_assignmentContext;
   class ConditionContext;
   class Condition_clauseContext;
   class Conditional_signal_assignmentContext;
+  class Conditional_waveform_assignmentContext;
+  class Conditional_force_assignmentContext;
   class Conditional_waveformsContext;
+  class Conditional_expressionContext;
   class Configuration_declarationContext;
   class Configuration_declarative_itemContext;
   class Configuration_declarative_partContext;
@@ -248,6 +262,7 @@ public:
   class Enumeration_type_definitionContext;
   class Exit_statementContext;
   class ExpressionContext;
+  class Logical_expressionContext;
   class FactorContext;
   class File_declarationContext;
   class File_logical_nameContext;
@@ -257,6 +272,11 @@ public:
   class Formal_partContext;
   class Free_quantity_declarationContext;
   class Generate_statementContext;
+  class For_generate_statementContext;
+  class If_generate_statementContext;
+  class Case_generate_statementContext;
+  class Case_generate_alternativeContext;
+  class Generate_statement_bodyContext;
   class Generation_schemeContext;
   class Generic_clauseContext;
   class Generic_listContext;
@@ -360,6 +380,11 @@ public:
   class Shift_expressionContext;
   class Shift_operatorContext;
   class Signal_assignment_statementContext;
+  class Simple_signal_assignmentContext;
+  class Simple_waveform_assignmentContext;
+  class Simple_force_assignmentContext;
+  class Simple_release_assignmentContext;
+  class Force_modeContext;
   class Signal_declarationContext;
   class Signal_kindContext;
   class Signal_listContext;
@@ -402,6 +427,9 @@ public:
   class Unconstrained_nature_definitionContext;
   class Use_clauseContext;
   class Variable_assignment_statementContext;
+  class Simple_variable_assignmentContext;
+  class Conditional_variable_assignmentContext;
+  class Selected_variable_assignmentContext;
   class Variable_declarationContext;
   class Wait_statementContext;
   class WaveformContext;
@@ -1243,16 +1271,69 @@ public:
   public:
     Concurrent_signal_assignment_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    Conditional_signal_assignmentContext *conditional_signal_assignment();
-    Selected_signal_assignmentContext *selected_signal_assignment();
+    Concurrent_simple_signal_assignmentContext *concurrent_simple_signal_assignment();
     Label_colonContext *label_colon();
     antlr4::tree::TerminalNode *POSTPONED();
+    Concurrent_conditional_signal_assignmentContext *concurrent_conditional_signal_assignment();
+    Concurrent_selected_signal_assignmentContext *concurrent_selected_signal_assignment();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
   Concurrent_signal_assignment_statementContext* concurrent_signal_assignment_statement();
+
+  class  Concurrent_simple_signal_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Concurrent_simple_signal_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    OptsContext *opts();
+    WaveformContext *waveform();
+    antlr4::tree::TerminalNode *SEMI();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Concurrent_simple_signal_assignmentContext* concurrent_simple_signal_assignment();
+
+  class  Concurrent_conditional_signal_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Concurrent_conditional_signal_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    OptsContext *opts();
+    Conditional_waveformsContext *conditional_waveforms();
+    antlr4::tree::TerminalNode *SEMI();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Concurrent_conditional_signal_assignmentContext* concurrent_conditional_signal_assignment();
+
+  class  Concurrent_selected_signal_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Concurrent_selected_signal_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WITH();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *SELECT();
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    OptsContext *opts();
+    Selected_waveformsContext *selected_waveforms();
+    antlr4::tree::TerminalNode *SEMI();
+    antlr4::tree::TerminalNode *TERNARY();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Concurrent_selected_signal_assignmentContext* concurrent_selected_signal_assignment();
 
   class  ConditionContext : public antlr4::ParserRuleContext {
   public:
@@ -1283,11 +1364,8 @@ public:
   public:
     Conditional_signal_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TargetContext *target();
-    antlr4::tree::TerminalNode *LE();
-    OptsContext *opts();
-    Conditional_waveformsContext *conditional_waveforms();
-    antlr4::tree::TerminalNode *SEMI();
+    Conditional_waveform_assignmentContext *conditional_waveform_assignment();
+    Conditional_force_assignmentContext *conditional_force_assignment();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -1295,21 +1373,74 @@ public:
 
   Conditional_signal_assignmentContext* conditional_signal_assignment();
 
+  class  Conditional_waveform_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Conditional_waveform_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    Conditional_waveformsContext *conditional_waveforms();
+    Delay_mechanismContext *delay_mechanism();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Conditional_waveform_assignmentContext* conditional_waveform_assignment();
+
+  class  Conditional_force_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Conditional_force_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    antlr4::tree::TerminalNode *FORCE();
+    Conditional_expressionContext *conditional_expression();
+    Force_modeContext *force_mode();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Conditional_force_assignmentContext* conditional_force_assignment();
+
   class  Conditional_waveformsContext : public antlr4::ParserRuleContext {
   public:
     Conditional_waveformsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    WaveformContext *waveform();
-    antlr4::tree::TerminalNode *WHEN();
-    ConditionContext *condition();
-    antlr4::tree::TerminalNode *ELSE();
-    Conditional_waveformsContext *conditional_waveforms();
+    std::vector<WaveformContext *> waveform();
+    WaveformContext* waveform(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> WHEN();
+    antlr4::tree::TerminalNode* WHEN(size_t i);
+    std::vector<ConditionContext *> condition();
+    ConditionContext* condition(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> ELSE();
+    antlr4::tree::TerminalNode* ELSE(size_t i);
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
   Conditional_waveformsContext* conditional_waveforms();
+
+  class  Conditional_expressionContext : public antlr4::ParserRuleContext {
+  public:
+    Conditional_expressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> WHEN();
+    antlr4::tree::TerminalNode* WHEN(size_t i);
+    std::vector<ConditionContext *> condition();
+    ConditionContext* condition(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> ELSE();
+    antlr4::tree::TerminalNode* ELSE(size_t i);
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Conditional_expressionContext* conditional_expression();
 
   class  Configuration_declarationContext : public antlr4::ParserRuleContext {
   public:
@@ -1918,6 +2049,20 @@ public:
   public:
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *CONDITION_OPERATOR();
+    PrimaryContext *primary();
+    Logical_expressionContext *logical_expression();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ExpressionContext* expression();
+
+  class  Logical_expressionContext : public antlr4::ParserRuleContext {
+  public:
+    Logical_expressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     std::vector<RelationContext *> relation();
     RelationContext* relation(size_t i);
     std::vector<Logical_operatorContext *> logical_operator();
@@ -1927,7 +2072,7 @@ public:
    
   };
 
-  ExpressionContext* expression();
+  Logical_expressionContext* logical_expression();
 
   class  FactorContext : public antlr4::ParserRuleContext {
   public:
@@ -2021,8 +2166,9 @@ public:
     virtual size_t getRuleIndex() const override;
     IdentifierContext *identifier();
     antlr4::tree::TerminalNode *LPAREN();
-    Explicit_rangeContext *explicit_range();
     antlr4::tree::TerminalNode *RPAREN();
+    ExpressionContext *expression();
+    Explicit_rangeContext *explicit_range();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -2052,16 +2198,104 @@ public:
   public:
     Generate_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    For_generate_statementContext *for_generate_statement();
+    If_generate_statementContext *if_generate_statement();
+    Case_generate_statementContext *case_generate_statement();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Generate_statementContext* generate_statement();
+
+  class  For_generate_statementContext : public antlr4::ParserRuleContext {
+  public:
+    For_generate_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     Label_colonContext *label_colon();
-    Generation_schemeContext *generation_scheme();
+    antlr4::tree::TerminalNode *FOR();
+    Parameter_specificationContext *parameter_specification();
+    std::vector<antlr4::tree::TerminalNode *> GENERATE();
+    antlr4::tree::TerminalNode* GENERATE(size_t i);
+    Generate_statement_bodyContext *generate_statement_body();
+    antlr4::tree::TerminalNode *END();
+    antlr4::tree::TerminalNode *SEMI();
+    IdentifierContext *identifier();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  For_generate_statementContext* for_generate_statement();
+
+  class  If_generate_statementContext : public antlr4::ParserRuleContext {
+  public:
+    If_generate_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IF();
+    std::vector<ConditionContext *> condition();
+    ConditionContext* condition(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> GENERATE();
+    antlr4::tree::TerminalNode* GENERATE(size_t i);
+    std::vector<Generate_statement_bodyContext *> generate_statement_body();
+    Generate_statement_bodyContext* generate_statement_body(size_t i);
+    antlr4::tree::TerminalNode *END();
+    antlr4::tree::TerminalNode *SEMI();
+    Label_colonContext *label_colon();
+    std::vector<antlr4::tree::TerminalNode *> ELSIF();
+    antlr4::tree::TerminalNode* ELSIF(size_t i);
+    antlr4::tree::TerminalNode *ELSE();
+    IdentifierContext *identifier();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  If_generate_statementContext* if_generate_statement();
+
+  class  Case_generate_statementContext : public antlr4::ParserRuleContext {
+  public:
+    Case_generate_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *CASE();
+    ExpressionContext *expression();
     std::vector<antlr4::tree::TerminalNode *> GENERATE();
     antlr4::tree::TerminalNode* GENERATE(size_t i);
     antlr4::tree::TerminalNode *END();
     antlr4::tree::TerminalNode *SEMI();
+    Label_colonContext *label_colon();
+    std::vector<Case_generate_alternativeContext *> case_generate_alternative();
+    Case_generate_alternativeContext* case_generate_alternative(size_t i);
+    IdentifierContext *identifier();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Case_generate_statementContext* case_generate_statement();
+
+  class  Case_generate_alternativeContext : public antlr4::ParserRuleContext {
+  public:
+    Case_generate_alternativeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WHEN();
+    ChoicesContext *choices();
+    antlr4::tree::TerminalNode *ARROW();
+    Generate_statement_bodyContext *generate_statement_body();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Case_generate_alternativeContext* case_generate_alternative();
+
+  class  Generate_statement_bodyContext : public antlr4::ParserRuleContext {
+  public:
+    Generate_statement_bodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *BEGIN();
     std::vector<Architecture_statementContext *> architecture_statement();
     Architecture_statementContext* architecture_statement(size_t i);
-    IdentifierContext *identifier();
     std::vector<Block_declarative_itemContext *> block_declarative_item();
     Block_declarative_itemContext* block_declarative_item(size_t i);
 
@@ -2069,7 +2303,7 @@ public:
    
   };
 
-  Generate_statementContext* generate_statement();
+  Generate_statement_bodyContext* generate_statement_body();
 
   class  Generation_schemeContext : public antlr4::ParserRuleContext {
   public:
@@ -2079,6 +2313,8 @@ public:
     Parameter_specificationContext *parameter_specification();
     antlr4::tree::TerminalNode *IF();
     ConditionContext *condition();
+    antlr4::tree::TerminalNode *CASE();
+    ExpressionContext *expression();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -3581,6 +3817,7 @@ public:
     OptsContext *opts();
     Selected_waveformsContext *selected_waveforms();
     antlr4::tree::TerminalNode *SEMI();
+    antlr4::tree::TerminalNode *TERNARY();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -3628,6 +3865,7 @@ public:
     NameContext* name(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *ALL();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -3710,18 +3948,92 @@ public:
   public:
     Signal_assignment_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TargetContext *target();
-    antlr4::tree::TerminalNode *LE();
-    WaveformContext *waveform();
-    antlr4::tree::TerminalNode *SEMI();
+    Simple_signal_assignmentContext *simple_signal_assignment();
     Label_colonContext *label_colon();
-    Delay_mechanismContext *delay_mechanism();
+    Conditional_signal_assignmentContext *conditional_signal_assignment();
+    Selected_signal_assignmentContext *selected_signal_assignment();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
   Signal_assignment_statementContext* signal_assignment_statement();
+
+  class  Simple_signal_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Simple_signal_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    Simple_waveform_assignmentContext *simple_waveform_assignment();
+    Simple_force_assignmentContext *simple_force_assignment();
+    Simple_release_assignmentContext *simple_release_assignment();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Simple_signal_assignmentContext* simple_signal_assignment();
+
+  class  Simple_waveform_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Simple_waveform_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    WaveformContext *waveform();
+    antlr4::tree::TerminalNode *SEMI();
+    Delay_mechanismContext *delay_mechanism();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Simple_waveform_assignmentContext* simple_waveform_assignment();
+
+  class  Simple_force_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Simple_force_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    antlr4::tree::TerminalNode *FORCE();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *SEMI();
+    Force_modeContext *force_mode();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Simple_force_assignmentContext* simple_force_assignment();
+
+  class  Simple_release_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Simple_release_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *LE();
+    antlr4::tree::TerminalNode *RELEASE();
+    antlr4::tree::TerminalNode *SEMI();
+    Force_modeContext *force_mode();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Simple_release_assignmentContext* simple_release_assignment();
+
+  class  Force_modeContext : public antlr4::ParserRuleContext {
+  public:
+    Force_modeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IN();
+    antlr4::tree::TerminalNode *OUT();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Force_modeContext* force_mode();
 
   class  Signal_declarationContext : public antlr4::ParserRuleContext {
   public:
@@ -4187,7 +4499,8 @@ public:
     virtual size_t getRuleIndex() const override;
     std::vector<Selected_nameContext *> selected_name();
     Selected_nameContext* selected_name(size_t i);
-    ConstraintContext *constraint();
+    std::vector<ConstraintContext *> constraint();
+    ConstraintContext* constraint(size_t i);
     Tolerance_aspectContext *tolerance_aspect();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -4403,17 +4716,61 @@ public:
   public:
     Variable_assignment_statementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TargetContext *target();
-    antlr4::tree::TerminalNode *VARASGN();
-    ExpressionContext *expression();
-    antlr4::tree::TerminalNode *SEMI();
+    Simple_variable_assignmentContext *simple_variable_assignment();
     Label_colonContext *label_colon();
+    Conditional_variable_assignmentContext *conditional_variable_assignment();
+    Selected_variable_assignmentContext *selected_variable_assignment();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
   };
 
   Variable_assignment_statementContext* variable_assignment_statement();
+
+  class  Simple_variable_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Simple_variable_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *VARASGN();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *SEMI();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Simple_variable_assignmentContext* simple_variable_assignment();
+
+  class  Conditional_variable_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Conditional_variable_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TargetContext *target();
+    antlr4::tree::TerminalNode *VARASGN();
+    Conditional_expressionContext *conditional_expression();
+    antlr4::tree::TerminalNode *SEMI();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Conditional_variable_assignmentContext* conditional_variable_assignment();
+
+  class  Selected_variable_assignmentContext : public antlr4::ParserRuleContext {
+  public:
+    Selected_variable_assignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WITH();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *SELECT();
+    antlr4::tree::TerminalNode *TERNARY();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  Selected_variable_assignmentContext* selected_variable_assignment();
 
   class  Variable_declarationContext : public antlr4::ParserRuleContext {
   public:

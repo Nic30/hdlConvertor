@@ -8,6 +8,15 @@ Port::Port(Direction direction, Variable * variable) {
 #ifdef USE_PYTHON
 PyObject * Port::toJson() const {
 	PyObject *d = PyDict_New();
+
+	if (position) {
+		JSN_DEBUG("Port - position")
+		PyDict_SetItemString(d, "position", position->toJson());
+	} else {
+		Py_IncRef (Py_None);
+		PyDict_SetItemString(d, "position", Py_None);
+	}
+
 	PyDict_SetItemString(d, "direction",
 			PyUnicode_FromString(Direction_toString(direction)));
 	PyDict_SetItemString(d, "variable", variable->toJson());

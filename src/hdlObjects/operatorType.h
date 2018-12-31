@@ -2,6 +2,11 @@
 
 enum OperatorType {
 	RANGE,
+	REVERSE_RANGE,
+	ACROSS,
+	THROUGH,
+	REFERENCE,
+	TOLERANCE,
 	INDEX,
 	DOWNTO,
 	TO,

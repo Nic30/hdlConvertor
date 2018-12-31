@@ -126,13 +126,25 @@ public:
 
     virtual antlrcpp::Any visitConcurrent_signal_assignment_statement(vhdlParser::Concurrent_signal_assignment_statementContext *context) = 0;
 
+    virtual antlrcpp::Any visitConcurrent_simple_signal_assignment(vhdlParser::Concurrent_simple_signal_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitConcurrent_conditional_signal_assignment(vhdlParser::Concurrent_conditional_signal_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitConcurrent_selected_signal_assignment(vhdlParser::Concurrent_selected_signal_assignmentContext *context) = 0;
+
     virtual antlrcpp::Any visitCondition(vhdlParser::ConditionContext *context) = 0;
 
     virtual antlrcpp::Any visitCondition_clause(vhdlParser::Condition_clauseContext *context) = 0;
 
     virtual antlrcpp::Any visitConditional_signal_assignment(vhdlParser::Conditional_signal_assignmentContext *context) = 0;
 
+    virtual antlrcpp::Any visitConditional_waveform_assignment(vhdlParser::Conditional_waveform_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitConditional_force_assignment(vhdlParser::Conditional_force_assignmentContext *context) = 0;
+
     virtual antlrcpp::Any visitConditional_waveforms(vhdlParser::Conditional_waveformsContext *context) = 0;
+
+    virtual antlrcpp::Any visitConditional_expression(vhdlParser::Conditional_expressionContext *context) = 0;
 
     virtual antlrcpp::Any visitConfiguration_declaration(vhdlParser::Configuration_declarationContext *context) = 0;
 
@@ -214,6 +226,8 @@ public:
 
     virtual antlrcpp::Any visitExpression(vhdlParser::ExpressionContext *context) = 0;
 
+    virtual antlrcpp::Any visitLogical_expression(vhdlParser::Logical_expressionContext *context) = 0;
+
     virtual antlrcpp::Any visitFactor(vhdlParser::FactorContext *context) = 0;
 
     virtual antlrcpp::Any visitFile_declaration(vhdlParser::File_declarationContext *context) = 0;
@@ -231,6 +245,16 @@ public:
     virtual antlrcpp::Any visitFree_quantity_declaration(vhdlParser::Free_quantity_declarationContext *context) = 0;
 
     virtual antlrcpp::Any visitGenerate_statement(vhdlParser::Generate_statementContext *context) = 0;
+
+    virtual antlrcpp::Any visitFor_generate_statement(vhdlParser::For_generate_statementContext *context) = 0;
+
+    virtual antlrcpp::Any visitIf_generate_statement(vhdlParser::If_generate_statementContext *context) = 0;
+
+    virtual antlrcpp::Any visitCase_generate_statement(vhdlParser::Case_generate_statementContext *context) = 0;
+
+    virtual antlrcpp::Any visitCase_generate_alternative(vhdlParser::Case_generate_alternativeContext *context) = 0;
+
+    virtual antlrcpp::Any visitGenerate_statement_body(vhdlParser::Generate_statement_bodyContext *context) = 0;
 
     virtual antlrcpp::Any visitGeneration_scheme(vhdlParser::Generation_schemeContext *context) = 0;
 
@@ -438,6 +462,16 @@ public:
 
     virtual antlrcpp::Any visitSignal_assignment_statement(vhdlParser::Signal_assignment_statementContext *context) = 0;
 
+    virtual antlrcpp::Any visitSimple_signal_assignment(vhdlParser::Simple_signal_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitSimple_waveform_assignment(vhdlParser::Simple_waveform_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitSimple_force_assignment(vhdlParser::Simple_force_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitSimple_release_assignment(vhdlParser::Simple_release_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitForce_mode(vhdlParser::Force_modeContext *context) = 0;
+
     virtual antlrcpp::Any visitSignal_declaration(vhdlParser::Signal_declarationContext *context) = 0;
 
     virtual antlrcpp::Any visitSignal_kind(vhdlParser::Signal_kindContext *context) = 0;
@@ -521,6 +555,12 @@ public:
     virtual antlrcpp::Any visitUse_clause(vhdlParser::Use_clauseContext *context) = 0;
 
     virtual antlrcpp::Any visitVariable_assignment_statement(vhdlParser::Variable_assignment_statementContext *context) = 0;
+
+    virtual antlrcpp::Any visitSimple_variable_assignment(vhdlParser::Simple_variable_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitConditional_variable_assignment(vhdlParser::Conditional_variable_assignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitSelected_variable_assignment(vhdlParser::Selected_variable_assignmentContext *context) = 0;
 
     virtual antlrcpp::Any visitVariable_declaration(vhdlParser::Variable_declarationContext *context) = 0;
 

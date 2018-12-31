@@ -88,7 +88,6 @@ hdlConvertor_parse(PyObject *self, PyObject *args, PyObject *keywds) {
 		}
 		return NULL;
 	}
-
 	MOD_DEBUG("cntx loaded");
 	PyObject * d = NULL;
 	try {

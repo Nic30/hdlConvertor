@@ -6,6 +6,7 @@
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/compInstance.h"
+#include "../hdlObjects/position.h"
 #include "literalParser.h"
 #include "referenceParser.h"
 

@@ -10,11 +10,14 @@
 #include "operatorType.h"
 #include "exprItem.h"
 #include "symbol.h"
+#include "position.h"
 #include "../debugConfig.h"
 
 class Expr {
 public:
 	ExprItem * data;
+	char * raw = "";
+	Position * position = NULL;
 	Expr();
 	Expr(const Expr & expr);
 
@@ -41,6 +44,7 @@ public:
 	static Expr * ARRAY(std::vector<Expr*> arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
 	static Expr * call(Expr * fnId, std::vector<Expr*> * operands);
+	static Expr * slice(Expr * fnId, std::vector<Expr*> * operands);
 
 	static Expr * OPEN();
 	static Expr * all();

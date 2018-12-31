@@ -229,6 +229,18 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitConcurrent_simple_signal_assignment(vhdlParser::Concurrent_simple_signal_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConcurrent_conditional_signal_assignment(vhdlParser::Concurrent_conditional_signal_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConcurrent_selected_signal_assignment(vhdlParser::Concurrent_selected_signal_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitCondition(vhdlParser::ConditionContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -241,7 +253,19 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitConditional_waveform_assignment(vhdlParser::Conditional_waveform_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConditional_force_assignment(vhdlParser::Conditional_force_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitConditional_waveforms(vhdlParser::Conditional_waveformsContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConditional_expression(vhdlParser::Conditional_expressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -405,6 +429,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitLogical_expression(vhdlParser::Logical_expressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitFactor(vhdlParser::FactorContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -438,6 +466,26 @@ public:
   }
 
   virtual antlrcpp::Any visitGenerate_statement(vhdlParser::Generate_statementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitFor_generate_statement(vhdlParser::For_generate_statementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitIf_generate_statement(vhdlParser::If_generate_statementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCase_generate_statement(vhdlParser::Case_generate_statementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitCase_generate_alternative(vhdlParser::Case_generate_alternativeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitGenerate_statement_body(vhdlParser::Generate_statement_bodyContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -853,6 +901,26 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitSimple_signal_assignment(vhdlParser::Simple_signal_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSimple_waveform_assignment(vhdlParser::Simple_waveform_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSimple_force_assignment(vhdlParser::Simple_force_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSimple_release_assignment(vhdlParser::Simple_release_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitForce_mode(vhdlParser::Force_modeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitSignal_declaration(vhdlParser::Signal_declarationContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -1018,6 +1086,18 @@ public:
   }
 
   virtual antlrcpp::Any visitVariable_assignment_statement(vhdlParser::Variable_assignment_statementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSimple_variable_assignment(vhdlParser::Simple_variable_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConditional_variable_assignment(vhdlParser::Conditional_variable_assignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSelected_variable_assignment(vhdlParser::Selected_variable_assignmentContext *ctx) override {
     return visitChildren(ctx);
   }
 

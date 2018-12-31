@@ -19,6 +19,8 @@ class ExprParser {
 public:
 	static std::vector<Expr*> * visitActual_parameter_part(
 			vhdlParser::Actual_parameter_partContext* ctx);
+	static 	std::vector<Expr*> * visitAssociation_list(
+			vhdlParser::Association_listContext *ctx);			
 	static Expr* visitAssociation_element(
 			vhdlParser::Association_elementContext* ctx);
 	static Expr* visitFormal_part(vhdlParser::Formal_partContext* ctx);
@@ -38,6 +40,8 @@ public:
 	static Expr* visitSimple_expression(
 			vhdlParser::Simple_expressionContext* ctx);
 	static Expr* visitExpression(vhdlParser::ExpressionContext* ctx);
+	static Expr* visitLogical_expression(
+			vhdlParser::Logical_expressionContext *ctx);
 	static Expr* visitRelation(vhdlParser::RelationContext* ctx);
 	static Expr* visitShift_expression(
 			vhdlParser::Shift_expressionContext* ctx);

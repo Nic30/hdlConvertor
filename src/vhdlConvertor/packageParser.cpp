@@ -48,124 +48,78 @@ void PackageParser::visitPackage_body_declarative_item(
 	// | group_template_declaration
 	// | group_declaration
 	// ;
-	auto sd = ctx->subprogram_declaration();
-	if (sd) {
-		visitSubprogram_declaration(sd);
-		return;
+    auto sp = ctx->subprogram_declaration();
+	if (sp) {
+		p->function_headers.push_back(SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+        return;
 	}
-
-	auto sb = ctx->subprogram_body();
+    auto sb = ctx->subprogram_body();
 	if (sb) {
-		Function * f = visitSubprogram_body(sb);
-		p->functions.push_back(f);
+		// TODO: implement
+		//Function * f = SubProgramParser::visitSubprogram_body(sb);
+		//p->functions.push_back(f);
 		return;
 	}
-
-	NotImplementedLogger::print(
-			"PackageParser.visitPackage_body_declarative_item");
-}
-Function * PackageParser::visitSubprogram_body(
-		vhdlParser::Subprogram_bodyContext* ctx) {
-	// subprogram_body :
-	// subprogram_specification IS
-	// subprogram_declarative_part
-	// BEGIN
-	// subprogram_statement_part
-	// END ( subprogram_kind )? ( designator )? SEMI
-	// ;
-	Function * f = PackageHeaderParser::visitSubprogram_specification(
-			ctx->subprogram_specification());
-
-	auto vs = visitSubprogram_declarative_part(
-			ctx->subprogram_declarative_part());
-	for (auto v : *vs) {
-		f->locals.push_back(v);
+    auto td = ctx->type_declaration();
+	if (td) {
+		NotImplementedLogger::print(
+				"PackageParser.visitType_declaration");
+        return;        
 	}
-	delete vs;
-
-	auto stmts = visitSubprogram_statement_part(
-			ctx->subprogram_statement_part());
-	for (auto s : *stmts) {
-		f->body.push_back(s);
+    auto st = ctx->subtype_declaration();
+	if (st) {
+		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
+		p->subtype_headers.push_back(_st);
+		return;	       
 	}
-	delete stmts;
-
-	return f;
-}
-std::vector<Variable*>* PackageParser::PackageParser::visitSubprogram_declarative_part(
-		vhdlParser::Subprogram_declarative_partContext* ctx) {
-	// subprogram_declarative_part
-	// : ( subprogram_declarative_item )*
-	// ;
-	std::vector<Variable*> * vars = new std::vector<Variable*>();
-	for (auto sd : ctx->subprogram_declarative_item()) {
-		auto spdis = visitSubprogram_declarative_item(sd);
-		for (auto spdi : *spdis)
-			vars->push_back(spdi);
-		delete spdis;
-	}
-
-	return vars;
-}
-std::vector<Variable *> * PackageParser::visitSubprogram_declarative_item(
-		vhdlParser::Subprogram_declarative_itemContext* ctx) {
-	// subprogram_declarative_item
-	// : subprogram_declaration
-	// | subprogram_body
-	// | type_declaration
-	// | subtype_declaration
-	// | constant_declaration
-	// | variable_declaration
-	// | file_declaration
-	// | alias_declaration
-	// | attribute_declaration
-	// | attribute_specification
-	// | use_clause
-	// | group_template_declaration
-	// | group_declaration
-	// ;
+    auto constd = ctx->constant_declaration();
+	if (constd) {
+		auto constants = ConstantParser::visitConstant_declaration(constd);
+		for (auto c : *constants) {
+			p->constants.push_back(c);
+		}
+		delete constants;
+        return;
+	}    
 	auto vd = ctx->variable_declaration();
 	if (vd) {
-		return visitVariable_declaration(vd);
+		auto variables = VariableParser::visitVariable_declaration(vd);
+		for (auto v : *variables) {
+			p->variables.push_back(v);
+		}
+		delete variables;
+        return;        
 	}
-
-	NotImplementedLogger::print(
-			"PackageParser.visitSubprogram_declarative_item");
-	return new std::vector<Variable*>();
-}
-
-std::vector<Variable*> * PackageParser::visitVariable_declaration(
-		vhdlParser::Variable_declarationContext* ctx) {
-	// variable_declaration :
-	// ( SHARED )? VARIABLE identifier_list COLON
-	// subtype_indication ( VARASGN expression )? SEMI
-	// ;
-	if (ctx->SHARED())
+	auto fd = ctx->file_declaration();
+	if (fd) {
 		NotImplementedLogger::print(
-				"PackageParser.visitVariable_declaration - SHARED");
-
-	std::vector<Variable*> * vl = InterfaceParser::extractVariables(
-			ctx->identifier_list(), ctx->subtype_indication(),
-			ctx->expression());
-	return vl;
-}
-
-void PackageParser::visitSubprogram_declaration(
-		vhdlParser::Subprogram_declarationContext* ctx) {
-	// subprogram_declaration
-	// : subprogram_specification SEMI
-	// ;
-	NotImplementedLogger::print("PackageParser.visitSubprogram_declaration");
-}
-
-std::vector<Statement *> * PackageParser::visitSubprogram_statement_part(
-		vhdlParser::Subprogram_statement_partContext* ctx) {
-	// subprogram_statement_part
-	// : ( sequential_statement )*
-	// ;
-	std::vector<Statement *> * statements = new std::vector<Statement*>();
-	for (auto s : ctx->sequential_statement()) {
-		statements->push_back(StatementParser::visitSequential_statement(s));
+				"PackageParser.visitFile_declaration");
+        return;        
 	}
-	return statements;
+	auto aliasd = ctx->alias_declaration();
+	if (aliasd) {
+		NotImplementedLogger::print(
+				"PackageParser.visitAlias_declaration");
+        return;        
+	}
+    auto uc = ctx->use_clause();
+	if (uc) {
+		NotImplementedLogger::print("PackageParser.visitUse_clause");
+        return;
+	}
+	auto gtd = ctx->group_template_declaration();
+	if (gtd) {
+		NotImplementedLogger::print(
+				"PackageParser.visitGroup_template_declaration");
+        return;        
+	}
+	auto gd = ctx->group_declaration();
+	if (gd) {
+		NotImplementedLogger::print(
+				"PackageParser.visitGroup_declaration");
+        return;        
+	}
+	NotImplementedLogger::print(
+			"PackageParser.visitProcess_declarative_item");
+	return;
 }

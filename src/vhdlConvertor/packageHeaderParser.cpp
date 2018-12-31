@@ -26,88 +26,6 @@ void PackageHeaderParser::visitPackage_declarative_part(PackageHeader * ph,
 		visitPackage_declarative_item(i);
 	}
 }
-Function * PackageHeaderParser::visitSubprogram_declaration(
-		vhdlParser::Subprogram_declarationContext* ctx) {
-	// subprogram_declaration
-	// : subprogram_specification SEMI
-	// ;
-	return visitSubprogram_specification(ctx->subprogram_specification());
-}
-Function * PackageHeaderParser::visitSubprogram_specification(
-		vhdlParser::Subprogram_specificationContext* ctx) {
-	// subprogram_specification
-	// : procedure_specification
-	// | function_specification
-	// ;
-
-	auto p = ctx->procedure_specification();
-	if (p)
-		return visitProcedure_specification(p);
-	else
-		return visitFunction_specification(ctx->function_specification());
-}
-
-Function * PackageHeaderParser::visitProcedure_specification(
-		vhdlParser::Procedure_specificationContext* ctx) {
-	// procedure_specification
-	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
-	// ;
-	auto designator = ctx->designator();
-	Expr * returnT = NULL;
-	bool isOperator = LiteralParser::isStrDesignator(designator);
-	char * name = LiteralParser::visitDesignator(designator);
-	std::vector<Variable*> * paramList = visitFormal_parameter_list(
-			ctx->formal_parameter_list());
-
-	return new Function(name, isOperator, returnT, paramList);
-}
-Function * PackageHeaderParser::visitFunction_specification(
-		vhdlParser::Function_specificationContext* ctx) {
-	// function_specification
-	// : ( PURE | IMPURE )? FUNCTION designator
-	// ( LPAREN formal_parameter_list RPAREN )? RETURN subtype_indication
-	// ;
-	auto designator = ctx->designator();
-	Expr * returnT = ExprParser::visitSubtype_indication(
-			ctx->subtype_indication());
-	assert(returnT);
-
-	bool isOperator = LiteralParser::isStrDesignator(designator);
-	char * name = LiteralParser::visitDesignator(designator);
-	std::vector<Variable*> * paramList = visitFormal_parameter_list(
-			ctx->formal_parameter_list());
-
-	return new Function(name, isOperator, returnT, paramList);
-}
-
-std::vector<Variable*> * PackageHeaderParser::visitFormal_parameter_list(
-		vhdlParser::Formal_parameter_listContext* ctx) {
-	// formal_parameter_list
-	// : interface_list
-	// ;
-	return InterfaceParser::visitInterface_list(ctx->interface_list());
-}
-
-std::vector<Variable*> * PackageHeaderParser::visitConstant_declaration(
-		vhdlParser::Constant_declarationContext* ctx) {
-	//constant_declaration :
-	//    CONSTANT identifier_list COLON subtype_indication
-	//    ( VARASGN expression )? SEMI
-	//  ;
-	return InterfaceParser::extractVariables(ctx->identifier_list(),
-			ctx->subtype_indication(), ctx->expression());
-}
-
-Variable * PackageHeaderParser::visitSubtype_declaration(
-		vhdlParser::Subtype_declarationContext* ctx) {
-	//subtype_declaration
-	//  : SUBTYPE identifier IS subtype_indication SEMI
-	//  ;
-	auto t = ExprParser::visitSubtype_indication(ctx->subtype_indication());
-	std::shared_ptr<Expr> tt(Expr::TYPE_T());
-	Variable * v = new Variable(ctx->identifier()->getText(), tt, t);
-	return v;
-}
 
 void PackageHeaderParser::visitPackage_declarative_item(
 		vhdlParser::Package_declarative_itemContext* ctx) {
@@ -133,7 +51,7 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	// ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		ph->functions.push_back(visitSubprogram_declaration(sp));
+		ph->function_headers.push_back(SubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -143,26 +61,36 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = visitSubtype_declaration(st);
-		ph->variables.push_back(_st);
+		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
+		ph->subtype_headers.push_back(_st);
+		return;	
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
-		auto constants = visitConstant_declaration(constd);
+		auto constants = ConstantParser::visitConstant_declaration(constd);
 		for (auto c : *constants) {
-			ph->variables.push_back(c);
+			ph->constants.push_back(c);
 		}
 		delete constants;
+		return;	
 	}
 	auto sd = ctx->signal_declaration();
 	if (sd) {
-		NotImplementedLogger::print(
-				"PackageHeaderParser.visitSignal_declaration");
+		auto signals = SignalParser::visitSignal_declaration(sd);
+		for (auto s : *signals) {
+			ph->signals.push_back(s);
+		}
+		delete signals;
+		return;	
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
-		NotImplementedLogger::print(
-				"PackageHeaderParser.visitVariable_declaration");
+		auto variables = VariableParser::visitVariable_declaration(vd);
+		for (auto v : *variables) {
+			ph->variables.push_back(v);
+		}
+		delete variables;
+        return;  
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {

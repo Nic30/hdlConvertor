@@ -8,12 +8,16 @@
 #include "jsonable.h"
 #include "process.h"
 #include "position.h"
-#include "generate.h"
 
-class Arch: public Named {
+enum GenerateType {
+	g_NONE, g_IF, g_ELSIF, g_ELSE, g_CASE, g_WHILE, g_FOR
+};
+
+class Generate {
 public:
-	const char * entityName;
+	const char * name = NULL;
 	Position * position = NULL;
+	GenerateType type;
 	std::vector<CompInstance*> componentInstances;
 	std::vector<Entity*> components;	
 	std::vector<Function*> function_headers;
@@ -23,9 +27,10 @@ public:
 	std::vector<Variable*> signals;
 	std::vector<Variable*> constants;
 	std::vector<Process*> processes;
-	std::vector<Generate*> generates;
+    std::vector<Generate*> generates;
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif
-	~Arch();
+	void dump(int indent) const;
+	~Generate();
 };
