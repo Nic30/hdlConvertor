@@ -3,7 +3,9 @@ from os import path
 
 setup(
     cmake_args= [
-        '-DANTLR_JAR_LOCATION='+path.abspath('antlr4/antlr-4.7.1-complete.jar')
+        '-DANTLR_JAR_LOCATION='+path.abspath('antlr4/antlr-4.7.2-complete.jar'),
+#        '-DCMAKE_BUILD_TYPE=Debug'
+
     ],
     name='hdlConvertor',
     version='1.2',
@@ -19,6 +21,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Build Tools',
         'Programming Language :: C++',
+        'Programming Language :: Python :: 2.7'
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor'],
