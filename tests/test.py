@@ -77,6 +77,16 @@ class BasicTC(unittest.TestCase):
         f, res = dumpFile("define.v", "verilog")
         str(res)
 
+    def test_verilog_fifo_rx(self):
+        f, res = dumpFile("fifo_rx.v", "verilog")
+        e = res['entities']
+        self.assertEqual(len(e), 1)
+        e = e[0]
+        self.assertEqual(len(e['generics']), 2)
+        self.assertEqual(len(e['ports']), 11)
+        str(res)
+
+
 #    def test_system_verilog_mem_base_object(self):
 #        f, res = dumpFile("mem_base_object.sv",  "systemVerilog")
 #        str(res)
