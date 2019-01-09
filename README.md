@@ -71,6 +71,7 @@ Currently package is tested only for python3.5+ (python3.6 or latest recomended)
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
+* [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 
 
 ### License
