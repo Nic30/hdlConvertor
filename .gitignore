@@ -34,6 +34,7 @@ MANIFEST
 
 # build folders
 Debug/
+build/
 target/
 dist/
 _skbuild/
@@ -51,4 +52,10 @@ hdlConvertor.egg-info
 # devel archives
 *.zip
 *.jar
-/build/
+
+# eclipse files
+.cproject
+.project
+.pydevproject
+
+
