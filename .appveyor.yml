@@ -12,6 +12,8 @@ environment:
     #- PYTHON: "C:\\Python35-x64"
     #- TOOLSET: cygwin
     - PYTHON: "C:\\Python37-x64"
+    # add to path otherwise Cython is not found
+      PATH: $(PYTHON)\Scripts;$(PATH) 
     #  CYGWIN: "c:\\cygwin64"
 
 install:
