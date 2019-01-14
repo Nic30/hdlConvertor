@@ -14,7 +14,7 @@ cdef extern from "exception.h":
 
 cdef extern from "langue.h":
     enum Langue:
-        VHDL, VERILOG,SYSTEM_VERILOG
+        VHDL, VERILOG, SYSTEM_VERILOG
 
 cdef extern from "convertor.h":
     cdef cppclass Convertor:
@@ -23,11 +23,11 @@ cdef extern from "convertor.h":
         Langue lang
         bool hierarchyOnly
 
-        Context * parse ( char *,
-                              Langue,
-                              vector[string],
-                              bool,
-                              bool
-                             ) except +raise_py_error
-        void test (string filename, vector[string] incdir) except +raise_py_error
+        Context * parse(char *,
+                        Langue,
+                        vector[string],
+                        bool,
+                        bool) except +raise_py_error
+
+        void test(string filename, vector[string] incdir) except +raise_py_error
 
