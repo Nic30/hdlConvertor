@@ -48,7 +48,7 @@ public:
 	static bool debug;
 
 	Context * parse(
-			std::string fileName,
+			std::vector<std::string> fileNames,
 			Langue lang,
 			std::vector<std::string>,
 			bool hierarchyOnly,

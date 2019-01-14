@@ -21,64 +21,66 @@ void parseFnSystemVerilog(sv2012::sv2012Parser * antlrParser,
 }
 #endif
 
-Context * Convertor::parse(std::string _fileName, Langue _lang,
+Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 		std::vector<std::string> incdir, bool _hierarchyOnly, bool _debug) {
 
-	struct stat buffer;
-	fileName = _fileName;
-	lang = _lang;
+	Context * c = NULL;
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
-	Context * c = NULL;
+	for (const auto & _fileName : _fileNames) {
+		struct stat buffer;
+		fileName = _fileName;
+		lang = _lang;
 
-	if (stat(_fileName.c_str(), &buffer) != 0) {
-		throw parseException(_fileName + " does not exist.");
-	}
-	std::ifstream t(fileName);
-	std::string str((std::istreambuf_iterator<char>(t)),
-			std::istreambuf_iterator<char>());
+		if (stat(_fileName.c_str(), &buffer) != 0) {
+			throw parseException(_fileName + " does not exist.");
+		}
+		std::ifstream t(fileName);
+		std::string str((std::istreambuf_iterator<char>(t)),
+				std::istreambuf_iterator<char>());
 
-	if (lang == VHDL) {
+		if (lang == VHDL) {
 
-		ANTLRInputStream input(str);
-		input.name = fileName;
-		auto pc =
-				new ParserContainer<vhdlLexer, vhdlParser, DesignFileParser>();
-		pc->parseFile(input, hierarchyOnly, debug, parseFnVHDL);
-		c = pc->context;
-		delete pc;
+			ANTLRInputStream input(str);
+			input.name = fileName;
+			auto pc = new ParserContainer<vhdlLexer, vhdlParser,
+					DesignFileParser>(c);
+			pc->parseFile(input, hierarchyOnly, debug, parseFnVHDL);
+			c = pc->context;
+			delete pc;
 
-	} else if (lang == VERILOG) {
+		} else if (lang == VERILOG) {
 
-		auto pc = new ParserContainer<Verilog2001Lexer, Verilog2001Parser,
-				Source_textParser>();
-		macroSymbol defineDB;
-		str = return_preprocessed(str, incdir, defineDB);
+			auto pc = new ParserContainer<Verilog2001Lexer, Verilog2001Parser,
+					Source_textParser>(c);
+			macroSymbol defineDB;
+			str = return_preprocessed(str, incdir, defineDB);
 
-		ANTLRInputStream input(str);
-		input.name = fileName;
+			ANTLRInputStream input(str);
+			input.name = fileName;
 
-		pc->parseFile(input, hierarchyOnly, debug, parseFnVerilog);
-		c = pc->context;
-		delete pc;
+			pc->parseFile(input, hierarchyOnly, debug, parseFnVerilog);
+			c = pc->context;
+			delete pc;
 
 #ifdef SV_PARSER
-	} else if (lang == SYSTEM_VERILOG) {
-		auto pc = new ParserContainer<sv2012::sv2012Lexer, sv2012::sv2012Parser,
-				source_textParser>();
+		} else if (lang == SYSTEM_VERILOG) {
+			auto pc = new ParserContainer<sv2012::sv2012Lexer,
+					sv2012::sv2012Parser, source_textParser>(c);
 
-		macroSymbol defineDB;
-		str = return_preprocessed(str, incdir, defineDB);
+			macroSymbol defineDB;
+			str = return_preprocessed(str, incdir, defineDB);
 
-		ANTLRInputStream input(str);
-		input.name = fileName;
+			ANTLRInputStream input(str);
+			input.name = fileName;
 
-		pc->parseFile(input, hierarchyOnly, debug, parseFnSystemVerilog);
-		c = pc->context;
-		delete pc;
+			pc->parseFile(input, hierarchyOnly, debug, parseFnSystemVerilog);
+			c = pc->context;
+			delete pc;
 #endif
-	} else {
-		throw std::runtime_error("Unsupported language.");
+		} else {
+			throw std::runtime_error("Unsupported language.");
+		}
 	}
 	return c;
 }

@@ -23,7 +23,7 @@ cdef extern from "convertor.h":
         Langue lang
         bool hierarchyOnly
 
-        Context * parse(char *,
+        Context * parse(vector[string],
                         Langue,
                         vector[string],
                         bool,

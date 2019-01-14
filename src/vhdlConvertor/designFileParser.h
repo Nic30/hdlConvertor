@@ -15,7 +15,7 @@ using namespace vhdl;
 
 class DesignFileParser : public BaseHdlParser {
 public:
-	DesignFileParser(bool _hierarchyOnly);
+	DesignFileParser(Context * ctx, bool _hierarchyOnly);
 	void visitDesign_file(vhdlParser::Design_fileContext* ctx);
 	void visitDesign_unit(vhdlParser::Design_unitContext* ctx);
 	void visitLibrary_unit(vhdlParser::Library_unitContext* ctx);

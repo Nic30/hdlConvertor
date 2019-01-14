@@ -8,6 +8,6 @@ using namespace sv2012;
 class source_textParser : public BaseHdlParser {
 
 	public:
-		source_textParser(bool _hierarchyOnly);
+		source_textParser(Context * ctx, bool _hierarchyOnly);
 		void visitSource_text(sv2012Parser::Source_textContext *ctx);
 };

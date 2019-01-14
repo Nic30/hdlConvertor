@@ -7,6 +7,7 @@ from libcpp cimport string
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
 from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Convertor
+import sys
 
 
 class parseException(Exception):
@@ -24,9 +25,14 @@ cdef class hdlConvertor:
     def __dealloc__(self):
         del self.thisptr
 
-    def parse(self, filename, langue, incdir, hierarchyOnly, debug):
+    def parse(self, filenames, langue, incdir, hierarchyOnly, debug):
+        """
+        :param filenames: sequence of strings or strig
+        :param language: one of "verilog", "vhdl", "systemVerilog"
+        """
 
         cdef Context * c
+
         if langue == "verilog":
             langue_value = VERILOG
         elif langue == "vhdl":
@@ -34,13 +40,24 @@ cdef class hdlConvertor:
         elif langue == "systemVerilog":
             langue_value = SYSTEM_VERILOG
         else:
-            raise ValueError(langue + " is not reconnized")
+            raise ValueError(langue + " is not recognized (expected verilog, vhdl or systemVerilog)")
 
-        if PY_MAJOR_VERSION == 3 :
-            filename = filename.encode('utf8')
-            incdir = [item.encode('utf8') for item in incdir ]
 
-        c = self.thisptr.parse(filename, langue_value, incdir, hierarchyOnly, debug)
+        PY3 = PY_MAJOR_VERSION == 3
+
+        if PY3:
+            string_type = str
+        else:
+            string_type = basestring
+        
+        if isinstance(filenames, string_type):
+            filenames = [filenames, ]
+
+        if PY3:
+            filenames = [item.encode('utf8') for item in filenames]
+            incdir = [item.encode('utf8') for item in incdir]
+
+        c = self.thisptr.parse(filenames, langue_value, incdir, hierarchyOnly, debug)
 
         cdef PyObject * d
         d = NULL
@@ -53,11 +70,11 @@ cdef class hdlConvertor:
         self.thisptr.test(filename, incdir)
     
 
-def parse(filename, langue, incdir=['.'], hierarchyOnly=False, debug=False):
+def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
     cdef hdlConvertor obj
     cdef object context
     obj = hdlConvertor()
-    context = obj.parse(filename, langue, incdir, hierarchyOnly, debug)
+    context = obj.parse(filenames, langue, incdir, hierarchyOnly, debug)
     return context
 
 

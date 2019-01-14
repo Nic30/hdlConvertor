@@ -33,6 +33,14 @@ class ParserContainer {
 		antlrParser->addErrorListener(syntaxErrLogger);
 	}
 public:
+	/*
+	 * :param context: if context is nullptr new context is generated
+	 *                 otherwise specified context is used
+	 * */
+	ParserContainer(Context * context):
+		syntaxErrLogger(nullptr), lexer(nullptr), tokens(nullptr),
+		antlrParser(nullptr), hdlParser(nullptr), context(context) {
+	}
 	Context * context;
 	void parseFile(
 			ANTLRInputStream &fileName,
@@ -47,7 +55,7 @@ public:
 
 		initParser(fileName);
 
-		hdlParser = new hdlParserT(hierarchyOnly);
+		hdlParser = new hdlParserT(context, hierarchyOnly);
 
 		// begin parsing at init rule
 		parseFn(antlrParser, hdlParser);

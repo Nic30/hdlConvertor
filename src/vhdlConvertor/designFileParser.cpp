@@ -1,6 +1,6 @@
 #include "designFileParser.h"
 
-DesignFileParser::DesignFileParser(bool _hierarchyOnly) : BaseHdlParser(_hierarchyOnly) {}
+DesignFileParser::DesignFileParser(Context * ctx, bool _hierarchyOnly) : BaseHdlParser(ctx, _hierarchyOnly) {}
 
 void DesignFileParser::visitDesign_file(
 		vhdlParser::Design_fileContext* ctx) {
