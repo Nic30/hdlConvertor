@@ -81,6 +81,7 @@ Context * Convertor::parse(std::string _fileName, Langue _lang,std::vector<std::
 	return c;
 }
 
+// [TODO] maybe relict
 void Convertor::test(const std::string fileName, std::vector<std::string> incdir ) {
 
   std::ifstream t(fileName);
