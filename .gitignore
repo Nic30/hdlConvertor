@@ -51,3 +51,4 @@ hdlConvertor.egg-info
 # devel archives
 *.zip
 *.jar
+/build/
