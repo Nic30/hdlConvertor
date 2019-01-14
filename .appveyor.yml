@@ -15,7 +15,7 @@ environment:
     #  CYGWIN: "c:\\cygwin64"
 
 install:
-  - "%PYTHON%\\python.exe -m pip -r requirements.txt"
+  - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - "%PYTHON%\\python.exe setup.py build"
   - "%PYTHON%\\python.exe setup.py install"
     
