@@ -15,20 +15,28 @@
 
 using namespace antlr4;
 
-class vPreprocessor : public  verilogPreprocBaseListener {
 
-		static macroSymbol _defineDB;
+/*
+ * Verilog preprocessor
+ * :ivar _defineDB: database of defines
+ * :ivar _incdir: directories where to search for included files (last will be searched first)
+ * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
+ **/
+class vPreprocessor : public  verilogPreprocBaseListener {
+		macroSymbol & _defineDB;
 		CommonTokenStream * _tokens;
 		std::vector<std::string> _incdir;
-		static std::vector<std::string> _stack_incfile;
+		std::vector<std::string> _stack_incfile;
 	public:
-		TokenStreamRewriter * _rewriter;
+		size_t include_depth_limit;
+		TokenStreamRewriter _rewriter;
 
 		std::string genBlank(size_t n);
 
 		vPreprocessor(TokenStream *tokens,
 				std::vector<std::string> &incdir,
-				bool eraseDB);
+				macroSymbol & defineDB,
+				size_t include_depth_limit=100);
 		~vPreprocessor();
 
   		void enterDefine(verilogPreprocParser::DefineContext * ctx);
@@ -44,4 +52,4 @@ class vPreprocessor : public  verilogPreprocBaseListener {
 
 std::string return_preprocessed(const std::string input_token,
 		std::vector<std::string> &incdir,
-		bool eraseDB);
+		macroSymbol & defineDB);

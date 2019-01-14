@@ -1,21 +1,16 @@
 #include "../verilogPreproc/vPreprocessor.h"
 
-macroSymbol vPreprocessor::_defineDB;
-std::vector<std::string> vPreprocessor::_stack_incfile;
-
-vPreprocessor::vPreprocessor(TokenStream * tokens,
-		std::vector<std::string> &incdir, bool eraseDB) {
-	_rewriter = new TokenStreamRewriter(tokens);
-	_tokens = (CommonTokenStream *) tokens;
-	_incdir = incdir;
-	if (eraseDB == true) {
-		_defineDB.clear();
-	}
-
+vPreprocessor::vPreprocessor(TokenStream *tokens,
+		std::vector<std::string> &incdir, macroSymbol & defineDB,
+		size_t include_depth_limit) :
+		_defineDB(defineDB), _rewriter(tokens), _tokens(
+				(CommonTokenStream *) tokens), _incdir(incdir), include_depth_limit(
+				include_depth_limit) {
+// [TODO] add dir of current file into _incdir if not present
 }
 
 vPreprocessor::~vPreprocessor() {
-	delete _rewriter;
+	// [TODO] pop dir of this file if was added to incdir
 }
 
 std::string vPreprocessor::genBlank(size_t n) {
@@ -56,7 +51,7 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
 
 	misc::Interval token = ctx->getSourceInterval();
 
-	_rewriter->replace(token.a, token.b, std::string(""));
+	_rewriter.replace(token.a, token.b, std::string(""));
 }
 
 void vPreprocessor::enterUndef(verilogPreprocParser::UndefContext * ctx) {
@@ -75,7 +70,7 @@ void vPreprocessor::enterToken_id(verilogPreprocParser::Token_idContext * ctx) {
 
 	misc::Interval token = ctx->getSourceInterval();
 
-	_rewriter->replace(token.a, token.b, replacement);
+	_rewriter.replace(token.a, token.b, replacement);
 }
 
 void vPreprocessor::exitIfdef_directive(
@@ -91,7 +86,7 @@ void vPreprocessor::exitIfdef_directive(
 		misc::Interval interval =
 				ctx->ifdef_group_of_lines()->getSourceInterval();
 		replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-				false);
+				_defineDB);
 	} else {
 		ID_cpt++;
 		while (ID_cpt < ctx->ID().size()) {
@@ -100,7 +95,7 @@ void vPreprocessor::exitIfdef_directive(
 				misc::Interval interval =
 						ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
 				replacement = return_preprocessed(_tokens->getText(interval),
-						_incdir, false);
+						_incdir, _defineDB);
 				goto exit_label;
 
 			}
@@ -110,12 +105,12 @@ void vPreprocessor::exitIfdef_directive(
 			misc::Interval interval =
 					ctx->else_group_of_lines()->getSourceInterval();
 			replacement = return_preprocessed(_tokens->getText(interval),
-					_incdir, false);
+					_incdir, _defineDB);
 
 		}
 	}
 
-	exit_label: _rewriter->replace(token.a, token.b, replacement);
+	exit_label: _rewriter.replace(token.a, token.b, replacement);
 
 }
 
@@ -132,7 +127,7 @@ void vPreprocessor::exitIfndef_directive(
 		misc::Interval interval =
 				ctx->ifndef_group_of_lines()->getSourceInterval();
 		replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-				false);
+				_defineDB);
 	} else {
 		ID_cpt++;
 		while (ID_cpt < ctx->ID().size()) {
@@ -141,7 +136,7 @@ void vPreprocessor::exitIfndef_directive(
 				misc::Interval interval =
 						ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
 				replacement = return_preprocessed(_tokens->getText(interval),
-						_incdir, false);
+						_incdir, _defineDB);
 				goto exit_label;
 
 			}
@@ -151,12 +146,12 @@ void vPreprocessor::exitIfndef_directive(
 			misc::Interval interval =
 					ctx->else_group_of_lines()->getSourceInterval();
 			replacement = return_preprocessed(_tokens->getText(interval),
-					_incdir, false);
+					_incdir, _defineDB);
 
 		}
 	}
 
-	exit_label: _rewriter->replace(token.a, token.b, replacement);
+	exit_label: _rewriter.replace(token.a, token.b, replacement);
 }
 
 void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
@@ -168,7 +163,6 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
 	std::string StringLiteral = ctx->StringLiteral()->getText();
 	std::string filename;
 	while (incdir_iter != _incdir.end() && found == false) {
-
 		filename = (*incdir_iter) + '/'
 				+ StringLiteral.substr(1, StringLiteral.size() - 2);
 		if (stat(filename.c_str(), &buffer) == 0) {
@@ -180,46 +174,48 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
 		std::string msg = StringLiteral.substr(1, StringLiteral.size() - 2)
 				+ " was not found in include directory\n";
 		throw parseException(msg);
-	} else if (_stack_incfile.size() > 20) {
-		std::string msg = "Nested include limite reach";
-		throw parseException(msg);
+	} else if (_stack_incfile.size() > include_depth_limit) {
+		std::stringstream msg;
+		msg << "Nested include limit reach" << std::endl;
+		for (auto f : _stack_incfile) {
+			msg << "    " << f << std::endl;
+		}
+		throw parseException(msg.str());
 	} else {
 
 		misc::Interval token = ctx->getSourceInterval();
 		//std::string replacement = genBlank(ctx->getText().size());
 		std::string replacement;
-		_rewriter->Delete(token.a, token.b);
+		_rewriter.Delete(token.a, token.b);
 
 		_stack_incfile.push_back(filename);
 		std::ifstream t(filename);
 		std::string str((std::istreambuf_iterator<char>(t)),
 				std::istreambuf_iterator<char>());
 
-		replacement = return_preprocessed(str, _incdir, false);
+		replacement = return_preprocessed(str, _incdir, _defineDB);
 		_stack_incfile.pop_back();
-		_rewriter->insertAfter(ctx->StringLiteral()->getSymbol(), replacement);
+		_rewriter.insertAfter(ctx->StringLiteral()->getSymbol(), replacement);
 
 	}
-
 }
 
-std::string return_preprocessed(const std::string input_token,
-		std::vector<std::string> &incdir, bool eraseDB) {
+std::string return_preprocessed(const std::string input_str,
+		std::vector<std::string> &incdir, macroSymbol & defineDB) {
 
-	ANTLRInputStream input(input_token);
+	ANTLRInputStream input(input_str);
 	verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
 	CommonTokenStream * tokens = new CommonTokenStream(lexer);
 	verilogPreprocParser * parser = new verilogPreprocParser(tokens);
 	tree::ParseTree *tree = parser->file();
 
 	tree::ParseTreeWalker walker = tree::ParseTreeWalker();
-	vPreprocessor * extractor = new vPreprocessor(tokens, incdir, eraseDB);
+	vPreprocessor * extractor = new vPreprocessor(tokens, incdir, defineDB);
 	walker.walk((tree::ParseTreeListener*) extractor, tree);
-	std::string return_value = extractor->_rewriter->getText();
+	std::string return_value = extractor->_rewriter.getText();
 	delete extractor;
 	delete parser;
 	delete tokens;
 	delete lexer;
 	return return_value;
-
 }
