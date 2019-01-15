@@ -3,7 +3,7 @@ from os import path
 from pprint import pprint
 import unittest
 
-TEST_DIR = path.dirname(__file__)
+TEST_DIR = path.abspath(path.dirname(__file__))
 BASE_DIR = path.join(TEST_DIR, "..")
 sys.path.insert(1, path.join(BASE_DIR, "dist"))
 
