@@ -12,6 +12,9 @@ import hdlConvertor
 
 def dumpFile(fname, language):
     f = path.join(BASE_DIR, "tests/", fname)
+    global TEST_DIR
+    if TEST_DIR == '':
+        TEST_DIR = '.'
     res = hdlConvertor.parse(f, language, [TEST_DIR], debug=True)
     return f, res
 
