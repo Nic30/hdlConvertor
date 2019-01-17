@@ -50,6 +50,6 @@ add_dependencies(parsersVerilogPreproc_static generateParsersVerilogPreproc)
 
 set_target_properties(parsersVerilogPreproc_static
 	PROPERTIES VERSION "1.0.0"
-	OUTPUT_NAME parseVerilog
+	OUTPUT_NAME verilogPreProc
 	POSITION_INDEPENDENT_CODE ON
 )
