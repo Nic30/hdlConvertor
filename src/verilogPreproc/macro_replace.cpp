@@ -47,28 +47,23 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
 std::string macro_replace::replace(std::vector<std::string> arg) {
 
 	std::string returnString;
-	if (!data.tmplate.empty()) {
+	
+    if (!data.tmplate.empty()) {
 		returnString = data.tmplate;
 
 		if (arg.size() != data.args.size()) {
-	  	//TODO throw an exception
+	  	//TODO throw an exception because size from the template and the macro
+        //     call are different
 		}
 		std::vector<std::string>::iterator macro= data.args.begin();
 		std::vector<std::string>::iterator instance = arg.begin();
-		/*
-		printf("%s\n",returnString.c_str());
-		*/
 		for ( ; macro != data.args.end(); macro++, instance++) {
-			/*
-			printf("arg: %s -> %s\n",(*macro).c_str(),(*instance).c_str());
-			*/
 			replaceAll(returnString,*macro,*instance);
-			/*
-			printf("%s\n",returnString.c_str());
-			*/
 		}
 	}
 	else {
+        //Macro can be empty
+        //Example `define MODE1
 		returnString = "";
 	}
 	return returnString;
@@ -79,7 +74,3 @@ std::string macro_replace::macro_replace::replace() {
 	std::vector<std::string> null_vector;
 	return replace(null_vector);
 }
-
-std::string macro_replace::getTmplate(){
-	return data.tmplate;
-}	

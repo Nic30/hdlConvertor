@@ -50,6 +50,11 @@ class vPreprocessor : public  verilogPreprocBaseListener {
 		void enterInclude(verilogPreprocParser::IncludeContext * ctx);
 };
 
+//call the preprocessor tool.
+//argument are 
+// a string token
+// a list of include directory (std::vector<std::string>)
+// a object representing the list of already defined macro
 std::string return_preprocessed(const std::string input_token,
 		std::vector<std::string> &incdir,
 		macroSymbol & defineDB);
