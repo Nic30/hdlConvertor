@@ -4,7 +4,7 @@ file(GLOB libparserSV_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-AddParserToBuild("sv2012" generateParsersSV_GENERATED_SRC ${PARSER_GEN_ONLY_LISTENER})
+AddParserToBuild("sv2012" ${generateParsersSV_GENERATED_SRC} ${PARSER_GEN_ONLY_LISTENER})
 
 set(parseSV_SRC
   ${libparserSV_SRC}
