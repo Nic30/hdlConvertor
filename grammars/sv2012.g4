@@ -707,7 +707,7 @@ lifetime : 'static' | 'automatic'
 // A.2.2.1 Net and variable types
 casting_type_reduced : //[TODO] 
 simple_type 
-| signing 
+| Signing 
 | 'string' 
 | 'const'
 ;
@@ -717,16 +717,16 @@ simple_type
 casting_type :
 simple_type
 | constant_primary //ilr
-| signing 
+| Signing 
 | 'string' 
 | 'const'
 ;
 
 data_type :
-integer_vector_type ( signing )?  ( packed_dimension )* 
-| integer_atom_type ( signing )?
-| non_integer_type
-| struct_union ( 'packed' ( signing )? )? '{' struct_union_member  ( struct_union_member )*  '}'
+ Integer_vector_type ( Signing )?  ( packed_dimension )* 
+| Integer_atom_type ( Signing )?
+| Non_integer_type
+| struct_union ( 'packed' ( Signing )? )? '{' struct_union_member  ( struct_union_member )*  '}'
 ( packed_dimension )* 
 | 'enum' ( enum_base_type )? '{' enum_name_declaration  ( ',' enum_name_declaration )*  '}'
 ( packed_dimension )* 
@@ -745,17 +745,20 @@ data_type
 | implicit_data_type
 ;
 
-implicit_data_type : ( signing )?  ( packed_dimension )* 
+implicit_data_type : ( Signing )?  ( packed_dimension )* 
 ;
 
 enum_base_type :
-integer_atom_type ( signing )?
-| integer_vector_type ( signing )? ( packed_dimension )?
+Integer_atom_type ( Signing )?
+| Integer_vector_type ( Signing )? ( packed_dimension )?
 | type_identifier ( packed_dimension )?
 ;
 
+//enum_name_declaration :
+//enum_identifier ( '[' Integral_number ( ':' Integral_number )? ']' )? ( '=' constant_expression )?
+//;
 enum_name_declaration :
-enum_identifier ( '[' Integral_number ( ':' Integral_number )? ']' )? ( '=' constant_expression )?
+enum_identifier ( '[' (Integral_number | Unsigned_number) ( ':' (Integral_number|Unsigned_number) )? ']' )? ( '=' constant_expression )?
 ;
 
 class_scope : class_type ':' ':'
@@ -766,16 +769,16 @@ ps_class_identifier ( parameter_value_assignment )?
 ( ':' ':' class_identifier ( parameter_value_assignment )? )* 
 ;
 
-integer_type : integer_vector_type | integer_atom_type
+integer_type : Integer_vector_type | Integer_atom_type
 ;
 
-integer_atom_type : 'byte' | 'shortint' | 'int' | 'longint' | 'integer' | 'time'
+Integer_atom_type : 'byte' | 'shortint' | 'int' | 'longint' | 'integer' | 'time'
 ;
 
-integer_vector_type : 'bit' | 'logic' | 'reg'
+Integer_vector_type : 'bit' | 'logic' | 'reg'
 ;
 
-non_integer_type : 'shortreal' | 'real' | 'realtime'
+Non_integer_type : 'shortreal' | 'real' | 'realtime'
 ;
 
 net_type : 'supply0' | 'supply1' | 'tri' | 'triand' | 'trior' | 'trireg' | 'tri0' | 'tri1' | 'uwire' | 'wire' | 'wand' | 'wor'
@@ -793,10 +796,10 @@ variable_port_type : var_data_type
 var_data_type : data_type | 'var' data_type_or_implicit
 ;
 
-signing : 'signed' | 'unsigned'
+Signing : 'signed' | 'unsigned'
 ;
 
-simple_type : integer_type | non_integer_type | ps_type_identifier | ps_parameter_identifier
+simple_type : integer_type | Non_integer_type | ps_type_identifier | ps_parameter_identifier
 ;
 
 struct_union_member :
@@ -1026,13 +1029,12 @@ dpi_task_proto : task_prototype
 task_declaration : 'task' ( lifetime )? task_body_declaration
 ;
 
-// [MODIFIED] tf_port_list can be reduced to "" so it does not require ?
 task_body_declaration :
 ( interface_identifier '.' | class_scope )? task_identifier ';'
 ( tf_item_declaration )* 
 ( statement_or_null )* 
 'endtask' ( ':' task_identifier )?
-| ( interface_identifier '.' | class_scope )? task_identifier '(' tf_port_list ')' ';'
+| ( interface_identifier '.' | class_scope )? task_identifier '(' tf_port_list? ')' ';'
 ( block_item_declaration )* 
 ( statement_or_null )* 
 'endtask' ( ':' task_identifier )?
@@ -1050,7 +1052,8 @@ tf_port_item  ( ',' tf_port_item )*
 tf_port_item :
 ( attribute_instance )* 
 ( tf_port_direction )? ( 'var' )? data_type_or_implicit
-( port_identifier  ( variable_dimension )*  ( '=' expression )? )?
+//( port_identifier  ( variable_dimension )*  ( '=' expression )? )? //Thomas replace by below
+port_identifier  ( variable_dimension )*  ( '=' expression )?
 ;
 
 tf_port_direction : port_direction | 'const' 'ref'
@@ -1851,7 +1854,9 @@ sequential_body : ( udp_initial_statement )? 'table' sequential_entry  ( sequent
 udp_initial_statement : 'initial' output_port_identifier '=' init_val ';'
 ;
 
-init_val : Integral_number
+//init_val : Integral_number
+//;
+init_val : Integral_number | Unsigned_number
 ;
 
 sequential_entry : seq_input_list ':' current_state ':' next_state ';'
@@ -1875,7 +1880,9 @@ current_state : level_symbol
 next_state : output_symbol | '-'
 ;
 
-output_symbol : Integral_number
+//output_symbol : Integral_number
+//;
+output_symbol : Integral_number | Unsigned_number
 ;
 
 //level_symbol : '0' | '1' | 'x' | 'X' | '?' | 'b' | 'B'
@@ -2188,7 +2195,7 @@ assignment_pattern_expression :
 assignment_pattern_expression_type :
 ps_type_identifier
 | ps_parameter_identifier
-| integer_atom_type
+| Integer_atom_type
 | type_reference
 ;
 
@@ -2349,8 +2356,13 @@ clocking_drive :
 clockvar_expression '<' '=' ( cycle_delay )? expression
 ;
 
+//cycle_delay :
+//'#' '#' Integral_number
+//| '#' '#' identifier
+//| '#' '#' '(' expression ')'
+//;
 cycle_delay :
-'#' '#' Integral_number
+'#' '#' (Integral_number|Unsigned_number)
 | '#' '#' identifier
 | '#' '#' '(' expression ')'
 ;
@@ -2378,8 +2390,13 @@ rs_prod  ( rs_prod )*
 | 'rand' 'join' ( '(' expression ')' )? production_item production_item  ( production_item )* 
 ;
 
+//weight_specification :
+//Integral_number
+//| ps_identifier
+//| '(' expression ')'
+//;
 weight_specification :
-Integral_number
+Integral_number | Unsigned_number
 | ps_identifier
 | '(' expression ')'
 ;
@@ -2749,7 +2766,8 @@ expression
 | expression '!' '=' '=' scalar_constant
 ;
 
-scalar_constant : Integral_number ;
+//scalar_constant : Integral_number ;
+scalar_constant : Integral_number | Unsigned_number;
 
 // A.8 Expressions
 // A.8.1 Concatenations
@@ -2804,11 +2822,19 @@ constant_function_call : function_subroutine_call
 ;
 
 tf_call : ps_or_hierarchical_tf_identifier  ( attribute_instance )*  ( '(' list_of_arguments ')' )?
+| ( class_qualifier | package_scope ) ( attribute_instance )* function_identifier ( '(' list_of_arguments ')' )? //Thomas for static method call
 ;
 
+//system_tf_call :
+//System_tf_identifier ( '(' list_of_arguments ')' )?
+//| System_tf_identifier '(' data_type ( ',' expression )? ')'
+//;
 system_tf_call :
-System_tf_identifier ( '(' list_of_arguments ')' )?
+System_tf_identifier
+| System_tf_identifier '(' ')'
+| System_tf_identifier '(' list_of_arguments ')'
 | System_tf_identifier '(' data_type ( ',' expression )? ')'
+| System_tf_identifier '(' expression (',' expression)+ (',' clocking_event)? ')'
 ;
 
 function_subroutine_call : subroutine_call
@@ -2817,16 +2843,17 @@ function_subroutine_call : subroutine_call
 subroutine_call :
 tf_call
 | system_tf_call
-//| method_call [TODO]
+| (primary | implicit_class_handle ) '.' method_call_body
 | ( 'std' ':' ':' )? randomize_call
 ;
-
-method_call : method_call_root '.' method_call_body
+/*
+method_call : (primary | implicit_class_handle ) '.' method_call_body
 ;
-
+*/
+/*
 method_call_root : primary | implicit_class_handle
 ;
-
+*/
 list_of_arguments :
 ()
 | expression  ( ',' ( expression )? )*   ( ',' '.' identifier '(' ( expression )? ')' )* 
@@ -2979,7 +3006,10 @@ primary_literal
 | ( package_scope | class_scope )? enum_identifier
 | constant_concatenation ( '[' constant_range_expression ']' )?
 | constant_multiple_concatenation ( '[' constant_range_expression ']' )?
-| constant_function_call
+| tf_call
+| system_tf_call
+| (primary | implicit_class_handle ) '.' method_call_body
+| ( 'std' ':' ':' )? randomize_call
 | constant_let_expression
 | '(' constant_mintypmax_expression ')'
 | constant_cast
@@ -2996,8 +3026,7 @@ number
 | '(' module_path_mintypmax_expression ')'
 ;
 
-// [MODIFIED] class_qualifier is reduced to "" so it does not require ?
-primary :
+/*primary :
 primary_literal
 | ( class_qualifier | package_scope ) hierarchical_identifier select
 | empty_queue
@@ -3014,6 +3043,52 @@ primary_literal
 | '$'
 | 'null'
 ;
+*/
+
+primary :
+primary_literal #primary_primary_literal
+| ( class_qualifier | package_scope ) hierarchical_identifier select #primary_hierarchical_identifier
+| empty_queue #primary_empty_queue
+| concatenation ( '[' range_expression ']' )? #primary_concatenation
+| multiple_concatenation ( '[' range_expression ']' )? #primary_multiple_concatenation
+
+| tf_call #primary_tf_call
+| system_tf_call #primary_system_tf_call
+| primary  '.' method_call_body #primary_method_call
+| implicit_class_handle '.' method_call_body #primary_method_call
+| ( 'std' ':' ':' )? randomize_call #primary_randomize_call
+| let_expression #primary_let_expression
+| '(' mintypmax_expression ')' #primary_mintypmax_expression
+| simple_type '\'' '(' expression ')' #primary_cast
+| primary_literal '\'' '(' expression ')' #primary_cast
+| ps_parameter_identifier constant_select '\'' '(' expression ')' #primary_cast
+| specparam_identifier ( '[' constant_range_expression ']' )? '\'' '(' expression ')' #primary_cast
+| genvar_identifier '\'' '(' expression ')' #primary_cast
+| formal_port_identifier constant_select '\'' '(' expression ')' #primary_cast
+| ( package_scope | class_scope )? enum_identifier '\'' '(' expression ')' #primary_cast
+| constant_concatenation ( '[' constant_range_expression ']' )? '\'' '(' expression ')' #primary_cast
+| constant_multiple_concatenation ( '[' constant_range_expression ']' )? '\'' '(' expression ')' #primary_cast
+| tf_call '\'' '(' expression ')' #primary_cast
+| system_tf_call '\'' '(' expression ')' #primary_cast
+| primary  '.' method_call_body '\'' '(' expression ')' #primary_cast
+| implicit_class_handle '.' method_call_body '\'' '(' expression ')' #primary_cast
+| ( 'std' ':' ':' )? randomize_call '\'' '(' expression ')' #primary_cast
+| constant_let_expression '\'' '(' expression ')' #primary_cast
+| '(' constant_mintypmax_expression ')' '\'' '(' expression ')' #primary_cast
+| constant_cast '\'' '(' expression ')' #primary_cast
+| constant_assignment_pattern_expression '\'' '(' expression ')' #primary_cast
+| type_reference '\'' '(' expression ')' #primary_cast
+| Signing '\'' '(' expression ')' #primary_cast
+| 'string' '\'' '(' expression ')' #primary_cast
+| 'const' '\'' '(' expression ')' #primary_cast
+| assignment_pattern_expression #primary_assignement_pattern_expression
+| streaming_concatenation #primary_streaming_concatenation
+| sequence_method_call #primary_sequence_method_call
+| 'this' #primary_this
+| '$' #primary_dollar
+| 'null' #primary_null
+;
+
 
 class_qualifier : ( 'local' ':' ':' )? ( implicit_class_handle '.' | class_scope )?
 ;
@@ -3114,8 +3189,13 @@ binary_module_path_operator :
 
 // A.8.7 Numbers
 
+//number :
+//Integral_number
+//| Real_number
+//;
 number :
 Integral_number
+| Unsigned_number
 | Real_number
 ;
 
@@ -3126,9 +3206,15 @@ Decimal_number
 | Hex_number
 ;
 
-Decimal_number :
-Unsigned_number
-| Size? Decimal_base Unsigned_number
+//Decimal_number :
+//Unsigned_number
+//| Size? Decimal_base Unsigned_number
+//| Size? Decimal_base X_digit  '_'*
+//| Size? Decimal_base Z_digit  '_'*
+//;
+
+fragment Decimal_number :
+Size? Decimal_base Decimal_digit  ( '_' | Decimal_digit )*
 | Size? Decimal_base X_digit  '_'*
 | Size? Decimal_base Z_digit  '_'*
 ;
@@ -3201,7 +3287,9 @@ fragment X_digit : [xX]
 fragment Z_digit : [zZ?]
 ;
 
-Unbased_unsized_literal : '\'' [01zZxX]
+// note 48: ' in unbase_unsized_literal shall not be followed by white_space
+Unbased_unsized_literal : 
+'\'0' | '\'1' | '\'z'| '\'Z'| '\'x' | '\'X'
 ;
 
 // A.8.8 Strings
