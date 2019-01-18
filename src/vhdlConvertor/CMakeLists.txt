@@ -4,7 +4,7 @@ file(GLOB libparserVhdl_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-AddParserToBuild("vhdl" ${vhdlParsers_GENERATED_SRC} ${PARSER_GEN_ONLY_LISTENER})
+AddParserToBuild("vhdl" vhdlParsers_GENERATED_SRC ${PARSER_GEN_ONLY_LISTENER})
 
 
 set(parseVhdl_SRC
