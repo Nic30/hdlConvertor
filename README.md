@@ -9,7 +9,7 @@ The System Verilog and VHDL parser for Python written in C++. This library parse
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
-This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library known to me.
+This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library (c++ runtime) known to me.
 To make your live easier I included it to this package for you.
 
 
