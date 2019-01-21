@@ -3,6 +3,10 @@ grammar verilogPreproc;
 /* Process #define statements in a C file using fuzzy parsing.
 */
 
+//@lexer::members {
+//  int parentesis_nesting = 0;
+//}
+
 file
     :   .*? ( preprocess_directive .*? )*
     ;
@@ -16,14 +20,17 @@ preprocess_directive
     ;
 
 define
-    :   DEFINE macro_id '(' ID ( ',' ID )* ')' replacement //{System.out.println(">>> macro(parm) : " + $macro_id.text + " replace by :" + $replacement.text);} 
-    |   DEFINE macro_id replacement //{System.out.println(">>> simple macro with space : " + $macro_id.text + " replace by :" + $replacement.text );}
-    |   DEFINE macro_id //{System.out.println(">>> simple macro : " + $macro_id.text);}
+    :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
+    |   DEFINE macro_id replacement
+    |   DEFINE macro_id
     ;
 
 replacement
-    //:   (~'\n'| '`'|'$'|';'|'\\\n'| '\\\r\n' | '+'|'-'|'/'|'*'|':'|'('|')')+ '\n'
-    :   ~'\n'+ '\n'
+    :   ~'\n'+ '\n'+
+    ;
+
+default_text
+    : ~(',' | ')')+
     ;
 
 undef 
@@ -65,12 +72,22 @@ group_of_lines
     ;
 
 token_id
-    : BACKTICK macro_toreplace '(' ID ( ',' ID )* ')'  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
+    //: <assoc=right> BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
+    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
     | BACKTICK macro_toreplace  //{ System.out.println(">>> to replace : " + $macro_toreplace.text);}
     ;
 
+value
+    : token_id 
+    | (ID|OTHER|StringLiteral)+
+    | LP value* RP
+    | '"' value* '"'
+    | '{' value* '}'
+    | '[' value* ']'
+    ;
+
 include
-    : INCLUDE StringLiteral 
+    : INCLUDE StringLiteral
     ;
 
 INCLUDE
@@ -106,6 +123,23 @@ ENDIF
     :'`endif'
     ;
 
+LP 
+    : '(' {
+//  if (parentesis_nesting > 0) {
+//    setType(OTHER);
+//  }
+//  parentesis_nesting++;
+}
+    ;
+    
+RP
+    : ')' {
+//  parentesis_nesting--;
+//  if (parentesis_nesting > 0) {
+//    setType(OTHER);
+//  }
+}
+    ;
 
 IGNORED_DIRECTIVE
     : BACKTICK Ignored_directive
@@ -145,6 +179,7 @@ CharacterLiteral
 
 StringLiteral
     :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    |  '<' ( EscapeSequence | ~('\\'|'>') )* '>'
     ;
 
 fragment
@@ -174,15 +209,21 @@ COMMENT
     ;
 
 LINE_ESCAPE
-    :  '\\' '\r'? '\n' -> channel(HIDDEN)
+    :  '\\' '\r'? '\n' -> channel(4)
     ;
 
 LINE_COMMENT
-    : '//' ~[\r\n]* '\r'? -> channel(HIDDEN) 
+    : '//' ~[\r\n]* '\r'? -> channel(5) 
     ;
 
 
 WS  :   [ \r\t\u000C]+ -> channel(HIDDEN)
+     ;
+
+
+
+NEW_LINE 
+    : '\n'
     ;
 
 OTHER 

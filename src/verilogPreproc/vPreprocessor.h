@@ -23,38 +23,43 @@ using namespace antlr4;
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
 class vPreprocessor : public  verilogPreprocBaseListener {
-		macroSymbol & _defineDB;
-		CommonTokenStream * _tokens;
-		std::vector<std::string> _incdir;
-		std::vector<std::string> _stack_incfile;
-	public:
-		size_t include_depth_limit;
-		TokenStreamRewriter _rewriter;
+  macroSymbol & _defineDB;
+  CommonTokenStream * _tokens;
+  std::vector<std::string> _incdir;
+  std::vector<std::string> _stack_incfile;
 
-		std::string genBlank(size_t n);
+  void remove_comment(Token * start, Token * end, std::string * str );
 
-		vPreprocessor(TokenStream *tokens,
-				std::vector<std::string> &incdir,
-				macroSymbol & defineDB,
-				size_t include_depth_limit=100);
-		~vPreprocessor();
+  public:
+  size_t include_depth_limit;
+  TokenStreamRewriter _rewriter;
 
-  		void enterDefine(verilogPreprocParser::DefineContext * ctx);
-  		void enterUndef(verilogPreprocParser::UndefContext * ctx);
+  std::string genBlank(size_t n);
 
-		void enterToken_id(verilogPreprocParser::Token_idContext * ctx);
+  vPreprocessor(TokenStream *tokens,
+      std::vector<std::string> &incdir,
+      macroSymbol & defineDB,
+      size_t include_depth_limit=100);
+  ~vPreprocessor();
 
-  		void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
-  		void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
+  void enterDefine(verilogPreprocParser::DefineContext * ctx);
+  void enterUndef(verilogPreprocParser::UndefContext * ctx);
 
-		void enterInclude(verilogPreprocParser::IncludeContext * ctx);
+  void exitToken_id(verilogPreprocParser::Token_idContext * ctx);
+
+  void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
+  void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
+
+  void enterInclude(verilogPreprocParser::IncludeContext * ctx);
 };
 
 //call the preprocessor tool.
-//argument are 
+//argument are
 // a string token
 // a list of include directory (std::vector<std::string>)
 // a object representing the list of already defined macro
 std::string return_preprocessed(const std::string input_token,
-		std::vector<std::string> &incdir,
-		macroSymbol & defineDB);
+    std::vector<std::string> &incdir,
+    macroSymbol & defineDB);
+
+std::string& rtrim(std::string& str, const std::string& chars = "\n\r");
