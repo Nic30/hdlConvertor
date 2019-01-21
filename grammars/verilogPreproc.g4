@@ -1,5 +1,11 @@
 grammar verilogPreproc;
 
+@lexer::members {
+static  const unsigned int CH_LINE_ESCAPE = 4;
+static  const unsigned int CH_LINE_COMMENT = 5;
+}
+
+//channels { LINE_ESCAPE, LINE_COMMENT}
 
 /* Process #define statements in a C file using fuzzy parsing.
 */
@@ -10,11 +16,63 @@ file
 
 preprocess_directive 
     : define
+    | resetall 
     | undef
     | conditional
     | include
     | token_id
+    | celldefine
+    | endcelldefine
+    | unconnected_drive
+    | nounconnected_drive
+    | default_nettype
+    | Line
+    | timing_spec
     ;
+
+resetall
+   : '`resetall'
+   ;
+
+celldefine
+   : '`celldefine'
+   ;
+
+endcelldefine
+   : '`endcelldefine'
+   ;
+
+timing_spec
+   : '`timescale' Time_Identifier '/' Time_Identifier
+   ;
+
+Time_Identifier
+   : [0-9]+ ' '* [mnpf]? 's'
+   ;
+
+default_nettype 
+   : '`default_nettype' default_nettype_value
+   ;
+
+default_nettype_value 
+   : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none'
+   ;
+
+Line 
+   : '`line' [0-9]+ '"' StringLiteral '"' Line_compiler_directive_level
+   ;
+
+Line_compiler_directive_level 
+   : '0' | '1' | '2'
+   ; 
+
+unconnected_drive
+   : '`unconnected_drive'
+   ;
+
+nounconnected_drive
+   : '`nounconnected_drive'
+   ;
 
 define
     :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
@@ -195,10 +253,12 @@ COMMENT
     ;
 
 LINE_ESCAPE
+    //:  '\\' '\r'? '\n' -> channel(LINE_ESCAPE)
     :  '\\' '\r'? '\n' -> channel(4)
     ;
 
 LINE_COMMENT
+    //: '//' ~[\r\n]* '\r'? -> channel(LINE_COMMENT) 
     : '//' ~[\r\n]* '\r'? -> channel(5) 
     ;
 

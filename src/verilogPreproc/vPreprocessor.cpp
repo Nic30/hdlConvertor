@@ -31,6 +31,36 @@ std::string vPreprocessor::genBlank(size_t n) {
   return a_string;
 }
 
+void vPreprocessor::replace_context_by_bank( antlr4::ParserRuleContext * ctx) {
+    misc::Interval token = ctx->getSourceInterval();
+    std::string replacement = genBlank(ctx->getText().size());
+    _rewriter.replace(token.a, token.b, replacement);
+}
+
+void vPreprocessor::enterResetall(verilogPreprocParser::ResetallContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+
+void vPreprocessor::enterCelldefine(verilogPreprocParser::CelldefineContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+void vPreprocessor::enterEndcelldefine(verilogPreprocParser::EndcelldefineContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+
+void vPreprocessor::enterTiming_spec(verilogPreprocParser::Timing_specContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+void vPreprocessor::enterDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+void vPreprocessor::enterUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+void vPreprocessor::enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+
 //method call when the definition of a macro is found
 void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
   // get the macro name
@@ -84,8 +114,9 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
 
   // the macro definition is replace by an empty string in the original
   // source code
-  misc::Interval token = ctx->getSourceInterval();
-  _rewriter.replace(token.a, token.b, std::string(""));
+  //misc::Interval token = ctx->getSourceInterval();
+  //_rewriter.replace(token.a, token.b, std::string(""));
+  replace_context_by_bank(ctx);  
 
 }
 
@@ -94,6 +125,8 @@ void vPreprocessor::enterUndef(verilogPreprocParser::UndefContext * ctx) {
   // we simply remove the macro from the macroDB object. So it is not anymore
   // defined
   _defineDB.erase(ctx->ID()->getText());
+  
+  replace_context_by_bank(ctx);  
 }
 
 //method call when `macro is found in the source code
@@ -180,8 +213,9 @@ void vPreprocessor::exitIfdef_directive(
   }
 
   //perform the replacement of code.
-  //Not if among the ID not one match and if there is no `else
-  //them we will replace the `ifdef `elsif by an empty string.
+  //But not if the ID is not one that match and if there is no `else
+  //then we will replace the `ifdef `elsif by an empty string.
+  //Because by default replacement is ""
   exit_label: _rewriter.replace(token.a, token.b, replacement);
 
 }
@@ -320,19 +354,27 @@ std::string& rtrim(std::string& str, const std::string& chars ) {
   return str;
 }
 
-
+/*
+ * Remove unwanted comment in text macro.
+ * Line escape and Line comment have to be removed
+ */
 void vPreprocessor::remove_comment(Token * start, Token * end, std::string * str){
+  
   std::vector<Token *> cmtChannel;
+  //Get the list of token between the start and the end of replacement rule.
   cmtChannel = _tokens->getTokens( start->getTokenIndex(),
       end->getTokenIndex()
       );
+  //For all those token we are going to their channel.
+  //If the channel is of the kind we search then we search and removed it from the string.
+  //TODO : replace by " " to preserve charactere position of the original source code
   for (auto cmt :cmtChannel) {
 
-    if (cmt->getChannel() == 4) {
+    if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_ESCAPE) {
       std::string comment_txt = cmt->getText();
       ReplaceStringInPlace(*str, comment_txt,"\n");
     }
-    else if (cmt->getChannel() == 5) {
+    else if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_COMMENT) {
       std::string comment_txt = cmt->getText();
       ReplaceStringInPlace(*str, comment_txt,"");
     }

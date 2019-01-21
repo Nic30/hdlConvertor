@@ -29,12 +29,13 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   std::vector<std::string> _stack_incfile;
 
   void remove_comment(Token * start, Token * end, std::string * str );
+  std::string genBlank(size_t n);
+  void replace_context_by_bank( antlr4::ParserRuleContext * ctx);
 
   public:
   size_t include_depth_limit;
   TokenStreamRewriter _rewriter;
 
-  std::string genBlank(size_t n);
 
   vPreprocessor(TokenStream *tokens,
       std::vector<std::string> &incdir,
@@ -42,15 +43,24 @@ class vPreprocessor : public  verilogPreprocBaseListener {
       size_t include_depth_limit=100);
   ~vPreprocessor();
 
-  void enterDefine(verilogPreprocParser::DefineContext * ctx);
-  void enterUndef(verilogPreprocParser::UndefContext * ctx);
+  virtual void enterResetall(verilogPreprocParser::ResetallContext * ctx);
+  virtual void enterCelldefine(verilogPreprocParser::CelldefineContext * ctx);
+  virtual void enterEndcelldefine(verilogPreprocParser::EndcelldefineContext * ctx);
 
-  void exitToken_id(verilogPreprocParser::Token_idContext * ctx);
+  virtual void enterTiming_spec(verilogPreprocParser::Timing_specContext * ctx);
+  virtual void enterDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx);
+  virtual void enterUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx);
+  virtual void enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx);
 
-  void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
-  void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
+  virtual void enterDefine(verilogPreprocParser::DefineContext * ctx);
+  virtual void enterUndef(verilogPreprocParser::UndefContext * ctx);
 
-  void enterInclude(verilogPreprocParser::IncludeContext * ctx);
+  virtual void exitToken_id(verilogPreprocParser::Token_idContext * ctx);
+
+  virtual void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
+  virtual void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
+
+  virtual void enterInclude(verilogPreprocParser::IncludeContext * ctx);
 };
 
 //call the preprocessor tool.
