@@ -75,7 +75,8 @@ nounconnected_drive
    ;
 
 define
-    :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
+    // SystemVerilog  :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
+    :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ( ',' NEW_LINE* ID NEW_LINE* )* RP replacement 
     |   DEFINE macro_id replacement
     |   DEFINE macro_id
     ;
