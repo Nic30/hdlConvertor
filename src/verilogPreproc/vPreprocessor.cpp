@@ -60,6 +60,11 @@ void vPreprocessor::enterUnconnected_drive(verilogPreprocParser::Unconnected_dri
 void vPreprocessor::enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx) {
   replace_context_by_bank(ctx);
 }
+void vPreprocessor::enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx){
+  printf("coucou\n");
+  printf("%s\n",ctx->getText().c_str());
+  replace_context_by_bank(ctx);
+}	
 
 //method call when the definition of a macro is found
 void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {

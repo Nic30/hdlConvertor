@@ -51,6 +51,7 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   virtual void enterDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx);
   virtual void enterUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx);
   virtual void enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx);
+  virtual void enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx); 
 
   virtual void enterDefine(verilogPreprocParser::DefineContext * ctx);
   virtual void enterUndef(verilogPreprocParser::UndefContext * ctx);

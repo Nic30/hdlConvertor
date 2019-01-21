@@ -20,14 +20,14 @@ preprocess_directive
     | undef
     | conditional
     | include
-    | token_id
     | celldefine
     | endcelldefine
     | unconnected_drive
     | nounconnected_drive
     | default_nettype
-    | Line
+    | line_directive
     | timing_spec
+    | token_id
     ;
 
 resetall
@@ -58,12 +58,12 @@ default_nettype_value
    : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none'
    ;
 
-Line 
-   : '`line' [0-9]+ '"' StringLiteral '"' Line_compiler_directive_level
+line_directive 
+   : Line
    ;
 
-Line_compiler_directive_level 
-   : '0' | '1' | '2'
+Line 
+   : '`line' [0-9]+ '"' StringLiteral '"' ('0' | '1' | '2')
    ; 
 
 unconnected_drive
