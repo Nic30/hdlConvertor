@@ -1,11 +1,8 @@
 grammar verilogPreproc;
 
+
 /* Process #define statements in a C file using fuzzy parsing.
 */
-
-//@lexer::members {
-//  int parentesis_nesting = 0;
-//}
 
 file
     :   .*? ( preprocess_directive .*? )*
@@ -72,9 +69,8 @@ group_of_lines
     ;
 
 token_id
-    //: <assoc=right> BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
-    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
-    | BACKTICK macro_toreplace  //{ System.out.println(">>> to replace : " + $macro_toreplace.text);}
+    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP
+    | BACKTICK macro_toreplace
     ;
 
 value
@@ -124,21 +120,11 @@ ENDIF
     ;
 
 LP 
-    : '(' {
-//  if (parentesis_nesting > 0) {
-//    setType(OTHER);
-//  }
-//  parentesis_nesting++;
-}
+    : '('
     ;
     
 RP
-    : ')' {
-//  parentesis_nesting--;
-//  if (parentesis_nesting > 0) {
-//    setType(OTHER);
-//  }
-}
+    : ')'
     ;
 
 IGNORED_DIRECTIVE
