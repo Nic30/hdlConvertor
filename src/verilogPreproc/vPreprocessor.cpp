@@ -273,7 +273,7 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
   //iterator on the list of directoy
   std::vector<std::string>::iterator incdir_iter = _incdir.begin();
   bool found = false;
-  std::string StringLiteral = ctx->StringLiteral()->getText();
+  std::string StringLiteral = ctx->stringLiteral()->getText();
   std::string filename;
   // iterate on list of directory until we found the file. 
   while (incdir_iter != _incdir.end() && found == false) {
@@ -328,7 +328,7 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
     _stack_incfile.pop_back();
 
     //update the current source code
-    _rewriter.insertAfter(ctx->StringLiteral()->getSymbol(), replacement);
+    _rewriter.insertAfter(ctx->getStop(), replacement);
 
   }
 }

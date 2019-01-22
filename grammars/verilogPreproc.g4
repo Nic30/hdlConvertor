@@ -31,19 +31,19 @@ preprocess_directive
     ;
 
 resetall
-   : '`resetall'
+   : '`resetall' NEW_LINE
    ;
 
 celldefine
-   : '`celldefine'
+   : '`celldefine' NEW_LINE
    ;
 
 endcelldefine
-   : '`endcelldefine'
+   : '`endcelldefine' NEW_LINE
    ;
 
 timing_spec
-   : '`timescale' Time_Identifier '/' Time_Identifier
+   : '`timescale' Time_Identifier '/' Time_Identifier NEW_LINE
    ;
 
 Time_Identifier
@@ -51,34 +51,30 @@ Time_Identifier
    ;
 
 default_nettype 
-   : '`default_nettype' default_nettype_value
+   : '`default_nettype' default_nettype_value NEW_LINE
    ;
 
 default_nettype_value 
    : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none'
    ;
 
-line_directive 
-   : Line
-   ;
-
-Line 
-   : '`line' [0-9]+ '"' StringLiteral '"' ('0' | '1' | '2')
+line_directive
+   : '`line' DIGIT+ StringLiteral_double_quote DIGIT NEW_LINE
    ; 
 
 unconnected_drive
-   : '`unconnected_drive'
+   : '`unconnected_drive' NEW_LINE
    ;
 
 nounconnected_drive
-   : '`nounconnected_drive'
+   : '`nounconnected_drive' NEW_LINE
    ;
 
 define
     // SystemVerilog  :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
     :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ( ',' NEW_LINE* ID NEW_LINE* )* RP replacement 
     |   DEFINE macro_id replacement
-    |   DEFINE macro_id
+    |   DEFINE macro_id NEW_LINE
     ;
 
 replacement
@@ -90,7 +86,8 @@ default_text
     ;
 
 undef 
-    : UNDEF ID ;
+    : UNDEF ID NEW_LINE
+    ;
 
 conditional
     : ifdef_directive
@@ -134,7 +131,7 @@ token_id
 
 value
     : token_id 
-    | (ID|OTHER|StringLiteral)+
+    | (ID|OTHER|DIGIT)+
     | LP value* RP
     | '"' value* '"'
     | '{' value* '}'
@@ -142,7 +139,7 @@ value
     ;
 
 include
-    : INCLUDE StringLiteral
+    : INCLUDE stringLiteral
     ;
 
 INCLUDE
@@ -186,20 +183,11 @@ RP
     : ')'
     ;
 
-IGNORED_DIRECTIVE
-    : BACKTICK Ignored_directive
-    ;
 
 BACKTICK
     : '`'
     ;
 
-fragment Ignored_directive
-    : 'begin_keywords' | 'celldefine' | 'default_nettype' 
-    | 'end_keywords' | 'endcelldefine' | 'line' 
-    | 'nounconnected_drive' | 'pragma' | 'resetall'
-    | 'timescale' | 'unconnected_drive'
-    ;
  
 macro_id
     : ID
@@ -211,7 +199,7 @@ macro_toreplace
 
 ID  :   ( ID_FIRST (ID_FIRST | DIGIT)* ) ;
 
-fragment DIGIT    : [0-9] ;
+DIGIT    : [0-9] ;
 fragment ID_FIRST : LETTER | '_' ;
 fragment LETTER   : [a-zA-Z] ;
 
@@ -222,9 +210,15 @@ CharacterLiteral
     :   '\'' ( EscapeSequence | ~('\''|'\\') ) '\''
     ;
 
-StringLiteral
+stringLiteral
+    : StringLiteral_double_quote | StringLiteral_chevrons
+    ;
+
+StringLiteral_double_quote 
     :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
-    |  '<' ( EscapeSequence | ~('\\'|'>') )* '>'
+    ;
+StringLiteral_chevrons  
+    :  '<' ( EscapeSequence | ~('\\'|'>') )* '>'
     ;
 
 fragment
