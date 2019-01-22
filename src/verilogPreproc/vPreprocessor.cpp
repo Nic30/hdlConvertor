@@ -61,8 +61,6 @@ void vPreprocessor::enterNounconnected_drive(verilogPreprocParser::Nounconnected
   replace_context_by_bank(ctx);
 }
 void vPreprocessor::enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx){
-  printf("coucou\n");
-  printf("%s\n",ctx->getText().c_str());
   replace_context_by_bank(ctx);
 }	
 
