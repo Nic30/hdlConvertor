@@ -5,7 +5,8 @@ static  const unsigned int CH_LINE_ESCAPE = 4;
 static  const unsigned int CH_LINE_COMMENT = 5;
 }
 
-//channels { LINE_ESCAPE, LINE_COMMENT}
+//custom channels are not supported in combined grammars
+//channels { CH_LINE_ESCAPE, CH_LINE_COMMENT}
 
 /* Process #define statements in a C file using fuzzy parsing.
 */
@@ -248,12 +249,12 @@ COMMENT
     ;
 
 LINE_ESCAPE
-    //:  '\\' '\r'? '\n' -> channel(LINE_ESCAPE)
+    //:  '\\' '\r'? '\n' -> channel(CH_LINE_ESCAPE)
     :  '\\' '\r'? '\n' -> channel(4)
     ;
 
 LINE_COMMENT
-    //: '//' ~[\r\n]* '\r'? -> channel(LINE_COMMENT) 
+    //: '//' ~[\r\n]* '\r'? -> channel(CH_LINE_COMMENT) 
     : '//' ~[\r\n]* '\r'? -> channel(5) 
     ;
 
