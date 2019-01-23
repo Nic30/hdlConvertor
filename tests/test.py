@@ -98,6 +98,9 @@ class BasicTC(unittest.TestCase):
         f, res = dumpFile("macro.v",'verilog')
         str(res)
 
+    def test_directive_verilogpp(self):
+        f, res = dumpFile("directive_verilogpp.v",'verilog')
+        str(res)
 
 #    def test_system_verilog_mem_base_object(self):
 #        f, res = dumpFile("mem_base_object.sv",  "systemVerilog")
