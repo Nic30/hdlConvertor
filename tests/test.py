@@ -59,7 +59,7 @@ class BasicTC(unittest.TestCase):
             "gnt1":"OUT",
             "gnt0":"OUT",
         }
-        
+
         _ports = { p["variable"]["name"]: p['direction'] for p in a["ports"]}
         self.assertDictEqual(_ports, ports)
 
@@ -92,6 +92,14 @@ class BasicTC(unittest.TestCase):
         e = res["entities"]
         self.assertSetEqual(set(_e["name"] for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
+        str(res)
+
+    def test_verilog_macro(self):
+        f, res = dumpFile("macro.v",'verilog')
+        str(res)
+
+    def test_directive_verilogpp(self):
+        f, res = dumpFile("directive_verilogpp.v",'verilog')
         str(res)
 
 #    def test_system_verilog_mem_base_object(self):

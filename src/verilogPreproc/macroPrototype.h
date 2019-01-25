@@ -1,15 +1,19 @@
 #pragma once
 
 #include <antlr4-runtime.h>
-#include "verilogPreprocParser/verilogPreprocSymbolLexer.h"
-#include "verilogPreprocParser/verilogPreprocSymbolParser.h"
 #include <string>
 #include <vector>
 
+/**
+ *  class that represent the macro name and  the list of argument
+ */
 class macroPrototype {
-	public:
-	std::string macroName;
-	std::vector<std::string> args;
+  public:
+    std::string macroName;
+    std::vector<std::string> args;
+    macroPrototype(std::string macroName, std::vector<std::string> args):
+      macroName(macroName),
+      args(args) {
+      }
 };
 
-macroPrototype return_prototype(std::string input_token);

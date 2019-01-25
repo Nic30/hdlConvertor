@@ -1,5 +1,13 @@
 grammar verilogPreproc;
 
+@lexer::members {
+static  const unsigned int CH_LINE_ESCAPE = 4;
+static  const unsigned int CH_LINE_COMMENT = 5;
+}
+
+//custom channels are not supported in combined grammars
+//channels { CH_LINE_ESCAPE, CH_LINE_COMMENT}
+
 /* Process #define statements in a C file using fuzzy parsing.
 */
 
@@ -9,25 +17,78 @@ file
 
 preprocess_directive 
     : define
+    | resetall 
     | undef
     | conditional
     | include
+    | celldefine
+    | endcelldefine
+    | unconnected_drive
+    | nounconnected_drive
+    | default_nettype
+    | line_directive
+    | timing_spec
     | token_id
     ;
 
+resetall
+   : '`resetall' NEW_LINE
+   ;
+
+celldefine
+   : '`celldefine' NEW_LINE
+   ;
+
+endcelldefine
+   : '`endcelldefine' NEW_LINE
+   ;
+
+timing_spec
+   : '`timescale' Time_Identifier '/' Time_Identifier NEW_LINE
+   ;
+
+Time_Identifier
+   : [0-9]+ ' '* [mnpf]? 's'
+   ;
+
+default_nettype 
+   : '`default_nettype' default_nettype_value NEW_LINE
+   ;
+
+default_nettype_value 
+   : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none'
+   ;
+
+line_directive
+   : '`line' DIGIT+ StringLiteral_double_quote DIGIT NEW_LINE
+   ; 
+
+unconnected_drive
+   : '`unconnected_drive' NEW_LINE
+   ;
+
+nounconnected_drive
+   : '`nounconnected_drive' NEW_LINE
+   ;
+
 define
-    :   DEFINE macro_id '(' ID ( ',' ID )* ')' replacement //{System.out.println(">>> macro(parm) : " + $macro_id.text + " replace by :" + $replacement.text);} 
-    |   DEFINE macro_id replacement //{System.out.println(">>> simple macro with space : " + $macro_id.text + " replace by :" + $replacement.text );}
-    |   DEFINE macro_id //{System.out.println(">>> simple macro : " + $macro_id.text);}
+    // SystemVerilog  :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
+    :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ( ',' NEW_LINE* ID NEW_LINE* )* RP replacement 
+    |   DEFINE macro_id replacement
+    |   DEFINE macro_id NEW_LINE
     ;
 
 replacement
-    //:   (~'\n'| '`'|'$'|';'|'\\\n'| '\\\r\n' | '+'|'-'|'/'|'*'|':'|'('|')')+ '\n'
-    :   ~'\n'+ '\n'
+    :   ~'\n'+ '\n'+
+    ;
+
+default_text
+    : ~(',' | ')')+
     ;
 
 undef 
-    : UNDEF ID ;
+    : UNDEF ID NEW_LINE
+    ;
 
 conditional
     : ifdef_directive
@@ -65,12 +126,21 @@ group_of_lines
     ;
 
 token_id
-    : BACKTICK macro_toreplace '(' ID ( ',' ID )* ')'  //{System.out.println(">>> to replace : " + $macro_toreplace.text);}
-    | BACKTICK macro_toreplace  //{ System.out.println(">>> to replace : " + $macro_toreplace.text);}
+    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP
+    | BACKTICK macro_toreplace
+    ;
+
+value
+    : token_id 
+    | (ID|OTHER|DIGIT)+
+    | LP value* RP
+    | '"' value* '"'
+    | '{' value* '}'
+    | '[' value* ']'
     ;
 
 include
-    : INCLUDE StringLiteral 
+    : INCLUDE stringLiteral
     ;
 
 INCLUDE
@@ -106,21 +176,19 @@ ENDIF
     :'`endif'
     ;
 
-
-IGNORED_DIRECTIVE
-    : BACKTICK Ignored_directive
+LP 
+    : '('
     ;
+    
+RP
+    : ')'
+    ;
+
 
 BACKTICK
     : '`'
     ;
 
-fragment Ignored_directive
-    : 'begin_keywords' | 'celldefine' | 'default_nettype' 
-    | 'end_keywords' | 'endcelldefine' | 'line' 
-    | 'nounconnected_drive' | 'pragma' | 'resetall'
-    | 'timescale' | 'unconnected_drive'
-    ;
  
 macro_id
     : ID
@@ -132,7 +200,7 @@ macro_toreplace
 
 ID  :   ( ID_FIRST (ID_FIRST | DIGIT)* ) ;
 
-fragment DIGIT    : [0-9] ;
+DIGIT    : [0-9] ;
 fragment ID_FIRST : LETTER | '_' ;
 fragment LETTER   : [a-zA-Z] ;
 
@@ -143,8 +211,15 @@ CharacterLiteral
     :   '\'' ( EscapeSequence | ~('\''|'\\') ) '\''
     ;
 
-StringLiteral
+stringLiteral
+    : StringLiteral_double_quote | StringLiteral_chevrons
+    ;
+
+StringLiteral_double_quote 
     :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    ;
+StringLiteral_chevrons  
+    :  '<' ( EscapeSequence | ~('\\'|'>') )* '>'
     ;
 
 fragment
@@ -174,15 +249,23 @@ COMMENT
     ;
 
 LINE_ESCAPE
-    :  '\\' '\r'? '\n' -> channel(HIDDEN)
+    //:  '\\' '\r'? '\n' -> channel(CH_LINE_ESCAPE)
+    :  '\\' '\r'? '\n' -> channel(4)
     ;
 
 LINE_COMMENT
-    : '//' ~[\r\n]* '\r'? -> channel(HIDDEN) 
+    //: '//' ~[\r\n]* '\r'? -> channel(CH_LINE_COMMENT) 
+    : '//' ~[\r\n]* '\r'? -> channel(5) 
     ;
 
 
 WS  :   [ \r\t\u000C]+ -> channel(HIDDEN)
+     ;
+
+
+
+NEW_LINE 
+    : '\n'
     ;
 
 OTHER 
