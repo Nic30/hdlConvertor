@@ -107,6 +107,15 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
       data.push_back(arg->getText());
     }
 
+    std::string predText;
+    for(unsigned int i=0; i< ctx->children.size(); i++){
+	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
+	} else if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(ctx->children[i])) {
+	}
+	printf("*%s*\n",ctx->children[i]->getText().c_str());
+	predText = ctx->children[i]->getText();
+    }
+
     for (auto a:data) {
       printf("  *%s*\n",a.c_str());
     }
@@ -171,16 +180,16 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   //create a macroPrototype object
   std::vector<std::string> args;
   
-  if (ctx->value().size() == 0) {
+  if (ctx->LP() == nullptr) {
   }
   else if (ctx->COMMA().size() == 0) {
     args.push_back(ctx->value(0)->getText());
   } else {
      std::string prevText;
      for(size_t i=0; i < ctx->children.size(); i++) {
-	//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
+	printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
 	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-	  //std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
+	  std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
 	  if (
 	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
 	     (prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
