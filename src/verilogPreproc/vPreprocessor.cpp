@@ -12,11 +12,13 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
 
 vPreprocessor::vPreprocessor(TokenStream *tokens,
     std::vector<std::string> &incdir, macroSymbol & defineDB,
+    unsigned int mode,
     size_t include_depth_limit) :
   _defineDB(defineDB),
   _rewriter(tokens), 
   _tokens((CommonTokenStream *) tokens), 
   _incdir(incdir),
+  _mode(mode),
   include_depth_limit(include_depth_limit) {
     // [TODO] add dir of current file into _incdir if not present
   }
@@ -94,9 +96,20 @@ void vPreprocessor::enterLine_nb(verilogPreprocParser::Line_nbContext * ctx){
 //method call when the definition of a macro is found
 void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
   // get the macro name
+  printf("%s\n",ctx->getText().c_str());
   std::string macroName = ctx->macro_id()->getText();
   printf("%s\n",macroName.c_str());
   std::string rep_data;
+  
+  macro_replace * item ;
+  std::map<std::string,std::string> default_args;
+
+  for(unsigned int i=0; i< ctx->children.size(); i++){
+    if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(ctx->children[i])) {
+        printf("arg: %s defaut: %s\n",ctx->children[i-2]->getText().c_str(), ctx->children[i]->getText().c_str());
+	default_args[ctx->children[i-2]->getText()] = ctx->children[i]->getText();
+      }
+  }
 
   // test the number of argument
   if (ctx->ID().size() != 0) {
@@ -107,18 +120,10 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
       data.push_back(arg->getText());
     }
 
-    std::string predText;
-    for(unsigned int i=0; i< ctx->children.size(); i++){
-	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-	} else if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(ctx->children[i])) {
-	}
-	printf("*%s*\n",ctx->children[i]->getText().c_str());
-	predText = ctx->children[i]->getText();
-    }
 
-    for (auto a:data) {
-      printf("  *%s*\n",a.c_str());
-    }
+//    for (auto a:data) {
+//      printf("  *%s*\n",a.c_str());
+//    }
 
     // get the template
     rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
@@ -127,10 +132,15 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
     rep_data = rtrim(rep_data);
 
     // add the macro to the macroDB object
-    macro_replace * item = new macro_replace(rep_data, data);
+    if (_mode == SV2012) {
+       item = new macro_replace_sv(rep_data, data, default_args);
+    }
+    else {
+       item = new macro_replace(rep_data, data);
+    }
     _defineDB.insert(
         std::pair<std::string, macro_replace*>(macroName, item),
-        _incdir);
+        _incdir,_mode);
   } else {
     // The macro has no argument
     std::vector<std::string> data;
@@ -142,18 +152,28 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
       rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
       remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
       rep_data = rtrim(rep_data);
-      macro_replace *item = new macro_replace(rep_data, data);
+      if (_mode == SV2012) {
+        item = new macro_replace_sv(rep_data, data, default_args);
+      }
+      else {
+        item = new macro_replace(rep_data, data);
+      }
       _defineDB.insert(
           std::pair<std::string, macro_replace*>(macroName, item),
-          _incdir);
+          _incdir,_mode);
     } else {
       // no template is provided
       // So we add a macro with empty string as template and no argument
       // to the macroDB object
-      macro_replace *item = new macro_replace("", data);
+      if (_mode == SV2012) {
+        item = new macro_replace_sv(rep_data, data, default_args);
+      }
+      else {
+        item = new macro_replace(rep_data, data);
+      }
       _defineDB.insert(
           std::pair<std::string, macro_replace*>(macroName, item),
-          _incdir);
+          _incdir,_mode);
     }
   }
 
@@ -180,10 +200,11 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   //create a macroPrototype object
   std::vector<std::string> args;
   
-  if (ctx->LP() == nullptr) {
-  }
-  else if (ctx->COMMA().size() == 0) {
-    args.push_back(ctx->value(0)->getText());
+  //if (ctx->LP() == nullptr || ctx->children.size()<=4) {
+  if (ctx->children.size()<=4) {
+  //}
+  //else if (ctx->COMMA().size() == 0 || ctx->value().size() == 1) {
+  //  args.push_back(ctx->value(0)->getText());
   } else {
      std::string prevText;
      for(size_t i=0; i < ctx->children.size(); i++) {
@@ -191,9 +212,12 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
 	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
 	  std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
 	  if (
-	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
-	     (prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
-	     (prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->RP()->getText())
+	     //(prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
+	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == std::string(",")) ||
+	     //(prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
+	     (prevText == std::string(",") && ctx->children[i]->getText() == std::string(",")) ||
+	     //(prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->RP()->getText())
+	     (prevText == std::string(",") && ctx->children[i]->getText() == ctx->RP()->getText())
 	     ) {
              args.push_back("");
 	  }
@@ -220,7 +244,7 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   //build the replacement string by calling the replacement method of the
   //macro_replace object and the provided argument of the macro.
   std::string replacement = _defineDB[macro.macroName]->replace(macro.args);
-  replacement = return_preprocessed(replacement,_incdir,_defineDB);
+  replacement = return_preprocessed(replacement,_incdir,_defineDB,_mode);
   // replace the original macro in the source code by the replacement string
   // we just setup
   misc::Interval token = ctx->getSourceInterval();
@@ -248,7 +272,7 @@ void vPreprocessor::exitIfdef_directive(
       ctx->ifdef_group_of_lines()->getSourceInterval();
     // process it
     replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-        _defineDB);
+        _defineDB,_mode);
   } else {
     // process `elsif and `else
     ID_cpt++; // ID(0) is the one for the `ifdef so we start to ID(1)
@@ -263,7 +287,7 @@ void vPreprocessor::exitIfdef_directive(
         misc::Interval interval =
           ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
         replacement = return_preprocessed(_tokens->getText(interval),
-            _incdir, _defineDB);
+            _incdir, _defineDB,_mode);
         // Because found the first macro that exist. we jump
         // inconditionnaly to the end of the method
         goto exit_label;
@@ -279,7 +303,7 @@ void vPreprocessor::exitIfdef_directive(
       misc::Interval interval =
         ctx->else_group_of_lines()->getSourceInterval();
       replacement = return_preprocessed(_tokens->getText(interval),
-          _incdir, _defineDB);
+          _incdir, _defineDB,_mode);
     }
   }
 
@@ -306,7 +330,7 @@ void vPreprocessor::exitIfndef_directive(
     misc::Interval interval =
       ctx->ifndef_group_of_lines()->getSourceInterval();
     replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-        _defineDB);
+        _defineDB,_mode);
   } else {
     ID_cpt++;
     while (ID_cpt < ctx->ID().size()) {
@@ -315,7 +339,7 @@ void vPreprocessor::exitIfndef_directive(
         misc::Interval interval =
           ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
         replacement = return_preprocessed(_tokens->getText(interval),
-            _incdir, _defineDB);
+            _incdir, _defineDB,_mode);
         goto exit_label;
 
       }
@@ -325,7 +349,7 @@ void vPreprocessor::exitIfndef_directive(
       misc::Interval interval =
         ctx->else_group_of_lines()->getSourceInterval();
       replacement = return_preprocessed(_tokens->getText(interval),
-          _incdir, _defineDB);
+          _incdir, _defineDB,_mode);
 
     }
   }
@@ -390,7 +414,7 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
     std::string str((std::istreambuf_iterator<char>(t)),
         std::istreambuf_iterator<char>());
     // run the pre-processor on it
-    replacement = return_preprocessed(str, _incdir, _defineDB);
+    replacement = return_preprocessed(str, _incdir, _defineDB,_mode);
 
     //pop back the include file
     _stack_incfile.pop_back();
@@ -402,15 +426,17 @@ void vPreprocessor::enterInclude(verilogPreprocParser::IncludeContext * ctx) {
 }
 
 std::string return_preprocessed(const std::string input_str,
-    std::vector<std::string> &incdir, macroSymbol & defineDB) {
+    std::vector<std::string> &incdir, macroSymbol & defineDB, unsigned int mode) {
   ANTLRInputStream input(input_str);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
+  lexer->mode = mode;
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
   verilogPreprocParser * parser = new verilogPreprocParser(tokens);
+  parser->mode = mode;
   tree::ParseTree *tree = parser->file();
 
   tree::ParseTreeWalker walker = tree::ParseTreeWalker();
-  vPreprocessor * extractor = new vPreprocessor(tokens,incdir, defineDB);
+  vPreprocessor * extractor = new vPreprocessor(tokens,incdir, defineDB, mode);
   walker.walk((tree::ParseTreeListener*) extractor, tree);
   std::string return_value = extractor->_rewriter.getText();
   delete extractor;

@@ -24,7 +24,6 @@ using namespace antlr4;
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
 class vPreprocessor : public  verilogPreprocBaseListener {
-  enum { VERILOG2001, VERILOG2005, SV2012};
   macroSymbol & _defineDB;
   CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
@@ -36,6 +35,7 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   void replace_context_by_bank( antlr4::ParserRuleContext * ctx);
 
   public:
+  enum { VERILOG2001, VERILOG2005, SV2012};
   size_t include_depth_limit;
   TokenStreamRewriter _rewriter;
 
@@ -43,6 +43,7 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   vPreprocessor(TokenStream *tokens,
       std::vector<std::string> &incdir,
       macroSymbol & defineDB,
+      unsigned int mode=VERILOG2001,
       size_t include_depth_limit=100);
   ~vPreprocessor();
 
@@ -85,6 +86,6 @@ class vPreprocessor : public  verilogPreprocBaseListener {
 // a object representing the list of already defined macro
 std::string return_preprocessed(const std::string input_token,
     std::vector<std::string> &incdir,
-    macroSymbol & defineDB);
+    macroSymbol & defineDB, unsigned int mode=0);
 
 std::string& rtrim(std::string& str, const std::string& chars = "\n\r");

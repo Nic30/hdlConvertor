@@ -54,7 +54,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 			auto pc = new ParserContainer<Verilog2001Lexer, Verilog2001Parser,
 					Source_textParser>(c);
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB);
+			str = return_preprocessed(str, incdir, defineDB,vPreprocessor::VERILOG2001);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -69,7 +69,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 					sv2012::sv2012Parser, source_textParser>(c);
 
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB);
+			str = return_preprocessed(str, incdir, defineDB,vPreprocessor::SV2012);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -87,14 +87,32 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 
 // [TODO] maybe relict
 void Convertor::test(const std::string fileName,
-		std::vector<std::string> incdir) {
+		std::vector<std::string> incdir,unsigned int mode) {
 
 	std::ifstream t(fileName);
 	std::string str((std::istreambuf_iterator<char>(t)),
 			std::istreambuf_iterator<char>());
 
 	macroSymbol defineDB;
-	std::string result = return_preprocessed(str, incdir, defineDB);
+//    // add __FILE__ macro
+//    std::vector<std::string> data;
+//    std::string rep_data = "\""+fileName+"\"";
+//    macro_replace * item = new macro_replace(rep_data, data);
+//    defineDB.insert(
+//            std::pair<std::string, macro_replace*>("__FILE__",item),
+//            incdir
+//            );
+//
+//    //fake
+//    rep_data = "\"fake line number\"";
+//    macro_replace * item2 = new macro_replace(rep_data, data);
+//    defineDB.insert(
+//            std::pair<std::string, macro_replace*>("__LINE__",item2),
+//            incdir
+//            );
+    
+
+	std::string result = return_preprocessed(str, incdir, defineDB, mode);
 	for (uint8_t i = 0; i < incdir.size(); i++) {
 		printf("incdir : %s\n", incdir[i].c_str());
 	}

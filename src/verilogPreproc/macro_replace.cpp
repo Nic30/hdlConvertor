@@ -79,7 +79,81 @@ std::string macro_replace::replace(std::vector<std::string> arg) {
 
 }
 
-std::string macro_replace::macro_replace::replace() {
+std::string macro_replace::replace() {
   std::vector<std::string> null_vector;
   return replace(null_vector);
+}
+
+macro_replace_sv::macro_replace_sv(std::string replace, std::vector<std::string> arg, std::map<std::string,std::string> default_maps): macro_replace(replace,arg) {
+	_default_map = default_maps;
+}
+
+
+std::string macro_replace_sv::replace() {
+  std::vector<std::string> null_vector;
+  return replace(null_vector);
+}
+
+std::string macro_replace_sv::replace(std::vector<std::string> arg) {
+    
+    for (auto a:arg) {
+      printf("  =%s*\n",a.c_str());
+    }
+    
+    for (auto a:_default_map) {
+      printf("%s : %s\n",a.first.c_str(),a.second.c_str());
+    }
+
+    std::string returnString;
+
+    if (!data.tmplate.empty()) {
+      returnString = data.tmplate;
+
+/*
+      if (arg.size() != data.args.size()) {
+        std::string message =  "Missmatch in number of argument macro declaration (" + 
+          std::to_string(data.args.size()) + 
+          ") and macro usage ("+std::to_string(arg.size())+')';
+        throw parseException(message);
+      }
+*/
+      // the number of provided argument is fewer than the number defined by the prototype.
+      // So we complete the list with default value.
+      if (arg.size() < data.args.size()) {
+         unsigned int i;
+	 if (arg.size()>0) {
+	  i = arg.size()-1;
+	 }
+	 else {
+	  i =0;
+	 }
+
+	 for (; i < data.args.size(); i++) {
+           if (_default_map.find(data.args[i]) == _default_map.end() ) {
+	    //throw
+	   }
+	   arg.push_back(_default_map[data.args[i]]);
+	 }
+      } else if (arg.size() > data.args.size()) {
+        //throw
+      }
+
+      std::vector<std::string>::iterator macro= data.args.begin();
+      std::vector<std::string>::iterator instance = arg.begin();
+      for ( ; macro != data.args.end(); macro++, instance++) {
+	std::string rpld_argument = *instance;
+	// if no argument was provided we use the default argument
+	if (rpld_argument == "" && _default_map.find(*macro)!= _default_map.end()){
+	  rpld_argument = _default_map[*macro];
+	}
+        replaceAll(returnString,*macro,rpld_argument);
+      }
+    }
+    else {
+      //Macro can be empty
+      //Example `define MODE1
+      returnString = "";
+    }
+    return returnString;
+
 }

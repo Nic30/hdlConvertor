@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-
+#include <map>
 #include "exception.h"
 
 /**
@@ -18,6 +18,7 @@ class macro_replace_data {
   public:
     std::string tmplate;
     std::vector<std::string> args;
+    std::vector<std::string> default_arg;
 };
 
 /**
@@ -25,7 +26,8 @@ class macro_replace_data {
  */
 class macro_replace {
 
-  void replaceAll(std::string& str, const std::string& from,
+  protected:
+      void replaceAll(std::string& str, const std::string& from,
       const std::string& to);
 
   public:
@@ -39,4 +41,14 @@ class macro_replace {
   // replace method without argument
   virtual std::string replace(std::vector<std::string>);
 
+};
+
+class macro_replace_sv :  public macro_replace {
+  private:
+    std::map<std::string, std::string> _default_map;
+
+  public:
+    macro_replace_sv(std::string, std::vector<std::string>, std::map<std::string,std::string>);
+    std::string replace();
+    std::string replace(std::vector<std::string> arg);
 };
