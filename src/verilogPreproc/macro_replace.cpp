@@ -95,7 +95,7 @@ std::string macro_replace_sv::replace() {
 }
 
 std::string macro_replace_sv::replace(std::vector<std::string> arg) {
-    
+   /* 
     for (auto a:arg) {
       printf("  =%s*\n",a.c_str());
     }
@@ -103,7 +103,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
     for (auto a:_default_map) {
       printf("%s : %s\n",a.first.c_str(),a.second.c_str());
     }
-
+*/
     std::string returnString;
 
     if (!data.tmplate.empty()) {
@@ -122,7 +122,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
       if (arg.size() < data.args.size()) {
          unsigned int i;
 	 if (arg.size()>0) {
-	  i = arg.size()-1;
+	  i = arg.size();
 	 }
 	 else {
 	  i =0;
