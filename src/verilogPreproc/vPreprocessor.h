@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <sys/stat.h>
+#include <typeinfo>
 
 #include "../verilogPreproc/macroPrototype.h"
 #include "../verilogPreproc/macroSymbol.h"
@@ -23,10 +24,12 @@ using namespace antlr4;
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
 class vPreprocessor : public  verilogPreprocBaseListener {
+  enum { VERILOG2001, VERILOG2005, SV2012};
   macroSymbol & _defineDB;
   CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
   std::vector<std::string> _stack_incfile;
+  unsigned int _mode = VERILOG2001;
 
   void remove_comment(Token * start, Token * end, std::string * str );
   std::string genBlank(size_t n);
@@ -51,7 +54,7 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   virtual void enterDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx);
   virtual void enterUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx);
   virtual void enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx);
-  virtual void enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx); 
+  virtual void enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx);
 
   virtual void enterDefine(verilogPreprocParser::DefineContext * ctx);
   virtual void enterUndef(verilogPreprocParser::UndefContext * ctx);
@@ -62,6 +65,17 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   virtual void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
 
   virtual void enterInclude(verilogPreprocParser::IncludeContext * ctx);
+
+  virtual void enterKeywords_directive(verilogPreprocParser::Keywords_directiveContext * ctx);
+  virtual void enterEndkeywords_directive(verilogPreprocParser::Endkeywords_directiveContext * ctx);
+
+  virtual void enterPragma(verilogPreprocParser::PragmaContext * ctx);
+
+  virtual void enterUndefineall(verilogPreprocParser::UndefineallContext * ctx);
+
+  virtual void enterFile_nb(verilogPreprocParser::File_nbContext * );
+  virtual void enterLine_nb(verilogPreprocParser::Line_nbContext * ctx);
+
 };
 
 //call the preprocessor tool.

@@ -64,10 +64,38 @@ void vPreprocessor::enterLine_directive(verilogPreprocParser::Line_directiveCont
   replace_context_by_bank(ctx);
 }	
 
+void vPreprocessor::enterKeywords_directive(verilogPreprocParser::Keywords_directiveContext * ctx) {
+  replace_context_by_bank(ctx);
+}
+
+void vPreprocessor::enterEndkeywords_directive(verilogPreprocParser::Endkeywords_directiveContext * ctx){
+  replace_context_by_bank(ctx);
+}
+
+void vPreprocessor::enterPragma(verilogPreprocParser::PragmaContext * ctx){
+  replace_context_by_bank(ctx);
+}
+
+void vPreprocessor::enterUndefineall(verilogPreprocParser::UndefineallContext * ctx){
+  _defineDB.clear();
+}
+
+void vPreprocessor::enterFile_nb(verilogPreprocParser::File_nbContext * ctx){
+    misc::Interval token = ctx->getSourceInterval();
+    std::string replacement = _tokens->getSourceName();
+    _rewriter.replace(token.a, token.b, replacement);
+}
+void vPreprocessor::enterLine_nb(verilogPreprocParser::Line_nbContext * ctx){
+    misc::Interval token = ctx->getSourceInterval();
+    std::string replacement = std::to_string(ctx->getStart()->getLine());
+    _rewriter.replace(token.a, token.b, replacement);
+}
+
 //method call when the definition of a macro is found
 void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
   // get the macro name
   std::string macroName = ctx->macro_id()->getText();
+  printf("%s\n",macroName.c_str());
   std::string rep_data;
 
   // test the number of argument
@@ -78,6 +106,11 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
     for (auto arg : ctx->ID()) {
       data.push_back(arg->getText());
     }
+
+    for (auto a:data) {
+      printf("  *%s*\n",a.c_str());
+    }
+
     // get the template
     rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
     remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
@@ -134,10 +167,36 @@ void vPreprocessor::enterUndef(verilogPreprocParser::UndefContext * ctx) {
 
 //method call when `macro is found in the source code
 void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
+  printf("%li%s\n",ctx->getStart()->getLine(),ctx->getText().c_str());
   //create a macroPrototype object
   std::vector<std::string> args;
-  for (auto arg : ctx->value()) {
-    args.push_back(arg->getText());
+  
+  if (ctx->value().size() == 0) {
+  }
+  else if (ctx->COMMA().size() == 0) {
+    args.push_back(ctx->value(0)->getText());
+  } else {
+     std::string prevText;
+     for(size_t i=0; i < ctx->children.size(); i++) {
+	//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
+	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
+	  //std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
+	  if (
+	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
+	     (prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
+	     (prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->RP()->getText())
+	     ) {
+             args.push_back("");
+	  }
+	}
+	else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(ctx->children[i]))  {
+	  args.push_back(ctx->children[i]->getText());
+	}
+	prevText = ctx->children[i]->getText();
+     }
+  } 
+  for (auto a:args) {
+    printf("  *%s*\n",a.c_str());
   }
   macroPrototype macro(ctx->macro_toreplace()->getText(),args);
 

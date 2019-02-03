@@ -3,7 +3,53 @@ grammar verilogPreproc;
 @lexer::members {
 static  const unsigned int CH_LINE_ESCAPE = 4;
 static  const unsigned int CH_LINE_COMMENT = 5;
+
+enum { VERILOG2001=0, VERILOG2005=1, SV2012=2};
+unsigned int mode = VERILOG2001;
+
+bool isVerilog2005() {
+  if (mode == VERILOG2005) {
+     return true;
+  } else {
+     return false;
+  }
 }
+
+bool isSV2012() {
+  if (mode == VERILOG2005 || mode == SV2012) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
+}
+
+@parser::members {
+enum { VERILOG2001=0, VERILOG2005=1, SV2012=2};
+unsigned int mode = VERILOG2001;
+
+bool isVerilog2005() {
+  if (mode == VERILOG2005) {
+     return true;
+  } else {
+     return false;
+  }
+}
+
+bool isSV2012() {
+  if (mode == VERILOG2005 || mode == SV2012) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+}
+
 
 //custom channels are not supported in combined grammars
 //channels { CH_LINE_ESCAPE, CH_LINE_COMMENT}
@@ -16,7 +62,14 @@ file
     ;
 
 preprocess_directive 
-    : define
+    :
+    {isSV2012()}? file_nb 
+    |{isSV2012()}? line_nb
+    |{isSV2012()}? undefineall
+    |{isVerilog2005() || isSV2012()}? keywords_directive  
+    | {isVerilog2005() || isSV2012()}? endkeywords_directive
+    | {isVerilog2005() || isSV2012()}? pragma
+    | define
     | resetall 
     | undef
     | conditional
@@ -30,6 +83,53 @@ preprocess_directive
     | timing_spec
     | token_id
     ;
+
+file_nb
+    : '`__FILE__'
+    ;
+ 
+line_nb
+    : '`__LINE__'
+    ;
+
+keywords_directive : '`begin_keywords' '"' version_specifier '"' NEW_LINE ;
+
+version_specifier :
+ {isSV2012()}? '1800-2012'
+|{isSV2012()}? '1800-2009'
+|{isSV2012()}? '1800-2005'
+| '1364-2005'
+| '1364-2001'
+| '1364-2001-noconfig'
+| '1364-1995'
+;
+
+endkeywords_directive : '`end_keywords';
+
+pragma :
+'`pragma' pragma_name ( pragma_expression ( COMMA pragma_expression )? )?
+;
+
+pragma_name : ID;
+
+pragma_expression :
+pragma_keyword
+| pragma_keyword '=' pragma_value
+| pragma_value
+;
+
+pragma_value :
+'(' pragma_expression ( COMMA pragma_expression )* ')'
+| DIGIT+
+| StringLiteral_double_quote
+| ID
+;
+
+pragma_keyword : ID;
+
+undefineall
+   : '`undefineall'
+   ;
 
 resetall
    : '`resetall' NEW_LINE
@@ -56,7 +156,7 @@ default_nettype
    ;
 
 default_nettype_value 
-   : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none'
+   : 'wire' | 'tri' | 'tri0' | 'tri1' | 'wand' | 'triand' | 'wor' | 'trior' | 'trireg' | 'uwire' | 'none' | {isVerilog2005()}? 'uwire'
    ;
 
 line_directive
@@ -72,8 +172,8 @@ nounconnected_drive
    ;
 
 define
-    // SystemVerilog  :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
-    :   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ( ',' NEW_LINE* ID NEW_LINE* )* RP replacement 
+    : {isSV2012()}? DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ('=' default_text) ? ( ',' NEW_LINE* ID NEW_LINE* ('=' default_text)? )* RP replacement 
+    |   DEFINE macro_id LP NEW_LINE* ID NEW_LINE* ( COMMA NEW_LINE* ID NEW_LINE* )* RP replacement 
     |   DEFINE macro_id replacement
     |   DEFINE macro_id NEW_LINE
     ;
@@ -83,7 +183,7 @@ replacement
     ;
 
 default_text
-    : ~(',' | ')')+
+    : ~(COMMA | ')')+
     ;
 
 undef 
@@ -126,13 +226,14 @@ group_of_lines
     ;
 
 token_id
-    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( ',' NEW_LINE* value? NEW_LINE* )* RP
+    : BACKTICK macro_toreplace NEW_LINE* LP NEW_LINE* value? NEW_LINE* ( COMMA NEW_LINE* value? NEW_LINE* )* RP
     | BACKTICK macro_toreplace
     ;
 
 value
     : token_id 
     | (ID|OTHER|DIGIT)+
+    | StringLiteral_double_quote
     | LP value* RP
     | '"' value* '"'
     | '{' value* '}'
@@ -262,7 +363,10 @@ LINE_COMMENT
 WS  :   [ \r\t\u000C]+ -> channel(HIDDEN)
      ;
 
-
+COMMA 
+    : ','
+    ;
+    
 
 NEW_LINE 
     : '\n'
