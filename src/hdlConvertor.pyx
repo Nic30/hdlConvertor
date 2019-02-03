@@ -80,7 +80,7 @@ cdef class hdlConvertor:
             filename = [item.encode('utf8') for item in filename]
             incdir = [item.encode('utf8') for item in incdir]
         
-        self.thisptr.test(filename, incdir, mode)
+        return self.thisptr.test(filename, incdir, mode)
     
 
 def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
@@ -94,5 +94,5 @@ def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
 def test(filename, incdir=['.'], mode=0):
     cdef hdlConvertor obj
     obj = hdlConvertor()
-    obj.test(filename, incdir,mode)
+    return obj.test(filename, incdir,mode)
 

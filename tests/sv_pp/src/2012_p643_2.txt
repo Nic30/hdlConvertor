@@ -1,0 +1,2 @@
+`define TOP(a,b) a + b
+`TOP( `TOP(b,1), `TOP(42,a) )

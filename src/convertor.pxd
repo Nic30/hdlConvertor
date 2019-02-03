@@ -29,5 +29,5 @@ cdef extern from "convertor.h":
                         bool,
                         bool) except +raise_py_error
 
-        void test(string filename, vector[string] incdir, unsigned int) except +raise_py_error
+        string test(string filename, vector[string] incdir, unsigned int) except +raise_py_error
 

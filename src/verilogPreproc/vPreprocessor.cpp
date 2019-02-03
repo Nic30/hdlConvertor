@@ -35,7 +35,7 @@ std::string vPreprocessor::genBlank(size_t n) {
 
 void vPreprocessor::replace_context_by_bank( antlr4::ParserRuleContext * ctx) {
     misc::Interval token = ctx->getSourceInterval();
-    std::string replacement = genBlank(ctx->getText().size());
+    std::string replacement = "";
     _rewriter.replace(token.a, token.b, replacement);
 }
 

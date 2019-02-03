@@ -1,0 +1,7 @@
+`define D(x,y) initial $display("start", x , y, "end");
+
+`D( "msg1" , "msg2" )
+`D( " msg1", )
+`D(, "msg2 ")
+`D(,)
+

@@ -86,7 +86,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 }
 
 // [TODO] maybe relict
-void Convertor::test(const std::string fileName,
+std::string Convertor::test(const std::string fileName,
 		std::vector<std::string> incdir,unsigned int mode) {
 
 	std::ifstream t(fileName);
@@ -120,6 +120,7 @@ void Convertor::test(const std::string fileName,
 	printf("%s\n", result.c_str());
 
 	printf("Finish...\n");
+	return result;
 
 }
 
