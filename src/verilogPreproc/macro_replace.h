@@ -31,6 +31,7 @@ class macro_replace {
       const std::string& to);
       std::vector<std::pair<size_t,size_t> > _substituate;
       bool check_interval(size_t start);
+      void look4stringLiteral(std::string);
 
   public:
   macro_replace_data data;

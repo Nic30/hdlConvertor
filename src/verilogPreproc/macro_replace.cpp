@@ -20,6 +20,24 @@ bool macro_replace::check_interval(size_t start) {
   }
   return false;
 }
+/*
+ * Look for String literal. In order to forbid them to be change by replacement
+ */
+void macro_replace::look4stringLiteral(std::string tmpl) {
+  size_t start_pos = 0;
+  size_t pos1 = -1;
+  while((start_pos = tmpl.find('"', start_pos)) != std::string::npos) {
+    if (pos1 == -1 && (start_pos != 0 && tmpl[start_pos-1]!='`' || start_pos == 0) ) {
+      pos1 = start_pos;
+    }
+    else if (pos1 != -1 && tmpl[start_pos-1]!= '`') {
+      size_t length = start_pos - pos1;
+      _substituate.push_back(std::make_pair(pos1,length));
+      pos1 = -1;
+    }
+    start_pos += 1;
+  }
+}
 
 void macro_replace::replaceAll(std::string& str, const std::string& from, const std::string& to) {
   if(from.empty())
@@ -152,6 +170,8 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
       }
 
       _substituate.clear();
+      look4stringLiteral(returnString);
+
       std::vector<std::string>::iterator macro= data.args.begin();
       std::vector<std::string>::iterator instance = arg.begin();
       for ( ; macro != data.args.end(); macro++, instance++) {
