@@ -9,6 +9,18 @@ macro_replace::macro_replace(std::string replace, std::vector<std::string> arg){
 macro_replace::~macro_replace() {
 }
 
+// return false to skip this find because it is 
+// from an already substitution of the same macro replacement
+bool macro_replace::check_interval(size_t start) {
+  for (auto paire:_substituate) {
+    //printf("{%li,%li}\n",paire.first,paire.second);
+    if ( (paire.first <= start) && (start < paire.first+paire.second)){
+      return true;
+    }
+  }
+  return false;
+}
+
 void macro_replace::replaceAll(std::string& str, const std::string& from, const std::string& to) {
   if(from.empty())
     return;
@@ -19,14 +31,16 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
         printf("-->%li %li\n",start_pos,from.length());
         printf("-->%s\n",to.c_str());
 	printf("-->%c\n",str[start_pos+from.length()]);
-        */
+	*/
     if( not (
           (('a' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='z')) ||
           (('A' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='Z')) ||
           (('0' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='9')) ||
           ('_' == str[start_pos+from.length()]) || ('$' == str[start_pos+from.length()]) ||
 	  ('(' == str[start_pos+from.length()]) || ('[' == str[start_pos+from.length()]) ||
-	  ('{' == str[start_pos+from.length()])
+	  ('{' == str[start_pos+from.length()]) ||
+	  
+	  check_interval(start_pos) //check the find is in the result of a substitution of the same macro_replacement
 
           )
       ) {
@@ -42,12 +56,9 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
        *   Operators
        * */
       str.replace(start_pos, from.length(), to);
+      _substituate.push_back(std::make_pair(start_pos,to.length()));
     }
-    if (to.length() > 1) {
-      start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
-    } else {
-      start_pos += 1;
-    }
+    start_pos += 1;
   }
 }
 
@@ -64,6 +75,7 @@ std::string macro_replace::replace(std::vector<std::string> arg) {
           ") and macro usage ("+std::to_string(arg.size())+')';
         throw parseException(message);
       }
+      _substituate.clear();
       std::vector<std::string>::iterator macro= data.args.begin();
       std::vector<std::string>::iterator instance = arg.begin();
       for ( ; macro != data.args.end(); macro++, instance++) {
@@ -108,6 +120,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
 
     if (!data.tmplate.empty()) {
       returnString = data.tmplate;
+      //printf("before replacement: %s\n",returnString.c_str());
 
 /*
       if (arg.size() != data.args.size()) {
@@ -138,6 +151,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
         //throw
       }
 
+      _substituate.clear();
       std::vector<std::string>::iterator macro= data.args.begin();
       std::vector<std::string>::iterator instance = arg.begin();
       for ( ; macro != data.args.end(); macro++, instance++) {
@@ -146,8 +160,10 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
 	if (rpld_argument == "" && _default_map.find(*macro)!= _default_map.end()){
 	  rpld_argument = _default_map[*macro];
 	}
+	//printf("%s@%s@%s\n",returnString.c_str(),(*macro).c_str(),rpld_argument.c_str() );
         replaceAll(returnString,*macro,rpld_argument);
       }
+      //printf("after replacement: %s\n",returnString.c_str());
     }
     else {
       //Macro can be empty

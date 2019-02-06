@@ -29,6 +29,8 @@ class macro_replace {
   protected:
       void replaceAll(std::string& str, const std::string& from,
       const std::string& to);
+      std::vector<std::pair<size_t,size_t> > _substituate;
+      bool check_interval(size_t start);
 
   public:
   macro_replace_data data;
