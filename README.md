@@ -4,7 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
 [![Python version](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)
 
-The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to single AST so other libraries does not have to care about Verilog/VHDL differences. 
+The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
