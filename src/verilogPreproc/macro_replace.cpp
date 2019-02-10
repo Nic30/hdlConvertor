@@ -138,7 +138,8 @@ std::string macro_replace_sv::replace() {
 }
 
 std::string macro_replace_sv::replace(std::vector<std::string> arg) {
-   /* 
+    /*
+    printf("---------------\n");
     for (auto a:arg) {
       printf("  =%s*\n",a.c_str());
     }
@@ -146,14 +147,27 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
     for (auto a:_default_map) {
       printf("%s : %s\n",a.first.c_str(),a.second.c_str());
     }
-*/
+    printf("---------------\n");
+    */
     std::string returnString;
+
+    if (arg.size() < data.args.size()) {
+       for(unsigned long int i = arg.size(); i < data.args.size(); i++ ) {
+         auto missing_arg = _default_map.find(data.args[i]);
+	 if (missing_arg != _default_map.end()) {
+	   arg.push_back(missing_arg->second);
+	 }
+         else {
+	   goto exit_label;
+	 }
+       }
+    }
+    exit_label: 
 
     if (!data.tmplate.empty()) {
       returnString = data.tmplate;
 
       //printf("before replacement: %s\n",returnString.c_str());
-
 
       if (arg.size() != data.args.size()) {
         std::string message =  "Missmatch in number of argument macro declaration (" + 
