@@ -81,6 +81,15 @@ class PreprocessorTC(unittest.TestCase):
             )
         self.assertTrue('Missmatch in number of argument macro declaration (2) and macro usage (1)' in context.exception)
 
+    def test_2012_p641_il2(self):
+        with self.assertRaises(hdlConvertor.parseException) as context:
+            hdlConvertor.test(
+                path.join(TEST_DIR,'sv_pp','src','2012_p641_il2.txt'),
+                ['.','..',path.join('sv_pp','src')],
+                2
+            )
+        self.assertTrue('Missmatch in number of argument macro declaration (2) and macro usage (0)' in context.exception)
+
 
 
 if __name__ == "__main__":
