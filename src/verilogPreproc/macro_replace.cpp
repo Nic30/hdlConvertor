@@ -154,14 +154,14 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
 
       //printf("before replacement: %s\n",returnString.c_str());
 
-/*
+
       if (arg.size() != data.args.size()) {
         std::string message =  "Missmatch in number of argument macro declaration (" + 
           std::to_string(data.args.size()) + 
           ") and macro usage ("+std::to_string(arg.size())+')';
         throw parseException(message);
       }
-*/
+
       // the number of provided argument is fewer than the number defined by the prototype.
       // So we complete the list with default value.
       if (arg.size() < data.args.size()) {

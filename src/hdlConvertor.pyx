@@ -10,7 +10,7 @@ from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Con
 import sys
 
 
-class parseException(Exception):
+cdef class parseException(Exception):
     pass
 
 
