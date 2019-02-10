@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../verilogPreproc/macro_replace.h"
+#include "../verilogPreproc/macro_replace_sv.h"
 /**
  * class to store all the defined macro. The class herite from the
  * std::map<std:string, macro_replace*>
