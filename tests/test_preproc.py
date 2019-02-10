@@ -68,12 +68,9 @@ class PreprocessorTC(unittest.TestCase):
         )
         self.assertEqual(result,ref)
 
-#    def test_2012_p644_2(self):
-#        result,ref = test_run(
-#            path.join('sv_pp','src','2012_p644_2.txt'),
-#            path.join('sv_pp','expected','2012_p644_2.txt')
-#        )
-#        self.assertEqual(result,ref)
+    def test_2012_p644_2(self):
+        result = hdlConvertor.test(path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),['.','..',path.join('sv_pp','src')],2)
+        self.assertEqual(result,'`include "/home/mydir/myfile"\n')
 
 if __name__ == "__main__":
     unittest.main()
