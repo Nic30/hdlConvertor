@@ -96,9 +96,9 @@ void vPreprocessor::enterLine_nb(verilogPreprocParser::Line_nbContext * ctx){
 //method call when the definition of a macro is found
 void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
   // get the macro name
-  printf("%s\n",ctx->getText().c_str());
+  //printf("%s\n",ctx->getText().c_str());
   std::string macroName = ctx->macro_id()->getText();
-  printf("%s\n",macroName.c_str());
+  //printf("%s\n",macroName.c_str());
   std::string rep_data;
   
   macro_replace * item ;
@@ -106,7 +106,7 @@ void vPreprocessor::enterDefine(verilogPreprocParser::DefineContext * ctx) {
 
   for(unsigned int i=0; i< ctx->children.size(); i++){
     if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(ctx->children[i])) {
-        printf("arg: %s defaut: %s\n",ctx->children[i-2]->getText().c_str(), ctx->children[i]->getText().c_str());
+        //printf("arg: %s defaut: %s\n",ctx->children[i-2]->getText().c_str(), ctx->children[i]->getText().c_str());
 	default_args[ctx->children[i-2]->getText()] = ctx->children[i]->getText();
       }
   }
@@ -196,7 +196,7 @@ void vPreprocessor::enterUndef(verilogPreprocParser::UndefContext * ctx) {
 
 //method call when `macro is found in the source code
 void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
-  printf("%li%s\n",ctx->getStart()->getLine(),ctx->getText().c_str());
+  //printf("%li%s\n",ctx->getStart()->getLine(),ctx->getText().c_str());
   //create a macroPrototype object
   std::vector<std::string> args;
   
@@ -208,9 +208,9 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   } else {
      std::string prevText;
      for(size_t i=0; i < ctx->children.size(); i++) {
-	printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
+	//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
 	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-	  std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
+	  //std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
 	  if (
 	     //(prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
 	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == std::string(",")) ||
@@ -223,14 +223,16 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
 	  }
 	}
 	else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(ctx->children[i]))  {
-	  args.push_back(ctx->children[i]->getText());
+	  args.push_back(_tokens->getText(ctx->children[i]->getSourceInterval()).c_str());
 	}
 	prevText = ctx->children[i]->getText();
      }
-  } 
+  }
+  /* 
   for (auto a:args) {
     printf("  *%s*\n",a.c_str());
   }
+  */
   macroPrototype macro(ctx->macro_toreplace()->getText(),args);
 
   //test if the macro has already been defined
@@ -244,9 +246,31 @@ void vPreprocessor::exitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   //build the replacement string by calling the replacement method of the
   //macro_replace object and the provided argument of the macro.
   std::string replacement = _defineDB[macro.macroName]->replace(macro.args);
+  //printf("%s\n",replacement.c_str());
+  
+  if (_mode == SV2012) {
+    size_t start_pos = 0;
+    while((start_pos = replacement.find("``", start_pos)) != std::string::npos) {
+      replacement.erase(start_pos,2);
+      start_pos += 1;
+    }
+    start_pos = 0;
+    while((start_pos = replacement.find("`\\", start_pos)) != std::string::npos) {
+      replacement.erase(start_pos,1);
+      start_pos += 1;
+    }
+    start_pos = 0;
+    while((start_pos = replacement.find("`\"", start_pos)) != std::string::npos) {
+      replacement.erase(start_pos,1);
+      start_pos += 1;
+    }
+  
+  }
+  
   replacement = return_preprocessed(replacement,_incdir,_defineDB,_mode);
   // replace the original macro in the source code by the replacement string
   // we just setup
+  //printf("%s->%s\n",ctx->getText().c_str(),replacement.c_str());
   misc::Interval token = ctx->getSourceInterval();
   _rewriter.replace(token.a, token.b, replacement);
 }

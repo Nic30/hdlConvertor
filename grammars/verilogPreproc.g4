@@ -285,6 +285,9 @@ RP
     : ')'
     ;
 
+DOUBLE_BACKTICK 
+    : '``'
+    ;
 
 BACKTICK
     : '`'

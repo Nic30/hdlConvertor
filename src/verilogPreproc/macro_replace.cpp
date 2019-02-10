@@ -44,7 +44,7 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
     return;
   size_t start_pos = 0;
   while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-     	/*
+     /*	
         printf("-->%s\n",str.c_str());
         printf("-->%li %li\n",start_pos,from.length());
         printf("-->%s\n",to.c_str());
@@ -151,6 +151,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
 
     if (!data.tmplate.empty()) {
       returnString = data.tmplate;
+
       //printf("before replacement: %s\n",returnString.c_str());
 
 /*
