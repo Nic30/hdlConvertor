@@ -44,12 +44,12 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
     return;
   size_t start_pos = 0;
   while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-     /*	
+     	/*
         printf("-->%s\n",str.c_str());
         printf("-->%li %li\n",start_pos,from.length());
         printf("-->%s\n",to.c_str());
 	printf("-->%c\n",str[start_pos+from.length()]);
-	*/
+*/
     if( not (
           (('a' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='z')) ||
           (('A' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='Z')) ||
@@ -62,6 +62,7 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
 
           )
       ) {
+	    //printf("replacement\n");
       /*
        * Test what is next character. If next character is part of [a-zA-Z0-9_$([{] then it is not what we have to replace.
        * 19.3.1 `define
@@ -74,6 +75,18 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
        *   Operators
        * */
       str.replace(start_pos, from.length(), to);
+      unsigned long int i = 0;
+      for (auto a: _substituate) {
+	 //printf("%li < %li\n",start_pos,a.first );
+         if (start_pos < a.first) {
+		 //a->first += to.length();
+		 _substituate.at(i) = std::make_pair(a.first+to.length(),a.second);
+	 }
+	 i++;
+      }
+      //for (auto paire:_substituate) {
+      //  printf("[%li,%li]\n",paire.first,paire.second);
+      //}
       _substituate.push_back(std::make_pair(start_pos,to.length()));
     }
     start_pos += 1;
