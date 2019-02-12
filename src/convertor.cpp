@@ -88,13 +88,18 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 std::string Convertor::verilog_pp(const std::string fileName,
 		std::vector<std::string> incdir,unsigned int mode) {
 
-	std::ifstream t(fileName);
-	std::string str((std::istreambuf_iterator<char>(t)),
-			std::istreambuf_iterator<char>());
+    struct stat buffer;
+    if (stat(fileName.c_str(), &buffer) != 0) {
+        throw parseException(fileName + " does not exist.");
+    }
+    
+    std::ifstream t(fileName);
+    std::string str((std::istreambuf_iterator<char>(t)),
+    	std::istreambuf_iterator<char>());
 
-	macroSymbol defineDB;
-	std::string result = return_preprocessed(str, incdir, defineDB, mode);
-	return result;
+    macroSymbol defineDB;
+    std::string result = return_preprocessed(str, incdir, defineDB, mode);
+    return result;
 
 }
 
