@@ -79,6 +79,7 @@ void vPreprocessor::enterPragma(verilogPreprocParser::PragmaContext * ctx){
 }
 
 void vPreprocessor::enterUndefineall(verilogPreprocParser::UndefineallContext * ctx){
+  replace_context_by_bank(ctx);
   _defineDB.clear();
 }
 
