@@ -10,7 +10,7 @@ sys.path.insert(1, path.join(BASE_DIR, "dist"))
 import hdlConvertor
 
 def test_run(test_file, golden_file):
-    test_result = hdlConvertor.test(path.join(TEST_DIR,test_file),['.','..',path.join('sv_pp','src')],2)
+    test_result = hdlConvertor.verilog_pp(path.join(TEST_DIR,test_file),['.','..',path.join('sv_pp','src')],2)
     with open(path.join(TEST_DIR,golden_file), 'r') as myfile:
         test_golden = myfile.read()
     myfile.close()
@@ -69,12 +69,12 @@ class PreprocessorTC(unittest.TestCase):
         self.assertEqual(result,ref)
 
     def test_2012_p644_2(self):
-        result = hdlConvertor.test(path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),['.','..',path.join('sv_pp','src')],2)
+        result = hdlConvertor.verilog_pp(path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),['.','..',path.join('sv_pp','src')],2)
         self.assertEqual(result,'`include "/home/mydir/myfile"\n')
 
     def test_2012_p641_il1(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
-            hdlConvertor.test(
+            hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
                 2
@@ -83,7 +83,7 @@ class PreprocessorTC(unittest.TestCase):
 
     def test_2012_p641_il2(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
-            hdlConvertor.test(
+            hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
                 2
@@ -92,7 +92,7 @@ class PreprocessorTC(unittest.TestCase):
 
     def test_2012_p641_il3(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
-            hdlConvertor.test(
+            hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il3.txt'),
                 ['.','..',path.join('sv_pp','src')],
                 2
@@ -102,7 +102,7 @@ class PreprocessorTC(unittest.TestCase):
 
     def test_2012_p642_il1(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
-            result = hdlConvertor.test(
+            result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
                 2
@@ -114,7 +114,7 @@ class PreprocessorTC(unittest.TestCase):
     @unittest.expectedFailure
     def test_2012_p642_il2(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
-            result = hdlConvertor.test(
+            result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
                 2
@@ -122,12 +122,11 @@ class PreprocessorTC(unittest.TestCase):
         self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' in context.exception)
 
 #    def test_2012_p642_il3(self):
-#        result = hdlConvertor.test(
+#        result = hdlConvertor.verilog_pp(
 #                path.join(TEST_DIR,'sv_pp','src','2012_p642_il3.txt'),
 #                ['.','..',path.join('sv_pp','src')],
 #                2
 #            )
-
 
 
 if __name__ == "__main__":

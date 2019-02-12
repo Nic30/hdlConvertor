@@ -54,6 +54,6 @@ public:
 			bool hierarchyOnly,
 			bool debug);
 
-	std::string test(const std::string, std::vector<std::string> incdir, unsigned int mode );
+	std::string verilog_pp(const std::string, std::vector<std::string> incdir, unsigned int mode );
 
 };

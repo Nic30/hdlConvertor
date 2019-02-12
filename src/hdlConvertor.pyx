@@ -65,7 +65,7 @@ cdef class hdlConvertor:
         d_py = < object > d
         return d_py
     
-    def test(self, filename, incdir=['.'],mode=0):
+    def verilog_pp(self, filename, incdir=['.'],mode=0):
         PY3 = PY_MAJOR_VERSION == 3
 
         if PY3:
@@ -80,7 +80,7 @@ cdef class hdlConvertor:
             filename = [item.encode('utf8') for item in filename]
             incdir = [item.encode('utf8') for item in incdir]
         
-        return self.thisptr.test(filename, incdir, mode)
+        return self.thisptr.verilog_pp(filename, incdir, mode)
     
 
 def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
@@ -91,8 +91,8 @@ def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
     return context
 
 
-def test(filename, incdir=['.'], mode=0):
+def verilog_pp(filename, incdir=['.'], mode=0):
     cdef hdlConvertor obj
     obj = hdlConvertor()
-    return obj.test(filename, incdir,mode)
+    return obj.verilog_pp(filename, incdir,mode)
 
