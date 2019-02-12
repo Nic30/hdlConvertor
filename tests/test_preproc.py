@@ -10,7 +10,10 @@ sys.path.insert(1, path.join(BASE_DIR, "dist"))
 import hdlConvertor
 
 def test_run(test_file, golden_file):
-    test_result = hdlConvertor.verilog_pp(path.join(TEST_DIR,test_file),['.','..',path.join('sv_pp','src')],2)
+    test_result = hdlConvertor.verilog_pp(
+        path.join(TEST_DIR,test_file),
+        ['.','..',path.join('sv_pp','src')],
+        "sv2012")
     with open(path.join(TEST_DIR,golden_file), 'r') as myfile:
         test_golden = myfile.read()
     myfile.close()
@@ -69,7 +72,10 @@ class PreprocessorTC(unittest.TestCase):
         self.assertEqual(result,ref)
 
     def test_2012_p644_2(self):
-        result = hdlConvertor.verilog_pp(path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),['.','..',path.join('sv_pp','src')],2)
+        result = hdlConvertor.verilog_pp(
+            path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),
+            ['.','..',path.join('sv_pp','src')],
+            "sv2012")
         self.assertEqual(result,'`include "/home/mydir/myfile"\n')
 
     def test_2012_p641_il1(self):
@@ -77,7 +83,7 @@ class PreprocessorTC(unittest.TestCase):
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
-                2
+                "sv2012"
             )
         self.assertTrue('Missmatch in number of argument macro declaration (2) and macro usage (1)' in context.exception)
 
@@ -86,7 +92,7 @@ class PreprocessorTC(unittest.TestCase):
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
-                2
+                "sv2012"
             )
         self.assertTrue('Missmatch in number of argument macro declaration (2) and macro usage (0)' in context.exception)
 
@@ -95,7 +101,7 @@ class PreprocessorTC(unittest.TestCase):
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il3.txt'),
                 ['.','..',path.join('sv_pp','src')],
-                2
+                "sv2012"
             )
         self.assertTrue('Missmatch in number of argument macro declaration (2) and macro usage (3)' in context.exception)
 
@@ -105,7 +111,7 @@ class PreprocessorTC(unittest.TestCase):
             result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
-                2
+                "sv2012"
             )
         self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (2)' in context.exception)
 
@@ -117,7 +123,7 @@ class PreprocessorTC(unittest.TestCase):
             result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
-                2
+                "sv2012"
             )
         self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' in context.exception)
 
@@ -125,7 +131,7 @@ class PreprocessorTC(unittest.TestCase):
 #        result = hdlConvertor.verilog_pp(
 #                path.join(TEST_DIR,'sv_pp','src','2012_p642_il3.txt'),
 #                ['.','..',path.join('sv_pp','src')],
-#                2
+#                "sv2012"
 #            )
 
 

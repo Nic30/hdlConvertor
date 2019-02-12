@@ -91,8 +91,22 @@ def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
     return context
 
 
-def verilog_pp(filename, incdir=['.'], mode=0):
+def verilog_pp(filename, incdir=['.'], mode="verilog2001"):
+    """
+    :param filename: object of verilog preprocess
+    :param incdir: list of include directories
+    :param language: one of "verilog2001", "verilog2005", "sv2012"
+    """
     cdef hdlConvertor obj
+    cdef int mode_value
+    if mode == "verilog2001" :
+        mode_value = 0
+    elif mode == "verilog2005" :
+        mode_value = 1
+    elif mode == "sv2012" :
+        mode_value = 2
+    else:
+        raise ValueError(mode + " is not recognized (expected verilog2001, verilog2005 or sv2012)")
     obj = hdlConvertor()
-    return obj.verilog_pp(filename, incdir,mode)
+    return obj.verilog_pp(filename, incdir,mode_value)
 
