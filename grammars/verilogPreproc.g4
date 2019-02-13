@@ -179,7 +179,7 @@ define
     ;
 
 replacement
-    :   ~'\n'+ '\n'+
+    :   ~'\n'+ '\n'
     ;
 
 default_text
