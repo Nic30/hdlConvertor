@@ -134,7 +134,6 @@ antlrcpp::Any vPreprocessor::visitLine_nb(verilogPreprocParser::Line_nbContext *
 antlrcpp::Any vPreprocessor::visitDefine(verilogPreprocParser::DefineContext * ctx) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
   // get the macro name
-  //printf("%s\n",ctx->getText().c_str());
   std::string macroName = ctx->macro_id()->getText();
   //printf("%s\n",macroName.c_str());
   std::string rep_data;
@@ -157,7 +156,6 @@ antlrcpp::Any vPreprocessor::visitDefine(verilogPreprocParser::DefineContext * c
     for (auto arg : ctx->ID()) {
       data.push_back(arg->getText());
     }
-
 
 //    for (auto a:data) {
 //      printf("  *%s*\n",a.c_str());
@@ -241,27 +239,18 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
   if (_stack_incfile.size() > 0) {
     return NULL;
   }
-  //printf("%s\n",_tokens->getText(ctx->getSourceInterval()).c_str());
   //create a macroPrototype object
   std::vector<std::string> args;
   
-  //if (ctx->LP() == nullptr || ctx->children.size()<=4) {
   if (ctx->children.size()<=4) {
-  //}
-  //else if (ctx->COMMA().size() == 0 || ctx->value().size() == 1) {
-  //  args.push_back(ctx->value(0)->getText());
   } else {
      std::string prevText;
      for(size_t i=0; i < ctx->children.size(); i++) {
 	//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
 	if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-	  //std::cout << "prevText: " << prevText << " current: " << ctx->children[i]->getText() <<std::endl;
 	  if (
-	     //(prevText == ctx->LP()->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
 	     (prevText == ctx->LP()->getText() && ctx->children[i]->getText() == std::string(",")) ||
-	     //(prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->COMMA(0)->getText()) ||
 	     (prevText == std::string(",") && ctx->children[i]->getText() == std::string(",")) ||
-	     //(prevText == ctx->COMMA(0)->getText() && ctx->children[i]->getText() == ctx->RP()->getText())
 	     (prevText == std::string(",") && ctx->children[i]->getText() == ctx->RP()->getText())
 	     ) {
              args.push_back("");
@@ -324,12 +313,9 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
 
 // methode call after `ifdef `elsif `else is found
 antlrcpp::Any vPreprocessor::visitIfdef_directive(
-//void vPreprocessor::enterIfdef_directive(
     verilogPreprocParser::Ifdef_directiveContext * ctx) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
   
-  //printf("exitIfdef_directive\n");
-
   uint32_t ID_cpt = 0;
   macroSymbol::iterator search;
   std::string replacement = "";
@@ -394,11 +380,8 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
 // method call after `ifndef `elif `else tree is found
 // See vPreprocessor::exitIfdef_directive for code comment
 antlrcpp::Any vPreprocessor::visitIfndef_directive(
-//void vPreprocessor::enterIfndef_directive(
     verilogPreprocParser::Ifndef_directiveContext * ctx) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
-
-  //printf("exitIfndef_directive\n");
 
   uint32_t ID_cpt = 0;
   macroSymbol::iterator search;
@@ -515,7 +498,6 @@ std::string return_preprocessed(const std::string input_str,
     std::vector<std::string> & stack_incfile,
     unsigned int mode) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
-  //printf("@return_preprocessed*%s*\n",input_str.c_str());
 
   ANTLRInputStream input(input_str);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
@@ -533,15 +515,15 @@ std::string return_preprocessed(const std::string input_str,
   /*
   std::cout << tree->toStringTree(parser) << std::endl << std::endl;
   */
-  //tree::ParseTreeWalker walker = tree::ParseTreeWalker();
   vPreprocessor * extractor = new vPreprocessor(tokens,incdir, defineDB, stack_incfile, mode);
-  //walker.walk((tree::ParseTreeListener*) extractor, tree);
   extractor->visit(tree);
   std::string return_value = extractor->_rewriter.getText();
+  
   delete extractor;
   delete parser;
   delete tokens;
   delete lexer;
+  
   return return_value;
 }
 
