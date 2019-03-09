@@ -54,7 +54,8 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 			auto pc = new ParserContainer<Verilog2001Lexer, Verilog2001Parser,
 					Source_textParser>(c);
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB,vPreprocessor::VERILOG2001);
+    			std::vector<std::string> stack_incfile;
+			str = return_preprocessed(str, incdir, defineDB,stack_incfile,vPreprocessor::VERILOG2001);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -69,7 +70,8 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 					sv2012::sv2012Parser, source_textParser>(c);
 
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB,vPreprocessor::SV2012);
+    			std::vector<std::string> stack_incfile;
+			str = return_preprocessed(str, incdir, defineDB,stack_incfile,vPreprocessor::SV2012);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -98,7 +100,8 @@ std::string Convertor::verilog_pp(const std::string fileName,
     	std::istreambuf_iterator<char>());
 
     macroSymbol defineDB;
-    std::string result = return_preprocessed(str, incdir, defineDB, mode);
+    std::vector<std::string> stack_incfile;
+    std::string result = return_preprocessed(str, incdir, defineDB, stack_incfile, mode);
     return result;
 
 }

@@ -4,7 +4,7 @@
 #include "antlr4-runtime.h"
 #include "verilogPreprocParser/verilogPreprocLexer.h"
 #include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocBaseListener.h"
+#include "verilogPreprocParser/verilogPreprocBaseVisitor.h"
 #include <string>
 #include <map>
 #include <sys/stat.h>
@@ -23,11 +23,11 @@ using namespace antlr4;
  * :ivar _incdir: directories where to search for included files (last will be searched first)
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
-class vPreprocessor : public  verilogPreprocBaseListener {
+class vPreprocessor : public  verilogPreprocBaseVisitor {
   macroSymbol & _defineDB;
   CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
-  std::vector<std::string> _stack_incfile;
+  std::vector<std::string> & _stack_incfile;
   unsigned int _mode = VERILOG2001;
 
   void remove_comment(Token * start, Token * end, std::string * str );
@@ -43,39 +43,40 @@ class vPreprocessor : public  verilogPreprocBaseListener {
   vPreprocessor(TokenStream *tokens,
       std::vector<std::string> &incdir,
       macroSymbol & defineDB,
+      std::vector<std::string> &stack_incfile,
       unsigned int mode=VERILOG2001,
       size_t include_depth_limit=100);
   ~vPreprocessor();
 
-  virtual void enterResetall(verilogPreprocParser::ResetallContext * ctx);
-  virtual void enterCelldefine(verilogPreprocParser::CelldefineContext * ctx);
-  virtual void enterEndcelldefine(verilogPreprocParser::EndcelldefineContext * ctx);
+  virtual antlrcpp::Any visitResetall(verilogPreprocParser::ResetallContext * ctx);
+  virtual antlrcpp::Any visitCelldefine(verilogPreprocParser::CelldefineContext * ctx);
+  virtual antlrcpp::Any visitEndcelldefine(verilogPreprocParser::EndcelldefineContext * ctx);
 
-  virtual void enterTiming_spec(verilogPreprocParser::Timing_specContext * ctx);
-  virtual void enterDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx);
-  virtual void enterUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx);
-  virtual void enterNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx);
-  virtual void enterLine_directive(verilogPreprocParser::Line_directiveContext * ctx);
+  virtual antlrcpp::Any visitTiming_spec(verilogPreprocParser::Timing_specContext * ctx);
+  virtual antlrcpp::Any visitDefault_nettype(verilogPreprocParser::Default_nettypeContext * ctx);
+  virtual antlrcpp::Any visitUnconnected_drive(verilogPreprocParser::Unconnected_driveContext * ctx);
+  virtual antlrcpp::Any visitNounconnected_drive(verilogPreprocParser::Nounconnected_driveContext * ctx);
+  virtual antlrcpp::Any visitLine_directive(verilogPreprocParser::Line_directiveContext * ctx);
 
-  virtual void enterDefine(verilogPreprocParser::DefineContext * ctx);
-  virtual void enterUndef(verilogPreprocParser::UndefContext * ctx);
+  virtual antlrcpp::Any visitDefine(verilogPreprocParser::DefineContext * ctx);
+  virtual antlrcpp::Any visitUndef(verilogPreprocParser::UndefContext * ctx);
 
-  virtual void exitToken_id(verilogPreprocParser::Token_idContext * ctx);
+  virtual antlrcpp::Any visitToken_id(verilogPreprocParser::Token_idContext * ctx);
 
-  virtual void exitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
-  virtual void exitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
+  virtual antlrcpp::Any visitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
+  virtual antlrcpp::Any visitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
 
-  virtual void enterInclude(verilogPreprocParser::IncludeContext * ctx);
+  virtual antlrcpp::Any visitInclude(verilogPreprocParser::IncludeContext * ctx);
 
-  virtual void enterKeywords_directive(verilogPreprocParser::Keywords_directiveContext * ctx);
-  virtual void enterEndkeywords_directive(verilogPreprocParser::Endkeywords_directiveContext * ctx);
+  virtual antlrcpp::Any visitKeywords_directive(verilogPreprocParser::Keywords_directiveContext * ctx);
+  virtual antlrcpp::Any visitEndkeywords_directive(verilogPreprocParser::Endkeywords_directiveContext * ctx);
 
-  virtual void enterPragma(verilogPreprocParser::PragmaContext * ctx);
+  virtual antlrcpp::Any visitPragma(verilogPreprocParser::PragmaContext * ctx);
 
-  virtual void enterUndefineall(verilogPreprocParser::UndefineallContext * ctx);
+  virtual antlrcpp::Any visitUndefineall(verilogPreprocParser::UndefineallContext * ctx);
 
-  virtual void enterFile_nb(verilogPreprocParser::File_nbContext * );
-  virtual void enterLine_nb(verilogPreprocParser::Line_nbContext * ctx);
+  virtual antlrcpp::Any visitFile_nb(verilogPreprocParser::File_nbContext * ctx);
+  virtual antlrcpp::Any visitLine_nb(verilogPreprocParser::Line_nbContext * ctx);
 
 };
 
@@ -86,6 +87,7 @@ class vPreprocessor : public  verilogPreprocBaseListener {
 // a object representing the list of already defined macro
 std::string return_preprocessed(const std::string input_token,
     std::vector<std::string> &incdir,
-    macroSymbol & defineDB, unsigned int mode=0);
+    macroSymbol & defineDB, std::vector<std::string> & stack_incfile,
+    unsigned int mode=0);
 
 std::string& rtrim(std::string& str, const std::string& chars = "\n\r");

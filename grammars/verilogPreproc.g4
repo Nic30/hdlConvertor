@@ -7,6 +7,11 @@ static  const unsigned int CH_LINE_COMMENT = 5;
 enum { VERILOG2001=0, VERILOG2005=1, SV2012=2};
 unsigned int mode = VERILOG2001;
 
+unsigned int nesting = 0;
+bool define_mode = false;
+bool token_mode = false;
+
+
 bool isVerilog2005() {
   if (mode == VERILOG2005) {
      return true;
@@ -57,6 +62,17 @@ bool isSV2012() {
 /* Process #define statements in a C file using fuzzy parsing.
 */
 
+
+LINE_ESCAPE
+    //:  '\\' '\r'? '\n' -> channel(CH_LINE_ESCAPE)
+    :  '\\' '\r'? '\n' -> channel(4)
+    ;
+
+LINE_COMMENT
+    //: '//' ~[\r\n]* '\r'? -> channel(CH_LINE_COMMENT) 
+    : '//' ~[\r\n]* '\r'? -> channel(5) 
+    ;
+
 file
     :   .*? ( preprocess_directive .*? )*
     ;
@@ -64,9 +80,9 @@ file
 preprocess_directive 
     :
     {isSV2012()}? file_nb 
-    |{isSV2012()}? line_nb
-    |{isSV2012()}? undefineall
-    |{isVerilog2005() || isSV2012()}? keywords_directive  
+    | {isSV2012()}? line_nb
+    | {isSV2012()}? undefineall
+    | {isVerilog2005() || isSV2012()}? keywords_directive  
     | {isVerilog2005() || isSV2012()}? endkeywords_directive
     | {isVerilog2005() || isSV2012()}? pragma
     | define
@@ -233,7 +249,6 @@ token_id
 value
     : token_id 
     | (ID|OTHER|DIGIT)+
-    | StringLiteral_double_quote
     | LP value* RP
     | '"' value* '"'
     | '{' value* '}'
@@ -249,7 +264,7 @@ INCLUDE
     ;
 
 DEFINE
-    : '`define'
+    : '`define' {define_mode=true;}
     ;
 
 IFNDEF
@@ -278,11 +293,19 @@ ENDIF
     ;
 
 LP 
-    : '('
+    : '(' {if (nesting != 0) setType(OTHER); if (token_mode == true || define_mode == true) nesting++;}
     ;
     
 RP
-    : ')'
+    : ')' {
+           if (token_mode == true || define_mode == true) nesting--;
+           if (nesting != 0) setType(OTHER);
+           if (nesting == 0 && define_mode == true )  { 
+             define_mode = false;
+           } else if (nesting == 0 && define_mode == true ) {
+             token_mode = false;
+           }
+          }
     ;
 
 DOUBLE_BACKTICK 
@@ -290,7 +313,7 @@ DOUBLE_BACKTICK
     ;
 
 BACKTICK
-    : '`'
+    : '`' {if (nesting > 0) setType(OTHER); if (nesting == 0) token_mode = true;}
     ;
 
  
@@ -320,7 +343,7 @@ stringLiteral
     ;
 
 StringLiteral_double_quote 
-    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"' { if (nesting > 0) setType(OTHER);}
     ;
 StringLiteral_chevrons  
     :  '<' ( EscapeSequence | ~('\\'|'>') )* '>'
@@ -352,27 +375,18 @@ COMMENT
     :   '/*' .*? '*/'    -> channel(HIDDEN) // match anything between /* and */
     ;
 
-LINE_ESCAPE
-    //:  '\\' '\r'? '\n' -> channel(CH_LINE_ESCAPE)
-    :  '\\' '\r'? '\n' -> channel(4)
-    ;
-
-LINE_COMMENT
-    //: '//' ~[\r\n]* '\r'? -> channel(CH_LINE_COMMENT) 
-    : '//' ~[\r\n]* '\r'? -> channel(5) 
-    ;
 
 
-WS  :   [ \r\t\u000C]+ -> channel(HIDDEN)
+WS  :   [ \r\t]+ -> channel(HIDDEN)
      ;
 
 COMMA 
-    : ','
+    : ',' {if (nesting > 1) setType(OTHER);}
     ;
     
 
 NEW_LINE 
-    : '\n'
+    : '\n' {if (nesting > 0 && define_mode == false) { setType(OTHER); setChannel(HIDDEN);}}
     ;
 
 OTHER 

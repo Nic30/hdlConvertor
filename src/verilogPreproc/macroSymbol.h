@@ -18,6 +18,8 @@ public:
   // The list of include directory is required to be able to register a
   // template where already presented macro are already expended
   void insert(const std::pair<std::string, macro_replace*>,
-			std::vector<std::string> &,unsigned int mode);
+			std::vector<std::string> &,
+			std::vector<std::string> &,
+			unsigned int mode);
 
 };

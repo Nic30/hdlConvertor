@@ -1,7 +1,7 @@
 
 #include "../verilogPreproc/macro_replace_sv.h"
 
-macro_replace_sv::macro_replace_sv(std::string replace, std::vector<std::string> arg, std::map<std::string,std::string> default_maps): macro_replace(replace,arg) {
+macro_replace_sv::macro_replace_sv(std::string macro_name, std::string replace, std::vector<std::string> arg, std::map<std::string,std::string> default_maps): macro_replace(macro_name,replace,arg) {
 	_default_map = default_maps;
 }
 
@@ -44,7 +44,8 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
       //printf("before replacement: %s\n",returnString.c_str());
 
       if (arg.size() != data.args.size()) {
-        std::string message =  "Missmatch in number of argument macro declaration (" + 
+        std::string message =  "Missmatch in number of argument macro declaration "
+	       +data.tmplate_name +" (" + 
           std::to_string(data.args.size()) + 
           ") and macro usage ("+std::to_string(arg.size())+')';
         throw parseException(message);

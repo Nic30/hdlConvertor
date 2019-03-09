@@ -16,6 +16,7 @@
 class macro_replace_data {
 
   public:
+    std::string tmplate_name;
     std::string tmplate;
     std::vector<std::string> args;
     std::vector<std::string> default_arg;
@@ -36,7 +37,7 @@ class macro_replace {
   public:
   macro_replace_data data;
   // class constructor
-  macro_replace(std::string, std::vector<std::string>);
+  macro_replace(std::string, std::string, std::vector<std::string>);
   // class desctructor
   virtual ~macro_replace();
   // replace method
