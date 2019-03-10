@@ -17,9 +17,9 @@ public:
   // specialisation of the insert method to add element in the map.
   // The list of include directory is required to be able to register a
   // template where already presented macro are already expended
-  void insert(const std::pair<std::string, macro_replace*>,
-			std::vector<std::string> &,
-			std::vector<std::string> &,
+  void insert(const std::pair<std::string, macro_replace*> item,
+			std::vector<std::string> & incdir,
+			std::vector<std::string> & stack_incfile,
 			unsigned int mode);
 
 };
