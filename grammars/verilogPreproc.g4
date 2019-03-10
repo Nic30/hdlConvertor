@@ -8,9 +8,15 @@ enum { VERILOG2001=0, VERILOG2005=1, SV2012=2};
 unsigned int mode = VERILOG2001;
 
 unsigned int nesting = 0;
-bool define_mode = false;
-bool token_mode = false;
+unsigned int nesting_save = 0;
 
+bool define_mode = false;
+bool define_mode_plus = false;
+bool token_mode = false;
+bool token_mode_plus = false;
+
+int lastType[2] = {-1,-1};
+antlr4::Token * lastToken;
 
 bool isVerilog2005() {
   if (mode == VERILOG2005) {
@@ -29,6 +35,12 @@ bool isSV2012() {
   }
 }
 
+antlr4::Token * emit() {
+  lastToken = antlr4::Lexer::emit();
+  lastType[1] = lastType[0];
+  lastType[0] = lastToken->getType();
+  return lastToken;
+}
 
 }
 
@@ -264,7 +276,7 @@ INCLUDE
     ;
 
 DEFINE
-    : '`define' {define_mode=true;}
+    : '`define'
     ;
 
 IFNDEF
@@ -293,18 +305,40 @@ ENDIF
     ;
 
 LP 
-    : '(' {if (nesting != 0) setType(OTHER); if (token_mode == true || define_mode == true) nesting++;}
+    : '(' {
+            //printf("LP : token_mode : %i, define_mode : %i\n",
+            //        token_mode,define_mode
+            //      );
+            nesting++;
+            if (token_mode ==  true && token_mode_plus == false) {
+              token_mode_plus = true;
+              nesting_save = nesting;
+            }
+            if (define_mode ==  true && define_mode_plus == false) {
+              define_mode_plus = true;
+              nesting_save = nesting;
+            }
+            if (nesting > nesting_save) {
+              //printf("LP : %i,%i\n", nesting,nesting_save);
+              setType(OTHER);
+            }
+          }
     ;
     
 RP
     : ')' {
-           if (token_mode == true || define_mode == true) nesting--;
-           if (nesting != 0) setType(OTHER);
-           if (nesting == 0 && define_mode == true )  { 
-             define_mode = false;
-           } else if (nesting == 0 && define_mode == true ) {
-             token_mode = false;
-           }
+            if (nesting > nesting_save) {
+              setType(OTHER);
+            }
+            if (nesting == nesting_save && token_mode ==  true) {
+              token_mode_plus = false;
+              nesting_save = 0;
+            }
+            if (nesting == nesting_save && define_mode ==  true) {
+              define_mode_plus = false;
+              nesting_save = 0;
+            }
+           nesting--;
           }
     ;
 
@@ -313,7 +347,12 @@ DOUBLE_BACKTICK
     ;
 
 BACKTICK
-    : '`' {if (nesting > 0) setType(OTHER); if (nesting == 0) token_mode = true;}
+    : '`'
+      { 
+        if (token_mode_plus == true) {
+          setType(OTHER);
+        }
+      }
     ;
 
  
@@ -325,7 +364,21 @@ macro_toreplace
     : ID
     ;
 
-ID  :   ( ID_FIRST (ID_FIRST | DIGIT)* ) ;
+ID  :   ( ID_FIRST (ID_FIRST | DIGIT)* ) 
+      {
+        //printf("ID : lastType[0]:%i lastType[1]:%i\n",lastType[0],lastType[1]);
+        if (lastType[0] == BACKTICK) {
+          token_mode = true;
+        }
+        else if (lastType[1] == DEFINE) {
+          define_mode = true;
+        }
+        //printf("ID token_mode:%i, define_mode:%i\n",
+        //      token_mode,
+        //      define_mode
+        //      );
+      }
+    ;
 
 DIGIT    : [0-9] ;
 fragment ID_FIRST : LETTER | '_' ;
@@ -377,16 +430,41 @@ COMMENT
 
 
 
-WS  :   [ \r\t]+ -> channel(HIDDEN)
+WS  :   [ \r\t]+ { 
+                   setChannel(HIDDEN);
+                   if (token_mode == true) {
+                     token_mode == false;
+                   }
+                 }
      ;
 
 COMMA 
-    : ',' {if (nesting > 1) setType(OTHER);}
+    : ',' {
+           if (nesting > nesting_save) { 
+             setType(OTHER);
+           }
+           //printf("',' nesting : %i, nesting_save : %i\n",nesting,nesting_save);
+          }
     ;
     
 
 NEW_LINE 
-    : '\n' {if (nesting > 0 && define_mode == false) { setType(OTHER); setChannel(HIDDEN);}}
+    : '\n' {
+             if (token_mode == true) {
+               token_mode = false;
+             }
+             if (define_mode == true) {
+               define_mode = false;
+             }
+             if (nesting > nesting_save) { 
+                setType(OTHER); 
+                setChannel(HIDDEN);
+             }
+             //printf("\\n token_mode:%i, define_mode:%i  nesting : %i, nesting_save : %i\n",
+             //       token_mode,
+             //       define_mode,
+             //       nesting,nesting_save);
+           }
     ;
 
 OTHER 
