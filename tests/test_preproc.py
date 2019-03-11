@@ -135,7 +135,6 @@ class PreprocessorTC(unittest.TestCase):
 #            )
 
     def test_FILE_LINE(self):
-        print(path.dirname(__file__))
         test_result = hdlConvertor.verilog_pp(
             path.join(path.dirname(__file__),
                       'sv_pp','src','test_FILE_LINE.sv'
