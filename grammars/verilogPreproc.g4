@@ -18,23 +18,6 @@ bool token_mode_plus = false;
 int lastType[2] = {-1,-1};
 antlr4::Token * lastToken;
 
-bool isVerilog2005() {
-  if (mode == VERILOG2005) {
-     return true;
-  } else {
-     return false;
-  }
-}
-
-bool isSV2012() {
-  if (mode == VERILOG2005 || mode == SV2012) {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
 antlr4::Token * emit() {
   lastToken = antlr4::Lexer::emit();
   lastType[1] = lastType[0];

@@ -239,9 +239,10 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
   if (_stack_incfile.size() > 0) {
     return NULL;
   }
+ 
   //create a macroPrototype object
   std::vector<std::string> args;
-  
+   
   if (ctx->children.size()<=4) {
   } else {
      std::string prevText;
@@ -302,7 +303,10 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
   
   }
   
-  replacement = return_preprocessed(replacement,_incdir,_defineDB,_stack_incfile,_mode);
+  if (replacement.find("`",0) != std::string::npos) {
+    replacement = return_preprocessed(replacement,_incdir,_defineDB,_stack_incfile,_mode);
+  }
+  
   // replace the original macro in the source code by the replacement string
   // we just setup
   //printf("%s->%s\n",ctx->getText().c_str(),replacement.c_str());
@@ -329,11 +333,6 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
   if (search != _defineDB.end()) {
     //the macro ID object is defined
     //Get the source code to use when the macro is found
-    //misc::Interval interval =
-    //  ctx->ifdef_group_of_lines()->getSourceInterval();
-    // process it
-    //replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-    //    _defineDB,_stack_incfile,_mode);
     visitIfdef_group_of_lines(ctx->ifdef_group_of_lines());
   } else {
     // process `elsif and `else
@@ -345,14 +344,9 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
       // lookup if the current macro exist
       search = _defineDB.find(ctx->ID(ID_cpt)->getText());
       if (search != _defineDB.end()) {
-        // the define exist to we process the relevant source code part
-        //misc::Interval interval =
-        //  ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
-        //replacement = return_preprocessed(_tokens->getText(interval),
-        //    _incdir, _defineDB,_stack_incfile,_mode);
-        // Because found the first macro that exist. we jump
-        // inconditionnaly to the end of the method
+        // the define exist so we process the relevant source code part
         visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
+	// Then we jump inconditionnaly to the end of the method
 	goto exit_label;
 
       }
@@ -363,10 +357,6 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
     // we test if the rule has match an else statement. That may or may not
     // exist
     if (ctx->ELSE() != nullptr) {
-      //misc::Interval interval =
-      //  ctx->else_group_of_lines()->getSourceInterval();
-      //replacement = return_preprocessed(_tokens->getText(interval),
-      //    _incdir, _defineDB,_stack_incfile,_mode);
       visitElse_group_of_lines(ctx->else_group_of_lines());
     }
   }
@@ -393,31 +383,19 @@ antlrcpp::Any vPreprocessor::visitIfndef_directive(
 
   search = _defineDB.find(ctx->ID(0)->getText());
   if (search == _defineDB.end()) {
-    //misc::Interval interval =
-    //  ctx->ifndef_group_of_lines()->getSourceInterval();
-    //replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-    //    _defineDB,_stack_incfile,_mode);
     visitIfndef_group_of_lines(ctx->ifndef_group_of_lines());
   } else {
     ID_cpt++;
     while (ID_cpt < ctx->ID().size()) {
       search = _defineDB.find(ctx->ID(ID_cpt)->getText());
       if (search != _defineDB.end()) {
-        //misc::Interval interval =
-        //  ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
-        //replacement = return_preprocessed(_tokens->getText(interval),
-        //    _incdir, _defineDB,_stack_incfile,_mode);
-	visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
+        visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
         goto exit_label;
 
       }
       ID_cpt++;
     }
     if (ctx->ELSE() != nullptr) {
-      //misc::Interval interval =
-      //  ctx->else_group_of_lines()->getSourceInterval();
-      //replacement = return_preprocessed(_tokens->getText(interval),
-      //    _incdir, _defineDB,_stack_incfile,_mode);
       visitElse_group_of_lines(ctx->else_group_of_lines());
     }
   }
@@ -504,7 +482,6 @@ std::string return_preprocessed(const std::string input_str,
     unsigned int mode) {
 
   //printf("@%s\n",__PRETTY_FUNCTION__);
-  printf("§\n");
 
   ANTLRInputStream input(input_str);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
