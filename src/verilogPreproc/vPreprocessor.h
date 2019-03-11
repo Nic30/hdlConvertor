@@ -90,4 +90,9 @@ std::string return_preprocessed(const std::string input_token,
     macroSymbol & defineDB, std::vector<std::string> & stack_incfile,
     unsigned int mode=0);
 
+std::string return_preprocessed_file(const std::string fileName,
+    std::vector<std::string> &incdir,
+    macroSymbol & defineDB, std::vector<std::string> & stack_incfile,
+    unsigned int mode=0);
+
 std::string& rtrim(std::string& str, const std::string& chars = "\n\r");

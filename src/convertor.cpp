@@ -31,18 +31,15 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 		struct stat buffer;
 		fileName = _fileName;
 		lang = _lang;
+		std::string str;
 
 		if (stat(_fileName.c_str(), &buffer) != 0) {
 			throw parseException(_fileName + " does not exist.");
 		}
-		std::ifstream t(fileName);
-		std::string str((std::istreambuf_iterator<char>(t)),
-				std::istreambuf_iterator<char>());
 
 		if (lang == VHDL) {
 
-			ANTLRInputStream input(str);
-			input.name = fileName;
+			ANTLRFileStream input(fileName);
 			auto pc = new ParserContainer<vhdlLexer, vhdlParser,
 					DesignFileParser>(c);
 			pc->parseFile(input, hierarchyOnly, debug, parseFnVHDL);
@@ -55,7 +52,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 					Source_textParser>(c);
 			macroSymbol defineDB;
     			std::vector<std::string> stack_incfile;
-			str = return_preprocessed(str, incdir, defineDB,stack_incfile,vPreprocessor::VERILOG2001);
+			str = return_preprocessed_file(fileName, incdir, defineDB,stack_incfile,vPreprocessor::VERILOG2001);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -71,7 +68,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 
 			macroSymbol defineDB;
     			std::vector<std::string> stack_incfile;
-			str = return_preprocessed(str, incdir, defineDB,stack_incfile,vPreprocessor::SV2012);
+			str = return_preprocessed_file(fileName, incdir, defineDB,stack_incfile,vPreprocessor::SV2012);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -95,13 +92,9 @@ std::string Convertor::verilog_pp(const std::string fileName,
         throw parseException(fileName + " does not exist.");
     }
     
-    std::ifstream t(fileName);
-    std::string str((std::istreambuf_iterator<char>(t)),
-    	std::istreambuf_iterator<char>());
-
     macroSymbol defineDB;
     std::vector<std::string> stack_incfile;
-    std::string result = return_preprocessed(str, incdir, defineDB, stack_incfile, mode);
+    std::string result = return_preprocessed_file(fileName, incdir, defineDB, stack_incfile, mode);
     return result;
 
 }

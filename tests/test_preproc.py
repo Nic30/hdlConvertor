@@ -134,6 +134,19 @@ class PreprocessorTC(unittest.TestCase):
 #                "sv2012"
 #            )
 
+    def test_FILE_LINE(self):
+        print(path.dirname(__file__))
+        test_result = hdlConvertor.verilog_pp(
+            path.join(path.dirname(__file__),
+                      'sv_pp','src','test_FILE_LINE.sv'
+                     ),
+        ['.','..',path.join('sv_pp','src')],
+        "sv2012")
+        test_golden = "module tb();\n\ninitial\n\t$display(\"Internal error: null handle at %s, line %d.\",\n"
+        test_golden += "\"" + path.join(path.dirname(__file__),
+                      'sv_pp','src','test_FILE_LINE.sv'
+                     )+"\", 5);\n\n\nendmodule\n"
+        self.assertEqual(test_result,test_golden)
 
 if __name__ == "__main__":
     unittest.main()

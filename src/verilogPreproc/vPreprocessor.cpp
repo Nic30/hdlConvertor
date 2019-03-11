@@ -117,7 +117,7 @@ antlrcpp::Any vPreprocessor::visitUndefineall(verilogPreprocParser::UndefineallC
 antlrcpp::Any vPreprocessor::visitFile_nb(verilogPreprocParser::File_nbContext * ctx){
   //printf("@%s\n",__PRETTY_FUNCTION__);
     misc::Interval token = ctx->getSourceInterval();
-    std::string replacement = _tokens->getSourceName();
+    std::string replacement = "\""+_tokens->getSourceName()+"\"";
     _rewriter.replace(token.a, token.b, replacement);
   return NULL;
 }
@@ -459,11 +459,8 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
     //printf("%s (%li)\n",filename.c_str(),buffer.st_size);
 
     // read the file
-    std::ifstream t(filename);
-    std::string str((std::istreambuf_iterator<char>(t)),
-        std::istreambuf_iterator<char>());
     // run the pre-processor on it
-    replacement = return_preprocessed(str, _incdir, _defineDB,_stack_incfile,_mode);
+    replacement = return_preprocessed_file(filename, _incdir, _defineDB,_stack_incfile,_mode);
 
     //printf("%s pop\n",filename.c_str());
     //pop back the include file
@@ -510,6 +507,42 @@ std::string return_preprocessed(const std::string input_str,
   
   return return_value;
 }
+
+std::string return_preprocessed_file(const std::string fileName,
+    std::vector<std::string> &incdir, macroSymbol & defineDB, 
+    std::vector<std::string> & stack_incfile,
+    unsigned int mode) {
+
+  //printf("@%s\n",__PRETTY_FUNCTION__);
+
+  ANTLRFileStream input(fileName);
+  verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
+  lexer->mode = mode;
+  CommonTokenStream * tokens = new CommonTokenStream(lexer);
+  /*
+  tokens->fill();
+  for (auto token : tokens->getTokens()) {
+    std::cout << token->toString() << std::endl;
+  }
+  */
+  verilogPreprocParser * parser = new verilogPreprocParser(tokens);
+  parser->mode = mode;
+  tree::ParseTree *tree = parser->file();
+  /*
+  std::cout << tree->toStringTree(parser) << std::endl << std::endl;
+  */
+  vPreprocessor * extractor = new vPreprocessor(tokens,incdir, defineDB, stack_incfile, mode);
+  extractor->visit(tree);
+  std::string return_value = extractor->_rewriter.getText();
+  
+  delete extractor;
+  delete parser;
+  delete tokens;
+  delete lexer;
+  
+  return return_value;
+}
+
 
 std::string& rtrim(std::string& str, const std::string& chars ) {
   str.erase(str.find_last_not_of(chars) + 1);
