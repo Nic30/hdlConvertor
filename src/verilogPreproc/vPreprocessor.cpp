@@ -329,11 +329,12 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
   if (search != _defineDB.end()) {
     //the macro ID object is defined
     //Get the source code to use when the macro is found
-    misc::Interval interval =
-      ctx->ifdef_group_of_lines()->getSourceInterval();
+    //misc::Interval interval =
+    //  ctx->ifdef_group_of_lines()->getSourceInterval();
     // process it
-    replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-        _defineDB,_stack_incfile,_mode);
+    //replacement = return_preprocessed(_tokens->getText(interval), _incdir,
+    //    _defineDB,_stack_incfile,_mode);
+    visitIfdef_group_of_lines(ctx->ifdef_group_of_lines());
   } else {
     // process `elsif and `else
     ID_cpt++; // ID(0) is the one for the `ifdef so we start to ID(1)
@@ -345,13 +346,14 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
       search = _defineDB.find(ctx->ID(ID_cpt)->getText());
       if (search != _defineDB.end()) {
         // the define exist to we process the relevant source code part
-        misc::Interval interval =
-          ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
-        replacement = return_preprocessed(_tokens->getText(interval),
-            _incdir, _defineDB,_stack_incfile,_mode);
+        //misc::Interval interval =
+        //  ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
+        //replacement = return_preprocessed(_tokens->getText(interval),
+        //    _incdir, _defineDB,_stack_incfile,_mode);
         // Because found the first macro that exist. we jump
         // inconditionnaly to the end of the method
-        goto exit_label;
+        visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
+	goto exit_label;
 
       }
       //next ID
@@ -361,10 +363,11 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
     // we test if the rule has match an else statement. That may or may not
     // exist
     if (ctx->ELSE() != nullptr) {
-      misc::Interval interval =
-        ctx->else_group_of_lines()->getSourceInterval();
-      replacement = return_preprocessed(_tokens->getText(interval),
-          _incdir, _defineDB,_stack_incfile,_mode);
+      //misc::Interval interval =
+      //  ctx->else_group_of_lines()->getSourceInterval();
+      //replacement = return_preprocessed(_tokens->getText(interval),
+      //    _incdir, _defineDB,_stack_incfile,_mode);
+      visitElse_group_of_lines(ctx->else_group_of_lines());
     }
   }
 
@@ -390,30 +393,32 @@ antlrcpp::Any vPreprocessor::visitIfndef_directive(
 
   search = _defineDB.find(ctx->ID(0)->getText());
   if (search == _defineDB.end()) {
-    misc::Interval interval =
-      ctx->ifndef_group_of_lines()->getSourceInterval();
-    replacement = return_preprocessed(_tokens->getText(interval), _incdir,
-        _defineDB,_stack_incfile,_mode);
+    //misc::Interval interval =
+    //  ctx->ifndef_group_of_lines()->getSourceInterval();
+    //replacement = return_preprocessed(_tokens->getText(interval), _incdir,
+    //    _defineDB,_stack_incfile,_mode);
+    visitIfndef_group_of_lines(ctx->ifndef_group_of_lines());
   } else {
     ID_cpt++;
     while (ID_cpt < ctx->ID().size()) {
       search = _defineDB.find(ctx->ID(ID_cpt)->getText());
       if (search != _defineDB.end()) {
-        misc::Interval interval =
-          ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
-        replacement = return_preprocessed(_tokens->getText(interval),
-            _incdir, _defineDB,_stack_incfile,_mode);
+        //misc::Interval interval =
+        //  ctx->elsif_group_of_lines(ID_cpt)->getSourceInterval();
+        //replacement = return_preprocessed(_tokens->getText(interval),
+        //    _incdir, _defineDB,_stack_incfile,_mode);
+	visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
         goto exit_label;
 
       }
       ID_cpt++;
     }
     if (ctx->ELSE() != nullptr) {
-      misc::Interval interval =
-        ctx->else_group_of_lines()->getSourceInterval();
-      replacement = return_preprocessed(_tokens->getText(interval),
-          _incdir, _defineDB,_stack_incfile,_mode);
-
+      //misc::Interval interval =
+      //  ctx->else_group_of_lines()->getSourceInterval();
+      //replacement = return_preprocessed(_tokens->getText(interval),
+      //    _incdir, _defineDB,_stack_incfile,_mode);
+      visitElse_group_of_lines(ctx->else_group_of_lines());
     }
   }
 
@@ -497,7 +502,9 @@ std::string return_preprocessed(const std::string input_str,
     std::vector<std::string> &incdir, macroSymbol & defineDB, 
     std::vector<std::string> & stack_incfile,
     unsigned int mode) {
+
   //printf("@%s\n",__PRETTY_FUNCTION__);
+  printf("§\n");
 
   ANTLRInputStream input(input_str);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
