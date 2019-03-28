@@ -43,3 +43,8 @@ dist/
 # devel archives
 *.zip
 *.jar
+
+# eclipse fiels
+.cproject
+.pydevproject
+.settings/
