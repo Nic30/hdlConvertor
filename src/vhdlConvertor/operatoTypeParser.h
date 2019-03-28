@@ -1,7 +1,7 @@
 # pragma once
 
 #include "antlr4-runtime.h"
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/operatorType.h"
 
 

@@ -5,6 +5,6 @@ class BaseHdlParser {
 public:
 	bool hierarchyOnly;
 	Context * context;
-	BaseHdlParser(bool _hierarchyOnly);
+	BaseHdlParser(Context * ctx, bool _hierarchyOnly);
 	Context * getContext();
 };

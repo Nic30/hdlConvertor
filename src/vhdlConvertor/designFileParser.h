@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/context.h"
 #include "../notImplementedLogger.h"
 #include "referenceParser.h"
@@ -15,7 +15,7 @@ using namespace vhdl;
 
 class DesignFileParser : public BaseHdlParser {
 public:
-	DesignFileParser(bool _hierarchyOnly);
+	DesignFileParser(Context * ctx, bool _hierarchyOnly);
 	void visitDesign_file(vhdlParser::Design_fileContext* ctx);
 	void visitDesign_unit(vhdlParser::Design_unitContext* ctx);
 	void visitLibrary_unit(vhdlParser::Library_unitContext* ctx);

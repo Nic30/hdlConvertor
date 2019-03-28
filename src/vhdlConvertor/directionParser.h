@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/direction.h"
 
 using namespace antlr4;

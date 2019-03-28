@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/function.h"

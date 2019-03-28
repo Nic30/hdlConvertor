@@ -1,7 +1,10 @@
 #include "baseHdlParser.h"
 
-BaseHdlParser::BaseHdlParser(bool _hierarchyOnly) {
-	context = new Context();
+BaseHdlParser::BaseHdlParser(Context * ctx, bool _hierarchyOnly) {
+	if (ctx == nullptr)
+		context = new Context();
+	else
+		context = ctx;
 	hierarchyOnly = _hierarchyOnly;
 }
 Context * BaseHdlParser::getContext() {

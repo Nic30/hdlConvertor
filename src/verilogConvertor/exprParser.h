@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-#include "../VerilogParser/Verilog2001Parser.h"
+#include "Verilog2001Parser/Verilog2001Parser.h"
 #include "../hdlObjects/operatorType.h"
 #include "../hdlObjects/expr.h"
 #include "../notImplementedLogger.h"
@@ -13,7 +13,7 @@
 #include "attributeParser.h"
 
 using namespace antlr4;
-using namespace verilog;
+using namespace Verilog2001;
 
 class VerExprParser {
 public:

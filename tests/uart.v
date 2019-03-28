@@ -1,3 +1,4 @@
+//http://www.asic-world.com/examples/verilog/uart.html
 //-----------------------------------------------------
 // Design Name : uart 
 // File Name   : uart.v

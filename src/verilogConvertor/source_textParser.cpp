@@ -1,6 +1,6 @@
 #include "source_textParser.h"
 
-Source_textParser::Source_textParser(bool _hierarchyOnly) : BaseHdlParser(_hierarchyOnly) {}
+Source_textParser::Source_textParser(Context * ctx, bool _hierarchyOnly) : BaseHdlParser(ctx, _hierarchyOnly) {}
 
 void Source_textParser::visitSource_text(
 		Verilog2001Parser::Source_textContext* ctx) {

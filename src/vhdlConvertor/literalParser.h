@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <string>
 #include "antlr4-runtime.h"
-#include "../VhdlParser/vhdlParser.h"
+#include "vhdlParser/vhdlParser.h"
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/operatorType.h"
 #include "../hdlObjects/symbol.h"
