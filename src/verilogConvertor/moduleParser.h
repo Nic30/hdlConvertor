@@ -34,6 +34,7 @@ public:
 			Verilog2001Parser::Param_assignmentContext * ctx);
 
 	void visitModule_item(Verilog2001Parser::Module_itemContext * ctx);
+	void visitModule_or_generate_item(Verilog2001Parser::Module_or_generate_itemContext * ctx);
 	void visitNon_port_module_item(
 			Verilog2001Parser::Non_port_module_itemContext * ctx);
 

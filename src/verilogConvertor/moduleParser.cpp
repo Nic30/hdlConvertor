@@ -143,6 +143,12 @@ void ModuleParser::visitModule_item(
 	// | attribute_instance* specify_block
 	// | attribute_instance* specparam_declaration
 	// ;
+	auto mog = ctx->module_or_generate_item();
+	if (mog) {
+		visitModule_or_generate_item(mog);
+		return;
+	}
+	// [TODO] attribute_instance
 	auto pd = ctx->port_declaration();
 	if (pd) {
 		auto portsDeclr = PortParser::visitPort_declaration(pd);
@@ -156,8 +162,90 @@ void ModuleParser::visitModule_item(
 		delete portsDeclr;
 		return;
 	}
-	NotImplementedLogger::print("ModuleParser.visitModule_item");
+	auto gi = ctx->generated_instantiation();
+	if (gi) {
+		NotImplementedLogger::print("ModuleParser.generated_instantiation");
+		return;
+	}
+	auto lpd = ctx->local_parameter_declaration();
+	if (lpd) {
+		NotImplementedLogger::print("ModuleParser.local_parameter_declaration");
+		return;
+	}
+	auto pad = ctx->parameter_declaration();
+	if (pad) {
+		NotImplementedLogger::print("ModuleParser.parameter_declaration");
+		return;
+	}
+	auto sb = ctx->specify_block();
+	if (sb) {
+		NotImplementedLogger::print("ModuleParser.specify_block");
+		return;
+	}
+	auto spd = ctx->specparam_declaration();
+	if(spd) {
+		NotImplementedLogger::print("ModuleParser.specparam_declaration");
+		return;
+	}
+	throw std::runtime_error("ModuleParser.visitModule_item - probably missing part of imolementation");
 }
+
+void ModuleParser::visitModule_or_generate_item(Verilog2001Parser::Module_or_generate_itemContext * ctx) {
+	//module_or_generate_item
+	//   : attribute_instance* module_or_generate_item_declaration
+	//   | attribute_instance* parameter_override
+	//   | attribute_instance* continuous_assign
+	//   | attribute_instance* gate_instantiation
+	////   | attribute_instance* udp_instantiation
+	//   | attribute_instance* module_instantiation
+	//   | attribute_instance* initial_construct
+	//   | attribute_instance* always_construct
+	//   ;
+
+	// [TODO] attribute_instance
+	auto mg = ctx->module_or_generate_item_declaration();
+	if (mg) {
+		NotImplementedLogger::print("ModuleParser.module_or_generate_item_declaration");
+		return;
+	}
+	auto pa = ctx->parameter_override();
+	if (pa) {
+		NotImplementedLogger::print("ModuleParser.parameter_override");
+		return;
+	}
+	auto ca = ctx->continuous_assign();
+	if (ca) {
+		NotImplementedLogger::print("ModuleParser.continuous_assign");
+		return;
+	}
+
+	auto ga = ctx->gate_instantiation();
+	if (ga) {
+		NotImplementedLogger::print("ModuleParser.gate_instantiation");
+		return;
+	}
+
+	auto mi = ctx->module_instantiation();
+	if (mi) {
+		NotImplementedLogger::print("ModuleParser.module_instantiation");
+		return;
+	}
+
+	auto ic = ctx->initial_construct();
+	if (ic) {
+		NotImplementedLogger::print("ModuleParser.initial_construct");
+		return;
+	}
+
+	auto a = ctx->always_construct();
+	if (a) {
+		NotImplementedLogger::print("ModuleParser.always_construct");
+		return;
+	}
+
+	NotImplementedLogger::print("ModuleParser.visitModule_or_generate_item");
+}
+
 void ModuleParser::visitNon_port_module_item(
 		Verilog2001Parser::Non_port_module_itemContext* ctx) {
 	// non_port_module_item :
