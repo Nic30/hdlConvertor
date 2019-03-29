@@ -79,7 +79,7 @@ target_link_libraries(hdlConvertor
 	parsersVhdl_static
 	antlr4_static
 )
-#target_link_libraries(hdlConvertor antlr4_shared parsersVerilog_shared )
+
 set_target_properties(hdlConvertor
 	PROPERTIES VERSION "1.0.0"
 	OUTPUT_NAME hdlConvertor
