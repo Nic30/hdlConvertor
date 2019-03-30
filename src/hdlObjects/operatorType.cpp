@@ -55,8 +55,6 @@ int OperatorType_arity(OperatorType opt) {
 	case CALL:
 		return -1;
 	case NOT:
-	case UN_MINUS:
-	case UN_PLUS:
 	case ABS:
 	case RANGE:
 		return 1;

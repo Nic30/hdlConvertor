@@ -114,7 +114,8 @@ void Operator::dump(int indent) const {
 	case 1:
 		break;
 	case 2:
-		dumpItemP("op1", indent, op1) << "\n";
+		if (op1) // may be unary variant of the bin operator (e.g. verilog &a)
+			dumpItemP("op1", indent, op1) << "\n";
 		break;
 	default:
 		throw "Invalid arity of operator";

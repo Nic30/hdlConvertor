@@ -181,7 +181,7 @@ Expr* ExprParser::visitSimple_expression(
 	if (t.size() > 1)
 		tIt++;
 	if (ctx->MINUS()) {
-		op0 = new Expr(op0, UN_MINUS, NULL);
+		op0 = new Expr(op0, SUB, NULL);
 	}
 	while (opListIt != opList.end()) {
 		auto op = *opListIt;

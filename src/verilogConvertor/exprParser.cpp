@@ -59,6 +59,45 @@ Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
 					ctx->lsb_constant_expression()->constant_expression()));
 
 }
+OperatorType VerExprParser::visitUnary_operator(Verilog2001Parser::Unary_operatorContext * ctx) {
+	// unary_operator
+	//    : '+'
+	//    | '-'
+	//    | '!'
+	//    | '~'
+	//    | '&'
+	//    | '~&'
+	//    | '|'
+	//    | '~|'
+	//    | '^'
+	//    | '~^'
+	//    | '^~'
+	//    ;
+	std::string op = ctx->getText();
+
+	if (op == "+")
+		return ADD;
+	else if (op  ==  "-")
+		return SUB;
+	else if (op  == "!")
+		return NOT;
+	else if (op  == "~" )
+		return NEG;
+	else if (op  == "&" )
+		return AND;
+	else if (op  == "~&")
+		return NAND;
+	else if (op  == "|" )
+		return OR;
+	else if (op  == "~|")
+		return NOR;
+	else if (op  == "^" )
+		return XOR;
+	else if (op  == "~^" or op  == "^~")
+		return XNOR;
+
+	throw std::runtime_error("Unsupported unary operator " + op);
+}
 OperatorType VerExprParser::visitBinary_operator(
 		Verilog2001Parser::Binary_operatorContext * ctx) {
 	// binary_operator : '+' | '-' | '*' | '/' | '%' | '==' | '!=' | '===' |
@@ -135,11 +174,12 @@ Expr * VerExprParser::vistiNet_lvalue(
 		return visitNet_concatenation(nc);
 	}
 }
-Expr * VerExprParser::visitNet_concatenation(Verilog2001Parser::Net_concatenationContext * ctx) {
+Expr * VerExprParser::visitNet_concatenation(
+		Verilog2001Parser::Net_concatenationContext * ctx) {
 	// net_concatenation
 	//    : '{' net_concatenation_value (',' net_concatenation_value)* '}'
 	//    ;
-    //
+	//
 	// net_concatenation_value
 	//    : hierarchical_net_identifier
 	//    | hierarchical_net_identifier '[' expression ']' ('[' expression ']')*
@@ -168,7 +208,7 @@ Expr * VerExprParser::visitNet_concatenation(Verilog2001Parser::Net_concatenatio
 		}
 	}
 	Expr * res = nullptr;
-	for (auto p: parts) {
+	for (auto p : parts) {
 		if (res == nullptr)
 			res = p;
 		else
@@ -248,15 +288,17 @@ Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
 	// | primary
 	// | String
 	// ;
-	auto uOp = ctx->unary_operator();
-	if (uOp) {
-		NotImplementedLogger::print(
-				"ExpressionParser.visitTerm - unary_operator");
-		return nullptr;
-	}
 	auto p = ctx->primary();
-	if (p)
-		return visitPrimary(p);
+	if (p) {
+		auto e = visitPrimary(p);
+		auto uOp = ctx->unary_operator();
+		if (uOp) {
+			auto o = visitUnary_operator(uOp);
+			return new Expr(e, o, nullptr);
+		} else {
+			return e;
+		}
+	}
 	return VerLiteralParser::visitString(ctx->String());
 }
 Expr * VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext* ctx) {
@@ -349,7 +391,7 @@ Expr * VerExprParser::visitConcatenation(
 		Verilog2001Parser::ConcatenationContext * ctx) {
 	// concatenation : '{' expression ( ',' expression )* '}' ;
 	Expr * res = nullptr;
-	for (auto e: ctx->expression()) {
+	for (auto e : ctx->expression()) {
 		auto p = VerExprParser::visitExpression(e);
 		if (res == nullptr)
 			res = p;

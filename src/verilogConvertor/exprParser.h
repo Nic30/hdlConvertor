@@ -29,6 +29,7 @@ public:
 	static Expr * visitRange_expression(
 			Verilog2001Parser::Range_expressionContext * ctx);
 	static Expr * visitRange_(Verilog2001Parser::Range_Context * ctx);
+	static OperatorType visitUnary_operator(Verilog2001Parser::Unary_operatorContext * ctx);
 	static OperatorType visitBinary_operator(
 			Verilog2001Parser::Binary_operatorContext * ctx);
 	static Expr * visitTerm(Verilog2001Parser::TermContext * ctx);
