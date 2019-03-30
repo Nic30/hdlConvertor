@@ -18,6 +18,9 @@ using namespace Verilog2001;
 class VerExprParser {
 public:
 	static Expr * visitExpression(Verilog2001Parser::ExpressionContext * ctx);
+	static Expr * vistiNet_lvalue(Verilog2001Parser::Net_lvalueContext * ctx);
+	static Expr * visitNet_concatenation(Verilog2001Parser::Net_concatenationContext * ctx);
+	static Expr * visitHierarchical_net_identifier(Verilog2001Parser::Hierarchical_net_identifierContext * ctx);
 	static Expr * visitConstant_expression(
 			Verilog2001Parser::Constant_expressionContext * ctx);
 	static Expr * visitDimension(Verilog2001Parser::DimensionContext * ctx);

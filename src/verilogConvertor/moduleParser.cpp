@@ -231,7 +231,8 @@ void ModuleParser::visitModule_or_generate_item(
 	}
 	auto ca = ctx->continuous_assign();
 	if (ca) {
-		NotImplementedLogger::print("ModuleParser.continuous_assign");
+		for (auto stm: VerStatementParser::vistContinuous_assign(ca))
+			arch->statements.push_back(stm);
 		return;
 	}
 

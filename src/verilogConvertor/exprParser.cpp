@@ -1,4 +1,5 @@
 #include "exprParser.h"
+using namespace std;
 
 Expr * VerExprParser::visitConstant_expression(
 		Verilog2001Parser::Constant_expressionContext * ctx) {
@@ -10,8 +11,10 @@ Expr * VerExprParser::visitDimension(
 	// dimension
 	//    : '[' dimension_constant_expression ':' dimension_constant_expression ']'
 	//    ;
-	auto l = visitDimension_constant_expression(ctx->dimension_constant_expression(0));
-	auto h = visitDimension_constant_expression(ctx->dimension_constant_expression(1));
+	auto l = visitDimension_constant_expression(
+			ctx->dimension_constant_expression(0));
+	auto h = visitDimension_constant_expression(
+			ctx->dimension_constant_expression(1));
 	return new Expr(l, OperatorType::DOWNTO, h);
 }
 Expr * VerExprParser::visitDimension_constant_expression(
@@ -110,6 +113,76 @@ OperatorType VerExprParser::visitBinary_operator(
 	return SLA;
 
 }
+Expr * VerExprParser::vistiNet_lvalue(
+		Verilog2001Parser::Net_lvalueContext * ctx) {
+	// net_lvalue
+	//    : hierarchical_net_identifier
+	//    | hierarchical_net_identifier '[' constant_expression ']' ('[' constant_expression ']')*
+	//    | hierarchical_net_identifier '[' constant_expression ']' ('[' constant_expression ']')* '[' constant_range_expression ']'
+	//    | hierarchical_net_identifier '[' constant_range_expression ']'
+	//    | net_concatenation
+	//    ;
+	auto hni = ctx->hierarchical_net_identifier();
+	if (hni) {
+		auto id = visitHierarchical_net_identifier(hni);
+		for (auto ce : ctx->constant_expression()) {
+			auto c = visitConstant_expression(ce);
+			id = new Expr(id, OperatorType::INDEX, c);
+		}
+		return id;
+	} else {
+		auto nc = ctx->net_concatenation();
+		return visitNet_concatenation(nc);
+	}
+}
+Expr * VerExprParser::visitNet_concatenation(Verilog2001Parser::Net_concatenationContext * ctx) {
+	// net_concatenation
+	//    : '{' net_concatenation_value (',' net_concatenation_value)* '}'
+	//    ;
+    //
+	// net_concatenation_value
+	//    : hierarchical_net_identifier
+	//    | hierarchical_net_identifier '[' expression ']' ('[' expression ']')*
+	//    | hierarchical_net_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
+	//    | hierarchical_net_identifier '[' range_expression ']'
+	//    | net_concatenation
+	//    ;
+	// collect operands of concatenation
+	vector<Expr *> parts;
+	for (auto ncv : ctx->net_concatenation_value()) {
+		auto hi = ncv->hierarchical_net_identifier();
+		if (hi) {
+			Expr * id = visitHierarchical_net_identifier(hi);
+			for (auto ce : ncv->expression()) {
+				auto c = visitExpression(ce);
+				id = new Expr(id, OperatorType::INDEX, c);
+			}
+			auto re = ncv->range_expression();
+			if (re) {
+				auto r = visitRange_expression(re);
+				id = new Expr(id, OperatorType::INDEX, r);
+			}
+			return id;
+		} else {
+			parts.push_back(visitNet_concatenation(ncv->net_concatenation()));
+		}
+	}
+	Expr * res = nullptr;
+	for (auto p: parts) {
+		if (res == nullptr)
+			res = p;
+		else
+			res = new Expr(res, OperatorType::CONCAT, p);
+	}
+	return res;
+}
+Expr * VerExprParser::visitHierarchical_net_identifier(
+		Verilog2001Parser::Hierarchical_net_identifierContext * ctx) {
+	// hierarchical_net_identifier
+	//    : hierarchical_identifier
+	//    ;
+	return visitHierarchical_identifier(ctx->hierarchical_identifier());
+}
 Expr * VerExprParser::visitExpression(
 		Verilog2001Parser::ExpressionContext * ctx) {
 	// expression:
@@ -179,7 +252,7 @@ Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
 	if (uOp) {
 		NotImplementedLogger::print(
 				"ExpressionParser.visitTerm - unary_operator");
-		return NULL;
+		return nullptr;
 	}
 	auto p = ctx->primary();
 	if (p)
@@ -187,21 +260,19 @@ Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
 	return VerLiteralParser::visitString(ctx->String());
 }
 Expr * VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext* ctx) {
-// primary :
-// number
-// | hierarchical_identifier
-// | hierarchical_identifier ( '[' expression ']' )+
-// | hierarchical_identifier ( '[' expression ']' )+ '['
-// range_expression
-// ']'
-// | hierarchical_identifier '[' range_expression ']'
-// | concatenation
-// | multiple_concatenation
-// | function_call
-// | system_function_call
-// | constant_function_call
-// | '(' mintypmax_expression ')'
-// ;
+	// primary :
+	// number
+	// | hierarchical_identifier
+	// | hierarchical_identifier ( '[' expression ']' )+
+	// | hierarchical_identifier ( '[' expression ']' )+ '[' range_expression ']'
+	// | hierarchical_identifier '[' range_expression ']'
+	// | concatenation
+	// | multiple_concatenation
+	// | function_call
+	// | system_function_call
+	// | constant_function_call
+	// | '(' mintypmax_expression ')'
+	// ;
 	auto n = ctx->number();
 	if (n)
 		return VerLiteralParser::visitNumber(n);
@@ -244,48 +315,55 @@ Expr * VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext* ctx) {
 }
 Expr * VerExprParser::visitConstant_function_call(
 		Verilog2001Parser::Constant_function_callContext* ctx) {
-// constant_function_call :
-// function_identifier attribute_instance* '('
-// (constant_expression ( ',' constant_expression )*)? ')'
-// ;
+	// constant_function_call :
+	// function_identifier attribute_instance* '('
+	// (constant_expression ( ',' constant_expression )*)? ')'
+	// ;
 	NotImplementedLogger::print("ExpressionParser.visitConstant_function_call");
 	return NULL;
 }
 Expr * VerExprParser::visitSystem_function_call(
 		Verilog2001Parser::System_function_callContext* ctx) {
-// system_function_call :
-// system_function_identifier (expression ( ',' expression )*)?
-// ;
+	// system_function_call :
+	// system_function_identifier (expression ( ',' expression )*)?
+	// ;
 	NotImplementedLogger::print("ExpressionParser.visitSystem_function_call");
 	return NULL;
 }
 Expr * VerExprParser::visitFunction_call(
 		Verilog2001Parser::Function_callContext* ctx) {
-// function_call
-// : hierarchical_function_identifier attribute_instance*
-// '(' (expression ( ',' expression )*)? ')'
-// ;
+	// function_call
+	// : hierarchical_function_identifier attribute_instance*
+	// '(' (expression ( ',' expression )*)? ')'
+	// ;
 	NotImplementedLogger::print("ExpressionParser.visitFunction_call");
 	return NULL;
 }
 Expr * VerExprParser::visitMultiple_concatenation(
 		Verilog2001Parser::Multiple_concatenationContext * ctx) {
-// multiple_concatenation : '{' constant_expression concatenation '}' ;
+	// multiple_concatenation : '{' constant_expression concatenation '}' ;
 	NotImplementedLogger::print("ExpressionParser.visitMultiple_concatenation");
 	return NULL;
 }
 Expr * VerExprParser::visitConcatenation(
 		Verilog2001Parser::ConcatenationContext * ctx) {
-// concatenation : '{' expression ( ',' expression )* '}' ;
-	NotImplementedLogger::print("ExpressionParser.visitConcatenation");
-	return NULL;
+	// concatenation : '{' expression ( ',' expression )* '}' ;
+	Expr * res = nullptr;
+	for (auto e: ctx->expression()) {
+		auto p = VerExprParser::visitExpression(e);
+		if (res == nullptr)
+			res = p;
+		else
+			res = new Expr(res, OperatorType::CONCAT, p);
+	}
+	return res;
 }
 Expr * VerExprParser::visitHierarchical_identifier(
 		Verilog2001Parser::Hierarchical_identifierContext* ctx) {
-// hierarchical_identifier :
-// simple_hierarchical_identifier
-// | escaped_hierarchical_identifier
-// ;
+	// hierarchical_identifier :
+	// simple_hierarchical_identifier
+	// | escaped_hierarchical_identifier
+	// ;
 	auto s = ctx->simple_hierarchical_identifier();
 	if (s)
 		return visitSimple_hierarchical_identifier(s);
@@ -295,10 +373,10 @@ Expr * VerExprParser::visitHierarchical_identifier(
 }
 Expr * VerExprParser::visitEscaped_hierarchical_identifier(
 		Verilog2001Parser::Escaped_hierarchical_identifierContext * ctx) {
-// escaped_hierarchical_identifier :
-// escaped_hierarchical_branch ( '.' simple_hierarchical_branch | '.'
-// escaped_hierarchical_branch )*
-// ;
+	// escaped_hierarchical_identifier :
+	// escaped_hierarchical_branch ( '.' simple_hierarchical_branch | '.'
+	// escaped_hierarchical_branch )*
+	// ;
 	Expr * top = NULL;
 	for (auto ch : ctx->children) {
 		if (!top)
@@ -323,19 +401,19 @@ Expr * VerExprParser::visitEscaped_hierarchical_identifier(
 }
 Expr * VerExprParser::visitSimple_hierarchical_identifier(
 		Verilog2001Parser::Simple_hierarchical_identifierContext * ctx) {
-// simple_hierarchical_identifier : simple_hierarchical_branch ( '.'
-// Escaped_identifier )? ;
+	// simple_hierarchical_identifier : simple_hierarchical_branch ( '.'
+	// Escaped_identifier )? ;
 	Expr * shb = visitSimple_hierarchical_branch(
 			ctx->simple_hierarchical_branch());
-// [TODO] Escaped_identifier
+	// [TODO] Escaped_identifier
 	return shb;
 }
 Expr * VerExprParser::visitSimple_hierarchical_branch(
 		Verilog2001Parser::Simple_hierarchical_branchContext * ctx) {
-// simple_hierarchical_branch :
-// Simple_identifier ( '[' Decimal_number ']' )?
-// ( '.' Simple_identifier ( '[' Decimal_number ']' )? )*
-// ;
+	// simple_hierarchical_branch :
+	// Simple_identifier ( '[' Decimal_number ']' )?
+	// ( '.' Simple_identifier ( '[' Decimal_number ']' )? )*
+	// ;
 	Expr * top = NULL;
 	for (auto ch : ctx->children) {
 		if (!top) {
@@ -349,7 +427,6 @@ Expr * VerExprParser::visitSimple_hierarchical_branch(
 	}
 	return top;
 }
-
 Expr * VerExprParser::visitIdentifier(
 		Verilog2001Parser::IdentifierContext * ctx) {
 	// identifier
@@ -362,22 +439,21 @@ Expr * VerExprParser::visitIdentifier(
 	else
 		return VerLiteralParser::parseEscaped_identifier(sid);
 }
-
 Expr * VerExprParser::visitEscaped_hierarchical_branch(
 		Verilog2001Parser::Escaped_hierarchical_branchContext * ctx) {
-// escaped_hierarchical_branch :
-// Escaped_identifier ( '[' Decimal_number ']' )?
-// ( '.' Escaped_identifier ( '[' Decimal_number ']' )? )*
-// ;
+	// escaped_hierarchical_branch :
+	// Escaped_identifier ( '[' Decimal_number ']' )?
+	// ( '.' Escaped_identifier ( '[' Decimal_number ']' )? )*
+	// ;
 	NotImplementedLogger::print(
 			"ExpressionParser.visitEscaped_hierarchical_branch");
 	return NULL;
 }
 Expr * VerExprParser::visitMintypmax_expression(
 		Verilog2001Parser::Mintypmax_expressionContext* ctx) {
-// mintypmax_expression
-// : expression (':' expression ':' expression)?
-// ;
+	// mintypmax_expression
+	// : expression (':' expression ':' expression)?
+	// ;
 	if (ctx->expression().size() > 1) {
 		NotImplementedLogger::print(
 				"ExpressionParser.visitMintypmax_expression - type and max specified");

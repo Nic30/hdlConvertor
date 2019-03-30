@@ -1,6 +1,8 @@
 #include "statementParser.h"
 #include "../notImplementedLogger.h"
+#include "exprParser.h"
 
+using namespace std;
 using namespace Verilog2001;
 
 Statement * VerStatementParser::visitAlways_construct(
@@ -65,7 +67,8 @@ Statement * VerStatementParser::visitStatement(
 	}
 	auto nba = ctx->nonblocking_assignment();
 	if (nba) {
-		NotImplementedLogger::print("VerStatementParser.nonblocking_assignment");
+		NotImplementedLogger::print(
+				"VerStatementParser.nonblocking_assignment");
 		return nullptr;
 	}
 	auto pb = ctx->par_block();
@@ -107,4 +110,40 @@ Statement * VerStatementParser::visitStatement(
 	}
 	throw std::runtime_error(
 			"VerStatementParser.visitStatement - probably unimplemented transition");
+}
+
+vector<Statement *> VerStatementParser::vistContinuous_assign(
+		Verilog2001::Verilog2001Parser::Continuous_assignContext * ctx) {
+	// continuous_assign
+	//    : 'assign' (drive_strength)? (delay3)? list_of_net_assignments ';'
+	//    ;
+	auto ds = ctx->drive_strength();
+	if (ds) {
+		NotImplementedLogger::print(
+				"VerStatementParser.vistContinuous_assign.drive_strength");
+	}
+	auto del = ctx->delay3();
+	if (del) {
+		NotImplementedLogger::print(
+				"VerStatementParser.vistContinuous_assign.delay3");
+	}
+	auto lna = ctx->list_of_net_assignments();
+	// list_of_net_assignments
+	//    : net_assignment (',' net_assignment)*
+	//    ;
+	vector<Statement*> res;
+	for (auto na : lna->net_assignment()) {
+		auto stm = visitNet_assignment(na);
+		res.push_back(stm);
+	}
+	return res;
+}
+
+Statement* VerStatementParser::visitNet_assignment(
+		Verilog2001Parser::Net_assignmentContext * ctx) {
+	// net_assignment : net_lvalue '=' expression
+	// ;
+	return Statement::ASSIG(
+			VerExprParser::vistiNet_lvalue(ctx->net_lvalue()),
+			VerExprParser::visitExpression(ctx->expression()));
 }
