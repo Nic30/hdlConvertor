@@ -3,12 +3,10 @@
 
 void NotImplementedLogger::print(const char * msg) {
 	if (Convertor::debug) {
-		std::cerr << msg << "\n";
+		std::cerr << msg << std::endl;
 	}
 }
 
 void NotImplementedLogger::print(const std::string & msg) {
-	if (Convertor::debug) {
-		std::cerr << msg << "\n";
-	}
+	print(msg.c_str());
 }
