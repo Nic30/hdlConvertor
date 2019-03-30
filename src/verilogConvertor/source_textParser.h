@@ -1,6 +1,5 @@
 #pragma once
 
-#include <antlr4-runtime.h>
 #include <vector>
 
 #include "Verilog2001Parser/Verilog2001Parser.h"

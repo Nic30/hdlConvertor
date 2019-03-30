@@ -11,7 +11,7 @@ public:
 	const char * entityName;
 	std::vector<Variable*> varialbles;
 	std::vector<CompInstance*> componentInstances;
-	std::vector<Process*> processes;
+	std::vector<Statement*> statements;
 
 #ifdef USE_PYTHON
 	PyObject * toJson() const;

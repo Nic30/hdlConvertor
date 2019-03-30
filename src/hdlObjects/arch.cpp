@@ -15,8 +15,8 @@ PyObject * Arch::toJson() const {
 	JSN_DEBUG("Arch - componentInstances")
 	addJsonArrP(o, "componentInstances", componentInstances);
 
-	JSN_DEBUG("Arch - processes")
-	addJsonArrP(o, "processes", processes);
+	JSN_DEBUG("Arch - statements")
+	addJsonArrP(o, "statements", statements);
 
 	return o;
 }
@@ -25,8 +25,8 @@ PyObject * Arch::toJson() const {
 Arch::~Arch() {
 	for (auto c : componentInstances)
 		delete c;
-	for (auto p : processes)
-		delete p;
+	for (auto s : statements)
+		delete s;
 	for (auto v : varialbles)
 		delete v;
 }

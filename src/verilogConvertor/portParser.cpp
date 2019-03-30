@@ -3,7 +3,10 @@
 std::vector<Port*>* PortParser::addTypeSpecToPorts(Direction direction,
 		Verilog2001Parser::Net_typeContext* net_type, bool signed_,
 		Verilog2001Parser::Range_Context* range_, std::vector<Port*> * ports) {
-	// [TODO] net_type
+	if (net_type and net_type->getText() != "wire") {
+		NotImplementedLogger::print(
+				"PortParser.addTypeSpecToPorts.net_type different than wire");
+	}
 	for (auto p : *ports) {
 		assert(!p->variable->type);
 		p->variable->type = Utils::mkWireT(range_, signed_);

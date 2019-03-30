@@ -1,4 +1,8 @@
 #include "moduleParser.h"
+#include "statementParser.h"
+#include "../notImplementedLogger.h"
+
+using namespace std;
 
 ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
 	context = _context;
@@ -21,10 +25,12 @@ void ModuleParser::visitModule_declaration(
 	ent->name = strdup(
 			ctx->module_identifier()->identifier()->getText().c_str());
 	for (auto a : ctx->attribute_instance()) {
-		auto ais = AttributeParser::visitAttribute_instance(a);
-		for (auto v : *ais)
-			ent->generics.push_back(v);
-		delete ais;
+		NotImplementedLogger::print(
+				"ModuleParser.visitModule_declaration.attribute_instance");
+		//auto ais = AttributeParser::visitAttribute_instance(a);
+		//for (auto v : *ais)
+		//	delete v;
+		//delete ais;
 	}
 	auto mppl = ctx->module_parameter_port_list();
 	if (mppl) {
@@ -192,7 +198,7 @@ void ModuleParser::visitModule_item(
 		return;
 	}
 	throw std::runtime_error(
-			"ModuleParser.visitModule_item - probably missing part of imolementation");
+			"ModuleParser.visitModule_item - probably missing part of implementation");
 }
 
 void ModuleParser::visitModule_or_generate_item(
@@ -208,7 +214,11 @@ void ModuleParser::visitModule_or_generate_item(
 	//   | attribute_instance* always_construct
 	//   ;
 
-	// [TODO] attribute_instance
+	auto ai = ctx->attribute_instance();
+	if (ai.size()) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitModule_or_generate_item.attribute_instance");
+	}
 	auto mg = ctx->module_or_generate_item_declaration();
 	if (mg) {
 		visitModule_or_generate_item_declaration(mg);
@@ -245,19 +255,12 @@ void ModuleParser::visitModule_or_generate_item(
 
 	auto a = ctx->always_construct();
 	if (a) {
-		visitAlways_construct(a);
+		auto stm = VerStatementParser::visitAlways_construct(a);
+		arch->statements.push_back(stm);
 		return;
 	}
 
 	NotImplementedLogger::print("ModuleParser.visitModule_or_generate_item");
-}
-
-void ModuleParser::visitAlways_construct(
-		Verilog2001Parser::Always_constructContext * ctx) {
-	// always_construct
-	//    : 'always' statement
-	//    ;
-	NotImplementedLogger::print("ModuleParser.always_construct");
 }
 
 void ModuleParser::visitModule_or_generate_item_declaration(
@@ -277,7 +280,7 @@ void ModuleParser::visitModule_or_generate_item_declaration(
 
 	auto nd = ctx->net_declaration();
 	if (nd) {
-		NotImplementedLogger::print("ModuleParser.net_declaration");
+		visitNet_declaration(nd);
 		return;
 	}
 	auto rd = ctx->reg_declaration();
@@ -338,6 +341,132 @@ void ModuleParser::visitReg_declaration(
 	auto t = Utils::mkWireT(ctx->range_(), Utils::is_signed(ctx));
 	visitList_of_variable_identifiers(ctx->list_of_variable_identifiers(), t,
 			true);
+}
+
+void ModuleParser::visitNet_declaration(
+		Verilog2001Parser::Net_declarationContext * ctx) {
+	// net_declaration
+	//    : net_type ('signed')? (delay3)? list_of_net_identifiers ';'
+	//    | net_type (drive_strength)? ('signed')? (delay3)? list_of_net_decl_assignments ';'
+	//    | 'trireg' (drive_strength)? ('signed')? (delay3)? list_of_net_decl_assignments ';'
+	//    | 'trireg' (charge_strength)? ('signed')? (delay3)? list_of_net_identifiers ';'
+	//    | 'trireg' (charge_strength)? ('vectored' | 'scalared')? ('signed')? range_ (delay3)? list_of_net_identifiers ';'
+	//    | 'trireg' (drive_strength)? ('vectored' | 'scalared')? ('signed')? range_ (delay3)? list_of_net_decl_assignments ';'
+	//    | net_type (drive_strength)? ('vectored' | 'scalared')? ('signed')? range_ (delay3)? list_of_net_decl_assignments ';'
+	//    | net_type ('vectored' | 'scalared')? ('signed')? range_ (delay3)? list_of_net_identifiers ';'
+	//    ;
+	auto nt = ctx->net_type();
+	if (nt->getText() != "wire") {
+		NotImplementedLogger::print(
+				string("ModuleParser.visitNet_declaration.net_type different than wire (")
+						+ nt->getText() + ")");
+	}
+	auto del = ctx->delay3();
+	if (del) {
+		NotImplementedLogger::print("ModuleParser.visitNet_declaration.delay3");
+	}
+	auto ds = ctx->drive_strength();
+	if (ds) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNet_declaration.drive_strength");
+	}
+	auto cs = ctx->charge_strength();
+	if (cs) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNet_declaration.charge_strength");
+	}
+
+	bool is_signed = Utils::is_signed(ctx);
+	Expr * t;
+	auto r = ctx->range_();
+	if (r) {
+		t = Utils::mkWireT(r, is_signed);
+	} else {
+		t = Utils::mkWireT();
+	}
+	auto ln = ctx->list_of_net_identifiers();
+	if (ln) {
+		for (auto v : visitList_of_net_identifiers(ln, t)) {
+			arch->varialbles.push_back(v);
+		}
+	} else {
+		auto lna = ctx->list_of_net_decl_assignments();
+		for (auto v : visitList_of_net_decl_assignments(lna, t)) {
+			arch->varialbles.push_back(v);
+		}
+	}
+}
+std::vector<Variable*> ModuleParser::visitList_of_net_identifiers(
+		Verilog2001Parser::List_of_net_identifiersContext * ctx,
+		Expr * base_type) {
+	// list_of_net_identifiers
+	//    : net_identifier (dimension (dimension)*)? (',' net_identifier (dimension (dimension)*)?)*
+	//    ;
+
+	// net_identifier
+	//    : identifier
+	//    ;
+
+	std::vector<Variable*> res;
+	Expr * actual_id = nullptr;
+	Expr * actual_t = base_type;
+	for (auto &child : ctx->children) {
+		auto ni =
+				dynamic_cast<Verilog2001Parser::Net_identifierContext *>(child);
+		if (ni) {
+			if (actual_id) {
+				// store previous variable
+				res.push_back(
+						new Variable(actual_id->extractStr(), actual_t,
+								nullptr));
+				// reset state of variable parsing
+				delete actual_id;
+				actual_id = nullptr;
+				actual_t = new Expr(*base_type);
+			}
+			actual_id = VerExprParser::visitIdentifier(ni->identifier());
+		} else {
+			// stack the dimensions on type
+			auto d = dynamic_cast<Verilog2001Parser::DimensionContext *>(child);
+			if (d) {
+				actual_t = new Expr(actual_t, OperatorType::INDEX,
+						VerExprParser::visitDimension(d));
+			}
+		}
+	}
+	if (actual_id) {
+		// process leftover
+		res.push_back(new Variable(actual_id->extractStr(), actual_t, nullptr));
+	}
+
+	return res;
+}
+
+// @note same as visitList_of_net_identifiers but without the dimensions and with the default value
+std::vector<Variable*> ModuleParser::visitList_of_net_decl_assignments(
+		Verilog2001Parser::List_of_net_decl_assignmentsContext * ctx,
+		Expr * base_type) {
+	//	list_of_net_decl_assignments
+	//	   : net_decl_assignment (',' net_decl_assignment)*
+	//	   ;
+
+	// net_decl_assignment
+	//    : net_identifier '=' expression
+	//    ;
+
+	// net_identifier
+	//    : identifier
+	//    ;
+
+	std::vector<Variable*> res;
+	for (auto & nd : ctx->net_decl_assignment()) {
+		Expr * id = VerExprParser::visitIdentifier(
+				nd->net_identifier()->identifier());
+		Expr * def_val = VerExprParser::visitExpression(nd->expression());
+		res.push_back(new Variable(id->extractStr(), base_type, def_val));
+		delete id;
+	}
+	return res;
 }
 
 void ModuleParser::visitList_of_variable_identifiers(

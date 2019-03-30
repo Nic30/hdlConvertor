@@ -12,14 +12,15 @@ const char * StatementType_toString(StatementType type) {
 		return "RETURN";
 	case s_ASSIGMENT:
 		return "ASSIGMENT";
+	case s_PROCESS:
+		return "PROCESS";
 	default:
-		throw "Invalid StatementType";
+		throw std::runtime_error("Invalid StatementType");
 	}
 }
 
 Statement::Statement(StatementType type) {
 	this->type = type;
-	this->ops = NULL;
 	this->op0 = NULL;
 	this->op1 = NULL;
 }
@@ -32,8 +33,7 @@ Statement * Statement::EXPR(Expr * e) {
 Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
 	Statement * s = new Statement(s_IF);
 	s->op0 = cond;
-	s->ops = new std::vector<std::vector<Statement*>*>(1);
-	(*s->ops)[0] = ifTrue;
+	s->sub_statements.push_back(ifTrue);
 
 	return s;
 }
@@ -41,9 +41,9 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 		std::vector<Statement*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->op0 = cond;
-	s->ops = new std::vector<std::vector<Statement*>*>(2);
-	(*s->ops)[0] = ifTrue;
-	(*s->ops)[1] = ifFalse;
+	s->sub_statements.reserve(2);
+	s->sub_statements.push_back(ifTrue);
+	s->sub_statements.push_back(ifFalse);
 
 	return s;
 }
@@ -65,11 +65,21 @@ Statement* Statement::ASSIG(Expr * dst, Expr * src) {
 Statement* Statement::WHILE(Expr * cond, std::vector<Statement*> * body) {
 	Statement * s = new Statement(s_WHILE);
 	s->op0 = cond;
-	s->ops = new std::vector<std::vector<Statement*> *>(1);
-	(*s->ops)[0] = body;
+	s->sub_statements.push_back(body);
 	return s;
 
 }
+
+Statement* Statement::PROCECESS(std::vector<Expr*> * sensitivity,
+		std::vector<Statement*>* body) {
+	Statement * s = new Statement(s_PROCESS);
+	s->sub_statements.reserve(2);
+	s->sub_statements.push_back(
+			reinterpret_cast<std::vector<Statement*> *>(sensitivity));
+	s->sub_statements.push_back(body);
+	return s;
+}
+
 #ifdef USE_PYTHON
 PyObject * Statement::toJson() const {
 	PyObject * d = PyDict_New();
@@ -82,11 +92,11 @@ PyObject * Statement::toJson() const {
 		return op0->toJson();
 	case s_IF:
 		PyDict_SetItemString(d, "cond", op0->toJson());
-		assert(ops);
-		_case = (*ops)[0];
+		assert(sub_statements);
+		_case = sub_statements[0];
 		addJsonArrP(d, "ifTrue", *_case);
-		if (ops->size() > 1) {
-			_case = (*ops)[1];
+		if (sub_statements.size() > 1) {
+			_case = sub_statements[1];
 			addJsonArrP(d, "ifFalse", *_case);
 		} else {
 			addJsonArr_empty(d, "ifFalse");
@@ -102,7 +112,14 @@ PyObject * Statement::toJson() const {
 		break;
 	case s_WHILE:
 		PyDict_SetItemString(d, "cond", op0->toJson());
-		addJsonArrP(d, "body", *(*ops)[0]);
+		addJsonArrP(d, "body", *sub_statements[0]);
+		break;
+	case s_PROCESS:
+		if (sub_statements[0]) {
+			addJsonArrP(d, "body",
+					*reinterpret_cast<std::vector<Expr*>*>(sub_statements[0]));
+		}
+		addJsonArrP(d, "body", *sub_statements[1]);
 		break;
 	default:
 		throw "Invalid StatementType ";
@@ -112,20 +129,21 @@ PyObject * Statement::toJson() const {
 #endif
 
 Statement::~Statement() {
-	if (ops) {
-		for (auto sl : *ops) {
+	if (type == s_PROCESS) {
+		delete reinterpret_cast<std::vector<Expr*>*>(sub_statements[0]);
+		delete sub_statements[1];
+	} else {
+		for (auto sl : sub_statements) {
 			for (auto stm : *sl) {
 				delete stm;
 			}
 			delete sl;
 		}
-		delete ops;
+
+		if (op0)
+			delete op0;
+
+		if (op1)
+			delete op1;
 	}
-
-	if (op0)
-		delete op0;
-
-	if (op1)
-		delete op1;
-
 }

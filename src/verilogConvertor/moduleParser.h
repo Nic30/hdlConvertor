@@ -1,6 +1,5 @@
 #pragma once
 
-#include <antlr4-runtime.h>
 #include <vector>
 
 #include "Verilog2001Parser/Verilog2001Parser.h"
@@ -37,11 +36,16 @@ public:
 	void visitModule_item(Verilog2001Parser::Module_itemContext * ctx);
 	void visitModule_or_generate_item(
 			Verilog2001Parser::Module_or_generate_itemContext * ctx);
-	void visitAlways_construct(
-			Verilog2001Parser::Always_constructContext * ctx);
 	void visitModule_or_generate_item_declaration(
 			Verilog2001Parser::Module_or_generate_item_declarationContext * ctx);
 	void visitReg_declaration(Verilog2001Parser::Reg_declarationContext * ctx);
+	void visitNet_declaration(Verilog2001Parser::Net_declarationContext * ctx);
+	std::vector<Variable*> visitList_of_net_identifiers(
+			Verilog2001Parser::List_of_net_identifiersContext * ctx,
+			Expr * base_type);
+	std::vector<Variable*> visitList_of_net_decl_assignments(
+			Verilog2001Parser::List_of_net_decl_assignmentsContext * ctx,
+			Expr * base_type);
 	/*
 	 * @note the variables may contains also the specification of the size of the array from this reason
 	 * 		the base_type does not have to be final type of the variable
