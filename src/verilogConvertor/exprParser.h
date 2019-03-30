@@ -17,10 +17,12 @@ using namespace Verilog2001;
 
 class VerExprParser {
 public:
-	static Expr * visitExpression(
-			Verilog2001Parser::ExpressionContext * ctx);
+	static Expr * visitExpression(Verilog2001Parser::ExpressionContext * ctx);
 	static Expr * visitConstant_expression(
 			Verilog2001Parser::Constant_expressionContext * ctx);
+	static Expr * visitDimension(Verilog2001Parser::DimensionContext * ctx);
+	static Expr * visitDimension_constant_expression(
+			Verilog2001Parser::Dimension_constant_expressionContext * ctx);
 	static Expr * visitRange_expression(
 			Verilog2001Parser::Range_expressionContext * ctx);
 	static Expr * visitRange_(Verilog2001Parser::Range_Context * ctx);
@@ -46,7 +48,7 @@ public:
 			Verilog2001Parser::Simple_hierarchical_identifierContext * ctx);
 	static Expr * visitSimple_hierarchical_branch(
 			Verilog2001Parser::Simple_hierarchical_branchContext * ctx);
-
+	static Expr * visitIdentifier(Verilog2001Parser::IdentifierContext * ctx);
 	static Expr * visitEscaped_hierarchical_branch(
 			Verilog2001Parser::Escaped_hierarchical_branchContext * ctx);
 	static Expr * visitMintypmax_expression(

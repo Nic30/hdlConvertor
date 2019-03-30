@@ -5,6 +5,22 @@ Expr * VerExprParser::visitConstant_expression(
 	// constant_expression : expression ;
 	return visitExpression(ctx->expression());
 }
+Expr * VerExprParser::visitDimension(
+		Verilog2001Parser::DimensionContext * ctx) {
+	// dimension
+	//    : '[' dimension_constant_expression ':' dimension_constant_expression ']'
+	//    ;
+	auto l = visitDimension_constant_expression(ctx->dimension_constant_expression(0));
+	auto h = visitDimension_constant_expression(ctx->dimension_constant_expression(1));
+	return new Expr(l, OperatorType::DOWNTO, h);
+}
+Expr * VerExprParser::visitDimension_constant_expression(
+		Verilog2001Parser::Dimension_constant_expressionContext * ctx) {
+	// dimension_constant_expression
+	//    : constant_expression
+	//    ;
+	return visitConstant_expression(ctx->constant_expression());
+}
 Expr * VerExprParser::visitRange_expression(
 		Verilog2001Parser::Range_expressionContext * ctx) {
 	// range_expression :
@@ -14,12 +30,19 @@ Expr * VerExprParser::visitRange_expression(
 	// | base_expression '-:' width_constant_expression
 	// ;
 
+	auto msb = ctx->msb_constant_expression();
+	if (msb) {
+		auto h = visitConstant_expression(msb->constant_expression());
+		auto lsb = ctx->lsb_constant_expression();
+		auto l = visitConstant_expression(lsb->constant_expression());
+		return new Expr(l, OperatorType::DOWNTO, h);
+	}
 	// msb_constant_expression : constant_expression ;
 	// lsb_constant_expression : constant_expression ;
 	// width_constant_expression : constant_expression ;
 	// base_expression : expression ;
 	NotImplementedLogger::print("ExpressionParser.visitRange_expression");
-	return NULL;
+	return nullptr;
 }
 Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
 	// range : '[' msb_constant_expression ':' lsb_constant_expression ']' ;
@@ -97,20 +120,21 @@ Expr * VerExprParser::visitExpression(
 	// )*
 	// ;
 	antlr4::tree::ParseTree* ch;
-	antlr4::tree::ParseTree* ch2 = NULL;
+	antlr4::tree::ParseTree* ch2 = nullptr;
 	auto childs = ctx->children.begin();
-	Expr * top = visitTerm((Verilog2001Parser::TermContext*)(*childs));
+	Expr * top = visitTerm((Verilog2001Parser::TermContext*) (*childs));
 	childs++;
 	// skip attribs
 	while (childs != ctx->children.end()) {
 		ch = *childs;
 		childs++;
-		auto binOp = (Verilog2001Parser::Binary_operatorContext*)ch;
+		auto binOp = (Verilog2001Parser::Binary_operatorContext*) ch;
 		if (binOp) {
 			while (true) {
 				ch2 = *childs;
 				childs++;
-				auto aic = dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
+				auto aic =
+						dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
 				if (aic) {
 					AttributeParser::visitAttribute_instance(aic);
 				} else {
@@ -118,12 +142,13 @@ Expr * VerExprParser::visitExpression(
 				}
 			}
 			top = new Expr(top, visitBinary_operator(binOp),
-					visitTerm((Verilog2001Parser::TermContext*)ch2));
+					visitTerm((Verilog2001Parser::TermContext*) ch2));
 		} else {
 			while (true) {
 				ch2 = *childs;
 				childs++;
-				auto _aic = dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
+				auto _aic =
+						dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
 				if (_aic) {
 					AttributeParser::visitAttribute_instance(_aic);
 				} else {
@@ -134,8 +159,8 @@ Expr * VerExprParser::visitExpression(
 			auto ifTrue = visitExpression(
 					dynamic_cast<Verilog2001Parser::ExpressionContext*>(ch2));
 			assert(ifTrue);
-			auto ifFalse = visitTerm(dynamic_cast<Verilog2001Parser::TermContext*>(
-							*childs));
+			auto ifFalse = visitTerm(
+					dynamic_cast<Verilog2001Parser::TermContext*>(*childs));
 			assert(ifFalse);
 			top = Expr::ternary(top, ifTrue, ifFalse);
 			childs++;
@@ -145,11 +170,11 @@ Expr * VerExprParser::visitExpression(
 	return top;
 }
 Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
-// term :
-// unary_operator attribute_instance* primary
-// | primary
-// | String
-// ;
+	// term :
+	// unary_operator attribute_instance* primary
+	// | primary
+	// | String
+	// ;
 	auto uOp = ctx->unary_operator();
 	if (uOp) {
 		NotImplementedLogger::print(
@@ -281,11 +306,13 @@ Expr * VerExprParser::visitEscaped_hierarchical_identifier(
 					ctx->escaped_hierarchical_branch(0));
 		else {
 			Expr * second;
-			auto ehbc = dynamic_cast<Verilog2001Parser::Escaped_hierarchical_branchContext*>(ch);
+			auto ehbc =
+					dynamic_cast<Verilog2001Parser::Escaped_hierarchical_branchContext*>(ch);
 			if (ehbc) {
 				second = visitEscaped_hierarchical_branch(ehbc);
 			} else {
-				auto shbc = dynamic_cast<Verilog2001Parser::Simple_hierarchical_branchContext*>(ch);
+				auto shbc =
+						dynamic_cast<Verilog2001Parser::Simple_hierarchical_branchContext*>(ch);
 				assert(shbc);
 				second = visitSimple_hierarchical_branch(shbc);
 			}
@@ -321,6 +348,19 @@ Expr * VerExprParser::visitSimple_hierarchical_branch(
 
 	}
 	return top;
+}
+
+Expr * VerExprParser::visitIdentifier(
+		Verilog2001Parser::IdentifierContext * ctx) {
+	// identifier
+	//    : Simple_identifier
+	//    | Escaped_identifier
+	//    ;
+	auto sid = ctx->Simple_identifier();
+	if (sid)
+		return VerLiteralParser::parseSimple_identifier(sid);
+	else
+		return VerLiteralParser::parseEscaped_identifier(sid);
 }
 
 Expr * VerExprParser::visitEscaped_hierarchical_branch(

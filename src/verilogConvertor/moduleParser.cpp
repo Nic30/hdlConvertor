@@ -4,6 +4,7 @@ ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
 	ent = new Entity();
+	arch = new Arch();
 }
 
 void ModuleParser::visitModule_declaration(
@@ -86,9 +87,7 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 	// |'parameter' 'time' list_of_param_assignments
 	// ;
 
-	// [TODO] signed
-
-	Expr * t = Utils::mkStringT();
+	Expr * t = nullptr;
 	auto typeStr = ctx->children[1];
 	auto term = dynamic_cast<antlr4::tree::TerminalNodeImpl*>(typeStr);
 	if (term) {
@@ -97,17 +96,22 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 
 	auto r = ctx->range_();
 	if (r) {
-		std::vector<Expr*> * operands = new std::vector<Expr*>();
-		operands->push_back(VerExprParser::visitRange_(r));
-		t = Expr::call(Utils::mkWireT(), operands);
+		t = Utils::mkWireT(r, Utils::is_signed(ctx));
 	}
 
 	std::vector<Variable*> * params = visitList_of_param_assignments(
 			ctx->list_of_param_assignments());
 
-	std::shared_ptr<Expr> _t(t);
-	for (auto v : *params)
-		v->type = _t;
+	if (t == nullptr)
+		t = Utils::mkStringT();
+	bool first = true;
+	for (auto v : *params) {
+		if (first) {
+			v->type = t;
+			first = false;
+		} else
+			v->type = new Expr(*t);
+	}
 
 	return params;
 }
@@ -183,14 +187,16 @@ void ModuleParser::visitModule_item(
 		return;
 	}
 	auto spd = ctx->specparam_declaration();
-	if(spd) {
+	if (spd) {
 		NotImplementedLogger::print("ModuleParser.specparam_declaration");
 		return;
 	}
-	throw std::runtime_error("ModuleParser.visitModule_item - probably missing part of imolementation");
+	throw std::runtime_error(
+			"ModuleParser.visitModule_item - probably missing part of imolementation");
 }
 
-void ModuleParser::visitModule_or_generate_item(Verilog2001Parser::Module_or_generate_itemContext * ctx) {
+void ModuleParser::visitModule_or_generate_item(
+		Verilog2001Parser::Module_or_generate_itemContext * ctx) {
 	//module_or_generate_item
 	//   : attribute_instance* module_or_generate_item_declaration
 	//   | attribute_instance* parameter_override
@@ -205,7 +211,7 @@ void ModuleParser::visitModule_or_generate_item(Verilog2001Parser::Module_or_gen
 	// [TODO] attribute_instance
 	auto mg = ctx->module_or_generate_item_declaration();
 	if (mg) {
-		NotImplementedLogger::print("ModuleParser.module_or_generate_item_declaration");
+		visitModule_or_generate_item_declaration(mg);
 		return;
 	}
 	auto pa = ctx->parameter_override();
@@ -239,11 +245,147 @@ void ModuleParser::visitModule_or_generate_item(Verilog2001Parser::Module_or_gen
 
 	auto a = ctx->always_construct();
 	if (a) {
-		NotImplementedLogger::print("ModuleParser.always_construct");
+		visitAlways_construct(a);
 		return;
 	}
 
 	NotImplementedLogger::print("ModuleParser.visitModule_or_generate_item");
+}
+
+void ModuleParser::visitAlways_construct(
+		Verilog2001Parser::Always_constructContext * ctx) {
+	// always_construct
+	//    : 'always' statement
+	//    ;
+	NotImplementedLogger::print("ModuleParser.always_construct");
+}
+
+void ModuleParser::visitModule_or_generate_item_declaration(
+		Verilog2001Parser::Module_or_generate_item_declarationContext * ctx) {
+	// module_or_generate_item_declaration
+	//    : net_declaration
+	//    | reg_declaration
+	//    | integer_declaration
+	//    | real_declaration
+	//    | time_declaration
+	//    | realtime_declaration
+	//    | event_declaration
+	//    | genvar_declaration
+	//    | task_declaration
+	//    | function_declaration
+	//    ;
+
+	auto nd = ctx->net_declaration();
+	if (nd) {
+		NotImplementedLogger::print("ModuleParser.net_declaration");
+		return;
+	}
+	auto rd = ctx->reg_declaration();
+	if (rd) {
+		visitReg_declaration(rd);
+		return;
+	}
+	auto id = ctx->integer_declaration();
+	if (id) {
+		NotImplementedLogger::print("ModuleParser.integer_declaration");
+		return;
+	}
+	auto red = ctx->real_declaration();
+	if (red) {
+		NotImplementedLogger::print("ModuleParser.real_declaration");
+		return;
+	}
+	auto td = ctx->time_declaration();
+	if (td) {
+		NotImplementedLogger::print("ModuleParser.time_declaration");
+		return;
+	}
+	auto rtd = ctx->realtime_declaration();
+	if (rtd) {
+		NotImplementedLogger::print("ModuleParser.realtime_declaration");
+		return;
+	}
+	auto ed = ctx->event_declaration();
+	if (ed) {
+		NotImplementedLogger::print("ModuleParser.event_declaration");
+		return;
+	}
+	auto gd = ctx->genvar_declaration();
+	if (gd) {
+		NotImplementedLogger::print("ModuleParser.genvar_declaration");
+		return;
+	}
+	auto tad = ctx->task_declaration();
+	if (tad) {
+		NotImplementedLogger::print("ModuleParser.task_declaration");
+		return;
+	}
+	auto fd = ctx->function_declaration();
+	if (fd) {
+		NotImplementedLogger::print("ModuleParser.function_declaration");
+		return;
+	}
+
+	NotImplementedLogger::print(
+			"ModuleParser.module_or_generate_item_declaration");
+}
+
+void ModuleParser::visitReg_declaration(
+		Verilog2001Parser::Reg_declarationContext * ctx) {
+	// reg_declaration
+	//    : 'reg' ('signed')? (range_)? list_of_variable_identifiers ';'
+	//    ;
+	auto t = Utils::mkWireT(ctx->range_(), Utils::is_signed(ctx));
+	visitList_of_variable_identifiers(ctx->list_of_variable_identifiers(), t,
+			true);
+}
+
+void ModuleParser::visitList_of_variable_identifiers(
+		Verilog2001Parser::List_of_variable_identifiersContext * ctx,
+		Expr * base_type, bool latched) {
+	// list_of_variable_identifiers
+	//    : variable_type (',' variable_type)*
+	//    ;
+	bool first = true;
+	for (auto vt : ctx->variable_type()) {
+		if (not first)
+			base_type = new Expr(*base_type);
+		Variable * v = visitVariable_type(vt, base_type);
+		v->latched = latched;
+		arch->varialbles.push_back(v);
+		first = false;
+	}
+}
+
+Variable * ModuleParser::visitVariable_type(
+		Verilog2001Parser::Variable_typeContext * ctx, Expr * base_type) {
+	// variable_type
+	//    : variable_identifier ('=' constant_expression)?
+	//    | variable_identifier dimension (dimension)*
+	//    ;
+	auto vi = ctx->variable_identifier();
+	auto t = base_type;
+	for (auto d : ctx->dimension()) {
+		t = new Expr(t, OperatorType::INDEX, VerExprParser::visitDimension(d));
+	}
+	Expr * def_val = nullptr;
+	auto c = ctx->constant_expression();
+	if (c) {
+		def_val = VerExprParser::visitConstant_expression(c);
+	}
+	return visitVariable_identifier(vi, t, def_val);
+}
+
+Variable * ModuleParser::visitVariable_identifier(
+		Verilog2001Parser::Variable_identifierContext * ctx, Expr * t,
+		Expr * def_val) {
+	// variable_identifier
+	//    : identifier
+	//    ;
+	auto id = VerExprParser::visitIdentifier(ctx->identifier());
+	auto v = new Variable(id->extractStr(), t, def_val);
+	delete id;
+	return v;
 }
 
 void ModuleParser::visitNon_port_module_item(

@@ -23,8 +23,7 @@ public:
 			std::vector<Port*> * ports);
 	static std::vector<Port*>* visitList_of_ports(
 			Verilog2001Parser::List_of_portsContext* ctx);
-	static std::vector<Port*> * visitPort(
-			Verilog2001Parser::PortContext* ctx);
+	static std::vector<Port*> * visitPort(Verilog2001Parser::PortContext* ctx);
 	static std::vector<Port*> *visitPort_expression(
 			Verilog2001Parser::Port_expressionContext* ctx);
 	static Port * visitPort_reference(

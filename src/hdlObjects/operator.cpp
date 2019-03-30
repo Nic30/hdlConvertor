@@ -7,7 +7,7 @@ Operator::Operator() {
 	op = ARROW;
 }
 
-Operator::Operator(const Operator & o){
+Operator::Operator(const Operator & o) {
 	if (o.operands) {
 		auto ops = new std::vector<Expr*>();
 		for (auto op : *o.operands) {
@@ -56,6 +56,8 @@ Operator * Operator::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	return op;
 }
 Operator::~Operator() {
+	// do not delete the variables as they may be shared
+	// and they are deleted on delete of scope itself
 	if (operands) {
 		for (auto o : *operands) {
 			delete o;

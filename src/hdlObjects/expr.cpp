@@ -10,7 +10,11 @@ Expr::Expr() {
 }
 
 Expr::Expr(const Expr & expr) {
-	data = expr.data->clone();
+	if (expr.data == nullptr or expr.data == &Type_t) {
+		data = expr.data;
+	} else {
+		data = expr.data->clone();
+	}
 }
 
 Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
@@ -127,13 +131,13 @@ Expr * Expr::null() {
 char * Expr::extractStr() {
 	Symbol * literal = dynamic_cast<Symbol*>(data);
 	return literal->value._str;
-
 }
 
 Expr::~Expr() {
 	if (data && data != &Type_t)
 		delete data;
 }
+
 #ifdef USE_PYTHON
 PyObject * Expr::toJson() const {
 	PyObject *d = PyDict_New();

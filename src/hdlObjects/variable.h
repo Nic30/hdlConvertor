@@ -6,10 +6,11 @@
 
 class Variable: public Named {
 public:
-	std::shared_ptr<Expr> type;
+	Expr * type;
 	Expr * value;
+	bool latched;
 
-	Variable(std::string id, const std::shared_ptr<Expr> & type, Expr * val);
+	Variable(std::string id, Expr * type, Expr * val);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif

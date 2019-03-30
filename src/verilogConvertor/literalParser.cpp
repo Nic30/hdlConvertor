@@ -1,7 +1,6 @@
 #include "literalParser.h"
 
-Expr * VerLiteralParser::visitNumber(
-		Verilog2001Parser::NumberContext* ctx) {
+Expr * VerLiteralParser::visitNumber(Verilog2001Parser::NumberContext* ctx) {
 	// number :
 	// Decimal_number
 	// | Octal_number
@@ -29,12 +28,17 @@ Expr * VerLiteralParser::visitNumber(
 	return NULL;
 
 }
-Expr * VerLiteralParser::parseSimple_identifier(
-		antlr4::tree::TerminalNode* n) {
+Expr * VerLiteralParser::parseSimple_identifier(antlr4::tree::TerminalNode* n) {
 	return Expr::ID(n->getText());
 }
-Expr * VerLiteralParser::parseIntNumber(
-		antlr4::tree::TerminalNode* n,
+Expr * VerLiteralParser::parseEscaped_identifier(
+		antlr4::tree::TerminalNode* n) {
+	auto s = n->getText();
+	s = s.substr(1);
+	return Expr::ID(s);
+}
+
+Expr * VerLiteralParser::parseIntNumber(antlr4::tree::TerminalNode* n,
 		int radix) {
 	// Decimal_number :
 	// Unsigned_number

@@ -17,6 +17,7 @@ class VerLiteralParser {
 public:
 	static Expr * visitNumber(Verilog2001Parser::NumberContext * ctx);
 	static Expr * parseSimple_identifier(antlr4::tree::TerminalNode * n);
+	static Expr * parseEscaped_identifier(antlr4::tree::TerminalNode* n);
 	static Expr * parseIntNumber(antlr4::tree::TerminalNode * n, int radix);
 	static Expr * visitString(antlr4::tree::TerminalNode * n);
 };
