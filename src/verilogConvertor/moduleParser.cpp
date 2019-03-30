@@ -231,7 +231,7 @@ void ModuleParser::visitModule_or_generate_item(
 	}
 	auto ca = ctx->continuous_assign();
 	if (ca) {
-		for (auto stm: VerStatementParser::vistContinuous_assign(ca))
+		for (auto stm : VerStatementParser::vistContinuous_assign(ca))
 			arch->statements.push_back(stm);
 		return;
 	}
@@ -359,7 +359,8 @@ void ModuleParser::visitNet_declaration(
 	auto nt = ctx->net_type();
 	if (nt->getText() != "wire") {
 		NotImplementedLogger::print(
-				string("ModuleParser.visitNet_declaration.net_type different than wire (")
+				string(
+						"ModuleParser.visitNet_declaration.net_type different than wire (")
 						+ nt->getText() + ")");
 	}
 	auto del = ctx->delay3();
@@ -528,5 +529,41 @@ void ModuleParser::visitNon_port_module_item(
 	// | attribute_instance* specify_block
 	// | attribute_instance* specparam_declaration
 	// ;
-	NotImplementedLogger::print("ModuleParser.visitNon_port_module_item");
+	auto gi = ctx->generated_instantiation();
+	if (gi) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNon_port_module_item.generated_instantiation");
+		return;
+	}
+	auto lp = ctx->local_parameter_declaration();
+	if (lp) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNon_port_module_item.local_parameter_declaration");
+		return;
+	}
+	auto mg = ctx->module_or_generate_item();
+	if (mg) {
+		visitModule_or_generate_item(mg);
+		return;
+	}
+	auto pd = ctx->parameter_declaration();
+	if (pd) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNon_port_module_item.parameter_declaration");
+		return;
+	}
+	auto sb = ctx->specify_block();
+	if (sb) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNon_port_module_item.specify_block");
+		return;
+	}
+	auto sd = ctx->specparam_declaration();
+	if (sd) {
+		NotImplementedLogger::print(
+				"ModuleParser.visitNon_port_module_item.specparam_declaration");
+		return;
+	}
+	throw runtime_error(
+			"ModuleParser.visitNon_port_module_item - unexpected transition");
 }
