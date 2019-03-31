@@ -393,8 +393,9 @@ Expr * VerExprParser::visitFunction_call(
 Expr * VerExprParser::visitMultiple_concatenation(
 		Verilog2001Parser::Multiple_concatenationContext * ctx) {
 	// multiple_concatenation : '{' constant_expression concatenation '}' ;
-	NotImplementedLogger::print("ExpressionParser.visitMultiple_concatenation");
-	return NULL;
+	auto ce = visitConstant_expression(ctx->constant_expression());
+	auto c = visitConcatenation(ctx->concatenation());
+	return new Expr(ce, OperatorType::REPL_CONCAT, c);
 }
 Expr * VerExprParser::visitConcatenation(
 		Verilog2001Parser::ConcatenationContext * ctx) {

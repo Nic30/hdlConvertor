@@ -12,8 +12,9 @@ enum OperatorType {
 	MOD,
 	REM,
 	CONCAT,// concatenation of signals
+	REPL_CONCAT, // replicative concatenation {<N>, <item>} duplicates and concatenates the item N times
 	POW, // bin operator power of
-	ABS, // absolute val
+	ABS, // absolute value
 	NOT,
 	NEG, // negation
 	LOG_AND,

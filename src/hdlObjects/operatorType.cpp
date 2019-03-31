@@ -12,6 +12,7 @@ static const char* const opTypeToStr[] = {
 	"MOD",
 	"REM",
 	"CONCAT",
+	"REPL_CONCAT",
 	"POW",
 	"ABS",
 	"NOT",
