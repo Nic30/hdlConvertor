@@ -42,7 +42,8 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2);
 	s->sub_statements.push_back(ifTrue);
-	s->sub_statements.push_back(ifFalse);
+	if (ifFalse)
+		s->sub_statements.push_back(ifFalse);
 	return s;
 }
 Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
@@ -136,8 +137,8 @@ PyObject * Statement::toJson() const {
 		if (elseIfs) {
 			PyDict_SetItemString(d, "elseIfs", elseIfs);
 		}
-		if (sub_statements.size() > 1) {
-			addJsonArrP(d, "ifFalse", *sub_statements[1]);
+		if (sub_statements.size() > elif_cnt + 1) {
+			addJsonArrP(d, "ifFalse", *sub_statements.at(elif_cnt + 1));
 		} else {
 			addJsonArr_empty(d, "ifFalse");
 		}
