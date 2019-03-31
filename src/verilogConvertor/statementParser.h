@@ -6,13 +6,24 @@
 
 class VerStatementParser {
 public:
-	static Statement * visitAlways_construct(
+	// single statement or many statements, only one is set at the time, other is nullptr
+	using stm_or_block_t = std::pair<Statement *, std::vector<Statement*>*>;
+	static stm_or_block_t visitAlways_construct(
 			Verilog2001::Verilog2001Parser::Always_constructContext * ctx);
-	static Statement * visitStatement(
+	static stm_or_block_t visitStatement(
 			Verilog2001::Verilog2001Parser::StatementContext * ctx);
+	static Statement * visitNonblocking_assignment(
+			Verilog2001::Verilog2001Parser::Nonblocking_assignmentContext * ctx);
+	static std::vector<Statement*> * visitSeq_block(
+			Verilog2001::Verilog2001Parser::Seq_blockContext * ctx);
+	static Statement * visitConditional_statement(
+			Verilog2001::Verilog2001Parser::Conditional_statementContext * ctx);
 	static Statement * visitProcedural_timing_control_statement(
 			Verilog2001::Verilog2001Parser::Procedural_timing_control_statementContext * ctx);
-	static Statement * visitStatement_or_null(
+	// utility function which ensures that the statements are always wrapped in vector
+	static std::vector<Statement *> * visitStatement_or_null__wrapped(
+			Verilog2001::Verilog2001Parser::Statement_or_nullContext * ctx);
+	static stm_or_block_t visitStatement_or_null(
 			Verilog2001::Verilog2001Parser::Statement_or_nullContext * ctx);
 	static std::vector<Expr*> * visitDelay_or_event_control(
 			Verilog2001::Verilog2001Parser::Delay_or_event_controlContext * ctx);

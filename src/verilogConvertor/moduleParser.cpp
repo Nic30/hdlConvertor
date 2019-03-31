@@ -257,7 +257,13 @@ void ModuleParser::visitModule_or_generate_item(
 	auto a = ctx->always_construct();
 	if (a) {
 		auto stm = VerStatementParser::visitAlways_construct(a);
-		arch->statements.push_back(stm);
+		if (stm.first)
+			arch->statements.push_back(stm.first);
+		else if (stm.second) {
+			for (Statement * s : *stm.second) {
+				arch->statements.push_back(s);
+			}
+		}
 		return;
 	}
 

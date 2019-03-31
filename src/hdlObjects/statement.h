@@ -24,8 +24,6 @@ public:
 	 * for PROCESS exprs contains the sensitivity list items, if sensitivity is not specified the re is only one time nullptr
 	 */
 	std::vector< Expr *> exprs;
-	// Expr* op0; // expr, cond, return, dst
-	// Expr* op1; // src
 
 	Statement(StatementType type);
 	static Statement* EXPR(Expr * e);
@@ -34,11 +32,16 @@ public:
 			Expr * cond,
 			std::vector<Statement*>* ifTrue,
 			std::vector<Statement*>* ifFalse);
+	static Statement* IF(
+			Expr * cond,
+			std::vector<Statement*>* ifTrue,
+			const std::vector<std::pair<Expr*, std::vector<Statement*>*>> & elseIfs,
+			std::vector<Statement*>* ifFalse);
 	static Statement* RETURN(Expr * val);
 	static Statement* RETURN();
 	static Statement* ASSIG(Expr * dst, Expr * src);
 	static Statement* WHILE(Expr * cond, std::vector<Statement*>* body);
-	static Statement* PROCECESS(std::vector<Expr*> * sensitivity, std::vector<Statement*>* body);
+	static Statement* PROCESS(std::vector<Expr*> * sensitivity, std::vector<Statement*>* body);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif

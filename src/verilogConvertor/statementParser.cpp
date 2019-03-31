@@ -5,14 +5,14 @@
 using namespace std;
 using namespace Verilog2001;
 
-Statement * VerStatementParser::visitAlways_construct(
+VerStatementParser::stm_or_block_t VerStatementParser::visitAlways_construct(
 		Verilog2001Parser::Always_constructContext * ctx) {
 	// always_construct
 	//    : 'always' statement
 	//    ;
 	return visitStatement(ctx->statement());
 }
-Statement * VerStatementParser::visitStatement(
+VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 		Verilog2001Parser::StatementContext * ctx) {
 	//statement
 	//   : attribute_instance* blocking_assignment ';'
@@ -38,91 +38,167 @@ Statement * VerStatementParser::visitStatement(
 	auto ba = ctx->blocking_assignment();
 	if (ba) {
 		NotImplementedLogger::print("VerStatementParser.blocking_assignment");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto cs = ctx->case_statement();
 	if (cs) {
 		NotImplementedLogger::print("VerStatementParser.case_statement");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto conds = ctx->conditional_statement();
 	if (conds) {
-		NotImplementedLogger::print("VerStatementParser.conditional_statement");
-		return nullptr;
+		return {visitConditional_statement(conds), nullptr};
 	}
 	auto d = ctx->disable_statement();
 	if (d) {
 		NotImplementedLogger::print("VerStatementParser.disable_statement");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto et = ctx->event_trigger();
 	if (et) {
 		NotImplementedLogger::print("VerStatementParser.event_trigger");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto ls = ctx->loop_statement();
 	if (ls) {
 		NotImplementedLogger::print("VerStatementParser.loop_statement");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto nba = ctx->nonblocking_assignment();
 	if (nba) {
-		NotImplementedLogger::print(
-				"VerStatementParser.nonblocking_assignment");
-		return nullptr;
+		return {visitNonblocking_assignment(nba), nullptr};
 	}
 	auto pb = ctx->par_block();
 	if (pb) {
 		NotImplementedLogger::print("VerStatementParser.par_block");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto pca = ctx->procedural_continuous_assignments();
 	if (pca) {
 		NotImplementedLogger::print(
 				"VerStatementParser.procedural_continuous_assignments");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto ptcs = ctx->procedural_timing_control_statement();
 	if (ptcs) {
-		return visitProcedural_timing_control_statement(ptcs);
+		return {visitProcedural_timing_control_statement(ptcs), nullptr};
 	}
 	auto sb = ctx->seq_block();
 	if (sb) {
-		NotImplementedLogger::print("VerStatementParser.seq_block");
-		return nullptr;
+		return {nullptr, visitSeq_block(sb)};
 	}
 	auto ste = ctx->system_task_enable();
 	if (ste) {
 		NotImplementedLogger::print("VerStatementParser.system_task_enable");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto ta = ctx->task_enable();
 	if (ta) {
 		NotImplementedLogger::print("VerStatementParser.task_enable");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	auto ws = ctx->wait_statement();
 	if (ws) {
 		NotImplementedLogger::print("VerStatementParser.wait_statement");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 	throw std::runtime_error(
 			"VerStatementParser.visitStatement - probably unimplemented transition");
 }
+Statement * VerStatementParser::visitNonblocking_assignment(Verilog2001Parser::Nonblocking_assignmentContext * ctx) {
+	// nonblocking_assignment
+	//    : variable_lvalue '<=' (delay_or_event_control)? expression
+	//    ;
+	auto dec = ctx->delay_or_event_control();
+	if (dec) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitNonblocking_assignment.delay_or_event_control");
+	}
+	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
+	auto src = VerExprParser::visitExpression(ctx->expression());
+	return Statement::ASSIG(dst, src);
+}
+std::vector<Statement*> * VerStatementParser::visitSeq_block(
+		Verilog2001Parser::Seq_blockContext * ctx) {
+	// seq_block
+	//    : 'begin' (':' block_identifier (block_item_declaration)*)? (statement)* 'end'
+	//    ;
+	auto bi = ctx->block_identifier();
+	if (bi) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitSeq_block.block_identifier");
+	}
+	auto bd = ctx->block_item_declaration();
+	if (bd.size()) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitSeq_block.block_item_declaration");
+	}
+	auto _stms = ctx->statement();
+	auto stms = new vector<Statement*>;
+	stms->reserve(_stms.size());
+	for (auto stm : _stms) {
+		auto r = visitStatement(stm);
+		if (r.first) {
+			stms->push_back(r.first);
+		} else if (r.second) {
+			// [fixme] block variables can get mixed together
+			for (auto s : *r.second)
+				stms->push_back(s);
+			delete r.second;
+		}
+	}
+	return stms;
+}
+Statement * VerStatementParser::visitConditional_statement(
+		Verilog2001Parser::Conditional_statementContext * ctx) {
+	// conditional_statement
+	//    : 'if' '(' expression ')' statement_or_null ('else' statement_or_null)?
+	//    | if_else_if_statement
+	//    ;
+	//
+	auto e = ctx->expression();
+	if (e) {
+		auto cond = VerExprParser::visitExpression(e);
+		auto ifTrue = visitStatement_or_null__wrapped(
+				ctx->statement_or_null(0));
+		auto ifFalse = ctx->statement_or_null(1);
+		return Statement::IF(cond, ifTrue,
+				visitStatement_or_null__wrapped(ifFalse));
+	}
 
+	// if_else_if_statement
+	//    : 'if' '(' expression ')' statement_or_null ('else' 'if' '(' expression ')' statement_or_null)* ('else' statement_or_null)?
+	//    ;
+	NotImplementedLogger::print(
+			"VerStatementParser.conditional_statement.if_else_if_statement");
+	return nullptr;
+}
 Statement * VerStatementParser::visitProcedural_timing_control_statement(
 		Verilog2001::Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
 	// procedural_timing_control_statement
 	//    : delay_or_event_control statement_or_null
 	//    ;
 	auto sens_list = visitDelay_or_event_control(ctx->delay_or_event_control());
-	auto stms = visitStatement_or_null(ctx->statement_or_null());
-	NotImplementedLogger::print(
-			"VerStatementParser.procedural_timing_control_statement");
-	return nullptr;
+	auto stms = visitStatement_or_null__wrapped(ctx->statement_or_null());
+	return Statement::PROCESS(sens_list, stms);
 }
 
-Statement * VerStatementParser::visitStatement_or_null(Verilog2001Parser::Statement_or_nullContext * ctx) {
+vector<Statement *> * VerStatementParser::visitStatement_or_null__wrapped(
+		Verilog2001Parser::Statement_or_nullContext * ctx) {
+	if (ctx == nullptr)
+		return nullptr;
+	auto r = visitStatement_or_null(ctx);
+	if (r.first) {
+		auto res = new vector<Statement*>(1);
+		(*res)[0] = r.first;
+		return res;
+	} else {
+		return r.second;
+	}
+
+}
+VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
+		Verilog2001Parser::Statement_or_nullContext * ctx) {
 	// statement_or_null
 	//    : statement
 	//    | attribute_instance* ';'
@@ -133,7 +209,7 @@ Statement * VerStatementParser::visitStatement_or_null(Verilog2001Parser::Statem
 	} else {
 		NotImplementedLogger::print(
 				"VerStatementParser.procedural_timing_control_statement");
-		return nullptr;
+		return {nullptr, nullptr};
 	}
 }
 

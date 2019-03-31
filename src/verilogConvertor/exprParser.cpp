@@ -1,5 +1,17 @@
 #include "exprParser.h"
 using namespace std;
+using namespace Verilog2001;
+
+Expr * reduce(const std::vector<Expr*> & ops, OperatorType op) {
+	Expr * res = nullptr;
+	for (auto p : ops) {
+		if (res == nullptr)
+			res = p;
+		else
+			res = new Expr(res, op, p);
+	}
+	return res;
+}
 
 Expr * VerExprParser::visitConstant_expression(
 		Verilog2001Parser::Constant_expressionContext * ctx) {
@@ -208,14 +220,8 @@ Expr * VerExprParser::visitNet_concatenation(
 			parts.push_back(visitNet_concatenation(ncv->net_concatenation()));
 		}
 	}
-	Expr * res = nullptr;
-	for (auto p : parts) {
-		if (res == nullptr)
-			res = p;
-		else
-			res = new Expr(res, OperatorType::CONCAT, p);
-	}
-	return res;
+
+	return reduce(parts, OperatorType::CONCAT);
 }
 Expr * VerExprParser::visitHierarchical_net_identifier(
 		Verilog2001Parser::Hierarchical_net_identifierContext * ctx) {
@@ -242,7 +248,7 @@ Expr * VerExprParser::visitExpression(
 	while (childs != ctx->children.end()) {
 		ch = *childs;
 		childs++;
-		auto binOp = (Verilog2001Parser::Binary_operatorContext*) ch;
+		auto binOp = dynamic_cast<Verilog2001Parser::Binary_operatorContext*>(ch);
 		if (binOp) {
 			while (true) {
 				ch2 = *childs;
@@ -300,7 +306,8 @@ Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
 			return e;
 		}
 	}
-	return VerLiteralParser::visitString(ctx->String());
+	auto s = ctx->String();
+	return VerLiteralParser::visitString(s);
 }
 Expr * VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext* ctx) {
 	// primary :
@@ -552,3 +559,66 @@ Expr * VerExprParser::visitEvent_primary(
 	}
 }
 
+Expr * VerExprParser::visitVariable_lvalue(
+		Verilog2001Parser::Variable_lvalueContext * ctx) {
+	// variable_lvalue
+	//    : hierarchical_variable_identifier
+	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')*
+	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
+	//    | hierarchical_variable_identifier '[' range_expression ']'
+	//    | variable_concatenation
+	//    ;
+
+	// hierarchical_variable_identifier
+	//    : hierarchical_identifier
+	//    ;
+	auto hi = ctx->hierarchical_variable_identifier()->hierarchical_identifier();
+	if (hi) {
+		auto id = visitHierarchical_identifier(hi);
+		for (auto e : ctx->expression()) {
+			auto expr = visitExpression(e);
+			id = new Expr(id, OperatorType::INDEX, expr);
+		}
+		return id;
+	} else {
+		auto vc = ctx->variable_concatenation();
+		return visitVariable_concatenation(vc);
+	}
+}
+
+Expr * VerExprParser::visitVariable_concatenation(
+		Verilog2001Parser::Variable_concatenationContext* ctx) {
+	// variable_concatenation
+	//    : '{' variable_concatenation_value (',' variable_concatenation_value)* '}'
+	//    ;
+	//
+	// variable_concatenation_value
+	//    : hierarchical_variable_identifier
+	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')*
+	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
+	//    | hierarchical_variable_identifier '[' range_expression ']'
+	//    | variable_concatenation
+	//    ;
+	// collect operands of concatenation
+	vector<Expr *> parts;
+	for (auto ncv : ctx->variable_concatenation_value()) {
+		auto hi = ncv->hierarchical_variable_identifier()->hierarchical_identifier();
+		if (hi) {
+			Expr * id = visitHierarchical_identifier(hi);
+			for (auto ce : ncv->expression()) {
+				auto c = visitExpression(ce);
+				id = new Expr(id, OperatorType::INDEX, c);
+			}
+			auto re = ncv->range_expression();
+			if (re) {
+				auto r = visitRange_expression(re);
+				id = new Expr(id, OperatorType::INDEX, r);
+			}
+			return id;
+		} else {
+			parts.push_back(visitVariable_concatenation(ncv->variable_concatenation()));
+		}
+	}
+
+	return reduce(parts, OperatorType::CONCAT);
+}
