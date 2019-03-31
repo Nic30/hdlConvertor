@@ -21,18 +21,17 @@ const char * StatementType_toString(StatementType type) {
 
 Statement::Statement(StatementType type) {
 	this->type = type;
-	this->op0 = NULL;
-	this->op1 = NULL;
+	exprs.reserve(4);
 }
 
 Statement * Statement::EXPR(Expr * e) {
 	Statement * s = new Statement(s_EXPR);
-	s->op0 = e;
+	s->exprs.push_back(e);
 	return s;
 }
 Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
 	Statement * s = new Statement(s_IF);
-	s->op0 = cond;
+	s->exprs.push_back(cond);
 	s->sub_statements.push_back(ifTrue);
 
 	return s;
@@ -40,7 +39,7 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
 Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 		std::vector<Statement*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
-	s->op0 = cond;
+	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2);
 	s->sub_statements.push_back(ifTrue);
 	s->sub_statements.push_back(ifFalse);
@@ -49,7 +48,7 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 }
 Statement* Statement::RETURN(Expr * val) {
 	Statement * s = RETURN();
-	s->op0 = val;
+	s->exprs.push_back(val);
 	return s;
 }
 Statement* Statement::RETURN() {
@@ -57,25 +56,26 @@ Statement* Statement::RETURN() {
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
 	Statement * s = new Statement(s_ASSIGMENT);
-	s->op0 = dst;
-	s->op1 = src;
-
+	s->exprs.push_back(dst);
+	s->exprs.push_back(src);
 	return s;
 }
 Statement* Statement::WHILE(Expr * cond, std::vector<Statement*> * body) {
 	Statement * s = new Statement(s_WHILE);
-	s->op0 = cond;
+	s->exprs.push_back(cond);
 	s->sub_statements.push_back(body);
 	return s;
-
 }
 
 Statement* Statement::PROCECESS(std::vector<Expr*> * sensitivity,
 		std::vector<Statement*>* body) {
 	Statement * s = new Statement(s_PROCESS);
-	s->sub_statements.reserve(2);
-	s->sub_statements.push_back(
-			reinterpret_cast<std::vector<Statement*> *>(sensitivity));
+	if (sensitivity) {
+		s->exprs.resize(sensitivity->size());
+		std::copy(sensitivity->begin(), sensitivity->end(), s->exprs.begin());
+	} else {
+		s->exprs.push_back(nullptr);
+	}
 	s->sub_statements.push_back(body);
 	return s;
 }
@@ -87,11 +87,10 @@ PyObject * Statement::toJson() const {
 			PyUnicode_FromString(StatementType_toString(type)));
 	std::vector<Statement*> * _case = NULL;
 
-	switch (type) {
-	case s_EXPR:
-		return op0->toJson();
-	case s_IF:
-		PyDict_SetItemString(d, "cond", op0->toJson());
+	if (type == s_EXPR) {
+		return exprs[0]->toJson();
+	} else if (type == s_IF) {
+		PyDict_SetItemString(d, "cond", exprs[0]->toJson());
 		assert(sub_statements);
 		_case = sub_statements[0];
 		addJsonArrP(d, "ifTrue", *_case);
@@ -101,49 +100,34 @@ PyObject * Statement::toJson() const {
 		} else {
 			addJsonArr_empty(d, "ifFalse");
 		}
-
-		break;
-	case s_RETURN:
-		PyDict_SetItemString(d, "val", op0->toJson());
-		break;
-	case s_ASSIGMENT:
-		PyDict_SetItemString(d, "dst", op0->toJson());
-		PyDict_SetItemString(d, "src", op1->toJson());
-		break;
-	case s_WHILE:
-		PyDict_SetItemString(d, "cond", op0->toJson());
+	} else if (type == s_RETURN) {
+		PyDict_SetItemString(d, "val", exprs[0]->toJson());
+	} else if (type == s_ASSIGMENT) {
+		PyDict_SetItemString(d, "dst", exprs[0]->toJson());
+		PyDict_SetItemString(d, "src", exprs[1]->toJson());
+	} else if (type == s_WHILE) {
+		PyDict_SetItemString(d, "cond", exprs[0]->toJson());
 		addJsonArrP(d, "body", *sub_statements[0]);
-		break;
-	case s_PROCESS:
-		if (sub_statements[0]) {
-			addJsonArrP(d, "body",
-					*reinterpret_cast<std::vector<Expr*>*>(sub_statements[0]));
+	} else if (type == s_PROCESS) {
+		if (exprs[0]) {
+			addJsonArrP(d, "sensitivity", exprs);
 		}
 		addJsonArrP(d, "body", *sub_statements[1]);
-		break;
-	default:
-		throw "Invalid StatementType ";
+	} else {
+		throw std::runtime_error("Invalid StatementType");
 	}
 	return d;
 }
 #endif
 
 Statement::~Statement() {
-	if (type == s_PROCESS) {
-		delete reinterpret_cast<std::vector<Expr*>*>(sub_statements[0]);
-		delete sub_statements[1];
-	} else {
-		for (auto sl : sub_statements) {
-			for (auto stm : *sl) {
-				delete stm;
-			}
-			delete sl;
+	for (auto sl : sub_statements) {
+		for (auto stm : *sl) {
+			delete stm;
 		}
-
-		if (op0)
-			delete op0;
-
-		if (op1)
-			delete op1;
+		delete sl;
 	}
+	for (auto e : exprs)
+		delete e;
 }
+

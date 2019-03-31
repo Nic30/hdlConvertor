@@ -15,8 +15,17 @@ public:
 	std::string label;
 	StatementType type;
 	std::vector< std::vector<Statement*> * > sub_statements;
-	Expr* op0; // expr, cond, return, dst
-	Expr* op1; // src
+	/*
+	 * for EXPR exprs contains only one item which is this value
+	 * for IF exprs containst the main condition and conditions from the else ifs
+	 * for RETURN exprs contains (optionaly) the return value
+	 * for ASSIG exprs contains dst, src in this order
+	 * for WHILE exprs contains the condition
+	 * for PROCESS exprs contains the sensitivity list items, if sensitivity is not specified the re is only one time nullptr
+	 */
+	std::vector< Expr *> exprs;
+	// Expr* op0; // expr, cond, return, dst
+	// Expr* op1; // src
 
 	Statement(StatementType type);
 	static Statement* EXPR(Expr * e);
