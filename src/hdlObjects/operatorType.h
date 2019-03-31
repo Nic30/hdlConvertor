@@ -39,7 +39,9 @@ enum OperatorType {
 	TERNARY,
 	DOT,
 	CALL,
-	ARROW
+	ARROW,
+	RISING,
+	FALLING,
 };
 
 const char* OperatorType_toString(OperatorType opt);
