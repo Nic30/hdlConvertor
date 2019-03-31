@@ -19,8 +19,10 @@ class VerExprParser {
 public:
 	static Expr * visitExpression(Verilog2001Parser::ExpressionContext * ctx);
 	static Expr * vistiNet_lvalue(Verilog2001Parser::Net_lvalueContext * ctx);
-	static Expr * visitNet_concatenation(Verilog2001Parser::Net_concatenationContext * ctx);
-	static Expr * visitHierarchical_net_identifier(Verilog2001Parser::Hierarchical_net_identifierContext * ctx);
+	static Expr * visitNet_concatenation(
+			Verilog2001Parser::Net_concatenationContext * ctx);
+	static Expr * visitHierarchical_net_identifier(
+			Verilog2001Parser::Hierarchical_net_identifierContext * ctx);
 	static Expr * visitConstant_expression(
 			Verilog2001Parser::Constant_expressionContext * ctx);
 	static Expr * visitDimension(Verilog2001Parser::DimensionContext * ctx);
@@ -29,7 +31,8 @@ public:
 	static Expr * visitRange_expression(
 			Verilog2001Parser::Range_expressionContext * ctx);
 	static Expr * visitRange_(Verilog2001Parser::Range_Context * ctx);
-	static OperatorType visitUnary_operator(Verilog2001Parser::Unary_operatorContext * ctx);
+	static OperatorType visitUnary_operator(
+			Verilog2001Parser::Unary_operatorContext * ctx);
 	static OperatorType visitBinary_operator(
 			Verilog2001Parser::Binary_operatorContext * ctx);
 	static Expr * visitTerm(Verilog2001Parser::TermContext * ctx);
@@ -57,4 +60,9 @@ public:
 			Verilog2001Parser::Escaped_hierarchical_branchContext * ctx);
 	static Expr * visitMintypmax_expression(
 			Verilog2001Parser::Mintypmax_expressionContext * ctx);
+	static std::vector<Expr*> * visitEvent_expression(
+			Verilog2001Parser::Event_expressionContext * ctx);
+	static Expr * visitEvent_primary(
+			Verilog2001Parser::Event_primaryContext * ctx);
+
 };

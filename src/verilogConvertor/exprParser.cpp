@@ -59,7 +59,8 @@ Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
 					ctx->lsb_constant_expression()->constant_expression()));
 
 }
-OperatorType VerExprParser::visitUnary_operator(Verilog2001Parser::Unary_operatorContext * ctx) {
+OperatorType VerExprParser::visitUnary_operator(
+		Verilog2001Parser::Unary_operatorContext * ctx) {
 	// unary_operator
 	//    : '+'
 	//    | '-'
@@ -77,23 +78,23 @@ OperatorType VerExprParser::visitUnary_operator(Verilog2001Parser::Unary_operato
 
 	if (op == "+")
 		return ADD;
-	else if (op  ==  "-")
+	else if (op == "-")
 		return SUB;
-	else if (op  == "!")
+	else if (op == "!")
 		return NOT;
-	else if (op  == "~" )
+	else if (op == "~")
 		return NEG;
-	else if (op  == "&" )
+	else if (op == "&")
 		return AND;
-	else if (op  == "~&")
+	else if (op == "~&")
 		return NAND;
-	else if (op  == "|" )
+	else if (op == "|")
 		return OR;
-	else if (op  == "~|")
+	else if (op == "~|")
 		return NOR;
-	else if (op  == "^" )
+	else if (op == "^")
 		return XOR;
-	else if (op  == "~^" or op  == "^~")
+	else if (op == "~^" or op == "^~")
 		return XNOR;
 
 	throw std::runtime_error("Unsupported unary operator " + op);
@@ -502,3 +503,52 @@ Expr * VerExprParser::visitMintypmax_expression(
 	}
 	return visitExpression(ctx->expression(0));
 }
+
+std::vector<Expr*> * VerExprParser::visitEvent_expression(
+		Verilog2001Parser::Event_expressionContext * ctx) {
+	// event_expression
+	//    : event_primary ('or' event_primary | ',' event_primary)*
+	//    ;
+	auto res = new std::vector<Expr*>;
+	Expr * actual_exp = nullptr;
+	for (auto child : ctx->children) {
+		auto ep = dynamic_cast<Verilog2001Parser::Event_primaryContext *>(child);
+		if (ep) {
+			auto new_e = visitEvent_primary(ep);
+			if (actual_exp == nullptr) {
+				actual_exp = new_e;
+			} else {
+				actual_exp = new Expr(actual_exp, OperatorType::OR, new_e);
+			}
+		} else if (child->getText() == ",") {
+			res->push_back(actual_exp);
+			actual_exp = nullptr;
+		}
+	}
+	if (actual_exp)
+		res->push_back(actual_exp);
+	return res;
+}
+
+Expr * VerExprParser::visitEvent_primary(
+		Verilog2001Parser::Event_primaryContext * ctx) {
+	// event_primary
+	//    : (expression | 'posedge' expression | 'negedge' expression)
+	//    ;
+	auto first_as_expr =
+			dynamic_cast<Verilog2001Parser::ExpressionContext*>(ctx->children[0]);
+	if (first_as_expr) {
+		return visitExpression(first_as_expr);
+	} else {
+		auto expr =
+				dynamic_cast<Verilog2001Parser::ExpressionContext*>(ctx->children[1]);
+		OperatorType o;
+		if (ctx->children[0]->getText() == "posedge") {
+			o = OperatorType::RISING;
+		} else {
+			o = OperatorType::FALLING;
+		}
+		return new Expr(visitExpression(expr), o, nullptr);
+	}
+}
+
