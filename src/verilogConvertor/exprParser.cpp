@@ -248,7 +248,8 @@ Expr * VerExprParser::visitExpression(
 	while (childs != ctx->children.end()) {
 		ch = *childs;
 		childs++;
-		auto binOp = dynamic_cast<Verilog2001Parser::Binary_operatorContext*>(ch);
+		auto binOp =
+				dynamic_cast<Verilog2001Parser::Binary_operatorContext*>(ch);
 		if (binOp) {
 			while (true) {
 				ch2 = *childs;
@@ -455,7 +456,11 @@ Expr * VerExprParser::visitSimple_hierarchical_identifier(
 	// Escaped_identifier )? ;
 	Expr * shb = visitSimple_hierarchical_branch(
 			ctx->simple_hierarchical_branch());
-	// [TODO] Escaped_identifier
+	auto ei = ctx->Escaped_identifier();
+	if (ei) {
+		return new Expr(shb, OperatorType::DOT,
+				VerLiteralParser::parseEscaped_identifier(ei));
+	}
 	return shb;
 }
 Expr * VerExprParser::visitSimple_hierarchical_branch(
@@ -464,14 +469,31 @@ Expr * VerExprParser::visitSimple_hierarchical_branch(
 	// Simple_identifier ( '[' Decimal_number ']' )?
 	// ( '.' Simple_identifier ( '[' Decimal_number ']' )? )*
 	// ;
-	Expr * top = NULL;
+	Expr * top = nullptr;
+	bool next_is_dot_index = false;
+	bool next_is_index = false;
 	for (auto ch : ctx->children) {
-		if (!top) {
+		if (top == nullptr) {
 			top = VerLiteralParser::parseSimple_identifier(
 					dynamic_cast<antlr4::tree::TerminalNode*>(ch));
 		} else {
-			NotImplementedLogger::print(
-					"ExpressionParser.visitSimple_hierarchical_branch");
+			if (next_is_dot_index) {
+				auto id = VerLiteralParser::parseSimple_identifier(
+						dynamic_cast<antlr4::tree::TerminalNode*>(ch));
+				top = new Expr(top, OperatorType::DOT, id);
+				next_is_dot_index = false;
+			} else if (next_is_index) {
+				auto i = VerLiteralParser::parseIntNumber(
+						dynamic_cast<antlr4::tree::TerminalNode*>(ch), 10);
+				top = new Expr(top, OperatorType::INDEX, i);
+				next_is_index = false;
+			} else {
+				auto t = ch->getText();
+				if (t == "[")
+					next_is_index = true;
+				else if (t == ".")
+					next_is_dot_index = true;
+			}
 		}
 
 	}
@@ -572,7 +594,8 @@ Expr * VerExprParser::visitVariable_lvalue(
 	// hierarchical_variable_identifier
 	//    : hierarchical_identifier
 	//    ;
-	auto hi = ctx->hierarchical_variable_identifier()->hierarchical_identifier();
+	auto hi =
+			ctx->hierarchical_variable_identifier()->hierarchical_identifier();
 	if (hi) {
 		auto id = visitHierarchical_identifier(hi);
 		for (auto e : ctx->expression()) {
@@ -602,7 +625,8 @@ Expr * VerExprParser::visitVariable_concatenation(
 	// collect operands of concatenation
 	vector<Expr *> parts;
 	for (auto ncv : ctx->variable_concatenation_value()) {
-		auto hi = ncv->hierarchical_variable_identifier()->hierarchical_identifier();
+		auto hi =
+				ncv->hierarchical_variable_identifier()->hierarchical_identifier();
 		if (hi) {
 			Expr * id = visitHierarchical_identifier(hi);
 			for (auto ce : ncv->expression()) {
@@ -616,7 +640,8 @@ Expr * VerExprParser::visitVariable_concatenation(
 			}
 			return id;
 		} else {
-			parts.push_back(visitVariable_concatenation(ncv->variable_concatenation()));
+			parts.push_back(
+					visitVariable_concatenation(ncv->variable_concatenation()));
 		}
 	}
 
