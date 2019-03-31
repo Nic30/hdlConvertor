@@ -70,6 +70,9 @@ Statement* Statement::RETURN() {
 	return new Statement(s_RETURN);
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
+	if (dst == nullptr or src == nullptr) {
+		throw std::runtime_error("wrong assig initialization");
+	}
 	Statement * s = new Statement(s_ASSIGMENT);
 	s->exprs.push_back(dst);
 	s->exprs.push_back(src);
@@ -150,7 +153,8 @@ PyObject * Statement::toJson() const {
 		if (exprs[0]) {
 			addJsonArrP(d, "sensitivity", exprs);
 		}
-		addJsonArrP(d, "body", *sub_statements[1]);
+		auto & body = *sub_statements[0];
+		addJsonArrP(d, "body", body);
 	} else {
 		throw std::runtime_error("Invalid StatementType");
 	}

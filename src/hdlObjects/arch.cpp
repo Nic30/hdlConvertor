@@ -2,12 +2,12 @@
 
 #ifdef USE_PYTHON
 PyObject * Arch::toJson() const {
-	PyObject * o = Named::toJson();
 	JSN_DEBUG("Arch - name")
-	PyDict_SetItemString(o, "name", PyUnicode_FromString(name));
+	PyObject * o = Named::toJson();
 
 	JSN_DEBUG("Arch - entityName")
-	PyDict_SetItemString(o, "entityName", PyUnicode_FromString(entityName));
+	if (entityName)
+		PyDict_SetItemString(o, "entityName", PyUnicode_FromString(entityName));
 
 	JSN_DEBUG("Arch - variables")
 	addJsonArrP(o, "variables", varialbles);

@@ -1,4 +1,9 @@
 #include "portParser.h"
+#include "../notImplementedLogger.h"
+#include "utils.h"
+#include "exprParser.h"
+
+using namespace Verilog2001;
 
 std::vector<Port*>* PortParser::addTypeSpecToPorts(Direction direction,
 		Verilog2001Parser::Net_typeContext* net_type, bool signed_,

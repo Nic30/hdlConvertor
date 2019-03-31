@@ -149,9 +149,9 @@ PyObject * Expr::toJson() const {
 		if (literal)
 			PyDict_SetItemString(d, "literal", literal->toJson());
 		else if (data)
-			throw "Expr is improperly initialized";
+			throw std::runtime_error("Expr is improperly initialized");
 		else
-			throw "Expr has NULL data";
+			throw std::runtime_error("Expr has NULL data");
 	}
 	//Py_INCREF(d);
 	return d;
@@ -167,7 +167,7 @@ void Expr::dump(int indent) const {
 		if (literal) {
 			dumpItemP("literal", indent + INDENT_INCR, literal) << "\n";
 		} else
-			throw "Expr is improperly initialized";
+			throw std::runtime_error("Expr is improperly initialized");
 	}
 	mkIndent(indent) << "}";
 }

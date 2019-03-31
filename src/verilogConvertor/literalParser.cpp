@@ -1,4 +1,7 @@
 #include "literalParser.h"
+#include "../notImplementedLogger.h"
+
+using namespace Verilog2001;
 
 Expr * VerLiteralParser::visitNumber(Verilog2001Parser::NumberContext* ctx) {
 	// number :

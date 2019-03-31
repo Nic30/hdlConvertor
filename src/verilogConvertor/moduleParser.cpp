@@ -1,8 +1,10 @@
 #include "moduleParser.h"
 #include "statementParser.h"
 #include "../notImplementedLogger.h"
+#include "utils.h"
 
 using namespace std;
+using namespace Verilog2001;
 
 ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
 	context = _context;
@@ -62,6 +64,7 @@ void ModuleParser::visitModule_declaration(
 		visitNon_port_module_item(npmi);
 
 	context->entities.push_back(ent);
+	context->architectures.push_back(arch);
 }
 
 std::vector<Variable*>* ModuleParser::visitModule_parameter_port_list(

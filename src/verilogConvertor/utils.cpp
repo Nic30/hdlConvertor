@@ -1,5 +1,9 @@
 #include "utils.h"
 #include "exprParser.h"
+#include "Verilog2001Parser/Verilog2001Lexer.h"
+#include "../hdlObjects/symbolType.h"
+
+using namespace Verilog2001;
 
 Expr *Utils::mkStringT() {
 	return Expr::ID("__str__");
@@ -23,4 +27,11 @@ Expr *Utils::mkWireT(Verilog2001Parser::Range_Context * range, bool signed_) {
 		assert(signed_ == false);
 		return mkWireT();
 	}
+}
+bool Utils::is_signed(antlr4::ParserRuleContext * ctx) {
+	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "signed") == 0)
+	auto st = ctx->getToken(Verilog2001Lexer::T__25, 0);
+	assert(st->getText() == "signed");
+	bool signed_ = st != nullptr;
+	return signed_;
 }

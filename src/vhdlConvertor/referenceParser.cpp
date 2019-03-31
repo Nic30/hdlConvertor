@@ -1,4 +1,9 @@
 #include "referenceParser.h"
+#include "literalParser.h"
+#include "exprParser.h"
+#include "../notImplementedLogger.h"
+
+using namespace vhdl;
 
 Expr * ReferenceParser::visitSelected_name(
 		vhdlParser::Selected_nameContext* ctx) {

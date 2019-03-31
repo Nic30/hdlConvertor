@@ -1,4 +1,12 @@
 #include "designFileParser.h"
+#include "../notImplementedLogger.h"
+#include "archParser.h"
+#include "packageParser.h"
+#include "entityParser.h"
+#include "packageHeaderParser.h"
+#include "referenceParser.h"
+
+using namespace vhdl;
 
 DesignFileParser::DesignFileParser(Context * ctx, bool _hierarchyOnly) : BaseHdlParser(ctx, _hierarchyOnly) {}
 

@@ -1,4 +1,8 @@
 #include "compInstanceParser.h"
+#include "../notImplementedLogger.h"
+#include "referenceParser.h"
+#include "literalParser.h"
+using namespace vhdl;
 
 CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 		vhdlParser::Component_instantiation_statementContext * ctx) {

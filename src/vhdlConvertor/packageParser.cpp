@@ -1,4 +1,11 @@
 #include "packageParser.h"
+#include "literalParser.h"
+#include "interfaceParser.h"
+#include "packageHeaderParser.h"
+#include "statementParser.h"
+#include "../notImplementedLogger.h"
+
+using namespace vhdl;
 
 PackageParser::PackageParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;

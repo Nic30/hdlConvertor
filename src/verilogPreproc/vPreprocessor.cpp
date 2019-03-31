@@ -1,5 +1,7 @@
 #include "../verilogPreproc/vPreprocessor.h"
 
+using namespace antlr4;
+
 void ReplaceStringInPlace(std::string& subject, const std::string& search,
     const std::string& replace) {
 

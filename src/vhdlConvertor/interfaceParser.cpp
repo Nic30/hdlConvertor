@@ -1,4 +1,8 @@
 #include "interfaceParser.h"
+#include "exprParser.h"
+#include "directionParser.h"
+
+using namespace vhdl;
 
 std::vector<Variable*> * InterfaceParser::extractVariables(
 		vhdlParser::Identifier_listContext* identifier_list,

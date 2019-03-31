@@ -1,4 +1,10 @@
 #include "exprParser.h"
+#include "../notImplementedLogger.h"
+#include "literalParser.h"
+#include "referenceParser.h"
+#include "operatoTypeParser.h"
+
+using namespace vhdl;
 
 std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 		vhdlParser::Actual_parameter_partContext* ctx) {

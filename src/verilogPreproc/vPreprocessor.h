@@ -1,20 +1,17 @@
 
 #pragma once
 
-#include "antlr4-runtime.h"
-#include "verilogPreprocParser/verilogPreprocLexer.h"
-#include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocBaseListener.h"
 #include <string>
 #include <map>
 #include <sys/stat.h>
 
+#include "verilogPreprocParser/verilogPreprocLexer.h"
+#include "verilogPreprocParser/verilogPreprocParser.h"
+#include "verilogPreprocParser/verilogPreprocBaseListener.h"
+
 #include "../verilogPreproc/macroPrototype.h"
 #include "../verilogPreproc/macroSymbol.h"
 #include "exception.h"
-
-using namespace antlr4;
-
 
 /*
  * Verilog preprocessor
@@ -24,20 +21,20 @@ using namespace antlr4;
  **/
 class vPreprocessor : public  verilogPreprocBaseListener {
   macroSymbol & _defineDB;
-  CommonTokenStream * _tokens;
+  antlr4::CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
   std::vector<std::string> _stack_incfile;
 
-  void remove_comment(Token * start, Token * end, std::string * str );
+  void remove_comment(antlr4::Token * start, antlr4::Token * end, std::string * str );
   std::string genBlank(size_t n);
   void replace_context_by_bank( antlr4::ParserRuleContext * ctx);
 
   public:
   size_t include_depth_limit;
-  TokenStreamRewriter _rewriter;
+  antlr4::TokenStreamRewriter _rewriter;
 
 
-  vPreprocessor(TokenStream *tokens,
+  vPreprocessor(antlr4::TokenStream *tokens,
       std::vector<std::string> &incdir,
       macroSymbol & defineDB,
       size_t include_depth_limit=100);

@@ -1,4 +1,8 @@
 #include "archParser.h"
+#include "../notImplementedLogger.h"
+#include "compInstanceParser.h"
+
+using namespace vhdl;
 
 ArchParser::ArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;

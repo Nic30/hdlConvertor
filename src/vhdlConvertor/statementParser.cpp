@@ -1,4 +1,8 @@
 #include "statementParser.h"
+#include "exprParser.h"
+#include "../notImplementedLogger.h"
+
+using namespace vhdl;
 
 Statement * StatementParser::visitSequential_statement(
 		vhdlParser::Sequential_statementContext* ctx) {

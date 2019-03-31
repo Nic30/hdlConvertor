@@ -86,7 +86,9 @@ PyObject * Operator::toJson() const {
 	case 1:
 		break;
 	case 2:
-		PyDict_SetItemString(d, "op1", op1->toJson());
+		// some of the bin. operators may appear as unary in verilog
+		if (op1)
+			PyDict_SetItemString(d, "op1", op1->toJson());
 		break;
 	default:
 		throw "Invalid arity of operator";

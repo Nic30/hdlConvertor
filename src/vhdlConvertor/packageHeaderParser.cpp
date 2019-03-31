@@ -1,4 +1,10 @@
 #include "packageHeaderParser.h"
+#include "literalParser.h"
+#include "exprParser.h"
+#include "entityParser.h"
+#include "interfaceParser.h"
+
+using namespace vhdl;
 
 PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
 	ph = new PackageHeader();
