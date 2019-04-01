@@ -165,7 +165,7 @@ OperatorType VerExprParser::visitBinary_operator(
 	return SLA;
 
 }
-Expr * VerExprParser::vistiNet_lvalue(
+Expr * VerExprParser::visitNet_lvalue(
 		Verilog2001Parser::Net_lvalueContext * ctx) {
 	// net_lvalue
 	//    : hierarchical_net_identifier

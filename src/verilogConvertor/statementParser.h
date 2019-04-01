@@ -12,6 +12,12 @@ public:
 			Verilog2001::Verilog2001Parser::Always_constructContext * ctx);
 	static stm_or_block_t visitStatement(
 			Verilog2001::Verilog2001Parser::StatementContext * ctx);
+	static Statement * visitBlocking_assignment(
+			Verilog2001::Verilog2001Parser::Blocking_assignmentContext *ctx);
+	static Statement * visitCase_statement(
+			Verilog2001::Verilog2001Parser::Case_statementContext * ctx);
+	static std::vector<Statement::case_t> visitCase_item(
+			Verilog2001::Verilog2001Parser::Case_itemContext * ctx);
 	static Statement * visitNonblocking_assignment(
 			Verilog2001::Verilog2001Parser::Nonblocking_assignmentContext * ctx);
 	static std::vector<Statement*> * visitSeq_block(

@@ -37,13 +37,11 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	}
 	auto ba = ctx->blocking_assignment();
 	if (ba) {
-		NotImplementedLogger::print("VerStatementParser.blocking_assignment");
-		return {nullptr, nullptr};
+		return {visitBlocking_assignment(ba), nullptr};
 	}
 	auto cs = ctx->case_statement();
 	if (cs) {
-		NotImplementedLogger::print("VerStatementParser.case_statement");
-		return {nullptr, nullptr};
+		return {visitCase_statement(cs), nullptr};
 	}
 	auto conds = ctx->conditional_statement();
 	if (conds) {
@@ -105,7 +103,76 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	throw std::runtime_error(
 			"VerStatementParser.visitStatement - probably unimplemented transition");
 }
-Statement * VerStatementParser::visitNonblocking_assignment(Verilog2001Parser::Nonblocking_assignmentContext * ctx) {
+
+Statement * VerStatementParser::visitBlocking_assignment(
+		Verilog2001::Verilog2001Parser::Blocking_assignmentContext *ctx) {
+	// blocking_assignment
+	//    : variable_lvalue '=' (delay_or_event_control)? expression
+	//    ;
+	auto dec = ctx->delay_or_event_control();
+	if (dec) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitBlocking_assignment.delay_or_event_control");
+	}
+	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
+	auto src = VerExprParser::visitExpression(ctx->expression());
+	return Statement::ASSIG(dst, src);
+}
+
+Statement * VerStatementParser::visitCase_statement(
+		Verilog2001::Verilog2001Parser::Case_statementContext * ctx) {
+	// case_statement
+	//    : 'case' '(' expression ')' case_item (case_item)* 'endcase'
+	//    | 'casez' '(' expression ')' case_item (case_item)* 'endcase'
+	//    | 'casex' '(' expression ')' case_item (case_item)* 'endcase'
+	//    ;
+	if (ctx->children[0]->getText() != "case") {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitCase_statement "
+						+ ctx->children[0]->getText());
+		return nullptr;
+	}
+	auto switchOn = VerExprParser::visitExpression(ctx->expression());
+	std::vector<Statement::case_t> cases;
+	vector<Statement*> * default_ = nullptr;
+	auto _cases = ctx->case_item();
+	cases.reserve(_cases.size());
+	for (auto _c : _cases) {
+		auto cs = visitCase_item(_c);
+		for (auto c : cs) {
+			if (c.first) {
+				cases.push_back(c);
+			} else {
+				assert(default_ == nullptr);
+				default_ = c.second;
+			}
+		}
+	}
+	return Statement::CASE(switchOn, cases, default_);
+
+}
+std::vector<Statement::case_t> VerStatementParser::visitCase_item(
+		Verilog2001::Verilog2001Parser::Case_itemContext * ctx) {
+	// case_item
+	//    : expression (',' expression)* ':' statement_or_null
+	//    | 'default' (':')? statement_or_null
+	//    ;
+	std::vector<Statement::case_t> res;
+	auto conds = ctx->expression();
+	auto stms = ctx->statement_or_null();
+	if (conds.size()) {
+		for (auto c : conds) {
+			auto ce = VerExprParser::visitExpression(c);
+			// [TODO] it would be better to copy the statements instead of parsing again
+			res.push_back( { ce, visitStatement_or_null__wrapped(stms) });
+		}
+	} else {
+		res.push_back( { nullptr, visitStatement_or_null__wrapped(stms) });
+	}
+	return res;
+}
+Statement * VerStatementParser::visitNonblocking_assignment(
+		Verilog2001Parser::Nonblocking_assignmentContext * ctx) {
 	// nonblocking_assignment
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
 	//    ;
@@ -291,6 +358,6 @@ Statement* VerStatementParser::visitNet_assignment(
 		Verilog2001Parser::Net_assignmentContext * ctx) {
 	// net_assignment : net_lvalue '=' expression
 	// ;
-	return Statement::ASSIG(VerExprParser::vistiNet_lvalue(ctx->net_lvalue()),
+	return Statement::ASSIG(VerExprParser::visitNet_lvalue(ctx->net_lvalue()),
 			VerExprParser::visitExpression(ctx->expression()));
 }

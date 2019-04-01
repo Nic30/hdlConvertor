@@ -16,7 +16,7 @@ class VerExprParser {
 public:
 	static Expr * visitExpression(
 			Verilog2001::Verilog2001Parser::ExpressionContext * ctx);
-	static Expr * vistiNet_lvalue(
+	static Expr * visitNet_lvalue(
 			Verilog2001::Verilog2001Parser::Net_lvalueContext * ctx);
 	static Expr * visitNet_concatenation(
 			Verilog2001::Verilog2001Parser::Net_concatenationContext * ctx);

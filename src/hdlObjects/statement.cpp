@@ -1,4 +1,7 @@
 #include "statement.h"
+#include <tuple>
+
+using namespace std;
 
 const char * StatementType_toString(StatementType type) {
 	switch (type) {
@@ -6,6 +9,8 @@ const char * StatementType_toString(StatementType type) {
 		return "EXPR";
 	case s_IF:
 		return "IF";
+	case s_CASE:
+		return "CASE";
 	case s_WHILE:
 		return "WHILE";
 	case s_RETURN:
@@ -15,7 +20,7 @@ const char * StatementType_toString(StatementType type) {
 	case s_PROCESS:
 		return "PROCESS";
 	default:
-		throw std::runtime_error("Invalid StatementType");
+		throw runtime_error("Invalid StatementType");
 	}
 }
 
@@ -29,15 +34,15 @@ Statement * Statement::EXPR(Expr * e) {
 	s->exprs.push_back(e);
 	return s;
 }
-Statement* Statement::IF(Expr * cond, std::vector<Statement*> * ifTrue) {
+Statement* Statement::IF(Expr * cond, vector<Statement*> * ifTrue) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(ifTrue);
 
 	return s;
 }
-Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
-		std::vector<Statement*>* ifFalse) {
+Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
+		vector<Statement*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2);
@@ -46,9 +51,8 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 		s->sub_statements.push_back(ifFalse);
 	return s;
 }
-Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
-		const std::vector<std::pair<Expr*, std::vector<Statement*>*>> & elseIfs,
-		std::vector<Statement*>* ifFalse) {
+Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
+		const vector<case_t> & elseIfs, vector<Statement*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.reserve(1 + elseIfs.size());
 	s->exprs.push_back(cond);
@@ -62,6 +66,20 @@ Statement* Statement::IF(Expr * cond, std::vector<Statement*>* ifTrue,
 		s->sub_statements.push_back(ifFalse);
 	return s;
 }
+Statement* Statement::CASE(Expr * switchOn, const vector<case_t> cases,
+		vector<Statement*>* default_) {
+	auto s = new Statement(s_CASE);
+	s->exprs.reserve(1 + cases.size());
+	s->exprs.push_back(switchOn);
+	s->sub_statements.reserve(cases.size() + 1);
+	for (auto c : cases) {
+		s->exprs.push_back(c.first);
+		s->sub_statements.push_back(c.second);
+	}
+	if (default_)
+		s->sub_statements.push_back(default_);
+	return s;
+}
 Statement* Statement::RETURN(Expr * val) {
 	Statement * s = RETURN();
 	s->exprs.push_back(val);
@@ -72,31 +90,62 @@ Statement* Statement::RETURN() {
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
 	if (dst == nullptr or src == nullptr) {
-		throw std::runtime_error("wrong assig initialization");
+		throw runtime_error("wrong assig initialization");
 	}
 	Statement * s = new Statement(s_ASSIGMENT);
 	s->exprs.push_back(dst);
 	s->exprs.push_back(src);
 	return s;
 }
-Statement* Statement::WHILE(Expr * cond, std::vector<Statement*> * body) {
+Statement* Statement::WHILE(Expr * cond, vector<Statement*> * body) {
 	Statement * s = new Statement(s_WHILE);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(body);
 	return s;
 }
 
-Statement* Statement::PROCESS(std::vector<Expr*> * sensitivity,
-		std::vector<Statement*>* body) {
+Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
+		vector<Statement*>* body) {
 	Statement * s = new Statement(s_PROCESS);
 	if (sensitivity) {
 		s->exprs.resize(sensitivity->size());
-		std::copy(sensitivity->begin(), sensitivity->end(), s->exprs.begin());
+		copy(sensitivity->begin(), sensitivity->end(), s->exprs.begin());
 	} else {
 		s->exprs.push_back(nullptr);
 	}
 	s->sub_statements.push_back(body);
 	return s;
+}
+
+pair<PyObject *, size_t> cases_toJson(vector<Expr*>::const_iterator cond_begin,
+		vector<Expr*>::const_iterator cond_end,
+		vector<vector<Statement*>*>::const_iterator stms_begin) {
+	PyObject * cases = nullptr;
+	size_t size = cond_begin != cond_end;
+	if (cond_begin != cond_end)
+		cases = PyList_New(size);
+	for (size_t case_cnt = 0; case_cnt < size; case_cnt++) {
+		// build tuple representing the elif item
+		auto case_ = PyTuple_New(2);
+		Expr* c = *cond_begin;
+		PyTuple_SetItem(case_, 0, c->toJson());
+		// fill statements in elif
+		auto stms = *stms_begin;
+		PyObject * objList = PyList_New(stms->size());
+		for (unsigned i = 0; i < stms->size(); i++) {
+			auto _o = (*stms)[i];
+			assert(_o);
+			PyObject * o = _o->toJson();
+			PyList_SetItem(objList, i, o);
+		}
+		//Py_IncRef(objList);
+		PyTuple_SetItem(case_, 1, objList);
+		// add to elif list
+		PyList_SetItem(cases, case_cnt, objList);
+		++cond_begin;
+		++stms_begin;
+	}
+	return {cases, size};
 }
 
 #ifdef USE_PYTHON
@@ -111,36 +160,27 @@ PyObject * Statement::toJson() const {
 		PyDict_SetItemString(d, "cond", exprs[0]->toJson());
 		assert(sub_statements);
 		addJsonArrP(d, "ifTrue", *sub_statements[0]);
+		PyObject * elseIfs;
 		size_t elif_cnt;
-
-		PyObject * elseIfs = nullptr;
-		if (exprs.size() > 1)
-			elseIfs = PyList_New(exprs.size() - 1);
-		for (elif_cnt = 0; elif_cnt < exprs.size() - 1; elif_cnt++) {
-			// build tuple representing the elif item
-			auto elif = PyTuple_New(2);
-			PyTuple_SetItem(elif, 0, exprs[1 + elif_cnt]->toJson());
-			// fill statements in elif
-			auto stms = sub_statements[1 + elif_cnt];
-			PyObject * objList = PyList_New(stms->size());
-			for (unsigned i = 0; i < stms->size(); i++) {
-				auto _o = (*stms)[i];
-				assert(_o);
-				PyObject * o = _o->toJson();
-				PyList_SetItem(objList, i, o);
-			}
-			//Py_IncRef(objList);
-			PyTuple_SetItem(elif, 1, objList);
-			// add to elif list
-			PyList_SetItem(elseIfs, elif_cnt, objList);
-		}
+		tie(elseIfs, elif_cnt) = cases_toJson(exprs.begin() + 1, exprs.end(),
+				sub_statements.begin() + 1);
 		if (elseIfs) {
 			PyDict_SetItemString(d, "elseIfs", elseIfs);
 		}
 		if (sub_statements.size() > elif_cnt + 1) {
 			addJsonArrP(d, "ifFalse", *sub_statements.at(elif_cnt + 1));
-		} else {
-			addJsonArr_empty(d, "ifFalse");
+		}
+	} else if (type == s_CASE) {
+		PyDict_SetItemString(d, "switchOn", exprs[0]->toJson());
+		PyObject * c;
+		size_t c_cnt;
+		tie(c, c_cnt) = cases_toJson(exprs.begin() + 1, exprs.end(),
+				sub_statements.begin() + 1);
+		if (c) {
+			PyDict_SetItemString(d, "cases", c);
+		}
+		if (sub_statements.size() == c_cnt) {
+			addJsonArrP(d, "ifFalse", *sub_statements.at(c_cnt - 1));
 		}
 	} else if (type == s_RETURN) {
 		PyDict_SetItemString(d, "val", exprs[0]->toJson());
@@ -157,7 +197,7 @@ PyObject * Statement::toJson() const {
 		auto & body = *sub_statements[0];
 		addJsonArrP(d, "body", body);
 	} else {
-		throw std::runtime_error("Invalid StatementType");
+		throw runtime_error("Invalid StatementType");
 	}
 	return d;
 }
