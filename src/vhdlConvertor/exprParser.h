@@ -11,7 +11,8 @@ public:
 	static Expr* visitAssociation_element(
 			vhdl::vhdlParser::Association_elementContext* ctx);
 	static Expr* visitFormal_part(vhdl::vhdlParser::Formal_partContext* ctx);
-	static Expr* visitExplicit_range(vhdl::vhdlParser::Explicit_rangeContext* ctx);
+	static Expr* visitExplicit_range(
+			vhdl::vhdlParser::Explicit_rangeContext* ctx);
 	static Expr* visitRange(vhdl::vhdlParser::RangeContext* ctx);
 	static Expr* visitActual_part(vhdl::vhdlParser::Actual_partContext* ctx);
 	static Expr* visitActual_designator(
@@ -23,7 +24,8 @@ public:
 			vhdl::vhdlParser::ConstraintContext* ctx);
 	static Expr* visitIndex_constraint(
 			vhdl::vhdlParser::Index_constraintContext* ctx);
-	static Expr* visitDiscrete_range(vhdl::vhdlParser::Discrete_rangeContext* ctx);
+	static Expr* visitDiscrete_range(
+			vhdl::vhdlParser::Discrete_rangeContext* ctx);
 	static Expr* visitSimple_expression(
 			vhdl::vhdlParser::Simple_expressionContext* ctx);
 	static Expr* visitExpression(vhdl::vhdlParser::ExpressionContext* ctx);
@@ -43,4 +45,11 @@ public:
 	static Expr* visitWaveform(vhdl::vhdlParser::WaveformContext* ctx);
 	static Expr* visitWaveform_element(
 			vhdl::vhdlParser::Waveform_elementContext* ctx);
+	/*
+	 * @return expression if specified else nullptr for "others" the vhdl keyword
+	 * */
+	static Expr * visitChoice(vhdl::vhdlParser::ChoiceContext * ctx);
+	static std::vector<Expr *> visitChoices(
+			vhdl::vhdlParser::ChoicesContext * ctx);
+
 };

@@ -159,3 +159,14 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	delete e;
 	return s->value._str;
 }
+
+char * LiteralParser::visitLabel_colon(
+		vhdlParser::Label_colonContext * ctx) {
+	// label_colon
+	// : identifier COLON
+	// ;
+	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
+	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
+	delete e;
+	return s;
+}

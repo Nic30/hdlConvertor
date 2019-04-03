@@ -1,7 +1,10 @@
 #include "statementParser.h"
 #include "exprParser.h"
 #include "../notImplementedLogger.h"
+#include "literalParser.h"
+#include "referenceParser.h"
 
+using namespace std;
 using namespace vhdl;
 
 Statement * StatementParser::visitSequential_statement(
@@ -54,9 +57,7 @@ Statement * StatementParser::visitSequential_statement(
 
 	auto c = ctx->case_statement();
 	if (c) {
-		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - case_statement");
-		return NULL;
+		return visitCase_statement(c);
 	}
 
 	auto l = ctx->loop_statement();
@@ -67,6 +68,35 @@ Statement * StatementParser::visitSequential_statement(
 	return NULL;
 
 }
+Statement * StatementParser::visitCase_statement(
+		vhdlParser::Case_statementContext * ctx) {
+	// case_statement
+	//   : ( label_colon )? CASE expression IS
+	//     ( case_statement_alternative )+
+	//     END CASE ( identifier )? SEMI
+	//   ;
+	auto _e = ctx->expression();
+	auto e = ExprParser::visitExpression(_e);
+	vector<Statement::case_t> alternatives;
+	vector<Statement*>* _default = nullptr;
+	for (auto a : ctx->case_statement_alternative()) {
+		// case_statement_alternative
+		//   : WHEN choices ARROW sequence_of_statements
+		//   ;
+		for (auto ch: ExprParser::visitChoices(a->choices())) {
+			auto s = a->sequence_of_statements();
+			auto stms = visitSequence_of_statements(s);
+			if (ch == nullptr) {
+				assert(_default = nullptr);
+				_default = stms;
+			} else {
+				alternatives.push_back({ch, stms});
+			}
+		}
+	}
+	return Statement::CASE(e, alternatives, _default);
+}
+
 Statement * StatementParser::visitSignal_assignment_statement(
 		vhdlParser::Signal_assignment_statementContext* ctx) {
 	// signal_assignment_statement :
@@ -120,7 +150,7 @@ Statement * StatementParser::visitIf_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitIf_statement - ELSIF");
 	}
-	std::vector<Statement*> * ifTrue = visitSequence_of_statements(*sIt);
+	vector<Statement*> * ifTrue = visitSequence_of_statements(*sIt);
 	++sIt;
 	if (sIt != s.end()) {
 		return Statement::IF(cond, ifTrue, visitSequence_of_statements(*sIt));
@@ -181,7 +211,8 @@ Statement * StatementParser::visitIteration_scheme(
 	// | FOR parameter_specification
 	// ;
 	if (ctx->WHILE()) {
-		return Statement::WHILE(visitCondition(ctx->condition()), new std::vector<Statement*>(0));
+		return Statement::WHILE(visitCondition(ctx->condition()),
+				new vector<Statement*>(0));
 	} else {
 		NotImplementedLogger::print(
 				"StatementParser.visitIteration_scheme - FOR");
@@ -189,14 +220,81 @@ Statement * StatementParser::visitIteration_scheme(
 	}
 
 }
-std::vector<Statement*> * StatementParser::visitSequence_of_statements(
+vector<Statement*> * StatementParser::visitSequence_of_statements(
 		vhdlParser::Sequence_of_statementsContext* ctx) {
-// sequence_of_statements
-// : ( sequential_statement )*
-// ;
-	std::vector<Statement*> * s = new std::vector<Statement*>();
+	// sequence_of_statements
+	// : ( sequential_statement )*
+	// ;
+	vector<Statement*> * s = new vector<Statement*>();
 	for (auto ss : ctx->sequential_statement()) {
 		s->push_back(visitSequential_statement(ss));
 	}
 	return s;
 }
+
+Statement * StatementParser::visitProcess_statement(
+		vhdl::vhdlParser::Process_statementContext * ctx) {
+	// process_statement
+	//   : ( label_colon )? ( POSTPONED )? PROCESS
+	//     ( LPAREN sensitivity_list RPAREN )? ( IS )?
+	//     process_declarative_part
+	//     BEGIN
+	//     process_statement_part
+	//     END ( POSTPONED )? PROCESS ( identifier )? SEMI
+	//   ;
+	string name;
+	auto lc = ctx->label_colon();
+	auto sensitivity_list = new vector<Expr*>;
+	auto stms = new vector<Statement*>;
+	if (lc) {
+		char * _name = LiteralParser::visitLabel_colon(lc);
+		name = _name;
+		free(_name);
+	}
+	if (ctx->POSTPONED().size()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitProcess_statement - POSTPONED");
+	}
+	auto sl = ctx->sensitivity_list();
+	if (sl) {
+		visitSensitivity_list(sl, *sensitivity_list);
+	}
+	auto declr = ctx->process_declarative_part();
+	visitProcess_declarative_part(declr);
+	visitProcess_statement_part(ctx->process_statement_part(), *stms);
+
+	auto p = Statement::PROCESS(sensitivity_list, stms);
+	p->label = name;
+	return p;
+}
+void StatementParser::visitSensitivity_list(
+		vhdlParser::Sensitivity_listContext * ctx, vector<Expr*> & res) {
+	// sensitivity_list
+	//   : name ( COMMA name )*
+	//   ;
+	for (auto n : ctx->name()) {
+		res.push_back(ReferenceParser::visitName(n));
+	}
+}
+vector<Variable*> StatementParser::visitProcess_declarative_part(
+		vhdlParser::Process_declarative_partContext * ctx) {
+	//process_declarative_part
+	//  : ( process_declarative_item )*
+	//  ;
+	for (auto i : ctx->process_declarative_item()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitProcess_declarative_part - process_declarative_item");
+	}
+	return {};
+}
+void StatementParser::visitProcess_statement_part(
+		vhdlParser::Process_statement_partContext * ctx,
+		vector<Statement*> & stms) {
+	//process_statement_part
+	//  : ( sequential_statement )*
+	//  ;
+	for (auto s : ctx->sequential_statement()) {
+		stms.push_back(visitSequential_statement(s));
+	}
+}
+
