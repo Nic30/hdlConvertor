@@ -1,6 +1,5 @@
 #include "named.h"
 
-
 Named::Named() {
 	name = NULL;
 }
@@ -8,8 +7,9 @@ Named::Named() {
 #ifdef USE_PYTHON
 PyObject * Named::toJson() const {
 	PyObject *d = PyDict_New();
-	assert(name != NULL);
-	PyDict_SetItemString(d, "name", PyUnicode_FromString(name));
+	if (name) {
+		PyDict_SetItemString(d, "name", PyUnicode_FromString(name));
+	}
 	return d;
 }
 #endif

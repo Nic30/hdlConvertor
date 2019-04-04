@@ -10,12 +10,13 @@
 #include <sys/stat.h>
 #include <typeinfo>
 
+#include "verilogPreprocParser/verilogPreprocLexer.h"
+#include "verilogPreprocParser/verilogPreprocParser.h"
+#include "verilogPreprocParser/verilogPreprocBaseListener.h"
+
 #include "../verilogPreproc/macroPrototype.h"
 #include "../verilogPreproc/macroSymbol.h"
 #include "exception.h"
-
-using namespace antlr4;
-
 
 /*
  * Verilog preprocessor
@@ -25,22 +26,22 @@ using namespace antlr4;
  **/
 class vPreprocessor : public  verilogPreprocBaseVisitor {
   macroSymbol & _defineDB;
-  CommonTokenStream * _tokens;
+  antlr4::CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
   std::vector<std::string> & _stack_incfile;
   unsigned int _mode = VERILOG2001;
 
-  void remove_comment(Token * start, Token * end, std::string * str );
+  void remove_comment(antlr4::Token * start, antlr4::Token * end, std::string * str );
   std::string genBlank(size_t n);
   void replace_context_by_bank( antlr4::ParserRuleContext * ctx);
 
   public:
   enum { VERILOG2001, VERILOG2005, SV2012};
   size_t include_depth_limit;
-  TokenStreamRewriter _rewriter;
+  antlr4::TokenStreamRewriter _rewriter;
 
 
-  vPreprocessor(TokenStream *tokens,
+  vPreprocessor(antlr4::TokenStream *tokens,
       std::vector<std::string> &incdir,
       macroSymbol & defineDB,
       std::vector<std::string> &stack_incfile,

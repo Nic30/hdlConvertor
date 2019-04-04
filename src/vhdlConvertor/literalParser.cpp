@@ -1,4 +1,10 @@
 #include "literalParser.h"
+#include <vector>
+#include <stdlib.h>
+#include <algorithm>
+
+#include "../notImplementedLogger.h"
+using namespace vhdl;
 
 Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal
@@ -117,13 +123,13 @@ Expr * LiteralParser::visitEnumeration_literal(
 
 	return visitCHARACTER_LITERAL(ctx->CHARACTER_LITERAL());
 }
-Expr * LiteralParser::visitSTRING_LITERAL(tree::TerminalNode * n) {
+Expr * LiteralParser::visitSTRING_LITERAL(antlr4::tree::TerminalNode * n) {
 	std::string s = n->getText();
 	std::string str = s.substr(1, s.length() - 2);
 	return Expr::STR(str);
 
 }
-Expr * LiteralParser::visitCHARACTER_LITERAL(tree::TerminalNode* ctx) {
+Expr * LiteralParser::visitCHARACTER_LITERAL(antlr4::tree::TerminalNode* ctx) {
 	return Expr::INT(ctx->getText()[1] - '0');
 }
 Expr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
@@ -152,4 +158,15 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	e->data = NULL;
 	delete e;
 	return s->value._str;
+}
+
+char * LiteralParser::visitLabel_colon(
+		vhdlParser::Label_colonContext * ctx) {
+	// label_colon
+	// : identifier COLON
+	// ;
+	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
+	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
+	delete e;
+	return s;
 }

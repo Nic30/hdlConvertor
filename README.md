@@ -3,13 +3,15 @@
 [![Win Build status](https://ci.appveyor.com/api/projects/status/e3cvi3ig5y4vni7e?svg=true)](https://ci.appveyor.com/project/nic30/hdlconvertor)
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
 [![Python version](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)
+[ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
-The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to one AST so other libraries does not have to care about Verilog/VHDL differences. 
+
+The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
-This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library known to me.
+This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library (c++ runtime) known to me.
 To make your live easier I included it to this package for you.
 
 
@@ -72,6 +74,7 @@ Currently package is tested only for python3.5+ (python3.6 or latest recomended)
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
+* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 
 

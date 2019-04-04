@@ -4,8 +4,6 @@
 #include <sstream>
 #include <string>
 
-using namespace antlr4;
-
 enum error_kind_t {SYNTAXERROR,REPORTAMBIGUITY,REPORTCONTEXTSENSITIVITY,REPORTATTEMPTINGFULLCONTEXT};
 
 class error_data {
@@ -18,7 +16,7 @@ class error_data {
 };
 
 
-class SyntaxErrorLogger: public ANTLRErrorListener {
+class SyntaxErrorLogger: public antlr4::ANTLRErrorListener {
 
 
 	class error_data {
@@ -37,35 +35,35 @@ private:
 public:
 	void CheckErrors();
 	void syntaxError(
-			Recognizer *recognizer,
-			Token *offendingSymbol,
+			antlr4::Recognizer *recognizer,
+			antlr4::Token *offendingSymbol,
 			size_t line,
 			size_t charPositionInLine,
 			const std::string &msg,
 			std::exception_ptr e);
 
 	void reportAmbiguity(
-			Parser *recognizer,
-			const dfa::DFA &dfa,
+			antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa,
 			size_t startIndex,
 			size_t stopIndex,
 			bool exact,
 			const antlrcpp::BitSet &ambigAlts,
-			atn::ATNConfigSet *configs);
+			antlr4::atn::ATNConfigSet *configs);
 	void reportContextSensitivity(
-			Parser *recognizer,
-			const dfa::DFA &dfa,
+			antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa,
 			size_t startIndex,
 			size_t stopIndex,
 			size_t prediction,
-			atn::ATNConfigSet *configs);
+			antlr4::atn::ATNConfigSet *configs);
 
 	void reportAttemptingFullContext(
-			Parser *recognizer,
-			const dfa::DFA &dfa,
+			antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa,
 			size_t startIndex,
 			size_t stopIndex,
 			const antlrcpp::BitSet &conflictingAlts,
-			atn::ATNConfigSet *configs);
+			antlr4::atn::ATNConfigSet *configs);
 
 };
