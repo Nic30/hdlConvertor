@@ -115,17 +115,17 @@ class PreprocessorTC(unittest.TestCase):
             )
         self.assertTrue('Missmatch in number of argument macro declaration MACRO1 (3) and macro usage (2)' in context.exception)
 
-    #`MACRO3 must have parentesis according to the SV specification.
-    #Currently the code is not able to detect this issue
-    @unittest.expectedFailure
-    def test_2012_p642_il2(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
-            result = hdlConvertor.verilog_pp(
-                path.join(TEST_DIR,'sv_pp','src','2012_p642_il2.txt'),
-                ['.','..',path.join('sv_pp','src')],
-                "sv2012"
-            )
-        self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' in context.exception)
+#    #`MACRO3 must have parentesis according to the SV specification.
+#    #Currently the code is not able to detect this issue
+#    @unittest.expectedFailure
+#    def test_2012_p642_il2(self):
+#        with self.assertRaises(hdlConvertor.parseException) as context:
+#            result = hdlConvertor.verilog_pp(
+#                path.join(TEST_DIR,'sv_pp','src','2012_p642_il2.txt'),
+#                ['.','..',path.join('sv_pp','src')],
+#                "sv2012"
+#            )
+#        self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' in context.exception)
 
 #    def test_2012_p642_il3(self):
 #        result = hdlConvertor.verilog_pp(
