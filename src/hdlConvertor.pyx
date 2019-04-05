@@ -77,7 +77,7 @@ cdef class hdlConvertor:
             filenames = [filename, ]
 
         if PY3:
-            filename = [item.encode('utf8') for item in filename]
+            filename = filename.encode('utf8')
             incdir = [item.encode('utf8') for item in incdir]
         
         return self.thisptr.verilog_pp(filename, incdir, mode)
