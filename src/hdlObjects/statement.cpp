@@ -89,8 +89,8 @@ Statement* Statement::RETURN() {
 	return new Statement(s_RETURN);
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
-	if (dst == nullptr or src == nullptr) {
-		throw runtime_error("wrong assig initialization");
+	if (dst == nullptr || src == nullptr) {
+		throw runtime_error("wrong assign initialization");
 	}
 	Statement * s = new Statement(s_ASSIGMENT);
 	s->exprs.push_back(dst);

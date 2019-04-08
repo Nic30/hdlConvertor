@@ -10,7 +10,7 @@ Expr::Expr() {
 }
 
 Expr::Expr(const Expr & expr) {
-	if (expr.data == nullptr or expr.data == &Type_t) {
+	if (expr.data == nullptr || expr.data == &Type_t) {
 		data = expr.data;
 	} else {
 		data = expr.data->clone();
