@@ -45,8 +45,6 @@ In python all parsed stuff are just dictionaries and values (str, int).
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 
-
-
 Example of usage:
 ```python
 import hdlConvertor
@@ -57,7 +55,7 @@ for e in res['entities']:
 ```
 
 
-Currently package is tested only for python3.5+ (python3.6 or latest recomended) under Linux but should work on any system with c++11 support. 
+If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
 
 ### Supported languages:
 
