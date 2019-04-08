@@ -5,7 +5,6 @@
 #include <iostream>
 #include <fstream>
 #include <streambuf>
-#include <unistd.h>
 
 #include "hdlObjects/context.h"
 
