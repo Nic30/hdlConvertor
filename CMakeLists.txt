@@ -26,6 +26,9 @@ include_directories( ${HDLCONVERTOR_SOURCE_DIR}/antlr4/runtime/src )
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+if(MSVC_VERSION)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Za")
+endif()
+ 
 add_subdirectory( antlr4 )
 add_subdirectory( src )
