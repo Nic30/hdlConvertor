@@ -22,10 +22,14 @@ else()
   endif()
 endif()
 
-include_directories( ${HDLCONVERTOR_SOURCE_DIR}/antlr4/runtime/src )
-add_subdirectory( antlr4 )
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
+
+include_directories( ${HDLCONVERTOR_SOURCE_DIR}/antlr4/runtime/src )
+add_subdirectory( antlr4 )
+
 add_subdirectory( src )
