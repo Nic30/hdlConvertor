@@ -158,7 +158,7 @@ PyObject * Statement::toJson() const {
 		return exprs[0]->toJson();
 	} else if (type == s_IF) {
 		PyDict_SetItemString(d, "cond", exprs[0]->toJson());
-		assert(sub_statements);
+		assert(sub_statements.size());
 		addJsonArrP(d, "ifTrue", *sub_statements[0]);
 		PyObject * elseIfs;
 		size_t elif_cnt;
