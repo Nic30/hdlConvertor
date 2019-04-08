@@ -89,8 +89,8 @@ Statement* Statement::RETURN() {
 	return new Statement(s_RETURN);
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
-	if (dst == nullptr or src == nullptr) {
-		throw runtime_error("wrong assig initialization");
+	if (dst == nullptr || src == nullptr) {
+		throw runtime_error("wrong assign initialization");
 	}
 	Statement * s = new Statement(s_ASSIGMENT);
 	s->exprs.push_back(dst);
@@ -158,7 +158,7 @@ PyObject * Statement::toJson() const {
 		return exprs[0]->toJson();
 	} else if (type == s_IF) {
 		PyDict_SetItemString(d, "cond", exprs[0]->toJson());
-		assert(sub_statements);
+		assert(sub_statements.size());
 		addJsonArrP(d, "ifTrue", *sub_statements[0]);
 		PyObject * elseIfs;
 		size_t elif_cnt;

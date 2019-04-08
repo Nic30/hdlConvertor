@@ -488,7 +488,7 @@ void ModuleParser::visitList_of_variable_identifiers(
 	//    ;
 	bool first = true;
 	for (auto vt : ctx->variable_type()) {
-		if (not first)
+		if (!first)
 			base_type = new Expr(*base_type);
 		Variable * v = visitVariable_type(vt, base_type);
 		v->latched = latched;

@@ -53,7 +53,7 @@ hdlConvertor.egg-info
 *.zip
 *.jar
 
-# eclipse fiels
+# eclipse files
 .cproject
 .project
 .pydevproject

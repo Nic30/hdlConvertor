@@ -88,26 +88,29 @@ OperatorType VerExprParser::visitUnary_operator(
 	//    ;
 	std::string op = ctx->getText();
 
-	if (op == "+")
+	if (op == "+") {
 		return ADD;
-	else if (op == "-")
+	} else if (op == "-") {
 		return SUB;
-	else if (op == "!")
+	} else if (op == "!") {
 		return NOT;
-	else if (op == "~")
+	} else if (op == "~") {
 		return NEG;
-	else if (op == "&")
+	} else if (op == "&") {
 		return AND;
-	else if (op == "~&")
+	} else if (op == "~&") {
 		return NAND;
-	else if (op == "|")
+	} else if (op == "|") {
 		return OR;
-	else if (op == "~|")
+	} else if (op == "~|") {
 		return NOR;
-	else if (op == "^")
+	} else if (op == "^") {
 		return XOR;
-	else if (op == "~^" or op == "^~")
+	} else if (op == "~^") {
 		return XNOR;
+	} else if (op == "^~") {
+		return XNOR;
+	}
 
 	throw std::runtime_error("Unsupported unary operator " + op);
 }

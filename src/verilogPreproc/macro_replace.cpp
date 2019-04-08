@@ -49,9 +49,8 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
         printf("-->%s\n",str.c_str());
         printf("-->%li %li\n",start_pos,from.length());
         printf("-->%s\n",to.c_str());
-	printf("-->%c\n",str[start_pos+from.length()]);
-*/
-    if( not (
+      */
+    if( !(
           (('a' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='z')) ||
           (('A' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='Z')) ||
           (('0' <= str[start_pos+from.length()]) && (str[start_pos+from.length()] <='9')) ||

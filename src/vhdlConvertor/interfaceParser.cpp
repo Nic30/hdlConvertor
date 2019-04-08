@@ -19,7 +19,7 @@ std::vector<Variable*> * InterfaceParser::extractVariables(
 		// identifier_list
 		// : identifier ( COMMA identifier )*
 		// ;
-		if (not firstIt)
+		if (!firstIt)
 			_type = new Expr(*_type);
 		Expr * __expr;
 		if (!expr) {
