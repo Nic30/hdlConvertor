@@ -26,8 +26,6 @@ include_directories( ${HDLCONVERTOR_SOURCE_DIR}/antlr4/runtime/src )
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(MY_CXX_WARNING_FLAGS " -Wall -pedantic -W")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MY_CXX_WARNING_FLAGS} -Wno-attributes")
 
 add_subdirectory( antlr4 )
 add_subdirectory( src )
