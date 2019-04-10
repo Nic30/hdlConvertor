@@ -22,14 +22,14 @@ public:
 			bool _hierarchyOnly);
 	void visitModule_declaration(
 			Verilog2001::Verilog2001Parser::Module_declarationContext * ctx);
-	static std::vector<Variable*>* visitModule_parameter_port_list(
+	std::vector<Variable*>* visitModule_parameter_port_list(
 			Verilog2001::Verilog2001Parser::Module_parameter_port_listContext * ctx);
 
-	static std::vector<Variable*>* visitParameter_declaration_(
+	std::vector<Variable*>* visitParameter_declaration_(
 			Verilog2001::Verilog2001Parser::Parameter_declaration_Context * ctx);
-	static std::vector<Variable*> *visitList_of_param_assignments(
+	std::vector<Variable*> *visitList_of_param_assignments(
 			Verilog2001::Verilog2001Parser::List_of_param_assignmentsContext * ctx);
-	static Variable * visitParam_assignment(
+	Variable * visitParam_assignment(
 			Verilog2001::Verilog2001Parser::Param_assignmentContext * ctx);
 
 	void visitModule_item(

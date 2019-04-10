@@ -9,7 +9,7 @@ Port * Entity::getPortByName(const char * name) {
 		if (strcmp(p->variable->name, name) == 0)
 			return p;
 	}
-	return NULL;
+	return nullptr;
 }
 
 #ifdef USE_PYTHON
