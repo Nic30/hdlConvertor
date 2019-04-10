@@ -17,7 +17,7 @@ To make your live easier I included it to this package for you.
 
 ## Installation
 ```
-sudo apt install uuid-dev
+sudo apt install build-essential uuid-dev cmake
 sudo pip3 install -r requirements.txt
 
 sudo pip3 install hdlConvertor
