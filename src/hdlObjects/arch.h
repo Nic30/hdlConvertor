@@ -6,7 +6,7 @@
 #include "variable.h"
 #include "process.h"
 
-class Arch: public Named {
+class Arch: public WithNameAndDoc {
 public:
 	const char * entityName;
 	std::vector<Variable*> varialbles;

@@ -4,7 +4,7 @@
 #include "expr.h"
 #include <memory>
 
-class Variable: public Named {
+class Variable: public WithNameAndDoc {
 public:
 	Expr * type;
 	Expr * value;

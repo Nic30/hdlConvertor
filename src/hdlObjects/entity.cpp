@@ -1,7 +1,7 @@
 #include "entity.h"
 
 Entity::Entity() :
-		Named() {
+		WithNameAndDoc() {
 }
 Port * Entity::getPortByName(const char * name) {
 	for (auto p : ports) {
@@ -14,7 +14,7 @@ Port * Entity::getPortByName(const char * name) {
 
 #ifdef USE_PYTHON
 PyObject * Entity::toJson() const {
-	PyObject * d = Named::toJson();
+	PyObject * d = WithNameAndDoc::toJson();
 	addJsonArrP(d, "generics", generics);
 	addJsonArrP(d, "ports", ports);
 	return d;
@@ -22,7 +22,7 @@ PyObject * Entity::toJson() const {
 #endif
 
 void Entity::dump(int indent) const {
-	Named::dump(indent);
+	WithNameAndDoc::dump(indent);
 	indent += INDENT_INCR;
 	dumpArrP("generics", indent, generics) << ",\n";
 	dumpArrP("ports", indent, ports) << "\n";

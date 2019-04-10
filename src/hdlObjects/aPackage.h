@@ -2,13 +2,14 @@
 
 #include <vector>
 #include <assert.h>
+#include <string>
 
 #include "named.h"
 #include "entity.h"
 #include "function.h"
 #include "variable.h"
 
-class aPackage: public Named {
+class aPackage: public WithNameAndDoc {
 public:
 	std::vector<Entity*> components;
 	std::vector<Function*> functions;

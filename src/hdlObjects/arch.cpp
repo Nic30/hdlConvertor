@@ -3,7 +3,7 @@
 #ifdef USE_PYTHON
 PyObject * Arch::toJson() const {
 	JSN_DEBUG("Arch - name")
-	PyObject * o = Named::toJson();
+	PyObject * o = WithNameAndDoc::toJson();
 
 	JSN_DEBUG("Arch - entityName")
 	if (entityName)

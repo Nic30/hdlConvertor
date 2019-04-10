@@ -4,12 +4,13 @@
 #include "jsonable.h"
 #include "statement.h"
 #include "expr.h"
+#include "named.h"
 
 enum StatementType {
 	s_EXPR, s_IF, s_CASE, s_WHILE, s_RETURN, s_ASSIGMENT, s_PROCESS
 };
 
-class Statement {
+class Statement : public WithDoc {
 public:
 	using case_t = std::pair<Expr*, std::vector<Statement*>*>;
 	// an optional extra label specified in HDL
