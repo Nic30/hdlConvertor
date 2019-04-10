@@ -6,15 +6,27 @@
 using namespace std;
 using namespace Verilog2001;
 
-ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
+ModuleParser::ModuleParser(antlr4::TokenStream * tokens, Context * _context,
+		bool _hierarchyOnly) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
 	ent = new Entity();
 	arch = new Arch();
+	this->tokens = tokens;
 }
 
 void ModuleParser::visitModule_declaration(
 		Verilog2001Parser::Module_declarationContext* ctx) {
+	auto comment_pre = dynamic_cast<antlr4::CommonTokenStream *>(tokens)->getHiddenTokensToLeft(
+			ctx->getStart()->getTokenIndex(), antlr4::Token::HIDDEN_CHANNEL);
+	for (auto c : comment_pre) {
+		auto s = c->getText();
+		if (s.size() >= 2 && s[0] == '/' && s[1] == '/') {
+			// trim the starting //
+			s = s.substr(2);
+		}
+		ent->__doc__ += s;
+	}
 	// module_declaration
 	// : attribute_instance* module_keyword module_identifier
 	// ( module_parameter_port_list )? ( list_of_ports )? ';' module_item*

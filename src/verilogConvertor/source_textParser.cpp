@@ -2,7 +2,10 @@
 
 using namespace Verilog2001;
 
-Source_textParser::Source_textParser(Context * ctx, bool _hierarchyOnly) : BaseHdlParser(ctx, _hierarchyOnly) {}
+Source_textParser::Source_textParser(antlr4::TokenStream* tokens, Context * ctx,
+		bool _hierarchyOnly) :
+		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
+}
 
 void Source_textParser::visitSource_text(
 		Verilog2001Parser::Source_textContext* ctx) {
@@ -25,6 +28,6 @@ void Source_textParser::visitTiming_spec(
 void Source_textParser::visitDescription(
 		Verilog2001Parser::DescriptionContext* ctx) {
 	// description : module_declaration ;
-	ModuleParser * p = new ModuleParser(context, hierarchyOnly);
+	ModuleParser * p = new ModuleParser(tokens, context, hierarchyOnly);
 	p->visitModule_declaration(ctx->module_declaration());
 }

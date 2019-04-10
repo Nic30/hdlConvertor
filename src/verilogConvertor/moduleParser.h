@@ -16,8 +16,10 @@ class ModuleParser {
 	bool hierarchyOnly;
 	Entity * ent;
 	Arch * arch;
+	antlr4::TokenStream * tokens;
 public:
-	ModuleParser(Context * _context, bool _hierarchyOnly);
+	ModuleParser(antlr4::TokenStream * tokens, Context * _context,
+			bool _hierarchyOnly);
 	void visitModule_declaration(
 			Verilog2001::Verilog2001Parser::Module_declarationContext * ctx);
 	static std::vector<Variable*>* visitModule_parameter_port_list(
@@ -30,13 +32,16 @@ public:
 	static Variable * visitParam_assignment(
 			Verilog2001::Verilog2001Parser::Param_assignmentContext * ctx);
 
-	void visitModule_item(Verilog2001::Verilog2001Parser::Module_itemContext * ctx);
+	void visitModule_item(
+			Verilog2001::Verilog2001Parser::Module_itemContext * ctx);
 	void visitModule_or_generate_item(
 			Verilog2001::Verilog2001Parser::Module_or_generate_itemContext * ctx);
 	void visitModule_or_generate_item_declaration(
 			Verilog2001::Verilog2001Parser::Module_or_generate_item_declarationContext * ctx);
-	void visitReg_declaration(Verilog2001::Verilog2001Parser::Reg_declarationContext * ctx);
-	void visitNet_declaration(Verilog2001::Verilog2001Parser::Net_declarationContext * ctx);
+	void visitReg_declaration(
+			Verilog2001::Verilog2001Parser::Reg_declarationContext * ctx);
+	void visitNet_declaration(
+			Verilog2001::Verilog2001Parser::Net_declarationContext * ctx);
 	std::vector<Variable*> visitList_of_net_identifiers(
 			Verilog2001::Verilog2001Parser::List_of_net_identifiersContext * ctx,
 			Expr * base_type);
@@ -51,11 +56,12 @@ public:
 	void visitList_of_variable_identifiers(
 			Verilog2001::Verilog2001Parser::List_of_variable_identifiersContext* ctx,
 			Expr * base_type, bool latched);
-	Variable * visitVariable_type(Verilog2001::Verilog2001Parser::Variable_typeContext * ctx,
+	Variable * visitVariable_type(
+			Verilog2001::Verilog2001Parser::Variable_typeContext * ctx,
 			Expr * base_type);
 	Variable * visitVariable_identifier(
-			Verilog2001::Verilog2001Parser::Variable_identifierContext * ctx, Expr * t,
-			Expr * def_val);
+			Verilog2001::Verilog2001Parser::Variable_identifierContext * ctx,
+			Expr * t, Expr * def_val);
 	void visitNon_port_module_item(
 			Verilog2001::Verilog2001Parser::Non_port_module_itemContext * ctx);
 

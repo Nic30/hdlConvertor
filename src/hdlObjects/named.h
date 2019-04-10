@@ -34,7 +34,7 @@ public:
 /*
  * Base class for HDL object with name and doc
  * */
-class WithNameAndDoc: public Named, WithDoc {
+class WithNameAndDoc: public Named, public WithDoc {
 public:
 	WithNameAndDoc();
 #ifdef USE_PYTHON

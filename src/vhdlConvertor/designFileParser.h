@@ -6,7 +6,7 @@
 
 class DesignFileParser : public BaseHdlParser {
 public:
-	DesignFileParser(Context * ctx, bool _hierarchyOnly);
+	DesignFileParser(antlr4::TokenStream* tokens, Context * ctx, bool _hierarchyOnly);
 	void visitDesign_file(vhdl::vhdlParser::Design_fileContext* ctx);
 	void visitDesign_unit(vhdl::vhdlParser::Design_unitContext* ctx);
 	void visitLibrary_unit(vhdl::vhdlParser::Library_unitContext* ctx);

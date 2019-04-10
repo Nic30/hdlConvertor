@@ -54,7 +54,7 @@ public:
 
 		initParser(fileName);
 
-		hdlParser = new hdlParserT(context, hierarchyOnly);
+		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context, hierarchyOnly);
 
 		// begin parsing at init rule
 		parseFn(antlrParser, hdlParser);
