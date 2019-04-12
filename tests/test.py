@@ -2,7 +2,6 @@ import sys
 from os import path
 from pprint import pprint
 import unittest
-import test_preproc
 
 TEST_DIR = path.abspath(path.dirname(__file__))
 BASE_DIR = path.join(TEST_DIR, "..")
@@ -112,7 +111,6 @@ if __name__ == "__main__":
     suite = unittest.TestSuite()
     # suite.addTest(BasicTC('test_read'))
     suite.addTest(unittest.makeSuite(BasicTC))
-    suite.addTest(unittest.makeSuite(test_preproc.PreprocessorTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

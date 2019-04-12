@@ -2,6 +2,7 @@ import sys
 from os import path
 from pprint import pprint
 import unittest
+from nose.tools import nottest
 
 TEST_DIR = path.abspath(path.dirname(__file__))
 BASE_DIR = path.join(TEST_DIR, "..")
@@ -9,6 +10,7 @@ sys.path.insert(1, path.join(BASE_DIR, "dist"))
 
 import hdlConvertor
 
+@nottest
 def test_run(test_file, golden_file):
     test_result = hdlConvertor.verilog_pp(
         path.join(TEST_DIR,test_file),
