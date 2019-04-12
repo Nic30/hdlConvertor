@@ -85,7 +85,7 @@ class PreprocessorTC(unittest.TestCase):
                 ['.','..',path.join('sv_pp','src')],
                 "sv2012"
             )
-        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (1)' in context.exception)
+        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (1)' == context.exception.__str__())
 
     def test_2012_p641_il2(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
@@ -94,7 +94,7 @@ class PreprocessorTC(unittest.TestCase):
                 ['.','..',path.join('sv_pp','src')],
                 "sv2012"
             )
-        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (0)' in context.exception)
+        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (0)' == context.exception.__str__())
 
     def test_2012_p641_il3(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
@@ -103,7 +103,7 @@ class PreprocessorTC(unittest.TestCase):
                 ['.','..',path.join('sv_pp','src')],
                 "sv2012"
             )
-        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (3)' in context.exception)
+        self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (3)' == context.exception.__str__())
 
 
     def test_2012_p642_il1(self):
@@ -113,7 +113,7 @@ class PreprocessorTC(unittest.TestCase):
                 ['.','..',path.join('sv_pp','src')],
                 "sv2012"
             )
-        self.assertTrue('Missmatch in number of argument macro declaration MACRO1 (3) and macro usage (2)' in context.exception)
+        self.assertTrue('Missmatch in number of argument macro declaration MACRO1 (3) and macro usage (2)' == context.exception.__str__())
 
     #`MACRO3 must have parentesis according to the SV specification.
     #Currently the code is not able to detect this issue
@@ -125,7 +125,7 @@ class PreprocessorTC(unittest.TestCase):
                 ['.','..',path.join('sv_pp','src')],
                 "sv2012"
             )
-        self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' in context.exception)
+        self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' == context.exception.__str__())
 
 #    def test_2012_p642_il3(self):
 #        result = hdlConvertor.verilog_pp(
