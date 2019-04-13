@@ -10,7 +10,7 @@ from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Con
 import sys
 
 
-class parseException(Exception):
+cdef class parseException(Exception):
     pass
 
 
@@ -42,7 +42,6 @@ cdef class hdlConvertor:
         else:
             raise ValueError(langue + " is not recognized (expected verilog, vhdl or systemVerilog)")
 
-
         PY3 = PY_MAJOR_VERSION == 3
 
         if PY3:
@@ -66,8 +65,28 @@ cdef class hdlConvertor:
         d_py = < object > d
         return d_py
     
-    def test(self, filename, incdir=['.']):
-        self.thisptr.test(filename, incdir)
+    def verilog_pp(self, filename, incdir=['.'],mode=0):
+        PY3 = PY_MAJOR_VERSION == 3
+
+        if PY3:
+            string_type = str
+        else:
+            string_type = basestring
+        
+        if isinstance(filename, string_type):
+            filenames = [filename, ]
+
+        if PY3:
+            filename = filename.encode('utf8')
+            incdir = [item.encode('utf8') for item in incdir]
+        
+        data = self.thisptr.verilog_pp(filename, incdir, mode)
+        
+        if PY3:
+            data = data.decode('utf8')
+
+        return data
+
     
 
 def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
@@ -78,8 +97,22 @@ def parse(filenames, langue, incdir=['.'], hierarchyOnly=False, debug=False):
     return context
 
 
-def test(filename, incdir=['.']):
+def verilog_pp(filename, incdir=['.'], mode="verilog2001"):
+    """
+    :param filename: object of verilog preprocess
+    :param incdir: list of include directories
+    :param language: one of "verilog2001", "verilog2005", "sv2012"
+    """
     cdef hdlConvertor obj
+    cdef int mode_value
+    if mode == "verilog2001" :
+        mode_value = 0
+    elif mode == "verilog2005" :
+        mode_value = 1
+    elif mode == "sv2012" :
+        mode_value = 2
+    else:
+        raise ValueError(mode + " is not recognized (expected verilog2001, verilog2005 or sv2012)")
     obj = hdlConvertor()
-    obj.test(filename, incdir)
+    return obj.verilog_pp(filename, incdir,mode_value)
 

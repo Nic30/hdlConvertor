@@ -1,0 +1,2 @@
+`define max(a,b)((a) > (b)) ? (a) : (b)
+n = `max(p+q, r+s) ;

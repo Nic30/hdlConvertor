@@ -1,0 +1,3 @@
+`define MACRO1(a=5,b="B",c) $display(a,,b,,c);
+
+`MACRO1 ( 1 )

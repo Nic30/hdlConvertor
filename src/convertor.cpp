@@ -36,18 +36,15 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 		struct stat buffer;
 		fileName = _fileName;
 		lang = _lang;
+		std::string str;
 
 		if (stat(_fileName.c_str(), &buffer) != 0) {
 			throw parseException(_fileName + " does not exist.");
 		}
-		std::ifstream t(fileName);
-		std::string str((std::istreambuf_iterator<char>(t)),
-				std::istreambuf_iterator<char>());
 
 		if (lang == VHDL) {
 
-			ANTLRInputStream input(str);
-			input.name = fileName;
+			ANTLRFileStream input(fileName);
 			auto pc = new ParserContainer<vhdlLexer, vhdlParser,
 					DesignFileParser>(c);
 			pc->parseFile(input, hierarchyOnly, debug, parseFnVHDL);
@@ -59,7 +56,8 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 			auto pc = new ParserContainer<Verilog2001Lexer, Verilog2001Parser,
 					Source_textParser>(c);
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB);
+    			std::vector<std::string> stack_incfile;
+			str = return_preprocessed_file(fileName, incdir, defineDB,stack_incfile,vPreprocessor::VERILOG2001);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -74,7 +72,8 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 					sv2012::sv2012Parser, source_textParser>(c);
 
 			macroSymbol defineDB;
-			str = return_preprocessed(str, incdir, defineDB);
+    			std::vector<std::string> stack_incfile;
+			str = return_preprocessed_file(fileName, incdir, defineDB,stack_incfile,vPreprocessor::SV2012);
 
 			ANTLRInputStream input(str);
 			input.name = fileName;
@@ -90,23 +89,18 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 	return c;
 }
 
-// [TODO] maybe relict
-void Convertor::test(const std::string fileName,
-		std::vector<std::string> incdir) {
+std::string Convertor::verilog_pp(const std::string fileName,
+		std::vector<std::string> incdir,unsigned int mode) {
 
-	std::ifstream t(fileName);
-	std::string str((std::istreambuf_iterator<char>(t)),
-			std::istreambuf_iterator<char>());
-
-	macroSymbol defineDB;
-	std::string result = return_preprocessed(str, incdir, defineDB);
-	for (uint8_t i = 0; i < incdir.size(); i++) {
-		printf("incdir : %s\n", incdir[i].c_str());
-	}
-	printf("---------------------------------------------\n");
-	printf("%s\n", result.c_str());
-
-	printf("Finish...\n");
+    struct stat buffer;
+    if (stat(fileName.c_str(), &buffer) != 0) {
+        throw parseException(fileName + " does not exist.");
+    }
+    
+    macroSymbol defineDB;
+    std::vector<std::string> stack_incfile;
+    std::string result = return_preprocessed_file(fileName, incdir, defineDB, stack_incfile, mode);
+    return result;
 
 }
 

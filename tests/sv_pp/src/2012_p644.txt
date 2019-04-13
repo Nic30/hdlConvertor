@@ -1,0 +1,5 @@
+`define msg(x,y) `"x: `\`"y`\`"`"
+`msg(left side,right side)
+
+`define append(f) f``_master
+`append(clock)
