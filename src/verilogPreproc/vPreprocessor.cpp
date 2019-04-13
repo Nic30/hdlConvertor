@@ -5,7 +5,7 @@ using namespace antlr4;
 void ReplaceStringInPlace(std::string& subject, const std::string& search,
     const std::string& replace) {
 
-  size_t pos;
+  size_t pos = 0;
   while ((pos = subject.find(search, pos)) != std::string::npos) {
     subject.replace(pos, search.length(), replace);
     pos += replace.length();
@@ -292,10 +292,12 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
       replacement.erase(start_pos,2);
       start_pos += 1;
     }
+    start_pos = 0;
     while((start_pos = replacement.find("`\\", start_pos)) != std::string::npos) {
       replacement.erase(start_pos,1);
       start_pos += 1;
     }
+    start_pos = 0;
     while((start_pos = replacement.find("`\"", start_pos)) != std::string::npos) {
       replacement.erase(start_pos,1);
       start_pos += 1;
