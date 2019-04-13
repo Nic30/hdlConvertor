@@ -48,7 +48,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
 	       +data.tmplate_name +" (" + 
           std::to_string(data.args.size()) + 
           ") and macro usage ("+std::to_string(arg.size())+')';
-        throw parseException(message);
+        throw ParseException(message);
       }
 
       // the number of provided argument is fewer than the number defined by the prototype.

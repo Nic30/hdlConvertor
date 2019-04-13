@@ -6,15 +6,16 @@ from libcpp cimport bool
 from libcpp cimport string
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
-from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Convertor
 import sys
 
 
-cdef class parseException(Exception):
+from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Convertor
+
+cdef class ParseException(Exception):
     pass
 
 
-cdef public PyObject * parseExceptionerror = < PyObject *> parseException
+cdef public PyObject * ParseExceptionT = < PyObject *> ParseException
 
 cdef class hdlConvertor:
     cdef _Convertor * thisptr

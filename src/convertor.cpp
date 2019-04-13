@@ -39,7 +39,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
 		std::string str;
 
 		if (stat(_fileName.c_str(), &buffer) != 0) {
-			throw parseException(_fileName + " does not exist.");
+			throw ParseException(_fileName + " does not exist.");
 		}
 
 		if (lang == VHDL) {
@@ -94,7 +94,7 @@ std::string Convertor::verilog_pp(const std::string fileName,
 
     struct stat buffer;
     if (stat(fileName.c_str(), &buffer) != 0) {
-        throw parseException(fileName + " does not exist.");
+        throw ParseException(fileName + " does not exist.");
     }
     
     macroSymbol defineDB;

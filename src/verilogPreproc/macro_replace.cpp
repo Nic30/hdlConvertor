@@ -105,7 +105,7 @@ std::string macro_replace::replace(std::vector<std::string> arg) {
 	  + data.tmplate_name + " (" + 
           std::to_string(data.args.size()) + 
           ") and macro usage ("+std::to_string(arg.size())+')';
-        throw parseException(message);
+        throw ParseException(message);
       }
       _substituate.clear();
       std::vector<std::string>::iterator macro= data.args.begin();
