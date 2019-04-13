@@ -17,7 +17,7 @@ To make your live easier I included it to this package for you.
 
 ## Installation
 ```
-sudo apt install uuid-dev
+sudo apt install build-essential uuid-dev cmake
 sudo pip3 install -r requirements.txt
 
 sudo pip3 install hdlConvertor
@@ -45,8 +45,6 @@ In python all parsed stuff are just dictionaries and values (str, int).
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 
-
-
 Example of usage:
 ```python
 import hdlConvertor
@@ -57,13 +55,13 @@ for e in res['entities']:
 ```
 
 
-Currently package is tested only for python3.5+ (python3.6 or latest recomended) under Linux but should work on any system with c++11 support. 
+If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
 
 ### Supported languages:
 
 * VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added or it can be executed manually.)
+* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
 
 
 ### Similar projects:

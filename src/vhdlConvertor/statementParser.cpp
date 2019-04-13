@@ -87,7 +87,7 @@ Statement * StatementParser::visitCase_statement(
 			auto s = a->sequence_of_statements();
 			auto stms = visitSequence_of_statements(s);
 			if (ch == nullptr) {
-				assert(_default = nullptr);
+				assert(_default == nullptr);
 				_default = stms;
 			} else {
 				alternatives.push_back({ch, stms});

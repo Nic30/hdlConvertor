@@ -3,7 +3,7 @@
 
 void NotImplementedLogger::print(const char * msg) {
 	if (Convertor::debug) {
-		std::cerr << msg << std::endl;
+		std::cerr << "Conversion to Python object not implemented: " << msg << std::endl;
 	}
 }
 

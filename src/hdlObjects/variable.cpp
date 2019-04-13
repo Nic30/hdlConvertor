@@ -9,7 +9,7 @@ Variable::Variable(std::string id, Expr * _type, Expr * val) {
 
 #ifdef USE_PYTHON
 PyObject* Variable::toJson() const {
-	PyObject * d = Named::toJson();
+	PyObject * d = WithNameAndDoc::toJson();
 	if (!type)
 		throw "Variable has no type";
 
@@ -26,7 +26,7 @@ PyObject* Variable::toJson() const {
 #endif
 
 void Variable::dump(int indent) const {
-	Named::dump(indent);
+	WithNameAndDoc::dump(indent);
 	indent += INDENT_INCR;
 	dumpKey("type", indent);
 	type->dump(indent);

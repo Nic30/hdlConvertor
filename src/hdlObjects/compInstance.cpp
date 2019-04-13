@@ -7,7 +7,7 @@ CompInstance::CompInstance(char * _name, Expr * _entityName) {
 
 #ifdef USE_PYTHON
 PyObject * CompInstance::toJson() const {
-	PyObject * d = Named::toJson();
+	PyObject * d = WithNameAndDoc::toJson();
 	PyDict_SetItemString(d, "entityName", entityName->toJson());
 	return d;
 }

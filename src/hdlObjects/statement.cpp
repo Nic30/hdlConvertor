@@ -150,7 +150,7 @@ pair<PyObject *, size_t> cases_toJson(vector<Expr*>::const_iterator cond_begin,
 
 #ifdef USE_PYTHON
 PyObject * Statement::toJson() const {
-	PyObject * d = PyDict_New();
+	PyObject * d = WithDoc::toJson();
 	PyDict_SetItemString(d, "type",
 			PyUnicode_FromString(StatementType_toString(type)));
 

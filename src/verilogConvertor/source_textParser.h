@@ -11,7 +11,7 @@
 
 class Source_textParser : public BaseHdlParser {
 public:
-	Source_textParser(Context * ctx, bool _hierarchyOnly);
+	Source_textParser(antlr4::TokenStream* tokens, Context * ctx, bool _hierarchyOnly);
 	void visitSource_text(Verilog2001::Verilog2001Parser::Source_textContext * ctx);
 	void visitTiming_spec(Verilog2001::Verilog2001Parser::Timing_specContext* ctx);
 	void visitDescription(Verilog2001::Verilog2001Parser::DescriptionContext* ctx);

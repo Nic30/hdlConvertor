@@ -11,7 +11,7 @@
  * 		this means that it does not have to have name or sensitivity list
  * 		specified explicitly
  * */
-class Process: public Named {
+class Process: public WithNameAndDoc {
 public:
 	bool sensitivity_list_specified;
 	std::vector<Expr*> sensitivity_list;

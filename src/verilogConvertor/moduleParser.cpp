@@ -2,15 +2,18 @@
 #include "statementParser.h"
 #include "../notImplementedLogger.h"
 #include "utils.h"
+#include "../baseHdlParser/commentParser.h"
 
 using namespace std;
 using namespace Verilog2001;
 
-ModuleParser::ModuleParser(Context * _context, bool _hierarchyOnly) {
+ModuleParser::ModuleParser(antlr4::TokenStream * tokens, Context * _context,
+		bool _hierarchyOnly) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
 	ent = new Entity();
 	arch = new Arch();
+	this->tokens = tokens;
 }
 
 void ModuleParser::visitModule_declaration(
@@ -24,6 +27,7 @@ void ModuleParser::visitModule_declaration(
 	// non_port_module_item*
 	// 'endmodule'
 	// ;
+	ent->__doc__ = parseComment(tokens, ctx);
 	ent->name = strdup(
 			ctx->module_identifier()->identifier()->getText().c_str());
 	for (auto a : ctx->attribute_instance()) {
@@ -71,7 +75,7 @@ std::vector<Variable*>* ModuleParser::visitModule_parameter_port_list(
 		Verilog2001Parser::Module_parameter_port_listContext* ctx) {
 	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','
 	// parameter_declaration_ )* ')' ;
-	std::vector<Variable*>* vars = new std::vector<Variable*>();
+	auto vars = new std::vector<Variable*>();
 	for (auto pd : ctx->parameter_declaration_()) {
 		auto pds = visitParameter_declaration_(pd);
 		for (auto pd : *pds)
@@ -95,7 +99,6 @@ std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
 	// |'parameter' 'realtime' list_of_param_assignments
 	// |'parameter' 'time' list_of_param_assignments
 	// ;
-
 	Expr * t = nullptr;
 	auto typeStr = ctx->children[1];
 	auto term = dynamic_cast<antlr4::tree::TerminalNodeImpl*>(typeStr);
@@ -142,6 +145,7 @@ Variable * ModuleParser::visitParam_assignment(
 			ctx->constant_expression());
 	Variable* p = new Variable(
 			ctx->parameter_identifier()->identifier()->getText(), NULL, value);
+	p->__doc__ = parseComment(tokens, ctx);
 	return p;
 }
 
@@ -169,7 +173,7 @@ void ModuleParser::visitModule_item(
 			Port * p = ent->getPortByName(declr->variable->name);
 			p->direction = declr->direction;
 			p->variable = declr->variable;
-			declr->variable = NULL;
+			declr->variable = nullptr;
 			delete declr;
 		}
 		delete portsDeclr;

@@ -1,14 +1,12 @@
 #include "process.h"
 
 Process::Process() :
-		Named(), sensitivity_list_specified(false) {
+		WithNameAndDoc(), sensitivity_list_specified(false) {
 }
 
 #ifdef USE_PYTHON
 PyObject * Process::toJson() const {
-	PyObject *d = PyDict_New();
-	if (name)
-		PyDict_SetItemString(d, "name", PyUnicode_FromString(name));
+	PyObject *d = WithNameAndDoc::toJson();
 	if (sensitivity_list_specified)
 		addJsonArrP(d, "sensitivity_list", sensitivity_list);
 
