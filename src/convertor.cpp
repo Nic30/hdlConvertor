@@ -1,5 +1,10 @@
 #include "convertor.h"
 
+using namespace antlr4;
+using namespace antlr4::tree;
+using namespace vhdl;
+using namespace Verilog2001;
+
 bool Convertor::debug = false;
 
 void parseFnVerilog(Verilog2001Parser * antlrParser,

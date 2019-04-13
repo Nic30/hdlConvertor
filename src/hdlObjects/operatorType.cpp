@@ -5,8 +5,6 @@ static const char* const opTypeToStr[] = {
 	"INDEX",
 	"DOWNTO",
 	"TO",
-	"UN_MINUS",
-	"UN_PLUS",
 	"SUB",
 	"ADD",
 	"DIV",
@@ -14,9 +12,11 @@ static const char* const opTypeToStr[] = {
 	"MOD",
 	"REM",
 	"CONCAT",
+	"REPL_CONCAT",
 	"POW",
 	"ABS",
 	"NOT",
+	"NEG",
 	"LOG_AND",
 	"LOG_OR",
 	"AND",
@@ -40,11 +40,13 @@ static const char* const opTypeToStr[] = {
 	"TERNARY",
 	"DOT",
 	"CALL",
-	"ARROW"
+	"ARROW",
+	"RISING",
+	"FALLING"
 };
 
 const char* OperatorType_toString(OperatorType opt) {
-	if (opt < RANGE || opt > ARROW)
+	if (opt < RANGE || opt > FALLING)
 		throw "Invalid operator type";
 
 	return opTypeToStr[opt];
@@ -55,8 +57,6 @@ int OperatorType_arity(OperatorType opt) {
 	case CALL:
 		return -1;
 	case NOT:
-	case UN_MINUS:
-	case UN_PLUS:
 	case ABS:
 	case RANGE:
 		return 1;
