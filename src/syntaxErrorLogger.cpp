@@ -1,10 +1,12 @@
 #include "syntaxErrorLogger.h"
+using namespace antlr4;
+using namespace std;
 
 void SyntaxErrorLogger::CheckErrors() {
-	std::stringstream error_msg;
-	error_msg << std::endl;
+	stringstream error_msg;
+	error_msg << endl;
 	for(
-	std::vector<error_data>::iterator iter = _errors.begin();
+	vector<error_data>::iterator iter = _errors.begin();
 	iter != _errors.end();
 	iter++ ) {
 		error_msg << iter->_filename 
@@ -12,7 +14,7 @@ void SyntaxErrorLogger::CheckErrors() {
 			<< ':' << (uint32_t) iter->_charPosition
 		        <<  ":SyntaxError:" 
 			<< iter->_message 
-			<< std::endl;
+			<< endl;
 	}
 	if (_errors.size() > 0) {
 		throw parseException(error_msg.str());	
@@ -25,8 +27,8 @@ void SyntaxErrorLogger::syntaxError(
 		Token *offendingSymbol,
 		size_t line,
 		size_t charPositionInLine,
-		const std::string &msg,
-		std::exception_ptr e) {
+		const string &msg,
+		exception_ptr e) {
 
 	error_data data;
 	data._line = line;
@@ -36,7 +38,7 @@ void SyntaxErrorLogger::syntaxError(
 	
 	_errors.push_back(data);
 
-	//std::cerr << line << ":" << charPositionInLine << ":Error:" << msg << "\n";
+	//cerr << line << ":" << charPositionInLine << ":Error:" << msg << "\n";
 }
 
 void SyntaxErrorLogger::reportAmbiguity(

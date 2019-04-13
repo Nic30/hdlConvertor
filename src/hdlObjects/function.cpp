@@ -10,7 +10,7 @@ Function::Function(char * name, bool isOperator, Expr * returnT,
 
 #ifdef USE_PYTHON
 PyObject * Function::toJson() const {
-	PyObject *d = Named::toJson();
+	PyObject *d = WithNameAndDoc::toJson();
 	PyDict_SetItemString(d, "isOperator", PyBool_FromLong(isOperator));
 	if (returnT) {
 		PyDict_SetItemString(d, "returnT", returnT->toJson());

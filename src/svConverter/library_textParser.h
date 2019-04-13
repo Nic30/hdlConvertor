@@ -7,6 +7,6 @@ using namespace sv2012;
 
 class Library_textParser: public BaseHdlParser {
 public:
-	Library_textParser(Context * ctx, bool _hierarchyOnly);
+	Library_textParser(antlr4::TokenStream* tokens, Context * ctx, bool _hierarchyOnly);
 	void visitLibrary_text(sv2012Parser::Library_textContext * ctx);
 };

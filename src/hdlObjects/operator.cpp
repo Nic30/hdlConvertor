@@ -7,7 +7,7 @@ Operator::Operator() {
 	op = ARROW;
 }
 
-Operator::Operator(const Operator & o){
+Operator::Operator(const Operator & o) {
 	if (o.operands) {
 		auto ops = new std::vector<Expr*>();
 		for (auto op : *o.operands) {
@@ -56,6 +56,8 @@ Operator * Operator::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	return op;
 }
 Operator::~Operator() {
+	// do not delete the variables as they may be shared
+	// and they are deleted on delete of scope itself
 	if (operands) {
 		for (auto o : *operands) {
 			delete o;
@@ -84,7 +86,9 @@ PyObject * Operator::toJson() const {
 	case 1:
 		break;
 	case 2:
-		PyDict_SetItemString(d, "op1", op1->toJson());
+		// some of the bin. operators may appear as unary in verilog
+		if (op1)
+			PyDict_SetItemString(d, "op1", op1->toJson());
 		break;
 	default:
 		throw "Invalid arity of operator";
@@ -112,7 +116,8 @@ void Operator::dump(int indent) const {
 	case 1:
 		break;
 	case 2:
-		dumpItemP("op1", indent, op1) << "\n";
+		if (op1) // may be unary variant of the bin operator (e.g. verilog &a)
+			dumpItemP("op1", indent, op1) << "\n";
 		break;
 	default:
 		throw "Invalid arity of operator";

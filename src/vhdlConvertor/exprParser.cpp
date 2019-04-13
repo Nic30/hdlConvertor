@@ -1,4 +1,10 @@
 #include "exprParser.h"
+#include "../notImplementedLogger.h"
+#include "literalParser.h"
+#include "referenceParser.h"
+#include "operatoTypeParser.h"
+
+using namespace vhdl;
 
 std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 		vhdlParser::Actual_parameter_partContext* ctx) {
@@ -181,7 +187,7 @@ Expr* ExprParser::visitSimple_expression(
 	if (t.size() > 1)
 		tIt++;
 	if (ctx->MINUS()) {
-		op0 = new Expr(op0, UN_MINUS, NULL);
+		op0 = new Expr(op0, SUB, NULL);
 	}
 	while (opListIt != opList.end()) {
 		auto op = *opListIt;
@@ -360,7 +366,7 @@ Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
 		Expr * e = visitElement_association(elm);
 		elements.push_back(e);
 	}
-	Expr * arr  = Expr::ARRAY(elements);
+	Expr * arr = Expr::ARRAY(elements);
 
 	return arr;
 }
@@ -371,7 +377,8 @@ Expr* ExprParser::visitElement_association(
 	//   : (  choices ARROW )? expression
 	//   ;
 	if (ctx->choices()) {
-		NotImplementedLogger::print("ExprParser.visitElement_association.choices");
+		NotImplementedLogger::print(
+				"ExprParser.visitElement_association.choices");
 	}
 	return visitExpression(ctx->expression());
 }
@@ -424,5 +431,38 @@ Expr *ExprParser::visitWaveform_element(
 				"ExprParser.visitWaveform_element - AFTER expression");
 	}
 	return top;
+}
 
+Expr * ExprParser::visitChoice(vhdl::vhdlParser::ChoiceContext * ctx) {
+	//choice
+	//  : identifier
+	//  | discrete_range
+	//  | simple_expression
+	//  | OTHERS
+	//  ;
+    //
+	auto i = ctx->identifier();
+	if (i) {
+		return LiteralParser::visitIdentifier(i);
+	}
+	auto dr = ctx->discrete_range();
+	if (dr) {
+		return visitDiscrete_range(dr);
+	}
+	auto e = ctx->simple_expression();
+	if (e) {
+		return visitSimple_expression(e);
+	}
+	return nullptr;
+}
+std::vector<Expr *> ExprParser::visitChoices(
+		vhdl::vhdlParser::ChoicesContext * ctx) {
+	//choices
+	//  : choice ( BAR choice )*
+	//  ;
+	std::vector<Expr *> res;
+	for (auto c: ctx->choice()) {
+		res.push_back(visitChoice(c));
+	}
+	return res;
 }
