@@ -1614,7 +1614,7 @@ LETTER
 
 COMMENT
   : '--' ( ~'\n' )* 
-  -> channel(HIDDEN)
+  -> skip
   ;
 
 TAB

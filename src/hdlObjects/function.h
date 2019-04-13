@@ -5,7 +5,7 @@
 #include "variable.h"
 #include "statement.h"
 
-class Function: public WithNameAndDoc {
+class Function: public Named {
 	bool isOperator;
 	Expr * returnT;
 	std::vector<Variable*> * params;

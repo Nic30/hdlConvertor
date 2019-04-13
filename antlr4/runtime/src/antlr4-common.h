@@ -42,7 +42,7 @@
   #ifdef _MSC_VER
     #pragma warning (disable: 4250) // Class inherits by dominance.
     #pragma warning (disable: 4512) // assignment operator could not be generated
-	#pragma warning (disable: 4251) // needs to have dll-interface to be used by clients of class
+
     #if _MSC_VER < 1900
       // Before VS 2015 code like "while (true)" will create a (useless) warning in level 4.
       #pragma warning (disable: 4127) // conditional expression is constant

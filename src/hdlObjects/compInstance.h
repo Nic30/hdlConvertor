@@ -3,7 +3,7 @@
 #include "named.h"
 #include "expr.h"
 
-class CompInstance: public WithNameAndDoc {
+class CompInstance: public Named {
 public:
 	Expr * entityName;
 	std::vector<Expr*> genericMap;

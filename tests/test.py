@@ -21,15 +21,15 @@ class BasicTC(unittest.TestCase):
     def test_vhld_dump_mux(self):
         f, res = dumpFile("mux.vhd", "vhdl")
         str(res)
-    
+
     def test_vhdl_package_array_const(self):
         f, res = dumpFile("package_array_const.vhd", "vhdl")
         str(res)
-    
+
     def test_vhdl_package_component(self):
         f, res = dumpFile("package_component.vhd", "vhdl")
         str(res)
-    
+
     def test_vhdl_package_constants(self):
         f, res = dumpFile("package_constants.vhd", "vhdl")
         str(res)
@@ -59,10 +59,10 @@ class BasicTC(unittest.TestCase):
             "gnt1":"OUT",
             "gnt0":"OUT",
         }
-    
+        
         _ports = { p["variable"]["name"]: p['direction'] for p in a["ports"]}
         self.assertDictEqual(_ports, ports)
-    
+
     def test_verilog_include(self):
         f, res = dumpFile("include.v", "verilog")
         str(res)
@@ -72,11 +72,11 @@ class BasicTC(unittest.TestCase):
         self.assertEqual(a["name"], "arbiter")
         u = e[1]
         self.assertEqual(u["name"], "uart")
-    
+
     def test_verilog_define(self):
         f, res = dumpFile("define.v", "verilog")
         str(res)
-    
+
     def test_verilog_fifo_rx(self):
         f, res = dumpFile("fifo_rx.v", "verilog")
         e = res['entities']
@@ -85,21 +85,13 @@ class BasicTC(unittest.TestCase):
         self.assertEqual(len(e['generics']), 2)
         self.assertEqual(len(e['ports']), 11)
         str(res)
-    
+
     def test_multiple_files_at_once(self):
         f = [path.join(BASE_DIR, "tests/", f) for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
         res = hdlConvertor.parse(f, "verilog", [TEST_DIR], debug=True)
         e = res["entities"]
         self.assertSetEqual(set(_e["name"] for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
-        str(res)
-    
-    def test_verilog_macro(self):
-        f, res = dumpFile("macro.v",'verilog')
-        str(res)
-    
-    def test_directive_verilogpp(self):
-        f, res = dumpFile("directive_verilogpp.v",'verilog')
         str(res)
 
 #    def test_system_verilog_mem_base_object(self):

@@ -1,9 +1,14 @@
 # pragma once
 
+#include "antlr4-runtime.h"
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/operatorType.h"
 
-inline OperatorType OperatorType_from(vhdl::vhdlParser::Shift_operatorContext * op) {
+
+using namespace antlr4;
+using namespace vhdl;
+
+inline OperatorType OperatorType_from(vhdlParser::Shift_operatorContext * op) {
 	// shift_operator
 	// : SLL
 	// | SRL
@@ -26,7 +31,7 @@ inline OperatorType OperatorType_from(vhdl::vhdlParser::Shift_operatorContext * 
 	return ROR;
 
 }
-inline OperatorType OperatorType_from(vhdl::vhdlParser::Relational_operatorContext * op) {
+inline OperatorType OperatorType_from(vhdlParser::Relational_operatorContext * op) {
 	// relational_operator
 	// : EQ
 	// | NEQ
@@ -48,8 +53,7 @@ inline OperatorType OperatorType_from(vhdl::vhdlParser::Relational_operatorConte
 	//assert(op->GE());
 	return GE;
 }
-inline OperatorType OperatorType_from(
-		vhdl::vhdlParser::Logical_operatorContext * op) {
+inline OperatorType OperatorType_from(vhdlParser::Logical_operatorContext * op) {
 	// logical_operator
 	// : AND
 	// | OR

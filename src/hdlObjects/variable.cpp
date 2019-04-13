@@ -1,15 +1,16 @@
 #include "variable.h"
 
-Variable::Variable(std::string id, Expr * _type, Expr * val) {
+Variable::Variable(std::string id, const std::shared_ptr<Expr> & _type,
+		Expr * val) {
 	name = strdup(id.c_str());
 	type = _type;
 	value = val;
-	latched = false;
 }
 
 #ifdef USE_PYTHON
+
 PyObject* Variable::toJson() const {
-	PyObject * d = WithNameAndDoc::toJson();
+	PyObject * d = Named::toJson();
 	if (!type)
 		throw "Variable has no type";
 
@@ -18,7 +19,7 @@ PyObject* Variable::toJson() const {
 	if (value) {
 		PyDict_SetItemString(d, "value", value->toJson());
 	} else {
-		Py_IncRef(Py_None);
+		Py_IncRef (Py_None);
 		PyDict_SetItemString(d, "value", Py_None);
 	}
 	return d;
@@ -26,7 +27,7 @@ PyObject* Variable::toJson() const {
 #endif
 
 void Variable::dump(int indent) const {
-	WithNameAndDoc::dump(indent);
+	Named::dump(indent);
 	indent += INDENT_INCR;
 	dumpKey("type", indent);
 	type->dump(indent);

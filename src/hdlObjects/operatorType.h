@@ -1,22 +1,22 @@
 #pragma once
 
 enum OperatorType {
-	RANGE, // range used in VHDL type specifications
-	INDEX, // array index
-	DOWNTO, // downto for the slice specification
-	TO,  // to for the slice specification
-	SUB, // can also be unary minus
-	ADD, // can also be unary plus
+	RANGE,
+	INDEX,
+	DOWNTO,
+	TO,
+	UN_MINUS,
+	UN_PLUS,
+	SUB,
+	ADD,
 	DIV,
 	MUL,
 	MOD,
 	REM,
-	CONCAT,// concatenation of signals
-	REPL_CONCAT, // replicative concatenation {<N>, <item>} duplicates and concatenates the item N times
-	POW, // bin operator power of
-	ABS, // absolute value
+	CONCAT,
+	POW,
+	ABS,
 	NOT,
-	NEG, // negation
 	LOG_AND,
 	LOG_OR,
 	AND,
@@ -25,24 +25,22 @@ enum OperatorType {
 	NOR,
 	XOR,
 	XNOR,
-	EQ,  // ==
-	NEQ, // ~
-	LOWERTHAN, // <
-	LE,   // <=
-	GREATERTHAN, // >
-	GE,  // >=
-	SLL, // shift left logical
-	SRL, // shift right logical
-	SLA, // shift left arithmetical
-	SRA, // shift right arithmetical
-	ROL, // rotate left
-	ROR, // rotate right
+	EQ,
+	NEQ,
+	LOWERTHAN,
+	LE,
+	GREATERTHAN,
+	GE,
+	SLL,
+	SRL,
+	SLA,
+	SRA,
+	ROL,
+	ROR,
 	TERNARY,
 	DOT,
 	CALL,
-	ARROW, // arrow operator used in vhdl type descriptions
-	RISING, // rising edge/posedge event operator
-	FALLING,// falling edge/negedge event operator
+	ARROW
 };
 
 const char* OperatorType_toString(OperatorType opt);

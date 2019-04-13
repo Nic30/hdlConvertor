@@ -2,18 +2,25 @@
 
 #include <vector>
 #include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/arch.h"
+#include "../hdlObjects/context.h"
+#include "../notImplementedLogger.h"
+#include "referenceParser.h"
+#include "../hdlObjects/named.h"
+#include "compInstanceParser.h"
 
-class ArchParser: public Named {
+using namespace antlr4;
+using namespace vhdl;
+
+class ArchParser : public Named {
 public:
 	Arch * a;
 	bool hierarchyOnly;
 	ArchParser(bool _hierarchyOnly);
 	Arch * visitArchitecture_body(
-			vhdl::vhdlParser::Architecture_bodyContext * ctx);
+			vhdlParser::Architecture_bodyContext * ctx);
 	void visitBlock_declarative_item(
-			vhdl::vhdlParser::Block_declarative_itemContext * ctx);
+			vhdlParser::Block_declarative_itemContext * ctx);
 	void visitArchitecture_statement(
-			vhdl::vhdlParser::Architecture_statementContext * ctx);
+			vhdlParser::Architecture_statementContext * ctx);
 
 };

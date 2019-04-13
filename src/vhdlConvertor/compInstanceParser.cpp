@@ -1,8 +1,4 @@
 #include "compInstanceParser.h"
-#include "../notImplementedLogger.h"
-#include "referenceParser.h"
-#include "literalParser.h"
-using namespace vhdl;
 
 CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 		vhdlParser::Component_instantiation_statementContext * ctx) {
@@ -11,7 +7,7 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 	// ( generic_map_aspect )?
 	// ( port_map_aspect )? SEMI
 	// ;
-	char * name = LiteralParser::visitLabel_colon(ctx->label_colon());
+	char * name = visitLabel_colon(ctx->label_colon());
 	CompInstance * ci = visitInstantiated_unit(ctx->instantiated_unit());
 	ci->name = name;
 	auto gma = ctx->generic_map_aspect();
@@ -37,6 +33,16 @@ std::vector<Expr*> * CompInstanceParser::visitPort_map_aspect(
 		vhdlParser::Port_map_aspectContext * ctx) {
 	NotImplementedLogger::print("CompInstanceParser.visitPort_map_aspect");
 	return new std::vector<Expr*>();
+}
+char * CompInstanceParser::visitLabel_colon(
+		vhdlParser::Label_colonContext * ctx) {
+	// label_colon
+	// : identifier COLON
+	// ;
+	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
+	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
+	delete e;
+	return s;
 }
 CompInstance * CompInstanceParser::visitInstantiated_unit(
 		vhdlParser::Instantiated_unitContext* ctx) {

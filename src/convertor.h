@@ -5,8 +5,10 @@
 #include <iostream>
 #include <fstream>
 #include <streambuf>
+#include <unistd.h>
 
 #include "hdlObjects/context.h"
+#include "antlr4-runtime.h"
 
 #include "vhdlConvertor/vhdlParser/vhdlLexer.h"
 #include "vhdlConvertor/vhdlParser/vhdlParser.h"
@@ -30,6 +32,12 @@
 #include "syntaxErrorLogger.h"
 #include "langue.h"
 #include "parserContainer.h"
+
+using namespace antlr4;
+using namespace antlr4::tree;
+using namespace vhdl;
+
+
 
 class Convertor {
 

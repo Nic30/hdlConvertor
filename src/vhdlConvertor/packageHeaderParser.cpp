@@ -1,10 +1,4 @@
 #include "packageHeaderParser.h"
-#include "literalParser.h"
-#include "exprParser.h"
-#include "entityParser.h"
-#include "interfaceParser.h"
-
-using namespace vhdl;
 
 PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
 	ph = new PackageHeader();
@@ -110,7 +104,8 @@ Variable * PackageHeaderParser::visitSubtype_declaration(
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
 	auto t = ExprParser::visitSubtype_indication(ctx->subtype_indication());
-	Variable * v = new Variable(ctx->identifier()->getText(), Expr::TYPE_T(), t);
+	std::shared_ptr<Expr> tt(Expr::TYPE_T());
+	Variable * v = new Variable(ctx->identifier()->getText(), tt, t);
 	return v;
 }
 

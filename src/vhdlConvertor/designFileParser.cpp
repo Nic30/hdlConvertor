@@ -1,19 +1,9 @@
 #include "designFileParser.h"
-#include "../notImplementedLogger.h"
-#include "archParser.h"
-#include "packageParser.h"
-#include "entityParser.h"
-#include "packageHeaderParser.h"
-#include "referenceParser.h"
 
-using namespace vhdl;
+DesignFileParser::DesignFileParser(Context * ctx, bool _hierarchyOnly) : BaseHdlParser(ctx, _hierarchyOnly) {}
 
-DesignFileParser::DesignFileParser(antlr4::TokenStream* tokens, Context * ctx,
-		bool _hierarchyOnly) :
-		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
-}
-
-void DesignFileParser::visitDesign_file(vhdlParser::Design_fileContext* ctx) {
+void DesignFileParser::visitDesign_file(
+		vhdlParser::Design_fileContext* ctx) {
 	if (!ctx)
 		return;
 	// design_file
@@ -24,7 +14,8 @@ void DesignFileParser::visitDesign_file(vhdlParser::Design_fileContext* ctx) {
 	}
 }
 
-void DesignFileParser::visitDesign_unit(vhdlParser::Design_unitContext* ctx) {
+void DesignFileParser::visitDesign_unit(
+		vhdlParser::Design_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// design_unit
@@ -33,7 +24,8 @@ void DesignFileParser::visitDesign_unit(vhdlParser::Design_unitContext* ctx) {
 	DesignFileParser::visitContext_clause(ctx->context_clause());
 	DesignFileParser::visitLibrary_unit(ctx->library_unit());
 }
-void DesignFileParser::visitLibrary_unit(vhdlParser::Library_unitContext* ctx) {
+void DesignFileParser::visitLibrary_unit(
+		vhdlParser::Library_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// library_unit
@@ -78,7 +70,8 @@ void DesignFileParser::visitContext_clause(
 		visitContext_item(item);
 	}
 }
-void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
+void DesignFileParser::visitPrimary_unit(
+		vhdlParser::Primary_unitContext* ctx) {
 	if (!ctx)
 		return;
 	// primary_unit
@@ -109,7 +102,8 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
 	}
 
 }
-void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext* ctx) {
+void DesignFileParser::visitContext_item(
+		vhdlParser::Context_itemContext* ctx) {
 	// context_item
 	// : library_clause
 	// | use_clause

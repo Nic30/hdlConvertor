@@ -4,13 +4,12 @@
 #include "expr.h"
 #include <memory>
 
-class Variable: public WithNameAndDoc {
+class Variable: public Named {
 public:
-	Expr * type;
+	std::shared_ptr<Expr> type;
 	Expr * value;
-	bool latched;
 
-	Variable(std::string id, Expr * type, Expr * val);
+	Variable(std::string id, const std::shared_ptr<Expr> & type, Expr * val);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif

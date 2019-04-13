@@ -1,17 +1,20 @@
 #pragma once
 
+#include <antlr4-runtime.h>
+#include <vector>
+
 #include "Verilog2001Parser/Verilog2001Parser.h"
+#include "../hdlObjects/symbolType.h"
 #include "../hdlObjects/expr.h"
+
+
+using namespace antlr4;
+using namespace Verilog2001;
 
 class Utils {
 public:
 	static Expr* mkStringT();
-
-	// wire type is represented by wire id or call wire(range, signed)
 	static Expr* mkWireT();
-	static Expr* mkWireT(Expr * range, bool signed_);
-	static Expr* mkWireT(Verilog2001::Verilog2001Parser::Range_Context * range,
-			bool signed_);
-
-	static bool is_signed(antlr4::ParserRuleContext * ctx);
+	static Expr* mkWireT(Expr * range);
+	static Expr* mkWireT(Verilog2001Parser::Range_Context * range);
 };

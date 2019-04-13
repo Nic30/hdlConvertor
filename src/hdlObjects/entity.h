@@ -3,7 +3,7 @@
 #include "variable.h"
 #include "port.h"
 
-class Entity: public WithNameAndDoc {
+class Entity: public Named {
 public:
 	std::vector<Variable*> generics;
 	std::vector<Port*> ports;

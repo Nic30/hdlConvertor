@@ -4,11 +4,11 @@
 using namespace std;
 
 aPackage::aPackage() :
-		WithNameAndDoc() {
+		Named() {
 }
 #ifdef USE_PYTHON
 PyObject * aPackage::toJson() const {
-	PyObject *d = WithNameAndDoc::toJson();
+	PyObject *d = Named::toJson();
 	addJsonArrP(d, "components", components);
 	addJsonArrP(d, "functions", functions);
 	addJsonArrP(d, "variables", variables);
@@ -17,7 +17,7 @@ PyObject * aPackage::toJson() const {
 }
 #endif
 void aPackage::dump(int indent) const {
-	WithNameAndDoc::dump(indent);
+	Named::dump(indent);
 	indent += INDENT_INCR;
 	dumpArrP("components", indent, components) << ",\n";
 	dumpArrP("functions", indent, functions) << "\n";

@@ -6,23 +6,24 @@
 
 #include "hdlObjects/context.h"
 #include "syntaxErrorLogger.h"
-#include <antlr4-runtime.h>
+#include "antlr4-runtime.h"
 
+using namespace antlr4;
 
 template<class antlrLexerT, class antlrParserT, class hdlParserT>
 class ParserContainer {
 	SyntaxErrorLogger * syntaxErrLogger;
 	antlrLexerT * lexer;
-	antlr4::CommonTokenStream * tokens;
+	CommonTokenStream * tokens;
 	antlrParserT * antlrParser;
 	hdlParserT * hdlParser;
 
-	void initParser(antlr4::ANTLRInputStream &input) {
+	void initParser(ANTLRInputStream &input) {
 		// create a lexer that feeds off of input CharStream
 		lexer = new antlrLexerT(&input);
 
 		// create a buffer of tokens pulled from the lexer
-		tokens = new antlr4::CommonTokenStream(lexer);
+		tokens = new CommonTokenStream(lexer);
 
 		// create a parser that feeds off the tokens buffer
 		antlrParser = new antlrParserT(tokens);
@@ -42,7 +43,7 @@ public:
 	}
 	Context * context;
 	void parseFile(
-			antlr4::ANTLRInputStream &fileName,
+			ANTLRInputStream &fileName,
 			bool hierarchyOnly,
 			bool debug,
 			std::function<
@@ -54,7 +55,7 @@ public:
 
 		initParser(fileName);
 
-		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context, hierarchyOnly);
+		hdlParser = new hdlParserT(context, hierarchyOnly);
 
 		// begin parsing at init rule
 		parseFn(antlrParser, hdlParser);
@@ -66,6 +67,7 @@ public:
 		delete antlrParser;
 		delete tokens;
 		delete lexer;
+
 	}
 };
 

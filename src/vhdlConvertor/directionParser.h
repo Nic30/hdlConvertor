@@ -3,7 +3,10 @@
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/direction.h"
 
-inline Direction Direction_from(vhdl::vhdlParser::Signal_modeContext * sm) {
+using namespace antlr4;
+using namespace vhdl;
+
+inline Direction Direction_from(vhdlParser::Signal_modeContext * sm) {
 	if (sm->IN())
 		return DIR_IN;
 	else if (sm->OUT())

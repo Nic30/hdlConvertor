@@ -5,10 +5,9 @@
 
 using namespace sv2012;
 
-class source_textParser: public BaseHdlParser {
+class source_textParser : public BaseHdlParser {
 
-public:
-	source_textParser(antlr4::TokenStream* tokens, Context * ctx,
-			bool _hierarchyOnly);
-	void visitSource_text(sv2012Parser::Source_textContext *ctx);
+	public:
+		source_textParser(Context * ctx, bool _hierarchyOnly);
+		void visitSource_text(sv2012Parser::Source_textContext *ctx);
 };

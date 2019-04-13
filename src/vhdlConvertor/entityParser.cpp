@@ -1,8 +1,4 @@
 #include "entityParser.h"
-#include "../notImplementedLogger.h"
-#include "../hdlObjects/expr.h"
-#include "interfaceParser.h"
-using namespace vhdl;
 
 EntityParser::EntityParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <stdlib.h>
 
 #include "vhdlParser/vhdlParser.h"
+#include "../notImplementedLogger.h"
 
 #include "../hdlObjects/symbolType.h"
 #include "../hdlObjects/expr.h"
@@ -10,27 +12,36 @@
 #include "../hdlObjects/package.h"
 #include "../hdlObjects/packageHeader.h"
 
+#include "literalParser.h"
+#include "interfaceParser.h"
+#include "packageHeaderParser.h"
+#include "statementParser.h"
+
+using namespace antlr4;
+using namespace vhdl;
+
 class PackageParser {
 public:
 	Package * p;
 	bool hierarchyOnly;
 	PackageParser(bool _hierarchyOnly);
-	Package * visitPackage_body(vhdl::vhdlParser::Package_bodyContext* ctx);
-	void visitPackage_body_declarative_part(aPackage * p,
-			vhdl::vhdlParser::Package_body_declarative_partContext* ctx);
+	Package * visitPackage_body(vhdlParser::Package_bodyContext* ctx);
+	void visitPackage_body_declarative_part(
+			aPackage * p,
+			vhdlParser::Package_body_declarative_partContext* ctx);
 	void visitPackage_body_declarative_item(
-			vhdl::vhdlParser::Package_body_declarative_itemContext* ctx);
+			vhdlParser::Package_body_declarative_itemContext* ctx);
 	static Function * visitSubprogram_body(
-			vhdl::vhdlParser::Subprogram_bodyContext* ctx);
+			vhdlParser::Subprogram_bodyContext* ctx);
 	static std::vector<Variable*>* visitSubprogram_declarative_part(
-			vhdl::vhdlParser::Subprogram_declarative_partContext* ctx);
+			vhdlParser::Subprogram_declarative_partContext* ctx);
 	static std::vector<Variable *> * visitSubprogram_declarative_item(
-			vhdl::vhdlParser::Subprogram_declarative_itemContext* ctx);
+			vhdlParser::Subprogram_declarative_itemContext* ctx);
 	static std::vector<Variable*> * visitVariable_declaration(
-			vhdl::vhdlParser::Variable_declarationContext* ctx);
+			vhdlParser::Variable_declarationContext* ctx);
 	void visitSubprogram_declaration(
-			vhdl::vhdlParser::Subprogram_declarationContext* ctx);
+			vhdlParser::Subprogram_declarationContext* ctx);
 	static std::vector<Statement *> * visitSubprogram_statement_part(
-			vhdl::vhdlParser::Subprogram_statement_partContext* ctx);
+			vhdlParser::Subprogram_statement_partContext* ctx);
 
 };

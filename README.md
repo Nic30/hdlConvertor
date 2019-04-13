@@ -3,21 +3,19 @@
 [![Win Build status](https://ci.appveyor.com/api/projects/status/e3cvi3ig5y4vni7e?svg=true)](https://ci.appveyor.com/project/nic30/hdlconvertor)
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
 [![Python version](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)
-[ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
-
-The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
+The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to one AST so other libraries does not have to care about Verilog/VHDL differences. 
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
-This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library (c++ runtime) known to me.
+This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library known to me.
 To make your live easier I included it to this package for you.
 
 
 ## Installation
 ```
-sudo apt install build-essential uuid-dev cmake
+sudo apt install uuid-dev
 sudo pip3 install -r requirements.txt
 
 sudo pip3 install hdlConvertor
@@ -45,6 +43,8 @@ In python all parsed stuff are just dictionaries and values (str, int).
 Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 
+
+
 Example of usage:
 ```python
 import hdlConvertor
@@ -55,13 +55,13 @@ for e in res['entities']:
 ```
 
 
-If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
+Currently package is tested only for python3.5+ (python3.6 or latest recomended) under Linux but should work on any system with c++11 support. 
 
 ### Supported languages:
 
 * VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
+* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added or it can be executed manually.)
 
 
 ### Similar projects:
@@ -72,7 +72,6 @@ If you having the troubles please check the installation part of the scripts for
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
-* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 
 

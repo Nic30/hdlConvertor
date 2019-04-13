@@ -1,8 +1,4 @@
 #include "interfaceParser.h"
-#include "exprParser.h"
-#include "directionParser.h"
-
-using namespace vhdl;
 
 std::vector<Variable*> * InterfaceParser::extractVariables(
 		vhdlParser::Identifier_listContext* identifier_list,
@@ -13,25 +9,23 @@ std::vector<Variable*> * InterfaceParser::extractVariables(
 	Expr * expr = NULL;
 	if (_expr)
 		expr = ExprParser::visitExpression(_expr);
-
+	std::shared_ptr<Expr> type(_type);
 	bool firstIt = true;
+
 	for (auto i : identifier_list->identifier()) {
 		// identifier_list
 		// : identifier ( COMMA identifier )*
 		// ;
-		if (!firstIt)
-			_type = new Expr(*_type);
 		Expr * __expr;
 		if (!expr) {
-			__expr = nullptr;
-			firstIt = false;
+			__expr = NULL;
 		} else if (firstIt) {
 			firstIt = false;
 			__expr = expr;
 		} else {
 			__expr = new Expr(*expr);
 		}
-		Variable * v = new Variable(i->getText(), _type, __expr);
+		Variable * v = new Variable(i->getText(), type, __expr);
 		vl->push_back(v);
 	}
 	return vl;

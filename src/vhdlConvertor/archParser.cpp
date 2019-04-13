@@ -1,9 +1,4 @@
 #include "archParser.h"
-#include "../notImplementedLogger.h"
-#include "compInstanceParser.h"
-#include "statementParser.h"
-
-using namespace vhdl;
 
 ArchParser::ArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -84,16 +79,10 @@ void ArchParser::visitArchitecture_statement(
 	// [TODO]
 	auto ci = ctx->component_instantiation_statement();
 	if (ci) {
-		auto i = CompInstanceParser::visitComponent_instantiation_statement(ci);
-		a->componentInstances.push_back(i);
+		a->componentInstances.push_back(
+				CompInstanceParser::visitComponent_instantiation_statement(ci));
 	} else {
 		if (!hierarchyOnly) {
-			auto p = ctx->process_statement();
-			if (p) {
-				auto proc = StatementParser::visitProcess_statement(p);
-				a->statements.push_back(proc);
-				return;
-			}
 			NotImplementedLogger::print(
 					"ArchParser.visitArchitecture_statement - unspecified next rule");
 		}
