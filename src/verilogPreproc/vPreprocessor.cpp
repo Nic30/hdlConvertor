@@ -18,12 +18,12 @@ vPreprocessor::vPreprocessor(TokenStream *tokens,
     unsigned int mode,
     size_t include_depth_limit) :
   _defineDB(defineDB),
-  _rewriter(tokens), 
   _tokens((CommonTokenStream *) tokens), 
   _incdir(incdir),
-  _mode(mode),
   _stack_incfile(stack_incfile),
-  include_depth_limit(include_depth_limit) {
+  _mode(mode),
+  include_depth_limit(include_depth_limit),
+  _rewriter(tokens) {
     // [TODO] add dir of current file into _incdir if not present
   }
 
