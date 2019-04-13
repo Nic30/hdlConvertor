@@ -36,7 +36,8 @@ PyObject * WithDoc::toJson() const {
 
 void WithDoc::dump(int indent) const {
 	std::cout << "{\n";
-	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << __doc__ << "\",\n";
+	// [NOTE] .c_str() because of the msvc
+	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << __doc__.c_str() << "\",\n";
 }
 
 WithNameAndDoc::WithNameAndDoc() :
@@ -60,5 +61,7 @@ PyObject * WithNameAndDoc::toJson() const {
 void WithNameAndDoc::dump(int indent) const {
 	std::cout << "{\n";
 	mkIndent(indent + INDENT_INCR) << "\"name\":\"" << name << "\",\n";
-	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << __doc__ << "\",\n";
+
+	// [NOTE] .c_str() because of the msvc
+	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << __doc__.c_str() << "\",\n";
 }
