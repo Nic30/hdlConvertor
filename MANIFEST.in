@@ -1,7 +1,13 @@
-include *.txt
+include *.txt *.md
 include MANIFEST.in
 include README.md
 include setup.py
 include setup.cfg
 
-recursive-include src *.c *.cpp *.h
+recursive-include src *.c *.cpp *.h *.txt *.py *.pxd *.pyx
+
+recursive-include grammars *.g4
+
+include antlr4/VERSION
+recursive-include antlr4 *.c *.cpp *.h *.txt *.jar 
+
