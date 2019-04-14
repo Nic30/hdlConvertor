@@ -49,5 +49,5 @@ deploy:
 script: 
   - nosetests tests -v 
   # also check if the installation works correctly
-  - python3 setup.py install --root=tmp
+  - python setup.py install --root=tmp
 
