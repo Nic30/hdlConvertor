@@ -4,11 +4,12 @@ from pprint import pprint
 import unittest
 from nose.tools import nottest
 
-TEST_DIR = path.abspath(path.dirname(__file__))
-BASE_DIR = path.join(TEST_DIR, "..")
-sys.path.insert(1, path.join(BASE_DIR, "dist"))
-
+try:
+    from .use_build_version import *
+except ImportError:
+    from use_build_version import *
 import hdlConvertor
+from hdlConvertor import ParseException
 
 @nottest
 def test_run(test_file, golden_file):
@@ -81,7 +82,7 @@ class PreprocessorTC(unittest.TestCase):
         self.assertEqual(result,'`include "/home/mydir/myfile"\n')
 
     def test_2012_p641_il1(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
+        with self.assertRaises(ParseException) as context:
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
@@ -90,7 +91,7 @@ class PreprocessorTC(unittest.TestCase):
         self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (1)' == context.exception.__str__())
 
     def test_2012_p641_il2(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
+        with self.assertRaises(ParseException) as context:
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
@@ -99,7 +100,7 @@ class PreprocessorTC(unittest.TestCase):
         self.assertTrue('Missmatch in number of argument macro declaration D (2) and macro usage (0)' == context.exception.__str__())
 
     def test_2012_p641_il3(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
+        with self.assertRaises(ParseException) as context:
             hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p641_il3.txt'),
                 ['.','..',path.join('sv_pp','src')],
@@ -109,7 +110,7 @@ class PreprocessorTC(unittest.TestCase):
 
 
     def test_2012_p642_il1(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
+        with self.assertRaises(ParseException) as context:
             result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il1.txt'),
                 ['.','..',path.join('sv_pp','src')],
@@ -121,7 +122,7 @@ class PreprocessorTC(unittest.TestCase):
     #Currently the code is not able to detect this issue
     @unittest.expectedFailure
     def test_2012_p642_il2(self):
-        with self.assertRaises(hdlConvertor.parseException) as context:
+        with self.assertRaises(ParseException) as context:
             result = hdlConvertor.verilog_pp(
                 path.join(TEST_DIR,'sv_pp','src','2012_p642_il2.txt'),
                 ['.','..',path.join('sv_pp','src')],
