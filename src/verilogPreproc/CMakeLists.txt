@@ -10,11 +10,13 @@ add_custom_command(
   OUTPUT
   ${verilogPreprocParsers_GENERATED_SRC}
   COMMAND
-  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -o
+  #"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -o
+  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -visitor -o
   	${CMAKE_CURRENT_SOURCE_DIR}/verilogPreprocParser
-  	${PROJECT_SOURCE_DIR}/grammars/verilogPreproc.g4
+	${PROJECT_SOURCE_DIR}/grammars/verilogPreprocLexer.g4
+  	${PROJECT_SOURCE_DIR}/grammars/verilogPreprocParser.g4
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/verilogPreproc.g4
+  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/verilogPreprocParser.g4 ${PROJECT_SOURCE_DIR}/grammars/verilogPreprocLexer.g4
 )
 
 add_custom_target(generateParsersVerilogPreproc

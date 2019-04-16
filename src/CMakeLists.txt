@@ -5,9 +5,9 @@
 
 function(GetAntlrParserFileNamesSpecDir root name result dir_prefix)
 	set(result_tmp
-		${root}/${dir_prefix}Parser/${name}BaseListener.cpp
+		#	${root}/${dir_prefix}Parser/${name}BaseListener.cpp
 		${root}/${dir_prefix}Parser/${name}Lexer.cpp
-		${root}/${dir_prefix}Parser/${name}Listener.cpp
+		#${root}/${dir_prefix}Parser/${name}Listener.cpp
 		${root}/${dir_prefix}Parser/${name}Parser.cpp
 	)
 

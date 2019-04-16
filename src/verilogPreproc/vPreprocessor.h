@@ -4,7 +4,7 @@
 #include "antlr4-runtime.h"
 #include "verilogPreprocParser/verilogPreprocLexer.h"
 #include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocBaseVisitor.h"
+#include "verilogPreprocParser/verilogPreprocParserBaseVisitor.h"
 #include <string>
 #include <map>
 #include <sys/stat.h>
@@ -12,7 +12,6 @@
 
 #include "verilogPreprocParser/verilogPreprocLexer.h"
 #include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocBaseListener.h"
 
 #include "../verilogPreproc/macroPrototype.h"
 #include "../verilogPreproc/macroSymbol.h"
@@ -24,7 +23,7 @@
  * :ivar _incdir: directories where to search for included files (last will be searched first)
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
-class vPreprocessor : public  verilogPreprocBaseVisitor {
+class vPreprocessor : public  verilogPreprocParserBaseVisitor {
   macroSymbol & _defineDB;
   antlr4::CommonTokenStream * _tokens;
   std::vector<std::string> _incdir;
@@ -67,6 +66,7 @@ class vPreprocessor : public  verilogPreprocBaseVisitor {
   virtual antlrcpp::Any visitIfdef_directive(verilogPreprocParser::Ifdef_directiveContext * ctx);
   virtual antlrcpp::Any visitIfndef_directive(verilogPreprocParser::Ifndef_directiveContext * ctx);
 
+  virtual antlrcpp::Any visitStringLiteral(verilogPreprocParser::StringLiteralContext *ctx);
   virtual antlrcpp::Any visitInclude(verilogPreprocParser::IncludeContext * ctx);
 
   virtual antlrcpp::Any visitKeywords_directive(verilogPreprocParser::Keywords_directiveContext * ctx);
@@ -96,4 +96,6 @@ std::string return_preprocessed_file(const std::string fileName,
     macroSymbol & defineDB, std::vector<std::string> & stack_incfile,
     unsigned int mode=0);
 
-std::string& rtrim(std::string& str, const std::string& chars = "\n\r");
+std::string& rtrim(std::string& str, const std::string& chars = " \t\n\r");
+std::string& ltrim(std::string& str, const std::string& chars = " \t\n\r");
+std::string& trim(std::string& str, const std::string& chars = " \t\n\r");
