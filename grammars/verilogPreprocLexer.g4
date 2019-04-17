@@ -14,7 +14,7 @@ antlr4::Token * emit() {
   return lastToken;
 }
 */
-bool define_parentesis = false;
+unsigned int define_parentesis_count = 0;
 unsigned int token_id_parentesis_count = 0;
 
 }
@@ -73,26 +73,29 @@ WS : [ \t] -> type(CODE);
 CODE : .;
 
 mode DEFINE_MODE;
+DM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
 DM_DIGIT    : [0-9] ;
 DM_ID : ID_FIRST (ID_FIRST | DM_DIGIT)*;
 DM_LP : '('
       {
-      define_parentesis = true;
+      define_parentesis_count++;
       }
 ;
 DM_RP : ')'
       {
-      define_parentesis = false;
+      define_parentesis_count--;
       }
 ;
 DM_COMMA: ',';
 DM_EQUAL: '=' -> mode(DEFINE_DEFAULT_TEXT);
 DM_WS : [ \t]+ {
-   if (define_parentesis == true) {
-     skip();
+   
+   if (define_parentesis_count == 0) {
+     setMode(DEFINE_NEXT_MODE);
+     setType(DM_WS);
    }
    else {
-     setMode(DEFINE_NEXT_MODE);
+     skip();
    }
 }
 ;
@@ -100,7 +103,7 @@ DM_WS : [ \t]+ {
 DM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'
                 {
                    setChannel(CH_LINE_COMMENT);
-                   if (define_parentesis == false) {
+                   if (define_parentesis_count == 0) {
                       setMode(DEFAULT_MODE);
                    }
                 }
@@ -109,7 +112,7 @@ DM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 DM_NEW_LINE: '\n'
            {  
               setType(NEW_LINE);
-              if (define_parentesis == false) {
+              if (define_parentesis_count == 0) {
                   setMode(DEFAULT_MODE);
               }
               else {
@@ -118,11 +121,6 @@ DM_NEW_LINE: '\n'
            }
            ;
 mode DEFINE_NEXT_MODE;
-//DNM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
-//DNM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
-//DNM_CODE : ( ~[\r\n]+ DNM_LINE_ESCAPE? )+;
-//DNM_NEW_LINE: '\r'? '\n' -> type(NEW_LINE),mode(DEFAULT_MODE);
-
 DNM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'->channel(CH_LINE_COMMENT);
 DNM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 DNM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
@@ -130,18 +128,46 @@ DNM_NEW_LINE: '\r'? '\n' -> type(NEW_LINE),mode(DEFAULT_MODE);
 DNM_CODE :  . ;
 
 mode DEFINE_DEFAULT_TEXT;
-DM_DTXT: ~[,)]* ->mode(DEFINE_MODE);
+DDT_LP : '('
+      {
+      define_parentesis_count++;
+      setType(DM_DTXT);
+      }
+      ;
+DDT_RP : ')'
+      {
+      define_parentesis_count--;
+      if (define_parentesis_count >= 1) {
+          setType(DM_DTXT);
+      }
+      else {
+          setType(DM_RP);
+          setMode(DEFINE_MODE);
+      }
+      }
+      ;
+DDT_COMMA : ','
+      {
+         if (define_parentesis_count > 1) {
+            setType(DM_DTXT);
+         }
+         else {
+             setType(DM_COMMA);
+             setMode(DEFINE_MODE);
+         }
+      }
+      ;
+DM_DTXT: . ;
 
 mode MACRO_REPLACE;
 MR_DIGIT: [0-9];
 MR_ID: ID_FIRST (ID_FIRST | MR_DIGIT)* ->type(ID);
-MR_LP: '('
+MR_LP: [ \t]* '('
      {
        setType(LP);
        setMode(MACRO_DEFAULT_TEXT);
        token_id_parentesis_count = 1;
      }; 
-MR_WS: [ \t] ->skip;
 MR_ANY: . ->type(CODE),mode(DEFAULT_MODE);
 
 mode MACRO_DEFAULT_TEXT;

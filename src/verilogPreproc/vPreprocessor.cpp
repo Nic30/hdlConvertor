@@ -238,9 +238,6 @@ antlrcpp::Any vPreprocessor::visitUndef(verilogPreprocParser::UndefContext * ctx
 //method call when `macro is found in the source code
 antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext * ctx) {
   //printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
-  if (_stack_incfile.size() > 0) {
-    return NULL;
-  }
  
   //create a macroPrototype object
   std::vector<std::string> args;
@@ -469,7 +466,7 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
 
     // register the include file on the include file stack
     _stack_incfile.push_back(filename);
-    printf("%s (%li)\n",filename.c_str(),buffer.st_size);
+    //printf("%s (%li)\n",filename.c_str(),buffer.st_size);
 
     // read the file
     // run the pre-processor on it

@@ -80,11 +80,11 @@ define
     ;
 
 replacement
-    :   DNM_CODE+
+    :   DNM_CODE*
     ;
 
 default_text
-    : DM_DTXT
+    : DM_DTXT+
     ;
 
 
