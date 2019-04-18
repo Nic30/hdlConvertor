@@ -28,10 +28,10 @@ void macro_replace::look4stringLiteral(std::string tmpl) {
   size_t start_pos = 0;
   size_t pos1 = -1;
   while((start_pos = tmpl.find('"', start_pos)) != std::string::npos) {
-    if (pos1 == -1 && (start_pos != 0 && tmpl[start_pos-1]!='`' || start_pos == 0) ) {
+    if (pos1 == (long unsigned int) -1 && ((start_pos != 0 && tmpl[start_pos-1]!='`') || start_pos == 0) ) {
       pos1 = start_pos;
     }
-    else if (pos1 != -1 && tmpl[start_pos-1]!= '`') {
+    else if (pos1 != (long unsigned int) -1 && tmpl[start_pos-1]!= '`') {
       size_t length = start_pos - pos1;
       _substituate.push_back(std::make_pair(pos1,length));
       pos1 = -1;

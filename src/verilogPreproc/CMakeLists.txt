@@ -10,7 +10,6 @@ add_custom_command(
   OUTPUT
   ${verilogPreprocParsers_GENERATED_SRC}
   COMMAND
-  #"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -o
   "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Dlanguage=Cpp -visitor -o
   	${CMAKE_CURRENT_SOURCE_DIR}/verilogPreprocParser
 	${PROJECT_SOURCE_DIR}/grammars/verilogPreprocLexer.g4
@@ -23,6 +22,9 @@ add_custom_target(generateParsersVerilogPreproc
   DEPENDS
   ${verilogPreprocParsers_GENERATED_SRC}
 )
+
+#Suppress warnings on generated code.
+set_property(SOURCE ${verilogPreprocParsers_GENERATED_SRC} PROPERTY COMPILE_FLAGS -Wno-unused-parameter)
 
 add_library(parsersVerilogPreproc_static STATIC 
 	${libparserverilogPreproc_SRC}
