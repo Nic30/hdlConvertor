@@ -47,7 +47,7 @@ class vPreprocessor : public  verilogPreprocBaseVisitor {
       std::vector<std::string> &stack_incfile,
       unsigned int mode=VERILOG2001,
       size_t include_depth_limit=100);
-  ~vPreprocessor();
+  virtual ~vPreprocessor();
 
   virtual antlrcpp::Any visitResetall(verilogPreprocParser::ResetallContext * ctx);
   virtual antlrcpp::Any visitCelldefine(verilogPreprocParser::CelldefineContext * ctx);

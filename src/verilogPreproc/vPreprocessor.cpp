@@ -18,12 +18,12 @@ vPreprocessor::vPreprocessor(TokenStream *tokens,
     unsigned int mode,
     size_t include_depth_limit) :
   _defineDB(defineDB),
-  _rewriter(tokens), 
   _tokens((CommonTokenStream *) tokens), 
   _incdir(incdir),
-  _mode(mode),
   _stack_incfile(stack_incfile),
-  include_depth_limit(include_depth_limit) {
+  _mode(mode),
+  include_depth_limit(include_depth_limit),
+  _rewriter(tokens) {
     // [TODO] add dir of current file into _incdir if not present
   }
 
@@ -278,7 +278,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
     //The  macro has not yet been defined. It is an issue we throw an
     //exception
     std::string msg = macro.macroName + " is not defined";
-    throw parseException(msg);
+    throw ParseException(msg);
   }
 
   //build the replacement string by calling the replacement method of the
@@ -437,7 +437,7 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
     // The file was not found. We throw a exception
     std::string msg = StringLiteral.substr(1, StringLiteral.size() - 2)
       + " was not found in include directory\n";
-    throw parseException(msg);
+    throw ParseException(msg);
   } else if (_stack_incfile.size() > include_depth_limit) {
     // test the number of nested include. 
     // If so throw an exception
@@ -446,7 +446,7 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
     for (auto f : _stack_incfile) {
       msg << "    " << f << std::endl;
     }
-    throw parseException(msg.str());
+    throw ParseException(msg.str());
   } else {
     //Well done. we are going to replace the content of the `include
     //directive by the content of the processed file

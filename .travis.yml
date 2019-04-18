@@ -34,7 +34,8 @@ addons:
 # command to install dependencies
 install:
 - pip install -r requirements.txt
-- python setup.py install
+- pip install nose
+- python setup.py install 
 
 deploy:
   provider: pypi
@@ -44,4 +45,9 @@ deploy:
   on:
     tags: true
     branch: master
-script: nosetests
+
+script: 
+  - nosetests tests -v 
+  # also check if the installation works correctly
+  - python setup.py install --root=tmp
+
