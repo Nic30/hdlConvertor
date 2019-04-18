@@ -134,12 +134,18 @@ class PreprocessorTC(unittest.TestCase):
             )
         self.assertTrue('Missmatch in number of argument macro declaration (3) and macro usage (0)' == context.exception.__str__())
 
-#    def test_2012_p642_il3(self):
-#        result = hdlConvertor.verilog_pp(
-#                path.join(TEST_DIR,'sv_pp','src','2012_p642_il3.txt'),
-#                ['.','..',path.join('sv_pp','src')],
-#                "sv2012"
-#            )
+    #No check that string are not split
+    @unittest.expectedFailure
+    def test_2012_p642_il3(self):
+        with self.assertRaises(hdlConvertor.parseException) as context:
+            result = hdlConvertor.verilog_pp(
+                path.join(TEST_DIR,'sv_pp','src','2012_p642_il3.txt'),
+                ['.','..',path.join('sv_pp','src')],
+                "sv2012"
+            )
+        self.assertTrue('an error message' == context.exception.__str__())
+
+        
 
     def test_FILE_LINE(self):
         test_result = hdlConvertor.verilog_pp(
