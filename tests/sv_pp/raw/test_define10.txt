@@ -1,0 +1,5 @@
+
+`define uvm_message_add_tag(NAME, VALUE, ACTION=(UVM_LOG|UVM_RM_RECORD)) \
+    __uvm_msg.add_string(NAME, VALUE, ACTION);
+
+

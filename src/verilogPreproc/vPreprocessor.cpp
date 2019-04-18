@@ -164,10 +164,16 @@ antlrcpp::Any vPreprocessor::visitDefine(verilogPreprocParser::DefineContext * c
     }
     */
     // get the template
-    rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
-    remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
 
-    rep_data = rtrim(rep_data);
+    if (ctx->replacement() != nullptr) {
+      rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
+      remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
+
+      rep_data = rtrim(rep_data);
+    }
+    else {
+      rep_data = "";
+    }
 
     // add the macro to the macroDB object
     if (_mode == SV2012) {
@@ -526,19 +532,24 @@ std::string return_preprocessed_file(const std::string fileName,
 
   //printf("@%s\n",__PRETTY_FUNCTION__);
 
+	
   ANTLRFileStream input(fileName);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
   lexer->mode = mode;
   lexer->reset(); // bug ?
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
   
-  tokens->fill();
   /*
+  tokens->fill();
   for (auto token : tokens->getTokens()) {
     std::cout << token->toString() << std::endl;
   }
   */
+  
   verilogPreprocParser * parser = new verilogPreprocParser(tokens);
+  parser->removeErrorListeners();
+  SyntaxErrorLogger * syntaxErrLogger = new SyntaxErrorLogger;
+  parser->addErrorListener(syntaxErrLogger);
   parser->mode = mode;
   tree::ParseTree *tree = parser->file();
   /* 

@@ -17,6 +17,8 @@
 #include "../verilogPreproc/macroSymbol.h"
 #include "exception.h"
 
+#include "../syntaxErrorLogger.h"
+
 /*
  * Verilog preprocessor
  * :ivar _defineDB: database of defines

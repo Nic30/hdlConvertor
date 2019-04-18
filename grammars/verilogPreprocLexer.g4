@@ -36,8 +36,8 @@ ENDIF: [ \t]* '`endif' [ \t\r\n]*;
 DOUBLE_BACKTICK: '``';
 FILE_NB: '`__FILE__';
 LINE_NB: '`__LINE__';
-BEGIN_KEYWORDS: '[ \t]* `begin_keywords' [ \t] ->mode(KEYWOORDS_MODE);
-END_KEYWORDS: '[ \t]* `end_keywords' '\r'? '\n';
+BEGIN_KEYWORDS: [ \t]* '`begin_keywords' [ \t] ->mode(KEYWOORDS_MODE);
+END_KEYWORDS: [ \t]* '`end_keywords' '\r'? '\n';
 PRAGMA: [ \t]* '`pragma' [ \t] -> mode(PRAGMA_MODE);
 UNDEFINEALL: [ \t]* '`undefineall' '\r'? '\n';
 RESETALL: [ \t]* '`resetall' [ \t]* '\r'? '\n';
@@ -260,6 +260,8 @@ TIMING_SPEC_MODE_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode KEYWOORDS_MODE;
 KEYWOORDS_MODE_WS : [ \t]+ -> skip;
+KEYWOORDS_MODE_WS_LINE_COMMENT : '//' ~[\r\n]* ->channel(CH_LINE_COMMENT);
+KEYWOORDS_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 V18002017 : '"1800-2017"' ;
 V18002012 : '"1800-2012"' ;
 V18002009 : '"1800-2009"' ;
@@ -268,7 +270,8 @@ V13642005 : '"1364-2005"' ;
 V13642001 : '"1364-2001"' ;
 V13642001noconfig : '"1364-2001-noconfig"' ;
 V13641995 : '"1364-1995"';
-KEYWOORDS_MODE_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+KEYWOORDS_MODE_NEW_LINE : '\r'? '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+
 
 mode INCLUDE_MODE;
 INCLUDE_MODE_StringLiteral_double_quote 

@@ -1,0 +1,4 @@
+
+
+`define uvm_cb_trace_noobj(CB,OPER) /* null */
+

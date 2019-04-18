@@ -1,0 +1,17 @@
+
+
+`ifdef macro
+ 
+  Zozo1
+
+`elsif DATA
+
+AZERTYHJ
+
+`define A
+ i
+`else
+
+ZoZo2
+
+`endif

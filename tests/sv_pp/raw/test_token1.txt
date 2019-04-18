@@ -1,0 +1,7 @@
+module dut(dut_if dif);
+  import uvm_pkg::*;
+  always @(posedge dif.clock)
+    if (dif.reset != 1) begin
+      `uvm_info
+    end
+endmodule

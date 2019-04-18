@@ -1,0 +1,8 @@
+
+`begin_keywords "1800-2005" // use IEEE Std 1800-2005 SystemVerilog keywords
+module m2 (...);
+reg [63:0] logic;
+// ERROR: "logic" is a keyword in 1800-2005
+...
+endmodule
+`end_keywords
