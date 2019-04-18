@@ -74,11 +74,15 @@ class PreprocessorTC(unittest.TestCase):
         self.assertEqual(result,ref)
 
     def test_2012_p644_2(self):
-        result = hdlConvertor.verilog_pp(
+        with self.assertRaises(hdlConvertor.parseException) as context:
+            result = hdlConvertor.verilog_pp(
             path.join(TEST_DIR,'sv_pp','src','2012_p644_2.txt'),
             ['.','..',path.join('sv_pp','src')],
             "sv2012")
-        self.assertEqual(result,'`include "/home/mydir/myfile"\n')
+        self.assertTrue(
+            '/home/mydir/myfile was not found in include directories\n' == \
+            context.exception.__str__()
+                       )
 
     def test_2012_p641_il1(self):
         with self.assertRaises(hdlConvertor.parseException) as context:
