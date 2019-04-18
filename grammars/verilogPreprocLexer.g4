@@ -14,6 +14,7 @@ antlr4::Token * emit() {
   return lastToken;
 }
 */
+bool define_parentesis_rp_seen = false;
 unsigned int define_parentesis_count = 0;
 unsigned int token_id_parentesis_count = 0;
 
@@ -73,32 +74,32 @@ WS : [ \t] -> type(CODE);
 CODE : .;
 
 mode DEFINE_MODE;
+DN_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 DM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
 DM_DIGIT    : [0-9] ;
-DM_ID : ID_FIRST (ID_FIRST | DM_DIGIT)*;
+DM_ID : ID_FIRST (ID_FIRST | DM_DIGIT)*
+      {
+      define_parentesis_rp_seen =  false;
+      };
 DM_LP : '('
       {
       define_parentesis_count++;
+      if (define_parentesis_rp_seen ==  true) {
+        setType(DNM_CODE);
+        setMode(DEFINE_NEXT_MODE);
+      }
       }
 ;
 DM_RP : ')'
       {
       define_parentesis_count--;
+      if (define_parentesis_count == 0) {
+          define_parentesis_rp_seen = true;
+      }
       }
 ;
 DM_COMMA: ',';
 DM_EQUAL: '=' -> mode(DEFINE_DEFAULT_TEXT);
-DM_WS : [ \t]+ {
-   
-   if (define_parentesis_count == 0) {
-     setMode(DEFINE_NEXT_MODE);
-     setType(DM_WS);
-   }
-   else {
-     skip();
-   }
-}
-;
 
 DM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'
                 {
@@ -120,6 +121,21 @@ DM_NEW_LINE: '\n'
               }
            }
            ;
+
+DM_WS : [ \t]+ {
+   
+   if (define_parentesis_count == 0) {
+     setMode(DEFINE_NEXT_MODE);
+     setType(DM_WS);
+   }
+   else {
+     skip();
+   }
+}
+;
+
+DM_ANY : .->type(DNM_CODE),mode(DEFINE_NEXT_MODE);
+
 mode DEFINE_NEXT_MODE;
 DNM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'->channel(CH_LINE_COMMENT);
 DNM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
@@ -168,6 +184,7 @@ MR_LP: [ \t]* '('
        setMode(MACRO_DEFAULT_TEXT);
        token_id_parentesis_count = 1;
      }; 
+
 MR_ANY: . ->type(CODE),mode(DEFAULT_MODE);
 
 mode MACRO_DEFAULT_TEXT;

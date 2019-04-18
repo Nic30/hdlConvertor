@@ -74,13 +74,13 @@ preprocess_directive
     ;
 
 define
-    : { isSV2012() || isSV2017() }? DEFINE macro_id DM_LP var_id (DM_EQUAL default_text?) ? ( DM_COMMA var_id (DM_EQUAL default_text?)? )* DM_RP (DM_WS replacement)? 
-    | {!( isSV2012() || isSV2017()) }?DEFINE macro_id DM_LP var_id ( DM_COMMA var_id )* DM_RP (DM_WS replacement)? 
-    | DEFINE macro_id (DM_WS replacement)?
+    : { isSV2012() || isSV2017() }? DEFINE macro_id DM_LP var_id (DM_EQUAL default_text?) ? ( DM_COMMA var_id (DM_EQUAL default_text?)? )* DM_RP DM_WS? replacement?
+    | {!( isSV2012() || isSV2017()) }?DEFINE macro_id DM_LP var_id ( DM_COMMA var_id )* DM_RP DM_WS? replacement?
+    | DEFINE macro_id DM_WS? replacement?
     ;
 
 replacement
-    :   DNM_CODE*
+    : DNM_CODE+
     ;
 
 default_text
