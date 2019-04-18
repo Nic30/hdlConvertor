@@ -26,8 +26,8 @@ file(GLOB libantlrcpp_SRC
 add_library(antlr4_static STATIC ${libantlrcpp_SRC})
 
 #set(LIB_OUTPUT_DIR "${CMAKE_HOME_DIRECTORY}/dist") # put generated libraries here.
-set(LIB_OUTPUT_DIR "${CMAKE_HOME_DIRECTORY}/hdlConvertor") # put generated libraries here.
-message(STATUS "Output libraries to ${LIB_OUTPUT_DIR}")
+set(LIB_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}") # put generated libraries here.
+#message(STATUS "Output libraries to ${LIB_OUTPUT_DIR}")
 
 # make sure 'make' works fine even if ${LIB_OUTPUT_DIR} is deleted.
 add_custom_target(make_lib_output_dir ALL
@@ -66,13 +66,13 @@ if(WIN32)
   set(extra_static_compile_flags "-DANTLR4CPP_STATIC")
 endif(WIN32)
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  if(WITH_STATIC_CRT)
+#  if(WITH_STATIC_CRT)
 #    target_compile_options(antlr4_shared PRIVATE "/MT$<$<CONFIG:Debug>:d>")
-    target_compile_options(antlr4_static PRIVATE "/MT$<$<CONFIG:Debug>:d>")
-  else()
+#    target_compile_options(antlr4_static PRIVATE "/MT$<$<CONFIG:Debug>:d>")
+#  else()
 #    target_compile_options(antlr4_shared PRIVATE "/MD$<$<CONFIG:Debug>:d>")
     target_compile_options(antlr4_static PRIVATE "/MD$<$<CONFIG:Debug>:d>")
-  endif()
+#  endif()
 endif()
 
 set(static_lib_suffix "")
@@ -108,15 +108,15 @@ set_target_properties(antlr4_static
 #install(TARGETS antlr4_shared
 #        DESTINATION lib 
 #        EXPORT antlr4-targets)
-install(TARGETS antlr4_static
-        DESTINATION lib
-        EXPORT antlr4-targets)
-
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/" 
-        DESTINATION "include/antlr4-runtime"
-        COMPONENT dev 
-        FILES_MATCHING PATTERN "*.h"
-        )
+#install(TARGETS antlr4_static
+#        DESTINATION lib
+#        EXPORT antlr4-targets)
+#
+#install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/" 
+#        DESTINATION "include/antlr4-runtime"
+#        COMPONENT dev 
+#        FILES_MATCHING PATTERN "*.h"
+#        )
 
 
 

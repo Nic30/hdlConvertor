@@ -5,9 +5,7 @@
 
 function(GetAntlrParserFileNamesSpecDir root name result dir_prefix)
 	set(result_tmp
-		#	${root}/${dir_prefix}Parser/${name}BaseListener.cpp
 		${root}/${dir_prefix}Parser/${name}Lexer.cpp
-		#${root}/${dir_prefix}Parser/${name}Listener.cpp
 		${root}/${dir_prefix}Parser/${name}Parser.cpp
 	)
 
@@ -67,12 +65,12 @@ file(GLOB libhdlConvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/*.cpp"
 )
 
-add_cython_target(hdlConvertor CXX)
-add_library(hdlConvertor MODULE ${hdlConvertor}
+add_cython_target(_hdlConvertor CXX)
+add_library(_hdlConvertor MODULE ${_hdlConvertor}
 								${libhdlConvertor_SRC})
-python_extension_module(hdlConvertor)
+python_extension_module(_hdlConvertor)
 
-target_link_libraries(hdlConvertor 
+target_link_libraries(_hdlConvertor 
 	parsersSV_static
 	parsersVerilog_static
 	parsersVerilogPreproc_static
@@ -80,13 +78,12 @@ target_link_libraries(hdlConvertor
 	antlr4_static
 )
 
-set_target_properties(hdlConvertor
-	PROPERTIES VERSION "1.0.0"
-	OUTPUT_NAME hdlConvertor
-	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
-)
+#set_target_properties(_hdlConvertor
+#	PROPERTIES VERSION "1.0.0"
+#	OUTPUT_NAME _hdlConvertor
+#	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+#	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+#)
 
-install(FILES $<TARGET_FILE:hdlConvertor>
-	DESTINATION .)
+install(TARGETS _hdlConvertor LIBRARY DESTINATION src)
 

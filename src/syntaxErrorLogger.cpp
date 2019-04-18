@@ -17,7 +17,7 @@ void SyntaxErrorLogger::CheckErrors() {
 			<< endl;
 	}
 	if (_errors.size() > 0) {
-		throw parseException(error_msg.str());	
+		throw ParseException(error_msg.str());	
 	}
 
 }
