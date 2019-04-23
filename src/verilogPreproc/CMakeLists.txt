@@ -23,8 +23,10 @@ add_custom_target(generateParsersVerilogPreproc
   ${verilogPreprocParsers_GENERATED_SRC}
 )
 
-#Suppress warnings on generated code.
-set_property(SOURCE ${verilogPreprocParsers_GENERATED_SRC} PROPERTY COMPILE_FLAGS -Wno-unused-parameter)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+	#Suppress warnings on generated code.
+	set_property(SOURCE ${verilogPreprocParsers_GENERATED_SRC} PROPERTY COMPILE_FLAGS -Wno-unused-parameter)
+endif()
 
 add_library(parsersVerilogPreproc_static STATIC 
 	${libparserverilogPreproc_SRC}
