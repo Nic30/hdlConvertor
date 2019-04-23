@@ -1,0 +1,16 @@
+`ifndef UVM_OBJECT_DEFINES_SVH
+`define UVM_OBJECT_DEFINES_SVH
+
+
+`ifdef UVM_EMPTY_MACROS
+
+`define uvm_object_utils(T)
+`define uvm_field_int(ARG,FLAG=UVM_DEFAULT)
+
+`else
+// The ~utils~ macros define the infrastructure needed to enable the
+// object/component for correct factory operation. See <`uvm_object_utils> and
+// <`uvm_component_utils> for details.
+
+`endif
+`endif

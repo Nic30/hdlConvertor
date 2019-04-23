@@ -1,0 +1,5 @@
+
+
+`define uvm_object_utils(T)
+`define uvm_field_int(ARG,FLAG=UVM_DEFAULT)
+

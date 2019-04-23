@@ -13,7 +13,8 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
 }
 
 vPreprocessor::vPreprocessor(TokenStream *tokens,
-    std::vector<std::string> &incdir, macroSymbol & defineDB,
+    std::vector<std::string> &incdir, 
+    macroSymbol & defineDB,
     std::vector<std::string> &stack_incfile,
     unsigned int mode,
     size_t include_depth_limit) :
@@ -134,7 +135,7 @@ antlrcpp::Any vPreprocessor::visitLine_nb(verilogPreprocParser::Line_nbContext *
 
 //method call when the definition of a macro is found
 antlrcpp::Any vPreprocessor::visitDefine(verilogPreprocParser::DefineContext * ctx) {
-  //printf("@%s\n",__PRETTY_FUNCTION__);
+  //printf("@%s - %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
   // get the macro name
   std::string macroName = ctx->macro_id()->getText();
   //printf("%s\n",macroName.c_str());
@@ -151,23 +152,29 @@ antlrcpp::Any vPreprocessor::visitDefine(verilogPreprocParser::DefineContext * c
   }
 
   // test the number of argument
-  if (ctx->ID().size() != 0) {
+  if (ctx->var_id().size() != 0) {
     // the macro has argument so we take each of them and register them in
     // a std::vector<std::string>
     std::vector<std::string> data;
-    for (auto arg : ctx->ID()) {
+    for (auto arg : ctx->var_id()) {
       data.push_back(arg->getText());
     }
-
-//    for (auto a:data) {
-//      printf("  *%s*\n",a.c_str());
-//    }
-
+    /*
+    for (auto a:data) {
+      printf("  *%s*\n",a.c_str());
+    }
+    */
     // get the template
-    rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
-    remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
 
-    rep_data = rtrim(rep_data);
+    if (ctx->replacement() != nullptr) {
+      rep_data = _tokens->getText(ctx->replacement()-> getSourceInterval());
+      remove_comment(ctx->replacement()->getStart(),ctx->replacement()->getStop(),&rep_data);
+
+      rep_data = rtrim(rep_data);
+    }
+    else {
+      rep_data = "";
+    }
 
     // add the macro to the macroDB object
     if (_mode == SV2012) {
@@ -237,10 +244,7 @@ antlrcpp::Any vPreprocessor::visitUndef(verilogPreprocParser::UndefContext * ctx
 
 //method call when `macro is found in the source code
 antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext * ctx) {
-  //printf("@%s\n",__PRETTY_FUNCTION__);
-  if (_stack_incfile.size() > 0) {
-    return NULL;
-  }
+  //printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
  
   //create a macroPrototype object
   std::vector<std::string> args;
@@ -260,12 +264,16 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
 	  }
 	}
 	else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(ctx->children[i]))  {
-	  args.push_back(_tokens->getText(ctx->children[i]->getSourceInterval()).c_str());
+	    std::string data; 
+	    data = _tokens->getText(ctx->children[i]->getSourceInterval());
+	    data = trim(data);
+	    args.push_back(data);
 	}
 	prevText = ctx->children[i]->getText();
      }
   }
-  /* 
+  /*
+  printf("%s\n", ctx->macro_toreplace()->getText().c_str());
   for (auto a:args) {
     printf("  *%s*\n",a.c_str());
   }
@@ -284,7 +292,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(verilogPreprocParser::Token_idContext
   //build the replacement string by calling the replacement method of the
   //macro_replace object and the provided argument of the macro.
   std::string replacement = _defineDB[macro.macroName]->replace(macro.args);
-  //printf("%s\n",replacement.c_str());
+  //printf("=>%s\n",replacement.c_str());
   
   if (_mode == SV2012) {
     size_t start_pos = 0;
@@ -322,38 +330,38 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
     verilogPreprocParser::Ifdef_directiveContext * ctx) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
   
-  uint32_t ID_cpt = 0;
+  uint32_t cond_id_cpt = 0;
   macroSymbol::iterator search;
   std::string replacement = "";
 
   //get the source code match by the rule
   misc::Interval token = ctx->getSourceInterval();
 
-  //search if the macro ID is in the macroDB object
-  search = _defineDB.find(ctx->ID(0)->getText());
+  //search if the macro cond_id is in the macroDB object
+  search = _defineDB.find(ctx->cond_id(0)->getText());
 
   if (search != _defineDB.end()) {
-    //the macro ID object is defined
+    //the macro cond_id object is defined
     //Get the source code to use when the macro is found
     visitIfdef_group_of_lines(ctx->ifdef_group_of_lines());
   } else {
     // process `elsif and `else
-    ID_cpt++; // ID(0) is the one for the `ifdef so we start to ID(1)
+    cond_id_cpt++; // cond_id(0) is the one for the `ifdef so we start to cond_id(1)
 
-    // process the multiple `elsif. There is ctx-ID().size() number of
+    // process the multiple `elsif. There is ctx-cond_id().size() number of
     // `elsif
-    while (ID_cpt < ctx->ID().size()) {
+    while (cond_id_cpt < ctx->cond_id().size()) {
       // lookup if the current macro exist
-      search = _defineDB.find(ctx->ID(ID_cpt)->getText());
+      search = _defineDB.find(ctx->cond_id(cond_id_cpt)->getText());
       if (search != _defineDB.end()) {
         // the define exist so we process the relevant source code part
-        visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
+        visitElsif_group_of_lines(ctx->elsif_group_of_lines(cond_id_cpt));
 	// Then we jump inconditionnaly to the end of the method
 	goto exit_label;
 
       }
-      //next ID
-      ID_cpt++;
+      //next cond_id
+      cond_id_cpt++;
     }
     // all `elsif has been test
     // we test if the rule has match an else statement. That may or may not
@@ -364,7 +372,7 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
   }
 
   //perform the replacement of code.
-  //But not if the ID is not one that match and if there is no `else
+  //But not if the cond_id is not one that match and if there is no `else
   //then we will replace the `ifdef `elsif by an empty string.
   //Because by default replacement is ""
   exit_label: _rewriter.replace(token.a, token.b, replacement);
@@ -378,24 +386,24 @@ antlrcpp::Any vPreprocessor::visitIfndef_directive(
     verilogPreprocParser::Ifndef_directiveContext * ctx) {
   //printf("@%s\n",__PRETTY_FUNCTION__);
 
-  uint32_t ID_cpt = 0;
+  uint32_t cond_id_cpt = 0;
   macroSymbol::iterator search;
   std::string replacement = "";
   misc::Interval token = ctx->getSourceInterval();
 
-  search = _defineDB.find(ctx->ID(0)->getText());
+  search = _defineDB.find(ctx->cond_id(0)->getText());
   if (search == _defineDB.end()) {
     visitIfndef_group_of_lines(ctx->ifndef_group_of_lines());
   } else {
-    ID_cpt++;
-    while (ID_cpt < ctx->ID().size()) {
-      search = _defineDB.find(ctx->ID(ID_cpt)->getText());
+    cond_id_cpt++;
+    while (cond_id_cpt < ctx->cond_id().size()) {
+      search = _defineDB.find(ctx->cond_id(cond_id_cpt)->getText());
       if (search != _defineDB.end()) {
-        visitElsif_group_of_lines(ctx->elsif_group_of_lines(ID_cpt));
+        visitElsif_group_of_lines(ctx->elsif_group_of_lines(cond_id_cpt));
         goto exit_label;
 
       }
-      ID_cpt++;
+      cond_id_cpt++;
     }
     if (ctx->ELSE() != nullptr) {
       visitElse_group_of_lines(ctx->else_group_of_lines());
@@ -404,6 +412,13 @@ antlrcpp::Any vPreprocessor::visitIfndef_directive(
 
   exit_label: _rewriter.replace(token.a, token.b, replacement);
   return NULL;
+}
+
+
+antlrcpp::Any vPreprocessor::visitStringLiteral(verilogPreprocParser::StringLiteralContext *ctx) {
+    std::string filestring;
+    filestring = return_preprocessed(ctx->getText(),_incdir,_defineDB,_stack_incfile,_mode);
+    return filestring;
 }
 
 //method call when `include is found
@@ -415,7 +430,7 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
   //iterator on the list of directoy
   std::vector<std::string>::iterator incdir_iter = _incdir.begin();
   bool found = false;
-  std::string StringLiteral = ctx->stringLiteral()->getText();
+  std::string StringLiteral = visit(ctx->stringLiteral());
   std::string filename;
   // iterate on list of directory until we found the file. 
   while (incdir_iter != _incdir.end() && found == false) {
@@ -436,7 +451,7 @@ antlrcpp::Any vPreprocessor::visitInclude(verilogPreprocParser::IncludeContext *
   if (found == false) {
     // The file was not found. We throw a exception
     std::string msg = StringLiteral.substr(1, StringLiteral.size() - 2)
-      + " was not found in include directory\n";
+      + " was not found in include directories\n";
     throw ParseException(msg);
   } else if (_stack_incfile.size() > include_depth_limit) {
     // test the number of nested include. 
@@ -485,6 +500,7 @@ std::string return_preprocessed(const std::string input_str,
   ANTLRInputStream input(input_str);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
   lexer->mode = mode;
+  lexer->reset(); // bug ?
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
   /*
   tokens->fill();
@@ -517,20 +533,27 @@ std::string return_preprocessed_file(const std::string fileName,
 
   //printf("@%s\n",__PRETTY_FUNCTION__);
 
+	
   ANTLRFileStream input(fileName);
   verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
   lexer->mode = mode;
+  lexer->reset(); // bug ?
   CommonTokenStream * tokens = new CommonTokenStream(lexer);
+  
   /*
   tokens->fill();
   for (auto token : tokens->getTokens()) {
     std::cout << token->toString() << std::endl;
   }
   */
+  
   verilogPreprocParser * parser = new verilogPreprocParser(tokens);
+  parser->removeErrorListeners();
+  SyntaxErrorLogger * syntaxErrLogger = new SyntaxErrorLogger;
+  parser->addErrorListener(syntaxErrLogger);
   parser->mode = mode;
   tree::ParseTree *tree = parser->file();
-  /*
+  /* 
   std::cout << tree->toStringTree(parser) << std::endl << std::endl;
   */
   vPreprocessor * extractor = new vPreprocessor(tokens,incdir, defineDB, stack_incfile, mode);
@@ -549,6 +572,15 @@ std::string return_preprocessed_file(const std::string fileName,
 std::string& rtrim(std::string& str, const std::string& chars ) {
   str.erase(str.find_last_not_of(chars) + 1);
   return str;
+}
+
+std::string& ltrim(std::string& str, const std::string& chars ) {
+  str = str.erase(0,str.find_first_not_of(chars));
+  return str;
+}
+
+std::string& trim(std::string& str, const std::string& chars ) {
+  return rtrim(ltrim(str,chars),chars);
 }
 
 /*

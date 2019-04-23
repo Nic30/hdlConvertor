@@ -1,4 +1,5 @@
 
+
 initial $display("start", "msg1" , "msg2", "end");
 initial $display("start", " msg1" , , "end");
 initial $display("start",  , "msg2 ", "end");

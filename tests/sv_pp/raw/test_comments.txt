@@ -1,0 +1,39 @@
+
+// The ~utils~ macros define the infrastructure needed to enable the
+// object/component for correct factory operation. See <`uvm_object_utils> and
+// <`uvm_component_utils> for details.
+//
+// A ~utils~ macro should be used inside ~every~ user-defined class that extends
+// <uvm_object> directly or indirectly, including <uvm_sequence_item> and
+// <uvm_component>.
+//
+// Below is an example usage of the ~utils~ macro for a user-defined object.
+//
+//|  class mydata extends uvm_object;
+//|
+//|     `uvm_object_utils(mydata)
+//|
+//|     // declare data properties
+//|
+//|    function new(string name="mydata_inst");
+//|      super.new(name);
+//|    endfunction
+//|
+//|  endclass
+//
+// Below is an example usage of a ~utils~ macro for a user-defined component.
+//
+//|  class my_comp extends uvm_component;
+//|
+//|     `uvm_component_utils(my_comp)
+//|
+//|     // declare data properties
+//|
+//|    function new(string name, uvm_component parent=null);
+//|      super.new(name,parent);
+//|    endfunction
+//|
+//|  endclass
+//
+//------------------------------------------------------------------------------
+
