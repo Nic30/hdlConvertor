@@ -32,6 +32,10 @@ public:
 	Variable * visitParam_assignment(
 			Verilog2001::Verilog2001Parser::Param_assignmentContext * ctx);
 
+	std::vector<Variable*>* visitParameter_declaration(
+			Verilog2001::Verilog2001Parser::Parameter_declarationContext * ctx);
+
+
 	void visitModule_item(
 			Verilog2001::Verilog2001Parser::Module_itemContext * ctx);
 	void visitModule_or_generate_item(
