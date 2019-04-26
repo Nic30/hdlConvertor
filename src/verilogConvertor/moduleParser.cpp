@@ -191,7 +191,9 @@ void ModuleParser::visitModule_item(
 	}
 	auto pad = ctx->parameter_declaration();
 	if (pad) {
-		NotImplementedLogger::print("ModuleParser.parameter_declaration");
+		auto ppls = visitParameter_declaration(pad);
+		for (auto v : *ppls)
+			ent->generics.push_back(v);
 		return;
 	}
 	auto sb = ctx->specify_block();
@@ -579,4 +581,14 @@ void ModuleParser::visitNon_port_module_item(
 	}
 	throw runtime_error(
 			"ModuleParser.visitNon_port_module_item - unexpected transition");
+}
+
+std::vector<Variable*>* ModuleParser::visitParameter_declaration(Verilog2001Parser::Parameter_declarationContext * ctx){
+	auto vars = new std::vector<Variable*>();
+	auto pds = visitParameter_declaration_(ctx->parameter_declaration_());
+	for (auto pd : *pds)
+		vars->push_back(pd);
+	delete pds;
+	return vars;
+	
 }
