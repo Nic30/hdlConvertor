@@ -1,7 +1,7 @@
 #include "exception.h"
 #include <Python.h>
 
-extern PyAPI_DATA(PyObject *) ParseExceptionT;
+PyAPI_DATA(PyObject *) ParseExceptionT;
 
 void raise_py_error() {
 	try {
