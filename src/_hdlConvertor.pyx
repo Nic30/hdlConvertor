@@ -9,9 +9,6 @@ from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
 import sys
 
-
-#from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, get_my_py_error_message, Convertor as _Convertor
-
 cdef extern from "hdlObjects/context.h":
     cdef cppclass Context:
         PyObject * toJson()
