@@ -1,14 +1,14 @@
 #include "exception.h"
 #include <Python.h>
 
-PyAPI_DATA(PyObject *) ParseExceptionT;
-
-void raise_py_error() {
-	try {
-		throw;
-	} catch (ParseException &e) {
-		PyErr_SetString(ParseExceptionT, e.what());
-	} catch (const std::exception &e) {
-		PyErr_SetString(PyExc_RuntimeError, e.what());
+const char* get_my_py_error_message()
+{
+  try {
+    throw;
+  } catch (const ParseException& e) {
+    return e.what();
+  } catch (const std::exception &e) {
+		return e.what();
 	}
+
 }

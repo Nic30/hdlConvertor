@@ -3,25 +3,61 @@
 from libc.string cimport strerror
 from libc.errno cimport errno
 from libcpp cimport bool
-from libcpp cimport string
+from libcpp.string cimport string
+from libcpp.vector cimport vector
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
 import sys
 
 
-from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, Convertor as _Convertor
+#from convertor cimport Context, VHDL, VERILOG, SYSTEM_VERILOG, get_my_py_error_message, Convertor as _Convertor
+
+cdef extern from "hdlObjects/context.h":
+    cdef cppclass Context:
+        PyObject * toJson()
+
+cdef extern from "exception.h":
+    cdef const char* get_my_py_error_message()
+
+cdef extern from "langue.h":
+    enum Langue:
+        VHDL, VERILOG, SYSTEM_VERILOG
 
 cdef class ParseException(Exception):
     pass
 
+cdef int raise_my_py_error() except *:
+    PY3 = PY_MAJOR_VERSION == 3
+    msg = get_my_py_error_message()
+    if PY3:
+        msg = msg.decode('utf-8')
 
-cdef public PyObject * ParseExceptionT = < PyObject *> ParseException
+    raise ParseException(msg)
+
+cdef extern from "convertor.h":
+    cdef cppclass Convertor:
+
+        string filename
+        Langue lang
+        bool hierarchyOnly
+
+        Context * parse(vector[string],
+                        Langue,
+                        vector[string],
+                        bool,
+                        bool) except +raise_my_py_error
+
+        string verilog_pp(string filename, vector[string] incdir, unsigned int) except +raise_my_py_error
+
+
+
+
 
 cdef class hdlConvertor:
-    cdef _Convertor * thisptr
+    cdef Convertor * thisptr
 
     def __cinit__(self):
-        self.thisptr = new _Convertor()
+        self.thisptr = new Convertor()
     
     def __dealloc__(self):
         del self.thisptr
