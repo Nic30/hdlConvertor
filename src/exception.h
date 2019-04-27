@@ -16,4 +16,4 @@ public:
 	}
 };
 
-void raise_py_error();
+extern const char* get_my_py_error_message();
