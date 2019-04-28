@@ -3,26 +3,19 @@ lexer grammar verilogPreprocLexer;
 channels { CH_LINE_ESCAPE, CH_LINE_COMMENT, CH_COMMENT}
 
 @lexer::members {
-/*
-int lastType[2] = {-1,-1};
-antlr4::Token * lastToken;
 
-antlr4::Token * emit() {
-  lastToken = antlr4::Lexer::emit();
-  lastType[1] = lastType[0];
-  lastType[0] = lastToken->getType();
-  return lastToken;
-}
-*/
 bool define_parentesis_rp_seen = false;
 unsigned int define_parentesis_count = 0;
 unsigned int token_id_parentesis_count = 0;
 
 }
 
+fragment CRLF : '\r'? '\n';
+fragment ID_FIRST : LETTER | '_' ;
+fragment LETTER   : [a-zA-Z] ;
 
-LINE_ESCAPE :  '\\' '\r'? '\n' -> channel(CH_LINE_ESCAPE);
-LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n' -> channel(CH_LINE_COMMENT);
+LINE_ESCAPE :  '\\' CRLF -> channel(CH_LINE_ESCAPE);
+LINE_COMMENT : '//' ~[\r\n]* CRLF -> channel(CH_LINE_COMMENT);
 
 INCLUDE: [ \t]* '`include' [ \t]+ -> mode(INCLUDE_MODE);
 DEFINE: [ \t]* '`define' [ \t]+ -> mode(DEFINE_MODE);
@@ -37,17 +30,17 @@ DOUBLE_BACKTICK: '``';
 FILE_NB: '`__FILE__';
 LINE_NB: '`__LINE__';
 BEGIN_KEYWORDS: [ \t]* '`begin_keywords' [ \t] ->mode(KEYWOORDS_MODE);
-END_KEYWORDS: [ \t]* '`end_keywords' '\r'? '\n';
+END_KEYWORDS: [ \t]* '`end_keywords' CRLF;
 PRAGMA: [ \t]* '`pragma' [ \t] -> mode(PRAGMA_MODE);
-UNDEFINEALL: [ \t]* '`undefineall' '\r'? '\n';
-RESETALL: [ \t]* '`resetall' [ \t]* '\r'? '\n';
-CELLDEFINE: [ \t]* '`celldefine' [ \t]* '\r'? '\n'; 
-ENDCELLDEFINE: [ \t]* '`endcelldefine' [ \t]* '\r'? '\n' ;
+UNDEFINEALL: [ \t]* '`undefineall' CRLF;
+RESETALL: [ \t]* '`resetall' [ \t]* CRLF;
+CELLDEFINE: [ \t]* '`celldefine' [ \t]* CRLF; 
+ENDCELLDEFINE: [ \t]* '`endcelldefine' [ \t]* CRLF ;
 TIMESCALE: [ \t]* '`timescale' [ \t]+ ->mode(TIMING_SPEC_MODE);
 DEFAULT_NETTYPE: [ \t]* '`default_nettype' [ \t]+ -> mode(DEFAULT_NETTYPE_MODE);
 LINE: [ \t]* '`line' [ \t]+ -> mode(LINE_MODE) ;
-UNCONNECTED_DRIVE: [ \t]* '`unconnected_drive' [ \t]* '\r'? '\n';
-NOUNCONNECTED_DRIVE: [ \t]* '`nounconnected_drive' [ \t]* '\r'? '\n'; 
+UNCONNECTED_DRIVE: [ \t]* '`unconnected_drive' [ \t]* CRLF;
+NOUNCONNECTED_DRIVE: [ \t]* '`nounconnected_drive' [ \t]* CRLF; 
 
 DStringLiteral_double_quote 
     :  '"' ( ~('\\'|'"') )* '"' ->type(CODE)
@@ -60,22 +53,18 @@ RP : ')'-> type(CODE);
 EQUAL : '=' ->type(CODE);
 BACKTICK: '`' -> mode(MACRO_REPLACE);
 
-fragment ID_FIRST : LETTER | '_' ;
-fragment LETTER   : [a-zA-Z] ;
 DUMMY_DIGIT    : [0-9] ->type(CODE);
 DIGIT    : [0-9] ;
 DUMMY_ID : ID_FIRST (ID_FIRST | DUMMY_DIGIT)*->type(CODE);
 ID : ID_FIRST (ID_FIRST | DIGIT)*;
-DUMMY_NEW_LINE : '\r'? '\n' -> type(CODE);
-NEW_LINE : '\r'? '\n';
+DUMMY_NEW_LINE : CRLF -> type(CODE);
+NEW_LINE : CRLF;
 WS : [ \t] -> type(CODE);
-//WS : [ \t] -> skip;
-//CODE : ~'`'* '\r'? '\n';
 CODE : .;
 
 mode DEFINE_MODE;
 DN_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
-DM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
+DM_LINE_ESCAPE :  '\\' CRLF ->channel(CH_LINE_ESCAPE);
 DM_DIGIT    : [0-9] ;
 DM_ID : ID_FIRST (ID_FIRST | DM_DIGIT)*
       {
@@ -101,7 +90,7 @@ DM_RP : ')'
 DM_COMMA: ',';
 DM_EQUAL: '=' -> mode(DEFINE_DEFAULT_TEXT);
 
-DM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'
+DM_LINE_COMMENT : '//' ~[\r\n]* CRLF
                 {
                    setChannel(CH_LINE_COMMENT);
                    if (define_parentesis_count == 0) {
@@ -110,7 +99,7 @@ DM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'
                 }
                 ;
 DM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
-DM_NEW_LINE: '\n'
+DM_NEW_LINE: CRLF
            {  
               setType(NEW_LINE);
               if (define_parentesis_count == 0) {
@@ -137,10 +126,10 @@ DM_WS : [ \t]+ {
 DM_ANY : .->type(DNM_CODE),mode(DEFINE_NEXT_MODE);
 
 mode DEFINE_NEXT_MODE;
-DNM_LINE_COMMENT : '//' ~[\r\n]* '\r'? '\n'->channel(CH_LINE_COMMENT);
+DNM_LINE_COMMENT : '//' ~[\r\n]* CRLF->channel(CH_LINE_COMMENT);
 DNM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
-DNM_LINE_ESCAPE :  '\\' '\r'? '\n' ->channel(CH_LINE_ESCAPE);
-DNM_NEW_LINE: '\r'? '\n' -> type(NEW_LINE),mode(DEFAULT_MODE);
+DNM_LINE_ESCAPE :  '\\' CRLF ->channel(CH_LINE_ESCAPE);
+DNM_NEW_LINE: CRLF -> type(NEW_LINE),mode(DEFAULT_MODE);
 DNM_CODE :  . ;
 
 mode DEFINE_DEFAULT_TEXT;
@@ -225,7 +214,7 @@ IFDM_ID : ID_FIRST (ID_FIRST | DM_DIGIT)* ->type(ID),mode(DEFAULT_MODE);
 mode UNDEF_MODE;
 UNDEF_DIGIT    : [0-9] ;
 UNDEF_ID : ID_FIRST (ID_FIRST | DM_DIGIT)* ->type(ID);
-UNDEF_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+UNDEF_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode DEFAULT_NETTYPE_MODE;
 WIRE : 'wire';
@@ -239,7 +228,7 @@ TRIOR : 'trior';
 TRIREG : 'trireg';
 UWIRE : 'uwire';
 NONE : 'none';
-DEFAULT_NETTYPE_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+DEFAULT_NETTYPE_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode LINE_MODE;
 LINE_MODE_DIGIT : [0-9] ->type(DIGIT);
@@ -247,7 +236,7 @@ StringLiteral_double_quote
     :  '"' ( ~('\\'|'"') )* '"'
     ;
 LM_WS: [ \t] ->skip;
-LINE_MODE_NEW_LINE: '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+LINE_MODE_NEW_LINE: CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode TIMING_SPEC_MODE;
 TIMING_SPEC_MODE_DIGIT : [0-9];
@@ -256,7 +245,7 @@ Time_Identifier
    ;
 SLASH : '/';
 TSM_WS : [ \t]->skip;
-TIMING_SPEC_MODE_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+TIMING_SPEC_MODE_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode KEYWOORDS_MODE;
 KEYWOORDS_MODE_WS : [ \t]+ -> skip;
@@ -270,7 +259,7 @@ V13642005 : '"1364-2005"' ;
 V13642001 : '"1364-2001"' ;
 V13642001noconfig : '"1364-2001-noconfig"' ;
 V13641995 : '"1364-1995"';
-KEYWOORDS_MODE_NEW_LINE : '\r'? '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+KEYWOORDS_MODE_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 
 mode INCLUDE_MODE;
@@ -294,4 +283,4 @@ PRAGMA_COMMA :  ',' ->type(COMMA);
 PRAGMA_EQUAL: '=' ->type(EQUAL);
 PRAGMA_LP: '(' -> type(LP);
 PRAGMA_RP: ')' -> type(RP);
-PRAGMA_NEW_LINE : '\n' ->type(NEW_LINE),mode(DEFAULT_MODE);
+PRAGMA_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
