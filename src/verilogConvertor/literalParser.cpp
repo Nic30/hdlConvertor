@@ -58,8 +58,8 @@ Expr * VerLiteralParser::parseIntNumber(antlr4::tree::TerminalNode* n,
 	int size = -1;
 	int valuePartStart = 0;
 
-	int baseStart = s.find('\'', 0);
-	if (baseStart >= 0) {
+	size_t baseStart = s.find('\'', 0);
+	if (baseStart != std::string::npos) {
 		if (baseStart > 0) {
 			s[baseStart] = 0;
 			size = atoi(s.c_str());

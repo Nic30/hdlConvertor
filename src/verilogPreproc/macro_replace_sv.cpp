@@ -26,7 +26,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
     std::string returnString;
 
     if (arg.size() < data.args.size()) {
-       for(unsigned long int i = arg.size(); i < data.args.size(); i++ ) {
+       for(size_t i = arg.size(); i < data.args.size(); i++ ) {
          auto missing_arg = _default_map.find(data.args[i]);
 	 if (missing_arg != _default_map.end()) {
 	   arg.push_back(missing_arg->second);
@@ -54,7 +54,7 @@ std::string macro_replace_sv::replace(std::vector<std::string> arg) {
       // the number of provided argument is fewer than the number defined by the prototype.
       // So we complete the list with default value.
       if (arg.size() < data.args.size()) {
-         unsigned int i;
+         size_t i;
 	 if (arg.size()>0) {
 	  i = arg.size();
 	 }
