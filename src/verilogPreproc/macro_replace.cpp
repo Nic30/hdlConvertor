@@ -1,6 +1,5 @@
 #include "../verilogPreproc/macro_replace.h"
 
-
 macro_replace::macro_replace(std::string macro_name, std::string replace, std::vector<std::string> arg){
 	data.tmplate_name = macro_name;
 	data.tmplate = replace;
@@ -26,15 +25,16 @@ bool macro_replace::check_interval(size_t start) {
  */
 void macro_replace::look4stringLiteral(std::string tmpl) {
   size_t start_pos = 0;
-  size_t pos1 = -1;
-  while((start_pos = tmpl.find('"', start_pos)) != std::string::npos) {
-    if (pos1 == (long unsigned int) -1 && ((start_pos != 0 && tmpl[start_pos-1]!='`') || start_pos == 0) ) {
+  auto npos = std::string::npos;
+  size_t pos1 = npos;
+  while((start_pos = tmpl.find('"', start_pos)) != npos) {
+    if (pos1 == npos && ((start_pos != 0 && tmpl[start_pos-1]!='`') || start_pos == 0) ) {
       pos1 = start_pos;
     }
-    else if (pos1 != (long unsigned int) -1 && tmpl[start_pos-1]!= '`') {
+    else if (pos1 != npos && tmpl[start_pos-1]!= '`') {
       size_t length = start_pos - pos1;
       _substituate.push_back(std::make_pair(pos1,length));
-      pos1 = -1;
+      pos1 = npos;
     }
     start_pos += 1;
   }
@@ -75,7 +75,7 @@ void macro_replace::replaceAll(std::string& str, const std::string& from, const 
        *   Operators
        * */
       str.replace(start_pos, from.length(), to);
-      unsigned long int i = 0;
+      size_t i = 0;
       for (auto a: _substituate) {
 	 //printf("%li < %li\n",start_pos,a.first );
          if (start_pos < a.first) {
