@@ -12,8 +12,12 @@ import hdlConvertor
 
 
 def dumpFile(fname, language):
-    f = path.join(BASE_DIR, "tests/", fname)
-    res = hdlConvertor.parse(f, language, [TEST_DIR], debug=True)
+    _language = language
+    if language == "systemVerilog":
+        _language = "verilog"
+    inc_dir = path.join(TEST_DIR, _language)
+    f = path.join(BASE_DIR, "tests", _language, fname)
+    res = hdlConvertor.parse(f, language, [inc_dir], debug=True)
     return f, res
 
 
@@ -88,8 +92,12 @@ class BasicTC(unittest.TestCase):
         str(res)
     
     def test_multiple_files_at_once(self):
-        f = [path.join(BASE_DIR, "tests/", f) for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
-        res = hdlConvertor.parse(f, "verilog", [TEST_DIR], debug=True)
+        language = "verilog"
+        f = [path.join(TEST_DIR, language, f)
+             for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
+        inc_dir = path.join(TEST_DIR, language)
+    
+        res = hdlConvertor.parse(f, language, [inc_dir], debug=True)
         e = res["entities"]
         self.assertSetEqual(set(_e["name"] for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
