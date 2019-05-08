@@ -118,13 +118,6 @@ class PreprocessorTC(unittest.TestCase):
             '2012_p642_il3.txt',
             'an error message'
         )
-        with self.assertRaises(ParseException) as context:
-            result = verilog_pp(
-                path.join(TEST_DIR, 'sv_pp', 'src', '2012_p642_il3.txt'),
-                ['.', '..', path.join('sv_pp', 'src')],
-                SV
-            )
-        self.assertTrue('an error message' == context.exception.__str__())
 
     def test_FILE_LINE(self):
         test_result = verilog_pp(
