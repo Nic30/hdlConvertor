@@ -46,7 +46,6 @@ deploy:
     branch: master
 
 script: 
-  - sudo python setup.py install
-  - sudo python setup.py test # the scikit-build automatically executes setup.py develop which requires access to installation dir
+  - python setup.py test # the scikit-build automatically executes setup.py develop which requires access to installation dir
 
 
