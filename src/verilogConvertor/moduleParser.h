@@ -3,13 +3,10 @@
 #include <vector>
 
 #include "Verilog2001Parser/Verilog2001Parser.h"
-#include "../hdlObjects/variable.h"
+#include "../hdlObjects/compInstance.h"
 #include "../hdlObjects/context.h"
 #include "../hdlObjects/entity.h"
-
-#include "attributeParser.h"
-#include "portParser.h"
-#include "exprParser.h"
+#include "../hdlObjects/variable.h"
 
 class ModuleParser {
 	Context * context;
@@ -34,7 +31,6 @@ public:
 
 	std::vector<Variable*>* visitParameter_declaration(
 			Verilog2001::Verilog2001Parser::Parameter_declarationContext * ctx);
-
 
 	void visitModule_item(
 			Verilog2001::Verilog2001Parser::Module_itemContext * ctx);

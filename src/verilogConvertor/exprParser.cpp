@@ -651,3 +651,40 @@ Expr * VerExprParser::visitVariable_concatenation(
 
 	return reduce(parts, OperatorType::CONCAT);
 }
+
+Expr * VerExprParser::visitArrayed_identifier(
+		Verilog2001Parser::Arrayed_identifierContext * ctx) {
+	// arrayed_identifier
+	//    : simple_arrayed_identifier
+	//    | escaped_arrayed_identifier
+	//    ;
+	{
+		auto sai = ctx->simple_arrayed_identifier();
+		// simple_arrayed_identifier
+		//    : Simple_identifier (range_)?
+		//    ;
+		if (sai) {
+			auto e = VerLiteralParser::parseSimple_identifier(
+					sai->Simple_identifier());
+			auto _r = sai->range_();
+			if (_r) {
+				auto r = visitRange_(_r);
+				e = new Expr(e, OperatorType::INDEX, r);
+			}
+			return e;
+		}
+	}
+	auto eai = ctx->escaped_arrayed_identifier();
+	// escaped_arrayed_identifier
+	//    : Escaped_identifier (range_)?
+	//    ;
+	auto e = VerLiteralParser::parseEscaped_identifier(
+			eai->Escaped_identifier());
+	auto _r = eai->range_();
+	if (_r) {
+		auto r = visitRange_(_r);
+		e = new Expr(e, OperatorType::INDEX, r);
+	}
+	return e;
+
+}

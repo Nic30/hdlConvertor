@@ -71,4 +71,6 @@ public:
 			Verilog2001::Verilog2001Parser::Variable_lvalueContext * ctx);
 	static Expr * visitVariable_concatenation(
 			Verilog2001::Verilog2001Parser::Variable_concatenationContext* ctx);
+	static Expr * visitArrayed_identifier(
+			Verilog2001::Verilog2001Parser::Arrayed_identifierContext * ctx);
 };

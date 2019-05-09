@@ -3,13 +3,14 @@
 #include "named.h"
 #include "expr.h"
 
-class CompInstance: public WithNameAndDoc {
+class CompInstance: public WithDoc {
 public:
+	Expr * name;
 	Expr * entityName;
 	std::vector<Expr*> genericMap;
 	std::vector<Expr*> portMap;
 
-	CompInstance(char * name, Expr * _entityName);
+	CompInstance(Expr * name, Expr * _entityName);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif

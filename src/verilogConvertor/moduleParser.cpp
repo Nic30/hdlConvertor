@@ -1,5 +1,9 @@
 #include "moduleParser.h"
+#include "attributeParser.h"
+#include "portParser.h"
+#include "exprParser.h"
 #include "statementParser.h"
+#include "moduleInstanceParser.h"
 #include "../notImplementedLogger.h"
 #include "utils.h"
 #include "../baseHdlParser/commentParser.h"
@@ -253,7 +257,10 @@ void ModuleParser::visitModule_or_generate_item(
 
 	auto mi = ctx->module_instantiation();
 	if (mi) {
-		NotImplementedLogger::print("ModuleParser.module_instantiation");
+		auto components = ModuleInstanceParser::visitModule_instantiation(mi);
+		for (auto c : components) {
+			arch->componentInstances.push_back(c);
+		}
 		return;
 	}
 
@@ -583,12 +590,13 @@ void ModuleParser::visitNon_port_module_item(
 			"ModuleParser.visitNon_port_module_item - unexpected transition");
 }
 
-std::vector<Variable*>* ModuleParser::visitParameter_declaration(Verilog2001Parser::Parameter_declarationContext * ctx){
+std::vector<Variable*>* ModuleParser::visitParameter_declaration(
+		Verilog2001Parser::Parameter_declarationContext * ctx) {
 	auto vars = new std::vector<Variable*>();
 	auto pds = visitParameter_declaration_(ctx->parameter_declaration_());
 	for (auto pd : *pds)
 		vars->push_back(pd);
 	delete pds;
 	return vars;
-	
+
 }

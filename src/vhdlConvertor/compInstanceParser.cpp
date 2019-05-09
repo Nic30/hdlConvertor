@@ -13,7 +13,7 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 	// ;
 	char * name = LiteralParser::visitLabel_colon(ctx->label_colon());
 	CompInstance * ci = visitInstantiated_unit(ctx->instantiated_unit());
-	ci->name = name;
+	ci->name = Expr::ID(name);
 	auto gma = ctx->generic_map_aspect();
 	if (gma) {
 		std::vector<Expr*> * gmas = visitGeneric_map_aspect(gma);
