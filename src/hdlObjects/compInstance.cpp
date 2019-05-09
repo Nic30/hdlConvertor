@@ -11,7 +11,7 @@ PyObject * CompInstance::toJson() const {
 	PyObject * d = WithDoc::toJson();
 	char * name_str = nullptr;
 	Symbol * name_lit = dynamic_cast<Symbol*>(name->data);
-	if (name_lit and name_lit->type == SymbolType::symb_ID) {
+	if (name_lit && name_lit->type == SymbolType::symb_ID) {
 		name_str = name_lit->value._str;
 	}
 	if (name_str)
