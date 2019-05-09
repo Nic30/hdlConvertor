@@ -8,43 +8,49 @@ try:
 except ImportError:
     from use_build_version import BASE_DIR, TEST_DIR
 
-import hdlConvertor
-
+from hdlConvertor import parse
+from hdlConvertor.language import Language  
+VHDL = "vhdl"
+VERILOG = "verilog"
 
 def dumpFile(fname, language):
     _language = language
     if language == "systemVerilog":
-        _language = "verilog"
+        _language = VERILOG
     inc_dir = path.join(TEST_DIR, _language)
     f = path.join(BASE_DIR, "tests", _language, fname)
-    res = hdlConvertor.parse(f, language, [inc_dir], debug=True)
+    res = parse(f, language, [inc_dir], debug=True)
     return f, res
 
 
 class BasicTC(unittest.TestCase):
 
     def test_vhld_dump_mux(self):
-        f, res = dumpFile("mux.vhd", "vhdl")
+        f, res = dumpFile("mux.vhd", VHDL)
         str(res)
     
     def test_vhdl_package_array_const(self):
-        f, res = dumpFile("package_array_const.vhd", "vhdl")
+        f, res = dumpFile("package_array_const.vhd", VHDL)
         str(res)
     
     def test_vhdl_package_component(self):
-        f, res = dumpFile("package_component.vhd", "vhdl")
+        f, res = dumpFile("package_component.vhd", VHDL)
         str(res)
     
     def test_vhdl_package_constants(self):
-        f, res = dumpFile("package_constants.vhd", "vhdl")
+        f, res = dumpFile("package_constants.vhd", VHDL)
         str(res)
 
     def test_verilog_uart(self):
-        f, res = dumpFile("uart.v", "verilog")
+        f, res = dumpFile("uart.v", VERILOG)
+        str(res)
+
+    def test_verilog_adder_implicit(self):
+        f, res = dumpFile("adder_implicit.v", VERILOG)
         str(res)
 
     def test_verilog_arbiter(self):
-        f, res = dumpFile("arbiter.v", "verilog")
+        f, res = dumpFile("arbiter.v", VERILOG)
         str(res)
         e = res["entities"]
         self.assertEqual(len(e), 1)
@@ -69,7 +75,7 @@ class BasicTC(unittest.TestCase):
         self.assertDictEqual(_ports, ports)
     
     def test_verilog_include(self):
-        f, res = dumpFile("include.v", "verilog")
+        f, res = dumpFile("include.v", VERILOG)
         str(res)
         e = res["entities"]
         self.assertEqual(len(e), 2)
@@ -79,11 +85,11 @@ class BasicTC(unittest.TestCase):
         self.assertEqual(u["name"], "uart")
     
     def test_verilog_define(self):
-        f, res = dumpFile("define.v", "verilog")
+        f, res = dumpFile("define.v", VERILOG)
         str(res)
     
     def test_verilog_fifo_rx(self):
-        f, res = dumpFile("fifo_rx.v", "verilog")
+        f, res = dumpFile("fifo_rx.v", VERILOG)
         e = res['entities']
         self.assertEqual(len(e), 1)
         e = e[0]
@@ -92,23 +98,23 @@ class BasicTC(unittest.TestCase):
         str(res)
     
     def test_multiple_files_at_once(self):
-        language = "verilog"
+        language = VERILOG
         f = [path.join(TEST_DIR, language, f)
              for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
         inc_dir = path.join(TEST_DIR, language)
     
-        res = hdlConvertor.parse(f, language, [inc_dir], debug=True)
+        res = parse(f, language, [inc_dir], debug=True)
         e = res["entities"]
         self.assertSetEqual(set(_e["name"] for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
     
     def test_verilog_macro(self):
-        f, res = dumpFile("macro.v",'verilog')
+        f, res = dumpFile("macro.v", VERILOG)
         str(res)
     
     def test_directive_verilogpp(self):
-        f, res = dumpFile("directive_verilogpp.v",'verilog')
+        f, res = dumpFile("directive_verilogpp.v", VERILOG)
         str(res)
 
     def test_system_verilog_mem_base_object(self):
