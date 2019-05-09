@@ -40,6 +40,14 @@ class BasicTC(unittest.TestCase):
     def test_vhdl_package_constants(self):
         f, res = dumpFile("package_constants.vhd", VHDL)
         str(res)
+    
+    def test_vhdl_fourbit_adder(self):
+        f, res = dumpFile("fourbit_adder.vhd", VHDL)
+        str(res)
+
+    def test_vhdl_mux2i(self):
+        f, res = dumpFile("mux2i.vhd", VHDL)
+        str(res)
 
     def test_verilog_uart(self):
         f, res = dumpFile("uart.v", VERILOG)
