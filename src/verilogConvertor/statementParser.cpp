@@ -323,8 +323,9 @@ vector<Expr*> * VerStatementParser::vistEvent_control(
 	if (ee) {
 		return VerExprParser::visitEvent_expression(ee);
 	}
-
-	return nullptr;
+	auto res = new vector<Expr*>;
+	res->push_back(Expr::all());
+	return res;
 }
 
 vector<Statement *> VerStatementParser::vistContinuous_assign(
