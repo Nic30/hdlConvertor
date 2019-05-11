@@ -116,45 +116,50 @@ std::vector<Port*> * PortParser::visitPort_declaration(
 	}
 
 	bool signed_ = Utils::is_signed(ctx);
-	bool reg_ = Utils::is_reg(ctx);
-	// inout_declaration : 'inout' ( net_type )? ( 'signed' )? ( range_ )?
-	// list_of_port_identifiers ;
-	auto inout = ctx->inout_declaration();
-	if (inout)
-		return addTypeSpecToPorts(DIR_INOUT, inout->net_type(), signed_, reg_,
-				inout->range_(),
-				visitList_of_port_identifiers(
-						inout->list_of_port_identifiers()));
-
-	// input_declaration : 'input' ( net_type )? ( 'signed' )? ( range_ )?
-	//                      list_of_port_identifiers ;
-	auto input = ctx->input_declaration();
-	if (input)
-		return addTypeSpecToPorts(DIR_IN, input->net_type(), signed_, reg_,
-				input->range_(),
-				visitList_of_port_identifiers(
-						input->list_of_port_identifiers()));
-
-	// output_declaration :
-	// 'output' ( net_type )? ( 'signed' )? ( range_ )?
-
-	// list_of_port_identifiers
-	// | 'output' ( 'reg' )? ( 'signed' )? ( range_ )? list_of_port_identifiers
-	// | 'output' 'reg' ( 'signed' )? ( range_ )? list_of_variable_port_identifiers
-	// | 'output' ( output_variable_type )? list_of_port_identifiers
-	// | 'output' output_variable_type list_of_variable_port_identifiers
-	// ;
-	auto od = ctx->output_declaration();
-	std::vector<Port*> * ports;
-	auto lovpi = od->list_of_variable_port_identifiers();
-	if (lovpi) {
-		ports = visitList_of_variable_port_identifiers(lovpi);
-	} else {
-		ports = visitList_of_port_identifiers(od->list_of_port_identifiers());
+	bool reg_ = false;
+	{
+		// inout_declaration : 'inout' ( net_type )? ( 'signed' )? ( range_ )?
+		// list_of_port_identifiers ;
+		auto inout = ctx->inout_declaration();
+		if (inout) {
+			return addTypeSpecToPorts(DIR_INOUT, inout->net_type(), signed_,
+					reg_, inout->range_(),
+					visitList_of_port_identifiers(
+							inout->list_of_port_identifiers()));
+		}
 	}
-
-	return addTypeSpecToPorts(DIR_OUT, od->net_type(), signed_, reg_, od->range_(),
-			ports);
+	{
+		// input_declaration : 'input' ( net_type )? ( 'signed' )? ( range_ )?
+		//                      list_of_port_identifiers ;
+		auto input = ctx->input_declaration();
+		if (input)
+			return addTypeSpecToPorts(DIR_IN, input->net_type(), signed_, reg_,
+					input->range_(),
+					visitList_of_port_identifiers(
+							input->list_of_port_identifiers()));
+	}
+	{
+		// output_declaration
+		//    : 'output' (net_type)? ('signed')? (range_)? list_of_port_identifiers
+		//    | 'output' ('reg')? ('signed')? (range_)? list_of_port_identifiers
+		//    | 'output' 'reg' ('signed')? (range_)? list_of_variable_port_identifiers
+		//    | 'output' (output_variable_type)? list_of_port_identifiers
+		//    | 'output' output_variable_type list_of_variable_port_identifiers
+		//    ;
+		auto od = ctx->output_declaration();
+		reg_ = Utils::is_reg(od);
+		signed_ = Utils::is_signed(od);
+		std::vector<Port*> * ports;
+		auto lovpi = od->list_of_variable_port_identifiers();
+		if (lovpi) {
+			ports = visitList_of_variable_port_identifiers(lovpi);
+		} else {
+			ports = visitList_of_port_identifiers(
+					od->list_of_port_identifiers());
+		}
+		return addTypeSpecToPorts(DIR_OUT, od->net_type(), signed_, reg_,
+				od->range_(), ports);
+	}
 }
 std::vector<Port*> * PortParser::visitList_of_port_identifiers(
 		Verilog2001Parser::List_of_port_identifiersContext* ctx) {

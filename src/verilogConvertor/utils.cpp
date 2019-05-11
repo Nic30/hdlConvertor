@@ -31,18 +31,18 @@ Expr *Utils::mkWireT(Verilog2001Parser::Range_Context * range, bool signed_) {
 
 bool Utils::is_reg(antlr4::ParserRuleContext * ctx) {
 	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "reg") == 0)
-	auto st = ctx->getToken(Verilog2001Lexer::T__35, 0);
-	bool signed_ = st != nullptr;
-	if (signed_ == true) {
-		assert(st->getText() == "reg");
+	auto rt = ctx->getToken(Verilog2001Lexer::T__34, 0);
+	bool reg_ = rt != nullptr;
+	if (reg_ == true) {
+		assert(rt->getText() == "reg");
 	}
-	return signed_;
+	return reg_;
 }
 
 
 bool Utils::is_signed(antlr4::ParserRuleContext * ctx) {
 	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "signed") == 0)
-	auto st = ctx->getToken(Verilog2001Lexer::T__25, 0);
+	auto st = ctx->getToken(Verilog2001Lexer::T__24, 0);
 	bool signed_ = st != nullptr;
 	if (signed_ == true) {
 		assert(st->getText() == "signed");
