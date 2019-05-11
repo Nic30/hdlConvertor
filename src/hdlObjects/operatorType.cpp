@@ -42,11 +42,12 @@ static const char* const opTypeToStr[] = {
 	"CALL",
 	"ARROW",
 	"RISING",
-	"FALLING"
+	"FALLING",
+	"MAP_ASSOCIATION"
 };
 
 const char* OperatorType_toString(OperatorType opt) {
-	if (opt < RANGE || opt > FALLING)
+	if (opt < RANGE || opt > MAP_ASSOCIATION)
 		throw "Invalid operator type";
 
 	return opTypeToStr[opt];

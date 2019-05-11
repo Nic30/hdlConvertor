@@ -82,7 +82,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 			} else {
 				v = Expr::null();
 			}
-			pcs.push_back(Expr::ARRAY( { k, v }));
+			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v ));
 		}
 	}
 	return pcs;
@@ -166,7 +166,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 			} else {
 				v = Expr::null();
 			}
-			pcs.push_back(Expr::ARRAY( { k, v }));
+			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v ));
 		}
 	}
 	return pcs;

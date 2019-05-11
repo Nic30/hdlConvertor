@@ -43,6 +43,7 @@ enum OperatorType {
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator
 	FALLING,// falling edge/negedge event operator
+	MAP_ASSOCIATION,
 };
 
 const char* OperatorType_toString(OperatorType opt);
