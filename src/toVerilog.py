@@ -99,7 +99,9 @@ class ToVerilog():
         if doc is not None:
             doc = doc.split("\n")
             w = self.out.write
-            for d in doc:
+            for last, d in iter_with_last_flag(doc):
+                if last and d == "":
+                    break
                 w("// ")
                 w(d)
                 w("\n")
@@ -121,10 +123,10 @@ class ToVerilog():
             self.print_expr(v)
 
     def print_port_declr(self, p):
-        self.print_doc(p)
         w = self.out.write
         d = p['direction']
         var = p['variable']
+        self.print_doc(var)
         name = var["name"]
         self.print_direction(d)
         w(" ")
@@ -146,7 +148,7 @@ class ToVerilog():
         w(e["name"])
         gs = e.get("generics", [])
         if gs:
-            w("#(\n")
+            w(" #(\n")
             with Indent(self.out):
                 for last, g in iter_with_last_flag(gs):
                     self.print_generic_declr(g)
@@ -510,7 +512,7 @@ if __name__ == "__main__":
     from hdlConvertor import hdlConvertor
     from hdlConvertor.language import Language
     c = hdlConvertor()
-    filenames = [os.path.join(TEST_DIR, "arbiter.v")]
+    filenames = [os.path.join(TEST_DIR, "sram.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, False)
     tv = ToVerilog(sys.stdout)
     tv.apply(d)

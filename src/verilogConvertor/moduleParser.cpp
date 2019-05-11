@@ -53,7 +53,8 @@ void ModuleParser::visitModule_declaration(
 	}
 	auto lop = ctx->list_of_ports();
 	if (lop) {
-		auto ps = PortParser::visitList_of_ports(lop);
+		PortParser pp(tokens);
+		auto ps = pp.visitList_of_ports(lop);
 		for (auto p : *ps) {
 			ent->ports.push_back(p);
 		}
@@ -65,7 +66,8 @@ void ModuleParser::visitModule_declaration(
 
 	auto lpd = ctx->list_of_port_declarations();
 	if (lpd) {
-		auto ps = PortParser::visitList_of_port_declarations(lpd);
+		PortParser pp(tokens);
+		auto ps = pp.visitList_of_port_declarations(lpd);
 		for (auto p : *ps) {
 			ent->ports.push_back(p);
 		}
@@ -98,7 +100,8 @@ void ModuleParser::visitModule_item(
 	// [TODO] attribute_instance
 	auto pd = ctx->port_declaration();
 	if (pd) {
-		auto portsDeclr = PortParser::visitPort_declaration(pd);
+		PortParser pp(tokens);
+		auto portsDeclr = pp.visitPort_declaration(pd);
 		for (auto declr : *portsDeclr) {
 			Port * p = ent->getPortByName(declr->variable->name);
 			p->direction = declr->direction;

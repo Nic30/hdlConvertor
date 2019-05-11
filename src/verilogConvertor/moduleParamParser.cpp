@@ -59,6 +59,7 @@ vector<Variable*>* ModuleParamParser::visitParameter_declaration_(
 	for (auto v : *params) {
 		if (first) {
 			v->type = t;
+			v->__doc__ = parseComment(tokens, ctx) + v->__doc__;
 			first = false;
 		} else
 			v->type = new Expr(*t);
@@ -84,7 +85,7 @@ Variable * ModuleParamParser::visitParam_assignment(
 			ctx->constant_expression());
 	Variable* p = new Variable(
 			ctx->parameter_identifier()->identifier()->getText(), NULL, value);
-	p->__doc__ = parseComment(tokens, ctx);
+	p->__doc__ += parseComment(tokens, ctx);
 	return p;
 }
 vector<Variable*>* ModuleParamParser::visitParameter_declaration(

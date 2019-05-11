@@ -2,6 +2,7 @@
 
 #include <string>
 #include <antlr4-runtime.h>
+#include "verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h"
 /**
  * The comment parser reads the text from the hidden tokens
  * generated from the antlr lexer. This tokens are not connected
@@ -24,19 +25,44 @@
  * */
 //[TODO] naive impl. only
 template<typename CONTEXT_T>
-std::string parseComment(antlr4::TokenStream * tokens, CONTEXT_T * ctx) {
-	std::string tmp;
-	auto comment_pre =
-			dynamic_cast<antlr4::CommonTokenStream *>(tokens)->getHiddenTokensToLeft(
-					ctx->getStart()->getTokenIndex(),
-					antlr4::Token::HIDDEN_CHANNEL);
-	for (auto c : comment_pre) {
-		auto s = c->getText();
-		if (s.size() >= 2 && s[0] == '/' && s[1] == '/') {
-			// trim the starting //
-			s = s.substr(2);
+std::string parseComment(antlr4::TokenStream * _tokens, CONTEXT_T * ctx) {
+	std::string tmp = "";
+	size_t last_token = ctx->getStart()->getTokenIndex();
+	size_t first_comment_token = last_token;
+	auto tokens = dynamic_cast<antlr4::CommonTokenStream *>(_tokens);
+	// find the first comment in block of comments
+	while (true) {
+		if (first_comment_token == 0)
+			break;
+		auto t = tokens->get(first_comment_token - 1);
+		if (t->getChannel() != antlr4::Token::HIDDEN_CHANNEL) {
+			//printf("break: %s\n", t->toString().c_str());
+			break;
+		}
+		first_comment_token--;
+	}
+	// collect the text from the comments
+	for (size_t i = first_comment_token; i < last_token; i++) {
+		auto t = tokens->get(i);
+		auto s = t->getText();
+		if (t->getType() == Verilog2001::Verilog2001Lexer::White_space) {
+			continue;
+		}
+		//printf("comment: %s, %s\n", s.c_str(), t->toString().c_str());
+		// trim the whitespaces on the beginning
+		size_t start = 0;
+		while(start < s.size() && isspace(s[start]))
+			start++;
+		if (s.size() >= start + 2 && s[start + 0] == '/' && s[start + 1] == '/') {
+			// trim the starting "//" OR "// "
+			if (s.size() >= start + 3 && s[start + 3] == ' ')
+				s = s.substr(start + 3);
+			else
+				s = s.substr(start + 2);
+			//printf("comment after: %s\n", s.c_str());
 		}
 		tmp += s;
 	}
+
 	return tmp;
 }

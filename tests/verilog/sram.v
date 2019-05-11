@@ -1,8 +1,17 @@
+// comment 0
+// comment 1
+                // comment with some indinet
 /**
  * https://timetoexplore.net/blog/block-ram-in-verilog-with-vivado
  * simple example of sram
  */
-module sram #(parameter ADDR_WIDTH = 8, DATA_WIDTH = 8, DEPTH = 256) (
+module sram #(
+	// widht of address
+	parameter ADDR_WIDTH = 8,
+	// widht of memory cell in memory
+	DATA_WIDTH = 8,
+	// number of cells in memory
+	DEPTH = 256) (
     // main clock signal
     input wire i_clk,
     input wire [ADDR_WIDTH-1:0] i_addr, 
