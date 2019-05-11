@@ -76,8 +76,9 @@ Statement* Statement::CASE(Expr * switchOn, const vector<case_t> cases,
 		s->exprs.push_back(c.first);
 		s->sub_statements.push_back(c.second);
 	}
-	if (default_)
+	if (default_) {
 		s->sub_statements.push_back(default_);
+	}
 	return s;
 }
 Statement* Statement::RETURN(Expr * val) {
@@ -121,8 +122,8 @@ pair<PyObject *, size_t> cases_toJson(vector<Expr*>::const_iterator cond_begin,
 		vector<Expr*>::const_iterator cond_end,
 		vector<vector<Statement*>*>::const_iterator stms_begin) {
 	PyObject * cases = nullptr;
-	size_t size = cond_begin != cond_end;
-	if (cond_begin != cond_end)
+	size_t size = cond_end - cond_begin;
+	if (size)
 		cases = PyList_New(size);
 	for (size_t case_cnt = 0; case_cnt < size; case_cnt++) {
 		// build tuple representing the elif item
@@ -131,17 +132,17 @@ pair<PyObject *, size_t> cases_toJson(vector<Expr*>::const_iterator cond_begin,
 		PyTuple_SetItem(case_, 0, c->toJson());
 		// fill statements in elif
 		auto stms = *stms_begin;
-		PyObject * objList = PyList_New(stms->size());
+		PyObject * stm_list = PyList_New(stms->size());
 		for (unsigned i = 0; i < stms->size(); i++) {
 			auto _o = (*stms)[i];
 			assert(_o);
 			PyObject * o = _o->toJson();
-			PyList_SetItem(objList, i, o);
+			PyList_SetItem(stm_list, i, o);
 		}
 		//Py_IncRef(objList);
-		PyTuple_SetItem(case_, 1, objList);
+		PyTuple_SetItem(case_, 1, stm_list);
 		// add to elif list
-		PyList_SetItem(cases, case_cnt, objList);
+		PyList_SetItem(cases, case_cnt, case_);
 		++cond_begin;
 		++stms_begin;
 	}
@@ -179,8 +180,8 @@ PyObject * Statement::toJson() const {
 		if (c) {
 			PyDict_SetItemString(d, "cases", c);
 		}
-		if (sub_statements.size() == c_cnt) {
-			addJsonArrP(d, "ifFalse", *sub_statements.at(c_cnt - 1));
+		if (sub_statements.size() > c_cnt) {
+			addJsonArrP(d, "default", *sub_statements.at(c_cnt - 1));
 		}
 	} else if (type == s_RETURN) {
 		PyDict_SetItemString(d, "val", exprs[0]->toJson());
