@@ -1,12 +1,14 @@
 #include "moduleParser.h"
+#include "../notImplementedLogger.h"
+
 #include "attributeParser.h"
 #include "portParser.h"
 #include "exprParser.h"
 #include "statementParser.h"
 #include "moduleInstanceParser.h"
-#include "../notImplementedLogger.h"
 #include "utils.h"
 #include "../baseHdlParser/commentParser.h"
+#include "moduleParamParser.h"
 
 using namespace std;
 using namespace Verilog2001;
@@ -44,7 +46,8 @@ void ModuleParser::visitModule_declaration(
 	}
 	auto mppl = ctx->module_parameter_port_list();
 	if (mppl) {
-		auto ppls = visitModule_parameter_port_list(mppl);
+		ModuleParamParser pp(tokens);
+		auto ppls = pp.visitModule_parameter_port_list(mppl);
 		for (auto v : *ppls)
 			ent->generics.push_back(v);
 	}
@@ -74,84 +77,6 @@ void ModuleParser::visitModule_declaration(
 	context->entities.push_back(ent);
 	arch->entityName = strdup(ent->name);
 	context->architectures.push_back(arch);
-}
-
-std::vector<Variable*>* ModuleParser::visitModule_parameter_port_list(
-		Verilog2001Parser::Module_parameter_port_listContext* ctx) {
-	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','
-	// parameter_declaration_ )* ')' ;
-	auto vars = new std::vector<Variable*>();
-	for (auto pd : ctx->parameter_declaration_()) {
-		auto pds = visitParameter_declaration_(pd);
-		for (auto pd : *pds)
-			vars->push_back(pd);
-		delete pds;
-	}
-
-	return vars;
-}
-
-std::vector<Variable*>* ModuleParser::visitParameter_declaration_(
-		Verilog2001Parser::Parameter_declaration_Context* ctx) {
-	//// split out semi on end. spec grammar is wrong. It won't allow
-	//// #(parameter B=8) since it wants a ';' in (...). Rule
-	//// module_parameter_port_list calls this one.
-
-	// parameter_declaration_ :
-	// 'parameter' ( 'signed' )? ( range_ )? list_of_param_assignments
-	// |'parameter' 'integer' list_of_param_assignments
-	// |'parameter' 'real' list_of_param_assignments
-	// |'parameter' 'realtime' list_of_param_assignments
-	// |'parameter' 'time' list_of_param_assignments
-	// ;
-	Expr * t = nullptr;
-	auto typeStr = ctx->children[1];
-	auto term = dynamic_cast<antlr4::tree::TerminalNodeImpl*>(typeStr);
-	if (term) {
-		t = Expr::ID(term->getText());
-	}
-
-	auto r = ctx->range_();
-	if (r) {
-		t = Utils::mkWireT(r, Utils::is_signed(ctx));
-	}
-
-	std::vector<Variable*> * params = visitList_of_param_assignments(
-			ctx->list_of_param_assignments());
-
-	if (t == nullptr)
-		t = Utils::mkStringT();
-	bool first = true;
-	for (auto v : *params) {
-		if (first) {
-			v->type = t;
-			first = false;
-		} else
-			v->type = new Expr(*t);
-	}
-
-	return params;
-}
-std::vector<Variable*> *ModuleParser::visitList_of_param_assignments(
-		Verilog2001Parser::List_of_param_assignmentsContext * ctx) {
-	// list_of_param_assignments :
-	// param_assignment ( ',' param_assignment )*
-	// ;
-	std::vector<Variable*>* params = new std::vector<Variable*>();
-	for (auto pa : ctx->param_assignment())
-		params->push_back(visitParam_assignment(pa));
-	return params;
-
-}
-Variable * ModuleParser::visitParam_assignment(
-		Verilog2001Parser::Param_assignmentContext* ctx) {
-	// param_assignment : parameter_identifier '=' constant_expression ;
-	auto value = VerExprParser::visitConstant_expression(
-			ctx->constant_expression());
-	Variable* p = new Variable(
-			ctx->parameter_identifier()->identifier()->getText(), NULL, value);
-	p->__doc__ = parseComment(tokens, ctx);
-	return p;
 }
 
 void ModuleParser::visitModule_item(
@@ -196,7 +121,8 @@ void ModuleParser::visitModule_item(
 	}
 	auto pad = ctx->parameter_declaration();
 	if (pad) {
-		auto ppls = visitParameter_declaration(pad);
+		ModuleParamParser pp(tokens);
+		auto ppls = pp.visitParameter_declaration(pad);
 		for (auto v : *ppls)
 			ent->generics.push_back(v);
 		return;
@@ -412,12 +338,12 @@ void ModuleParser::visitNet_declaration(
 	auto ln = ctx->list_of_net_identifiers();
 	if (ln) {
 		for (auto v : visitList_of_net_identifiers(ln, t)) {
-			arch->varialbles.push_back(v);
+			arch->variables.push_back(v);
 		}
 	} else {
 		auto lna = ctx->list_of_net_decl_assignments();
 		for (auto v : visitList_of_net_decl_assignments(lna, t)) {
-			arch->varialbles.push_back(v);
+			arch->variables.push_back(v);
 		}
 	}
 }
@@ -506,7 +432,7 @@ void ModuleParser::visitList_of_variable_identifiers(
 			base_type = new Expr(*base_type);
 		Variable * v = visitVariable_type(vt, base_type);
 		v->latched = latched;
-		arch->varialbles.push_back(v);
+		arch->variables.push_back(v);
 		first = false;
 	}
 }
@@ -591,13 +517,3 @@ void ModuleParser::visitNon_port_module_item(
 			"ModuleParser.visitNon_port_module_item - unexpected transition");
 }
 
-std::vector<Variable*>* ModuleParser::visitParameter_declaration(
-		Verilog2001Parser::Parameter_declarationContext * ctx) {
-	auto vars = new std::vector<Variable*>();
-	auto pds = visitParameter_declaration_(ctx->parameter_declaration_());
-	for (auto pd : *pds)
-		vars->push_back(pd);
-	delete pds;
-	return vars;
-
-}

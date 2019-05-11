@@ -12,7 +12,7 @@
 class Arch: public WithNameAndDoc {
 public:
 	const char * entityName;
-	std::vector<Variable*> varialbles;
+	std::vector<Variable*> variables;
 	std::vector<CompInstance*> componentInstances;
 	std::vector<Statement*> statements;
 

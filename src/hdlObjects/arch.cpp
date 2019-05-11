@@ -10,7 +10,7 @@ PyObject * Arch::toJson() const {
 		PyDict_SetItemString(o, "entityName", PyUnicode_FromString(entityName));
 
 	JSN_DEBUG("Arch - variables")
-	addJsonArrP(o, "variables", varialbles);
+	addJsonArrP(o, "variables", variables);
 
 	JSN_DEBUG("Arch - componentInstances")
 	addJsonArrP(o, "componentInstances", componentInstances);
@@ -27,6 +27,6 @@ Arch::~Arch() {
 		delete c;
 	for (auto s : statements)
 		delete s;
-	for (auto v : varialbles)
+	for (auto v : variables)
 		delete v;
 }
