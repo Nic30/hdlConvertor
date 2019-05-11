@@ -10,15 +10,16 @@ except ImportError:
 
 from hdlConvertor import parse
 from hdlConvertor.language import Language  
-VHDL = "vhdl"
-VERILOG = "verilog"
+VHDL = Language.VHDL
+VERILOG = Language.VERILOG
+SV = Language.SYSTEM_VERILOG
 
 def dumpFile(fname, language):
     _language = language
-    if language == "systemVerilog":
+    if language == SV:
         _language = VERILOG
-    inc_dir = path.join(TEST_DIR, _language)
-    f = path.join(BASE_DIR, "tests", _language, fname)
+    inc_dir = path.join(TEST_DIR, _language.value)
+    f = path.join(BASE_DIR, "tests", _language.value, fname)
     res = parse(f, language, [inc_dir], debug=True)
     return f, res
 
@@ -107,9 +108,9 @@ class BasicTC(unittest.TestCase):
     
     def test_multiple_files_at_once(self):
         language = VERILOG
-        f = [path.join(TEST_DIR, language, f)
+        f = [path.join(TEST_DIR, language.value, f)
              for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
-        inc_dir = path.join(TEST_DIR, language)
+        inc_dir = path.join(TEST_DIR, language.value)
     
         res = parse(f, language, [inc_dir], debug=True)
         e = res["entities"]
@@ -126,7 +127,7 @@ class BasicTC(unittest.TestCase):
         str(res)
 
     def test_system_verilog_mem_base_object(self):
-        f, res = dumpFile("mem_base_object.sv",  "systemVerilog")
+        f, res = dumpFile("mem_base_object.sv",  SV)
         str(res)
 
 

@@ -7,6 +7,7 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
+from hdlConvertor.language import Language as PyHdlLanguageEnum
 import sys
 
 
@@ -75,11 +76,11 @@ cdef class hdlConvertor:
         :param debug: if True the debug logging is enabled
         """
 
-        if langue == "verilog":
+        if langue == PyHdlLanguageEnum.VERILOG:
             langue_value = VERILOG
-        elif langue == "vhdl":
+        elif langue == PyHdlLanguageEnum.VHDL:
             langue_value = VHDL
-        elif langue == "systemVerilog":
+        elif langue == PyHdlLanguageEnum.SYSTEM_VERILOG:
             langue_value = SYSTEM_VERILOG
         else:
             raise ValueError(langue + " is not recognized (expected verilog, vhdl or systemVerilog)")
