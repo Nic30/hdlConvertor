@@ -141,39 +141,5 @@ Expr::~Expr() {
 		delete data;
 }
 
-#ifdef USE_PYTHON
-PyObject * Expr::toJson() const {
-	PyObject *d = PyDict_New();
-	Operator * op = dynamic_cast<Operator*>(data);
-	if (op) {
-		PyDict_SetItemString(d, "binOperator", op->toJson());
-	} else {
-		Symbol * literal = dynamic_cast<Symbol*>(data);
-		if (literal)
-			PyDict_SetItemString(d, "literal", literal->toJson());
-		else if (data)
-			throw std::runtime_error("Expr is improperly initialised");
-		else
-			throw std::runtime_error("Expr has NULL data");
-	}
-	//Py_INCREF(d);
-	return d;
-}
-#endif
-void Expr::dump(int indent) const {
-	Operator * op = dynamic_cast<Operator*>(data);
-	std::cout << "{\n";
-	if (op) {
-		dumpItemP("binOperator", indent + INDENT_INCR, op) << "\n";
-	} else {
-		Symbol * literal = dynamic_cast<Symbol*>(data);
-		if (literal) {
-			dumpItemP("literal", indent + INDENT_INCR, literal) << "\n";
-		} else
-			throw std::runtime_error("Expr is improperly initialised");
-	}
-	mkIndent(indent) << "}";
-}
-
 }
 }

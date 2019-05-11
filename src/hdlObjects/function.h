@@ -9,18 +9,15 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 class Function: public WithNameAndDoc {
-	bool isOperator;
-	Expr * returnT;
-	std::vector<Variable*> * params;
 public:
+	const bool isOperator;
+	const Expr * returnT;
+	const std::vector<Variable*> * params;
 	std::vector<Variable*> locals;
 	std::vector<Statement*> body;
 
 	Function(char * name, bool isOperator, Expr * returnT,
 			std::vector<Variable*> * params);
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
 	~Function();
 };
 

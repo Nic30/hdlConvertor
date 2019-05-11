@@ -15,6 +15,11 @@ cdef extern from "hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass Context:
         PyObject * toJson()
 
+cdef extern from "toJson.h" namespace "hdlConvertor":
+    cdef cppclass ToJson:
+        @staticmethod
+        PyObject * toJson(const Context * c)
+
 
 cdef extern from "exception.h":
     cdef const char* get_my_py_error_message()
@@ -106,7 +111,7 @@ cdef class hdlConvertor:
             c = self.thisptr.parse(
                 filenames, langue_value, incdirs, hierarchyOnly, debug)
     
-            d = c.toJson()
+            d = ToJson.toJson(c)
             d_py = < object > d
             return d_py
         else:

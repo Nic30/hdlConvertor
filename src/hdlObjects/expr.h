@@ -10,7 +10,6 @@
 #include "operatorType.h"
 #include "exprItem.h"
 #include "symbol.h"
-#include "../debugConfig.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -52,10 +51,6 @@ public:
 	// @return char* of the variable string if this Expr is string value
 	char * extractStr();
 
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
 	~Expr();
 };
 

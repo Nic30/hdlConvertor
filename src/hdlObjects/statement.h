@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "jsonable.h"
 #include "statement.h"
 #include "expr.h"
 #include "named.h"
@@ -12,6 +11,7 @@ namespace hdlObjects {
 enum StatementType {
 	s_EXPR, s_IF, s_CASE, s_WHILE, s_RETURN, s_ASSIGMENT, s_PROCESS
 };
+const char * StatementType_toString(StatementType type);
 
 class Statement : public WithDoc {
 public:
@@ -47,9 +47,6 @@ public:
 	static Statement* WHILE(Expr * cond, std::vector<Statement*>* body);
 	static Statement* PROCESS(std::vector<Expr*> * sensitivity,
 			std::vector<Statement*>* body);
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
 	~Statement();
 };
 

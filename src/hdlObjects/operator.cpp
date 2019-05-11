@@ -73,59 +73,8 @@ Operator::~Operator() {
 		delete op1;
 }
 
-#ifdef USE_PYTHON
-PyObject * Operator::toJson() const {
-	PyObject *d = PyDict_New();
-	PyDict_SetItemString(d, "op0", op0->toJson());
-	PyDict_SetItemString(d, "operator",
-			PyUnicode_FromString(OperatorType_toString(op)));
-
-	int arity = OperatorType_arity(op);
-	switch (arity) {
-	case -1:
-	case 3:
-		addJsonArrP(d, "operands", *operands);
-		break;
-	case 1:
-		break;
-	case 2:
-		// some of the bin. operators may appear as unary in verilog
-		if (op1)
-			PyDict_SetItemString(d, "op1", op1->toJson());
-		break;
-	default:
-		throw "Invalid arity of operator";
-	}
-	return d;
-}
-#endif
-
 ExprItem * Operator::clone() const {
 	return new Operator(*this);
-}
-
-void Operator::dump(int indent) const {
-	std::cout << "{\n";
-	indent += INDENT_INCR;
-	dumpItemP("op0", indent, op0) << ",\n";
-	dumpVal("operator", indent, OperatorType_toString(op)) << ",\n";
-
-	int arity = OperatorType_arity(op);
-	switch (arity) {
-	case -1:
-	case 3:
-		dumpArrP("operands", indent, *operands) << "\n";
-		break;
-	case 1:
-		break;
-	case 2:
-		if (op1) // may be unary variant of the bin operator (e.g. verilog &a)
-			dumpItemP("op1", indent, op1) << "\n";
-		break;
-	default:
-		throw "Invalid arity of operator";
-	}
-	mkIndent(indent - INDENT_INCR) << "}";
 }
 
 }

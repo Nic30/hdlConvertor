@@ -2,7 +2,6 @@
 
 #include <vector>
 #include "named.h"
-#include "jsonable.h"
 #include "statement.h"
 
 namespace hdlConvertor {
@@ -21,9 +20,6 @@ public:
 	std::vector<Statement*> statements;
 
 	Process();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
 	~Process();
 };
 

@@ -2,7 +2,6 @@
 #include <vector>
 #include "named.h"
 #include "compInstance.h"
-#include "jsonable.h"
 #include "variable.h"
 #include "process.h"
 
@@ -19,9 +18,6 @@ public:
 	std::vector<CompInstance*> componentInstances;
 	std::vector<Statement*> statements;
 
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
 	~Arch();
 };
 

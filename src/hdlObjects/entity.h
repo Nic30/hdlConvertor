@@ -12,10 +12,6 @@ public:
 	std::vector<Port*> ports;
 	Entity();
 	Port * getPortByName(const char * name);
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
 	~Entity();
 };
 

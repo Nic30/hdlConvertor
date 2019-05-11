@@ -1,8 +1,5 @@
 #pragma once
-
-#include <assert.h>
-#include "../debugConfig.h"
-#include "jsonable.h"
+#include <string>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -15,10 +12,7 @@ public:
 	char * name;
 
 	Named();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
+	Named(char * name);
 	~Named();
 };
 
@@ -28,10 +22,6 @@ public:
 class WithDoc {
 public:
 	std::string __doc__;
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
 };
 
 /*
@@ -40,10 +30,8 @@ public:
 class WithNameAndDoc: public Named, public WithDoc {
 public:
 	WithNameAndDoc();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
+	WithNameAndDoc(char * name);
+
 };
 
 }
