@@ -2,6 +2,9 @@
 
 #include "macro_replace.h"
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 class macro_replace_sv: public macro_replace {
 private:
 	std::map<std::string, std::string> _default_map;
@@ -12,3 +15,6 @@ public:
 	std::string replace();
 	std::string replace(std::vector<std::string> arg);
 };
+
+}
+}

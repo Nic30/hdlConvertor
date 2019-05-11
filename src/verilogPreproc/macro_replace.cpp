@@ -2,6 +2,9 @@
 
 using namespace std;
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 macro_replace::macro_replace(string macro_name, string replace,
 		vector<string> arg) {
 	data.tmplate_name = macro_name;
@@ -137,3 +140,5 @@ string macro_replace::replace() {
 	return replace(null_vector);
 }
 
+}
+}

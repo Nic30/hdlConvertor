@@ -3,7 +3,12 @@
 #include "compInstanceParser.h"
 #include "statementParser.h"
 
-using namespace vhdl;
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace vhdl {
+
 
 ArchParser::ArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -98,4 +103,7 @@ void ArchParser::visitArchitecture_statement(
 					"ArchParser.visitArchitecture_statement - unspecified next rule");
 		}
 	}
+}
+
+}
 }

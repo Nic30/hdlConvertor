@@ -1,5 +1,8 @@
 #include "port.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Port::Port(Direction direction, Variable * variable) {
 	this->direction = direction;
 	this->variable = variable;
@@ -28,4 +31,7 @@ void Port::dump(int indent) const {
 Port::~Port() {
 	if (variable)
 		delete variable;
+}
+
+}
 }

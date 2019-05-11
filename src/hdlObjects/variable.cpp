@@ -1,5 +1,8 @@
 #include "variable.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Variable::Variable(std::string id, Expr * _type, Expr * val) {
 	name = strdup(id.c_str());
 	type = _type;
@@ -48,4 +51,7 @@ void Variable::dump(int indent) const {
 Variable::~Variable() {
 	if (value)
 		delete value;
+}
+
+}
 }

@@ -1,9 +1,5 @@
 #pragma once
 
-#include "antlr4-runtime.h"
-#include "verilogPreprocParser/verilogPreprocLexer.h"
-#include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocParserBaseVisitor.h"
 #include <string>
 #include <map>
 #include <sys/stat.h>
@@ -11,12 +7,16 @@
 
 #include "verilogPreprocParser/verilogPreprocLexer.h"
 #include "verilogPreprocParser/verilogPreprocParser.h"
+#include "verilogPreprocParser/verilogPreprocParserBaseVisitor.h"
 
-#include "../verilogPreproc/macroPrototype.h"
-#include "../verilogPreproc/macroSymbol.h"
+#include "macroPrototype.h"
+#include "macroSymbol.h"
 #include "exception.h"
 
 #include "../syntaxErrorLogger.h"
+
+namespace hdlConvertor {
+namespace verilog_pp {
 
 /*
  * Verilog preprocessor
@@ -117,3 +117,6 @@ std::string return_preprocessed_file(const std::string fileName,
 std::string& rtrim(std::string& str, const std::string& chars = " \t\n\r");
 std::string& ltrim(std::string& str, const std::string& chars = " \t\n\r");
 std::string& trim(std::string& str, const std::string& chars = " \t\n\r");
+
+}
+}

@@ -1,5 +1,8 @@
 #include "context.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 #ifdef USE_PYTHON
 PyObject * Context::toJson() const {
 	PyObject * c = PyDict_New();
@@ -56,4 +59,7 @@ Context::~Context() {
 
 	for (auto i : variables)
 		delete i;
+}
+
+}
 }

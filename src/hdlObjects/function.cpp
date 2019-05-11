@@ -1,5 +1,8 @@
 #include "function.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Function::Function(char * name, bool isOperator, Expr * returnT,
 		std::vector<Variable*> * params) {
 	this->name = name;
@@ -36,4 +39,7 @@ Function::~Function() {
 	for (auto b : body)
 		delete b;
 
+}
+
+}
 }

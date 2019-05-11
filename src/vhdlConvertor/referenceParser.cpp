@@ -3,7 +3,12 @@
 #include "exprParser.h"
 #include "../notImplementedLogger.h"
 
-using namespace vhdl;
+
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 Expr * ReferenceParser::visitSelected_name(
 		vhdlParser::Selected_nameContext* ctx) {
@@ -131,4 +136,7 @@ Expr * ReferenceParser::visitName_part(vhdlParser::Name_partContext* ctx) {
 		sn = visitName_part_specificator(sn, sp);
 	}
 	return sn;
+}
+
+}
 }

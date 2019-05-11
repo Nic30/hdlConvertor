@@ -5,6 +5,9 @@
 #include "jsonable.h"
 #include "statement.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 /*
  * Class for representation of the process in HDL
  * @note the process may may be described only by statement in HDL
@@ -23,3 +26,6 @@ public:
 #endif
 	~Process();
 };
+
+}
+}

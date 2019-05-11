@@ -4,7 +4,12 @@
 #include <algorithm>
 
 #include "../notImplementedLogger.h"
-using namespace vhdl;
+using vhdlParser = vhdl_antlr::vhdlParser;
+
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace vhdl {
 
 Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal
@@ -169,4 +174,7 @@ char * LiteralParser::visitLabel_colon(
 	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
 	delete e;
 	return s;
+}
+
+}
 }

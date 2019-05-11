@@ -8,6 +8,9 @@
 #include "package.h"
 #include "packageHeader.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Context {
 public:
 	std::vector<Expr*> imports;
@@ -22,3 +25,6 @@ public:
 	void dump(int indent) const;
 	~Context();
 };
+
+}
+}

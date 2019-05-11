@@ -4,8 +4,11 @@
 #include <map>
 #include <vector>
 
-#include "../verilogPreproc/macro_replace.h"
-#include "../verilogPreproc/macro_replace_sv.h"
+#include "macro_replace.h"
+#include "macro_replace_sv.h"
+
+namespace hdlConvertor {
+namespace verilog_pp {
 
 /**
  * class to store all the defined macro. The class herite from the
@@ -23,3 +26,6 @@ public:
 			std::vector<std::string> & stack_incfile, unsigned int mode);
 
 };
+
+}
+}

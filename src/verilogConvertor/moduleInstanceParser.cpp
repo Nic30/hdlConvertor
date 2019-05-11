@@ -4,7 +4,11 @@
 #include "exprParser.h"
 
 using namespace std;
-using namespace Verilog2001;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 		Verilog2001Parser::Module_instantiationContext* ctx) {
@@ -170,4 +174,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 		}
 	}
 	return pcs;
+}
+
+}
 }

@@ -3,7 +3,12 @@
 #include "Verilog2001Parser/Verilog2001Lexer.h"
 #include "../hdlObjects/symbolType.h"
 
-using namespace Verilog2001;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using Verilog2001Lexer = Verilog2001_antlr::Verilog2001Lexer;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 Expr *Utils::mkStringT() {
 	return Expr::ID("__str__");
@@ -48,4 +53,7 @@ bool Utils::is_signed(antlr4::ParserRuleContext * ctx) {
 		assert(st->getText() == "signed");
 	}
 	return signed_;
+}
+
+}
 }

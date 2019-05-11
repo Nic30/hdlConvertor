@@ -1,6 +1,11 @@
 #include "exprParser.h"
+
 using namespace std;
-using namespace Verilog2001;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 Expr * reduce(const std::vector<Expr*> & ops, OperatorType op) {
 	Expr * res = nullptr;
@@ -687,4 +692,7 @@ Expr * VerExprParser::visitArrayed_identifier(
 	}
 	return e;
 
+}
+
+}
 }

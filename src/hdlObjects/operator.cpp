@@ -1,5 +1,8 @@
 #include "operator.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Operator::Operator() {
 	operands = NULL;
 	op0 = NULL;
@@ -123,4 +126,7 @@ void Operator::dump(int indent) const {
 		throw "Invalid arity of operator";
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
+}
+
+}
 }

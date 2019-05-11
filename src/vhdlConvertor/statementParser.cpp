@@ -5,7 +5,11 @@
 #include "referenceParser.h"
 
 using namespace std;
-using namespace vhdl;
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace vhdl {
 
 Statement * StatementParser::visitSequential_statement(
 		vhdlParser::Sequential_statementContext* ctx) {
@@ -83,14 +87,14 @@ Statement * StatementParser::visitCase_statement(
 		// case_statement_alternative
 		//   : WHEN choices ARROW sequence_of_statements
 		//   ;
-		for (auto ch: ExprParser::visitChoices(a->choices())) {
+		for (auto ch : ExprParser::visitChoices(a->choices())) {
 			auto s = a->sequence_of_statements();
 			auto stms = visitSequence_of_statements(s);
 			if (ch == nullptr) {
 				assert(_default == nullptr);
 				_default = stms;
 			} else {
-				alternatives.push_back({ch, stms});
+				alternatives.push_back( { ch, stms });
 			}
 		}
 	}
@@ -233,7 +237,7 @@ vector<Statement*> * StatementParser::visitSequence_of_statements(
 }
 
 Statement * StatementParser::visitProcess_statement(
-		vhdl::vhdlParser::Process_statementContext * ctx) {
+		vhdlParser::Process_statementContext * ctx) {
 	// process_statement
 	//   : ( label_colon )? ( POSTPONED )? PROCESS
 	//     ( LPAREN sensitivity_list RPAREN )? ( IS )?
@@ -298,3 +302,5 @@ void StatementParser::visitProcess_statement_part(
 	}
 }
 
+}
+}

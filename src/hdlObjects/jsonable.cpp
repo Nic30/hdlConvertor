@@ -1,5 +1,7 @@
 #include "jsonable.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
 
 #ifdef USE_PYTHON
 PyObject * addJsonArr_empty(PyObject * parent, const char * name) {
@@ -9,3 +11,6 @@ PyObject * addJsonArr_empty(PyObject * parent, const char * name) {
 	return objList;
 }
 #endif
+
+}
+}

@@ -1,5 +1,8 @@
 #include "symbol.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Symbol::Symbol(SymbolType type, LiteralVal value) {
 	this->type = type;
 	this->value = value;
@@ -145,4 +148,7 @@ void Symbol::dump(int indent) const {
 		break;
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
+}
+
+}
 }

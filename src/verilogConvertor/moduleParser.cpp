@@ -10,7 +10,11 @@
 #include "moduleParamParser.h"
 
 using namespace std;
-using namespace Verilog2001;
+using namespace Verilog2001_antlr;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 ModuleParser::ModuleParser(CommentParser & commentParser, Context * _context,
 		bool _hierarchyOnly) : commentParser(commentParser) {
@@ -522,3 +526,5 @@ void ModuleParser::visitNon_port_module_item(
 			"ModuleParser.visitNon_port_module_item - unexpected transition");
 }
 
+}
+}

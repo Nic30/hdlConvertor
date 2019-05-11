@@ -1,5 +1,8 @@
 #include "arch.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 #ifdef USE_PYTHON
 PyObject * Arch::toJson() const {
 	JSN_DEBUG("Arch - name")
@@ -29,4 +32,7 @@ Arch::~Arch() {
 		delete s;
 	for (auto v : variables)
 		delete v;
+}
+
+}
 }

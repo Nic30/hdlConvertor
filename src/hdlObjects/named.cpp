@@ -1,5 +1,8 @@
 #include "named.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Named::Named() {
 	name = NULL;
 }
@@ -64,4 +67,7 @@ void WithNameAndDoc::dump(int indent) const {
 
 	// [NOTE] .c_str() because of the msvc
 	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << __doc__.c_str() << "\",\n";
+}
+
+}
 }

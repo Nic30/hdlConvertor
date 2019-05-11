@@ -4,7 +4,11 @@
 #include "referenceParser.h"
 #include "operatoTypeParser.h"
 
-using namespace vhdl;
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 		vhdlParser::Actual_parameter_partContext* ctx) {
@@ -433,14 +437,14 @@ Expr *ExprParser::visitWaveform_element(
 	return top;
 }
 
-Expr * ExprParser::visitChoice(vhdl::vhdlParser::ChoiceContext * ctx) {
+Expr * ExprParser::visitChoice(vhdlParser::ChoiceContext * ctx) {
 	//choice
 	//  : identifier
 	//  | discrete_range
 	//  | simple_expression
 	//  | OTHERS
 	//  ;
-    //
+	//
 	auto i = ctx->identifier();
 	if (i) {
 		return LiteralParser::visitIdentifier(i);
@@ -455,14 +459,16 @@ Expr * ExprParser::visitChoice(vhdl::vhdlParser::ChoiceContext * ctx) {
 	}
 	return nullptr;
 }
-std::vector<Expr *> ExprParser::visitChoices(
-		vhdl::vhdlParser::ChoicesContext * ctx) {
+std::vector<Expr *> ExprParser::visitChoices(vhdlParser::ChoicesContext * ctx) {
 	//choices
 	//  : choice ( BAR choice )*
 	//  ;
 	std::vector<Expr *> res;
-	for (auto c: ctx->choice()) {
+	for (auto c : ctx->choice()) {
 		res.push_back(visitChoice(c));
 	}
 	return res;
+}
+
+}
 }

@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 /**
  *  class that represent the macro name and  the list of argument
  */
@@ -16,3 +19,5 @@ public:
 	}
 };
 
+}
+}

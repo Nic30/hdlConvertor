@@ -5,16 +5,25 @@
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/compInstance.h"
 
+namespace hdlConvertor {
+namespace vhdl {
+
 class CompInstanceParser {
 public:
+	using vhdlParser = vhdl_antlr::vhdlParser;
+	using CompInstance = hdlObjects::CompInstance;
+	using Expr = hdlObjects::Expr;
+
 	static CompInstance * visitComponent_instantiation_statement(
-			vhdl::vhdlParser::Component_instantiation_statementContext* ctx);
+			vhdlParser::Component_instantiation_statementContext* ctx);
 	static std::vector<Expr*> * visitPort_map_aspect(
-			vhdl::vhdlParser::Port_map_aspectContext* ctx);
-	static char * visitLabel_colon(
-			vhdl::vhdlParser::Label_colonContext* ctx);
+			vhdlParser::Port_map_aspectContext* ctx);
+	static char * visitLabel_colon(vhdlParser::Label_colonContext* ctx);
 	static CompInstance * visitInstantiated_unit(
-			vhdl::vhdlParser::Instantiated_unitContext* ctx);
+			vhdlParser::Instantiated_unitContext* ctx);
 	static std::vector<Expr*> * visitGeneric_map_aspect(
-			vhdl::vhdlParser::Generic_map_aspectContext* ctx);
+			vhdlParser::Generic_map_aspectContext* ctx);
 };
+
+}
+}

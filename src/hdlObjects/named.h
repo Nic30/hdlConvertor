@@ -4,6 +4,9 @@
 #include "../debugConfig.h"
 #include "jsonable.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 /*
  * Base class for HDL object with name
  * */
@@ -42,3 +45,6 @@ public:
 #endif
 	void dump(int indent) const;
 };
+
+}
+}

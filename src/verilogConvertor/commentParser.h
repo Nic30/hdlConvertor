@@ -4,6 +4,10 @@
 #include <string>
 #include <antlr4-runtime.h>
 #include "verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h"
+
+namespace hdlConvertor {
+namespace verilog {
+
 /**
  * The comment parser reads the text from the hidden tokens
  * generated from the antlr lexer. This tokens are not connected
@@ -49,7 +53,7 @@ public:
 		for (size_t i = first_comment_token; i < last_token; i++) {
 			auto t = tokens.get(i);
 			auto s = t->getText();
-			if (t->getType() == Verilog2001::Verilog2001Lexer::White_space) {
+			if (t->getType() == Verilog2001_antlr::Verilog2001Lexer::White_space) {
 				continue;
 			}
 			//printf("comment: %s, %s\n", s.c_str(), t->toString().c_str());
@@ -72,3 +76,6 @@ public:
 		return tmp;
 	}
 };
+
+}
+}

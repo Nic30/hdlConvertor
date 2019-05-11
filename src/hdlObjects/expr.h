@@ -12,6 +12,9 @@
 #include "symbol.h"
 #include "../debugConfig.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Expr {
 public:
 	ExprItem * data;
@@ -55,3 +58,6 @@ public:
 	void dump(int indent) const;
 	~Expr();
 };
+
+}
+}

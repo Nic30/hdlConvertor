@@ -2,6 +2,9 @@
 #include "symbol.h"
 #include "operator.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 LiteralVal __v = { NULL };
 static Symbol Type_t(symbol_T, __v); // symbol representing that expr is type of type;
 
@@ -170,4 +173,7 @@ void Expr::dump(int indent) const {
 			throw std::runtime_error("Expr is improperly initialised");
 	}
 	mkIndent(indent) << "}";
+}
+
+}
 }

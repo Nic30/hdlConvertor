@@ -1,5 +1,8 @@
 #include "symbolType.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 LiteralVal LiteralVal_clone(const LiteralVal & val, enum SymbolType t) {
 	LiteralVal v;
 	switch (t) {
@@ -25,4 +28,7 @@ LiteralVal LiteralVal_clone(const LiteralVal & val, enum SymbolType t) {
 		break;
 	}
 	return v;
+}
+
+}
 }

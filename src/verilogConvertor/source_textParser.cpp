@@ -1,6 +1,13 @@
 #include "source_textParser.h"
+#include "commentParser.h"
+#include "moduleParser.h"
+#include "notImplementedLogger.h"
 
-using namespace Verilog2001;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 Source_textParser::Source_textParser(antlr4::TokenStream* tokens, Context * ctx,
 		bool _hierarchyOnly) :
@@ -31,4 +38,7 @@ void Source_textParser::visitDescription(
 	CommentParser cp(tokens);
 	ModuleParser p(cp, context, hierarchyOnly);
 	p.visitModule_declaration(ctx->module_declaration());
+}
+
+}
 }

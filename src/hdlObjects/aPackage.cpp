@@ -3,6 +3,9 @@
 
 using namespace std;
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 aPackage::aPackage() :
 		WithNameAndDoc() {
 }
@@ -34,4 +37,7 @@ aPackage::~aPackage() {
 		delete f;
 	for (auto f : variables)
 		delete f;
+}
+
+}
 }

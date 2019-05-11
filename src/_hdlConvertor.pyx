@@ -11,7 +11,7 @@ from hdlConvertor.language import Language as PyHdlLanguageEnum
 import sys
 
 
-cdef extern from "hdlObjects/context.h":
+cdef extern from "hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass Context:
         PyObject * toJson()
 
@@ -20,7 +20,7 @@ cdef extern from "exception.h":
     cdef const char* get_my_py_error_message()
 
 
-cdef extern from "language.h":
+cdef extern from "language.h" namespace "hdlConvertor":
     enum Language:
         VHDL, VERILOG, SYSTEM_VERILOG
 
@@ -38,7 +38,7 @@ cdef int raise_my_py_error() except *:
     raise ParseException(msg)
 
 
-cdef extern from "convertor.h":
+cdef extern from "convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
 
         string filename
@@ -138,7 +138,7 @@ cdef class hdlConvertor:
         return data
 
     
-# [TODO] remove because it is useless
+# [TODO] remove because it is useless (use hdlConvertor class)
 def parse(filenames, langue, incdirs=['.'], hierarchyOnly=False, debug=False):
     cdef hdlConvertor obj
     cdef object context

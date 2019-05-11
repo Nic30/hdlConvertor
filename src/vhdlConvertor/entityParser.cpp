@@ -2,7 +2,13 @@
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/expr.h"
 #include "interfaceParser.h"
-using namespace vhdl;
+
+
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlObjects;
 
 EntityParser::EntityParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -57,8 +63,7 @@ void EntityParser::visitEntity_declarative_item(
 
 	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item");
 }
-void EntityParser::visitGeneric_clause(
-		vhdlParser::Generic_clauseContext* ctx,
+void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 		std::vector<Variable*> * generics) {
 	if (ctx) {
 		// generic_clause
@@ -72,7 +77,7 @@ void EntityParser::visitGeneric_clause(
 		for (auto ic : gl->interface_constant_declaration()) {
 			std::vector<Variable*> * vl =
 					InterfaceParser::visitInterface_constant_declaration(ic);
-			for (auto v : *vl){
+			for (auto v : *vl) {
 				assert(v);
 				generics->push_back(v);
 			}
@@ -80,8 +85,7 @@ void EntityParser::visitGeneric_clause(
 		}
 	}
 }
-void EntityParser::visitPort_clause(
-		vhdlParser::Port_clauseContext* ctx,
+void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 		std::vector<Port*> * ports) {
 	if (ctx) {
 		// port_clause
@@ -104,8 +108,7 @@ void EntityParser::visitPort_clause(
 		}
 	}
 }
-void EntityParser::visitEntity_header(
-		Entity * e,
+void EntityParser::visitEntity_header(Entity * e,
 		vhdlParser::Entity_headerContext* ctx) {
 // entity_header
 // : ( generic_clause )?
@@ -125,4 +128,7 @@ void EntityParser::visitEntity_statement_part(
 // : ( entity_statement )*
 // ;
 	NotImplementedLogger::print("EntityParser.visitEntity_statement_part");
+}
+
+}
 }

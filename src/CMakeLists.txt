@@ -34,7 +34,7 @@ macro(AddParserToBuild name sources parser_gen_ops)
 	  COMMAND
 	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
 	  COMMAND
-	  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp ${parser_gen_ops} -package ${name} -encoding utf-8 -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
+	  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp ${parser_gen_ops} -package "${name}_antlr" -encoding utf-8 -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
 	  COMMAND
 	  ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/${sources}"
 	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"

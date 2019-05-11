@@ -3,6 +3,9 @@
 #include "variable.h"
 #include "port.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Entity: public WithNameAndDoc {
 public:
 	std::vector<Variable*> generics;
@@ -15,3 +18,6 @@ public:
 	void dump(int indent) const;
 	~Entity();
 };
+
+}
+}

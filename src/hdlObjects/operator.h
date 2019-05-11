@@ -5,6 +5,9 @@
 #include "expr.h"
 #include "exprItem.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Operator: public ExprItem {
 private:
 	Operator();
@@ -25,3 +28,6 @@ public:
 	void dump(int indent) const;
 	~Operator();
 };
+
+}
+}

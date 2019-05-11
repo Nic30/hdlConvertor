@@ -1,5 +1,9 @@
 #pragma once
 
+
+namespace hdlConvertor {
+namespace hdlObjects {
+
 enum OperatorType {
 	RANGE, // range used in VHDL type specifications
 	INDEX, // array index
@@ -48,3 +52,6 @@ enum OperatorType {
 
 const char* OperatorType_toString(OperatorType opt);
 int OperatorType_arity(OperatorType opt);
+
+}
+}

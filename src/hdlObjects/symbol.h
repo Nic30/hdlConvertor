@@ -6,6 +6,9 @@
 #include "symbolType.h"
 #include "exprItem.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Symbol: public virtual ExprItem {
 public:
 	SymbolType type;
@@ -26,3 +29,6 @@ public:
 
 	~Symbol();
 };
+
+}
+}

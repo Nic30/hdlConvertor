@@ -3,6 +3,9 @@
 #include "named.h"
 #include "expr.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class CompInstance: public WithDoc {
 public:
 	Expr * name;
@@ -16,3 +19,6 @@ public:
 #endif
 	~CompInstance();
 };
+
+}
+}

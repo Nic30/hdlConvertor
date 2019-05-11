@@ -6,6 +6,9 @@
 #include "expr.h"
 #include "named.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 enum StatementType {
 	s_EXPR, s_IF, s_CASE, s_WHILE, s_RETURN, s_ASSIGMENT, s_PROCESS
 };
@@ -49,3 +52,6 @@ public:
 #endif
 	~Statement();
 };
+
+}
+}

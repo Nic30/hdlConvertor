@@ -5,6 +5,9 @@
 #include "variable.h"
 #include "statement.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Function: public WithNameAndDoc {
 	bool isOperator;
 	Expr * returnT;
@@ -13,13 +16,13 @@ public:
 	std::vector<Variable*> locals;
 	std::vector<Statement*> body;
 
-	Function(
-			char * name,
-			bool isOperator,
-			Expr * returnT,
+	Function(char * name, bool isOperator, Expr * returnT,
 			std::vector<Variable*> * params);
 #ifdef USE_PYTHON
 	PyObject * toJson() const;
 #endif
 	~Function();
 };
+
+}
+}

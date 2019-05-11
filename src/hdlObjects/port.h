@@ -2,6 +2,9 @@
 #include "direction.h"
 #include "variable.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class Port {
 public:
 	Direction direction;
@@ -15,3 +18,6 @@ public:
 	void dump(int indent) const;
 	~Port();
 };
+
+}
+}

@@ -4,7 +4,10 @@
 #include <iostream>
 #include "../debugConfig.h"
 
-#define INDENT_INCR 2
+namespace hdlConvertor {
+namespace hdlObjects {
+
+constexpr size_t INDENT_INCR = 2;
 
 #ifdef USE_PYTHON
 PyObject * addJsonArr_empty(PyObject * parent, const char * name);
@@ -65,4 +68,7 @@ std::ostream & dumpItemP(const char * name, int indent, T const & object) {
 	mkIndent(indent) << "\"" << name << "\":";
 	object->dump(indent);
 	return std::cout;
+}
+
+}
 }

@@ -3,8 +3,12 @@
 #include "utils.h"
 #include "exprParser.h"
 
-using namespace Verilog2001;
 using namespace std;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 PortParser::PortParser(CommentParser & commentParser) :
 		commentParser(commentParser) {
@@ -208,4 +212,7 @@ vector<Port*> *PortParser::visitList_of_variable_port_identifiers(
 		}
 	}
 	return ports;
+}
+
+}
 }

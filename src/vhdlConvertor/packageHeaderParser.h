@@ -7,35 +7,45 @@
 #include "../hdlObjects/function.h"
 #include "../hdlObjects/packageHeader.h"
 
+namespace hdlConvertor {
+namespace vhdl {
+
 class PackageHeaderParser {
-	PackageHeader * ph;
+	hdlObjects::PackageHeader * ph;
 	bool hierarchyOnly;
 public:
+	using vhdlParser = vhdl_antlr::vhdlParser;
+	using Function = hdlObjects::Function;
+	using Variable = hdlObjects::Variable;
+
 	PackageHeaderParser(bool _hierarchyOnly);
-	PackageHeader * visitPackage_declaration(
-			vhdl::vhdlParser::Package_declarationContext* ctx);
+	hdlObjects::PackageHeader * visitPackage_declaration(
+			vhdlParser::Package_declarationContext* ctx);
 	void visitPackage_declarative_part(
-			PackageHeader * ph,
-			vhdl::vhdlParser::Package_declarative_partContext* ctx);
+			hdlObjects::PackageHeader * ph,
+			vhdlParser::Package_declarative_partContext* ctx);
 	static Function * visitSubprogram_declaration(
-			vhdl::vhdlParser::Subprogram_declarationContext* ctx);
+			vhdlParser::Subprogram_declarationContext* ctx);
 	static Function * visitSubprogram_specification(
-			vhdl::vhdlParser::Subprogram_specificationContext* ctx);
+			vhdlParser::Subprogram_specificationContext* ctx);
 
 	static Function * visitProcedure_specification(
-			vhdl::vhdlParser::Procedure_specificationContext* ctx);
+			vhdlParser::Procedure_specificationContext* ctx);
 	static Function * visitFunction_specification(
-			vhdl::vhdlParser::Function_specificationContext* ctx);
+			vhdlParser::Function_specificationContext* ctx);
 
 	static std::vector<Variable*> * visitFormal_parameter_list(
-			vhdl::vhdlParser::Formal_parameter_listContext* ctx);
+			vhdlParser::Formal_parameter_listContext* ctx);
 
 	void visitPackage_declarative_item(
-			vhdl::vhdlParser::Package_declarative_itemContext* ctx);
-	Entity * visitComponent_declaration(
-			vhdl::vhdlParser::Component_declarationContext* ctx);
+			vhdlParser::Package_declarative_itemContext* ctx);
+	hdlObjects::Entity * visitComponent_declaration(
+			vhdlParser::Component_declarationContext* ctx);
 	static std::vector<Variable*> * visitConstant_declaration(
-			vhdl::vhdlParser::Constant_declarationContext* ctx);
+			vhdlParser::Constant_declarationContext* ctx);
 	static Variable * visitSubtype_declaration(
-			vhdl::vhdlParser::Subtype_declarationContext* ctx);
+			vhdlParser::Subtype_declarationContext* ctx);
 };
+
+}
+}

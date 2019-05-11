@@ -2,7 +2,9 @@
 
 #include "named.h"
 #include "expr.h"
-#include <memory>
+
+namespace hdlConvertor {
+namespace hdlObjects {
 
 class Variable: public WithNameAndDoc {
 public:
@@ -17,3 +19,6 @@ public:
 	void dump(int indent) const;
 	~Variable();
 };
+
+}
+}

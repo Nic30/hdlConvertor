@@ -9,6 +9,9 @@
 #include "function.h"
 #include "variable.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 class aPackage: public WithNameAndDoc {
 public:
 	std::vector<Entity*> components;
@@ -22,3 +25,6 @@ public:
 	void dump(int indent) const;
 	~aPackage();
 };
+
+}
+}

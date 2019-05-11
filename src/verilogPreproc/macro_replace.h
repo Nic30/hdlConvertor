@@ -5,6 +5,9 @@
 #include <map>
 #include "exception.h"
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 /**
  * class macro_replace_data is the object to represent macro data.
  * Example:
@@ -47,3 +50,5 @@ public:
 
 };
 
+}
+}

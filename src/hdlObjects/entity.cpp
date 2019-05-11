@@ -1,5 +1,8 @@
 #include "entity.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Entity::Entity() :
 		WithNameAndDoc() {
 }
@@ -34,4 +37,7 @@ Entity::~Entity() {
 		delete g;
 	for (auto p : ports)
 		delete p;
+}
+
+}
 }

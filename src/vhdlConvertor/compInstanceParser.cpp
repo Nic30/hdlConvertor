@@ -2,7 +2,13 @@
 #include "../notImplementedLogger.h"
 #include "referenceParser.h"
 #include "literalParser.h"
-using namespace vhdl;
+
+
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 		vhdlParser::Component_instantiation_statementContext * ctx) {
@@ -63,4 +69,7 @@ std::vector<Expr*> * CompInstanceParser::visitGeneric_map_aspect(
 		vhdlParser::Generic_map_aspectContext* ctx) {
 	NotImplementedLogger::print("CompInstanceParser.visitGeneric_map_aspect");
 	return new std::vector<Expr*>();
+}
+
+}
 }

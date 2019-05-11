@@ -3,7 +3,11 @@
 #include "exprParser.h"
 
 using namespace std;
-using namespace Verilog2001;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace verilog {
 
 ModuleParamParser::ModuleParamParser(CommentParser & commentParser) :
 		commentParser(commentParser) {
@@ -96,4 +100,7 @@ vector<Variable*>* ModuleParamParser::visitParameter_declaration(
 	delete pds;
 	return vars;
 
+}
+
+}
 }

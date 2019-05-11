@@ -1,7 +1,11 @@
-#include "../verilogPreproc/vPreprocessor.h"
+#include "vPreprocessor.h"
 
 using namespace antlr4;
 using namespace std;
+
+namespace hdlConvertor {
+namespace verilog_pp {
+
 
 void ReplaceStringInPlace(string& subject, const string& search,
 		const string& replace) {
@@ -624,4 +628,7 @@ void vPreprocessor::remove_comment(Token * start, Token * end, string * str) {
 			ReplaceStringInPlace(*str, comment_txt, "");
 		}
 	}
+}
+
+}
 }

@@ -6,6 +6,9 @@
 #include "variable.h"
 #include "process.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 /*
  * The container for the vhdl architecture or the body of the module in verilog
  * */
@@ -21,3 +24,6 @@ public:
 #endif
 	~Arch();
 };
+
+}
+}

@@ -5,7 +5,11 @@
 #include "statementParser.h"
 #include "../notImplementedLogger.h"
 
-using namespace vhdl;
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 PackageParser::PackageParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -29,8 +33,7 @@ Package * PackageParser::visitPackage_body(
 	}
 	return p;
 }
-void PackageParser::visitPackage_body_declarative_part(
-		aPackage * p,
+void PackageParser::visitPackage_body_declarative_part(aPackage * p,
 		vhdlParser::Package_body_declarative_partContext* ctx) {
 	// package_body_declarative_part
 	// : ( package_body_declarative_item )*
@@ -175,4 +178,7 @@ std::vector<Statement *> * PackageParser::visitSubprogram_statement_part(
 		statements->push_back(StatementParser::visitSequential_statement(s));
 	}
 	return statements;
+}
+
+}
 }

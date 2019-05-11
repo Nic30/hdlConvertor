@@ -2,9 +2,11 @@
 
 using namespace std;
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 macro_replace_sv::macro_replace_sv(string macro_name, string replace,
-		vector<string> arg,
-		map<string, string> default_maps) :
+		vector<string> arg, map<string, string> default_maps) :
 		macro_replace(macro_name, replace, arg) {
 	_default_map = default_maps;
 }
@@ -40,8 +42,7 @@ string macro_replace_sv::replace(vector<string> arg) {
 		}
 	}
 
-	exit_label:
-	if (!data.tmplate.empty()) {
+	exit_label: if (!data.tmplate.empty()) {
 		returnString = data.tmplate;
 
 		//printf("before replacement: %s\n",returnString.c_str());
@@ -99,4 +100,7 @@ string macro_replace_sv::replace(vector<string> arg) {
 	}
 	return returnString;
 
+}
+
+}
 }

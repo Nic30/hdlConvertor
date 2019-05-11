@@ -4,20 +4,26 @@
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/expr.h"
 
+namespace hdlConvertor {
+namespace vhdl {
+
 class ReferenceParser {
 public:
-	static Expr * visitSelected_name(vhdl::vhdlParser::Selected_nameContext* ctx);
-	static Expr * visitSuffix(vhdl::vhdlParser::SuffixContext* ctx);
+	using vhdlParser = vhdl_antlr::vhdlParser;
+	using Expr = hdlObjects::Expr;
 
-	static Expr * visitName(vhdl::vhdlParser::NameContext* ctx);
-	static Expr * visitAttribute_designator(
-			Expr * selectedName,
-			vhdl::vhdlParser::Attribute_designatorContext* ctx);
-	static Expr * visitName_attribute_part(
-			Expr * selectedName,
-			vhdl::vhdlParser::Name_attribute_partContext* ctx);
-	static Expr * visitName_part_specificator(
-			Expr * selectedName,
-			vhdl::vhdlParser::Name_part_specificatorContext* ctx);
-	static Expr * visitName_part(vhdl::vhdlParser::Name_partContext* ctx);
+	static Expr * visitSelected_name(vhdlParser::Selected_nameContext* ctx);
+	static Expr * visitSuffix(vhdlParser::SuffixContext* ctx);
+
+	static Expr * visitName(vhdlParser::NameContext* ctx);
+	static Expr * visitAttribute_designator(Expr * selectedName,
+			vhdlParser::Attribute_designatorContext* ctx);
+	static Expr * visitName_attribute_part(Expr * selectedName,
+			vhdlParser::Name_attribute_partContext* ctx);
+	static Expr * visitName_part_specificator(Expr * selectedName,
+			vhdlParser::Name_part_specificatorContext* ctx);
+	static Expr * visitName_part(vhdlParser::Name_partContext* ctx);
 };
+
+}
+}

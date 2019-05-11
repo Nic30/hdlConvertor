@@ -4,7 +4,12 @@
 #include "entityParser.h"
 #include "interfaceParser.h"
 
-using namespace vhdl;
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
+
 
 PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
 	ph = new PackageHeader();
@@ -243,4 +248,7 @@ Entity * PackageHeaderParser::visitComponent_declaration(
 		EntityParser::visitPort_clause(ctx->port_clause(), &e->ports);
 	}
 	return e;
+}
+
+}
 }

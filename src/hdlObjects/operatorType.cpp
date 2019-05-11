@@ -1,5 +1,8 @@
 #include "operatorType.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 static const char* const opTypeToStr[] = {
 	"RANGE",
 	"INDEX",
@@ -66,4 +69,7 @@ int OperatorType_arity(OperatorType opt) {
 	default:
 		return 2;
 	}
+}
+
+}
 }

@@ -3,6 +3,9 @@
 
 using namespace std;
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 const char * StatementType_toString(StatementType type) {
 	switch (type) {
 	case s_EXPR:
@@ -215,3 +218,5 @@ Statement::~Statement() {
 		delete e;
 }
 
+}
+}
