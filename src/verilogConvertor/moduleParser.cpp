@@ -72,6 +72,7 @@ void ModuleParser::visitModule_declaration(
 		visitNon_port_module_item(npmi);
 
 	context->entities.push_back(ent);
+	arch->entityName = strdup(ent->name);
 	context->architectures.push_back(arch);
 }
 
