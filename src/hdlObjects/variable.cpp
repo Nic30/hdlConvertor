@@ -11,7 +11,7 @@ Variable::Variable(std::string id, Expr * _type, Expr * val) {
 PyObject* Variable::toJson() const {
 	PyObject * d = WithNameAndDoc::toJson();
 	if (!type)
-		throw "Variable has no type";
+		throw std::runtime_error("Variable has no type");
 
 	PyDict_SetItemString(d, "type", type->toJson());
 
@@ -20,6 +20,10 @@ PyObject* Variable::toJson() const {
 	} else {
 		Py_IncRef(Py_None);
 		PyDict_SetItemString(d, "value", Py_None);
+	}
+	if (latched) {
+		Py_IncRef(Py_True);
+		PyDict_SetItemString(d, "latched", Py_True);
 	}
 	return d;
 }
