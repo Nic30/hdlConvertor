@@ -126,7 +126,6 @@ class ToVerilog():
         d = p['direction']
         var = p['variable']
         name = var["name"]
-
         self.print_direction(d)
         w(" ")
         l = var.get("latched", False)
@@ -287,10 +286,23 @@ class ToVerilog():
                 self.print_expr(size_expr)
                 w("] ")
             else:
+                o = op["operator"]
+                if o == "INDEX":
+                    self.print_type_first_part(op["op0"])
+                    return True
                 raise NotImplementedError()
         
         return False
- 
+
+    def print_type_array_part(self, t):
+        w = self.out.write
+        op = t.get("binOperator", None)
+        if op and op["operator"] == "INDEX":
+            self.print_type_array_part(op["op0"])
+            w("[")
+            self.print_expr(op["op1"])
+            w("]")
+
     def print_variable(self, var):
         self.print_doc(var)
         name = var["name"]
@@ -302,10 +314,10 @@ class ToVerilog():
         else:
             w("wire ")
         is_array = self.print_type_first_part(t)
-        if is_array:
-            raise NotImplementedError()
-
         w(name)
+        if is_array:
+            w(" ")
+            self.print_type_array_part(t)
 
     def print_process(self, proc):
         sens = proc['sensitivity']
@@ -496,8 +508,9 @@ if __name__ == "__main__":
 
     TEST_DIR = os.path.join(BASE_DIR, 'tests', 'verilog')
     from hdlConvertor import hdlConvertor
+    from hdlConvertor.language import Language
     c = hdlConvertor()
     filenames = [os.path.join(TEST_DIR, "arbiter.v")]
-    d = c.parse(filenames, "verilog", [], False, False)
+    d = c.parse(filenames, Language.VERILOG, [], False, False)
     tv = ToVerilog(sys.stdout)
     tv.apply(d)
