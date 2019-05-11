@@ -28,6 +28,18 @@ Expr *Utils::mkWireT(Verilog2001Parser::Range_Context * range, bool signed_) {
 		return mkWireT();
 	}
 }
+
+bool Utils::is_reg(antlr4::ParserRuleContext * ctx) {
+	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "reg") == 0)
+	auto st = ctx->getToken(Verilog2001Lexer::T__35, 0);
+	bool signed_ = st != nullptr;
+	if (signed_ == true) {
+		assert(st->getText() == "reg");
+	}
+	return signed_;
+}
+
+
 bool Utils::is_signed(antlr4::ParserRuleContext * ctx) {
 	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "signed") == 0)
 	auto st = ctx->getToken(Verilog2001Lexer::T__25, 0);

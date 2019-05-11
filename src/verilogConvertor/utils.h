@@ -14,4 +14,5 @@ public:
 			bool signed_);
 
 	static bool is_signed(antlr4::ParserRuleContext * ctx);
+	static bool is_reg(antlr4::ParserRuleContext * ctx);
 };
