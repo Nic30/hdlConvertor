@@ -28,6 +28,7 @@ void Source_textParser::visitTiming_spec(
 void Source_textParser::visitDescription(
 		Verilog2001Parser::DescriptionContext* ctx) {
 	// description : module_declaration ;
-	ModuleParser * p = new ModuleParser(tokens, context, hierarchyOnly);
-	p->visitModule_declaration(ctx->module_declaration());
+	CommentParser cp(tokens);
+	ModuleParser p(cp, context, hierarchyOnly);
+	p.visitModule_declaration(ctx->module_declaration());
 }

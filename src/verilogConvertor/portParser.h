@@ -5,11 +5,12 @@
 #include "Verilog2001Parser/Verilog2001Parser.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/port.h"
+#include "commentParser.h"
 
 class PortParser {
-	antlr4::TokenStream * tokens;
+	CommentParser & commentParser;
 public:
-	PortParser(antlr4::TokenStream * tokens);
+	PortParser(CommentParser & commentParser);
 
 	std::vector<Port*>* addTypeSpecToPorts(Direction direction,
 			Verilog2001::Verilog2001Parser::Net_typeContext * net_type,

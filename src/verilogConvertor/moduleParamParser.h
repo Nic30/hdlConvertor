@@ -3,11 +3,12 @@
 #include <vector>
 #include "../hdlObjects/variable.h"
 #include "Verilog2001Parser/Verilog2001Parser.h"
+#include "commentParser.h"
 
 class ModuleParamParser {
-	antlr4::TokenStream * tokens;
+	CommentParser & commentParser;
 public:
-	ModuleParamParser(antlr4::TokenStream * tokens);
+	ModuleParamParser(CommentParser & commentParser);
 
 	std::vector<Variable*>* visitModule_parameter_port_list(
 			Verilog2001::Verilog2001Parser::Module_parameter_port_listContext * ctx);

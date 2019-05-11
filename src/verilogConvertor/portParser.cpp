@@ -2,13 +2,12 @@
 #include "../notImplementedLogger.h"
 #include "utils.h"
 #include "exprParser.h"
-#include "../baseHdlParser/commentParser.h"
 
 using namespace Verilog2001;
 using namespace std;
 
-PortParser::PortParser(antlr4::TokenStream * tokens) :
-		tokens(tokens) {
+PortParser::PortParser(CommentParser & commentParser) :
+		commentParser(commentParser) {
 }
 
 vector<Port*>* PortParser::addTypeSpecToPorts(Direction direction,
@@ -116,7 +115,7 @@ vector<Port*> * PortParser::visitPort_declaration(
 	// | attribute_instance* input_declaration
 	// | attribute_instance* output_declaration
 	// ;
-	string doc = parseComment(tokens, ctx);
+	string doc = commentParser.parse(ctx);
 	// [TODO] attribs
 	auto attribs = ctx->attribute_instance();
 	if (attribs.size() > 0) {

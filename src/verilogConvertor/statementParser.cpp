@@ -5,6 +5,9 @@
 using namespace std;
 using namespace Verilog2001;
 
+VerStatementParser::VerStatementParser(CommentParser & commentParser) :
+		commentParser(commentParser) {
+}
 VerStatementParser::stm_or_block_t VerStatementParser::visitAlways_construct(
 		Verilog2001Parser::Always_constructContext * ctx) {
 	// always_construct
@@ -352,6 +355,7 @@ vector<Statement *> VerStatementParser::vistContinuous_assign(
 		auto stm = visitNet_assignment(na);
 		res.push_back(stm);
 	}
+	res[0]->__doc__ = commentParser.parse(ctx);
 	return res;
 }
 

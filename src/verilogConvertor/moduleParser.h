@@ -7,15 +7,16 @@
 #include "../hdlObjects/context.h"
 #include "../hdlObjects/entity.h"
 #include "../hdlObjects/variable.h"
+#include "commentParser.h"
 
 class ModuleParser {
+	CommentParser & commentParser;
 	Context * context;
 	bool hierarchyOnly;
 	Entity * ent;
 	Arch * arch;
-	antlr4::TokenStream * tokens;
 public:
-	ModuleParser(antlr4::TokenStream * tokens, Context * _context,
+	ModuleParser(CommentParser & commentParser, Context * _context,
 			bool _hierarchyOnly);
 	void visitModule_declaration(
 			Verilog2001::Verilog2001Parser::Module_declarationContext * ctx);

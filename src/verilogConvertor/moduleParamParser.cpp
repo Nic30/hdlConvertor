@@ -1,13 +1,12 @@
 #include "moduleParamParser.h"
 #include "utils.h"
 #include "exprParser.h"
-#include "../baseHdlParser/commentParser.h"
 
 using namespace std;
 using namespace Verilog2001;
 
-ModuleParamParser::ModuleParamParser(antlr4::TokenStream * tokens) :
-		tokens(tokens) {
+ModuleParamParser::ModuleParamParser(CommentParser & commentParser) :
+		commentParser(commentParser) {
 }
 
 vector<Variable*>* ModuleParamParser::visitModule_parameter_port_list(
@@ -59,7 +58,7 @@ vector<Variable*>* ModuleParamParser::visitParameter_declaration_(
 	for (auto v : *params) {
 		if (first) {
 			v->type = t;
-			v->__doc__ = parseComment(tokens, ctx) + v->__doc__;
+			v->__doc__ = commentParser.parse(ctx) + v->__doc__;
 			first = false;
 		} else
 			v->type = new Expr(*t);
@@ -85,7 +84,7 @@ Variable * ModuleParamParser::visitParam_assignment(
 			ctx->constant_expression());
 	Variable* p = new Variable(
 			ctx->parameter_identifier()->identifier()->getText(), NULL, value);
-	p->__doc__ += parseComment(tokens, ctx);
+	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }
 vector<Variable*>* ModuleParamParser::visitParameter_declaration(

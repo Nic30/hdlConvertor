@@ -7,19 +7,17 @@
 #include "statementParser.h"
 #include "moduleInstanceParser.h"
 #include "utils.h"
-#include "../baseHdlParser/commentParser.h"
 #include "moduleParamParser.h"
 
 using namespace std;
 using namespace Verilog2001;
 
-ModuleParser::ModuleParser(antlr4::TokenStream * tokens, Context * _context,
-		bool _hierarchyOnly) {
+ModuleParser::ModuleParser(CommentParser & commentParser, Context * _context,
+		bool _hierarchyOnly) : commentParser(commentParser) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
 	ent = new Entity();
 	arch = new Arch();
-	this->tokens = tokens;
 }
 
 void ModuleParser::visitModule_declaration(
@@ -33,7 +31,7 @@ void ModuleParser::visitModule_declaration(
 	// non_port_module_item*
 	// 'endmodule'
 	// ;
-	ent->__doc__ = parseComment(tokens, ctx);
+	ent->__doc__ = commentParser.parse(ctx);
 	ent->name = strdup(
 			ctx->module_identifier()->identifier()->getText().c_str());
 	for (auto a : ctx->attribute_instance()) {
@@ -46,14 +44,14 @@ void ModuleParser::visitModule_declaration(
 	}
 	auto mppl = ctx->module_parameter_port_list();
 	if (mppl) {
-		ModuleParamParser pp(tokens);
+		ModuleParamParser pp(commentParser);
 		auto ppls = pp.visitModule_parameter_port_list(mppl);
 		for (auto v : *ppls)
 			ent->generics.push_back(v);
 	}
 	auto lop = ctx->list_of_ports();
 	if (lop) {
-		PortParser pp(tokens);
+		PortParser pp(commentParser);
 		auto ps = pp.visitList_of_ports(lop);
 		for (auto p : *ps) {
 			ent->ports.push_back(p);
@@ -66,7 +64,7 @@ void ModuleParser::visitModule_declaration(
 
 	auto lpd = ctx->list_of_port_declarations();
 	if (lpd) {
-		PortParser pp(tokens);
+		PortParser pp(commentParser);
 		auto ps = pp.visitList_of_port_declarations(lpd);
 		for (auto p : *ps) {
 			ent->ports.push_back(p);
@@ -97,15 +95,17 @@ void ModuleParser::visitModule_item(
 		visitModule_or_generate_item(mog);
 		return;
 	}
+	string doc = commentParser.parse(ctx);
 	// [TODO] attribute_instance
 	auto pd = ctx->port_declaration();
 	if (pd) {
-		PortParser pp(tokens);
+		PortParser pp(commentParser);
 		auto portsDeclr = pp.visitPort_declaration(pd);
 		for (auto declr : *portsDeclr) {
 			Port * p = ent->getPortByName(declr->variable->name);
 			p->direction = declr->direction;
 			p->variable = declr->variable;
+			p->variable->__doc__ += doc;
 			declr->variable = nullptr;
 			delete declr;
 		}
@@ -124,7 +124,8 @@ void ModuleParser::visitModule_item(
 	}
 	auto pad = ctx->parameter_declaration();
 	if (pad) {
-		ModuleParamParser pp(tokens);
+		ModuleParamParser pp(commentParser);
+		// [TODO] sync with params defined in module header
 		auto ppls = pp.visitParameter_declaration(pad);
 		for (auto v : *ppls)
 			ent->generics.push_back(v);
@@ -174,7 +175,8 @@ void ModuleParser::visitModule_or_generate_item(
 	}
 	auto ca = ctx->continuous_assign();
 	if (ca) {
-		for (auto stm : VerStatementParser::vistContinuous_assign(ca))
+		VerStatementParser stmp(commentParser);
+		for (auto stm : stmp.vistContinuous_assign(ca))
 			arch->statements.push_back(stm);
 		return;
 	}
