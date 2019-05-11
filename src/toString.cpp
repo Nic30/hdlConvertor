@@ -1,5 +1,10 @@
 #include "toString.h"
 
+
+namespace hdlConvertor {
+
+using namespace hdlObjects;
+
 void ToString::dump(const aPackage * p, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(p), indent);
 	indent += INDENT_INCR;
@@ -146,4 +151,6 @@ void ToString::dump(const Operator * o, int indent) {
 		throw "Invalid arity of operator";
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
+}
+
 }

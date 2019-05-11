@@ -5,25 +5,27 @@
 #include "debugConfig.h"
 #include "hdlObjects/context.h"
 #include "hdlObjects/operator.h"
+#include "hdlObjects/named.h"
+
 
 namespace hdlConvertor {
 
 class ToString {
-	constexpr size_t INDENT_INCR = 2;
+	static constexpr size_t INDENT_INCR = 2;
 
-	inline std::ostream& mkIndent(int indent) {
+	static inline std::ostream& mkIndent(int indent) {
 		for (int i = 0; i < indent; i++) {
 			std::cout << ' ';
 		}
 		return std::cout;
 	}
 
-	inline std::ostream & dumpKey(const char * key, int indent) {
+	static inline std::ostream & dumpKey(const char * key, int indent) {
 		return mkIndent(indent) << "\"" << key << "\":";
 	}
 
 	template<typename T>
-	std::ostream & dumpVal(const char * key, int indent, T val) {
+	static std::ostream & dumpVal(const char * key, int indent, T val) {
 		return dumpKey(key, indent) << "\"" << val << "\"";
 	}
 	template<typename T>
