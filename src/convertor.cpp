@@ -26,10 +26,10 @@ void parseFnSystemVerilog(sv2012::sv2012Parser * antlrParser,
 }
 #endif
 
-Context * Convertor::parse(std::vector<std::string> _fileNames, Langue _lang,
+Context * Convertor::parse(std::vector<std::string> _fileNames, Language _lang,
 		std::vector<std::string> incdir, bool _hierarchyOnly, bool _debug) {
 
-	Context * c = NULL;
+	Context * c = nullptr;
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
 	for (const auto & _fileName : _fileNames) {

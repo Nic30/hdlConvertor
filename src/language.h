@@ -1,6 +1,6 @@
 #pragma once
 
 
-enum Langue {
+enum Language {
 	VHDL, VERILOG, SYSTEM_VERILOG
 };

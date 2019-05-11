@@ -28,20 +28,20 @@
 
 #include "exception.h"
 #include "syntaxErrorLogger.h"
-#include "langue.h"
+#include <language.h>
 #include "parserContainer.h"
 
 class Convertor {
 
 public:
 	std::string fileName;
-	Langue lang;
+	Language lang;
 	bool hierarchyOnly;
 	static bool debug;
 
 	Context * parse(
 			std::vector<std::string> fileNames,
-			Langue lang,
+			Language lang,
 			std::vector<std::string>,
 			bool hierarchyOnly,
 			bool debug);
