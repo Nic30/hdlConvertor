@@ -74,7 +74,7 @@ If you having the troubles please check the installation part of the scripts for
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
-
+* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code 
 
 ### License
 
