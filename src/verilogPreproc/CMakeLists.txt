@@ -1,10 +1,10 @@
 
+GetAntlrParserFileNames("${CMAKE_CURRENT_SOURCE_DIR}" "verilogPreproc" verilogPreprocParsers_GENERATED_SRC)
+
 file(GLOB libparserverilogPreproc_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-GetAntlrParserFileNames("${CMAKE_CURRENT_SOURCE_DIR}" "verilogPreproc"
-                        verilogPreprocParsers_GENERATED_SRC)
 AddParserToBuildWithLexer("verilogPreproc" verilogPreprocParsers_GENERATED_SRC)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")

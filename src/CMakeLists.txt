@@ -68,7 +68,7 @@ macro(AddParserToBuild name sources parser_gen_ops)
 	  ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/${sources}"
 	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
 	  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
-	  COMMENT "build ${name}Parser"
+	  COMMENT "generating sources for ${name}Parser"
 	)
 	add_custom_target(generateParsers${name}
 	  DEPENDS
@@ -81,12 +81,15 @@ macro(AddParserToBuildWithLexer name sources)
       OUTPUT
       "${sources}"
       COMMAND
+	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+      COMMAND
         "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool" 
         -Dlanguage=Cpp -visitor -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser 
         ${PROJECT_SOURCE_DIR}/grammars/${name}Lexer.g4 
         ${PROJECT_SOURCE_DIR}/grammars/${name}Parser.g4
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       DEPENDS ${PROJECT_SOURCE_DIR}/grammars/${name}Parser.g4 ${PROJECT_SOURCE_DIR}/grammars/${name}Lexer.g4
+      COMMENT "generating sources for ${name}Parser"
     )
     add_custom_target(generateParsers${name}
       DEPENDS
