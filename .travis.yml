@@ -25,10 +25,11 @@ addons:
       packages:
          - build-essential 
          - cython
-         #- g++-5
+         - g++-8
+         - gcc-8
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
-#env: CC=g++-5 CXX=g++-5 
+env: CC=gcc++-8 CXX=g++-8 
 
 
 # command to install dependencies
