@@ -29,7 +29,7 @@ addons:
          - gcc-8
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
-env: CC=gcc++-8 CXX=g++-8 
+env: CC=gcc-8 CXX=g++-8 
 
 
 # command to install dependencies
