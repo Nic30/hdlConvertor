@@ -20,7 +20,7 @@ FOREACH(antlr_jar ${ANTLR_JARS})
   endif()
 ENDFOREACH()
 
-set(ANTLR_EXE "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" org.antlr.v4.Tool)
+#set(ANTLR_EXE "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool")
 
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
 MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
@@ -61,10 +61,11 @@ macro(AddParserToBuild name sources parser_gen_ops)
 	  "${sources}"
 	  COMMAND
 	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
-	  COMMAND 
-	  ${ANTLR_EXE}
-	     ARGS
-	     "-Dlanguage=Cpp ${parser_gen_ops} -package ${name}_antlr -encoding utf-8 -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser ${PROJECT_SOURCE_DIR}/grammars/${name}.g4"
+	  COMMAND
+	  "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool" 
+	  -Dlanguage=Cpp ${parser_gen_ops} -package ${name}_antlr -encoding utf-8 
+	  -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser 
+	  ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
 	  COMMAND
 	  ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/${sources}"
 	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
@@ -82,9 +83,10 @@ macro(AddParserToBuildWithLexer name sources)
       OUTPUT
       "${sources}"
       COMMAND
-        ${ANTLR_EXE}
-        ARGS
-          "-Dlanguage=Cpp -visitor -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser ${PROJECT_SOURCE_DIR}/grammars/${name}Lexer.g4 ${PROJECT_SOURCE_DIR}/grammars/${name}Parser.g4"
+        "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool" 
+        -Dlanguage=Cpp -visitor -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser 
+        ${PROJECT_SOURCE_DIR}/grammars/${name}Lexer.g4 
+        ${PROJECT_SOURCE_DIR}/grammars/${name}Parser.g4
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       DEPENDS ${PROJECT_SOURCE_DIR}/grammars/${name}Parser.g4 ${PROJECT_SOURCE_DIR}/grammars/${name}Lexer.g4
     )
