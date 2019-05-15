@@ -6,18 +6,16 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
 
-The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
+The System Verilog and VHDL parser for Python/C++ written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
-This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library (c++ runtime) known to me.
-To make your live easier I included it to this package for you.
-
 
 ## Installation
 ```
-sudo apt install build-essential uuid-dev cmake default-jre
+# note that only last 2 are really required rest is downloaded automatically as dependency
+sudo apt install build-essential uuid-dev cmake default-jre libantlr4-runtime-dev antlr4
 sudo pip3 install -r requirements.txt
 
 sudo pip3 install hdlConvertor
@@ -54,8 +52,9 @@ for e in res['entities']:
 
 ```
 
-
 If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
+Also if it is something which is not unique to your system, tell us so we can fix it.
+
 
 ### Supported languages:
 
@@ -76,10 +75,8 @@ If you having the troubles please check the installation part of the scripts for
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code 
 
+
 ### License
 
 License in top folder applies to this project only.
-In this repository there is also ANTRLR4 library (BSD 3-clause license) and some grammars (.g4 files - BSD 3, GPL-3, GPL).
-This library is for now distributed in this package as a temporary solution until proper package for ANTLR4 library will be present in linux prepositories.
-
-
+In this repository there are also grammars (.g4 files - BSD 3, GPL-3, GPL).

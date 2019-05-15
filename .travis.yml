@@ -33,6 +33,9 @@ addons:
 
 # command to install dependencies
 install:
+- sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
+- sudo apt update
+- sudo apt install libantlr4-runtime-dev antlr4
 - pip install -r requirements.txt
 - python setup.py install 
 

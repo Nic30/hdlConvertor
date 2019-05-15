@@ -5,23 +5,7 @@ file(GLOB libparserverilogPreproc_SRC
 
 GetAntlrParserFileNames("${CMAKE_CURRENT_SOURCE_DIR}" "verilogPreproc"
                         verilogPreprocParsers_GENERATED_SRC)
-
-add_custom_command(
-  OUTPUT
-  ${verilogPreprocParsers_GENERATED_SRC}
-  COMMAND
-  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -visitor -o
-  	${CMAKE_CURRENT_SOURCE_DIR}/verilogPreprocParser
-	${PROJECT_SOURCE_DIR}/grammars/verilogPreprocLexer.g4
-  	${PROJECT_SOURCE_DIR}/grammars/verilogPreprocParser.g4
-  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/verilogPreprocParser.g4 ${PROJECT_SOURCE_DIR}/grammars/verilogPreprocLexer.g4
-)
-
-add_custom_target(generateParsersVerilogPreproc
-  DEPENDS
-  ${verilogPreprocParsers_GENERATED_SRC}
-)
+AddParserToBuildWithLexer("verilogPreproc" verilogPreprocParsers_GENERATED_SRC)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 	#Suppress warnings on generated code.
@@ -37,7 +21,7 @@ target_include_directories(parsersVerilogPreproc_static
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/verilogPreprocParser
 )
-add_dependencies(parsersVerilogPreproc_static generateParsersVerilogPreproc)
+add_dependencies(parsersVerilogPreproc_static generateParsersverilogPreproc)
 
 set_target_properties(parsersVerilogPreproc_static
 	PROPERTIES VERSION "1.0.0"
