@@ -1,8 +1,6 @@
 ##############################################################################################
 # antlr settings
 ##############################################################################################
-add_compile_definitions(ANTLR4CPP_STATIC)
-
 set(ANTLR_JARS "stringtemplate4;antlr4;antlr4-runtime;antlr3-runtime;treelayout")
 set(ANTLR_CLASSPATH "")
 FOREACH(antlr_jar ${ANTLR_JARS})
