@@ -42,7 +42,7 @@ else()
 endif()
 include_directories(${ANTLR4CPP_INCLUDE_DIRS})
 
-find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so libantlr4-runtime.lib
+find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so antlr4-runtime-static.lib
     HINTS "${ANTLR4CPP_ROOT}/usr/lib"
           "${ANTLR4CPP_ROOT}/lib")
 if(NOT ANTLR4CPP_LIBRARIES)
