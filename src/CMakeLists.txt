@@ -27,11 +27,26 @@ else()
 	ENDFOREACH()
 endif()
 
-find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
-MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
+find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h 
+	HINTS "/usr/include"
+	      "C:/Program files/LIBANTLR4/usr/include"
+	      "C:/Program files (x86)/LIBANTLR4/usr/include")
+if(NOT ANTLR4CPP_INCLUDE_DIRS)
+	message(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
+else()
+	MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
+endif()
+
 include_directories(${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime)
-find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.lib)
-MESSAGE(STATUS "ANTLR4CPP_LIBS=${ANTLR4CPP_LIBS}")
+find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.lib
+    HINTS "/usr/lib"
+	      "C:/Program files/LIBANTLR4/usr/lib"
+	      "C:/Program files (x86)/LIBANTLR4/usr/lib")
+if(NOT ANTLR4CPP_LIBS)
+	message(FATAL_ERROR "Can not find ANTLR4CPP_LIBS")
+else()
+	MESSAGE(STATUS "ANTLR4CPP_LIBS=${ANTLR4CPP_LIBS}")
+endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	add_compile_definitions(ANTLR4CPP_STATIC)
 endif()
