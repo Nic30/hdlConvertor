@@ -17,7 +17,7 @@ else()
 	  set(_ANTLR_JAR_LOCATION ${_ANTLR_JAR_LOCATION_${antlr_jar}})
 	  MESSAGE(STATUS "using ${antlr_jar} found in ${_ANTLR_JAR_LOCATION}")
 	  if (NOT _ANTLR_JAR_LOCATION)
-	    message(FATAL_ERROR "Can not find ${antlr_jar}")	 
+	    MESSAGE(FATAL_ERROR "Can not find ${antlr_jar}")	 
 	  endif()
 	  if(ANTLR_CLASSPATH)
 	  	set(ANTLR_CLASSPATH "${ANTLR_CLASSPATH}:${_ANTLR_JAR_LOCATION}")
@@ -29,24 +29,24 @@ endif()
 
 # search for antlr4 include dir and library
 if(ANTLR4CPP_ROOT)
-	message(STATUS "Antlr4 cpp runtime root set to: ${ANTLR4CPP_ROOT}")
+	MESSAGE(STATUS "Antlr4 cpp runtime root set to: ${ANTLR4CPP_ROOT}")
 endif()
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime.h 
 	HINTS "${ANTLR4CPP_ROOT}/usr/include/antlr4-runtime/"
 	      "${ANTLR4CPP_ROOT}/include/antlr4-runtime/"
     PATH_SUFFIXES antlr4-runtime)
 if(NOT ANTLR4CPP_INCLUDE_DIRS)
-	message(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
+	MESSAGE(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
 else()
 	MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}")
 endif()
 include_directories(${ANTLR4CPP_INCLUDE_DIRS})
 
-find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so antlr4-runtime.lib
+find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so antlr4-runtime-shared.lib
     HINTS "${ANTLR4CPP_ROOT}/usr/lib"
           "${ANTLR4CPP_ROOT}/lib")
 if(NOT ANTLR4CPP_LIBRARIES)
-	message(FATAL_ERROR "Can not find ANTLR4CPP_LIBRARIES")
+	MESSAGE(FATAL_ERROR "Can not find ANTLR4CPP_LIBRARIES")
 else()
 	MESSAGE(STATUS "ANTLR4CPP_LIBRARIES=${ANTLR4CPP_LIBRARIES}")
 endif()
