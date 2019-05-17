@@ -31,8 +31,11 @@ endif()
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
 MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
 include_directories(${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime)
-find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime)
+find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.lib)
 MESSAGE(STATUS "ANTLR4CPP_LIBS=${ANTLR4CPP_LIBS}")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	add_compile_definitions(ANTLR4CPP_STATIC)
+endif()
 
 ##############################################################################################
 # antlr4 utils
