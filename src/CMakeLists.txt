@@ -31,7 +31,7 @@ endif()
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
 MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
 include_directories(${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime)
-find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.dll libantlr4-runtime.a)
+find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime)
 MESSAGE(STATUS "ANTLR4CPP_LIBS=${ANTLR4CPP_LIBS}")
 
 ##############################################################################################
