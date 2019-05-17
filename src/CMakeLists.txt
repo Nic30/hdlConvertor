@@ -4,9 +4,9 @@
 # there are two types of distribution the all in one antlr4-complete.jar or group of antrl4 jars 
 find_jar(_ANTLR_JAR_LOCATION_antlr4_complete "antlr4-complete" 
 	PATHS "/usr/share/java/antlr4-complete.jar"
-		  "./antlr4-complete.jar")
+		  "antlr4-complete.jar")
 if(_ANTLR_JAR_LOCATION_antlr4_complete) 
-	MESSAGE(STATUS "using ${antlr_jar} found in ${_ANTLR_JAR_LOCATION_antlr4_complete}")
+	MESSAGE(STATUS "using antlr4-complete.jar found in ${_ANTLR_JAR_LOCATION_antlr4_complete}")
 	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION_antlr4_complete}")
 else()
 	set(ANTLR_CLASSPATH "")
@@ -26,7 +26,6 @@ else()
 	  endif()
 	ENDFOREACH()
 endif()
-#set(ANTLR_EXE "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool")
 
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
 MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime")
