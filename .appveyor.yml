@@ -5,11 +5,8 @@ environment:
   matrix:
     # For Python versions available on Appveyor, see
     # http://www.appveyor.com/docs/installed-software#python
-    # The list here is complete (excluding Python 2.6, which
-    # isn't covered by this document) at the time of writing.
 
     #  DISTUTILS_USE_SDK: "1"
-    #- PYTHON: "C:\\Python35-x64"
     #- TOOLSET: cygwin
     - PYTHON: "C:\\Python37-x64"
     # add to path otherwise Cython is not found
@@ -17,8 +14,17 @@ environment:
     #  CYGWIN: "c:\\cygwin64"
 
 install:
+  - "curl -fsS -o antlr4-complete.jar https://www.antlr.org/download/antlr-4.7.2-complete.jar"
+  - "git clone https://github.com/antlr/antlr4"
+  - "cd antlr4/runtime/Cpp"
+  - "mkdir build"
+  - "cd build"
+  - 'cmake  -G "Visual Studio 15 2017 Win64" -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=Release ..'
+  - "msbuild LIBANTLR4.sln /p:configuration=Release" # for other configuration installation does not work currently
+  - "cmake -P cmake_install.cmake"
+  - "cd ../../../../"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
-  - "%PYTHON%\\python.exe setup.py install"
+  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\Program Files\LIBANTLR4"'
     
 build: off
 
