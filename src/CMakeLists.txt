@@ -1,23 +1,31 @@
 ##############################################################################################
 # antlr settings
 ##############################################################################################
-set(ANTLR_JARS "stringtemplate4;antlr4;antlr4-runtime;antlr3-runtime;treelayout")
-set(ANTLR_CLASSPATH "")
-FOREACH(antlr_jar ${ANTLR_JARS})
-  
-  find_jar(_ANTLR_JAR_LOCATION_${antlr_jar} "${antlr_jar}" PATHS "/usr/share/java/${antlr_jar}.jar")
-  set(_ANTLR_JAR_LOCATION ${_ANTLR_JAR_LOCATION_${antlr_jar}})
-  MESSAGE(STATUS "java jar ${antlr_jar} found in ${_ANTLR_JAR_LOCATION}")
-  if (NOT _ANTLR_JAR_LOCATION)
-    message(FATAL_ERROR "Can not find ${antlr_jar}")	 
-  endif()
-  if(ANTLR_CLASSPATH)
-  	set(ANTLR_CLASSPATH "${ANTLR_CLASSPATH}:${_ANTLR_JAR_LOCATION}")
-  else()
-  	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION}")
-  endif()
-ENDFOREACH()
-
+# there are two types of distribution the all in one antlr4-complete.jar or group of antrl4 jars 
+find_jar(_ANTLR_JAR_LOCATION_antlr4_complete "antlr4-complete" 
+	PATHS "/usr/share/java/antlr4-complete.jar"
+		  "./antlr4-complete.jar")
+if(_ANTLR_JAR_LOCATION_antlr4_complete) 
+	MESSAGE(STATUS "using ${antlr_jar} found in ${_ANTLR_JAR_LOCATION_antlr4_complete}")
+	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION_antlr4_complete}")
+else()
+	set(ANTLR_CLASSPATH "")
+	set(ANTLR_JARS "stringtemplate4;antlr4;antlr4-runtime;antlr3-runtime;treelayout")
+	FOREACH(antlr_jar ${ANTLR_JARS})
+	  find_jar(_ANTLR_JAR_LOCATION_${antlr_jar} "${antlr_jar}" 
+	  		PATHS "/usr/share/java/${antlr_jar}.jar")
+	  set(_ANTLR_JAR_LOCATION ${_ANTLR_JAR_LOCATION_${antlr_jar}})
+	  MESSAGE(STATUS "using ${antlr_jar} found in ${_ANTLR_JAR_LOCATION}")
+	  if (NOT _ANTLR_JAR_LOCATION)
+	    message(FATAL_ERROR "Can not find ${antlr_jar}")	 
+	  endif()
+	  if(ANTLR_CLASSPATH)
+	  	set(ANTLR_CLASSPATH "${ANTLR_CLASSPATH}:${_ANTLR_JAR_LOCATION}")
+	  else()
+	  	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION}")
+	  endif()
+	ENDFOREACH()
+endif()
 #set(ANTLR_EXE "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool")
 
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h)
