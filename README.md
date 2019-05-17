@@ -13,16 +13,18 @@ There is also Java version. But it seems that there is no use for it.
 
 
 ## Installation
+Linux:
 ```
 # note that only last 2 are really required rest is downloaded automatically as dependency
 sudo apt install build-essential uuid-dev cmake default-jre libantlr4-runtime-dev antlr4
-sudo pip3 install -r requirements.txt
-
+# note this may be older version than you see in repo
 sudo pip3 install hdlConvertor
+
 #or download repository and run
+sudo pip3 install -r requirements.txt
 sudo python3 setup.py install
 ```
-Or the same using python and pip for python 2.7.
+Or the same for python 2.7 with other options just for demonstration.
 
 Installer also supports other commands.
 ```
@@ -32,6 +34,14 @@ python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug --
 Other commands:
 python setup.py --help-commands
 ```
+
+If you having issues take a look at .travis.yml (build script for the ubuntu 16.04).
+
+Windows:
+
+Take a look at appveyor.yml. It is required to download antlr4 first and hand have visual studio or other c++ compiler installed.
+
+
 
 ## Usage
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.
