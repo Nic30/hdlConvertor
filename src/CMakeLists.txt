@@ -28,9 +28,7 @@ else()
 endif()
 
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime/antlr4-runtime.h 
-	HINTS "/usr/include"
-	      "C:/Program files/LIBANTLR4/usr/include"
-	      "C:/Program files (x86)/LIBANTLR4/usr/include")
+	HINTS "${ANTLR4CPP_ROOT}/usr/include")
 if(NOT ANTLR4CPP_INCLUDE_DIRS)
 	message(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
 else()
@@ -39,9 +37,7 @@ endif()
 
 include_directories(${ANTLR4CPP_INCLUDE_DIRS}/antlr4-runtime)
 find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.lib
-    HINTS "/usr/lib"
-	      "C:/Program files/LIBANTLR4/usr/lib"
-	      "C:/Program files (x86)/LIBANTLR4/usr/lib")
+    HINTS "${ANTLR4CPP_ROOT}/usr/lib")
 if(NOT ANTLR4CPP_LIBS)
 	message(FATAL_ERROR "Can not find ANTLR4CPP_LIBS")
 else()
