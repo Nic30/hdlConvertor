@@ -24,6 +24,7 @@ install:
   - 'cmake  -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release ..'
   - "msbuild LIBANTLR4.sln /p:configuration=Release" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
+  - "cd ../../../../"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - "%PYTHON%\\python.exe setup.py install -DJava_JAR_PATHS=."
     
