@@ -1,5 +1,5 @@
 ##############################################################################################
-# antlr settings
+# antlr4 settings
 ##############################################################################################
 # there are two types of distribution the all in one antlr4-complete.jar or group of antrl4 jars 
 find_jar(_ANTLR_JAR_LOCATION_antlr4_complete "antlr4-complete" 
@@ -27,8 +27,13 @@ else()
 	ENDFOREACH()
 endif()
 
+# search for antlr4 include dir and library
+if(ANTLR4CPP_ROOT)
+	message(STATUS "Antlr4 cpp runtime root set to: ${ANTLR4CPP_ROOT}")
+endif()
 find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime.h 
 	HINTS "${ANTLR4CPP_ROOT}/usr/include/antlr4-runtime/"
+	      "${ANTLR4CPP_ROOT}/include/antlr4-runtime/"
     PATH_SUFFIXES antlr4-runtime)
 if(NOT ANTLR4CPP_INCLUDE_DIRS)
 	message(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
@@ -37,12 +42,13 @@ else()
 endif()
 include_directories(${ANTLR4CPP_INCLUDE_DIRS})
 
-find_library(ANTLR4CPP_LIBS libantlr4-runtime.so libantlr4-runtime.lib
-    HINTS "${ANTLR4CPP_ROOT}/usr/lib")
-if(NOT ANTLR4CPP_LIBS)
-	message(FATAL_ERROR "Can not find ANTLR4CPP_LIBS")
+find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so libantlr4-runtime.lib
+    HINTS "${ANTLR4CPP_ROOT}/usr/lib"
+          "${ANTLR4CPP_ROOT}/lib")
+if(NOT ANTLR4CPP_LIBRARIES)
+	message(FATAL_ERROR "Can not find ANTLR4CPP_LIBRARIES")
 else()
-	MESSAGE(STATUS "ANTLR4CPP_LIBS=${ANTLR4CPP_LIBS}")
+	MESSAGE(STATUS "ANTLR4CPP_LIBRARIES=${ANTLR4CPP_LIBRARIES}")
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	add_compile_definitions(ANTLR4CPP_STATIC)
@@ -120,6 +126,8 @@ macro(AddParserToBuildWithLexer name sources)
 endmacro()
 
 ##############################################################################################
+# build of the main python module
+##############################################################################################
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(
   ${HDLCONVERTOR_SOURCE_DIR}/src
@@ -148,7 +156,7 @@ target_link_libraries(_hdlConvertor
 	parsersVerilog_static
 	parsersVerilogPreproc_static
 	parsersVhdl_static
-	${ANTLR4CPP_LIBS}
+	${ANTLR4CPP_LIBRARIES}
 )
 
 #set_target_properties(_hdlConvertor
