@@ -39,7 +39,7 @@ If you having issues take a look at .travis.yml (build script for the ubuntu 16.
 
 Windows:
 
-Take a look at appveyor.yml. It is required to download antlr4 first and hand have visual studio or other c++ compiler installed.
+Take a look at appveyor.yml. It is required to download antlr4 first and have visual studio or other c++ compiler installed.
 
 
 
