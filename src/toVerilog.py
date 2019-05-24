@@ -1,64 +1,9 @@
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, WIRE
 
 
-class Indent():
-    """
-    indentation context
-    """
-
-    def __init__(self, autoIndentStream):
-        self.s = autoIndentStream
-        self.original_indent = None
-
-    def __enter__(self):
-        s = self.s
-        self.original_indent = s.indent_str
-        s.indent_cnt += 1
-        s.indent_str = s.indent_str + s.INDENT_STEP
-    
-    def __exit__(self, exception_type, exception_value, traceback):
-        s = self.s
-        s.indent_cnt -= 1
-        s.indent_str = self.original_indent
-
-
-class AutoIndentingStream():
-
-    def __init__(self, stream, indent_step):
-        """
-        :param stream: output stream
-        :param indent_step: string of indent
-        """
-
-        self.INDENT_STEP = indent_step
-        self.stream = stream
-        self.requires_indent = True
-        self.indent_cnt = 0
-        self.indent_str = ""
-
-    def write(self, s):
-        w = self.stream.write
-        if self.requires_indent:
-            w(self.indent_str)
-        w(s)
-        self.requires_indent = s.endswith("\n")
-
-
-def iter_with_last_flag(it):
-    # Ensure it's an iterator and get the first field
-    it = iter(it)
-    prev = next(it)
-    for item in it:
-        # Lag by one item so I know I'm not at the end
-        yield False, prev
-        prev = item
-
-    # Last item
-    yield True, prev
-
-        
 class ToVerilog():
     """
-    Convert hdlObject AST back to Verilog 
+    Convert hdlObject AST back to Verilog
     """
     INDENT_STEP = "    "
     DIR2V = {
@@ -66,7 +11,7 @@ class ToVerilog():
         "OUT": "output",
         "INOUT": "inout",
     }
-    WIRE = {'literal': {'type': 'ID', 'value': 'wire'}}
+
     GENERIC_BIN_OPS = {
         "AND": "&",
         "LOG_AND": "&&",
@@ -88,12 +33,12 @@ class ToVerilog():
         "GREATERTHAN": ">",
         "GE": ">=",
         "SLL": "<<",
-        "SRL": ">>", 
+        "SRL": ">>",
     }
-    
+
     def __init__(self, out_stream):
         self.out = AutoIndentingStream(out_stream, self.INDENT_STEP)
-        
+
     def print_doc(self, obj):
         doc = obj.get("__doc__", None)
         if doc is not None:
@@ -109,7 +54,7 @@ class ToVerilog():
     def print_direction(self, d):
         vd = self.DIR2V[d]
         self.out.write(vd)
-    
+
     def print_generic_declr(self, g):
         self.print_doc(g)
         w = self.out.write
@@ -138,7 +83,7 @@ class ToVerilog():
         is_array = self.print_type_first_part(t)
         if is_array:
             raise NotImplementedError()
-        
+
         w(name)
 
     def print_module_header(self, e):
@@ -156,7 +101,7 @@ class ToVerilog():
                         w("\n")
                     else:
                         w(",\n")
-            
+
             w(")")
         ps = e.get("ports", [])
         if ps:
@@ -176,7 +121,7 @@ class ToVerilog():
         if isinstance(expr, str):
             w(expr)
             return
-        
+
         lit = expr.get("literal", None)
         if lit is not None:
             t = lit["type"]
@@ -196,9 +141,9 @@ class ToVerilog():
             else:
                 raise NotImplementedError()
             return
-            
+
         o = expr.get("binOperator", None)
-        
+
         if o is not None:
             op = o["operator"]
             symbol = self.GENERIC_BIN_OPS.get(op, None)
@@ -259,7 +204,7 @@ class ToVerilog():
                 self.print_expr(o0)
                 w(" : ")
                 self.print_expr(o1)
-            
+
             else:
                 raise NotImplementedError(op)
             return
@@ -270,18 +215,18 @@ class ToVerilog():
         :return: True if the type has also the array dimmension part
         """
         w = self.out.write
-        if t != self.WIRE:
+        if t != WIRE:
             op = t.get("binOperator", None)
             if op is None:
                 assert t["literal"]
                 self.print_expr(t)
                 return False
 
-            if op and op.get('operator', None) == "CALL" and op["op0"] == self.WIRE:
+            if op and op.get('operator', None) == "CALL" and op["op0"] == WIRE:
                 # 1D vector
                 w("[")
                 ops = op["operands"]
-                size_expr =  ops[0]
+                size_expr = ops[0]
                 is_signed = ops[1]["literal"]["value"]
                 if is_signed:
                     raise NotImplementedError()
@@ -293,7 +238,7 @@ class ToVerilog():
                     self.print_type_first_part(op["op0"])
                     return True
                 raise NotImplementedError()
-        
+
         return False
 
     def print_type_array_part(self, t):
@@ -325,7 +270,7 @@ class ToVerilog():
         sens = proc['sensitivity']
         body = proc['body']
         w = self.out.write
-        
+
         w("always @ (")
         for last, item in iter_with_last_flag(sens):
             self.print_expr(item)
@@ -356,13 +301,13 @@ class ToVerilog():
             w("end\n")
             return True
         return False
-        
+
     def print_if(self, stm):
         w = self.out.write
         c = stm['cond']
         ifTrue = stm["ifTrue"]
         ifFalse = stm.get("ifFalse", None)
-        
+
         w("if (")
         self.print_expr(c)
         w(")")
@@ -375,13 +320,13 @@ class ToVerilog():
             self.print_expr(cond)
             w(")")
             need_space = self.print_block(stms)
-        
+
         if ifFalse is not None:
             if need_space:
                 w(" ")
             w("else")
             self.print_block(ifFalse)
-    
+
     def print_assignment(self, a, is_top=False):
         s = a["src"]
         d = a["dst"]
@@ -414,7 +359,7 @@ class ToVerilog():
             if defal is not None:
                 w("default:")
                 self.print_block(defal)
-                
+
         w("endcase\n")
 
     def print_statement(self, stm, is_top=False):
@@ -436,7 +381,7 @@ class ToVerilog():
         if op and op["operator"] == "MAP_ASSOCIATION":
             w = self.out.write
             # k, v pair
-            k, v  = op["op0"], op["op1"]
+            k, v = op["op0"], op["op1"]
             w(".")
             self.print_expr(k)
             w("(")
@@ -454,7 +399,7 @@ class ToVerilog():
                     w("\n")
                 else:
                     w(",\n")
-    
+
     def print_component_instance(self, c):
         self.print_doc(c)
         w = self.out.write
@@ -487,10 +432,10 @@ class ToVerilog():
 
             for s in a['statements']:
                 self.print_statement(s, is_top=True)
-         
+
         self.out.write("endmodule\n")
 
-    def apply(self, context):
+    def print_context(self, context):
         mod_head2body = {a["entityName"] : a for a in context.get("architectures", [])}
         for e in context.get("entities", []):
             self.print_module_header(e)
@@ -515,4 +460,4 @@ if __name__ == "__main__":
     filenames = [os.path.join(TEST_DIR, "sram.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, False)
     tv = ToVerilog(sys.stdout)
-    tv.apply(d)
+    tv.print_context(d)
