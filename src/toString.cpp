@@ -1,5 +1,5 @@
 #include "toString.h"
-
+#include <limits>
 
 namespace hdlConvertor {
 
@@ -9,7 +9,11 @@ void ToString::dump(const aPackage * p, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(p), indent);
 	indent += INDENT_INCR;
 	dumpArrP("components", indent, p->components) << ",\n";
+	dumpArrP("function_headers", indent, p->function_headers) << ",\n";
 	dumpArrP("functions", indent, p->functions) << "\n";
+    dumpArrP("subtype_headers", indent, p->subtype_headers) << ",\n";
+    dumpArrP("signals", indent, p->signals) << ",\n";
+    dumpArrP("constants", indent, p->constants) << ",\n";
 	dumpArrP("variables", indent, p->variables) << ",\n";
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
@@ -151,6 +155,58 @@ void ToString::dump(const Operator * o, int indent) {
 		throw "Invalid arity of operator";
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
+}
+
+void ToString::dump(const Process * p, int indent) {
+	mkIndent(indent) << "{\n";
+	indent += INDENT_INCR;
+	dumpArrP("function_headers", indent, p->function_headers) << ",\n";
+	dumpArrP("functions", indent, p->functions) << ",\n";
+	dumpArrP("subtype_headers", indent, p->subtype_headers) << ",\n";
+	dumpArrP("constants", indent, p->constants) << ",\n";
+	dumpArrP("variables", indent, p->variables) << ",\n";
+	if (p->sensitivity_list_specified)
+		dumpArrP("sensitivity_list", indent, p->sensitivity_list) << ",\n";
+
+	//dumpArrP("body", indent, body) << ",\n";
+	indent -= INDENT_INCR;
+	mkIndent(indent) << "}";
+}
+
+void ToString::dump(const Generate * o, int indent) {
+	mkIndent(indent) << "{\n";
+	indent += INDENT_INCR;
+	dumpArrP("componentInstances", indent, o->componentInstances) << ",\n";
+	dumpArrP("components", indent, o->components) << ",\n";
+	dumpArrP("constants", indent, o->constants) << ",\n";
+	dumpArrP("function_headers", indent, o->function_headers) << ",\n";
+	dumpArrP("functions", indent, o->functions) << ",\n";
+	dumpArrP("subtype_headers", indent, o->subtype_headers) << ",\n";
+	dumpArrP("variables", indent, o->variables) << ",\n";
+	dumpArrP("processes", indent, o->processes) << ",\n";
+	dumpArrP("generates", indent, o->generates) << ",\n";
+	indent -= INDENT_INCR;
+	mkIndent(indent) << "}";
+}
+void ToString::dump(const Position * o, int indent) {
+	mkIndent(indent) << "{\n";
+	indent += INDENT_INCR;
+	auto dump_size_t = [&](const std::string & name, size_t val) {
+		mkIndent(indent) << "\"" << name << "\":";
+		if (val != Position::INVALID) {
+			std::cout << val;
+		} else {
+			std::cout << "null";
+		}
+		std::cout << ",\n";
+	};
+
+	dump_size_t("startLine", o->startLine);
+	dump_size_t("stopLine", o->stopLine);
+	dump_size_t("startColumn", o->startColumn);
+	dump_size_t("stopColumn", o->stopColumn);
+	indent -= INDENT_INCR;
+	mkIndent(indent) << "}";
 }
 
 }

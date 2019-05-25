@@ -1,6 +1,7 @@
 #pragma once
 #include "direction.h"
 #include "variable.h"
+#include "position.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {

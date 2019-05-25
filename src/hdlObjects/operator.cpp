@@ -37,12 +37,19 @@ Operator::Operator(Expr* op0, OperatorType operatorType, Expr* op1) {
 	this->op0 = op0;
 	this->op = operatorType;
 	this->op1 = op1;
-	operands = NULL;
+	operands = nullptr;
 }
 Operator * Operator::call(Expr* fn, std::vector<Expr*> * operands) {
 	Operator * o = new Operator();
 	o->op0 = fn;
 	o->op = CALL;
+	o->operands = operands;
+	return o;
+}
+Operator * Operator::slice(Expr* fn, std::vector<Expr*> * operands) {
+	Operator * o = new Operator();
+	o->op0 = fn;
+	o->op = INDEX;
 	o->operands = operands;
 	return o;
 }

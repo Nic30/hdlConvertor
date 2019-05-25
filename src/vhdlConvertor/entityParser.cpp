@@ -33,6 +33,7 @@ Entity * EntityParser::visitEntity_declaration(
 			visitEntity_declarative_item(d);
 		}
 	}
+	e->position = Position(ctx->getStart()->getLine(), ctx->getStop()->getLine(), -1, -1);
 	return e;
 }
 
@@ -102,8 +103,10 @@ void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 
 		for (auto ipd : ipl->interface_port_declaration()) {
 			auto ps = InterfaceParser::visitInterface_port_declaration(ipd);
-			for (Port * p : *ps)
+			for (Port * p : *ps) {
+				p->variable->position = Position(ipd->getStart()->getLine(), ipd->getStop()->getLine(), -1, -1);
 				ports->push_back(p);
+			}
 			delete ps;
 		}
 	}

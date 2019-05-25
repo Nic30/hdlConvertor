@@ -19,6 +19,7 @@ public:
 	Operator(Expr* op0, OperatorType operatorType, Expr* op1);
 
 	static Operator * call(Expr* fn, std::vector<Expr*> * operands);
+	static Operator * slice(Expr* fn, std::vector<Expr*> * operands);
 	static Operator * ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse);
 	ExprItem * clone() const;
 	~Operator();

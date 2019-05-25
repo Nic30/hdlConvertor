@@ -2,11 +2,12 @@
 #include <vector>
 #include "named.h"
 #include "expr.h"
+#include "position.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class CompInstance: public WithDoc {
+class CompInstance: public WithDoc, public WithPos {
 public:
 	Expr * name;
 	Expr * entityName;

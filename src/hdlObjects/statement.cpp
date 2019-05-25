@@ -16,6 +16,10 @@ const char * StatementType_toString(StatementType type) {
 		return "CASE";
 	case s_WHILE:
 		return "WHILE";
+	case s_BREAK:
+		return "BREAK";
+	case s_FOR:
+		return "FOR";
 	case s_RETURN:
 		return "RETURN";
 	case s_ASSIGMENT:
@@ -31,7 +35,6 @@ Statement::Statement(StatementType type) {
 	this->type = type;
 	exprs.reserve(4);
 }
-
 Statement * Statement::EXPR(Expr * e) {
 	Statement * s = new Statement(s_EXPR);
 	s->exprs.push_back(e);
@@ -107,6 +110,9 @@ Statement* Statement::WHILE(Expr * cond, vector<Statement*> * body) {
 	s->sub_statements.push_back(body);
 	return s;
 }
+Statement* Statement::BREAK() {
+	return new Statement(s_BREAK);
+}
 
 Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 		vector<Statement*>* body) {
@@ -120,6 +126,15 @@ Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 	s->sub_statements.push_back(body);
 	return s;
 }
+
+Statement* Statement::FOR(const vector<Expr*> & args, std::vector<Statement*>* body) {
+	Statement * s = new Statement(s_FOR);
+	for (auto e: args)
+		s->exprs.push_back(e);
+	s->sub_statements.push_back(body);
+	return s;
+}
+
 
 Statement::~Statement() {
 	for (auto sl : sub_statements) {

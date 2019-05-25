@@ -6,6 +6,7 @@
 #include "hdlObjects/context.h"
 #include "hdlObjects/operator.h"
 #include "hdlObjects/named.h"
+#include "hdlObjects/generate.h"
 
 
 namespace hdlConvertor {
@@ -62,6 +63,9 @@ public:
 	static void dump(const hdlObjects::Symbol * p, int indent);
 	static void dump(const hdlObjects::Variable * v, int indent);
 	static void dump(const hdlObjects::Operator * v, int indent);
+	static void dump(const hdlObjects::Process * p, int indent);
+	static void dump(const hdlObjects::Position * o, int indent);
+	static void dump(const hdlObjects::Generate * o, int indent);
 };
 
 }

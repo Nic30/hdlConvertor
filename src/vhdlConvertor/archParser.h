@@ -20,6 +20,9 @@ public:
 			vhdlParser::Block_declarative_itemContext * ctx);
 	void visitArchitecture_statement(
 			vhdlParser::Architecture_statementContext * ctx);
+	hdlObjects::Entity * visitComponent_declaration(
+			vhdlParser::Component_declarationContext* ctx);
+
 };
 
 }

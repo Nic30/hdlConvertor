@@ -100,7 +100,11 @@ Expr * Expr::call(Expr * fnId, std::vector<Expr*> * operands) {
 	e->data = Operator::call(fnId, operands);
 	return e;
 }
-
+Expr * Expr::slice(Expr * fnId, std::vector<Expr*> * operands) {
+	Expr * e = new Expr();
+	e->data = Operator::slice(fnId, operands);
+	return e;
+}
 Expr * Expr::ID(const char * value) {
 	LiteralVal v;
 	v._str = strdup(value);

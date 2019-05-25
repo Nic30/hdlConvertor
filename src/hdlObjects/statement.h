@@ -4,16 +4,19 @@
 #include "statement.h"
 #include "expr.h"
 #include "named.h"
+#include "position.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
+// @note the NOP statement is not required as it is represented by empty statement list
 enum StatementType {
-	s_EXPR, s_IF, s_CASE, s_WHILE, s_RETURN, s_ASSIGMENT, s_PROCESS
+	s_EXPR, s_IF, s_CASE, s_WHILE, s_BREAK, s_RETURN, s_FOR, s_ASSIGMENT, s_PROCESS
 };
+
 const char * StatementType_toString(StatementType type);
 
-class Statement : public WithDoc {
+class Statement : public WithDoc, public WithPos {
 public:
 	using case_t = std::pair<Expr*, std::vector<Statement*>*>;
 	// an optional extra label specified in HDL
@@ -45,8 +48,10 @@ public:
 	static Statement* RETURN();
 	static Statement* ASSIG(Expr * dst, Expr * src);
 	static Statement* WHILE(Expr * cond, std::vector<Statement*>* body);
+	static Statement* BREAK();
 	static Statement* PROCESS(std::vector<Expr*> * sensitivity,
 			std::vector<Statement*>* body);
+	static Statement* FOR(const std::vector<Expr*> & cond, std::vector<Statement*>* body);
 	~Statement();
 };
 

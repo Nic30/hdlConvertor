@@ -10,13 +10,15 @@
 #include "operatorType.h"
 #include "exprItem.h"
 #include "symbol.h"
+#include "named.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class Expr {
+class Expr: public WithPos {
 public:
 	ExprItem * data;
+
 	Expr();
 	// @note deepcopy
 	Expr(const Expr & expr);
@@ -43,6 +45,7 @@ public:
 	static Expr * ARRAY(std::vector<Expr*> arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
 	static Expr * call(Expr * fnId, std::vector<Expr*> * operands);
+	static Expr * slice(Expr * fnId, std::vector<Expr*> * operands);
 
 	static Expr * OPEN();
 	static Expr * all();

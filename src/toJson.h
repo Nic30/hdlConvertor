@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "debugConfig.h"
 #include "hdlObjects/aPackage.h"
 #include "hdlObjects/arch.h"
@@ -8,6 +9,7 @@
 #include "hdlObjects/named.h"
 #include "hdlObjects/process.h"
 #include "hdlObjects/statement.h"
+#include "hdlObjects/generate.h"
 
 namespace hdlConvertor {
 
@@ -34,8 +36,9 @@ class ToJson {
 			std::vector<hdlObjects::Expr*>::const_iterator cond_end,
 			std::vector<std::vector<hdlObjects::Statement*>*>::const_iterator stms_begin);
 
-
 public:
+	static void toJson(const hdlObjects::WithPos * o, PyObject *d);
+
 	static PyObject * toJson(const hdlObjects::aPackage * p);
 	static PyObject * toJson(const hdlObjects::Arch * p);
 	static PyObject * toJson(const hdlObjects::CompInstance * ci);
@@ -52,6 +55,9 @@ public:
 	static PyObject * toJson(const hdlObjects::Symbol * p);
 	static PyObject * toJson(const hdlObjects::Variable * p);
 	static PyObject * toJson(const hdlObjects::Operator * p);
+	static PyObject * toJson(const hdlObjects::Generate * o);
+	static PyObject * toJson(const hdlObjects::Position * o);
+
 
 #endif
 

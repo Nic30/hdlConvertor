@@ -7,6 +7,14 @@
 #include "../hdlObjects/statement.h"
 #include "../hdlObjects/package.h"
 #include "../hdlObjects/packageHeader.h"
+#include "../hdlObjects/symbolType.h"
+#include "../hdlObjects/named.h"
+#include "../hdlObjects/expr.h"
+#include "../hdlObjects/function.h"
+#include "../hdlObjects/variable.h"
+#include "../hdlObjects/process.h"
+#include "../hdlObjects/package.h"
+#include "../hdlObjects/packageHeader.h"
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -27,18 +35,6 @@ public:
 			vhdlParser::Package_body_declarative_partContext* ctx);
 	void visitPackage_body_declarative_item(
 			vhdlParser::Package_body_declarative_itemContext* ctx);
-	static hdlObjects::Function * visitSubprogram_body(
-			vhdlParser::Subprogram_bodyContext* ctx);
-	static std::vector<Variable*>* visitSubprogram_declarative_part(
-			vhdlParser::Subprogram_declarative_partContext* ctx);
-	static std::vector<Variable *> * visitSubprogram_declarative_item(
-			vhdlParser::Subprogram_declarative_itemContext* ctx);
-	static std::vector<Variable*> * visitVariable_declaration(
-			vhdlParser::Variable_declarationContext* ctx);
-	void visitSubprogram_declaration(
-			vhdlParser::Subprogram_declarationContext* ctx);
-	static std::vector<hdlObjects::Statement *> * visitSubprogram_statement_part(
-			vhdlParser::Subprogram_statement_partContext* ctx);
 
 };
 

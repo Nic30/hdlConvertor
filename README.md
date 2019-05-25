@@ -6,7 +6,7 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
 
-The System Verilog and VHDL parser for Python/C++ written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
+The System Verilog and VHDL parser for Python/C++ written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences.
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
@@ -69,6 +69,7 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ### Supported languages:
 
 * VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
+* VHDL 2008 on same level as current [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html)
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
 
@@ -76,14 +77,14 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ### Similar projects:
 
 * [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
-* [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python 
+* [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
-* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
+* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
-* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code 
+* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 
 
 ### License

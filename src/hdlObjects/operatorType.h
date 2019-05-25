@@ -6,6 +6,11 @@ namespace hdlObjects {
 
 enum OperatorType {
 	RANGE, // range used in VHDL type specifications
+	REVERSE_RANGE,
+	ACROSS,
+	THROUGH,
+	REFERENCE,
+	TOLERANCE,
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification

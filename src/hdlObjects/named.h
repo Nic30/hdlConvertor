@@ -1,5 +1,8 @@
 #pragma once
+
 #include <string>
+#include "position.h"
+
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -25,9 +28,17 @@ public:
 };
 
 /*
+ * Base class for HDL object with in code position specified
+ * */
+class WithPos {
+public:
+	Position position;
+};
+
+/*
  * Base class for HDL object with name and doc
  * */
-class WithNameAndDoc: public Named, public WithDoc {
+class WithNameAndDoc: public Named, public WithDoc, public WithPos {
 public:
 	WithNameAndDoc();
 	WithNameAndDoc(char * name);

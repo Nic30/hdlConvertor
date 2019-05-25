@@ -3,9 +3,12 @@
 #include <vector>
 #include "vhdlParser/vhdlParser.h"
 #include "../notImplementedLogger.h"
+#include "../hdlObjects/named.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/function.h"
+#include "../hdlObjects/variable.h"
 #include "../hdlObjects/packageHeader.h"
+#include "../hdlObjects/process.h"
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -24,19 +27,6 @@ public:
 	void visitPackage_declarative_part(
 			hdlObjects::PackageHeader * ph,
 			vhdlParser::Package_declarative_partContext* ctx);
-	static Function * visitSubprogram_declaration(
-			vhdlParser::Subprogram_declarationContext* ctx);
-	static Function * visitSubprogram_specification(
-			vhdlParser::Subprogram_specificationContext* ctx);
-
-	static Function * visitProcedure_specification(
-			vhdlParser::Procedure_specificationContext* ctx);
-	static Function * visitFunction_specification(
-			vhdlParser::Function_specificationContext* ctx);
-
-	static std::vector<Variable*> * visitFormal_parameter_list(
-			vhdlParser::Formal_parameter_listContext* ctx);
-
 	void visitPackage_declarative_item(
 			vhdlParser::Package_declarative_itemContext* ctx);
 	hdlObjects::Entity * visitComponent_declaration(
