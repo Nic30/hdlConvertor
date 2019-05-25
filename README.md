@@ -92,4 +92,4 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ### License
 
 License in top folder applies to this project only.
-In this repository there are also grammars (.g4 files - BSD 3, GPL-3, GPL).
+In this repository there are also ANTLR4 grammars (.g4 files - BSD 3, GPL-3, GPL, however they are not present in installation).
