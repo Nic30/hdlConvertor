@@ -69,7 +69,7 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ### Supported languages:
 
 * VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
-* VHDL 2008 on same level as current [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html)
+* VHDL 2008 on level which allows to use all [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html) files
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
 
