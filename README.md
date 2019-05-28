@@ -6,7 +6,9 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
 
-The System Verilog and VHDL parser for Python/C++ written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences.
+The System Verilog and VHDL parser for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
+
+It is also possible to convert this AST back to original HDL (curently only for Verilog).
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
@@ -71,7 +73,7 @@ Also if it is something which is not unique to your system, tell us so we can fi
 * [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
 * VHDL 2008 on same level as current [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
+* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP)
 
 
 ### Similar projects:
@@ -90,4 +92,4 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ### License
 
 License in top folder applies to this project only.
-In this repository there are also grammars (.g4 files - BSD 3, GPL-3, GPL).
+In this repository there are also ANTLR4 grammars (.g4 files - BSD 3, GPL-3, GPL, however they are not present in installation).
