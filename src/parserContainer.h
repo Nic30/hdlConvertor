@@ -3,10 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <functional>
+#include <antlr4-runtime.h>
 
 #include "hdlObjects/context.h"
 #include "syntaxErrorLogger.h"
-#include <antlr4-runtime.h>
+#include "notImplementedLogger.h"
 
 namespace hdlConvertor {
 
@@ -45,7 +46,6 @@ public:
 	void parseFile(
 			antlr4::ANTLRInputStream &fileName,
 			bool hierarchyOnly,
-			bool debug,
 			std::function<
 					void(
 						antlrParserT * antlrParser,
@@ -56,11 +56,10 @@ public:
 		initParser(fileName);
 
 		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context, hierarchyOnly);
-
 		// begin parsing at init rule
 		parseFn(antlrParser, hdlParser);
-
 		context = hdlParser->getContext();
+
 		syntaxErrLogger->CheckErrors(); // Throw exception if errors
 		delete hdlParser;
 		delete syntaxErrLogger;

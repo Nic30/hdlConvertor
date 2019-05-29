@@ -1,8 +1,10 @@
 #pragma once
-#include "antlr4-runtime.h"
-#include "exception.h"
+
+#include <antlr4-runtime.h>
 #include <sstream>
 #include <string>
+
+#include "exception.h"
 
 namespace hdlConvertor {
 
@@ -29,7 +31,7 @@ class SyntaxErrorLogger: public antlr4::ANTLRErrorListener {
 		std::string _filename;
 		std::string _message;
 	};
-	
+
 private:
 	std::vector<error_data> _errors;
 

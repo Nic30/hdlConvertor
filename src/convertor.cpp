@@ -52,7 +52,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Language _lang,
 			ANTLRFileStream input(fileName);
 			auto pc = new ParserContainer<vhdl_antlr::vhdlLexer,
 					vhdl_antlr::vhdlParser, vhdl::DesignFileParser>(c);
-			pc->parseFile(input, hierarchyOnly, debug, parseFnVHDL);
+			pc->parseFile(input, hierarchyOnly, parseFnVHDL);
 			c = pc->context;
 			delete pc;
 
@@ -69,7 +69,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Language _lang,
 			ANTLRInputStream input(str);
 			input.name = fileName;
 
-			pc->parseFile(input, hierarchyOnly, debug, parseFnVerilog);
+			pc->parseFile(input, hierarchyOnly, parseFnVerilog);
 			c = pc->context;
 			delete pc;
 
@@ -86,7 +86,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Language _lang,
 			ANTLRInputStream input(str);
 			input.name = fileName;
 
-			pc->parseFile(input, hierarchyOnly, debug, parseFnSystemVerilog);
+			pc->parseFile(input, hierarchyOnly, parseFnSystemVerilog);
 			c = pc->context;
 			delete pc;
 #endif
