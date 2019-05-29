@@ -311,6 +311,7 @@ void GenerateStatementParser::visitBlock_declarative_item(
 
 void GenerateStatementParser::visitArchitecture_statement(
 		vhdlParser::Architecture_statementContext * ctx, Generate * g) {
+	// [TODO] duplicit
 	// architecture_statement
 	// : block_statement
 	// | process_statement

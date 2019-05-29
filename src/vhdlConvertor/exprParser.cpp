@@ -523,7 +523,6 @@ Expr * ExprParser::visitProcedure_call_statement(
 	if (ctx->label_colon()) {
 		NotImplementedLogger::print(
 				"ExprParser.visitProcedure_call_statement - label_colon");
-
 	}
 	return visitProcedure_call(ctx->procedure_call());
 }

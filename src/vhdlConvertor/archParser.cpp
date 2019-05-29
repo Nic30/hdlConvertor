@@ -9,14 +9,13 @@
 #include "processParser.h"
 #include "compInstanceParser.h"
 #include "entityParser.h"
-
+#include "simultaneousStatementParser.h"
 
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
 namespace hdlConvertor {
 namespace vhdl {
-
 
 ArchParser::ArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -35,7 +34,8 @@ Arch * ArchParser::visitArchitecture_body(
 
 	a->name = strdup(ctx->identifier(0)->getText().c_str());
 	a->entityName = strdup(ctx->identifier(1)->getText().c_str());
-	a->position = Position(ctx->getStart()->getLine(), ctx->getStop()->getLine(), -1, -1);
+	a->position = Position(ctx->getStart()->getLine(),
+			ctx->getStop()->getLine(), -1, -1);
 	if (!hierarchyOnly) {
 		for (auto bi : ctx->architecture_declarative_part()->block_declarative_item()) {
 			// architecture_declarative_part
@@ -81,7 +81,8 @@ void ArchParser::visitBlock_declarative_item(
 	// ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		a->function_headers.push_back(SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		a->function_headers.push_back(
+				SubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
@@ -89,14 +90,12 @@ void ArchParser::visitBlock_declarative_item(
 		// TODO: Implement
 		//Function * f = SubProgramParser::visitSubprogram_body(sb);
 		//a->functions.push_back(f);
-		NotImplementedLogger::print(
-				"ArchParser.visitSubprogram_body");
+		NotImplementedLogger::print("ArchParser.visitSubprogram_body");
 		return;
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print(
-				"ArchParser.visitType_declaration");
+		NotImplementedLogger::print("ArchParser.visitType_declaration");
 		return;
 	}
 	auto st = ctx->subtype_declaration();
@@ -130,18 +129,16 @@ void ArchParser::visitBlock_declarative_item(
 			a->variables.push_back(v);
 		}
 		delete variables;
-        return;
+		return;
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitFile_declaration");
+		NotImplementedLogger::print("ArchParser.visitFile_declaration");
 		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitAlias_declaration");
+		NotImplementedLogger::print("ArchParser.visitAlias_declaration");
 		return;
 	}
 	auto compd = ctx->component_declaration();
@@ -151,14 +148,12 @@ void ArchParser::visitBlock_declarative_item(
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitAttribute_declaration");
+		NotImplementedLogger::print("ArchParser.visitAttribute_declaration");
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
-		NotImplementedLogger::print(
-				"ArchParser.visitAttribute_specification");
+		NotImplementedLogger::print("ArchParser.visitAttribute_specification");
 		return;
 	}
 	auto discs = ctx->disconnection_specification();
@@ -180,28 +175,22 @@ void ArchParser::visitBlock_declarative_item(
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitGroup_declaration");
+		NotImplementedLogger::print("ArchParser.visitGroup_declaration");
 		return;
 	}
 	auto nd = ctx->nature_declaration();
 	if (nd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitNature_declaration");
+		NotImplementedLogger::print("ArchParser.visitNature_declaration");
 		return;
 	}
 	auto snd = ctx->subnature_declaration();
 	if (snd) {
-		NotImplementedLogger::print(
-				"ArchParser.visitSubnature_declaration");
+		NotImplementedLogger::print("ArchParser.visitSubnature_declaration");
 		return;
 	}
 	auto tdc = ctx->terminal_declaration();
-	if (tdc) {
-		NotImplementedLogger::print(
-				"ArchParser.visitTerminal_declaration");
-		return;
-	}
+	assert(tdc);
+	NotImplementedLogger::print("ArchParser.visitTerminal_declaration");
 }
 void ArchParser::visitArchitecture_statement(
 		vhdlParser::Architecture_statementContext * ctx) {
@@ -216,20 +205,36 @@ void ArchParser::visitArchitecture_statement(
 	//  | concurrent_break_statement
 	//  | simultaneous_statement
 	//  ;
-	// [TODO]
 
 	auto b = ctx->block_statement();
 	if (b) {
-		NotImplementedLogger::print(
-				"ArchParser.visitBlock_statement");
+		NotImplementedLogger::print("ArchParser.visitBlock_statement");
 		return;
 	}
 	auto p = ctx->process_statement();
 	if (p) {
-		a->processes.push_back(
-				ProcessParser::visitProcess_statement(p));
+		a->processes.push_back(ProcessParser::visitProcess_statement(p));
 		return;
 	}
+	auto cpc = ctx->concurrent_procedure_call_statement();
+	if (cpc) {
+		NotImplementedLogger::print(
+				"ArchParser.visitConcurrent_procedure_call_statement");
+		return;
+	}
+	auto ca = ctx->concurrent_assertion_statement();
+	if (ca) {
+		NotImplementedLogger::print(
+				"ArchParser.visitConcurrent_assertion_statement");
+		return;
+	}
+	auto csa = ctx->concurrent_signal_assignment_statement();
+	if (csa) {
+		NotImplementedLogger::print(
+				"ArchParser.visitConcurrent_signal_assignment_statement");
+		return;
+	}
+
 	auto ci = ctx->component_instantiation_statement();
 	if (ci) {
 		a->componentInstances.push_back(
@@ -240,11 +245,18 @@ void ArchParser::visitArchitecture_statement(
 	auto gs = ctx->generate_statement();
 	if (gs) {
 		a->generates.push_back(
-			GenerateStatementParser::visitGenerate_statement(gs));
+				GenerateStatementParser::visitGenerate_statement(gs));
 		return;
 	}
-	NotImplementedLogger::print(
-					"ArchParser.visitArchitecture_statement - unspecified next rule");
+	auto cb = ctx->concurrent_break_statement();
+	if (cb) {
+		NotImplementedLogger::print(
+				"ArchParser.visitConcurrent_break_statement");
+		return;
+	}
+	auto s = ctx->simultaneous_statement();
+	assert(s);
+	a->statements.push_back(SimultaneousStatementParser::visitSimultaneous_statement(s));
 }
 Entity * ArchParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext* ctx) {

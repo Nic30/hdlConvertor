@@ -133,6 +133,14 @@ Statement * StatementParser::visitCase_statement(
 	//     ( case_statement_alternative )+
 	//     END CASE ( identifier )? SEMI
 	//   ;
+	if (ctx->label_colon()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitCase_statement - label_colon");
+	}
+	if (ctx->identifier()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitCase_statement - identifier");
+	}
 	auto _e = ctx->expression();
 	auto e = ExprParser::visitExpression(_e);
 	vector<Statement::case_t> alternatives;
