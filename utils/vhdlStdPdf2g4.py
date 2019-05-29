@@ -137,12 +137,21 @@ class ANTLR4_rule(_Antlr4GrammarElem):
         def toAntlr4(self):
             return "\n"
 
+        def __eq__(self, other):
+            return isinstance(other, ANTLR4_rule.VisualNewline)
+
+        def __ne__(self, other):
+            return not (self == other)
+
     class Sequence(list, _Antlr4GrammarElem):
 
         def walk(self, fn):
             fn(self)
             for i in self:
                 i.walk(fn)
+
+        def __eq__(self, other):
+            return isinstance(other, ANTLR4_rule.Sequence) and list.__eq__(self, other)
 
         def toAntlr4(self):
             return " ".join(i.toAntlr4() for i in self)
@@ -171,11 +180,14 @@ class ANTLR4_rule(_Antlr4GrammarElem):
             for i in self.body:
                 i.walk(fn)
 
+        def __eq__(self, other):
+            return isinstance(other, ANTLR4_rule.Option) and self.body == other.body
+
         def toAntlr4(self):
             body = " ".join([b.toAntlr4() for b in self.body])
             return "( %s )?" % body
 
-    class Selection(_Antlr4GrammarElem, list):
+    class Selection(list, _Antlr4GrammarElem):
 
         def walk(self, fn):
             fn(self)
@@ -193,7 +205,7 @@ class ANTLR4_rule(_Antlr4GrammarElem):
             self.is_terminal = is_terminal
 
         def __eq__(self, other):
-            return (isinstance(other, Symbol)
+            return (isinstance(other, ANTLR4_rule.Symbol)
                     and self.symbol == other.symbol
                     and self.is_terminal == other.is_terminal)
 
@@ -223,20 +235,51 @@ class VhdlRule2Antlr4Rule():
     RE_TAILING_UNDERSCORE = re.compile("</it>_")
     # to add an extra space if there is not
     RE_GRAM_OP = re.compile("(\{|\}|\[|\]|\|)")
+
+    ASSIGN        : '=='  ;
+    LBRACKET      : '['   ;
+    RBRACKET      : ']'   ;
     MINUS = "–"  # note it is not regular - char
-    SPEC_SYMB = {";", "(", ")", "'", '"', "<<", ">>", "@", "#", ",", ".", "?", ":",
-                 "=", "/=", "<", "|=", ">", ">="  , "?="  , "?/="  , "?<"  , "?<="  , "?>"  , "?>=" , # relational_operator
-                 "+", "-", "&",  # adding_operator
-                 "*", "/",  # multiplying_operator
-                 "**",  # miscellaneous_operator
-                 "<=",  # concurrent_simple_signal_assignment
-                 "\\",  # extended_identifier
-                 "`",  # tool_directive
-                 "^", # relative_pathname
-                 ":=", # simple_variable_assignment
-                 "<>", # constrained_array_definition
-                 "=>", # association_element
-                 "??", # condition_operator
+    SPEC_SYMB = {";" : "SEMI",
+                 "(" : "LPAREN",
+                 ")" : "RPAREN",
+                 "'" : "APOSTROPHE",
+                 '"' : "DBLQUOTE",
+                 "<<" : "SHIFT_LEFT",
+                 ">>" : "SHIFT_RIGHT",
+                 "@": "AT",
+                 "#": "HASHTAG",
+                 ",": "COMMA",
+                 ".": "DOT",
+                 "?": "QUESTIONMARK",
+                 ":": "COLON",
+                 "=": "EQ",
+                 "/=": "NEQ",
+                 "<": "LT",
+                 ">" : "GT",
+                 ">=": "GE",
+                 "?=": "MATCH_EQ",
+                 "?/=": "MATCH_NEQ",
+                 "?<": "MATCH_LT",
+                 "?<=": "MATCH_LE" ,
+                 "?>": "MATCH_GT",
+                 "?>=": "MATCH_GE" ,  # relational_operator
+                 "+": "PLUS",
+                 "-": "MINUS",
+                 "&": "AMPERSAND",  # adding_operator
+                 "|": "BAR",
+                 "\\": "BACKSLASH",
+                 "*": "MUL",
+                 "/": "DIV",  # multiplying_operator
+                 "**": "DOUBLESTAR",  # miscellaneous_operator
+                 "<=": "CONASGN",  # concurrent_simple_signal_assignment
+                 "\\": "BACKSLASH",  # extended_identifier
+                 "`": "GRAVE_ACCENT",  # tool_directive
+                 "^": "UP",  # relative_pathname
+                 ":=": "VARASGN",  # simple_variable_assignment
+                 "<>": "BOX",  # constrained_array_definition
+                 "=>": "ARROW",  # association_element
+                 "??": "COND_OP",  # condition_operator
                  }
     INDENT = "      "
     RE_IT_PREFIX = re.compile("<it>[a-zA-Z0-9_]+</it>_?")
@@ -326,8 +369,6 @@ class VhdlRule2Antlr4Rule():
                 _p = _p.strip()
                 if _p == self.MINUS:
                     _p = "-"
-                if _p in self.SPEC_SYMB:
-                    _p = "\'%s\'" % _p
                 if _p:
                     tokens.append(_p)
             if part.endswith("\n"):
@@ -377,16 +418,20 @@ def get_used_non_terminals(rules: List[ANTLR4_rule]):
 
     return nts
 
+
 def rm_newline_from_simple_rules(rules):
     """
     Rule is simple if contains one newline at the end
     """
     for r in rules:
+
         class Cntr():
             nls = 0
+
         def count_nl(obj):
             if isinstance(obj, ANTLR4_rule.VisualNewline):
                Cntr.nls += 1
+
         r.walk(count_nl)
         if Cntr.nls == 1:
             if isinstance(r.body, ANTLR4_rule.Sequence):
@@ -398,7 +443,22 @@ def rm_newline_from_simple_rules(rules):
             else:
                 raise NotImplementedError(r.body)
 
-
+def left_recursion_remove(rules):
+    # A → Aα / β
+    # to
+    # A → βA’
+    # A’ → αA’ / ∈
+    # is replaced manually in vhdl_base.g4
+    replaced_rules = {
+        "name",
+        #"prefix",
+        "selected_name",
+        #"suffix",
+        "indexed_name",
+        "slice_name",
+        #"attribute_name",
+    }
+    return [r for r in rules if r.name not in replaced_rules]
 
 
 # {x} - zero or more times -> (x)*
@@ -415,31 +475,116 @@ if __name__ == "__main__":
     # # for page in islice(pages, PAGE_OFFSET + 23, PAGE_OFFSET + 25):
     #     # page = next(islice(pages, PAGE_OFFSET + 6, None))
     #    vp.parse_page(page)
-    rules_described_in_text = [
-        ANTLR4_rule("digit",
-                    ANTLR4_rule.Selection([
-                        ANTLR4_rule.Sequence([ ANTLR4_rule.Symbol("%d" % i, True),])
-                        for i in range(10)
-                        ])),
-        ANTLR4_rule("format_effector",
-            ANTLR4_rule.Selection([
-                ANTLR4_rule.Sequence([ ANTLR4_rule.Symbol(i, True),])
-                for i in ["'\t'", "'\v'", "'\c'", "'\n'", "'\f'"]
-                ])),
-        ANTLR4_rule("space_character", ANTLR4_rule.Symbol("' '", True)),
-        ANTLR4_rule("underline", ANTLR4_rule.Symbol("'_'", True))
-    ]
 
+    renames = { k: k.upper() for k in [
+        "base_specifier", "lower_case_letter", "upper_case_letter",
+        'special_character', 'other_special_character', 'digit',
+        'format_effector', 'space_character', 'underline']}
+    renames["mode"] = "signal_mode"
+    renames["E"] = "E_SIGN"
+    for k, v in VhdlRule2Antlr4Rule.SPEC_SYMB.items():
+        renames[k] = v
+
+    def apply_rename(obj):
+        if isinstance(obj, ANTLR4_rule):
+            n = renames.get(obj.name, None)
+            if n is not None:
+                obj.name = n
+        elif isinstance(obj, ANTLR4_rule.Symbol):
+            n = renames.get(obj.symbol , None)
+            if n is not None:
+                obj.symbol = n
+
+    IGNORED = [
+        ANTLR4_rule.Symbol(s, False)
+        for s in [
+            "Property_Declaration",
+            "Sequence_Declaration",
+            "Clock_Declaration",
+            "PSL_Directive",
+            "Verification_Unit",
+    ]]
     with open("vhdl2008.g4_proto") as f:
         p = VhdlRule2Antlr4Rule()
         p.convert(f)
-        p.rules.extend(rules_described_in_text)
-
         rm_newline_from_simple_rules(p.rules)
         nts = get_used_non_terminals(p.rules)
         def_nts = get_defined_non_terminals(p.rules)
 
+        keywords = set()
+
+        def collect_keywords(obj):
+            if isinstance(obj, ANTLR4_rule.Symbol):
+                s = obj.symbol
+                if (s.isupper() and s not in VhdlRule2Antlr4Rule.SPEC_SYMB.values()
+                        and s not in renames.values()
+                        and s not in ["B", "D", "E", "O", "X"]):
+                    keywords.add(obj.symbol)
+
+        p.rules = left_recursion_remove(p.rules)
         for r in p.rules:
-            print(r.toAntlr4())
-        pprint(nts - def_nts)
+            r.walk(apply_rename)
+            r.walk(collect_keywords)
+            s = r.body
+
+            while True:
+                if isinstance(s, (ANTLR4_rule.Selection, ANTLR4_rule.Sequence)):
+                    _s = s[-1]
+                    if isinstance(_s, ANTLR4_rule.Sequence):
+                        all_to_remove = True
+                        for s2 in _s:
+                            if (s2 not in IGNORED
+                                    and s2 != ANTLR4_rule.VisualNewline()
+                                    and not isinstance(s2, ANTLR4_rule.VisualIndent)):
+                                all_to_remove = False
+                        if _s and all_to_remove:
+                            s.pop()
+                            continue
+                break
+            if r.name == "signature":
+                # rm ()? as it is in ()? every where it is used
+                a, b = r.body[0].body
+                a = a.body
+                b = b.body
+                # ( ( type_mark ( COMMA type_mark )* )? ( RETURN type_mark )? )?
+                r.body = ANTLR4_rule.Selection([
+                    ANTLR4_rule.Sequence([a, ANTLR4_rule.VisualNewline(), ANTLR4_rule.VisualIndent(1)]),
+                    ANTLR4_rule.Sequence([a, b, ANTLR4_rule.VisualNewline(), ANTLR4_rule.VisualIndent(1)]),
+                    ANTLR4_rule.Sequence([b, ANTLR4_rule.VisualNewline()]),
+                ])
+
+    HEADER = """/*
+ * Grammar extracted from the VHDL 1993, 2002, 2008, 2018 standard and then merged together
+ * (the standard is selected by parser propery)
+ */
+
+grammar vhdl_body;
+"""
+    with open("vhdl_body.g4", "w") as f:
+        f.write("\n\n")
+        f.write(HEADER)
+        for kw in keywords:
+            r = ANTLR4_rule(kw, ANTLR4_rule.Sequence([
+                    ANTLR4_rule.Symbol(k, True) for k in kw
+                ]))
+            f.write(r.toAntlr4())
+            f.write("\n")
+
+        for k, v in VhdlRule2Antlr4Rule.SPEC_SYMB.items():
+            if k == "'":
+                k = "'\\''"
+            elif k == "\\":
+                k = "'\\\\'"
+            else:
+                k = "'%s'" % k
+            r = ANTLR4_rule(v, ANTLR4_rule.Symbol(k, True))
+            f.write(r.toAntlr4())
+            f.write("\n")
+
+        with open("vhdl_base.g4") as b:
+            f.write(b.read())
+        for r in p.rules:
+            f.write(r.toAntlr4())
+            f.write("\n")
+    # pprint(nts - def_nts)
 
