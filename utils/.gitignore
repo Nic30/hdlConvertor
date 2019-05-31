@@ -1,4 +1,3 @@
 *.pdf
-*.g4
+vhdl.g4
 *.g4_proto
-

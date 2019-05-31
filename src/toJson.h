@@ -9,7 +9,7 @@
 #include "hdlObjects/named.h"
 #include "hdlObjects/process.h"
 #include "hdlObjects/statement.h"
-#include "hdlObjects/generate.h"
+#include "hdlObjects/function.h"
 
 namespace hdlConvertor {
 
@@ -34,7 +34,7 @@ class ToJson {
 	static std::pair<PyObject *, size_t> cases_toJson(
 			std::vector<hdlObjects::Expr*>::const_iterator cond_begin,
 			std::vector<hdlObjects::Expr*>::const_iterator cond_end,
-			std::vector<std::vector<hdlObjects::Statement*>*>::const_iterator stms_begin);
+			std::vector<std::vector<hdlObjects::iHdlObj*>*>::const_iterator stms_begin);
 
 public:
 	static void toJson(const hdlObjects::WithPos * o, PyObject *d);
@@ -46,18 +46,16 @@ public:
 	static PyObject * toJson(const hdlObjects::Entity * c);
 	static PyObject * toJson(const hdlObjects::Expr * e);
 	static PyObject * toJson(const hdlObjects::Function * e);
+	static PyObject * toJson(const hdlObjects::iHdlObj * o);
 	static PyObject * toJson(const hdlObjects::Named * n);
-	static PyObject * toJson(const hdlObjects::WithDoc * wd);
-	static PyObject * toJson(const hdlObjects::WithNameAndDoc * wnd);
+	static PyObject * toJson(const hdlObjects::Operator * p);
+	static PyObject * toJson(const hdlObjects::Position * o);
 	static PyObject * toJson(const hdlObjects::Process * p);
-	static PyObject * toJson(const hdlObjects::Port * p);
 	static PyObject * toJson(const hdlObjects::Statement * p);
 	static PyObject * toJson(const hdlObjects::Symbol * p);
 	static PyObject * toJson(const hdlObjects::Variable * p);
-	static PyObject * toJson(const hdlObjects::Operator * p);
-	static PyObject * toJson(const hdlObjects::Generate * o);
-	static PyObject * toJson(const hdlObjects::Position * o);
-
+	static PyObject * toJson(const hdlObjects::WithDoc * wd);
+	static PyObject * toJson(const hdlObjects::WithNameAndDoc * wnd);
 
 #endif
 

@@ -2,15 +2,25 @@
 
 #include "named.h"
 #include "expr.h"
+#include "iHdlObj.h"
+#include "direction.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class Variable: public WithNameAndDoc {
+/*
+ * Class for representation of port constants, signals and other variables
+ *
+ * @note if variable is a port the direction is set to something else than Direction::DIR_INTERNAL
+ * @note latched flag corresponds to verilog "reg" or vhdl variable
+ **/
+class Variable: public WithNameAndDoc, public iHdlObj {
 public:
 	Expr * type;
 	Expr * value;
 	bool latched;
+	bool is_const;
+	Direction direction;
 
 	Variable(std::string id, Expr * type, Expr * val);
 	~Variable();

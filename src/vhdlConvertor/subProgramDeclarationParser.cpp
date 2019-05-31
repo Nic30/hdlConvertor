@@ -11,7 +11,6 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-
 Function * SubProgramDeclarationParser::visitSubprogram_declaration(
 		vhdlParser::Subprogram_declarationContext* ctx) {
 	// subprogram_declaration
@@ -57,9 +56,14 @@ Function * SubProgramDeclarationParser::visitFunction_specification(
 	// : ( PURE | IMPURE )? FUNCTION designator
 	// ( LPAREN formal_parameter_list RPAREN )? RETURN subtype_indication
 	// ;
+	// function_specification:
+	//       ( PURE IMPURE )? FUNCTION designator
+	//           subprogram_header
+	//           ( ( PARAMETER )? LPAREN formal_parameter_list RPAREN )? RETURN type_mark
+	// ;
+
 	auto designator = ctx->designator();
-	Expr * returnT = ExprParser::visitSubtype_indication(
-			ctx->subtype_indication());
+	Expr * returnT = ExprParser::visitType_mark(ctx->type_mark());
 	assert(returnT);
 
 	bool isOperator = LiteralParser::isStrDesignator(designator);
@@ -115,35 +119,30 @@ std::vector<Variable*>* SubProgramDeclarationParser::visitSubprogram_declarative
 	// | group_declaration
 	// ;
 
-auto sp = ctx->subprogram_declaration();
+	auto sp = ctx->subprogram_declaration();
 	if (sp) {
 		// SubProgramDeclarationParser::visitSubprogram_declaration(sp);
-		NotImplementedLogger::print(
-				"PackageParser.subprogram_declaration");
+		NotImplementedLogger::print("PackageParser.subprogram_declaration");
 	}
-    auto sb = ctx->subprogram_body();
+	auto sb = ctx->subprogram_body();
 	if (sb) {
 		//SubProgramParser::visitSubprogram_body(sb);
-		NotImplementedLogger::print(
-				"PackageParser.visitSubprogram_body");
+		NotImplementedLogger::print("PackageParser.visitSubprogram_body");
 	}
-    auto td = ctx->type_declaration();
+	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print(
-				"PackageParser.visitType_declaration");
+		NotImplementedLogger::print("PackageParser.visitType_declaration");
 	}
-    auto st = ctx->subtype_declaration();
+	auto st = ctx->subtype_declaration();
 	if (st) {
 		//SubtypeDeclarationParser::visitSubtype_declaration(st);
 
-		NotImplementedLogger::print(
-				"PackageParser.visitSubtype_declaration");
+		NotImplementedLogger::print("PackageParser.visitSubtype_declaration");
 	}
-    auto constd = ctx->constant_declaration();
+	auto constd = ctx->constant_declaration();
 	if (constd) {
 		// ConstantParser::visitConstant_declaration(constd);
-		NotImplementedLogger::print(
-				"PackageParser.visitConstant_declaration");
+		NotImplementedLogger::print("PackageParser.visitConstant_declaration");
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
@@ -151,25 +150,22 @@ auto sp = ctx->subprogram_declaration();
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print(
-				"PackageParser.visitFile_declaration");
+		NotImplementedLogger::print("PackageParser.visitFile_declaration");
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print(
-				"PackageParser.visitAlias_declaration");
+		NotImplementedLogger::print("PackageParser.visitAlias_declaration");
 	}
-    auto atrd = ctx->attribute_declaration();
+	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print(
-				"PackageParser.visitAttribute_declaration");
+		NotImplementedLogger::print("PackageParser.visitAttribute_declaration");
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
 				"PackageParser.visitAttribute_specification");
 	}
-    auto uc = ctx->use_clause();
+	auto uc = ctx->use_clause();
 	if (uc) {
 		NotImplementedLogger::print("PackageParser.visitUse_clause");
 	}
@@ -180,8 +176,7 @@ auto sp = ctx->subprogram_declaration();
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
-		NotImplementedLogger::print(
-				"PackageParser.visitGroup_declaration");
+		NotImplementedLogger::print("PackageParser.visitGroup_declaration");
 	}
 
 	NotImplementedLogger::print(

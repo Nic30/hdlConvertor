@@ -22,7 +22,7 @@ public:
 	static void visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 			std::vector<hdlObjects::Variable*> * generics);
 	static void visitPort_clause(vhdlParser::Port_clauseContext* ctx,
-			std::vector<hdlObjects::Port*> * ports);
+			std::vector<hdlObjects::Variable*> * ports);
 	static void visitEntity_header(hdlObjects::Entity * e,
 			vhdlParser::Entity_headerContext* ctx);
 	void visitEntity_statement_part(

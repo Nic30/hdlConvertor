@@ -28,9 +28,11 @@ public:
 	void visitModule_declaration(
 			Verilog2001Parser::Module_declarationContext * ctx);
 
-	void visitModule_item(Verilog2001Parser::Module_itemContext * ctx);
+	void visitModule_item(Verilog2001Parser::Module_itemContext * ctx,
+			std::vector<hdlObjects::iHdlObj*> & objs);
 	void visitModule_or_generate_item(
-			Verilog2001Parser::Module_or_generate_itemContext * ctx);
+			Verilog2001Parser::Module_or_generate_itemContext * ctx,
+			std::vector<hdlObjects::iHdlObj*> & objs);
 	void visitModule_or_generate_item_declaration(
 			Verilog2001Parser::Module_or_generate_item_declarationContext * ctx);
 	void visitReg_declaration(Verilog2001Parser::Reg_declarationContext * ctx);

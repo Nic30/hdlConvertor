@@ -11,11 +11,13 @@
 #include "exprItem.h"
 #include "symbol.h"
 #include "named.h"
+#include "iHdlObj.h"
+
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class Expr: public WithPos {
+class Expr: public WithPos, public iHdlObj {
 public:
 	ExprItem * data;
 

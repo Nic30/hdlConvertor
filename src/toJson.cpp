@@ -37,26 +37,8 @@ PyObject * ToJson::toJson(const WithNameAndDoc * o) {
 
 PyObject * ToJson::toJson(const aPackage * p) {
 	PyObject *d = toJson(static_cast<const WithNameAndDoc*>(p));
-	JSN_DEBUG("aPackage - components")
-	addJsonArrP(d, "components", p->components);
-
-	JSN_DEBUG("aPackage - function_headers")
-	addJsonArrP(d, "function_headers", p->function_headers);
-
-	JSN_DEBUG("aPackage - functions")
-	addJsonArrP(d, "functions", p->functions);
-
-	JSN_DEBUG("aPackage - subtype_headers")
-	addJsonArrP(d, "subtype_headers", p->subtype_headers);
-
-	JSN_DEBUG("aPackage - constants")
-	addJsonArrP(d, "signals", p->signals);
-
-	JSN_DEBUG("aPackage - constants")
-	addJsonArrP(d, "constants", p->constants);
-
-	JSN_DEBUG("aPackage - variables")
-	addJsonArrP(d, "variables", p->variables);
+	JSN_DEBUG("aPackage - objs")
+	addJsonArrP(d, "objs", p->objs);
 
 	return d;
 }
@@ -66,41 +48,10 @@ PyObject * ToJson::toJson(const Arch * a) {
 
 	JSN_DEBUG("Arch - entityName")
 	if (a->entityName)
-		PyDict_SetItemString(o, "entityName",
-				PyUnicode_FromString(a->entityName));
+		PyDict_SetItemString(o, "entityName", toJson(a->entityName));
 
-	JSN_DEBUG("Arch - variables")
-	addJsonArrP(o, "variables", a->variables);
-
-	JSN_DEBUG("Arch - componentInstances")
-	addJsonArrP(o, "componentInstances", a->componentInstances);
-
-	JSN_DEBUG("Arch - components")
-	addJsonArrP(o, "components", a->components);
-
-	JSN_DEBUG("Arch - function_headers")
-	addJsonArrP(o, "function_headers", a->function_headers);
-
-	JSN_DEBUG("Arch - functions")
-	addJsonArrP(o, "functions", a->functions);
-
-	JSN_DEBUG("Arch - subtype_headers")
-	addJsonArrP(o, "subtype_headers", a->subtype_headers);
-
-	JSN_DEBUG("Arch - variables")
-	addJsonArrP(o, "variables", a->variables);
-
-	JSN_DEBUG("Arch - signals")
-	addJsonArrP(o, "signals", a->signals);
-
-	JSN_DEBUG("Arch - constants")
-	addJsonArrP(o, "constants", a->constants);
-
-	JSN_DEBUG("Arch - statements")
-	addJsonArrP(o, "statements", a->statements);
-
-	JSN_DEBUG("Arch - generates")
-	addJsonArrP(o, "generates", a->generates);
+	JSN_DEBUG("Arch - objs")
+	addJsonArrP(o, "objs", a->objs);
 
 	return o;
 }
@@ -199,39 +150,12 @@ PyObject * ToJson::toJson(const WithDoc * wd) {
 	return d;
 }
 
-PyObject * ToJson::toJson(const Port * p) {
-	PyObject *d = PyDict_New();
-	PyDict_SetItemString(d, "direction",
-			PyUnicode_FromString(Direction_toString(p->direction)));
-	PyDict_SetItemString(d, "variable", toJson(p->variable));
-	return d;
-}
 PyObject * ToJson::toJson(const Process * p) {
 	PyObject *d = toJson(static_cast<const WithNameAndDoc*>(p));
 
 	if (p->sensitivity_list_specified)
 		addJsonArrP(d, "sensitivity_list", p->sensitivity_list);
-	addJsonArrP(d, "statements", p->statements);
-
-	JSN_DEBUG("Process - function_headers")
-	addJsonArrP(d, "function_headers", p->function_headers);
-
-	JSN_DEBUG("Process - functions")
-	addJsonArrP(d, "functions", p->functions);
-
-	JSN_DEBUG("Process - subtype_headers")
-	addJsonArrP(d, "subtype_headers", p->subtype_headers);
-
-	JSN_DEBUG("Process - constants")
-	addJsonArrP(d, "constants", p->constants);
-
-	JSN_DEBUG("Process - variable")
-	addJsonArrP(d, "variables", p->variables);
-
-	if (!p->statements.empty()) {
-		JSN_DEBUG("Process - body")
-		addJsonArrP(d, "body", p->statements);
-	}
+	addJsonArrP(d, "objs", p->objs);
 
 	return d;
 }
@@ -239,7 +163,7 @@ PyObject * ToJson::toJson(const Process * p) {
 pair<PyObject *, size_t> ToJson::cases_toJson(
 		vector<Expr*>::const_iterator cond_begin,
 		vector<Expr*>::const_iterator cond_end,
-		vector<vector<Statement*>*>::const_iterator stms_begin) {
+		vector<vector<iHdlObj*>*>::const_iterator stms_begin) {
 	PyObject * cases = nullptr;
 	size_t size = cond_end - cond_begin;
 	if (size)
@@ -383,6 +307,9 @@ PyObject* ToJson::toJson(const Variable * v) {
 
 	PyDict_SetItemString(d, "type", toJson(v->type));
 
+	PyDict_SetItemString(d, "direction",
+			PyUnicode_FromString(Direction_toString(v->direction)));
+
 	if (v->value) {
 		PyDict_SetItemString(d, "value", toJson(v->value));
 	} else {
@@ -418,44 +345,6 @@ PyObject * ToJson::toJson(const Operator * o) {
 	default:
 		throw runtime_error("Invalid arity of operator");
 	}
-	return d;
-}
-PyObject * ToJson::toJson(const Generate * o) {
-	PyObject *d = toJson(static_cast<const WithNameAndDoc*>(o));
-
-	PyDict_SetItemString(d, "type",
-			PyUnicode_FromString(GenerateType_toString(o->type)));
-
-	JSN_DEBUG("Generate - componentInstances")
-	addJsonArrP(d, "componentInstances", o->componentInstances);
-
-	JSN_DEBUG("Generate - components")
-	addJsonArrP(d, "components", o->components);
-
-	JSN_DEBUG("Generate - function_headers")
-	addJsonArrP(d, "function_headers", o->function_headers);
-
-	JSN_DEBUG("Generate - functions")
-	addJsonArrP(d, "functions", o->functions);
-
-	JSN_DEBUG("Generate - subtype_headers")
-	addJsonArrP(d, "subtype_headers", o->subtype_headers);
-
-	JSN_DEBUG("Generate - variables")
-	addJsonArrP(d, "variables", o->variables);
-
-	JSN_DEBUG("Generate - signals")
-	addJsonArrP(d, "signals", o->signals);
-
-	JSN_DEBUG("Generate - constants")
-	addJsonArrP(d, "constants", o->constants);
-
-	JSN_DEBUG("Generate - processes")
-	addJsonArrP(d, "processes", o->processes);
-
-	JSN_DEBUG("Generate - generates")
-	addJsonArrP(d, "generates", o->generates);
-
 	return d;
 }
 

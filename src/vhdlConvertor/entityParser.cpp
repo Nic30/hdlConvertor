@@ -3,7 +3,6 @@
 #include "../hdlObjects/expr.h"
 #include "interfaceParser.h"
 
-
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -15,15 +14,17 @@ EntityParser::EntityParser(bool _hierarchyOnly) {
 }
 Entity * EntityParser::visitEntity_declaration(
 		vhdlParser::Entity_declarationContext* ctx) {
-
-	// entity_declaration
-	// : ENTITY identifier IS entity_header
-	// entity_declarative_part
-	// ( BEGIN entity_statement_part )?
-	// END ( ENTITY )? ( identifier )? SEMI
+	// entity_declaration:
+	//       ENTITY identifier IS
+	//           entity_header
+	//           entity_declarative_part
+	//       ( BEGIN
+	//           entity_statement_part )?
+	//       END ( ENTITY )? ( simple_name )? SEMI
 	// ;
+
 	Entity * e = new Entity();
-	e->name = strdup(ctx->identifier(0)->getText().c_str());
+	e->name = strdup(ctx->identifier()->getText().c_str());
 	// entity_declarative_part
 	// : ( entity_declarative_item )*
 	// ;
@@ -33,7 +34,7 @@ Entity * EntityParser::visitEntity_declaration(
 			visitEntity_declarative_item(d);
 		}
 	}
-	e->position = Position(ctx->getStart()->getLine(), ctx->getStop()->getLine(), -1, -1);
+	e->position.update_from_elem(ctx);
 	return e;
 }
 
@@ -67,44 +68,36 @@ void EntityParser::visitEntity_declarative_item(
 void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 		std::vector<Variable*> * generics) {
 	if (ctx) {
-		// generic_clause
-		// : GENERIC LPAREN generic_list RPAREN SEMI
+		// generic_clause:
+		//       GENERIC LPAREN generic_list RPAREN SEMI
 		// ;
-		// generic_list
-		// : interface_constant_declaration (SEMI
-		// interface_constant_declaration)*
-		// ;
+		// generic_list: interface_list;
 		auto gl = ctx->generic_list();
-		for (auto ic : gl->interface_constant_declaration()) {
-			std::vector<Variable*> * vl =
-					InterfaceParser::visitInterface_constant_declaration(ic);
-			for (auto v : *vl) {
-				assert(v);
-				generics->push_back(v);
-			}
-			delete vl;
+		auto gs = InterfaceParser::visitInterface_list(gl->interface_list());
+		for (auto v : *gs) {
+			assert(v);
+			generics->push_back(v);
 		}
+		delete gs;
 	}
 }
 void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
-		std::vector<Port*> * ports) {
+		std::vector<Variable*> * ports) {
 	if (ctx) {
-		// port_clause
-		// : PORT LPAREN port_list RPAREN SEMI
+		// port_clause:
+		//       PORT LPAREN port_list RPAREN SEMI
 		// ;
-		// port_list
-		// : interface_port_list
-		// ;
+		// port_list: interface_list;
 		auto pl = ctx->port_list();
-		auto ipl = pl->interface_port_list();
-		// interface_port_list
-		// : interface_port_declaration ( SEMI interface_port_declaration )*
+		auto il = pl->interface_list();
+		// interface_list:
+		//       interface_element ( SEMI interface_element )*
 		// ;
 
-		for (auto ipd : ipl->interface_port_declaration()) {
-			auto ps = InterfaceParser::visitInterface_port_declaration(ipd);
-			for (Port * p : *ps) {
-				p->variable->position = Position(ipd->getStart()->getLine(), ipd->getStop()->getLine(), -1, -1);
+		for (auto ie : il->interface_element()) {
+			auto ps = InterfaceParser::visitInterface_element(ie);
+			for (Variable * p : *ps) {
+				p->position.update_from_elem(ie);
 				ports->push_back(p);
 			}
 			delete ps;
@@ -113,11 +106,11 @@ void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 }
 void EntityParser::visitEntity_header(Entity * e,
 		vhdlParser::Entity_headerContext* ctx) {
-// entity_header
-// : ( generic_clause )?
-// ( port_clause )?
-// ;
-//
+	// entity_header
+	// : ( generic_clause )?
+	// ( port_clause )?
+	// ;
+	//
 	auto g = ctx->generic_clause();
 	visitGeneric_clause(g, &e->generics);
 	auto pc = ctx->port_clause();

@@ -2,6 +2,7 @@
 #include "literalParser.h"
 #include "exprParser.h"
 #include "../notImplementedLogger.h"
+#include "../hdlObjects/operatorType.h"
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -23,23 +24,26 @@ Expr * ReferenceParser::visitSelected_name(
 }
 
 Expr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
-	// suffix
-	// : identifier
-	// | CHARACTER_LITERAL
-	// | STRING_LITERAL
-	// | ALL
-	// ;
-	auto id = ctx->identifier();
+	//suffix:
+	//      simple_name
+	//      | character_literal
+	//      | operator_symbol
+	//      | ALL
+	//;
+
+	auto id = ctx->simple_name();
 	if (id)
-		return LiteralParser::visitIdentifier(id);
+		return ReferenceParser::visitSimple_name(id);
 
-	auto n = ctx->CHARACTER_LITERAL();
+	auto n = ctx->character_literal();
 	if (n)
-		return LiteralParser::visitCHARACTER_LITERAL(n);
-	n = ctx->STRING_LITERAL();
-	if (n)
-		return LiteralParser::visitSTRING_LITERAL(n);
-
+		return LiteralParser::visitCharacter_literal(n);
+	// operator_symbol: string_literal;
+	auto o = ctx->operator_symbol();
+	if (o) {
+		auto sl = o->string_literal();
+		return LiteralParser::visitString_literal(sl);
+	}
 	return Expr::all();
 }
 
@@ -67,7 +71,7 @@ Expr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
 	return op0;
 }
 
-Expr * ReferenceParser::visitName_attribute_part(Expr * selectedName,
+Expr * ReferenceParser::visitName_attribute_part(
 		vhdlParser::Name_attribute_partContext* ctx) {
 	// name_attribute_part
 	// : APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
@@ -76,48 +80,32 @@ Expr * ReferenceParser::visitName_attribute_part(Expr * selectedName,
 	if (expressions.size() > 0)
 		NotImplementedLogger::print(
 				"ExprParser.visitName_attribute_part - expression");
-	return visitAttribute_designator(selectedName, ctx->attribute_designator());
+	return visitAttribute_designator(ctx->attribute_designator());
+}
+Expr* ReferenceParser::visitAttribute_name(
+		vhdlParser::Attribute_nameContext *ctx) {
+	// attribute_name:
+	//       prefix ( signature )? APOSTROPHE attribute_designator ( LPAREN expression RPAREN )?
+	// ;
+	Expr * p = ExprParser::visitPrefix(ctx->prefix());
+	auto s = ctx->signature();
+	if (s)
+		NotImplementedLogger::print(
+				"ExprParser.visitAttribute_name - signature");
+	auto ad = ctx->attribute_designator();
+	Expr * res = new Expr(p, OperatorType::DOT, visitAttribute_designator(ad));
+	auto e = ctx->expression();
+	if (e)
+		res = new Expr(res, OperatorType::INDEX,
+				ExprParser::visitExpression(e));
+
+	return res;
 }
 
-Expr * ReferenceParser::visitAttribute_designator(Expr * selectedName,
+Expr * ReferenceParser::visitAttribute_designator(
 		vhdlParser::Attribute_designatorContext* ctx) {
-	// attribute_designator
-	// : identifier
-	// | RANGE
-	// | REVERSE_RANGE
-	// | ACROSS
-	// | THROUGH
-	// | REFERENCE
-	// | TOLERANCE
-	// ;
-	auto idctx = ctx->identifier();
-	if (idctx) {
-		Expr * id = LiteralParser::visitIdentifier(idctx);
-		return new Expr(selectedName, DOT, id);
-	}
-
-	if (ctx->RANGE()) {
-		return new Expr(selectedName, RANGE, NULL);
-	}
-
-	if (ctx->REVERSE_RANGE()) {
-		return new Expr(selectedName, REVERSE_RANGE, NULL);
-	}
-
-	if (ctx->ACROSS()) {
-		return new Expr(selectedName, ACROSS, NULL);
-	}
-
-	if (ctx->THROUGH()) {
-		return new Expr(selectedName, THROUGH, NULL);
-	}
-
-	if (ctx->REFERENCE()) {
-		return new Expr(selectedName, REFERENCE, NULL);
-	}
-
-	assert(ctx->TOLERANCE());
-	return new Expr(selectedName, TOLERANCE, NULL);
+	// attribute_designator: simple_name;
+	return visitSimple_name(ctx->simple_name());
 }
 
 Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
@@ -130,7 +118,8 @@ Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
 
 	auto na = ctx->name_attribute_part();
 	if (na) {
-		return visitName_attribute_part(selectedName, na);
+		return new Expr(selectedName, OperatorType::DOT,
+				visitName_attribute_part(na));
 	}
 	auto callOrIndx = ctx->name_function_call_or_indexed_part();
 	if (callOrIndx) {
@@ -169,6 +158,11 @@ std::vector<Expr*> * ReferenceParser::visitName_slice_part(
 		sp->push_back(ExprParser::visitExplicit_range(er));
 	}
 	return sp;
+}
+
+Expr * ReferenceParser::visitSimple_name(vhdlParser::Simple_nameContext * ctx) {
+	// simple_name: identifier;
+	return LiteralParser::visitIdentifier(ctx->identifier());
 }
 
 }

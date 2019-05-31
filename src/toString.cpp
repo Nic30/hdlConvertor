@@ -8,13 +8,7 @@ using namespace hdlObjects;
 void ToString::dump(const aPackage * p, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(p), indent);
 	indent += INDENT_INCR;
-	dumpArrP("components", indent, p->components) << ",\n";
-	dumpArrP("function_headers", indent, p->function_headers) << ",\n";
-	dumpArrP("functions", indent, p->functions) << "\n";
-    dumpArrP("subtype_headers", indent, p->subtype_headers) << ",\n";
-    dumpArrP("signals", indent, p->signals) << ",\n";
-    dumpArrP("constants", indent, p->constants) << ",\n";
-	dumpArrP("variables", indent, p->variables) << ",\n";
+	dumpArrP("objs", indent, p->objs) << ",\n";
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
 }
@@ -70,15 +64,6 @@ void ToString::dump(const WithNameAndDoc * wnd, int indent) {
 	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << wnd->__doc__.c_str()
 			<< "\",\n";
 }
-void ToString::dump(const Port * p, int indent) {
-	std::cout << "{\n";
-	indent += INDENT_INCR;
-	dumpVal("direction", indent, Direction_toString(p->direction)) << ",\n";
-	dumpKey("variable", indent);
-	dump(p->variable, indent);
-	std::cout << "\n";
-	mkIndent(indent - INDENT_INCR) << "}";
-}
 void ToString::dump(const Symbol * s, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
@@ -124,7 +109,7 @@ void ToString::dump(const Variable * v, int indent) {
 	dumpKey("type", indent);
 	dump(v->type, indent);
 	std::cout << ",\n";
-
+	dumpVal("direction", indent, Direction_toString(v->direction)) << ",\n";
 	if (v->value) {
 		dumpKey("value", indent) << "\n";
 		dump(v->value, indent);
@@ -160,11 +145,7 @@ void ToString::dump(const Operator * o, int indent) {
 void ToString::dump(const Process * p, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
-	dumpArrP("function_headers", indent, p->function_headers) << ",\n";
-	dumpArrP("functions", indent, p->functions) << ",\n";
-	dumpArrP("subtype_headers", indent, p->subtype_headers) << ",\n";
-	dumpArrP("constants", indent, p->constants) << ",\n";
-	dumpArrP("variables", indent, p->variables) << ",\n";
+	dumpArrP("objs", indent, p->objs) << ",\n";
 	if (p->sensitivity_list_specified)
 		dumpArrP("sensitivity_list", indent, p->sensitivity_list) << ",\n";
 
@@ -173,21 +154,6 @@ void ToString::dump(const Process * p, int indent) {
 	mkIndent(indent) << "}";
 }
 
-void ToString::dump(const Generate * o, int indent) {
-	mkIndent(indent) << "{\n";
-	indent += INDENT_INCR;
-	dumpArrP("componentInstances", indent, o->componentInstances) << ",\n";
-	dumpArrP("components", indent, o->components) << ",\n";
-	dumpArrP("constants", indent, o->constants) << ",\n";
-	dumpArrP("function_headers", indent, o->function_headers) << ",\n";
-	dumpArrP("functions", indent, o->functions) << ",\n";
-	dumpArrP("subtype_headers", indent, o->subtype_headers) << ",\n";
-	dumpArrP("variables", indent, o->variables) << ",\n";
-	dumpArrP("processes", indent, o->processes) << ",\n";
-	dumpArrP("generates", indent, o->generates) << ",\n";
-	indent -= INDENT_INCR;
-	mkIndent(indent) << "}";
-}
 void ToString::dump(const Position * o, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;

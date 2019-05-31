@@ -18,11 +18,10 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 	// ( generic_map_aspect )?
 	// ( port_map_aspect )? SEMI
 	// ;
-	char * name = LiteralParser::visitLabel_colon(ctx->label_colon());
+	char * name = LiteralParser::visitLabel(ctx->label());
 	CompInstance * ci = visitInstantiated_unit(ctx->instantiated_unit());
 	ci->name = Expr::ID(name);
-	ci->position.startLine = ctx->getStart()->getLine(), ci->position.startColumn =
-			ctx->getStop()->getLine();
+	ci->position.update_from_elem(ctx);
 
 	auto gma = ctx->generic_map_aspect();
 	if (gma) {
@@ -43,16 +42,7 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 
 	return ci;
 }
-char * CompInstanceParser::visitLabel_colon(
-		vhdlParser::Label_colonContext * ctx) {
-	// label_colon
-	// : identifier COLON
-	// ;
-	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
-	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
-	delete e;
-	return s;
-}
+
 CompInstance * CompInstanceParser::visitInstantiated_unit(
 		vhdlParser::Instantiated_unitContext* ctx) {
 	// instantiated_unit

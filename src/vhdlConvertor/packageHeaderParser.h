@@ -4,6 +4,7 @@
 #include "vhdlParser/vhdlParser.h"
 #include "../notImplementedLogger.h"
 #include "../hdlObjects/named.h"
+#include "../hdlObjects/entity.h"
 #include "../hdlObjects/expr.h"
 #include "../hdlObjects/function.h"
 #include "../hdlObjects/variable.h"

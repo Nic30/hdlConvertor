@@ -3,6 +3,7 @@
 #include <vector>
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/expr.h"
+#include "../hdlObjects/operatorType.h"
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -21,16 +22,23 @@ public:
 	static Expr* visitFormal_part(vhdlParser::Formal_partContext* ctx);
 	static Expr* visitExplicit_range(vhdlParser::Explicit_rangeContext* ctx);
 	static Expr* visitRange(vhdlParser::RangeContext* ctx);
+	static Expr* visitPrefix(vhdlParser::PrefixContext * ctx);
+	static Expr* visitFunction_call(vhdlParser::Function_callContext *ctx);
 	static Expr* visitActual_part(vhdlParser::Actual_partContext* ctx);
 	static Expr* visitActual_designator(
 			vhdlParser::Actual_designatorContext* ctx);
 	static Expr* visitSubtype_indication(
 			vhdlParser::Subtype_indicationContext* ctx);
+	static Expr * visitResolution_indication(
+			vhdlParser::Resolution_indicationContext * ctx);
 	static Expr* visitConstraint(Expr * selectedName,
 			vhdlParser::ConstraintContext* ctx);
+	static Expr* visitArray_constraint(
+			vhdlParser::Array_constraintContext * ctx);
 	static Expr* visitIndex_constraint(
 			vhdlParser::Index_constraintContext* ctx);
 	static Expr* visitDiscrete_range(vhdlParser::Discrete_rangeContext* ctx);
+	static hdlObjects::OperatorType visitSign(vhdlParser::SignContext * ctx);
 	static Expr* visitSimple_expression(
 			vhdlParser::Simple_expressionContext* ctx);
 	static Expr* visitExpression(vhdlParser::ExpressionContext* ctx);
@@ -61,6 +69,7 @@ public:
 	static Expr * visitProcedure_call_statement(
 			vhdlParser::Procedure_call_statementContext * ctx);
 	static Expr * visitProcedure_call(vhdlParser::Procedure_callContext * ctx);
+	static Expr * visitType_mark(vhdlParser::Type_markContext * ctx);
 };
 
 }

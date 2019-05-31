@@ -17,7 +17,8 @@ namespace hdlConvertor {
 namespace verilog {
 
 ModuleParser::ModuleParser(CommentParser & commentParser, Context * _context,
-		bool _hierarchyOnly) : commentParser(commentParser) {
+		bool _hierarchyOnly) :
+		commentParser(commentParser) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
 	ent = new Entity();
@@ -64,7 +65,7 @@ void ModuleParser::visitModule_declaration(
 	}
 
 	for (auto mi : ctx->module_item())
-		visitModule_item(mi);
+		visitModule_item(mi, arch->objs);
 
 	auto lpd = ctx->list_of_port_declarations();
 	if (lpd) {
@@ -79,12 +80,12 @@ void ModuleParser::visitModule_declaration(
 		visitNon_port_module_item(npmi);
 
 	context->entities.push_back(ent);
-	arch->entityName = strdup(ent->name);
+	arch->entityName = Expr::ID(ent->name);
 	context->architectures.push_back(arch);
 }
 
-void ModuleParser::visitModule_item(
-		Verilog2001Parser::Module_itemContext* ctx) {
+void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
+		std::vector<hdlObjects::iHdlObj*> & objs) {
 	// module_item :
 	// module_or_generate_item
 	// | port_declaration ';'
@@ -96,7 +97,7 @@ void ModuleParser::visitModule_item(
 	// ;
 	auto mog = ctx->module_or_generate_item();
 	if (mog) {
-		visitModule_or_generate_item(mog);
+		visitModule_or_generate_item(mog, objs);
 		return;
 	}
 	string doc = commentParser.parse(ctx);
@@ -106,11 +107,17 @@ void ModuleParser::visitModule_item(
 		PortParser pp(commentParser);
 		auto portsDeclr = pp.visitPort_declaration(pd);
 		for (auto declr : *portsDeclr) {
-			Port * p = ent->getPortByName(declr->variable->name);
+			Variable * p = ent->getPortByName(declr->name);
 			p->direction = declr->direction;
-			p->variable = declr->variable;
-			p->variable->__doc__ += doc;
-			declr->variable = nullptr;
+			assert(p == nullptr);
+			p->type = declr->type;
+			assert(p->value == nullptr);
+			p->value = declr->value;
+			p->latched |= declr->latched;
+			p->is_const |= declr->is_const;
+			if (p->direction == Direction::DIR_UNKNOWN)
+				p->direction = declr->direction;
+			p->__doc__ += doc;
 			delete declr;
 		}
 		delete portsDeclr;
@@ -150,7 +157,8 @@ void ModuleParser::visitModule_item(
 }
 
 void ModuleParser::visitModule_or_generate_item(
-		Verilog2001Parser::Module_or_generate_itemContext * ctx) {
+		Verilog2001Parser::Module_or_generate_itemContext * ctx,
+		std::vector<hdlObjects::iHdlObj*> & objs) {
 	//module_or_generate_item
 	//   : attribute_instance* module_or_generate_item_declaration
 	//   | attribute_instance* parameter_override
@@ -181,7 +189,7 @@ void ModuleParser::visitModule_or_generate_item(
 	if (ca) {
 		VerStatementParser stmp(commentParser);
 		for (auto stm : stmp.vistContinuous_assign(ca))
-			arch->statements.push_back(stm);
+			objs.push_back(stm);
 		return;
 	}
 
@@ -195,7 +203,7 @@ void ModuleParser::visitModule_or_generate_item(
 	if (mi) {
 		auto components = ModuleInstanceParser::visitModule_instantiation(mi);
 		for (auto c : components) {
-			arch->componentInstances.push_back(c);
+			objs.push_back(c);
 		}
 		return;
 	}
@@ -210,10 +218,10 @@ void ModuleParser::visitModule_or_generate_item(
 	if (a) {
 		auto stm = VerStatementParser::visitAlways_construct(a);
 		if (stm.first)
-			arch->statements.push_back(stm.first);
+			objs.push_back(stm.first);
 		else if (stm.second) {
 			for (Statement * s : *stm.second) {
-				arch->statements.push_back(s);
+				objs.push_back(s);
 			}
 		}
 		return;
@@ -347,12 +355,12 @@ void ModuleParser::visitNet_declaration(
 	auto ln = ctx->list_of_net_identifiers();
 	if (ln) {
 		for (auto v : visitList_of_net_identifiers(ln, t)) {
-			arch->variables.push_back(v);
+			arch->objs.push_back(v);
 		}
 	} else {
 		auto lna = ctx->list_of_net_decl_assignments();
 		for (auto v : visitList_of_net_decl_assignments(lna, t)) {
-			arch->variables.push_back(v);
+			arch->objs.push_back(v);
 		}
 	}
 }
@@ -441,7 +449,7 @@ void ModuleParser::visitList_of_variable_identifiers(
 			base_type = new Expr(*base_type);
 		Variable * v = visitVariable_type(vt, base_type);
 		v->latched = latched;
-		arch->variables.push_back(v);
+		arch->objs.push_back(v);
 		first = false;
 	}
 }
@@ -501,7 +509,7 @@ void ModuleParser::visitNon_port_module_item(
 	}
 	auto mg = ctx->module_or_generate_item();
 	if (mg) {
-		visitModule_or_generate_item(mg);
+		visitModule_or_generate_item(mg, arch->objs);
 		return;
 	}
 	auto pd = ctx->parameter_declaration();

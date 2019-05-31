@@ -5,20 +5,19 @@
 #include "statementParser.h"
 #include "../notImplementedLogger.h"
 
-#include "packageHeaderParser.h"
 #include "compInstanceParser.h"
-#include "exprParser.h"
+#include "constantParser.h"
 #include "entityParser.h"
+#include "exprParser.h"
 #include "interfaceParser.h"
 #include "literalParser.h"
+#include "packageHeaderParser.h"
 #include "referenceParser.h"
-#include "subProgramDeclarationParser.h"
-#include "variableParser.h"
-#include "constantParser.h"
 #include "statementParser.h"
-#include "subtypeDeclarationParser.h"
+#include "subProgramDeclarationParser.h"
 #include "subProgramParser.h"
-
+#include "subtypeDeclarationParser.h"
+#include "variableParser.h"
 
 
 namespace hdlConvertor {
@@ -33,12 +32,12 @@ PackageParser::PackageParser(bool _hierarchyOnly) {
 }
 Package * PackageParser::visitPackage_body(
 		vhdlParser::Package_bodyContext* ctx) {
-	// package_body
-	// : PACKAGE BODY identifier IS
-	// package_body_declarative_part
-	// END ( PACKAGE BODY )? ( identifier )? SEMI
+	// package_body:
+	//       PACKAGE BODY simple_name IS
+	//           package_body_declarative_part
+	//       END ( PACKAGE BODY )? ( simple_name )? SEMI
 	// ;
-	Expr * id = LiteralParser::visitIdentifier(ctx->identifier(0));
+	Expr * id = ReferenceParser::visitSimple_name(ctx->simple_name(0));
 	p->name = strdup(id->extractStr());
 	delete id;
 
@@ -75,15 +74,36 @@ void PackageParser::visitPackage_body_declarative_item(
 	//   | group_declaration
 	//   ;
     //
+	//package_body_declarative_item:
+	//      subprogram_declaration
+	//      | subprogram_body
+	//      | subprogram_instantiation_declaration
+	//      | package_declaration
+	//      | package_body
+	//      | package_instantiation_declaration
+	//      | type_declaration
+	//      | subtype_declaration
+	//      | constant_declaration
+	//      | variable_declaration
+	//      | file_declaration
+	//      | alias_declaration
+	//      | attribute_declaration
+	//      | attribute_specification
+	//      | use_clause
+	//      | group_template_declaration
+	//      | group_declaration
+	//;
+
+
     auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		p->function_headers.push_back(SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		p->objs.push_back(SubProgramDeclarationParser::visitSubprogram_declaration(sp));
         return;
 	}
     auto sb = ctx->subprogram_body();
 	if (sb) {
 		Function * f = SubProgramParser::visitSubprogram_body(sb);
-		p->functions.push_back(f);
+		p->objs.push_back(f);
 		return;
 	}
     auto td = ctx->type_declaration();
@@ -95,14 +115,14 @@ void PackageParser::visitPackage_body_declarative_item(
     auto st = ctx->subtype_declaration();
 	if (st) {
 		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
-		p->subtype_headers.push_back(_st);
+		p->objs.push_back(_st);
 		return;
 	}
     auto constd = ctx->constant_declaration();
 	if (constd) {
 		auto constants = ConstantParser::visitConstant_declaration(constd);
 		for (auto c : *constants) {
-			p->constants.push_back(c);
+			p->objs.push_back(c);
 		}
 		delete constants;
         return;
@@ -111,7 +131,7 @@ void PackageParser::visitPackage_body_declarative_item(
 	if (vd) {
 		auto variables = VariableParser::visitVariable_declaration(vd);
 		for (auto v : *variables) {
-			p->variables.push_back(v);
+			p->objs.push_back(v);
 		}
 		delete variables;
         return;

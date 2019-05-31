@@ -482,6 +482,7 @@ if __name__ == "__main__":
         'format_effector', 'space_character', 'underline']}
     renames["mode"] = "signal_mode"
     renames["E"] = "E_SIGN"
+    renames["NULL"] = "NULL_SYM"
     for k, v in VhdlRule2Antlr4Rule.SPEC_SYMB.items():
         renames[k] = v
 
@@ -558,9 +559,9 @@ if __name__ == "__main__":
  * (the standard is selected by parser propery)
  */
 
-grammar vhdl_body;
+grammar vhdl;
 """
-    with open("vhdl_body.g4", "w") as f:
+    with open("vhdl.g4", "w") as f:
         f.write("\n\n")
         f.write(HEADER)
         for kw in keywords:

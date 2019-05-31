@@ -141,7 +141,7 @@ Statement * VerStatementParser::visitCase_statement(
 	}
 	auto switchOn = VerExprParser::visitExpression(ctx->expression());
 	std::vector<Statement::case_t> cases;
-	vector<Statement*> * default_ = nullptr;
+	vector<iHdlObj*> * default_ = nullptr;
 	auto _cases = ctx->case_item();
 	cases.reserve(_cases.size());
 	for (auto _c : _cases) {
@@ -171,10 +171,16 @@ std::vector<Statement::case_t> VerStatementParser::visitCase_item(
 		for (auto c : conds) {
 			auto ce = VerExprParser::visitExpression(c);
 			// [TODO] it would be better to copy the statements instead of parsing again
-			res.push_back( { ce, visitStatement_or_null__wrapped(stms) });
+			auto _stms =
+					reinterpret_cast<vector<iHdlObj*>*>(visitStatement_or_null__wrapped(
+							stms));
+			res.push_back( { ce, _stms });
 		}
 	} else {
-		res.push_back( { nullptr, visitStatement_or_null__wrapped(stms) });
+		auto _stms =
+				reinterpret_cast<vector<iHdlObj*>*>(visitStatement_or_null__wrapped(
+						stms));
+		res.push_back( { nullptr, _stms });
 	}
 	return res;
 }
@@ -235,11 +241,11 @@ Statement * VerStatementParser::visitConditional_statement(
 		auto cond = VerExprParser::visitExpression(e);
 		auto ifTrue = visitStatement_or_null__wrapped(
 				ctx->statement_or_null(0));
-		auto ifFalse = ctx->statement_or_null(1);
-		return Statement::IF(cond, ifTrue,
-				visitStatement_or_null__wrapped(ifFalse));
+		auto _ifFalse = ctx->statement_or_null(1);
+		auto ifFalse = visitStatement_or_null__wrapped(_ifFalse);
+		return Statement::IF(cond, ifTrue, ifFalse);
 	}
-
+	// [TODO] must have feature
 	// if_else_if_statement
 	//    : 'if' '(' expression ')' statement_or_null ('else' 'if' '(' expression ')' statement_or_null)* ('else' statement_or_null)?
 	//    ;
@@ -253,7 +259,9 @@ Statement * VerStatementParser::visitProcedural_timing_control_statement(
 	//    : delay_or_event_control statement_or_null
 	//    ;
 	auto sens_list = visitDelay_or_event_control(ctx->delay_or_event_control());
-	auto stms = visitStatement_or_null__wrapped(ctx->statement_or_null());
+	auto stms =
+			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__wrapped(
+					ctx->statement_or_null()));
 	return Statement::PROCESS(sens_list, stms);
 }
 

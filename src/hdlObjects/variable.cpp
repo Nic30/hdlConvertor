@@ -8,6 +8,8 @@ Variable::Variable(std::string id, Expr * _type, Expr * val) {
 	type = _type;
 	value = val;
 	latched = false;
+	is_const = false;
+	direction = Direction::DIR_INTERNAL;
 }
 
 Variable::~Variable() {

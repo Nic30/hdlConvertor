@@ -4,11 +4,12 @@
 #include "expr.h"
 #include "variable.h"
 #include "statement.h"
+#include "iHdlObj.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class Function: public WithNameAndDoc {
+class Function: public WithNameAndDoc, public iHdlObj {
 public:
 	const bool isOperator;
 	const Expr * returnT;

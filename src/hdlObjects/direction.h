@@ -4,7 +4,13 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 enum Direction {
-	DIR_IN, DIR_OUT, DIR_INOUT, DIR_BUFFER, DIR_LINKAGE, DIR_UNKNOWN,
+	DIR_IN,
+	DIR_OUT,
+	DIR_INOUT,
+	DIR_BUFFER,
+	DIR_LINKAGE,
+	DIR_INTERNAL,
+	DIR_UNKNOWN,
 };
 
 inline const char * Direction_toString(Direction d) {
@@ -19,6 +25,8 @@ inline const char * Direction_toString(Direction d) {
 		return "BUFFER";
 	case DIR_LINKAGE:
 		return "LINKAGE";
+	case DIR_INTERNAL:
+		return "INTERNAL";
 	default:
 		throw "Invalid direction value";
 	}

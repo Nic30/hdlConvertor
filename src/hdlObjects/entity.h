@@ -1,19 +1,20 @@
 #pragma once
 #include "named.h"
 #include "variable.h"
-#include "port.h"
 #include "position.h"
+#include "iHdlObj.h"
+
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class Entity: public WithNameAndDoc {
+class Entity: public WithNameAndDoc, public iHdlObj {
 public:
 	std::vector<Variable*> generics;
-	std::vector<Port*> ports;
+	std::vector<Variable*> ports;
 
 	Entity();
-	Port * getPortByName(const char * name);
+	Variable * getPortByName(const char * name);
 	~Entity();
 };
 

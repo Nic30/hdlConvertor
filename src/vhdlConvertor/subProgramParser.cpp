@@ -74,13 +74,13 @@ Function * SubProgramParser::visitProcedure_specification(
 
 Function * SubProgramParser::visitFunction_specification(
 		vhdlParser::Function_specificationContext* ctx) {
-	// function_specification
-	// : ( PURE | IMPURE )? FUNCTION designator
-	// ( LPAREN formal_parameter_list RPAREN )? RETURN subtype_indication
+	// function_specification:
+	//       ( PURE IMPURE )? FUNCTION designator
+	//           subprogram_header
+	//           ( ( PARAMETER )? LPAREN formal_parameter_list RPAREN )? RETURN type_mark
 	// ;
 	auto designator = ctx->designator();
-	Expr * returnT = ExprParser::visitSubtype_indication(
-			ctx->subtype_indication());
+	Expr * returnT = ExprParser::visitType_mark(ctx->type_mark());
 	assert(returnT);
 
 	bool isOperator = LiteralParser::isStrDesignator(designator);

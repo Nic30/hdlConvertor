@@ -3,11 +3,12 @@
 #include "named.h"
 #include "expr.h"
 #include "position.h"
+#include "iHdlObj.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class CompInstance: public WithDoc, public WithPos {
+class CompInstance: public WithDoc, public WithPos, public iHdlObj {
 public:
 	Expr * name;
 	Expr * entityName;

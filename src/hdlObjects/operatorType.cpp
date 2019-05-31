@@ -52,6 +52,12 @@ static const char* const opTypeToStr[] = {
 		"RISING",
 		"FALLING",
 		"MAP_ASSOCIATION",
+		"MATCH_EQ",
+		"MATCH_NEQ",
+		"MATCH_LT",
+		"MATCH_LE",
+		"MATCH_GT",
+		"MATCH_GE",
 };
 
 const char* OperatorType_toString(OperatorType opt) {

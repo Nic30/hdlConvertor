@@ -18,9 +18,11 @@ public:
 
 	static Process * visitProcess_statement(
 			vhdlParser::Process_statementContext * ctx);
-	static char * visitLabel_colon(vhdlParser::Label_colonContext * ctx);
-	static std::vector<Expr*> * visitSensitivity_list(
-			vhdlParser::Sensitivity_listContext *ctx);
+	static void visitProcess_sensitivity_list(
+			vhdlParser::Process_sensitivity_listContext *ctx,
+			std::vector<Expr*> & sensitivity);
+	static void visitSensitivity_list(vhdlParser::Sensitivity_listContext *ctx,
+			std::vector<Expr*> & sensitivity);
 	static void visitProcess_declarative_item(
 			vhdlParser::Process_declarative_itemContext *ctx, Process * p);
 	static void visitProcess_declarative_part(

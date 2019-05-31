@@ -34,21 +34,22 @@ const char * StatementType_toString(StatementType type) {
 Statement::Statement(StatementType type) {
 	this->type = type;
 	exprs.reserve(4);
+	in_preproc = false;
 }
 Statement * Statement::EXPR(Expr * e) {
 	Statement * s = new Statement(s_EXPR);
 	s->exprs.push_back(e);
 	return s;
 }
-Statement* Statement::IF(Expr * cond, vector<Statement*> * ifTrue) {
+Statement* Statement::IF(Expr * cond, vector<iHdlObj*> * ifTrue) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(ifTrue);
 
 	return s;
 }
-Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
-		vector<Statement*>* ifFalse) {
+Statement* Statement::IF(Expr * cond, vector<iHdlObj*>* ifTrue,
+		vector<iHdlObj*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2);
@@ -57,8 +58,8 @@ Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
 		s->sub_statements.push_back(ifFalse);
 	return s;
 }
-Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
-		const vector<case_t> & elseIfs, vector<Statement*>* ifFalse) {
+Statement* Statement::IF(Expr * cond, vector<iHdlObj*>* ifTrue,
+		const vector<case_t> & elseIfs, vector<iHdlObj*>* ifFalse) {
 	Statement * s = new Statement(s_IF);
 	s->exprs.reserve(1 + elseIfs.size());
 	s->exprs.push_back(cond);
@@ -72,8 +73,25 @@ Statement* Statement::IF(Expr * cond, vector<Statement*>* ifTrue,
 		s->sub_statements.push_back(ifFalse);
 	return s;
 }
+
+Statement* Statement::IF(Expr* cond, vector<Statement*>* ifTrue) {
+	return Statement::IF(cond, reinterpret_cast<vector<iHdlObj*>*>(ifTrue));
+}
+Statement* Statement::IF(Expr* cond, vector<Statement*>* ifTrue,
+		vector<Statement*>* ifFalse) {
+	return Statement::IF(cond, reinterpret_cast<vector<iHdlObj*>*>(ifTrue),
+			reinterpret_cast<vector<iHdlObj*>*>(ifFalse));
+}
+Statement* Statement::IF(Expr* cond, vector<Statement*>* ifTrue,
+		const vector<pair<Expr*, vector<Statement*>*>> & elseIfs,
+		vector<Statement*>* ifFalse) {
+	return Statement::IF(cond, reinterpret_cast<vector<iHdlObj*>*>(ifTrue),
+			*reinterpret_cast<const vector<case_t>*>(&elseIfs),
+			reinterpret_cast<vector<iHdlObj*>*>(ifFalse));
+}
+
 Statement* Statement::CASE(Expr * switchOn, const vector<case_t> cases,
-		vector<Statement*>* default_) {
+		vector<iHdlObj*>* default_) {
 	auto s = new Statement(s_CASE);
 	s->exprs.reserve(1 + cases.size());
 	s->exprs.push_back(switchOn);
@@ -104,7 +122,7 @@ Statement* Statement::ASSIG(Expr * dst, Expr * src) {
 	s->exprs.push_back(src);
 	return s;
 }
-Statement* Statement::WHILE(Expr * cond, vector<Statement*> * body) {
+Statement* Statement::WHILE(Expr * cond, vector<iHdlObj*> * body) {
 	Statement * s = new Statement(s_WHILE);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(body);
@@ -115,7 +133,7 @@ Statement* Statement::BREAK() {
 }
 
 Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
-		vector<Statement*>* body) {
+		vector<iHdlObj*>* body) {
 	Statement * s = new Statement(s_PROCESS);
 	if (sensitivity) {
 		s->exprs.resize(sensitivity->size());
@@ -127,14 +145,13 @@ Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 	return s;
 }
 
-Statement* Statement::FOR(const vector<Expr*> & args, std::vector<Statement*>* body) {
+Statement* Statement::FOR(const vector<Expr*> & args, vector<iHdlObj*>* body) {
 	Statement * s = new Statement(s_FOR);
-	for (auto e: args)
+	for (auto e : args)
 		s->exprs.push_back(e);
 	s->sub_statements.push_back(body);
 	return s;
 }
-
 
 Statement::~Statement() {
 	for (auto sl : sub_statements) {

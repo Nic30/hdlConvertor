@@ -6,7 +6,7 @@
 #include "hdlObjects/context.h"
 #include "hdlObjects/operator.h"
 #include "hdlObjects/named.h"
-#include "hdlObjects/generate.h"
+#include "hdlObjects/process.h"
 
 
 namespace hdlConvertor {
@@ -52,20 +52,20 @@ class ToString {
 		return std::cout;
 	}
 public:
-	static void dump(const hdlObjects::Context * c, int indent);
 	static void dump(const hdlObjects::aPackage * p, int indent);
+	static void dump(const hdlObjects::Arch * p, int indent);
+	static void dump(const hdlObjects::Context * c, int indent);
 	static void dump(const hdlObjects::Entity * e, int indent);
 	static void dump(const hdlObjects::Expr * e, int indent);
+	static void dump(const hdlObjects::iHdlObj * o, int indent);
 	static void dump(const hdlObjects::Named * n, int indent);
-	static void dump(const hdlObjects::WithDoc * wd, int indent);
-	static void dump(const hdlObjects::WithNameAndDoc * wnd, int indent);
-	static void dump(const hdlObjects::Port * p, int indent);
+	static void dump(const hdlObjects::Operator * v, int indent);
+	static void dump(const hdlObjects::Position * o, int indent);
+	static void dump(const hdlObjects::Process * p, int indent);
 	static void dump(const hdlObjects::Symbol * p, int indent);
 	static void dump(const hdlObjects::Variable * v, int indent);
-	static void dump(const hdlObjects::Operator * v, int indent);
-	static void dump(const hdlObjects::Process * p, int indent);
-	static void dump(const hdlObjects::Position * o, int indent);
-	static void dump(const hdlObjects::Generate * o, int indent);
+	static void dump(const hdlObjects::WithDoc * wd, int indent);
+	static void dump(const hdlObjects::WithNameAndDoc * wnd, int indent);
 };
 
 }

@@ -33,39 +33,39 @@ inline hdlObjects::OperatorType OperatorType_from(
 }
 inline hdlObjects::OperatorType OperatorType_from(
 		vhdl_antlr::vhdlParser::Relational_operatorContext * op) {
-	// relational_operator
-	// : EQ
-	// | NEQ
-	// | LOWERTHAN
-	// | LE
-	// | GREATERTHAN
-	// | GE
-	// ;
+	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | MATCH_EQ | MATCH_NEQ | MATCH_LT | MATCH_LE | MATCH_GT | MATCH_GE;
+
 
 	using hdlObjects::OperatorType;
 	if (op->EQ())
 		return OperatorType::EQ;
 	if (op->NEQ())
 		return OperatorType::NEQ;
-	if (op->LOWERTHAN())
-		return OperatorType::LOWERTHAN;
-	if (op->LE())
+
+	if (op->CONASGN())
 		return OperatorType::LE;
-	if (op->GREATERTHAN())
+	if (op->LT())
+		return OperatorType::LOWERTHAN;
+	if (op->GT())
 		return OperatorType::GREATERTHAN;
-	//assert(op->GE());
-	return OperatorType::GE;
+	if (op->GE())
+		return OperatorType::GE;
+	if (op->MATCH_EQ())
+		return OperatorType::MATCH_EQ;
+	if (op->MATCH_NEQ())
+		return OperatorType::MATCH_NEQ;
+	if (op->MATCH_LT())
+		return OperatorType::MATCH_LT;
+	if (op->MATCH_LE())
+		return OperatorType::MATCH_LE;
+	if (op->MATCH_GT())
+		return OperatorType::MATCH_GT;
+	assert (op->MATCH_GE());
+		return OperatorType::MATCH_GE;
 }
 inline hdlObjects::OperatorType OperatorType_from(
 		vhdl_antlr::vhdlParser::Logical_operatorContext * op) {
-	// logical_operator
-	// : AND
-	// | OR
-	// | NAND
-	// | NOR
-	// | XOR
-	// | XNOR
-	// ;
+	// logical_operator: AND | OR | NAND | NOR | XOR | XNOR;
 
 	using hdlObjects::OperatorType;
 	if (op->AND())
@@ -80,7 +80,6 @@ inline hdlObjects::OperatorType OperatorType_from(
 		return OperatorType::XOR;
 	//assert(op->XNOR());
 	return OperatorType::XNOR;
-
 }
 
 }

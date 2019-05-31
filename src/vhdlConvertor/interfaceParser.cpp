@@ -1,6 +1,7 @@
 #include "interfaceParser.h"
 #include "exprParser.h"
 #include "directionParser.h"
+#include "literalParser.h"
 #include "../notImplementedLogger.h"
 
 namespace hdlConvertor {
@@ -42,95 +43,104 @@ vector<Variable*> * InterfaceParser::extractVariables(
 	}
 	return vl;
 }
-vector<Port*> * InterfaceParser::visitInterface_port_declaration(
-		vhdlParser::Interface_port_declarationContext* ctx) {
-	vector<Port*> * pl = new vector<Port*>();
-	// interface_port_declaration
-	// : identifier_list COLON signal_mode subtype_indication
-	// ( BUS )? ( VARASGN expression )?
-	// ;
-	vector<Variable*>* vl = extractVariables(ctx->identifier_list(),
-			ctx->subtype_indication(), ctx->expression());
-	// signal_mode
-	// : IN
-	// | OUT
-	// | INOUT
-	// | BUFFER
-	// | LINKAGE
-	// ;
-	Direction d = Direction_from(ctx->signal_mode());
-	for (auto v : *vl) {
-		Port * p = new Port(d, v);
-		pl->push_back(p);
-	}
-	delete vl;
-	return pl;
-}
 vector<Variable*> * InterfaceParser::visitInterface_constant_declaration(
 		vhdlParser::Interface_constant_declarationContext* ctx) {
-	// interface_constant_declaration
-	// : ( CONSTANT )? identifier_list COLON ( IN )? subtype_indication
-	// ( VARASGN expression )?
+	// interface_constant_declaration:
+	//       ( CONSTANT )? identifier_list COLON ( IN )? subtype_indication ( VARASGN expression )?
 	// ;
-	return extractVariables(ctx->identifier_list(), ctx->subtype_indication(),
-			ctx->expression());
-
+	auto consts = extractVariables(ctx->identifier_list(),
+			ctx->subtype_indication(), ctx->expression());
+	for (auto c : *consts)
+		c->is_const = true;
+	return consts;
 }
 vector<Variable*> * InterfaceParser::visitInterface_signal_declaration(
 		vhdlParser::Interface_signal_declarationContext* ctx) {
-	// interface_signal_declaration
-	// : SIGNAL identifier_list COLON subtype_indication
-	// ( BUS )? ( VARASGN expression )?
+	// interface_signal_declaration:
+	//       ( SIGNAL )? identifier_list COLON ( signal_mode )? subtype_indication ( BUS )? ( VARASGN expression )?
 	// ;
-	return new vector<Variable*>();
+	if (ctx->BUS()) {
+		NotImplementedLogger::print(
+				"InterfaceParser.visitInterface_signal_declaration - BUS");
+	}
+	auto sigs = extractVariables(ctx->identifier_list(),
+			ctx->subtype_indication(), ctx->expression());
+	auto m = visitSignalMode(ctx->signal_mode());
+	for (auto s : *sigs)
+		s->direction = m;
+	return sigs;
 }
 vector<Variable*> * InterfaceParser::visitInterface_variable_declaration(
 		vhdlParser::Interface_variable_declarationContext* ctx) {
-	// interface_variable_declaration
-	// : ( VARIABLE )? identifier_list COLON
-	// ( signal_mode )? subtype_indication ( VARASGN expression )?
+	// interface_variable_declaration:
+	//       ( VARIABLE )? identifier_list COLON ( signal_mode )? subtype_indication ( VARASGN expression )?
 	// ;
-	NotImplementedLogger::print(
-			"InterfaceParser.visitInterface_variable_declaration");
-	return new vector<Variable*>();
+	auto vars = extractVariables(ctx->identifier_list(),
+			ctx->subtype_indication(), ctx->expression());
+	auto m = visitSignalMode(ctx->signal_mode());
+	for (auto v : *vars) {
+		v->direction = m;
+		v->latched = true;
+	}
+	return vars;
 }
 vector<Variable*> * InterfaceParser::visitInterface_file_declaration(
 		vhdlParser::Interface_file_declarationContext* ctx) {
-	// interface_file_declaration
-	// : FILE identifier_list COLON subtype_indication
+	// interface_file_declaration:
+	//       FILE identifier_list COLON subtype_indication
 	// ;
 	NotImplementedLogger::print(
 			"InterfaceParser.visitInterface_file_declaration");
 	return new vector<Variable*>();
 }
-vector<Variable*> * InterfaceParser::visitInterface_terminal_declaration(
-		vhdlParser::Interface_terminal_declarationContext* ctx) {
-	// interface_terminal_declaration
-	// : TERMINAL identifier_list COLON subnature_indication
-	// ;
-	NotImplementedLogger::print(
-			"InterfaceParser.visitInterface_terminal_declaration");
-	return new vector<Variable*>();
-}
-vector<Variable*> * InterfaceParser::visitInterface_quantity_declaration(
-		vhdlParser::Interface_quantity_declarationContext* ctx) {
-	// interface_quantity_declaration
-	// : QUANTITY identifier_list COLON ( IN | OUT )? subtype_indication
-	// ( VARASGN expression )?
-	// ;
-	NotImplementedLogger::print(
-			"InterfaceParser.visitInterface_quantity_declaration");
-	return new vector<Variable*>();
-}
+
 vector<Variable*> * InterfaceParser::visitInterface_declaration(
 		vhdlParser::Interface_declarationContext* ctx) {
-	// interface_declaration
-	// : interface_constant_declaration
-	// | interface_signal_declaration
-	// | interface_variable_declaration
-	// | interface_file_declaration
-	// | interface_terminal_declaration
-	// | interface_quantity_declaration
+	// interface_declaration:
+	//       interface_object_declaration
+	//       | interface_type_declaration
+	//       | interface_subprogram_declaration
+	//       | interface_package_declaration
+	// ;
+	auto iod = ctx->interface_object_declaration();
+	if (iod) {
+		return visitInterface_object_declaration(iod);
+	}
+	auto itd = ctx->interface_type_declaration();
+	if (itd) {
+		auto t = visitInterface_type_declaration(itd);
+		delete t;
+		NotImplementedLogger::print(
+				"InterfaceParser.visitInterface_declaration - interface_type_declaration");
+	}
+	auto isd = ctx->interface_subprogram_declaration();
+	if (itd) {
+		NotImplementedLogger::print(
+				"InterfaceParser.visitInterface_declaration - interface_subprogram_declaration");
+	}
+	auto ipd = ctx->interface_package_declaration();
+	if (itd) {
+		NotImplementedLogger::print(
+				"InterfaceParser.visitInterface_declaration - interface_package_declaration");
+	}
+	return new vector<Variable*>();
+}
+Expr * InterfaceParser::visitInterface_type_declaration(
+		vhdlParser::Interface_type_declarationContext * ctx) {
+	// interface_type_declaration:
+	//       interface_incomplete_type_declaration
+	// ;
+	// interface_incomplete_type_declaration: TYPE identifier;
+	return LiteralParser::visitIdentifier(
+			ctx->interface_incomplete_type_declaration()->identifier());
+}
+std::vector<Variable*> * InterfaceParser::visitInterface_object_declaration(
+		vhdlParser::Interface_object_declarationContext * ctx) {
+	// interface_object_declaration:
+	//       interface_constant_declaration
+	//       | interface_signal_declaration
+	//       | interface_variable_declaration
+	//       | interface_file_declaration
 	// ;
 	auto c = ctx->interface_constant_declaration();
 	if (c) {
@@ -145,22 +155,13 @@ vector<Variable*> * InterfaceParser::visitInterface_declaration(
 		return visitInterface_variable_declaration(v);
 	}
 	auto f = ctx->interface_file_declaration();
-	if (f) {
-		return visitInterface_file_declaration(f);
-	}
-	auto t = ctx->interface_terminal_declaration();
-	if (t) {
-		return visitInterface_terminal_declaration(t);
-	} else {
-		auto q = ctx->interface_quantity_declaration();
-		assert(q);
-		return visitInterface_quantity_declaration(q);
-	}
+	assert(f);
+	return visitInterface_file_declaration(f);
 }
 vector<Variable*> * InterfaceParser::visitInterface_list(
 		vhdlParser::Interface_listContext* ctx) {
-	// interface_list
-	// : interface_element ( SEMI interface_element )*
+	// interface_list:
+	//       interface_element ( SEMI interface_element )*
 	// ;
 	vector<Variable*> * elems = new vector<Variable*>();
 	for (auto ie : ctx->interface_element()) {
@@ -174,9 +175,7 @@ vector<Variable*> * InterfaceParser::visitInterface_list(
 }
 vector<Variable*> * InterfaceParser::visitInterface_element(
 		vhdlParser::Interface_elementContext* ctx) {
-	// interface_element
-	// : interface_declaration
-	// ;
+	// interface_element: interface_declaration;
 	auto intfDec = ctx->interface_declaration();
 	return visitInterface_declaration(intfDec);
 }

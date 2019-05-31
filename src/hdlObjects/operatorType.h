@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace hdlConvertor {
 namespace hdlObjects {
 
@@ -20,7 +19,7 @@ enum OperatorType {
 	MUL,
 	MOD,
 	REM,
-	CONCAT,// concatenation of signals
+	CONCAT, // concatenation of signals
 	REPL_CONCAT, // replicative concatenation {<N>, <item>} duplicates and concatenates the item N times
 	POW, // bin operator power of
 	ABS, // absolute value
@@ -51,8 +50,14 @@ enum OperatorType {
 	CALL,
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator
-	FALLING,// falling edge/negedge event operator
+	FALLING, // falling edge/negedge event operator
 	MAP_ASSOCIATION,
+	MATCH_EQ, // VHDL matching ops (the X values are ignored while match)
+	MATCH_NEQ,
+	MATCH_LT,
+	MATCH_LE,
+	MATCH_GT,
+	MATCH_GE,
 };
 
 const char* OperatorType_toString(OperatorType opt);
