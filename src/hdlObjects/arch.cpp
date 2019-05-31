@@ -1,32 +1,32 @@
 #include "arch.h"
 
-#ifdef USE_PYTHON
-PyObject * Arch::toJson() const {
-	JSN_DEBUG("Arch - name")
-	PyObject * o = WithNameAndDoc::toJson();
-
-	JSN_DEBUG("Arch - entityName")
-	if (entityName)
-		PyDict_SetItemString(o, "entityName", PyUnicode_FromString(entityName));
-
-	JSN_DEBUG("Arch - variables")
-	addJsonArrP(o, "variables", varialbles);
-
-	JSN_DEBUG("Arch - componentInstances")
-	addJsonArrP(o, "componentInstances", componentInstances);
-
-	JSN_DEBUG("Arch - statements")
-	addJsonArrP(o, "statements", statements);
-
-	return o;
-}
-#endif
+namespace hdlConvertor {
+namespace hdlObjects {
 
 Arch::~Arch() {
 	for (auto c : componentInstances)
 		delete c;
 	for (auto s : statements)
 		delete s;
-	for (auto v : varialbles)
+	for (auto v : variables)
 		delete v;
+	for (auto c : components)
+		delete c;
+	for (auto c : constants)
+		delete c;
+	for (auto fh : function_headers)
+		delete fh;
+	for (auto f : functions)
+		delete f;
+	for (auto sh : subtype_headers)
+		delete sh;
+	for (auto v : variables)
+		delete v;
+	for (auto p : processes)
+		delete p;
+	for (auto g : generates)
+		delete g;
+}
+
+}
 }

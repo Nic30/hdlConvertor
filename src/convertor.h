@@ -28,24 +28,26 @@
 
 #include "exception.h"
 #include "syntaxErrorLogger.h"
-#include "langue.h"
+#include "language.h"
 #include "parserContainer.h"
+
+namespace hdlConvertor {
 
 class Convertor {
 
 public:
 	std::string fileName;
-	Langue lang;
+	Language lang;
 	bool hierarchyOnly;
 	static bool debug;
 
-	Context * parse(
-			std::vector<std::string> fileNames,
-			Langue lang,
-			std::vector<std::string>,
-			bool hierarchyOnly,
-			bool debug);
+	hdlObjects::Context * parse(std::vector<std::string> fileNames,
+			Language lang, std::vector<std::string>,
+			bool hierarchyOnly, bool debug);
 
-	std::string verilog_pp(const std::string, std::vector<std::string> incdir, unsigned int mode );
+	std::string verilog_pp(const std::string, std::vector<std::string> incdir,
+			unsigned int mode);
 
 };
+
+}

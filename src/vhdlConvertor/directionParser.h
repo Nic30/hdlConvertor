@@ -3,17 +3,25 @@
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/direction.h"
 
-inline Direction Direction_from(vhdl::vhdlParser::Signal_modeContext * sm) {
+namespace hdlConvertor {
+namespace vhdl {
+
+inline hdlObjects::Direction Direction_from(
+		vhdl_antlr::vhdlParser::Signal_modeContext * sm) {
+	using hdlObjects::Direction;
 	if (sm->IN())
-		return DIR_IN;
+		return Direction::DIR_IN;
 	else if (sm->OUT())
-		return DIR_OUT;
+		return Direction::DIR_OUT;
 	else if (sm->INOUT())
-		return DIR_INOUT;
+		return Direction::DIR_INOUT;
 	else if (sm->BUFFER())
-		return DIR_BUFFER;
+		return Direction::DIR_BUFFER;
 	else {
 		//assert (sm->LINKAGE());
-		return DIR_LINKAGE;
+		return Direction::DIR_LINKAGE;
 	}
+}
+
+}
 }

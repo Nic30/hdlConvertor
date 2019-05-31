@@ -25,16 +25,19 @@ addons:
       packages:
          - build-essential 
          - cython
-         #- g++-5
+         - g++-8
+         - gcc-8
          #- clang-3.9
 #env: CC=clang-3.9 CXX=clang-3.9
-#env: CC=g++-5 CXX=g++-5 
+env: CC=gcc-8 CXX=g++-8 
 
 
 # command to install dependencies
 install:
+- sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
+- sudo apt update
+- sudo apt install libantlr4-runtime-dev antlr4
 - pip install -r requirements.txt
-- pip install nose
 - python setup.py install 
 
 deploy:
@@ -47,7 +50,6 @@ deploy:
     branch: master
 
 script: 
-  - nosetests tests -v 
-  # also check if the installation works correctly
-  - python setup.py install --root=tmp
+  - python setup.py test # the scikit-build automatically executes setup.py develop which requires access to installation dir
+
 

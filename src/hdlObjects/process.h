@@ -2,8 +2,14 @@
 
 #include <vector>
 #include "named.h"
-#include "jsonable.h"
 #include "statement.h"
+#include "statement.h"
+#include "function.h"
+#include "variable.h"
+#include "position.h"
+
+namespace hdlConvertor {
+namespace hdlObjects {
 
 /*
  * Class for representation of the process in HDL
@@ -13,13 +19,22 @@
  * */
 class Process: public WithNameAndDoc {
 public:
+
 	bool sensitivity_list_specified;
 	std::vector<Expr*> sensitivity_list;
 	std::vector<Statement*> statements;
 
+	std::vector<Function*> function_headers;
+	std::vector<Function*> functions;
+	std::vector<Variable*> subtype_headers;
+	std::vector<Variable*> constants;
+	std::vector<Variable*> variables;
+
 	Process();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
 	~Process();
 };
+
+}
+}
+
+

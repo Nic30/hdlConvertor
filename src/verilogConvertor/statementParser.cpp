@@ -2,9 +2,16 @@
 #include "../notImplementedLogger.h"
 #include "exprParser.h"
 
-using namespace std;
-using namespace Verilog2001;
+namespace hdlConvertor {
+namespace verilog {
 
+using namespace std;
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+VerStatementParser::VerStatementParser(CommentParser & commentParser) :
+		commentParser(commentParser) {
+}
 VerStatementParser::stm_or_block_t VerStatementParser::visitAlways_construct(
 		Verilog2001Parser::Always_constructContext * ctx) {
 	// always_construct
@@ -105,7 +112,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 }
 
 Statement * VerStatementParser::visitBlocking_assignment(
-		Verilog2001::Verilog2001Parser::Blocking_assignmentContext *ctx) {
+		Verilog2001Parser::Blocking_assignmentContext *ctx) {
 	// blocking_assignment
 	//    : variable_lvalue '=' (delay_or_event_control)? expression
 	//    ;
@@ -120,7 +127,7 @@ Statement * VerStatementParser::visitBlocking_assignment(
 }
 
 Statement * VerStatementParser::visitCase_statement(
-		Verilog2001::Verilog2001Parser::Case_statementContext * ctx) {
+		Verilog2001Parser::Case_statementContext * ctx) {
 	// case_statement
 	//    : 'case' '(' expression ')' case_item (case_item)* 'endcase'
 	//    | 'casez' '(' expression ')' case_item (case_item)* 'endcase'
@@ -152,7 +159,7 @@ Statement * VerStatementParser::visitCase_statement(
 
 }
 std::vector<Statement::case_t> VerStatementParser::visitCase_item(
-		Verilog2001::Verilog2001Parser::Case_itemContext * ctx) {
+		Verilog2001Parser::Case_itemContext * ctx) {
 	// case_item
 	//    : expression (',' expression)* ':' statement_or_null
 	//    | 'default' (':')? statement_or_null
@@ -241,7 +248,7 @@ Statement * VerStatementParser::visitConditional_statement(
 	return nullptr;
 }
 Statement * VerStatementParser::visitProcedural_timing_control_statement(
-		Verilog2001::Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
+		Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
 	// procedural_timing_control_statement
 	//    : delay_or_event_control statement_or_null
 	//    ;
@@ -281,7 +288,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
 }
 
 vector<Expr*>* VerStatementParser::visitDelay_or_event_control(
-		Verilog2001::Verilog2001Parser::Delay_or_event_controlContext * ctx) {
+		Verilog2001Parser::Delay_or_event_controlContext * ctx) {
 	// delay_or_event_control
 	//    : delay_control
 	//    | event_control
@@ -303,7 +310,7 @@ vector<Expr*>* VerStatementParser::visitDelay_or_event_control(
 }
 
 vector<Expr*> * VerStatementParser::vistEvent_control(
-		Verilog2001::Verilog2001Parser::Event_controlContext * ctx) {
+		Verilog2001Parser::Event_controlContext * ctx) {
 	//event_control
 	//   : '@' event_identifier
 	//   | '@' '(' event_expression ')'
@@ -323,12 +330,13 @@ vector<Expr*> * VerStatementParser::vistEvent_control(
 	if (ee) {
 		return VerExprParser::visitEvent_expression(ee);
 	}
-
-	return nullptr;
+	auto res = new vector<Expr*>;
+	res->push_back(Expr::all());
+	return res;
 }
 
 vector<Statement *> VerStatementParser::vistContinuous_assign(
-		Verilog2001::Verilog2001Parser::Continuous_assignContext * ctx) {
+		Verilog2001Parser::Continuous_assignContext * ctx) {
 	// continuous_assign
 	//    : 'assign' (drive_strength)? (delay3)? list_of_net_assignments ';'
 	//    ;
@@ -351,6 +359,7 @@ vector<Statement *> VerStatementParser::vistContinuous_assign(
 		auto stm = visitNet_assignment(na);
 		res.push_back(stm);
 	}
+	res[0]->__doc__ = commentParser.parse(ctx);
 	return res;
 }
 
@@ -360,4 +369,7 @@ Statement* VerStatementParser::visitNet_assignment(
 	// ;
 	return Statement::ASSIG(VerExprParser::visitNet_lvalue(ctx->net_lvalue()),
 			VerExprParser::visitExpression(ctx->expression()));
+}
+
+}
 }

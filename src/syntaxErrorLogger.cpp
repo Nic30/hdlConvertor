@@ -2,6 +2,8 @@
 using namespace antlr4;
 using namespace std;
 
+namespace hdlConvertor {
+
 void SyntaxErrorLogger::CheckErrors() {
 	stringstream error_msg;
 	error_msg << endl;
@@ -69,5 +71,7 @@ void SyntaxErrorLogger::reportAttemptingFullContext(
 		size_t stopIndex,
 		const antlrcpp::BitSet &conflictingAlts,
 		atn::ATNConfigSet *configs) {
+
+}
 
 }

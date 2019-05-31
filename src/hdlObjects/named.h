@@ -1,8 +1,11 @@
 #pragma once
 
-#include <assert.h>
-#include "../debugConfig.h"
-#include "jsonable.h"
+#include <string>
+#include "position.h"
+
+
+namespace hdlConvertor {
+namespace hdlObjects {
 
 /*
  * Base class for HDL object with name
@@ -12,10 +15,7 @@ public:
 	char * name;
 
 	Named();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
+	Named(char * name);
 	~Named();
 };
 
@@ -25,20 +25,25 @@ public:
 class WithDoc {
 public:
 	std::string __doc__;
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
+};
+
+/*
+ * Base class for HDL object with in code position specified
+ * */
+class WithPos {
+public:
+	Position position;
 };
 
 /*
  * Base class for HDL object with name and doc
  * */
-class WithNameAndDoc: public Named, public WithDoc {
+class WithNameAndDoc: public Named, public WithDoc, public WithPos {
 public:
 	WithNameAndDoc();
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
+	WithNameAndDoc(char * name);
+
 };
+
+}
+}

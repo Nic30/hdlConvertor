@@ -6,25 +6,27 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
 
-The System Verilog and VHDL parser for Python written in C++. This library parses all HDL languages to a single AST so other libraries does not have to care about Verilog/VHDL differences. 
+The System Verilog and VHDL parser for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
+
+It is also possible to convert this AST back to original HDL (curently only for Verilog).
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
-This project use a ANTLR4. Currently, there is no universal way of distributing ANTLR4 library (c++ runtime) known to me.
-To make your live easier I included it to this package for you.
-
 
 ## Installation
+Linux:
 ```
-sudo apt install build-essential uuid-dev cmake default-jre
-sudo pip3 install -r requirements.txt
-
+# note that only last 2 are really required rest is downloaded automatically as dependency
+sudo apt install build-essential uuid-dev cmake default-jre python3 python3-pip libantlr4-runtime-dev antlr4
+# note this may be older version than you see in repo
 sudo pip3 install hdlConvertor
+
 #or download repository and run
+sudo pip3 install -r requirements.txt
 sudo python3 setup.py install
 ```
-Or the same using python and pip for python 2.7.
+Or the same for python 2.7 with other options just for demonstration.
 
 Installer also supports other commands.
 ```
@@ -34,6 +36,14 @@ python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug --
 Other commands:
 python setup.py --help-commands
 ```
+
+If you having issues take a look at .travis.yml (build script for the ubuntu 16.04).
+
+Windows:
+
+Take a look at appveyor.yml. It is required to download antlr4 first and have visual studio or other c++ compiler installed.
+
+
 
 ## Usage
 In the meantime when there is no wiki yet you can take look at src/hdlObjects.
@@ -54,32 +64,32 @@ for e in res['entities']:
 
 ```
 
-
 If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
+Also if it is something which is not unique to your system, tell us so we can fix it.
+
 
 ### Supported languages:
-
-* VHDL 2002 (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
+* [VHDL 1076-1993](https://perso.telecom-paristech.fr/guilley/ENS/20161206/TP/tp_syn/doc/IEEE_VHDL_1076-1993.pdf) compatible
+* [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
+* VHDL 2008 on same level as current [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (This does not work as expected due missing preprocessor but it will be added and it can be executed manually.)
+* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP)
 
 
 ### Similar projects:
 
 * [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
-* [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python 
+* [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
-* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c 
+* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
+* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 
 
 ### License
 
 License in top folder applies to this project only.
-In this repository there is also ANTRLR4 library (BSD 3-clause license) and some grammars (.g4 files - BSD 3, GPL-3, GPL).
-This library is for now distributed in this package as a temporary solution until proper package for ANTLR4 library will be present in linux prepositories.
-
-
+In this repository there are also ANTLR4 grammars (.g4 files - BSD 3, GPL-3, GPL, however they are not present in installation).

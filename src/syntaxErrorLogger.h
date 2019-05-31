@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 
+namespace hdlConvertor {
+
 enum error_kind_t {SYNTAXERROR,REPORTAMBIGUITY,REPORTCONTEXTSENSITIVITY,REPORTATTEMPTINGFULLCONTEXT};
 
 class error_data {
@@ -67,3 +69,5 @@ public:
 			antlr4::atn::ATNConfigSet *configs);
 
 };
+
+}

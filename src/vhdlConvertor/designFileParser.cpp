@@ -6,7 +6,11 @@
 #include "packageHeaderParser.h"
 #include "referenceParser.h"
 
-using namespace vhdl;
+namespace hdlConvertor {
+namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 DesignFileParser::DesignFileParser(antlr4::TokenStream* tokens, Context * ctx,
 		bool _hierarchyOnly) :
@@ -137,4 +141,7 @@ std::vector<Expr*> DesignFileParser::visitUse_clause(
 		refL.push_back(r);
 	}
 	return refL;
+}
+
+}
 }

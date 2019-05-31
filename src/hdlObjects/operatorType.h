@@ -1,7 +1,16 @@
 #pragma once
 
+
+namespace hdlConvertor {
+namespace hdlObjects {
+
 enum OperatorType {
 	RANGE, // range used in VHDL type specifications
+	REVERSE_RANGE,
+	ACROSS,
+	THROUGH,
+	REFERENCE,
+	TOLERANCE,
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification
@@ -43,7 +52,11 @@ enum OperatorType {
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator
 	FALLING,// falling edge/negedge event operator
+	MAP_ASSOCIATION,
 };
 
 const char* OperatorType_toString(OperatorType opt);
 int OperatorType_arity(OperatorType opt);
+
+}
+}

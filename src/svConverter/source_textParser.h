@@ -1,14 +1,17 @@
 #pragma once
 #include "../baseHdlParser/baseHdlParser.h"
 #include "sv2012Parser/sv2012Parser.h"
-#include "../notImplementedLogger.h"
 
-using namespace sv2012;
+namespace hdlConvertor {
+namespace sv {
 
 class source_textParser: public BaseHdlParser {
-
 public:
-	source_textParser(antlr4::TokenStream* tokens, Context * ctx,
+	typedef sv2012_antlr::sv2012Parser sv2012Parser;
+	source_textParser(antlr4::TokenStream* tokens, hdlObjects::Context * ctx,
 			bool _hierarchyOnly);
 	void visitSource_text(sv2012Parser::Source_textContext *ctx);
 };
+
+}
+}

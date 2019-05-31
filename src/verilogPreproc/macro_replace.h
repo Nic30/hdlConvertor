@@ -5,6 +5,9 @@
 #include <map>
 #include "exception.h"
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 /**
  * class macro_replace_data is the object to represent macro data.
  * Example:
@@ -15,11 +18,11 @@
  */
 class macro_replace_data {
 
-  public:
-    std::string tmplate_name;
-    std::string tmplate;
-    std::vector<std::string> args;
-    std::vector<std::string> default_arg;
+public:
+	std::string tmplate_name;
+	std::string tmplate;
+	std::vector<std::string> args;
+	std::vector<std::string> default_arg;
 };
 
 /**
@@ -27,23 +30,25 @@ class macro_replace_data {
  */
 class macro_replace {
 
-  protected:
-      void replaceAll(std::string& str, const std::string& from,
-      const std::string& to);
-      std::vector<std::pair<size_t,size_t> > _substituate;
-      bool check_interval(size_t start);
-      void look4stringLiteral(std::string);
+protected:
+	void replaceAll(std::string& str, const std::string& from,
+			const std::string& to);
+	std::vector<std::pair<size_t, size_t> > _substituate;
+	bool check_interval(size_t start);
+	void look4stringLiteral(std::string);
 
-  public:
-  macro_replace_data data;
-  // class constructor
-  macro_replace(std::string, std::string, std::vector<std::string>);
-  // class desctructor
-  virtual ~macro_replace();
-  // replace method
-  virtual std::string replace();
-  // replace method without argument
-  virtual std::string replace(std::vector<std::string>);
+public:
+	macro_replace_data data;
+	// class constructor
+	macro_replace(std::string, std::string, std::vector<std::string>);
+	// class desctructor
+	virtual ~macro_replace();
+	// replace method
+	virtual std::string replace();
+	// replace method without argument
+	virtual std::string replace(std::vector<std::string>);
 
 };
 
+}
+}

@@ -1,22 +1,28 @@
 #include "process.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 Process::Process() :
 		WithNameAndDoc(), sensitivity_list_specified(false) {
 }
 
-#ifdef USE_PYTHON
-PyObject * Process::toJson() const {
-	PyObject *d = WithNameAndDoc::toJson();
-	if (sensitivity_list_specified)
-		addJsonArrP(d, "sensitivity_list", sensitivity_list);
-
-	addJsonArrP(d, "statements", statements);
-
-	return d;
-}
-#endif
-
 Process::~Process() {
-	for (auto stm : statements)
-		delete stm;
+	for (auto fh : function_headers)
+		delete fh;
+	for (auto f : functions)
+		delete f;
+	for (auto sh : subtype_headers)
+		delete sh;
+	for (auto c : constants)
+		delete c;
+	for (auto v : variables)
+		delete v;
+	for (auto s : sensitivity_list)
+		delete s;
+	for (auto s : statements)
+		delete s;
+}
+
+}
 }

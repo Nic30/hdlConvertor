@@ -4,6 +4,9 @@
 #include <string.h>
 #include <assert.h>
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 union LiteralVal {
 	BigInteger _int;
 	double _float;
@@ -39,3 +42,6 @@ inline const char * SymbolType_toString(SymbolType t) {
 }
 
 LiteralVal LiteralVal_clone(const LiteralVal & val, enum SymbolType t);
+
+}
+}

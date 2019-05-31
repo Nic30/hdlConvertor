@@ -8,6 +8,7 @@
 #include "syntaxErrorLogger.h"
 #include <antlr4-runtime.h>
 
+namespace hdlConvertor {
 
 template<class antlrLexerT, class antlrParserT, class hdlParserT>
 class ParserContainer {
@@ -36,11 +37,11 @@ public:
 	 * :param context: if context is nullptr new context is generated
 	 *                 otherwise specified context is used
 	 * */
-	ParserContainer(Context * context):
+	ParserContainer(hdlObjects::Context * context):
 		syntaxErrLogger(nullptr), lexer(nullptr), tokens(nullptr),
 		antlrParser(nullptr), hdlParser(nullptr), context(context) {
 	}
-	Context * context;
+	hdlObjects::Context * context;
 	void parseFile(
 			antlr4::ANTLRInputStream &fileName,
 			bool hierarchyOnly,
@@ -69,3 +70,4 @@ public:
 	}
 };
 
+}

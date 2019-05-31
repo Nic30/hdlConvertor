@@ -1,10 +1,12 @@
 #pragma once
 
-#include <stdlib.h>
-#include "jsonable.h"
+#include <vector>
 #include "bigInteger.h"
 #include "symbolType.h"
 #include "exprItem.h"
+
+namespace hdlConvertor {
+namespace hdlObjects {
 
 class Symbol: public virtual ExprItem {
 public:
@@ -18,11 +20,10 @@ public:
 	Symbol(BigInteger value, int bits);
 	Symbol(const std::vector<Symbol> * arr);
 
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
 	ExprItem * clone() const;
 
 	~Symbol();
 };
+
+}
+}

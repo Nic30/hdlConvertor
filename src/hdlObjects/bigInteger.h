@@ -3,6 +3,9 @@
 #include <string>
 #include "../debugConfig.h"
 
+namespace hdlConvertor {
+namespace hdlObjects {
+
 #ifdef USE_PYTHON
 typedef PyObject * BigInteger;
 #else
@@ -26,4 +29,7 @@ inline BigInteger BigInteger_fromLong(long long val) {
 #else
 	return val;
 #endif
+}
+
+}
 }

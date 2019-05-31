@@ -4,12 +4,17 @@
 #include <algorithm>
 
 #include "../notImplementedLogger.h"
-using namespace vhdl;
+using vhdlParser = vhdl_antlr::vhdlParser;
+
+using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace vhdl {
 
 Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal
 	// : NULL
-	// | BIT_STRING_LITERAL
+	// | bit_string_literal
 	// | STRING_LITERAL
 	// | enumeration_literal
 	// | numeric_literal
@@ -20,10 +25,11 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	auto n = ctx->BIT_STRING_LITERAL();
 	if (n) {
 		std::string s = n->getText();
+		std::size_t fdRadix = s.find('"')-1;
 		std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 		int radix = 0;
 		int bitRatio = 0;
-		switch (s[0]) {
+		switch (s[fdRadix]) {
 		case 'b':
 			radix = 2;
 			bitRatio = 1;
@@ -36,18 +42,41 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 			radix = 16;
 			bitRatio = 4;
 			break;
+		case 'd':
+			radix = 16;
+			bitRatio = 4;
+			break;	
+		}
+
+		int integer = 0;
+		if ((fdRadix > 0 && s[fdRadix-1] != 'u') ||
+		   (fdRadix > 1 && s[fdRadix-1] == 'u')) {
+			integer = std::stoi(s);
 		}
 
 		s[s.length() - 1] = 0; // cut of "
 		s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
-		char * strVal = (char*) s.c_str() + 2; // cut off radix"
-		BigInteger val = BigInteger_fromStr(strVal, radix);
-		return new Expr(val, strlen(strVal) * bitRatio);
-	}
+		char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
+		int bits;
+		if (integer != 0) {
+			bits = integer;
+		} else {
+			bits = strlen(strVal) * bitRatio;	
+		}
 
-	n = ctx->STRING_LITERAL();
-	if (n)
-		return visitSTRING_LITERAL(n);
+		// TODO: Not correct implementation for don't care.
+		if (s.find('-')!=std::string::npos) {
+			BigInteger val = BigInteger_fromStr("0", radix);
+			return new Expr(val, bits);
+		} else {			
+			BigInteger val = BigInteger_fromStr(strVal, radix);		
+			return new Expr(val, bits);
+		}
+	}
+	
+	auto sl = ctx->STRING_LITERAL();
+	if (sl)
+		return visitSTRING_LITERAL(sl);
 
 	auto el = ctx->enumeration_literal();
 	if (el)
@@ -56,6 +85,7 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	auto nl = ctx->numeric_literal();
 	return visitNumeric_literal(nl);
 }
+
 Expr * LiteralParser::visitNumeric_literal(
 		vhdlParser::Numeric_literalContext* ctx) {
 	// numeric_literal
@@ -73,7 +103,7 @@ Expr * LiteralParser::visitPhysical_literal(
 	// physical_literal
 	// : abstract_literal (: identifier)
 	// ;
-	NotImplementedLogger::print("ExprParser.visitPhysical_literal");
+	NotImplementedLogger::print("LiteralParser.visitPhysical_literal");
 	return NULL;
 }
 Expr * LiteralParser::visitAbstract_literal(
@@ -169,4 +199,7 @@ char * LiteralParser::visitLabel_colon(
 	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
 	delete e;
 	return s;
+}
+
+}
 }

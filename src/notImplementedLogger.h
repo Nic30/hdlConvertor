@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 
+namespace hdlConvertor {
 
 class NotImplementedLogger {
 public:
@@ -8,3 +9,5 @@ public:
 	static void print(const std::string & msg);
 
 };
+
+}

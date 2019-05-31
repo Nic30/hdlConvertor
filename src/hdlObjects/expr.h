@@ -10,11 +10,15 @@
 #include "operatorType.h"
 #include "exprItem.h"
 #include "symbol.h"
-#include "../debugConfig.h"
+#include "named.h"
 
-class Expr {
+namespace hdlConvertor {
+namespace hdlObjects {
+
+class Expr: public WithPos {
 public:
 	ExprItem * data;
+
 	Expr();
 	// @note deepcopy
 	Expr(const Expr & expr);
@@ -41,6 +45,7 @@ public:
 	static Expr * ARRAY(std::vector<Expr*> arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
 	static Expr * call(Expr * fnId, std::vector<Expr*> * operands);
+	static Expr * slice(Expr * fnId, std::vector<Expr*> * operands);
 
 	static Expr * OPEN();
 	static Expr * all();
@@ -49,9 +54,8 @@ public:
 	// @return char* of the variable string if this Expr is string value
 	char * extractStr();
 
-#ifdef USE_PYTHON
-	PyObject * toJson() const;
-#endif
-	void dump(int indent) const;
 	~Expr();
 };
+
+}
+}
