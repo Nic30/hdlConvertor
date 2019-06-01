@@ -1,0 +1,33 @@
+# Tutorial for developing of C++ python extension with Cython and Scikit-build
+
+# Basic project setup in Eclipse (eclipse + CDT -> C/C++ project)
+(Note that we will use python3-dbg, if you want to use python3/2 you have to recompile.
+ Without -dbg you will mostly see only segfaults without explanation if there is some problem.)
+(Note that there python3.7 is used you may have to change this version if required.)
+* `sudo apt install python3-dev python3-dbg`
+* create a C/C++ project from this repo
+* project properties ->
+   * C/C++ General -> Paths and Symbols -> add Python and ANTLR include dir (for all lags)
+  ```
+  /usr/include/python3.7m
+  /usr/include/antlr4-runtime
+
+  ```
+   * C/C++ build -> Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 threads)
+
+# Debuging in Eclipse
+* new debug configuration -> C++ Application
+	* C/C++ Aplication: `/usr/bin/python3-dbg`
+	* Arguments: $NAME_OF_YOUR_SCRIPT etc
+	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path}/_skbuild/linux-x86_64-3.7/setuptools/lib`
+	* in CMakeLists.txt add  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+	  to enable debuging build and disable optimisations
+	* now break points in c++ and all other debuging stuff should work as expected
+
+
+# Utils
+* c++filt - progam which translates ugly cpp compiled names back to readable form
+  ```
+  $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlObjects7iHdlObjEi
+  hdlConvertor::ToString::dump(hdlConvertor::hdlObjects::iHdlObj const*, int)
+  ```
