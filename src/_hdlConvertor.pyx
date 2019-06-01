@@ -1,4 +1,4 @@
-# from libc cimport errno,string
+# from libc cimport errno, string
 
 from libc.string cimport strerror
 from libc.errno cimport errno
@@ -8,41 +8,37 @@ from libcpp.vector cimport vector
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
 from hdlConvertor.language import Language as PyHdlLanguageEnum
+from hdlConvertor.hdlAst import HdlContext
 import sys
-
 
 cdef extern from "hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass Context:
-        PyObject * toJson()
+        pass
 
 cdef extern from "toPy.h" namespace "hdlConvertor":
     cdef cppclass ToPy:
         ToPy()
+
         @staticmethod
-        PyObject * toPy(const Context * c)
+        PyObject * toPy(const Context * c) except NULL
 
-
-cdef extern from "exception.h":
-    cdef const char* get_my_py_error_message()
-
+cdef extern from "conversion_exception.h" namespace "hdlConvertor":
+    cdef const char * get_my_py_error_message()
 
 cdef extern from "language.h" namespace "hdlConvertor":
     enum Language:
         VHDL, VERILOG, SYSTEM_VERILOG
 
-
 cdef class ParseException(Exception):
     pass
 
-
-cdef int raise_my_py_error() except *:
+cdef int raise_my_py_error() except * :
     PY3 = PY_MAJOR_VERSION == 3
     msg = get_my_py_error_message()
     if PY3:
         msg = msg.decode('utf-8')
 
     raise ParseException(msg)
-
 
 cdef extern from "convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
@@ -59,14 +55,12 @@ cdef extern from "convertor.h" namespace "hdlConvertor":
 
         string verilog_pp(string filename, vector[string] incdirs, unsigned int) except +raise_my_py_error
 
-
-cdef class hdlConvertor:
+cdef class HdlConvertor:
     """
     The container of the Convertor which parses HDL code to universal AST
     """
 
     cdef Convertor * thisptr
-
     def __cinit__(self):
         self.thisptr = new Convertor()
 
@@ -80,6 +74,7 @@ cdef class hdlConvertor:
         :param incdirs: list of include directories
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
+        :return: HdlContext instance
         """
 
         if langue == PyHdlLanguageEnum.VERILOG:
@@ -113,11 +108,14 @@ cdef class hdlConvertor:
             c = self.thisptr.parse(
                 filenames, langue_value, incdirs, hierarchyOnly, debug)
 
+            toPy = ToPy()
             d = toPy.toPy(c)
+            if not d:
+                raise
             d_py = < object > d
             return d_py
         else:
-            return {}
+            return HdlContext()
 
     def verilog_pp(self, filename, incdirs=['.'], mode=0):
         """
@@ -143,33 +141,3 @@ cdef class hdlConvertor:
             data = data.decode('utf8')
 
         return data
-
-
-# [TODO] remove because it is useless (use hdlConvertor class)
-def parse(filenames, langue, incdirs=['.'], hierarchyOnly=False, debug=False):
-    cdef hdlConvertor obj
-    cdef object context
-    obj = hdlConvertor()
-    context = obj.parse(filenames, langue, incdirs, hierarchyOnly, debug)
-    return context
-
-
-def verilog_pp(filename, incdirs=['.'], mode="verilog2001"):
-    """
-    :param filename: object of verilog preprocess
-    :param incdirs: list of include directories
-    :param language: one of "verilog2001", "verilog2005", "sv2012"
-    """
-    cdef hdlConvertor obj
-    cdef int mode_value
-    if mode == "verilog2001" :
-        mode_value = 0
-    elif mode == "verilog2005" :
-        mode_value = 1
-    elif mode == "sv2012" :
-        mode_value = 2
-    else:
-        raise ValueError(mode + " is not recognized (expected verilog2001, verilog2005 or sv2012)")
-    obj = hdlConvertor()
-    return obj.verilog_pp(filename, incdirs,mode_value)
-

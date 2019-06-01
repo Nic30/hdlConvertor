@@ -148,11 +148,11 @@ OperatorType VerExprParser::visitBinary_operator(
 	else if (op.compare("**") == 0)
 		return POW;
 	else if (op.compare("<") == 0)
-		return LOWERTHAN;
+		return LT;
 	else if (op.compare("<=") == 0)
 		return LE;
 	else if (op.compare(">") == 0)
-		return GREATERTHAN;
+		return GT;
 	else if (op.compare(">=") == 0)
 		return GE;
 	else if (op.compare("&") == 0)

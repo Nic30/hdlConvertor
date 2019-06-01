@@ -142,7 +142,6 @@ add_subdirectory(vhdlConvertor)
 file(GLOB libhdlConvertor_SRC
   "${HDLCONVERTOR_SOURCE_DIR}/src/hdlObjects/*.cpp"
   "${HDLCONVERTOR_SOURCE_DIR}/src/baseHdlParser/*.cpp"
-  "${HDLCONVERTOR_SOURCE_DIR}/src/hdlConvertor/*.cpp"
   "${HDLCONVERTOR_SOURCE_DIR}/src/*.cpp"
 )
 

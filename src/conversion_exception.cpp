@@ -1,5 +1,6 @@
-#include "exception.h"
-#include <Python.h>
+#include "conversion_exception.h"
+
+namespace hdlConvertor {
 
 const char* get_my_py_error_message() {
 	try {
@@ -9,5 +10,7 @@ const char* get_my_py_error_message() {
 	} catch (const std::exception &e) {
 		return e.what();
 	}
+
+}
 
 }

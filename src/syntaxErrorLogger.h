@@ -4,14 +4,17 @@
 #include <sstream>
 #include <string>
 
-#include "exception.h"
-
 namespace hdlConvertor {
 
-enum error_kind_t {SYNTAXERROR,REPORTAMBIGUITY,REPORTCONTEXTSENSITIVITY,REPORTATTEMPTINGFULLCONTEXT};
+enum error_kind_t {
+	SYNTAXERROR,
+	REPORTAMBIGUITY,
+	REPORTCONTEXTSENSITIVITY,
+	REPORTATTEMPTINGFULLCONTEXT
+};
 
 class error_data {
-	public:
+public:
 	enum error_kind_t _error_kind;
 	size_t _line;
 	size_t _charPosition;
@@ -19,12 +22,10 @@ class error_data {
 	std::string _message;
 };
 
-
 class SyntaxErrorLogger: public antlr4::ANTLRErrorListener {
 
-
 	class error_data {
-		public:
+	public:
 		enum error_kind_t _error_kind;
 		size_t _line;
 		size_t _charPosition;
@@ -35,38 +36,23 @@ class SyntaxErrorLogger: public antlr4::ANTLRErrorListener {
 private:
 	std::vector<error_data> _errors;
 
-
 public:
 	void CheckErrors();
-	void syntaxError(
-			antlr4::Recognizer *recognizer,
-			antlr4::Token *offendingSymbol,
-			size_t line,
-			size_t charPositionInLine,
-			const std::string &msg,
+	void syntaxError(antlr4::Recognizer *recognizer,
+			antlr4::Token *offendingSymbol, size_t line,
+			size_t charPositionInLine, const std::string &msg,
 			std::exception_ptr e);
 
-	void reportAmbiguity(
-			antlr4::Parser *recognizer,
-			const antlr4::dfa::DFA &dfa,
-			size_t startIndex,
-			size_t stopIndex,
-			bool exact,
-			const antlrcpp::BitSet &ambigAlts,
+	void reportAmbiguity(antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa, size_t startIndex, size_t stopIndex,
+			bool exact, const antlrcpp::BitSet &ambigAlts,
 			antlr4::atn::ATNConfigSet *configs);
-	void reportContextSensitivity(
-			antlr4::Parser *recognizer,
-			const antlr4::dfa::DFA &dfa,
-			size_t startIndex,
-			size_t stopIndex,
-			size_t prediction,
-			antlr4::atn::ATNConfigSet *configs);
+	void reportContextSensitivity(antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa, size_t startIndex, size_t stopIndex,
+			size_t prediction, antlr4::atn::ATNConfigSet *configs);
 
-	void reportAttemptingFullContext(
-			antlr4::Parser *recognizer,
-			const antlr4::dfa::DFA &dfa,
-			size_t startIndex,
-			size_t stopIndex,
+	void reportAttemptingFullContext(antlr4::Parser *recognizer,
+			const antlr4::dfa::DFA &dfa, size_t startIndex, size_t stopIndex,
 			const antlrcpp::BitSet &conflictingAlts,
 			antlr4::atn::ATNConfigSet *configs);
 

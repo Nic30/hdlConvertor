@@ -119,7 +119,8 @@ Expr * LiteralParser::visitAbstract_literal(
 		if (n.size() == 1)
 			return Expr::INT(n[0]->getText(), 10);
 
-		NotImplementedLogger::print("LiteralParser.visitAbstract_literal - float");
+		NotImplementedLogger::print(
+				"LiteralParser.visitAbstract_literal - float");
 		return nullptr;
 		//return Expr::FLOAT(atof(n[0]->getText().c_str()));
 	}
@@ -143,7 +144,8 @@ Expr * LiteralParser::visitAbstract_literal(
 	BigInteger val = BigInteger_fromStr(bl->children[2]->getText().c_str(),
 			base);
 	if (bl->exponent()) {
-		NotImplementedLogger::print("LiteralParser.visitBased_literal - exponent");
+		NotImplementedLogger::print(
+				"LiteralParser.visitBased_literal - exponent");
 	}
 	return new Expr(val);
 }
@@ -156,13 +158,15 @@ Expr * LiteralParser::visitEnumeration_literal(
 
 	return visitCharacter_literal(ctx->character_literal());
 }
-Expr * LiteralParser::visitString_literal(vhdlParser::String_literalContext * ctx) {
+Expr * LiteralParser::visitString_literal(
+		vhdlParser::String_literalContext * ctx) {
 	std::string s = ctx->getText();
 	std::string str = s.substr(1, s.length() - 2);
 	return Expr::STR(str);
 
 }
-Expr * LiteralParser::visitCharacter_literal(vhdlParser::Character_literalContext* ctx) {
+Expr * LiteralParser::visitCharacter_literal(
+		vhdlParser::Character_literalContext* ctx) {
 	return Expr::INT(ctx->getText()[1] - '0');
 }
 Expr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
@@ -188,12 +192,12 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	return s->value._str;
 }
 
-char * LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
+std::string LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
 	// label_colon
 	// : identifier COLON
 	// ;
 	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
-	char * s = strdup(dynamic_cast<Symbol*>(e->data)->value._str);
+	std::string s = dynamic_cast<Symbol*>(e->data)->value._str;
 	delete e;
 	return s;
 }

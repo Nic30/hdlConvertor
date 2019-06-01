@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Union, Tuple, Optional
+from typing import Dict, Union, Tuple, Optional, List
 
 """
 This module contains the containers for Hardware Description Language Abstract Syntax Tree (HDL AST)
@@ -33,7 +33,7 @@ class HdlDirection(Enum):
     BUFFER,
     LINKAGE,
     INTERNAL,
-    UNKNOWN) = range(6)
+    UNKNOWN) = range(7)
 
 
 class HdlName(str):
@@ -87,14 +87,6 @@ class HdlTypeBits():
             and self.lsb == other.lsb
             and self.signed == other.signed)
 
-class HdlImport(list):
-    """
-    Container for import in HDL code
-
-    this is List[Union[HdlName, HdlAll]]
-    """
-    __slots__ = []
-
 
 class HdlTypeAuto():
     """
@@ -115,6 +107,18 @@ class iHdlObj():
         self.doc: str = ""
 
 
+class HdlImport(iHdlObj):
+    """
+    Container for import in HDL code
+
+    this is List[Union[HdlName, HdlAll]]
+    """
+    __slots__ = ["path"]
+
+    def __init__(self):
+        self.path = []  # type: List[iHdlObj]
+
+
 class HdlIntValue():
     """
     Object for represenation of int value in in HDL (= also for the bitstrings)
@@ -125,9 +129,15 @@ class HdlIntValue():
         self.val = val  # type: int
         self.bits = bits  # type: Optional[int]
 
+    def __int__(self):
+        return self.val
+
+    def __bool__(self):
+        return bool(self.val)
+
 
 # None is equivalent of HDL null
-iHdlExpr = Union[HdlName, HdlInt, float, string, None, List["iHdlExpr"], HdlAll, "HdlCall"]
+iHdlExpr = Union[HdlName, HdlIntValue, float, str, None, List["iHdlExpr"], HdlAll, "HdlCall"]
 
 
 class HdlBuildinFn(Enum):
@@ -165,10 +175,10 @@ class HdlBuildinFn(Enum):
     XOR,
     XNOR,
     EQ,  # ==
-    NEQ,  # ~
-    LOWERTHAN,  # <
+    NEQ, # ~
+    LT,  # <
     LE,  # <=
-    GREATERTHAN,  # >
+    GT,  # >
     GE,  # >=
     SLL,  # shift left logical
     SRL,  # shift right logical
@@ -189,7 +199,7 @@ class HdlBuildinFn(Enum):
     MATCH_LE,
     MATCH_GT,
     MATCH_GE,
-    ) = range(53)
+    ) = range(54)
     # note that in verilog bitewise operators can have only one argument
 
 
@@ -238,14 +248,16 @@ class HdlImport(iHdlObj):
 
 
 class HdlVariableDef(iHdlObj, iInModuleHdlObj):
-    __slots__ = ["type", "value", "latched", "direction"]
+    __slots__ = ["type", "name", "value", "latched", "is_const", "direction"]
 
     def __init__(self):
         iHdlObj.__init__(self)
         iInModuleHdlObj.__init__(self)
+        self.name = None  # type HdlName
         self.type = None  # type: HdlType
         self.value = None  # iHdlExpr
         self.latched = False  # type: bool
+        self.is_const = False  # type: bool
         self.direction = None  # type: HdlDirection
 
 
@@ -266,7 +278,7 @@ class HdlModuleDec(HdlNamespace):
 
     Corresponds to VHDL entity and the first first part of the module with the ports and parameters
     """
-    __slots__ = ["params", "ports", objs]
+    __slots__ = ["params", "ports", "objs"]
 
     def __init__(self):
         super(HdlModuleDec, self).__init__()
@@ -313,7 +325,7 @@ class iHdlStatement(iHdlObj, iInModuleHdlObj):
     :ivar in_preproc: if True the statement is VHDL generate
             or other different of type of statement which should be evaluated complile time
     """
-    __slots__ = ["labels", "in_preproc"]
+    __slots__ = ["labels", "in_prepoc"]
 
     def __init__(self):
         iHdlObj.__init__(self)
@@ -322,15 +334,16 @@ class iHdlStatement(iHdlObj, iInModuleHdlObj):
         self.in_prepoc = False  # type: bool
 
 
-class HdlStatementBlock(iHdlStatement, list):
+class HdlStatementBlock(iHdlStatement):
     """
     Block of statements in HDL
     List[Union[iHdlExpr, iHdlStatement, HdlVariableDef, iHdlTypeDef]]
     """
-    __slots__ = []
+    __slots__ = ["body"]
 
     def __init__(self):
         super(HdlStatementBlock, self).__init__()
+        self.body = []  # type: List[iHdlObj]
 
 
 class HdlAssignStm(iHdlStatement):
@@ -339,10 +352,10 @@ class HdlAssignStm(iHdlStatement):
     """
     __slots__ = ["src", "dst"]
 
-    def __init__(self):
-        super(HdlAssignStm, self).__init__(iHdlStatement)
-        self.src = None  # type: iHdlExpr
-        self.dst = None  # type: iHdlExpr
+    def __init__(self, src, dst):
+        super(HdlAssignStm, self).__init__()
+        self.src = src  # type: iHdlExpr
+        self.dst = dst  # type: iHdlExpr
 
 
 class HdlIfStm(iHdlStatement):
@@ -351,19 +364,20 @@ class HdlIfStm(iHdlStatement):
 
     :ivar cond: condition in if statement
     :ivar if_true: block of statements which is in if true branch
-    :ivar elifs: tuples of
+    :ivar elifs: type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
+                  = list of (condition, statement list)
     """
-    __slots__ = ["cond", "if_true", "if_false"]
+    __slots__ = ["cond", "if_true", "elifs", "if_false"]
 
     def __init__(self):
         super(HdlIfStm, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.if_true = HdlStatementBlock()  # type: HdlStatementBlock
-        self.elifs = []  # type: List[Tuple[iHdlExpr, HdlStatementBlock]]
-        self.if_false = None  # type: Optional[HdlStatementBlock]
+        self.if_true = []  # type: List[iHdlStatement]
+        self.elifs = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
+        self.if_false = None  # type: Optional[List[iHdlStatement]]
 
 
-class HdlProcessStm(HdlStatementBlock, iHdlObjWithName):
+class HdlProcessStm(iHdlStatement):
     """
     HdlProcess statement
     the container of statements with the sensitivity specified
@@ -371,12 +385,12 @@ class HdlProcessStm(HdlStatementBlock, iHdlObjWithName):
     :ivar sensitivity: optional list of expessions which specifies
         the trigger of the evaluation of the process
     """
-    __slots__ = ["sensitivity"]
+    __slots__ = ["sensitivity", "body"]
 
     def __init__(self):
-        HdlStatementBlock.__init__(self)
-        iHdlObjWithName.__init__(self)
+        super(HdlProcessStm, self).__init__()
         self.sensitivity = None  # type: Optional[iHdlExpr]
+        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
 
 class HdlCaseStm(iHdlStatement):
@@ -388,8 +402,8 @@ class HdlCaseStm(iHdlStatement):
     def __init__(self):
         super(iHdlStatement, self).__init__()
         self.switch_on = None  # type: iHdlExpr
-        self.cases = []  # type: List[Tuple[iHdlExpr, HdlStatementBlock]]
-        self.default = None  # type: Optional[Tuple[iHdlExpr, HdlStatementBlock]]
+        self.cases = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
+        self.default = None  # type: Optional[List[iHdlStatement]]
 
 
 class HdlForStm(iHdlStatement):
@@ -401,7 +415,7 @@ class HdlForStm(iHdlStatement):
     def __init__(self):
         super(iHdlStatement, self).__init__()
         self.params = []  # type: List[iHdlExpr]
-        self.body = []  # type: Tuple[iHdlExpr, HdlStatementBlock]
+        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
 
 class HdlWhileStm(iHdlStatement):
@@ -413,7 +427,7 @@ class HdlWhileStm(iHdlStatement):
     def __init__(self):
         super(iHdlStatement, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.body = []  # type: Tuple[iHdlExpr, HdlStatementBlock]
+        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
 
 class HdlReturnStm(iHdlStatement):

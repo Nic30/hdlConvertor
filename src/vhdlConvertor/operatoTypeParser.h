@@ -45,9 +45,9 @@ inline hdlObjects::OperatorType OperatorType_from(
 	if (op->CONASGN())
 		return OperatorType::LE;
 	if (op->LT())
-		return OperatorType::LOWERTHAN;
+		return OperatorType::LT;
 	if (op->GT())
-		return OperatorType::GREATERTHAN;
+		return OperatorType::GT;
 	if (op->GE())
 		return OperatorType::GE;
 	if (op->MATCH_EQ())

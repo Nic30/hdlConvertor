@@ -155,7 +155,7 @@ UP: '^';
 VARASGN: ':=';
 BOX: '<>';
 ARROW: '=>';
-COND_OP: '??';
+COND_OP: '?' '?';
 LOWER_CASE_LETTER: 'a'..'z';
 UPPER_CASE_LETTER: 'A'..'Z';
 

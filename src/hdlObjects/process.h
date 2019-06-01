@@ -1,9 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "named.h"
-#include "expr.h"
-#include "iHdlObj.h"
+#include "statement.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -14,15 +12,19 @@ namespace hdlObjects {
  * 		this means that it does not have to have name or sensitivity list
  * 		specified explicitly
  * */
-class Process: public WithNameAndDoc, public iHdlObj {
+class Process: public Statement {
 public:
 
 	bool sensitivity_list_specified;
-	std::vector<Expr*> sensitivity_list;
-	std::vector<iHdlObj*> objs;
+
+	std::vector<Expr*> & sensitivity_list();
+	std::vector<iHdlObj*> & objs();
+
+	const std::vector<Expr*> & sensitivity_list() const;
+	const std::vector<iHdlObj*> & objs() const;
 
 	Process();
-	~Process();
+	Process(std::vector<Expr*> * sensitivity, std::vector<iHdlObj*> * body);
 };
 
 }

@@ -13,7 +13,6 @@
 #include "named.h"
 #include "iHdlObj.h"
 
-
 namespace hdlConvertor {
 namespace hdlObjects {
 
@@ -27,7 +26,7 @@ public:
 
 	Expr(Expr * op0, OperatorType operatorType, Expr * op1);
 	Expr(SymbolType type, LiteralVal value);
-	Expr(SymbolType type, Symbol * value);
+	Expr(Symbol * value);
 	Expr(BigInteger value, int bits);
 	Expr(BigInteger value);
 

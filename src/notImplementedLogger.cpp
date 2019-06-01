@@ -11,7 +11,7 @@ void NotImplementedLogger::print(const char * msg) {
 }
 
 void NotImplementedLogger::print(const std::string & msg) {
-	print(msg.c_str());
+	NotImplementedLogger::print(msg.c_str());
 }
 
 }

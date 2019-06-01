@@ -24,7 +24,7 @@ public:
 	static Expr * visitIdentifier(vhdlParser::IdentifierContext* ctx);
 	static bool isStrDesignator(vhdlParser::DesignatorContext* ctx);
 	static char * visitDesignator(vhdlParser::DesignatorContext* ctx);
-	static char * visitLabel(vhdlParser::LabelContext * ctx);
+	static std::string visitLabel(vhdlParser::LabelContext * ctx);
 };
 
 }

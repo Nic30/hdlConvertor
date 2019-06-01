@@ -31,7 +31,7 @@ public:
 	PackageParser(bool _hierarchyOnly);
 	hdlObjects::Package * visitPackage_body(
 			vhdlParser::Package_bodyContext* ctx);
-	void visitPackage_body_declarative_part(hdlObjects::aPackage * p,
+	void visitPackage_body_declarative_part(
 			vhdlParser::Package_body_declarative_partContext* ctx);
 	void visitPackage_body_declarative_item(
 			vhdlParser::Package_body_declarative_itemContext* ctx);

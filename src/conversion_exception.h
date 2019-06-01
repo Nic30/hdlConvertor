@@ -3,6 +3,8 @@
 #include <string>
 #include <exception>
 
+namespace hdlConvertor {
+
 class ParseException: public std::exception {
 private:
 	std::string _msg;
@@ -17,3 +19,5 @@ public:
 };
 
 extern const char* get_my_py_error_message();
+
+}

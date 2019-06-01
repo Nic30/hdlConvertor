@@ -44,12 +44,11 @@ Package * PackageParser::visitPackage_body(
 	if (!hierarchyOnly) {
 		auto pdp = ctx->package_body_declarative_part();
 		if (pdp)
-			visitPackage_body_declarative_part(p, pdp);
+			visitPackage_body_declarative_part(pdp);
 	}
 	return p;
 }
-void PackageParser::visitPackage_body_declarative_part(aPackage * p,
-		vhdlParser::Package_body_declarative_partContext* ctx) {
+void PackageParser::visitPackage_body_declarative_part(vhdlParser::Package_body_declarative_partContext* ctx) {
 	// package_body_declarative_part
 	// : ( package_body_declarative_item )*
 	// ;

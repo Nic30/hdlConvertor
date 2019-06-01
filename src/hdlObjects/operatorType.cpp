@@ -35,9 +35,9 @@ static const char* const opTypeToStr[] = {
 		"XNOR",
 		"EQ",
 		"NEQ",
-		"LOWERTHAN",
+		"LT",
 		"LE",
-		"GREATERTHAN",
+		"GT",
 		"GE",
 		"SLL",
 		"SRL",
@@ -67,20 +67,6 @@ const char* OperatorType_toString(OperatorType opt) {
 	return opTypeToStr[opt];
 }
 
-int OperatorType_arity(OperatorType opt) {
-	switch (opt) {
-	case CALL:
-		return -1;
-	case NOT:
-	case ABS:
-	case RANGE || REVERSE_RANGE || ACROSS || THROUGH || REFERENCE || TOLERANCE:
-		return 1;
-	case TERNARY:
-		return 3;
-	default:
-		return 2;
-	}
-}
 
 }
 }

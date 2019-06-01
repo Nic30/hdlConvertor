@@ -28,11 +28,12 @@ Process * ProcessParser::visitProcess_statement(
 	Process * p = new Process();
 	p->position.update_from_elem(ctx);
 	if (ctx->label(0)) {
-		p->name = LiteralParser::visitLabel(ctx->label(0));
+		auto l = LiteralParser::visitLabel(ctx->label(0));
+		p->labels.push_back(l);
 	}
 	auto sl = ctx->process_sensitivity_list();
 	if (sl) {
-		visitProcess_sensitivity_list(sl, p->sensitivity_list);
+		visitProcess_sensitivity_list(sl, p->sensitivity_list());
 		p->sensitivity_list_specified = true;
 	}
 
@@ -41,7 +42,7 @@ Process * ProcessParser::visitProcess_statement(
 	auto statParts = visitProcess_statement_part(ctx->process_statement_part());
 	for (auto sp : *statParts) {
 		if (sp) {
-			p->objs.push_back(sp);
+			p->objs().push_back(sp);
 		}
 	}
 
@@ -96,14 +97,14 @@ void ProcessParser::visitProcess_declarative_item(
 	//  ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		p->objs.push_back(
+		p->objs().push_back(
 				SubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
 		auto f = SubProgramParser::visitSubprogram_body(sb);
-		p->objs.push_back(f);
+		p->objs().push_back(f);
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -114,14 +115,14 @@ void ProcessParser::visitProcess_declarative_item(
 	auto st = ctx->subtype_declaration();
 	if (st) {
 		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
-		p->objs.push_back(_st);
+		p->objs().push_back(_st);
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
 		auto constants = ConstantParser::visitConstant_declaration(constd);
 		for (auto c : *constants) {
-			p->objs.push_back(c);
+			p->objs().push_back(c);
 		}
 		delete constants;
 		return;
@@ -130,7 +131,7 @@ void ProcessParser::visitProcess_declarative_item(
 	if (vd) {
 		auto variables = VariableParser::visitVariable_declaration(vd);
 		for (auto v : *variables) {
-			p->objs.push_back(v);
+			p->objs().push_back(v);
 		}
 		delete variables;
 		return;

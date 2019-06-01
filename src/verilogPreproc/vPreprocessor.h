@@ -11,9 +11,8 @@
 
 #include "macroPrototype.h"
 #include "macroSymbol.h"
-#include "exception.h"
-
 #include "../syntaxErrorLogger.h"
+#include "conversion_exception.h"
 
 namespace hdlConvertor {
 namespace verilog_pp {

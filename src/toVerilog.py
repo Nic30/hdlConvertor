@@ -1,4 +1,8 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, WIRE
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag
+from hdlConvertor._hdlConvertor import HdlConvertor
+from hdlConvertor.hdlAst import *
+
+WIRE = HdlName('wire')
 
 
 class ToVerilog():
@@ -7,40 +11,40 @@ class ToVerilog():
     """
     INDENT_STEP = "    "
     DIR2V = {
-        "IN": "input",
-        "OUT": "output",
-        "INOUT": "inout",
+        HdlDirection.IN: "input",
+        HdlDirection.OUT: "output",
+        HdlDirection.INOUT: "inout",
     }
 
     GENERIC_BIN_OPS = {
-        "AND": "&",
-        "LOG_AND": "&&",
-        "OR": "|",
-        "LOG_OR": "||",
-        "SUB": "-",
-        "ADD": "+",
-        "MUL": "*",
-        "DIV": "/",
-        "MOD": "%",
-        "NAND": "~&",
-        "NOR": "~|",
-        "XOR": "^",
-        "XNOR": "~^",
-        "EQ": '==',
-        "NEQ": "!=",
-        "LOWERTHAN": "<",
-        "LE": "<=",
-        "GREATERTHAN": ">",
-        "GE": ">=",
-        "SLL": "<<",
-        "SRL": ">>",
+        HdlBuildinFn.AND: "&",
+        HdlBuildinFn.LOG_AND: "&&",
+        HdlBuildinFn.OR: "|",
+        HdlBuildinFn.LOG_OR: "||",
+        HdlBuildinFn.SUB: "-",
+        HdlBuildinFn.ADD: "+",
+        HdlBuildinFn.MUL: "*",
+        HdlBuildinFn.DIV: "/",
+        HdlBuildinFn.MOD: "%",
+        HdlBuildinFn.NAND: "~&",
+        HdlBuildinFn.NOR: "~|",
+        HdlBuildinFn.XOR: "^",
+        HdlBuildinFn.XNOR: "~^",
+        HdlBuildinFn.EQ: '==',
+        HdlBuildinFn.NEQ: "!=",
+        HdlBuildinFn.LT: "<",
+        HdlBuildinFn.LE: "<=",
+        HdlBuildinFn.GT: ">",
+        HdlBuildinFn.GE: ">=",
+        HdlBuildinFn.SLL: "<<",
+        HdlBuildinFn.SRL: ">>",
     }
 
     def __init__(self, out_stream):
         self.out = AutoIndentingStream(out_stream, self.INDENT_STEP)
 
     def print_doc(self, obj):
-        doc = obj.get("__doc__", None)
+        doc = obj.doc
         if doc is not None:
             doc = doc.split("\n")
             w = self.out.write
@@ -59,39 +63,39 @@ class ToVerilog():
         self.print_doc(g)
         w = self.out.write
         w("parameter ")
-        is_array = self.print_type_first_part(g["type"])
+        is_array = self.print_type_first_part(g.type)
         w(" ")
-        w(g["name"])
-        v = g.get("value", None)
+        w(g.name)
+        v = g.value
         if v:
             w(" = ")
             self.print_expr(v)
 
     def print_port_declr(self, p):
+        """
+        :type p: HdlVariableDef
+        """
         w = self.out.write
-        d = p['direction']
-        var = p['variable']
-        self.print_doc(var)
-        name = var["name"]
-        self.print_direction(d)
+        self.print_doc(p)
+        self.print_direction(p.direction)
         w(" ")
-        l = var.get("latched", False)
+        l = p.latched
         if l:
             w("reg ")
 
-        t = var["type"]
+        t = p.type
         is_array = self.print_type_first_part(t)
         if is_array:
             raise NotImplementedError()
 
-        w(name)
+        w(p.name)
 
     def print_module_header(self, e):
         self.print_doc(e)
         w = self.out.write
         w("module ")
-        w(e["name"])
-        gs = e.get("generics", [])
+        w(e.name)
+        gs = e.params
         if gs:
             w(" #(\n")
             with Indent(self.out):
@@ -103,7 +107,7 @@ class ToVerilog():
                         w(",\n")
 
             w(")")
-        ps = e.get("ports", [])
+        ps = e.ports
         if ps:
             w("(\n")
             with Indent(self.out):
@@ -122,92 +126,95 @@ class ToVerilog():
             w(expr)
             return
 
-        lit = expr.get("literal", None)
-        if lit is not None:
-            t = lit["type"]
-            v = lit["value"]
-            if t == "INT":
-                bits = lit["bits"]
-                if bits == -1:
-                    w(str(v))
-                else:
-                    w(str(bits))
-                    w("'h")
-                    w("%x" % v)
-            elif t == "ID":
-                w(v)
-            elif t == "ALL":
-                w("*")
+        if isinstance(expr, HdlIntValue):
+            v = expr.val
+            bits = expr.bits
+            if bits is None:
+                w(str(v))
             else:
-                raise NotImplementedError()
+                w(str(bits))
+                w("'h")
+                w("%x" % v)
             return
-
-        o = expr.get("binOperator", None)
-
-        if o is not None:
-            op = o["operator"]
+        elif isinstance(expr, HdlName):
+            w(v)
+            return
+        elif isinstance(expr, HdlAll):
+            w("*")
+            return
+        elif isinstance(expr, HdlCall):
+            o = expr
+            op = expr.fn
             symbol = self.GENERIC_BIN_OPS.get(op, None)
             if symbol is not None:
                 w("(")
-                self.print_expr(o["op0"])
+                self.print_expr(o.ops[0])
                 w(" ")
                 w(symbol)
                 w(" ")
-                self.print_expr(o["op1"])
+                self.print_expr(o.ops[1])
                 w(")")
                 return
-
-            if op == "DOWNTO":
-                self.print_expr(o["op0"])
+            if op == HdlBuildinFn.DOWNTO:
+                self.print_expr(o.ops[0])
                 w(":")
-                self.print_expr(o["op1"])
-            elif op == "TO":
-                self.print_expr(o["op1"])
+                self.print_expr(o.ops[1])
+                return
+            elif op == HdlBuildinFn.TO:
+                self.print_expr(o.ops[1])
                 w(":")
-                self.print_expr(o["op0"])
-            elif op == "NOT":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.NOT:
                 w("!")
-                self.print_expr(o["op0"])
-            elif op == "NEG":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.NEG:
                 w("~")
-                self.print_expr(o["op0"])
-            elif op == "RISING":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.RISING:
                 w("posedge ")
-                self.print_expr(o["op0"])
-            elif op == "FALLING":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.FALLING:
                 w("negedge ")
-                self.print_expr(o["op0"])
-            elif op == "NEG":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.NEG:
                 w("~")
-                self.print_expr(o["op0"])
-            elif op == "CONCAT":
+                self.print_expr(o.ops[0])
+                return
+            elif op == HdlBuildinFn.CONCAT:
                 w("{")
-                self.print_expr(o["op0"])
+                self.print_expr(o.ops[0])
                 w(", ")
-                self.print_expr(o["op1"])
+                self.print_expr(o.ops[1])
                 w("}")
-            elif op == "INDEX":
-                self.print_expr(o["op0"])
+                return
+            elif op == HdlBuildinFn.INDEX:
+                self.print_expr(o.ops[0])
                 w("[")
-                self.print_expr(o["op1"])
+                self.print_expr(o.ops[1])
                 w("]")
-            elif op == "REPL_CONCAT":
+                return
+            elif op == HdlBuildinFn.REPL_CONCAT:
                 w("{(")
-                self.print_expr(o["op0"])
+                self.print_expr(o.ops[0])
                 w("){")
-                self.print_expr(o["op1"])
+                self.print_expr(o.ops[1])
                 w("}}")
-            elif op == "TERNARY":
-                self.print_expr(o['op0'])
+                return
+            elif op == HdlBuildinFn.TERNARY:
+                self.print_expr(o.op[0])
                 w(" ? ")
-                o0, o1 = o['operands']
+                o0, o1 = o.ops[1:]
                 self.print_expr(o0)
                 w(" : ")
                 self.print_expr(o1)
-
+                return
             else:
                 raise NotImplementedError(op)
-            return
         raise NotImplementedError()
 
     def print_type_first_part(self, t):
@@ -216,26 +223,25 @@ class ToVerilog():
         """
         w = self.out.write
         if t != WIRE:
-            op = t.get("binOperator", None)
+            op = t if isinstance(t, HdlCall) else None
             if op is None:
-                assert t["literal"]
                 self.print_expr(t)
                 return False
 
-            if op and op.get('operator', None) == "CALL" and op["op0"] == WIRE:
+            if op and op.fn == HdlBuildinFn.CALL and op.ops[0] == WIRE:
                 # 1D vector
                 w("[")
-                ops = op["operands"]
+                ops = op.ops[1:]
                 size_expr = ops[0]
-                is_signed = ops[1]["literal"]["value"]
+                is_signed = bool(ops[1])
                 if is_signed:
                     raise NotImplementedError()
                 self.print_expr(size_expr)
                 w("] ")
             else:
-                o = op["operator"]
-                if o == "INDEX":
-                    self.print_type_first_part(op["op0"])
+                o = op.fn
+                if o == HdlBuildinFn.INDEX:
+                    self.print_type_first_part(op.ops[0])
                     return True
                 raise NotImplementedError()
 
@@ -243,18 +249,17 @@ class ToVerilog():
 
     def print_type_array_part(self, t):
         w = self.out.write
-        op = t.get("binOperator", None)
-        if op and op["operator"] == "INDEX":
-            self.print_type_array_part(op["op0"])
+        if isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
+            self.print_type_array_part(t.ops[0])
             w("[")
-            self.print_expr(op["op1"])
+            self.print_expr(t.ops[1])
             w("]")
 
     def print_variable(self, var):
         self.print_doc(var)
-        name = var["name"]
-        t = var["type"]
-        l = var.get("latched", False)
+        name = var.name
+        t = var.type
+        l = var.latched
         w = self.out.write
         if l:
             w("reg ")
@@ -267,8 +272,8 @@ class ToVerilog():
             self.print_type_array_part(t)
 
     def print_process(self, proc):
-        sens = proc['sensitivity']
-        body = proc['body']
+        sens = proc.sensitivity
+        body = proc.body
         w = self.out.write
 
         w("always @ (")
@@ -304,16 +309,16 @@ class ToVerilog():
 
     def print_if(self, stm):
         w = self.out.write
-        c = stm['cond']
-        ifTrue = stm["ifTrue"]
-        ifFalse = stm.get("ifFalse", None)
+        c = stm.cond
+        ifTrue = stm.if_true
+        ifFalse = stm.if_false
 
         w("if (")
         self.print_expr(c)
         w(")")
         need_space = self.print_block(ifTrue)
 
-        for cond, stms in stm.get('elseIfs', []):
+        for cond, stms in stm.elifs:
             if need_space:
                 w(" ")
             w("else if (")
@@ -328,8 +333,8 @@ class ToVerilog():
             self.print_block(ifFalse)
 
     def print_assignment(self, a, is_top=False):
-        s = a["src"]
-        d = a["dst"]
+        s = a.src
+        d = a.dst
         w = self.out.write
         if is_top:
             w("assign ")
@@ -345,17 +350,17 @@ class ToVerilog():
     def print_case(self, cstm):
         w = self.out.write
         w("case(")
-        self.print_expr(cstm["switchOn"])
+        self.print_expr(cstm.switch_on)
         w(")")
         with Indent(self.out):
-            cases = cstm['cases']
+            cases = cstm.cases
             for k, stms in cases:
                 self.print_expr(k)
                 w(":")
                 is_block = self.print_block(stms)
                 if is_block:
                     w("\n")
-            defal = cstm.get("default", None)
+            defal = cstm.default
             if defal is not None:
                 w("default:")
                 self.print_block(defal)
@@ -364,24 +369,22 @@ class ToVerilog():
 
     def print_statement(self, stm, is_top=False):
         self.print_doc(stm)
-        t = stm["type"]
-        if t == "PROCESS":
+        if isinstance(stm, HdlProcessStm):
             self.print_process(stm)
-        elif t == "IF":
+        elif isinstance(stm, HdlIfStm):
             self.print_if(stm)
-        elif t == "ASSIGMENT":
+        elif isinstance(stm, HdlAssignStm):
             self.print_assignment(stm, is_top=is_top)
-        elif t == "CASE":
+        elif isinstance(stm, HdlCaseStm):
             self.print_case(stm)
         else:
             raise NotImplementedError(t)
 
     def print_map_item(self, item):
-        op = item.get("binOperator", None)
-        if op and op["operator"] == "MAP_ASSOCIATION":
+        if isinstance(item, HdlCall) and item.fn == HdlBuildinFn.MAP_ASSOCIATION:
             w = self.out.write
             # k, v pair
-            k, v = op["op0"], op["op1"]
+            k, v = item.ops
             w(".")
             self.print_expr(k)
             w("(")
@@ -401,18 +404,21 @@ class ToVerilog():
                     w(",\n")
 
     def print_component_instance(self, c):
+        """
+        :type c: HdlComponentInst
+        """
         self.print_doc(c)
         w = self.out.write
-        self.print_expr(c["entityName"])
+        self.print_expr(c.entity_name)
         w(" ")
-        self.print_expr(c["name"])
-        gms = c['genericMap']
+        self.print_expr(c.name)
+        gms = c.param_map
         if gms:
             w(" #(\n")
             self.print_map(gms)
             w(")")
 
-        pms = c['portMap']
+        pms = c.port_map
         if pms:
             w(" (\n")
             self.print_map(pms)
@@ -420,43 +426,48 @@ class ToVerilog():
         w(";")
 
     def print_module_body(self, a):
+        """
+        :type a: HdlModuleDef
+        """
         w = self.out.write
         with Indent(self.out):
-            for v in a['variables']:
-                self.print_variable(v)
-                w(";\n")
-
-            for c in a['componentInstances']:
-                self.print_component_instance(c)
-                w("\n")
-
-            for s in a['statements']:
-                self.print_statement(s, is_top=True)
+            for o in a.objs:
+                if isinstance(o, HdlVariableDef):
+                    self.print_variable(o)
+                    w(";\n")
+                elif isinstance(o, HdlComponentInst):
+                    self.print_component_instance(o)
+                    w("\n")
+                elif isinstance(o, iHdlStatement):
+                    self.print_statement(o, is_top=True)
+                else:
+                    raise NotImplementedError()
 
         self.out.write("endmodule\n")
 
     def print_context(self, context):
-        mod_head2body = {a["entityName"] : a for a in context.get("architectures", [])}
-        for e in context.get("entities", []):
-            self.print_module_header(e)
-            a = mod_head2body[e["name"]]
-            self.print_module_body(a)
+        """
+        :type context: HdlContext
+        """
+        last = None
+        for o in context.objs:
+            if isinstance(o, HdlModuleDec):
+                self.print_module_header(o)
+            elif isinstance(o, HdlModuleDef):
+                self.print_module_body(o)
+            else:
+                raise NotImplementedError(o)
+
+            last = o
 
 
 if __name__ == "__main__":
     import os
     import sys
     BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
-    SKBUILD_DIR = os.path.join(BASE_DIR, "_skbuild")
-    # there should be only one directory with the name of the python configuration like linux-x86_64-3.7
-    PY_CONFIG = os.listdir(SKBUILD_DIR)[0]
-    SKBUILD_BUILD_DIR = os.path.join(SKBUILD_DIR, PY_CONFIG, "setuptools", "lib")
-    sys.path.insert(1, SKBUILD_BUILD_DIR)
-
     TEST_DIR = os.path.join(BASE_DIR, 'tests', 'verilog')
-    from hdlConvertor import hdlConvertor
     from hdlConvertor.language import Language
-    c = hdlConvertor()
+    c = HdlConvertor()
     filenames = [os.path.join(TEST_DIR, "sram.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, False)
     tv = ToVerilog(sys.stdout)

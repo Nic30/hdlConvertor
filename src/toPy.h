@@ -2,15 +2,16 @@
 #include <Python.h>
 #include <vector>
 
-#include "hdlObjects/named.h"
+#include "hdlObjects/arch.h"
 #include "hdlObjects/context.h"
 #include "hdlObjects/entity.h"
-#include "hdlObjects/arch.h"
 #include "hdlObjects/expr.h"
-#include "hdlObjects/variable.h"
+#include "hdlObjects/named.h"
 #include "hdlObjects/operator.h"
 #include "hdlObjects/operatorType.h"
+#include "hdlObjects/process.h"
 #include "hdlObjects/statement.h"
+#include "hdlObjects/variable.h"
 
 namespace hdlConvertor {
 
@@ -34,49 +35,59 @@ class ToPy {
 	PyObject* HdlCaseStmCls;
 	PyObject* HdlForStmCls;
 	PyObject* HdlWhileStmCls;
-	PyObject* HdlReturnCls;
+	PyObject* HdlReturnStmCls;
 	PyObject* HdlBreakStmCls;
 	PyObject* HdlContinueStmCls;
 	PyObject* HdlImportCls;
 
 	template<typename OBJ_T>
-	void toPy_arr(PyObject * parent, const std::string & prop_name,
+	int toPy_arr(PyObject * parent, const std::string & prop_name,
 			const std::vector<OBJ_T> & objs) {
+
 		PyObject * parent_list = PyObject_GetAttrString(parent,
 				prop_name.c_str());
+		if (parent_list == nullptr) {
+			PyErr_SetString(PyExc_ValueError,
+					"oPy::toPy_arr object does not have specified property");
+			return -1;
+		}
 		for (auto o : objs) {
 			auto py_obj = toPy(o);
-			if (py_obj) {
-				throw std::runtime_error("ToPy::toPy_arr: toPy failed");
+			if (py_obj == nullptr) {
+				return -1;
 			}
 			auto e = PyList_Append(parent_list, py_obj);
 			Py_DECREF(py_obj);
 			if (e) {
-				throw std::runtime_error("ToPy::toPy_arr: can not add items to list");
+				Py_DECREF(parent_list);
+				return e;
 			}
 		}
+		return 0;
 	}
 	std::pair<PyObject *, size_t> cases_toPy(
 			std::vector<hdlObjects::Expr*>::const_iterator cond_begin,
 			std::vector<hdlObjects::Expr*>::const_iterator cond_end,
 			std::vector<std::vector<hdlObjects::iHdlObj*>*>::const_iterator stms_begin);
+	static constexpr size_t SIZE_T_ERR = std::numeric_limits<size_t>::max();
 public:
 	ToPy();
 
-	void toPy(const hdlObjects::WithNameAndDoc * o, PyObject * py_inst);
-	void toPy(const hdlObjects::WithDoc * o, PyObject * py_inst);
-	PyObject* toPy(const hdlObjects::Symbol * o);
-	PyObject* toPy(const hdlObjects::Operator * o);
-	PyObject* toPy(const hdlObjects::OperatorType o);
-	PyObject* toPy(const hdlObjects::Direction o);
+	int toPy(const hdlObjects::WithNameAndDoc * o, PyObject * py_inst);
+	int toPy(const hdlObjects::WithDoc * o, PyObject * py_inst);
+
+	PyObject* toPy(const hdlObjects::Arch * o);
 	PyObject* toPy(const hdlObjects::Context * o);
-	PyObject* toPy(const hdlObjects::iHdlObj * o);
+	PyObject* toPy(const hdlObjects::Direction o);
 	PyObject* toPy(const hdlObjects::Entity * o);
 	PyObject* toPy(const hdlObjects::Expr * o);
-	PyObject* toPy(const hdlObjects::Variable * o);
+	PyObject* toPy(const hdlObjects::iHdlObj * o);
+	PyObject* toPy(const hdlObjects::Operator * o);
+	PyObject* toPy(const hdlObjects::OperatorType o);
 	PyObject* toPy(const hdlObjects::Statement * o);
+	PyObject* toPy(const hdlObjects::Symbol * o);
+	PyObject* toPy(const hdlObjects::Variable * o);
 	PyObject* toPy(const std::string & o);
-
 
 	~ToPy();
 };

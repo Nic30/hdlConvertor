@@ -26,7 +26,7 @@
 
 #include "verilogPreproc/vPreprocessor.h"
 
-#include "exception.h"
+#include <conversion_exception.h>
 #include "syntaxErrorLogger.h"
 #include "language.h"
 #include "parserContainer.h"

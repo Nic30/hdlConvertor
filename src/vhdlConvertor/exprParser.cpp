@@ -227,6 +227,8 @@ Expr* ExprParser::visitConstraint(Expr* selectedName,
 			assert(r);
 			NotImplementedLogger::print(
 					"ExprParser.visitConstraint - record_constraint");
+			op = DOT;
+			op1 = nullptr;
 		}
 	}
 

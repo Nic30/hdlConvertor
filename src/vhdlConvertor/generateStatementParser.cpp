@@ -25,6 +25,10 @@ using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
+GenerateStatementParser::GenerateStatementParser(bool _hierarchyOnly) :
+		hierarchyOnly(_hierarchyOnly) {
+}
+
 Statement * GenerateStatementParser::visitGenerate_statement(
 		vhdlParser::Generate_statementContext *ctx) {
 	//generate_statement
@@ -65,8 +69,10 @@ Statement * GenerateStatementParser::visitFor_generate_statement(
 	auto fstm = Statement::FOR(*args, objs);
 	delete args;
 	auto label = ctx->label();
-	if (label.size())
-		fstm->labels.push_back(LiteralParser::visitLabel(label[0]));
+	if (label.size()) {
+		auto l = LiteralParser::visitLabel(label[0]);
+		fstm->labels.push_back(l);
+	}
 	fstm->position.update_from_elem(ctx);
 	fstm->in_preproc = true;
 	return fstm;

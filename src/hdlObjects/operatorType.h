@@ -35,9 +35,9 @@ enum OperatorType {
 	XNOR,
 	EQ,  // ==
 	NEQ, // ~
-	LOWERTHAN, // <
+	LT, // <
 	LE,   // <=
-	GREATERTHAN, // >
+	GT, // >
 	GE,  // >=
 	SLL, // shift left logical
 	SRL, // shift right logical
@@ -61,7 +61,6 @@ enum OperatorType {
 };
 
 const char* OperatorType_toString(OperatorType opt);
-int OperatorType_arity(OperatorType opt);
 
 }
 }

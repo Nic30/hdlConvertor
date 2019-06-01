@@ -18,7 +18,7 @@ CompInstance * CompInstanceParser::visitComponent_instantiation_statement(
 	// ( generic_map_aspect )?
 	// ( port_map_aspect )? SEMI
 	// ;
-	char * name = LiteralParser::visitLabel(ctx->label());
+	auto name = LiteralParser::visitLabel(ctx->label());
 	CompInstance * ci = visitInstantiated_unit(ctx->instantiated_unit());
 	ci->name = Expr::ID(name);
 	ci->position.update_from_elem(ctx);

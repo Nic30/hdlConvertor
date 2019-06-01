@@ -53,5 +53,3 @@ def iter_with_last_flag(it):
 
     # Last item
     yield True, prev
-
-WIRE = {'literal': {'type': 'ID', 'value': 'wire'}}

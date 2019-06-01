@@ -1,5 +1,6 @@
 #include "statement.h"
 #include <tuple>
+#include "process.h"
 
 using namespace std;
 
@@ -144,15 +145,7 @@ Statement* Statement::CONTINUE() {
 }
 Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 		vector<iHdlObj*>* body) {
-	Statement * s = new Statement(s_PROCESS);
-	if (sensitivity) {
-		s->exprs.resize(sensitivity->size());
-		copy(sensitivity->begin(), sensitivity->end(), s->exprs.begin());
-	} else {
-		s->exprs.push_back(nullptr);
-	}
-	s->sub_statements.push_back(body);
-	return s;
+	return new Process(sensitivity, body);
 }
 
 Statement* Statement::FOR(const vector<Expr*> & args, vector<iHdlObj*>* body) {

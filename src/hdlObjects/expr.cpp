@@ -27,7 +27,7 @@ Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
 Expr::Expr(SymbolType type, LiteralVal value) {
 	data = new Symbol(type, value);
 }
-Expr::Expr(SymbolType type, Symbol * value) {
+Expr::Expr(Symbol * value) {
 	data = value;
 }
 
@@ -80,7 +80,7 @@ Expr * Expr::ARRAY(std::vector<Expr*> arr) {
 		delete item;
 	}
 
-	return new Expr(symb_ARRAY, new Symbol(_arr));
+	return new Expr(new Symbol(_arr));
 }
 
 Expr * Expr::OPEN() {

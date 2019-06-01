@@ -17,8 +17,12 @@ Operator::Operator(const Operator & o) {
 }
 
 Operator::Operator(Expr* op0, OperatorType operatorType, Expr* op1) {
-	operands.push_back(op0);
-	operands.push_back(op1);
+	if (op0) {
+		operands.push_back(op0);
+		assert(!op1);
+	}
+	if (op1)
+		operands.push_back(op1);
 	this->op = operatorType;
 }
 
@@ -27,14 +31,17 @@ Operator * Operator::call(Expr* fn, const std::vector<Expr*> & operands) {
 	o->op = CALL;
 	o->operands.reserve(operands.size() + 1);
 	o->operands.push_back(fn);
-	for (auto op: operands)
+	for (auto op : operands)
 		o->operands.push_back(op);
 	return o;
 }
 Operator * Operator::slice(Expr* fn, const std::vector<Expr*> & operands) {
 	Operator * o = new Operator();
 	o->op = INDEX;
-	o->operands = operands;
+	o->operands.reserve(operands.size() + 1);
+	o->operands.push_back(fn);
+	for (auto op : operands)
+		o->operands.push_back(op);
 	return o;
 }
 Operator * Operator::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {

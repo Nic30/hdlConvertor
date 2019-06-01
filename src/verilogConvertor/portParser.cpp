@@ -10,7 +10,6 @@ namespace verilog {
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using namespace hdlObjects;
-;
 
 PortParser::PortParser(CommentParser & commentParser) :
 		commentParser(commentParser) {

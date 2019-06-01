@@ -41,6 +41,30 @@ void ToString::dump(const Expr * e, int indent) {
 	}
 	mkIndent(indent) << "}";
 }
+void ToString::dump(const hdlObjects::iHdlObj * o, int indent) {
+	auto c = dynamic_cast<const Context*>(o);
+	if (c)
+		dump(c, indent);
+	auto md = dynamic_cast<const Entity*>(o);
+	if (md)
+		dump(md, indent);
+	auto ex = dynamic_cast<const Expr*>(o);
+	if (ex)
+		dump(ex, indent);
+	auto v = dynamic_cast<const Variable*>(o);
+	if (v)
+		dump(v, indent);
+	auto s = dynamic_cast<const Statement*>(o);
+	if (s)
+		dump(s, indent);
+
+	assert(false);
+}
+void ToString::dump(const hdlObjects::Statement * o, int indent) {
+	std::cout
+			<< "\"[TODO] void ToString::dump(const hdlObjects::Statement * o, int indent)\""
+			<< std::endl;
+}
 void ToString::dump(const Named * n, int indent) {
 	std::cout << "{\n";
 	mkIndent(indent + INDENT_INCR) << "\"name\":\"" << n->name << "\",\n";
@@ -124,9 +148,9 @@ void ToString::dump(const Operator * o, int indent) {
 void ToString::dump(const Process * p, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
-	dumpArrP("objs", indent, p->objs) << ",\n";
+	dumpArrP("objs", indent, p->objs()) << ",\n";
 	if (p->sensitivity_list_specified)
-		dumpArrP("sensitivity_list", indent, p->sensitivity_list) << ",\n";
+		dumpArrP("sensitivity_list", indent, p->sensitivity_list()) << ",\n";
 
 	//dumpArrP("body", indent, body) << ",\n";
 	indent -= INDENT_INCR;

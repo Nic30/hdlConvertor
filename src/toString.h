@@ -10,6 +10,7 @@
 #include "hdlObjects/aPackage.h"
 #include "hdlObjects/arch.h"
 #include "hdlObjects/entity.h"
+#include "hdlObjects/statement.h"
 
 
 namespace hdlConvertor {
@@ -65,6 +66,7 @@ public:
 	static void dump(const hdlObjects::Operator * v, int indent);
 	static void dump(const hdlObjects::Position * o, int indent);
 	static void dump(const hdlObjects::Process * p, int indent);
+	static void dump(const hdlObjects::Statement * p, int indent);
 	static void dump(const hdlObjects::Symbol * p, int indent);
 	static void dump(const hdlObjects::Variable * v, int indent);
 	static void dump(const hdlObjects::WithDoc * wd, int indent);
