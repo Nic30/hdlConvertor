@@ -16,12 +16,7 @@ void ToString::dump(const aPackage * p, int indent) {
 void ToString::dump(const hdlObjects::Context * c, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
-	dumpArrP("imports", indent, c->imports) << ",\n";
-	dumpArrP("entities", indent, c->entities) << ",\n";
-	dumpArrP("architectures", indent, c->architectures) << ",\n";
-	dumpArrP("packages", indent, c->packages) << ",\n";
-	dumpArrP("packageHeaders", indent, c->packageHeaders) << ",\n";
-	dumpArrP("variables", indent, c->variables) << ",\n";
+	dumpArrP("objs", indent, c->objs) << ",\n";
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
 }
@@ -121,24 +116,8 @@ void ToString::dump(const Variable * v, int indent) {
 void ToString::dump(const Operator * o, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
-	dumpItemP("op0", indent, o->op0) << ",\n";
 	dumpVal("operator", indent, OperatorType_toString(o->op)) << ",\n";
-
-	int arity = OperatorType_arity(o->op);
-	switch (arity) {
-	case -1:
-	case 3:
-		dumpArrP("operands", indent, *o->operands) << "\n";
-		break;
-	case 1:
-		break;
-	case 2:
-		if (o->op1) // may be unary variant of the bin operator (e.g. verilog &a)
-			dumpItemP("op1", indent, o->op1) << "\n";
-		break;
-	default:
-		throw "Invalid arity of operator";
-	}
+	dumpArrP("operands", indent, o->operands) << "\n";
 	mkIndent(indent - INDENT_INCR) << "}";
 }
 

@@ -52,7 +52,7 @@ enum OperatorType {
 	RISING, // rising edge/posedge event operator
 	FALLING, // falling edge/negedge event operator
 	MAP_ASSOCIATION,
-	MATCH_EQ, // VHDL matching ops (the X values are ignored while match)
+	MATCH_EQ, // VHDL-2008 matching ops (the X values are ignored while match)
 	MATCH_NEQ,
 	MATCH_LT,
 	MATCH_LE,

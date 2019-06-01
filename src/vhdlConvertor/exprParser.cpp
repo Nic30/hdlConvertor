@@ -121,7 +121,6 @@ Expr* ExprParser::visitFunction_call(vhdlParser::Function_callContext *ctx) {
 	//       name ( LPAREN actual_parameter_part RPAREN )?
 	// ;
 	auto n = ReferenceParser::visitName(ctx->name());
-	auto c = new Expr();
 	std::vector<Expr*> * args = nullptr;
 	auto app = ctx->actual_parameter_part();
 	if (app) {
@@ -129,7 +128,9 @@ Expr* ExprParser::visitFunction_call(vhdlParser::Function_callContext *ctx) {
 	} else {
 		args = new std::vector<Expr*>();
 	}
-	return Expr::call(n, args);
+	auto call = Expr::call(n, *args);
+	delete args;
+	return call;
 }
 
 Expr* ExprParser::visitActual_part(vhdlParser::Actual_partContext* ctx) {
@@ -140,8 +141,7 @@ Expr* ExprParser::visitActual_part(vhdlParser::Actual_partContext* ctx) {
 	auto name = ctx->name();
 	Expr * ad = visitActual_designator(ctx->actual_designator());
 	if (name) {
-		std::vector<Expr*> * ops = new std::vector<Expr*>();
-		ops->push_back(ad);
+		std::vector<Expr*> ops = { ad, };
 		return Expr::call(ReferenceParser::visitName(name), ops);
 	}
 	return ad;
@@ -619,10 +619,11 @@ Expr * ExprParser::visitProcedure_call(
 		vhdlParser::Procedure_callContext * ctx) {
 	// procedure_call: name ( LPAREN actual_parameter_part RPAREN )?;
 	Expr * fnName = ReferenceParser::visitName(ctx->name());
-	return Expr::call(fnName,
-			ExprParser::visitActual_parameter_part(
-					ctx->actual_parameter_part()));
-
+	auto args = ExprParser::visitActual_parameter_part(
+			ctx->actual_parameter_part());
+	auto c = Expr::call(fnName, *args);
+	delete args;
+	return c;
 }
 
 Expr * ExprParser::visitType_mark(vhdlParser::Type_markContext * ctx) {

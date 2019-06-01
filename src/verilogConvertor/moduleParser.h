@@ -3,10 +3,12 @@
 #include <vector>
 
 #include "Verilog2001Parser/Verilog2001Parser.h"
+#include "../hdlObjects/arch.h"
 #include "../hdlObjects/compInstance.h"
 #include "../hdlObjects/context.h"
 #include "../hdlObjects/entity.h"
 #include "../hdlObjects/variable.h"
+
 #include "commentParser.h"
 
 namespace hdlConvertor {

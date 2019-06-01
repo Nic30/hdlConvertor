@@ -18,9 +18,11 @@ enum StatementType {
 	s_WHILE,
 	s_BREAK,
 	s_RETURN,
+	s_CONTINUE,
 	s_FOR,
 	s_ASSIGMENT,
-	s_PROCESS
+	s_PROCESS,
+	s_IMPORT,
 };
 
 const char * StatementType_toString(StatementType type);
@@ -47,6 +49,7 @@ public:
 
 	Statement(StatementType type);
 	static Statement* EXPR(Expr * e);
+	static Statement* IMPORT(const std::vector<Expr *> & path);
 	static Statement* IF(Expr* cond, std::vector<iHdlObj*>* ifTrue);
 	static Statement* IF(Expr* cond, std::vector<Statement*>* ifTrue);
 	static Statement* IF(Expr* cond, std::vector<iHdlObj*>* ifTrue,
@@ -66,6 +69,7 @@ public:
 	static Statement* ASSIG(Expr* dst, Expr * src);
 	static Statement* WHILE(Expr* cond, std::vector<iHdlObj*>* body);
 	static Statement* BREAK();
+	static Statement* CONTINUE();
 	static Statement* PROCESS(std::vector<Expr*>* sensitivity,
 			std::vector<iHdlObj*>* body);
 	static Statement* FOR(const std::vector<Expr*> & args,

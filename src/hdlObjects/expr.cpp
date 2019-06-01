@@ -6,7 +6,7 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 LiteralVal __v = { NULL };
-static Symbol Type_t(symbol_T, __v); // symbol representing that expr is type of type;
+static Symbol Type_t(symb_T, __v); // symbol representing that expr is type of type;
 
 Expr::Expr() {
 	data = NULL;
@@ -95,12 +95,12 @@ Expr* Expr::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	e->data = Operator::ternary(cond, ifTrue, ifFalse);
 	return e;
 }
-Expr * Expr::call(Expr * fnId, std::vector<Expr*> * operands) {
+Expr * Expr::call(Expr * fnId, const std::vector<Expr*> & operands) {
 	Expr * e = new Expr();
 	e->data = Operator::call(fnId, operands);
 	return e;
 }
-Expr * Expr::slice(Expr * fnId, std::vector<Expr*> * operands) {
+Expr * Expr::slice(Expr * fnId, const std::vector<Expr*> & operands) {
 	Expr * e = new Expr();
 	e->data = Operator::slice(fnId, operands);
 	return e;

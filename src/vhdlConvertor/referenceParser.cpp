@@ -126,13 +126,18 @@ Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
 		// name_function_call_or_indexed_part
 		// : LPAREN actual_parameter_part? RPAREN
 		// ;
-		return Expr::call(selectedName,
-				ExprParser::visitActual_parameter_part(
-						callOrIndx->actual_parameter_part()));
+		auto args = ExprParser::visitActual_parameter_part(
+				callOrIndx->actual_parameter_part());
+		auto c = Expr::call(selectedName, *args);
+		delete args;
+		return c;
 	}
 	auto ns = ctx->name_slice_part();
 	if (ns) {
-		return Expr::slice(selectedName, visitName_slice_part(ns));
+		auto args = visitName_slice_part(ns);
+		auto s = Expr::slice(selectedName, *args);
+		delete args;
+		return s;
 	}
 	return Expr::null();
 }

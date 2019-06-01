@@ -15,10 +15,11 @@ cdef extern from "hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass Context:
         PyObject * toJson()
 
-cdef extern from "toJson.h" namespace "hdlConvertor":
-    cdef cppclass ToJson:
+cdef extern from "toPy.h" namespace "hdlConvertor":
+    cdef cppclass ToPy:
+        ToPy()
         @staticmethod
-        PyObject * toJson(const Context * c)
+        PyObject * toPy(const Context * c)
 
 
 cdef extern from "exception.h":
@@ -68,7 +69,7 @@ cdef class hdlConvertor:
 
     def __cinit__(self):
         self.thisptr = new Convertor()
-    
+
     def __dealloc__(self):
         del self.thisptr
 
@@ -96,22 +97,23 @@ cdef class hdlConvertor:
             string_type = str
         else:
             string_type = basestring
-        
+
         if isinstance(filenames, string_type):
             filenames = [filenames, ]
 
         if PY3:
             filenames = [item.encode('utf8') for item in filenames]
             incdirs = [item.encode('utf8') for item in incdirs]
-        
+
         cdef Context * c
         cdef object d_py
         cdef PyObject * d
+        cdef ToPy toPy
         if filenames:
             c = self.thisptr.parse(
                 filenames, langue_value, incdirs, hierarchyOnly, debug)
-    
-            d = ToJson.toJson(c)
+
+            d = toPy.toPy(c)
             d_py = < object > d
             return d_py
         else:
@@ -127,22 +129,22 @@ cdef class hdlConvertor:
             string_type = str
         else:
             string_type = basestring
-        
+
         if isinstance(filename, string_type):
             filenames = [filename, ]
 
         if PY3:
             filename = filename.encode('utf8')
             incdirs = [item.encode('utf8') for item in incdirs]
-        
+
         data = self.thisptr.verilog_pp(filename, incdirs, mode)
-        
+
         if PY3:
             data = data.decode('utf8')
 
         return data
 
-    
+
 # [TODO] remove because it is useless (use hdlConvertor class)
 def parse(filenames, langue, incdirs=['.'], hierarchyOnly=False, debug=False):
     cdef hdlConvertor obj

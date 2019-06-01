@@ -79,9 +79,9 @@ void ModuleParser::visitModule_declaration(
 	for (auto npmi : ctx->non_port_module_item())
 		visitNon_port_module_item(npmi);
 
-	context->entities.push_back(ent);
+	context->objs.push_back(ent);
 	arch->entityName = Expr::ID(ent->name);
-	context->architectures.push_back(arch);
+	context->objs.push_back(arch);
 }
 
 void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,

@@ -22,7 +22,7 @@ LiteralVal LiteralVal_clone(const LiteralVal & val, enum SymbolType t) {
 	case symb_OPEN:
 	case symb_ARRAY:
 	case symb_ALL:
-	case symbol_T:
+	case symb_T:
 	default:
 		v._str = NULL;
 		break;

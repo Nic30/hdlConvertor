@@ -19,9 +19,7 @@ Expr *Utils::mkWireT() {
 }
 
 Expr *Utils::mkWireT(Expr * range, bool signed_) {
-	std::vector<Expr*> * operands = new std::vector<Expr*>();
-	operands->push_back(range);
-	operands->push_back(Expr::INT(signed_));
+	std::vector<Expr*> operands = { range, Expr::INT(signed_) };
 	return Expr::call(mkWireT(), operands);
 }
 
@@ -43,7 +41,6 @@ bool Utils::is_reg(antlr4::ParserRuleContext * ctx) {
 	}
 	return reg_;
 }
-
 
 bool Utils::is_signed(antlr4::ParserRuleContext * ctx) {
 	//assert(strcmp(Verilog2001Lexer::getVocabulary() == "signed") == 0)

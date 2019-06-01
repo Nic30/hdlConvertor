@@ -1,9 +1,12 @@
 #pragma once
 #include <vector>
+#include <antlr4-common.h>
+
 #include "vhdlParser/vhdlParser.h"
 #include "../hdlObjects/context.h"
+#include "../hdlObjects/expr.h"
+#include "../hdlObjects/statement.h"
 #include "../baseHdlParser/baseHdlParser.h"
-#include <antlr4-common.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -22,7 +25,7 @@ public:
 	void visitContext_clause(vhdlParser::Context_clauseContext* ctx);
 	void visitPrimary_unit(vhdlParser::Primary_unitContext* ctx);
 	void visitContext_item(vhdlParser::Context_itemContext* ctx);
-	std::vector<Expr*> visitUse_clause(vhdlParser::Use_clauseContext* ctx);
+	hdlObjects::Statement * visitUse_clause(vhdlParser::Use_clauseContext* ctx);
 };
 
 }

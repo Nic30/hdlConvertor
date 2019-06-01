@@ -57,17 +57,15 @@ void DesignFileParser::visitSecondary_unit(
 	// ;
 	auto arch = ctx->architecture_body();
 	if (arch) {
-		auto aparser = new ArchParser(hierarchyOnly);
-		Arch * a = aparser->visitArchitecture_body(arch);
-		delete aparser;
-		context->architectures.push_back(a);
+		ArchParser aparser(hierarchyOnly);
+		Arch * a = aparser.visitArchitecture_body(arch);
+		context->objs.push_back(a);
 	}
 	auto pack = ctx->package_body();
 	if (pack) {
-		PackageParser * pparser = new PackageParser(hierarchyOnly);
-		Package * p = pparser->visitPackage_body(pack);
-		delete pparser;
-		context->packages.push_back(p);
+		PackageParser pparser(hierarchyOnly);
+		Package * p = pparser.visitPackage_body(pack);
+		context->objs.push_back(p);
 
 	}
 }
@@ -92,10 +90,9 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
 	// ;
 	auto ed = ctx->entity_declaration();
 	if (ed) {
-		auto eParser = new EntityParser(hierarchyOnly);
-		Entity * e = eParser->visitEntity_declaration(ed);
-		context->entities.push_back(e);
-		delete eParser;
+		EntityParser eParser(hierarchyOnly);
+		Entity * e = eParser.visitEntity_declaration(ed);
+		context->objs.push_back(e);
 		return;
 	}
 	auto cd = ctx->configuration_declaration();
@@ -106,10 +103,9 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
 	}
 	auto pd = ctx->package_declaration();
 	if (pd) {
-		auto php = new PackageHeaderParser(hierarchyOnly);
-		PackageHeader * ph = php->visitPackage_declaration(pd);
-		context->packageHeaders.push_back(ph);
-		delete php;
+		PackageHeaderParser php(hierarchyOnly);
+		PackageHeader * ph = php.visitPackage_declaration(pd);
+		context->objs.push_back(ph);
 	}
 
 }
@@ -120,17 +116,17 @@ void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext* ctx) {
 	// ;
 	auto l = ctx->library_clause();
 	if (l) {
+		NotImplementedLogger::print(
+						"DesignFileParser.visitContext_item - library_clause");
 		return; //libraries are ignored
 	}
 	auto u = ctx->use_clause();
 	if (u) {
-		for (Expr * r : visitUse_clause(u)) {
-			context->imports.push_back(r);
-		}
+		context->objs.push_back(visitUse_clause(u));
 	}
 }
 
-std::vector<Expr*> DesignFileParser::visitUse_clause(
+Statement * DesignFileParser::visitUse_clause(
 		vhdlParser::Use_clauseContext* ctx) {
 	// use_clause
 	// : USE selected_name ( COMMA selected_name )* SEMI
@@ -140,7 +136,7 @@ std::vector<Expr*> DesignFileParser::visitUse_clause(
 		Expr * r = ReferenceParser::visitSelected_name(sn);
 		refL.push_back(r);
 	}
-	return refL;
+	return Statement::IMPORT(refL);
 }
 
 }

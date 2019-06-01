@@ -18,6 +18,8 @@ const char * StatementType_toString(StatementType type) {
 		return "WHILE";
 	case s_BREAK:
 		return "BREAK";
+	case s_CONTINUE:
+		return "CONTINUE";
 	case s_FOR:
 		return "FOR";
 	case s_RETURN:
@@ -39,6 +41,12 @@ Statement::Statement(StatementType type) {
 Statement * Statement::EXPR(Expr * e) {
 	Statement * s = new Statement(s_EXPR);
 	s->exprs.push_back(e);
+	return s;
+}
+Statement * Statement::IMPORT(const std::vector<Expr *> & path) {
+	Statement * s = new Statement(s_IMPORT);
+	for (auto n: path)
+		s->exprs.push_back(n);
 	return s;
 }
 Statement* Statement::IF(Expr * cond, vector<iHdlObj*> * ifTrue) {
@@ -131,7 +139,9 @@ Statement* Statement::WHILE(Expr * cond, vector<iHdlObj*> * body) {
 Statement* Statement::BREAK() {
 	return new Statement(s_BREAK);
 }
-
+Statement* Statement::CONTINUE() {
+	return new Statement(s_CONTINUE);
+}
 Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 		vector<iHdlObj*>* body) {
 	Statement * s = new Statement(s_PROCESS);

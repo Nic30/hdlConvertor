@@ -7,6 +7,9 @@
 #include "hdlObjects/operator.h"
 #include "hdlObjects/named.h"
 #include "hdlObjects/process.h"
+#include "hdlObjects/aPackage.h"
+#include "hdlObjects/arch.h"
+#include "hdlObjects/entity.h"
 
 
 namespace hdlConvertor {
