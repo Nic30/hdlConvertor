@@ -1,1 +1,1 @@
-from ._hdlConvertor import hdlConvertor, ParseException
+from ._hdlConvertor import HdlConvertor, ParseException
