@@ -728,13 +728,11 @@ formal_designator:
       name
 ;
 actual_part:
-      actual_designator
-      | name LPAREN actual_designator RPAREN
-      | type_mark LPAREN actual_designator RPAREN
+      name LPAREN actual_designator RPAREN
+      | actual_designator
 ;
 actual_designator:
       ( INERTIAL )? expression
-      | name
       | subtype_indication
       | OPEN
 ;
@@ -912,14 +910,14 @@ factor:
       | logical_operator primary
 ;
 primary:
-      name
-      | literal
-      | aggregate
-      | function_call
+        literal
       | qualified_expression
+      | LPAREN expression RPAREN
+      | function_call
       | type_conversion
       | allocator
-      | LPAREN expression RPAREN
+      | aggregate
+      | name
 ;
 condition_operator: COND_OP;
 logical_operator: AND | OR | NAND | NOR | XOR | XNOR;
@@ -946,11 +944,11 @@ aggregate:
 element_association:
       ( choices ARROW )? expression
 ;
-choices: choice (  choice )*;
+choices: ( choice )+;
+// [rm non determinism]      | simple_name
 choice:
-      simple_expression
-      | discrete_range
-      | simple_name
+      discrete_range
+      | simple_expression
       | OTHERS
 ;
 function_call:
