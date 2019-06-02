@@ -1,7 +1,6 @@
 
 /*
- * Grammar extracted from the VHDL 1993, 2002, 2008, 2018 standard and then merged together
- * (the standard is selected by parser propery)
+ * Grammar extracted from the 2008 standard
  */
 
 grammar vhdl;
