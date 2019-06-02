@@ -215,7 +215,11 @@ class ToVerilog():
                 return
             else:
                 raise NotImplementedError(op)
-        raise NotImplementedError()
+        elif expr is HdlAll:
+            w("*")
+            return
+
+        raise NotImplementedError(expr)
 
     def print_type_first_part(self, t):
         """
@@ -409,7 +413,7 @@ class ToVerilog():
         """
         self.print_doc(c)
         w = self.out.write
-        self.print_expr(c.entity_name)
+        self.print_expr(c.module_name)
         w(" ")
         self.print_expr(c.name)
         gms = c.param_map
@@ -468,7 +472,8 @@ if __name__ == "__main__":
     TEST_DIR = os.path.join(BASE_DIR, 'tests', 'verilog')
     from hdlConvertor.language import Language
     c = HdlConvertor()
-    filenames = [os.path.join(TEST_DIR, "sram.v")]
+    # filenames = [os.path.join(TEST_DIR, "sram.v")]
+    filenames = [os.path.join(TEST_DIR, "fifo_rx.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, False)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)
