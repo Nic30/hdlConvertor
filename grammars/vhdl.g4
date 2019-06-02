@@ -1,11 +1,11 @@
 
-
 /*
  * Grammar extracted from the VHDL 1993, 2002, 2008, 2018 standard and then merged together
  * (the standard is selected by parser propery)
  */
 
 grammar vhdl;
+
 PROCESS: P R O C E S S;
 CONTEXT: C O N T E X T;
 POSTPONED: P O S T P O N E D;
@@ -117,81 +117,8 @@ BUS: B U S;
 ACCESS: A C C E S S;
 WHEN: W H E N;
 PORT: P O R T;
-SEMI: ';';
-LPAREN: '(';
-RPAREN: ')';
-APOSTROPHE: '\'';
-DBLQUOTE: '"';
-SHIFT_LEFT: '<<';
-SHIFT_RIGHT: '>>';
-AT: '@';
-HASHTAG: '#';
-COMMA: ',';
-DOT: '.';
-QUESTIONMARK: '?';
-COLON: ':';
-EQ: '=';
-NEQ: '/=';
-LT: '<';
-GT: '>';
-GE: '>=';
-MATCH_EQ: '?=';
-MATCH_NEQ: '?/=';
-MATCH_LT: '?<';
-MATCH_LE: '?<=';
-MATCH_GT: '?>';
-MATCH_GE: '?>=';
-PLUS: '+';
-MINUS: '-';
-AMPERSAND: '&';
-BAR: '|';
-BACKSLASH: '\\';
-MUL: '*';
-DIV: '/';
-DOUBLESTAR: '**';
-CONASGN: '<=';
-GRAVE_ACCENT: '`';
-UP: '^';
-VARASGN: ':=';
-BOX: '<>';
-ARROW: '=>';
-COND_OP: '?' '?';
-LOWER_CASE_LETTER: 'a'..'z';
-UPPER_CASE_LETTER: 'A'..'Z';
-
-COMMENT: '--' ( ~'\n' )* -> channel(HIDDEN);
-TAB: ( '\t' )+ -> skip;
-SPACE: ( ' ' )+ -> skip;
-NEWLINE: '\n' -> skip;
-CR: '\r' -> skip;
-
-SPECIAL_CHARACTER:
-    '"' | '#' | '&' | '\'' | '(' | ')' | '*' | '+'
-  | ',' | '-' | '.' | '/' | ':' | ';' | '<' | '='
-  | '>' | '?' | '@' | '[' | ']' | '_' | '`' | '|';
-
-OTHER_SPECIAL_CHARACTER:
-    '!' | '$' | '%' | '@' | '?' | '^' | '`' | '{' | '}' | '~'
-  | ' ' | 'Ў' | 'ў' | 'Ј' | '¤' | 'Ґ' | '¦' | '§'
-  | 'Ё' | '©' | 'Є' | '«' | '¬' | '­' | '®' | 'Ї'
-  | '°' | '±' | 'І' | 'і' | 'ґ' | 'µ' | '¶' | '·'
-  | 'ё' | '№' | 'є' | '»' | 'ј' | 'Ѕ' | 'ѕ' | 'ї'
-  | 'А' | 'Б' | 'В' | 'Г' | 'Д' | 'Е' | 'Ж' | 'З'
-  | 'И' | 'Й' | 'К' | 'Л' | 'М' | 'Н' | 'О' | 'П'
-  | 'Р' | 'С' | 'Т' | 'У' | 'Ф' | 'Х' | 'Ц' | 'Ч'
-  | 'Ш' | 'Щ' | 'Ъ' | 'Ы' | 'Ь' | 'Э' | 'Ю' | 'Я'
-  | 'а' | 'б' | 'в' | 'г' | 'д' | 'е' | 'ж' | 'з'
-  | 'и' | 'й' | 'к' | 'л' | 'м' | 'н' | 'о' | 'п'
-  | 'р' | 'с' | 'т' | 'у' | 'ф' | 'х' | 'ц' | 'ч'
-  | 'ш' | 'щ' | 'ъ' | 'ы' | 'ь' | 'э' | 'ю' | 'я'
-  ;
-
-FORMAT_EFFECTOR: '\t' | '\n' ; // | '\v' | '\c' | '\f';
-SPACE_CHARACTER: ' ';
-UNDERLINE: '_';
-DIGIT:  '0'..'9';
-E_SIGN: 'e' | 'E';
 NULL_SYM: N U L L;
+
 
 // case insensitive chars
 fragment A:('a'|'A');
@@ -222,6 +149,39 @@ fragment Y:('y'|'Y');
 fragment Z:('z'|'Z');
 
 
+fragment EXTENDED_DIGIT: DIGIT | LETTER;
+fragment BASE_SPECIFIER: B | O | X | UB | UO | UX | SB | SO | SX | D;
+// [note] GRAPHIC_CHARACTER group wa reworked in order to resolve Ambiguity
+fragment GRAPHIC_CHARACTER:
+        SPECIAL_CHARACTER
+      | LETTER_OR_DIGIT
+      | OTHER_SPECIAL_CHARACTER
+;
+fragment SPECIAL_CHARACTER:
+    DBLQUOTE | HASHTAG | AMPERSAND | APOSTROPHE | LPAREN | RPAREN | MUL | PLUS
+  | COMMA | MINUS | DOT | DIV | COLON | SEMI | LT | EQ
+  | GT | QUESTIONMARK | AT | '[' | ']' | UNDERSCORE | GRAVE_ACCENT | BAR;
+
+fragment OTHER_SPECIAL_CHARACTER:
+    '!' | '$' | '%' | UP | '{' | '}' | '~'
+  | SPACE_CHARACTER | 'Ў' | 'ў' | 'Ј' | '¤' | 'Ґ' | '¦' | '§'
+  | 'Ё' | '©' | 'Є' | '«' | '¬' | '­' | '®' | 'Ї'
+  | '°' | '±' | 'І' | 'і' | 'ґ' | 'µ' | '¶' | '·'
+  | 'ё' | '№' | 'є' | '»' | 'ј' | 'Ѕ' | 'ѕ' | 'ї'
+  | 'А' | 'Б' | 'В' | 'Г' | 'Д' | 'Е' | 'Ж' | 'З'
+  | 'И' | 'Й' | 'К' | 'Л' | 'М' | 'Н' | 'О' | 'П'
+  | 'Р' | 'С' | 'Т' | 'У' | 'Ф' | 'Х' | 'Ц' | 'Ч'
+  | 'Ш' | 'Щ' | 'Ъ' | 'Ы' | 'Ь' | 'Э' | 'Ю' | 'Я'
+  | 'а' | 'б' | 'в' | 'г' | 'д' | 'е' | 'ж' | 'з'
+  | 'и' | 'й' | 'к' | 'л' | 'м' | 'н' | 'о' | 'п'
+  | 'р' | 'с' | 'т' | 'у' | 'ф' | 'х' | 'ц' | 'ч'
+  | 'ш' | 'щ' | 'ъ' | 'ы' | 'ь' | 'э' | 'ю' | 'я'
+  ;
+
+fragment LETTER_OR_DIGIT: LETTER | DIGIT;
+fragment LETTER: 'A'..'Z' | 'a'..'z';
+
+
 // name:
 //       simple_name
 //       | operator_symbol
@@ -236,7 +196,6 @@ fragment Z:('z'|'Z');
 //       name
 //       | function_call
 // ;
-// selected_name: prefix DOT suffix;
 // indexed_name: prefix LPAREN expression ( COMMA expression )* RPAREN;
 // slice_name: prefix LPAREN discrete_range RPAREN;
 // attribute_name:
@@ -247,8 +206,7 @@ fragment Z:('z'|'Z');
 // slice_name, and attribute_name, respectively)
 // (2.2.2004, e.f.)
 name
-  : selected_name
-  | name_part ( DOT name_part)*
+  : name_part ( DOT name_part)*
   | external_name
   ;
 
@@ -256,23 +214,18 @@ name_part
    : selected_name (name_part_specificator)*
    ;
 
-name_part_specificator
-   : name_attribute_part
-   | name_function_call_or_indexed_part
-   | name_slice_part
+name_part_specificator:
+     name_attribute_part
+   | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
    ;
 
-name_attribute_part
-   : APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
+name_attribute_part:
+   APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
    ;
 
-name_function_call_or_indexed_part
-   : LPAREN actual_parameter_part? RPAREN
-   ;
+name_function_call_or_indexed_part:  actual_parameter_part?;
 
-name_slice_part
-   : LPAREN explicit_range ( COMMA explicit_range )* RPAREN
-   ;
+name_slice_part: explicit_range ( COMMA explicit_range )*;
 
 explicit_range
   : simple_expression direction simple_expression
@@ -417,7 +370,7 @@ subprogram_header:
       ( generic_map_aspect )? )?
 ;
 designator: identifier | operator_symbol;
-operator_symbol: string_literal;
+operator_symbol: STRING_LITERAL;
 formal_parameter_list: interface_list;
 subprogram_body:
       subprogram_specification IS
@@ -539,7 +492,7 @@ direction: TO | DOWNTO;
 enumeration_type_definition:
       LPAREN enumeration_literal ( COMMA enumeration_literal )* RPAREN
 ;
-enumeration_literal: identifier | character_literal;
+enumeration_literal: identifier | CHARACTER_LITERAL;
 integer_type_definition: range_constraint;
 physical_type_definition:
       range_constraint
@@ -707,14 +660,15 @@ interface_object_declaration:
       | interface_variable_declaration
       | interface_file_declaration
 ;
+// [note] constant as variables can be parsed as a signal if their keyword is not specified
 interface_constant_declaration:
-      ( CONSTANT )? identifier_list COLON ( IN )? subtype_indication ( VARASGN expression )?
+      CONSTANT identifier_list COLON ( IN )? subtype_indication ( VARASGN expression )?
 ;
 interface_signal_declaration:
       ( SIGNAL )? identifier_list COLON ( signal_mode )? subtype_indication ( BUS )? ( VARASGN expression )?
 ;
 interface_variable_declaration:
-      ( VARIABLE )? identifier_list COLON ( signal_mode )? subtype_indication ( VARASGN expression )?
+      VARIABLE identifier_list COLON ( signal_mode )? subtype_indication ( VARASGN expression )?
 ;
 interface_file_declaration:
       FILE identifier_list COLON subtype_indication
@@ -793,7 +747,7 @@ port_map_aspect:
 alias_declaration:
       ALIAS alias_designator ( COLON subtype_indication )? IS name ( signature )? SEMI
 ;
-alias_designator: identifier | character_literal | operator_symbol;
+alias_designator: identifier | CHARACTER_LITERAL | operator_symbol;
 attribute_declaration:
       ATTRIBUTE identifier COLON type_mark SEMI
 ;
@@ -814,7 +768,7 @@ group_declaration:
       GROUP identifier COLON name LPAREN group_constituent_list RPAREN SEMI
 ;
 group_constituent_list: group_constituent ( COMMA group_constituent )*;
-group_constituent: name | character_literal;
+group_constituent: name | CHARACTER_LITERAL;
 attribute_specification:
       ATTRIBUTE attribute_designator OF entity_specification IS expression SEMI
 ;
@@ -848,7 +802,7 @@ entity_name_list:
       | ALL
 ;
 entity_designator: entity_tag ( signature )?;
-entity_tag: simple_name | character_literal | operator_symbol;
+entity_tag: simple_name | CHARACTER_LITERAL | operator_symbol;
 configuration_specification:
       simple_configuration_specification
       | compound_configuration_specification
@@ -903,7 +857,7 @@ prefix:
 simple_name: identifier;
 suffix:
       simple_name
-      | character_literal
+      | CHARACTER_LITERAL
       | operator_symbol
       | ALL
 ;
@@ -912,18 +866,7 @@ attribute_name:
 ;
 attribute_designator: simple_name;
 external_name:
-      external_constant_name
-      | external_signal_name
-      | external_variable_name
-;
-external_constant_name:
-      SHIFT_LEFT CONSTANT external_pathname COLON subtype_indication SHIFT_RIGHT
-;
-external_signal_name:
-      SHIFT_LEFT SIGNAL external_pathname COLON subtype_indication SHIFT_RIGHT
-;
-external_variable_name:
-      SHIFT_LEFT VARIABLE external_pathname COLON subtype_indication SHIFT_RIGHT
+      SHIFT_LEFT (VARIABLE | CONSTANT | SIGNAL) external_pathname COLON subtype_indication SHIFT_RIGHT
 ;
 external_pathname:
       package_pathname
@@ -989,8 +932,8 @@ miscellaneous_operator: DOUBLESTAR | ABS | NOT;
 literal:
       numeric_literal
       | enumeration_literal
-      | string_literal
-      | bit_string_literal
+      | STRING_LITERAL
+      | BIT_STRING_LITERAL
       | NULL_SYM
 ;
 numeric_literal:
@@ -1008,6 +951,7 @@ choice:
       simple_expression
       | discrete_range
       | simple_name
+      | OTHERS
 ;
 function_call:
       name ( LPAREN actual_parameter_part RPAREN )?
@@ -1369,39 +1313,85 @@ context_item:
 context_reference:
       CONTEXT selected_name ( COMMA selected_name )* SEMI
 ;
-basic_graphic_character:
-      UPPER_CASE_LETTER | DIGIT | SPECIAL_CHARACTER | SPACE_CHARACTER
+
+
+
+
+
+
+identifier: BASIC_IDENTIFIER | EXTENDED_IDENTIFIER;
+BASIC_IDENTIFIER:
+      LETTER ( ( UNDERSCORE )? LETTER_OR_DIGIT )*
 ;
-graphic_character:
-      basic_graphic_character | LOWER_CASE_LETTER | OTHER_SPECIAL_CHARACTER
+EXTENDED_IDENTIFIER:
+      BACKSLASH (GRAPHIC_CHARACTER)+ BACKSLASH
 ;
-basic_character:
-      basic_graphic_character | FORMAT_EFFECTOR
-;
-identifier: basic_identifier | extended_identifier;
-basic_identifier:
-      letter ( ( UNDERLINE )? letter_or_digit )*
-;
-letter_or_digit: letter | DIGIT;
-letter: UPPER_CASE_LETTER | LOWER_CASE_LETTER;
-extended_identifier:
-      BACKSLASH graphic_character ( graphic_character )* BACKSLASH
-;
-abstract_literal: decimal_literal | based_literal;
-decimal_literal: integer ( DOT integer )? ( exponent )?;
-integer: DIGIT ( ( UNDERLINE )? DIGIT )*;
-exponent: E_SIGN ( PLUS )? integer | E_SIGN MINUS integer;
+abstract_literal: DECIMAL_LITERAL | based_literal;
+DECIMAL_LITERAL: INTEGER ( DOT INTEGER )? ( EXPONENT )?;
+INTEGER: DIGIT ( ( UNDERSCORE )? DIGIT )*;
+EXPONENT: E ( PLUS )? INTEGER | E MINUS INTEGER;
 based_literal:
-      base HASHTAG based_integer ( DOT based_integer )? HASHTAG ( exponent )?
+      BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
 ;
-base: integer;
-based_integer:
-      extended_digit ( ( UNDERLINE )? extended_digit )*
+BASE: INTEGER;
+BASED_INTEGER:
+      EXTENDED_DIGIT ( ( UNDERSCORE )? EXTENDED_DIGIT )*
 ;
-extended_digit: DIGIT | letter;
-character_literal: APOSTROPHE graphic_character APOSTROPHE;
-string_literal: DBLQUOTE ( graphic_character )* DBLQUOTE;
-bit_string_literal: ( integer )? BASE_SPECIFIER DBLQUOTE ( bit_value )? DBLQUOTE;
-bit_value: graphic_character ( ( UNDERLINE )? graphic_character )*;
-BASE_SPECIFIER: B | O | X | UB | UO | UX | SB | SO | SX | D;
-tool_directive: GRAVE_ACCENT identifier ( graphic_character )*;
+CHARACTER_LITERAL: APOSTROPHE GRAPHIC_CHARACTER APOSTROPHE;
+STRING_LITERAL: DBLQUOTE (GRAPHIC_CHARACTER)* DBLQUOTE;
+BIT_STRING_LITERAL: ( INTEGER )? BASE_SPECIFIER DBLQUOTE (
+   // BIT_VALUE
+   GRAPHIC_CHARACTER ( ( UNDERSCORE )? GRAPHIC_CHARACTER )*
+   )? DBLQUOTE;
+// [TODO] tool_directive removed
+
+COMMENT: '--' ( ~'\n' )* -> channel(HIDDEN);
+TAB: ( '\t' )+ -> skip;
+SPACE: ( SPACE_CHARACTER )+ -> skip;
+NEWLINE: '\n' -> skip;
+CR: '\r' -> skip;
+
+SPACE_CHARACTER: ' ';
+DBLQUOTE: '"';
+UNDERSCORE: '_';
+DIGIT:  '0'..'9';
+SEMI: ';';
+LPAREN: '(';
+RPAREN: ')';
+APOSTROPHE: '\'';
+SHIFT_LEFT: '<<';
+SHIFT_RIGHT: '>>';
+AT: '@';
+HASHTAG: '#';
+COMMA: ',';
+DOT: '.';
+QUESTIONMARK: '?';
+COLON: ':';
+EQ: '=';
+NEQ: '/=';
+LT: '<';
+GT: '>';
+GE: '>=';
+MATCH_EQ: '?=';
+MATCH_NEQ: '?/=';
+MATCH_LT: '?<';
+MATCH_LE: '?<=';
+MATCH_GT: '?>';
+MATCH_GE: '?>=';
+PLUS: '+';
+MINUS: '-';
+AMPERSAND: '&';
+BAR: '|';
+BACKSLASH: '\\';
+MUL: '*';
+DIV: '/';
+DOUBLESTAR: '**';
+CONASGN: '<=';
+GRAVE_ACCENT: '`';
+UP: '^';
+VARASGN: ':=';
+BOX: '<>';
+ARROW: '=>';
+COND_OP: '?' '?';
+
+
