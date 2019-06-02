@@ -104,7 +104,7 @@ class iHdlObj():
     __slots__ = ["doc"]
 
     def __init__(self):
-        self.doc: str = ""
+        self.doc = "" # type: str
 
 
 class HdlIntValue():
