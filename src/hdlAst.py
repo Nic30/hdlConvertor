@@ -402,7 +402,7 @@ class HdlCaseStm(iHdlStatement):
     __slots__ = ["switch_on", "cases", "default"]
 
     def __init__(self):
-        super(iHdlStatement, self).__init__()
+        super(HdlCaseStm, self).__init__()
         self.switch_on = None  # type: iHdlExpr
         self.cases = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
         self.default = None  # type: Optional[List[iHdlStatement]]
@@ -415,7 +415,7 @@ class HdlForStm(iHdlStatement):
     __slots__ = ["params", "body"]
 
     def __init__(self):
-        super(iHdlStatement, self).__init__()
+        super(HdlForStm, self).__init__()
         self.params = []  # type: List[iHdlExpr]
         self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
@@ -427,7 +427,7 @@ class HdlWhileStm(iHdlStatement):
     __slots__ = ["params", "body"]
 
     def __init__(self):
-        super(iHdlStatement, self).__init__()
+        super(HdlWhileStm, self).__init__()
         self.cond = None  # type: iHdlExpr
         self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
@@ -439,7 +439,7 @@ class HdlReturnStm(iHdlStatement):
     __slots__ = ["val"]
 
     def __init__(self):
-        super(iHdlStatement, self).__init__()
+        super(HdlReturnStm, self).__init__()
         self.val = None  # type: iHdlExpr
 
 
