@@ -9,6 +9,7 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+// [TODO] add definition_only flag
 class Function: public WithNameAndDoc, public iHdlObj {
 public:
 	const bool isOperator;

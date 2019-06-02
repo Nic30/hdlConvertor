@@ -19,7 +19,7 @@
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
 	* Arguments: $NAME_OF_YOUR_SCRIPT etc
-	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path}/_skbuild/linux-x86_64-3.7/setuptools/lib`
+	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/_skbuild/linux-x86_64-3.7/setuptools/lib`
 	* in CMakeLists.txt add  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	  to enable debuging build and disable optimisations
 	* now break points in c++ and all other debuging stuff should work as expected
@@ -31,3 +31,6 @@
   $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlObjects7iHdlObjEi
   hdlConvertor::ToString::dump(hdlConvertor::hdlObjects::iHdlObj const*, int)
   ```
+* to forece regeneration of generated files delete cmake file which
+  tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
+
