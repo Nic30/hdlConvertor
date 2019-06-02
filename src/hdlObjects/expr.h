@@ -43,7 +43,7 @@ public:
 
 	static Expr * FLOAT(double val);
 	static Expr * STR(std::string strVal);
-	static Expr * ARRAY(std::vector<Expr*> arr);
+	static Expr * ARRAY(const std::vector<Expr*> & arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
 	static Expr * call(Expr * fnId, const std::vector<Expr*> & operands);
 	static Expr * slice(Expr * fnId, const std::vector<Expr*> & operands);
@@ -51,6 +51,7 @@ public:
 	static Expr * OPEN();
 	static Expr * all();
 	static Expr * null();
+	static Expr * others();
 
 	// @return char* of the variable string if this Expr is string value
 	char * extractStr();

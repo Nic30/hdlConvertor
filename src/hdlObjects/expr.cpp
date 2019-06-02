@@ -72,10 +72,12 @@ Expr * Expr::STR(std::string strVal) {
 	return new Expr(symb_STRING, v);
 }
 
-Expr * Expr::ARRAY(std::vector<Expr*> arr) {
+Expr * Expr::ARRAY(const std::vector<Expr*> & arr) {
 	auto _arr = new std::vector<Symbol>();
 	for (auto item : arr) {
-		_arr->push_back(*dynamic_cast<Symbol*>(item->data));
+		auto s = dynamic_cast<Symbol*>(item->data);
+		assert(s);
+		_arr->push_back(*s);
 		item->data = NULL;
 		delete item;
 	}
@@ -134,7 +136,13 @@ Expr * Expr::null() {
 	e->data = new Symbol(symb_NULL, v);
 	return e;
 }
-
+Expr * Expr::others() {
+	Expr * e = new Expr();
+	LiteralVal v;
+	v._str = NULL;
+	e->data = new Symbol(symb_OTHERS, v);
+	return e;
+}
 char * Expr::extractStr() {
 	Symbol * literal = dynamic_cast<Symbol*>(data);
 	return literal->value._str;

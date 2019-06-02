@@ -175,7 +175,9 @@ Statement * StatementParser::visitCase_statement(
 		for (auto ch : ExprParser::visitChoices(a->choices())) {
 			auto s = a->sequence_of_statements();
 			auto stms = visitSequence_of_statements(s);
-			if (ch == nullptr) {
+			auto _ch = dynamic_cast<Symbol*>(ch->data);
+			if (_ch && _ch->type == SymbolType::symb_OTHERS) {
+				delete ch;
 				assert(_default == nullptr);
 				_default = stms;
 			} else {
@@ -524,37 +526,6 @@ vector<Expr*> * StatementParser::visitParameter_specification(
 	e->push_back(LiteralParser::visitIdentifier(ctx->identifier()));
 	e->push_back(ExprParser::visitDiscrete_range(ctx->discrete_range()));
 	return e;
-}
-
-vector<Expr*> * StatementParser::visitChoices(vhdlParser::ChoicesContext *ctx) {
-	//choices
-	//	: choice ( BAR choice )*
-	//	;
-	auto cs = new vector<Expr*>();
-	for (auto c : ctx->choice()) {
-		cs->push_back(visitChoice(c));
-	}
-	return cs;
-}
-
-Expr * StatementParser::visitChoice(vhdlParser::ChoiceContext *ctx) {
-	// choice:
-	//       simple_expression
-	//       | discrete_range
-	//       | simple_name
-	// ;
-	auto se = ctx->simple_expression();
-	if (se)
-		return ExprParser::visitSimple_expression(se);
-
-	auto dr = ctx->discrete_range();
-	if (dr)
-		return ExprParser::visitDiscrete_range(dr);
-
-	auto sn = ctx->simple_name();
-	assert(sn);
-	return ReferenceParser::visitSimple_name(sn);
-
 }
 
 void StatementParser::visitConcurrent_statement(

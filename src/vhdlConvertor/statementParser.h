@@ -60,8 +60,6 @@ public:
 			vhdlParser::Null_statementContext * ctx);
 	static Statement * visitCase_statement(
 			vhdlParser::Case_statementContext* ctx);
-	static std::vector<Expr*> * visitChoices(vhdlParser::ChoicesContext *ctx);
-	static Expr * visitChoice(vhdlParser::ChoiceContext *context);
 	static std::vector<hdlObjects::iHdlObj*> * visitSequence_of_statements(
 			vhdlParser::Sequence_of_statementsContext* ctx);
 	void visitConcurrent_statement(
