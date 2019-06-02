@@ -9,14 +9,15 @@ try:
 except ImportError:
     from use_build_version import *
 
-from hdlConvertor import verilog_pp
-from hdlConvertor import ParseException
+from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
-SV = Language.SYSTEM_VERILOG_2012.value
+
+SV = Language.SYSTEM_VERILOG_2012
 
 
 def _test_run(test_file, golden_file):
-    test_result = verilog_pp(
+    c = HdlConvertor()
+    test_result = c.verilog_pp(
         path.join(TEST_DIR, test_file),
         ['.', '..', path.join('sv_pp', 'src')],
         SV)
@@ -65,7 +66,8 @@ class PreprocessorTC(unittest.TestCase):
     def assertPPError(self, file, err_msg, use_rel_path=False):
         with self.assertRaises(ParseException) as context:
             f = path.join(TEST_DIR, 'sv_pp', 'src', file)
-            result = verilog_pp(
+            c = HdlConvertor()
+            result = c.verilog_pp(
                 f,
                 ['.', '..', path.join('sv_pp', 'src')],
                 SV
@@ -120,7 +122,8 @@ class PreprocessorTC(unittest.TestCase):
         )
 
     def test_FILE_LINE(self):
-        test_result = verilog_pp(
+        c = HdlConvertor()
+        test_result = c.verilog_pp(
             path.join(path.dirname(__file__),'sv_pp', 'src', 'test_FILE_LINE.sv'),
             ['.', '..', path.join('sv_pp', 'src')],
             SV
@@ -143,7 +146,8 @@ class PreprocessorGrammar(unittest.TestCase):
 
     def run_pp_by_testname(self):
         test_name = self.getTestName()
-        verilog_pp(path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt'),
+        c = HdlConvertor()
+        c.verilog_pp(path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt'),
                    ['.', '..', path.join('sv_pp', 'raw')],
                    SV
         )

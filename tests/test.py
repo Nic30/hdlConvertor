@@ -10,7 +10,7 @@ except ImportError:
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
-from hdlConvertor.hdlAst import HdlModuleDec, HdlDirection
+from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 
 
 VHDL = Language.VHDL
@@ -105,7 +105,7 @@ class BasicTC(unittest.TestCase):
 
     def test_verilog_fifo_rx(self):
         f, res = dumpFile("fifo_rx.v", VERILOG)
-        f = self.find_obj_by_name(HdlModuleDec, "arbiter")
+        f = self.find_obj_by_name(res, HdlModuleDec, "fifo_rx")
         self.assertEqual(len(f.params), 2)
         self.assertEqual(len(f.ports), 11)
         str(res)
@@ -118,7 +118,7 @@ class BasicTC(unittest.TestCase):
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
         e = [ o for o in res.objs if isinstance(o, HdlModuleDef)]
-        self.assertSetEqual(set(_e.name for _e in e),
+        self.assertSetEqual(set(_e.module_name for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
 
