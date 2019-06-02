@@ -34,3 +34,11 @@
 * to forece regeneration of generated files delete cmake file which
   tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
 
+* antlr4 gui - visualize a parse tree
+   ```
+   CLASSPATH=/usr/share/java/stringtemplate4.jar:/usr/share/java/antlr4.jar:/usr/share/java/antlr4-runtime.jar:/usr/share/java/antlr3-runtime.jar/:/usr/share/java/treelayout.jar
+   mkdir gen && cd gen
+   antlr4 ../vhdl.g4 && mv ../*.java ../*.tokens ../*.interp . \
+      && javac -cp $CLASSPATH vhdl*.java                       \
+      && java -cp $CLASSPATH:$PWD "org.antlr.v4.gui.TestRig" vhdl design_file -gui ../../tests/vhdl/mux.vhd -help -diagnostics -trace -tokens
+   ```
