@@ -67,7 +67,7 @@ cdef class HdlConvertor:
     def __dealloc__(self):
         del self.thisptr
 
-    def parse(self, filenames, langue, incdirs, hierarchyOnly, debug):
+    def parse(self, filenames, langue, incdirs, hierarchyOnly=False, debug=True):
         """
         :param filenames: sequence of strings or strig
         :param language: one of "verilog", "vhdl", "systemVerilog"
