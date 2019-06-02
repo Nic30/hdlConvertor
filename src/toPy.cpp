@@ -438,9 +438,9 @@ std::pair<PyObject *, size_t> ToPy::cases_toPy(
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
 		}
-		// add to elif list
+		// add to elif/case list
 		int e = PyList_SetItem(cases, case_cnt, case_);
-		if (!e) {
+		if (e) {
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
 		}
@@ -451,14 +451,16 @@ std::pair<PyObject *, size_t> ToPy::cases_toPy(
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
 		}
+
 		e = PyTuple_SetItem(case_, 0, c);
 		if (e) {
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
 		}
-		// fill statements in elif
-		auto stms = *stms_begin;
-		PyObject * stm_list = PyList_New(stms->size());
+
+		// fill statements in elif/case
+		auto & stms = **stms_begin;
+		PyObject * stm_list = PyList_New(stms.size());
 		if (!stm_list) {
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
@@ -468,15 +470,19 @@ std::pair<PyObject *, size_t> ToPy::cases_toPy(
 			Py_DECREF(cases);
 			return {nullptr, SIZE_T_ERR};
 		}
-		for (unsigned i = 0; i < stms->size(); i++) {
-			auto _o = (*stms)[i];
+		for (unsigned i = 0; i < stms.size(); i++) {
+			auto _o = stms[i];
 			assert(_o);
 			PyObject * o = toPy(_o);
 			if (!o) {
 				Py_DECREF(cases);
 				return {nullptr, SIZE_T_ERR};
 			}
-			PyList_SetItem(stm_list, i, o);
+			e = PyList_SetItem(stm_list, i, o);
+			if (e) {
+				Py_DECREF(cases);
+				return {nullptr, SIZE_T_ERR};
+			}
 		}
 
 		++cond_begin;
@@ -491,10 +497,10 @@ PyObject* ToPy::toPy(const Statement * o) {
 	auto type = o->type;
 	PyObject* py_inst = nullptr;
 	int e = 0;
+
 	if (type == s_EXPR) {
 		return toPy(exprs[0]);
 	} else if (type == s_IF) {
-
 		py_inst = PyObject_CallObject(HdlIfStmCls, NULL);
 		if (!py_inst) {
 			return nullptr;
@@ -539,8 +545,8 @@ PyObject* ToPy::toPy(const Statement * o) {
 				return nullptr;
 			}
 		}
-	} else if (type == s_CASE) {
 
+	} else if (type == s_CASE) {
 		py_inst = PyObject_CallObject(HdlCaseStmCls, NULL);
 		if (!py_inst) {
 			return nullptr;
@@ -553,7 +559,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 		PyObject * c;
 		size_t c_cnt;
 		std::tie(c, c_cnt) = cases_toPy(exprs.begin() + 1, exprs.end(),
-				sub_statements.begin() + 1);
+				sub_statements.begin());
 		if (c) {
 			PyObject_SetAttrString(py_inst, "cases", c);
 		}
@@ -576,8 +582,8 @@ PyObject* ToPy::toPy(const Statement * o) {
 				return nullptr;
 			}
 		}
-	} else if (type == s_FOR) {
 
+	} else if (type == s_FOR) {
 		py_inst = PyObject_CallObject(HdlForStmCls, NULL);
 		if (!py_inst) {
 			return nullptr;
@@ -593,8 +599,8 @@ PyObject* ToPy::toPy(const Statement * o) {
 			Py_DECREF(py_inst);
 			return nullptr;
 		}
-	} else if (type == s_RETURN) {
 
+	} else if (type == s_RETURN) {
 		py_inst = PyObject_CallObject(HdlReturnStmCls, NULL);
 		if (!py_inst) {
 			return nullptr;
@@ -613,11 +619,10 @@ PyObject* ToPy::toPy(const Statement * o) {
 			Py_DECREF(py_inst);
 			return nullptr;
 		}
-	} else if (type == s_BREAK) {
 
+	} else if (type == s_BREAK) {
 		py_inst = PyObject_CallObject(HdlBreakStmCls, NULL);
 	} else if (type == s_CONTINUE) {
-
 		py_inst = PyObject_CallObject(HdlContinueStmCls, NULL);
 	} else if (type == s_ASSIGMENT) {
 		auto src = toPy(o->exprs[0]);

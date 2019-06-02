@@ -57,10 +57,9 @@ class ToPy {
 		PyObject * parent_list = PyObject_GetAttrString(parent,
 				prop_name.c_str());
 		if (parent_list == nullptr) {
-
 			std::string err_msg = (std::string(
 					"ToPy::toPy_arr object does not have specified property:")
-					+ prop_name + std::string(" PyObject for: ")
+					+ prop_name + std::string(" : ")
 					+ PyObject_repr(parent));
 			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 			return -1;
