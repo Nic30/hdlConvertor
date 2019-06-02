@@ -1,5 +1,4 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag
-from hdlConvertor._hdlConvertor import HdlConvertor
 from hdlConvertor.hdlAst import *
 
 WIRE = HdlName('wire')
@@ -471,6 +470,7 @@ if __name__ == "__main__":
     BASE_DIR = os.path.join(os.path.dirname(__file__), "..")
     TEST_DIR = os.path.join(BASE_DIR, 'tests', 'verilog')
     from hdlConvertor.language import Language
+    from hdlConvertor import HdlConvertor
     c = HdlConvertor()
     # filenames = [os.path.join(TEST_DIR, "sram.v")]
     filenames = [os.path.join(TEST_DIR, "fifo_rx.v")]
