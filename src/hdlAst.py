@@ -16,7 +16,7 @@ Main container is HdlContext which can store all other objects.
 """
 
 
-class CodePosition():
+class CodePosition(object):
     __slots__ = ["startLine", "stopLine", "startColumn", "stopColumn"]
 
     def __init__(self, startLine, stopLine, startColumn, stopColumn):
@@ -43,14 +43,14 @@ class HdlName(str):
     __slots__ = []
 
 
-class HdlAll():
+class HdlAll(object):
     """
     Constant which corresponds to VHDL "all" keyword or "*" in verilog sensitivitylist
     """
     __slots__ = []
 
 
-class HdlTypeType():
+class HdlTypeType(object):
     """
     Type which means that the object is type of type
     """
@@ -65,7 +65,7 @@ HdlTypeEnum = Enum
 
 # arrays are described as HdlCall(HdlBuildinFn.INDEX, (type, array size))
 # [TODO] HdlTypeStruct/Union
-class HdlTypeBits():
+class HdlTypeBits(object):
     """
     The type which represents bit or bit vector in HDL (std_logic/_vector in VHDL [0:8] in verilog)
 
@@ -88,14 +88,14 @@ class HdlTypeBits():
             and self.signed == other.signed)
 
 
-class HdlTypeAuto():
+class HdlTypeAuto(object):
     """
     Type which means that the type is automatically resolved from the type of the value
     """
     __slots__ = []
 
 
-class iHdlObj():
+class iHdlObj(object):
     """
     Object with direct represenation in HDL
 
@@ -107,7 +107,7 @@ class iHdlObj():
         self.doc = "" # type: str
 
 
-class HdlIntValue():
+class HdlIntValue(object):
     """
     Object for represenation of int value in in HDL (= also for the bitstrings)
     """
@@ -191,7 +191,7 @@ class HdlBuildinFn(Enum):
     # note that in verilog bitewise operators can have only one argument
 
 
-class HdlCall():
+class HdlCall(object):
     """
     Container for call of the HDL function in HDL code
     """
@@ -213,7 +213,7 @@ class iHdlObjWithName(iHdlObj):
         self.name = None  # type: HdlName
 
 
-class iInModuleHdlObj():
+class iInModuleHdlObj(object):
     """
     Object which can apear in the module body
     """
@@ -457,7 +457,7 @@ class HdlContinueStm(iHdlStatement):
     __slots__ = []
 
 
-class HdlContext():
+class HdlContext(object):
     """
     The container of the objects specified in HDL files
 
