@@ -36,6 +36,22 @@ ToPy::ToPy() {
 	import(HdlBreakStmCls, "HdlBreakStm");
 	import(HdlContinueStmCls, "HdlContinueStm");
 	import(HdlImportCls, "HdlImport");
+	import(HdlComponentInstCls, "HdlComponentInst");
+	import(HdlFunctionCls, "HdlFunction");
+}
+
+std::string ToPy::PyObject_repr(PyObject * o) {
+	PyObject* args = Py_BuildValue("(O)", PyObject_Repr(o));
+	if (!args)
+		return "";
+	const char* s = nullptr;
+	if (!PyArg_ParseTuple(args, "s", &s)) {
+		Py_DECREF(args);
+		return "";
+	}
+	std::string ret = s;
+	Py_DECREF(args);
+	return ret;
 }
 
 PyObject* ToPy::toPy(const Context * o) {
@@ -70,8 +86,23 @@ PyObject* ToPy::toPy(const iHdlObj * o) {
 	auto mdef = dynamic_cast<const Arch *>(o);
 	if (mdef)
 		return toPy(mdef);
+	auto ci = dynamic_cast<const CompInstance *>(o);
+	if (ci)
+		return toPy(ci);
+	auto na = dynamic_cast<const Package *>(o);
+	if (na)
+		return toPy(na);
+	auto naDec = dynamic_cast<const PackageHeader *>(o);
+	if (naDec)
+		return toPy(naDec);
 
-	PyErr_SetString(PyExc_ValueError, "ToPy::toPy unknown type of iHdlObj");
+	auto fn = dynamic_cast<const Function*>(o);
+	if (fn)
+		return toPy(fn);
+
+	std::string err_msg = std::string("ToPy::toPy unknown type of iHdlObj:")
+			+ std::string(typeid(*o).name());
+	PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 	return nullptr;
 }
 
@@ -104,7 +135,6 @@ int ToPy::toPy(const WithDoc * o, PyObject * py_inst) {
 }
 
 PyObject* ToPy::toPy(const Arch * o) {
-
 	PyObject* py_inst = PyObject_CallObject(HdlModuleDefCls, NULL);
 	if (py_inst == nullptr)
 		return nullptr;
@@ -129,8 +159,38 @@ PyObject* ToPy::toPy(const Arch * o) {
 	Py_DECREF(py_inst);
 	return nullptr;
 }
-PyObject* ToPy::toPy(const Entity * o) {
 
+PyObject* ToPy::toPy(const hdlObjects::CompInstance * o) {
+	PyObject* py_inst = PyObject_CallObject(HdlComponentInstCls, NULL);
+	if (py_inst == nullptr)
+		return nullptr;
+	auto n = toPy(o->name);
+	if (!n) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	int e = PyObject_SetAttrString(py_inst, "name", n);
+	if (!e) {
+		auto module_name = toPy(o->entityName);
+		if (!module_name) {
+			e = -1;
+		} else {
+			e = PyObject_SetAttrString(py_inst, "module_name", module_name);
+		}
+	}
+	if (!e)
+		e = toPy_arr(py_inst, "param_map", o->genericMap);
+	if (!e)
+		e = toPy_arr(py_inst, "port_map", o->portMap);
+
+	if (e) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const Entity * o) {
 	PyObject* py_inst = PyObject_CallObject(HdlModuleDecCls, NULL);
 	if (py_inst == nullptr)
 		return nullptr;
@@ -168,6 +228,41 @@ PyObject* ToPy::toPy(const Expr * o) {
 			PyErr_SetString(PyExc_ValueError,
 					"ToPy::toPy - Expr has NULL data");
 	}
+	return nullptr;
+}
+
+PyObject* ToPy::toPy(const Function * o) {
+	PyObject* py_inst = PyObject_CallObject(HdlFunctionCls, NULL);
+	if (py_inst == nullptr)
+		return nullptr;
+	for (;;) {
+		int e = toPy(static_cast<const WithNameAndDoc*>(o), py_inst);
+		if (e)
+			break;
+		if (o->params) {
+			e = toPy_arr(py_inst, "params", *o->params);
+			if (e)
+				break;
+		}
+		if (o->returnT) {
+			auto r_t = toPy(o->returnT);
+			if (!r_t)
+				break;
+			e = PyObject_SetAttrString(py_inst, "return_t", r_t);
+			if (e)
+				break;
+		}
+		e = toPy_arr(py_inst, "body", o->locals);
+		if (e)
+			break;
+
+		e = toPy_arr(py_inst, "body", o->body);
+		if (e)
+			break;
+
+		return py_inst;
+	}
+	Py_DECREF(py_inst);
 	return nullptr;
 }
 
@@ -223,7 +318,6 @@ PyObject* ToPy::toPy(const Symbol * o) {
 		Py_RETURN_NONE;
 	} else {
 		assert(t == symb_T);
-
 		return PyObject_CallObject(HdlTypeTypeCls, NULL);
 	}
 }
@@ -244,7 +338,6 @@ PyObject* ToPy::toPy(const Direction o) {
 }
 
 PyObject* ToPy::toPy(const Operator * o) {
-
 	PyObject* py_inst = PyObject_CallObject(HdlCallCls, NULL);
 	if (!py_inst)
 		return nullptr;
@@ -262,8 +355,29 @@ PyObject* ToPy::toPy(const Operator * o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const Variable * o) {
+// [TODO] too similar with the code for Arch
+PyObject* ToPy::toPy(const Package* o) {
+	PyObject* py_inst = PyObject_CallObject(HdlModuleDefCls, NULL);
+	if (py_inst == nullptr)
+		return nullptr;
+	for (;;) {
+		int e = toPy(static_cast<const WithNameAndDoc*>(o), py_inst);
+		if (e)
+			break;
+		e = toPy_arr(py_inst, "objs", o->objs);
+		if (e)
+			break;
 
+		return py_inst;
+	}
+	Py_DECREF(py_inst);
+	return nullptr;
+}
+PyObject* ToPy::toPy(const PackageHeader* o) {
+	return toPy(reinterpret_cast<const Package*>(o));
+}
+
+PyObject* ToPy::toPy(const Variable * o) {
 	PyObject* py_inst = PyObject_CallObject(HdlVariableDefCls, NULL);
 	if (!py_inst)
 		return nullptr;
@@ -431,7 +545,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 		if (!py_inst) {
 			return nullptr;
 		}
-		e = PyObject_SetAttrString(py_inst, "switchOn", toPy(exprs[0]));
+		e = PyObject_SetAttrString(py_inst, "switch_on", toPy(exprs[0]));
 		if (e) {
 			Py_DECREF(py_inst);
 			return nullptr;
@@ -568,7 +682,6 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 	} else if (type == s_IMPORT) {
-
 		py_inst = PyObject_CallObject(HdlImportCls, NULL);
 		if (!py_inst) {
 			return nullptr;
@@ -602,6 +715,8 @@ PyObject* ToPy::toPy(const std::string & o) {
 }
 
 ToPy::~ToPy() {
+	Py_XDECREF(HdlFunctionCls);
+	Py_XDECREF(HdlComponentInstCls);
 	Py_XDECREF(HdlImportCls);
 	Py_XDECREF(HdlContinueStmCls);
 	Py_XDECREF(HdlBreakStmCls);

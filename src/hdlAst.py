@@ -107,18 +107,6 @@ class iHdlObj():
         self.doc: str = ""
 
 
-class HdlImport(iHdlObj):
-    """
-    Container for import in HDL code
-
-    this is List[Union[HdlName, HdlAll]]
-    """
-    __slots__ = ["path"]
-
-    def __init__(self):
-        self.path = []  # type: List[iHdlObj]
-
-
 class HdlIntValue():
     """
     Object for represenation of int value in in HDL (= also for the bitstrings)
@@ -175,7 +163,7 @@ class HdlBuildinFn(Enum):
     XOR,
     XNOR,
     EQ,  # ==
-    NEQ, # ~
+    NEQ,  # ~
     LT,  # <
     LE,  # <=
     GT,  # >
@@ -230,21 +218,6 @@ class iInModuleHdlObj():
     Object which can apear in the module body
     """
     __slots__ = []
-
-
-class HdlImport(iHdlObj):
-    """
-    The import statements used in VHDL
-
-    :note: note that this does not corresponds to include as include is processed by preprocessor
-    :ivar path: the list of namemes which are in the import
-    :ivar wildcard: flag if true all objects from specified namespace should be imported
-    """
-    __slots__ = ["path", "wildcard"]
-
-    def __init__(self):
-        self.path = []  # type: List[str]
-        self.wildcard = False  # type: bool
 
 
 class HdlVariableDef(iHdlObj, iInModuleHdlObj):
@@ -318,6 +291,19 @@ class HdlComponentInst(iHdlObjWithName, iInModuleHdlObj):
         self.port_map = []  # type: List[iHdlExpr]
 
 
+class HdlFunction(iHdlObjWithName, iInModuleHdlObj):
+    """
+    HDL Function definition or declaration
+    """
+    __slots__ = ["is_operator", "return_t", "params", "body"]
+
+    def __init__(self):
+        self.is_operator = False  # type: bool
+        self.return_t = None  # type: Optional[iHdlExpr]
+        self.params = []  # type: List[HdlVariableDef]
+        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement]]
+
+
 class iHdlStatement(iHdlObj, iInModuleHdlObj):
     """
     :ivar labels: list of labes, the first label is for this statement
@@ -332,6 +318,22 @@ class iHdlStatement(iHdlObj, iInModuleHdlObj):
         iInModuleHdlObj.__init__(self)
         self.labels = []  # type: List[HdlName]
         self.in_prepoc = False  # type: bool
+
+
+class HdlImport(iHdlStatement):
+    """
+    The import statements used in VHDL
+
+    :note: note that this does not corresponds to include as include is processed by preprocessor
+    :ivar path: the list of namemes which are in the import
+    :ivar wildcard: flag if true all objects from specified namespace should be imported
+    """
+    __slots__ = ["path", "wildcard"]
+
+    def __init__(self):
+        super(HdlImport, self).__init__()
+        self.path = []  # type: List[str]
+        self.wildcard = False  # type: bool
 
 
 class HdlStatementBlock(iHdlStatement):
