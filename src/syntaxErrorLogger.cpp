@@ -1,4 +1,4 @@
-#include <conversion_exception.h>
+#include "conversion_exception.h"
 #include "syntaxErrorLogger.h"
 
 namespace hdlConvertor {
@@ -8,11 +8,10 @@ using namespace std;
 void SyntaxErrorLogger::CheckErrors() {
 	stringstream error_msg;
 	error_msg << endl;
-	for (vector<error_data>::iterator iter = _errors.begin();
-			iter != _errors.end(); iter++) {
-		error_msg << iter->_filename << ':' << (*iter)._line << ':'
-				<< (uint32_t) iter->_charPosition << ":SyntaxError:"
-				<< iter->_message << endl;
+	for (auto & e : _errors) {
+		error_msg << e._filename << ':' << e._line << ':'
+				<< (uint32_t) e._charPosition << ":SyntaxError:" << e._message
+				<< endl;
 	}
 	if (_errors.size() > 0) {
 		throw ParseException(error_msg.str());
@@ -32,7 +31,7 @@ void SyntaxErrorLogger::syntaxError(Recognizer *recognizer,
 	data._message = msg;
 
 	_errors.push_back(data);
-	//cerr << line << ":" << charPositionInLine << ":Error:" << msg << "\n";
+	//cerr << line << ":" << charPositionInLine << ":SyntaxError:" << msg << "\n";
 }
 
 void SyntaxErrorLogger::reportAmbiguity(
@@ -43,7 +42,7 @@ void SyntaxErrorLogger::reportAmbiguity(
 		bool exact __attribute__((unused)),
 		const antlrcpp::BitSet &ambigAlts __attribute__((unused)),
 		atn::ATNConfigSet *configs __attribute__((unused))) {
-
+	//cerr << ":Ambiguity:" << std::endl;
 }
 
 void SyntaxErrorLogger::reportContextSensitivity(
@@ -53,7 +52,7 @@ void SyntaxErrorLogger::reportContextSensitivity(
 		size_t stopIndex __attribute__((unused)),
 		size_t prediction __attribute__((unused)),
 		atn::ATNConfigSet *configs __attribute__((unused))) {
-
+	//cerr << ":ContextSensitivity:" << std::endl;
 }
 
 void SyntaxErrorLogger::reportAttemptingFullContext(
@@ -63,7 +62,7 @@ void SyntaxErrorLogger::reportAttemptingFullContext(
 		size_t stopIndex __attribute__((unused)),
 		const antlrcpp::BitSet &conflictingAlts __attribute__((unused)),
 		atn::ATNConfigSet *configs __attribute__((unused))) {
-
+	//cerr << ":AttemptingFullContext:" << std::endl;
 }
 
 }
