@@ -53,7 +53,9 @@ cdef extern from "convertor.h" namespace "hdlConvertor":
                         bool,
                         bool) except +raise_my_py_error
 
-        string verilog_pp(string filename, vector[string] incdirs, unsigned int) except +raise_my_py_error
+        string verilog_pp(string filename,
+                          vector[string] incdirs,
+                          unsigned int) except +raise_my_py_error
 
 cdef class HdlConvertor:
     """
@@ -117,10 +119,20 @@ cdef class HdlConvertor:
         else:
             return HdlContext()
 
-    def verilog_pp(self, filename, incdirs=['.'], mode=0):
+    def verilog_pp(self, filename, incdirs=['.'], mode=PyHdlLanguageEnum.VERILOG):
         """
-        Execute verilog preprocessor
+        Execute Verilog preprocessor
         """
+        L = PyHdlLanguageEnum
+        if mode == L.VERILOG or mode == L.VERILOG_2001:
+            mode_value = 0
+        elif mode == L.VERILOG_2005:
+            mode_value = 1
+        elif mode == L.SYSTEM_VERILOG_2012 or mode == L.SYSTEM_VERILOG:
+            mode_value = 2
+        else:
+            raise ValueError(mode + " is not recognized (expected " + repr(PyHdlLanguageEnum) + ")")
+
         PY3 = PY_MAJOR_VERSION == 3
 
         if PY3:
@@ -135,7 +147,7 @@ cdef class HdlConvertor:
             filename = filename.encode('utf8')
             incdirs = [item.encode('utf8') for item in incdirs]
 
-        data = self.thisptr.verilog_pp(filename, incdirs, mode)
+        data = self.thisptr.verilog_pp(filename, incdirs, mode_value)
 
         if PY3:
             data = data.decode('utf8')
