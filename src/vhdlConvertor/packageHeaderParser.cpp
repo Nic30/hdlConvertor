@@ -39,10 +39,10 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 
 	Expr * name = LiteralParser::visitIdentifier(ctx->identifier());
 	ph->name = name->extractStr();
-	visitPackage_declarative_part(ph, ctx->package_declarative_part());
+	visitPackage_declarative_part(ctx->package_declarative_part());
 	return ph;
 }
-void PackageHeaderParser::visitPackage_declarative_part(PackageHeader * ph,
+void PackageHeaderParser::visitPackage_declarative_part(
 		vhdlParser::Package_declarative_partContext* ctx) {
 	// package_declarative_part
 	// : ( package_declarative_item )*
@@ -193,8 +193,12 @@ Entity * PackageHeaderParser::visitComponent_declaration(
 	Entity * e = new Entity();
 	e->name = strdup(ctx->identifier()->getText().c_str());
 	if (!hierarchyOnly) {
-		EntityParser::visitGeneric_clause(ctx->generic_clause(), &e->generics);
-		EntityParser::visitPort_clause(ctx->port_clause(), &e->ports);
+		auto gc = ctx->generic_clause();
+		if (gc)
+			EntityParser::visitGeneric_clause(gc, &e->generics);
+		auto pc = ctx->port_clause();
+		if (pc)
+			EntityParser::visitPort_clause(pc, &e->ports);
 	}
 	return e;
 }

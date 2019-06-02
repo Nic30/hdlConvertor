@@ -4,12 +4,13 @@
 #include <algorithm>
 
 #include "../notImplementedLogger.h"
-using vhdlParser = vhdl_antlr::vhdlParser;
-
-using namespace hdlConvertor::hdlObjects;
+#include "referenceParser.h"
 
 namespace hdlConvertor {
 namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal:
@@ -27,14 +28,14 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	if (el)
 		return visitEnumeration_literal(el);
 
-	auto sl = ctx->string_literal();
+	auto sl = ctx->STRING_LITERAL();
 	if (sl)
-		return visitString_literal(sl);
+		return visitString_literal(sl->getText());
 
 	if (ctx->NULL_SYM())
 		return Expr::null();
 
-	auto n = ctx->bit_string_literal();
+	auto n = ctx->BIT_STRING_LITERAL();
 	assert(n);
 	std::string s = n->getText();
 	std::size_t fdRadix = s.find('"') - 1;
@@ -101,33 +102,37 @@ Expr * LiteralParser::visitNumeric_literal(
 }
 Expr * LiteralParser::visitPhysical_literal(
 		vhdlParser::Physical_literalContext* ctx) {
-	// physical_literal
-	// : abstract_literal (: identifier)
-	// ;
-	NotImplementedLogger::print("LiteralParser.visitPhysical_literal");
-	return NULL;
+	// physical_literal: ( abstract_literal )? name;
+	auto _al = ctx->abstract_literal();
+	if (_al)
+		NotImplementedLogger::print("LiteralParser.visitPhysical_literal - abstract_literal");
+	auto _n = ctx->name();
+	return ReferenceParser::visitName(_n);
 }
 Expr * LiteralParser::visitAbstract_literal(
 		vhdlParser::Abstract_literalContext* ctx) {
-	// abstract_literal: decimal_literal | based_literal;
-
-	// abstract_literal: decimal_literal | based_literal;
-	auto dl = ctx->decimal_literal();
+	// abstract_literal: DECIMAL_LITERAL | BASED_LITERAL;
+	auto dl = ctx->DECIMAL_LITERAL();
 	if (dl) {
 		// decimal_literal: integer ( DOT integer )? ( exponent )?;
-		auto n = dl->integer();
-		if (n.size() == 1)
-			return Expr::INT(n[0]->getText(), 10);
+		auto n = dl->getText();
+		bool is_float = false;
+		for (auto c : n) {
+			if (c == '.' || c == 'e' || c == 'E') {
+				is_float = true;
+				break;
+			}
+		}
+		if (is_float)
+			return Expr::FLOAT(atof(n.c_str()));
+		else
+			return Expr::INT(n, 10);
 
-		NotImplementedLogger::print(
-				"LiteralParser.visitAbstract_literal - float");
-		return nullptr;
-		//return Expr::FLOAT(atof(n[0]->getText().c_str()));
 	}
 	auto bl = ctx->based_literal();
 	assert(bl);
 	// based_literal:
-	//       base HASHTAG based_integer ( DOT based_integer )? HASHTAG ( exponent )?
+	//       BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
 	// ;
 
 	// INTEGER must be checked to be between and including 2 and 16
@@ -139,13 +144,13 @@ Expr * LiteralParser::visitAbstract_literal(
 	// should be given
 
 	// [TODO] exponent
-	auto n = bl->base();
-	int base = atoi(n->children[0]->getText().c_str());
-	BigInteger val = BigInteger_fromStr(bl->children[2]->getText().c_str(),
+	auto n = bl->BASE();
+	int base = atoi(n->getText().c_str());
+	BigInteger val = BigInteger_fromStr(bl->BASED_INTEGER(0)->getText().c_str(),
 			base);
-	if (bl->exponent()) {
+	if (bl->EXPONENT()) {
 		NotImplementedLogger::print(
-				"LiteralParser.visitBased_literal - exponent");
+				"LiteralParser.visitBased_literal - EXPONENT");
 	}
 	return new Expr(val);
 }
@@ -156,18 +161,15 @@ Expr * LiteralParser::visitEnumeration_literal(
 	if (id)
 		return visitIdentifier(id);
 
-	return visitCharacter_literal(ctx->character_literal());
+	return visitCharacter_literal(ctx->CHARACTER_LITERAL()->getText());
 }
-Expr * LiteralParser::visitString_literal(
-		vhdlParser::String_literalContext * ctx) {
-	std::string s = ctx->getText();
-	std::string str = s.substr(1, s.length() - 2);
+Expr * LiteralParser::visitString_literal(const std::string & ctx) {
+	std::string str = ctx.substr(1, ctx.length() - 2);
 	return Expr::STR(str);
 
 }
-Expr * LiteralParser::visitCharacter_literal(
-		vhdlParser::Character_literalContext* ctx) {
-	return Expr::INT(ctx->getText()[1] - '0');
+Expr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
+	return Expr::INT(ctx[1] - '0');
 }
 Expr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
 	std::string s = ctx->getText();
@@ -182,7 +184,7 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	// operator_symbol: string_literal;;
 	Expr * e;
 	if (isStrDesignator(ctx)) {
-		e = visitString_literal(ctx->operator_symbol()->string_literal());
+		e = visitString_literal(ctx->operator_symbol()->STRING_LITERAL()->getText());
 	} else {
 		e = visitIdentifier(ctx->identifier());
 	}

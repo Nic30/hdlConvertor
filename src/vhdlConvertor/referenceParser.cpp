@@ -35,27 +35,28 @@ Expr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
 	if (id)
 		return ReferenceParser::visitSimple_name(id);
 
-	auto n = ctx->character_literal();
+	auto n = ctx->CHARACTER_LITERAL();
 	if (n)
-		return LiteralParser::visitCharacter_literal(n);
+		return LiteralParser::visitCharacter_literal(n->getText());
 	// operator_symbol: string_literal;
 	auto o = ctx->operator_symbol();
 	if (o) {
-		auto sl = o->string_literal();
-		return LiteralParser::visitString_literal(sl);
+		auto sl = o->STRING_LITERAL();
+		return LiteralParser::visitString_literal(sl->getText());
 	}
 	return Expr::all();
 }
 
 Expr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
 	// name
-	// : selected_name
-	// | name_part ( DOT name_part)*
-	// ;
-	auto sn = ctx->selected_name();
-	if (sn)
-		return visitSelected_name(sn);
-
+	//   : name_part ( DOT name_part)*
+	//   | external_name
+	//   ;
+	auto en = ctx->external_name();
+	if (en) {
+		NotImplementedLogger::print("ExprParser.visitName - external_name");
+		return nullptr;
+	}
 	auto np = ctx->name_part();
 	Expr * op0 = NULL;
 	for (auto it = np.begin(); it != np.end(); ++it) {

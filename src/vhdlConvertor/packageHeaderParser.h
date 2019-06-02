@@ -26,7 +26,6 @@ public:
 	hdlObjects::PackageHeader * visitPackage_declaration(
 			vhdlParser::Package_declarationContext* ctx);
 	void visitPackage_declarative_part(
-			hdlObjects::PackageHeader * ph,
 			vhdlParser::Package_declarative_partContext* ctx);
 	void visitPackage_declarative_item(
 			vhdlParser::Package_declarative_itemContext* ctx);

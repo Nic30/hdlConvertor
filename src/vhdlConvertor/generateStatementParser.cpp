@@ -202,8 +202,12 @@ Entity * GenerateStatementParser::visitComponent_declaration(
 	// ;
 	Entity * e = new Entity();
 	e->name = strdup(ctx->identifier()->getText().c_str());
-	EntityParser::visitGeneric_clause(ctx->generic_clause(), &e->generics);
-	EntityParser::visitPort_clause(ctx->port_clause(), &e->ports);
+	auto gc = ctx->generic_clause();
+	if (gc)
+		EntityParser::visitGeneric_clause(gc, &e->generics);
+	auto pc = ctx->port_clause();
+	if (pc)
+		EntityParser::visitPort_clause(pc, &e->ports);
 
 	return e;
 }

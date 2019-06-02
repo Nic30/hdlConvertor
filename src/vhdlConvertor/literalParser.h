@@ -19,8 +19,8 @@ public:
 			vhdlParser::Abstract_literalContext* ctx);
 	static Expr * visitEnumeration_literal(
 			vhdlParser::Enumeration_literalContext* ctx);
-	static Expr * visitString_literal(vhdlParser::String_literalContext * ctx);
-	static Expr * visitCharacter_literal(vhdlParser::Character_literalContext* ctx);
+	static Expr * visitString_literal(const std::string & ctx);
+	static Expr * visitCharacter_literal(const std::string & ctx);
 	static Expr * visitIdentifier(vhdlParser::IdentifierContext* ctx);
 	static bool isStrDesignator(vhdlParser::DesignatorContext* ctx);
 	static char * visitDesignator(vhdlParser::DesignatorContext* ctx);

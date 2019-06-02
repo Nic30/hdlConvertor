@@ -192,10 +192,14 @@ hdlObjects::Entity * BlockDeclarationParser::visitComponent_declaration(
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
 	auto e = new hdlObjects::Entity();
-	e->name = strdup(ctx->simple_name()->identifier()->getText().c_str());
+	e->name = strdup(ctx->identifier()->getText().c_str());
 	if (!hierarchyOnly) {
-		EntityParser::visitGeneric_clause(ctx->generic_clause(), &e->generics);
-		EntityParser::visitPort_clause(ctx->port_clause(), &e->ports);
+		auto gc = ctx->generic_clause();
+		if (gc)
+			EntityParser::visitGeneric_clause(gc, &e->generics);
+		auto pc = ctx->port_clause();
+		if (pc)
+			EntityParser::visitPort_clause(pc, &e->ports);
 	}
 	return e;
 }

@@ -25,10 +25,9 @@ std::vector<Expr*> * ExprParser::visitActual_parameter_part(
 
 std::vector<Expr*> * ExprParser::visitAssociation_list(
 		vhdlParser::Association_listContext *ctx) {
-	// association_list
-	// : association_element ( COMMA association_element )*
+	// association_list:
+	//       association_element ( COMMA association_element )*
 	// ;
-
 	std::vector<Expr*> * ae = new std::vector<Expr*>();
 	for (auto e : ctx->association_element()) {
 		ae->push_back(visitAssociation_element(e));
@@ -38,10 +37,12 @@ std::vector<Expr*> * ExprParser::visitAssociation_list(
 
 Expr* ExprParser::visitAssociation_element(
 		vhdlParser::Association_elementContext* ctx) {
-	// association_element
-	// : ( formal_part ARROW )? actual_part
+	// association_element:
+	//       ( formal_part ARROW )? actual_part
 	// ;
-	Expr * ap = visitActual_part(ctx->actual_part());
+
+	auto _ap = ctx->actual_part();
+	Expr * ap = visitActual_part(_ap);
 	auto fp = ctx->formal_part();
 	if (fp) {
 		auto vfp = new Expr(visitFormal_part(fp), ARROW, ap);
@@ -134,12 +135,14 @@ Expr* ExprParser::visitFunction_call(vhdlParser::Function_callContext *ctx) {
 }
 
 Expr* ExprParser::visitActual_part(vhdlParser::Actual_partContext* ctx) {
-	// actual_part
-	// : name LPAREN actual_designator RPAREN
-	// | actual_designator
+	// actual_part:
+	//       name LPAREN actual_designator RPAREN
+	//       | actual_designator
 	// ;
+
 	auto name = ctx->name();
-	Expr * ad = visitActual_designator(ctx->actual_designator());
+	auto _ad = ctx->actual_designator();
+	Expr * ad = visitActual_designator(_ad);
 	if (name) {
 		std::vector<Expr*> ops = { ad, };
 		return Expr::call(ReferenceParser::visitName(name), ops);
@@ -288,9 +291,11 @@ hdlObjects::OperatorType ExprParser::visitSign(vhdlParser::SignContext * ctx) {
 Expr* ExprParser::visitSimple_expression(
 		vhdlParser::Simple_expressionContext* ctx) {
 	// simple_expression:
-	//	( sign )? term ( adding_operator term )*
-	//	;
+	//       ( sign )? term ( adding_operator term )*
+	// ;
 	// adding_operator: PLUS | MINUS | AMPERSAND;
+	if (!ctx)
+		throw std::runtime_error("visitSimple_expression got nullptr");
 
 	auto t = ctx->term();
 	auto tIt = t.begin();
@@ -333,6 +338,8 @@ Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
 		auto vle = visitLogical_expression(le);
 		return vle;
 	}
+
+	NotImplementedLogger::print("ExprParser.visitExpression - CONDITION_OPERATOR");
 
 	auto p = ctx->primary();
 	assert(p);
@@ -493,8 +500,8 @@ Expr* ExprParser::visitAllocator(vhdlParser::AllocatorContext* ctx) {
 
 }
 Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
-	// aggregate
-	// : LPAREN element_association ( COMMA element_association )* RPAREN
+	// aggregate:
+	//    LPAREN element_association ( COMMA element_association )* RPAREN
 	// ;
 	std::vector<Expr*> elements;
 	for (auto elm : ctx->element_association()) {
@@ -513,7 +520,7 @@ Expr* ExprParser::visitElement_association(
 	//   ;
 	if (ctx->choices()) {
 		NotImplementedLogger::print(
-				"ExprParser.visitElement_association.choices");
+				"ExprParser.visitElement_association - choices");
 	}
 	return visitExpression(ctx->expression());
 }
@@ -570,37 +577,29 @@ Expr *ExprParser::visitWaveform_element(
 }
 
 Expr * ExprParser::visitChoice(vhdlParser::ChoiceContext * ctx) {
-	//choice
-	//  : identifier
-	//  | discrete_range
-	//  | simple_expression
-	//  | OTHERS
-	//  ;
-	//
 	// choice:
-	//       simple_expression
-	//       | discrete_range
-	//       | simple_name
+	//       discrete_range
+	//       | simple_expression
+	//       | OTHERS
 	// ;
 
-	auto se = ctx->simple_expression();
-	if (se) {
-		return ExprParser::visitSimple_expression(se);
-	}
 	auto dr = ctx->discrete_range();
 	if (dr) {
 		return visitDiscrete_range(dr);
 	}
-	auto e = ctx->simple_expression();
-	assert(e);
-	return visitSimple_expression(e);
+	auto se = ctx->simple_expression();
+	if (se) {
+		return ExprParser::visitSimple_expression(se);
+	}
+	auto o = ctx->OTHERS();
+	assert(o);
+	return Expr::others();
 }
 std::vector<Expr *> ExprParser::visitChoices(vhdlParser::ChoicesContext * ctx) {
-	//choices
-	//  : choice ( BAR choice )*
-	//  ;
+	// choices: choice ( choice )*;
 	std::vector<Expr *> res;
-	for (auto c : ctx->choice()) {
+	auto _choice =ctx->choice();
+	for (auto c : _choice) {
 		res.push_back(visitChoice(c));
 	}
 	return res;
