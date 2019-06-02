@@ -6,6 +6,7 @@ class Language(Enum):
     VHDL = "vhdl" # default vhdl version
     
     VERILOG_2001 = "verilog2001"
+    VERILOG_2005 = "verilog2005"
     VERILOG = "verilog" # default verilog version
     
     SYSTEM_VERILOG_2012 = "sv2012"
