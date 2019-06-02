@@ -57,11 +57,19 @@ Top class of hdlObjects is Context, wich is container of all other hdl objects.
 
 Example of usage:
 ```python
-import hdlConvertor
-res = hdlConvertor.parse("yourfile.vhd", "vhdl")
-for e in res['entities']:
-    print(e['name'])
+from hdlConvertor.language import Language
+from hdlConvertor.toVerilog import ToVerilog
+from hdlConvertor import HdlConvertor
+c = HdlConvertor()
+filenames = ["your.v", ]
+include_dirs = []
+d = c.parse(filenames, Language.VERILOG, include_dirs, hierarchyOnly=False, debug=True)
 
+tv = ToVerilog(sys.stdout)
+tv.print_context(d)
+
+for o in d.objs:
+    print(o)
 ```
 
 If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
