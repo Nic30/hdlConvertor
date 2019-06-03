@@ -8,7 +8,7 @@ try:
 except ImportError:
     from use_build_version import BASE_DIR, TEST_DIR
 
-from hdlConvertor import HdlConvertor
+from hdlConvertor import HdlConvertor, ParseException
 from hdlConvertor.language import Language
 from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 
@@ -133,6 +133,10 @@ class BasicTC(unittest.TestCase):
     def test_system_verilog_mem_base_object(self):
         f, res = dumpFile("mem_base_object.sv", SV)
         str(res)
+
+    def test_vhdl_malformed(self):
+        with self.assertRaises(ParseException):
+            f, res = dumpFile("malformed.vhdl", VHDL)
 
 
 if __name__ == "__main__":
