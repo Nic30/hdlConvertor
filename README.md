@@ -78,8 +78,8 @@ Also if it is something which is not unique to your system, tell us so we can fi
 
 ### Supported languages:
 * [VHDL 1076-1993](https://perso.telecom-paristech.fr/guilley/ENS/20161206/TP/tp_syn/doc/IEEE_VHDL_1076-1993.pdf) compatible
-* [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) (based on grammar https://guest.iis.ee.ethz.ch/~zimmi/download/vhdl02_syntax.html, https://github.com/antlr/grammars-v4/blob/master/vhdl/vhdl.g4 )
-* VHDL 2008 on same level as current [Intel Quartus](https://www.intel.co.uk/content/www/uk/en/software/programmable/quartus-prime/download.html) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
+* [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) compatible
+* VHDL 2008, (currently only without `tool_directive` and `PSL`) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
 * System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP)
 
