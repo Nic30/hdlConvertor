@@ -43,17 +43,13 @@ Windows:
 
 Take a look at appveyor.yml. It is required to download antlr4 first and have visual studio or other c++ compiler installed.
 
+Also if it is something which is not unique to your system, tell us so we can fix it.
 
 
 ## Usage
-In the meantime when there is no wiki yet you can take look at src/hdlObjects.
-There are classes for objects in HDL langues and there are also toJson() for them.
-This function is used for conversion to Python objects.
-
-In python all parsed stuff are just dictionaries and values (str, int).
-
-Top class of hdlObjects is Context, wich is container of all other hdl objects.
-
+The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`. 
+In the meantime when there is no wiki yet you can take look at src/hdlAst.py.
+There are classes for objects in HDL langues and there is also type specified for every properrty.
 
 Example of usage:
 ```python
@@ -71,9 +67,6 @@ tv.print_context(d)
 for o in d.objs:
     print(o)
 ```
-
-If you having the troubles please check the installation part of the scripts for travis-ci and appveyor, they are verified to be working.
-Also if it is something which is not unique to your system, tell us so we can fix it.
 
 
 ### Supported languages:
