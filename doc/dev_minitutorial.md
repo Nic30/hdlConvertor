@@ -13,7 +13,11 @@
   /usr/include/antlr4-runtime
 
   ```
-   * C/C++ build -> Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 threads)
+   * C/C++ build ->
+       * Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 threads)
+       * uncheck Generate makefile automatically
+       * set build directory to project root
+       * in Behavior tab change target Build (increamental) from "all" to "build"
 
 # Debuging in Eclipse
 * new debug configuration -> C++ Application
