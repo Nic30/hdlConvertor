@@ -6,7 +6,7 @@ WIRE = HdlName('wire')
 
 class ToVerilog():
     """
-    Convert hdlObject AST back to Verilog
+    Convert hdlObject AST back to Verilog 2002
     """
     INDENT_STEP = "    "
     DIR2V = {
