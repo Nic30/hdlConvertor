@@ -16,7 +16,6 @@ python_extension_module(_hdlConvertor)
 
 target_link_libraries(_hdlConvertor
 	hdlConvertor_cpp_static
-	#${hdlConvertor_cpp_static_LIBRARIES}
 )
 
 #set_target_properties(_hdlConvertor
