@@ -307,8 +307,9 @@ void ModuleParser::visitReg_declaration(
 	//    : 'reg' ('signed')? (range_)? list_of_variable_identifiers ';'
 	//    ;
 	auto t = Utils::mkWireT(ctx->range_(), Utils::is_signed(ctx));
+	auto doc = commentParser.parse(ctx);
 	visitList_of_variable_identifiers(ctx->list_of_variable_identifiers(), t,
-			true);
+			true, doc);
 }
 
 void ModuleParser::visitNet_declaration(
@@ -353,14 +354,24 @@ void ModuleParser::visitNet_declaration(
 	} else {
 		t = Utils::mkWireT();
 	}
+	auto doc = commentParser.parse(ctx);
+	bool first = true;
 	auto ln = ctx->list_of_net_identifiers();
 	if (ln) {
 		for (auto v : visitList_of_net_identifiers(ln, t)) {
+			if (first) {
+				v->__doc__ = doc;
+				first = false;
+			}
 			arch->objs.push_back(v);
 		}
 	} else {
 		auto lna = ctx->list_of_net_decl_assignments();
 		for (auto v : visitList_of_net_decl_assignments(lna, t)) {
+			if (first) {
+				v->__doc__ = doc;
+				first = false;
+			}
 			arch->objs.push_back(v);
 		}
 	}
@@ -440,7 +451,7 @@ std::vector<Variable*> ModuleParser::visitList_of_net_decl_assignments(
 
 void ModuleParser::visitList_of_variable_identifiers(
 		Verilog2001Parser::List_of_variable_identifiersContext * ctx,
-		Expr * base_type, bool latched) {
+		Expr * base_type, bool latched, const std::string & doc) {
 	// list_of_variable_identifiers
 	//    : variable_type (',' variable_type)*
 	//    ;
@@ -449,6 +460,8 @@ void ModuleParser::visitList_of_variable_identifiers(
 		if (!first)
 			base_type = new Expr(*base_type);
 		Variable * v = visitVariable_type(vt, base_type);
+		if (first)
+			v->__doc__ = doc;
 		v->latched = latched;
 		arch->objs.push_back(v);
 		first = false;

@@ -52,7 +52,7 @@ public:
 	 * */
 	void visitList_of_variable_identifiers(
 			Verilog2001Parser::List_of_variable_identifiersContext* ctx,
-			Expr * base_type, bool latched);
+			Expr * base_type, bool latched, const std::string & doc);
 	Variable * visitVariable_type(Verilog2001Parser::Variable_typeContext * ctx,
 			Expr * base_type);
 	Variable * visitVariable_identifier(
