@@ -1,7 +1,7 @@
 #pragma once
-#include "../baseHdlParser/baseHdlParser.h"
-#include "sv2012Parser/sv2012Parser.h"
-#include "../notImplementedLogger.h"
+#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
+#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Parser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
 namespace sv {

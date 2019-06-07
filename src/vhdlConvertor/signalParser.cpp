@@ -1,5 +1,5 @@
-#include "signalParser.h"
-#include "interfaceParser.h"
+#include <hdlConvertor/vhdlConvertor/signalParser.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

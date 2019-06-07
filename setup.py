@@ -23,5 +23,4 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor'],
-    package_dir={'hdlConvertor':'src/'}
 )

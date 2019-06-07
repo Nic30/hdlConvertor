@@ -1,4 +1,4 @@
-#include "commentParser.h"
+#include <hdlConvertor/verilogConvertor/commentParser.h>
 
 namespace hdlConvertor {
 namespace verilog {

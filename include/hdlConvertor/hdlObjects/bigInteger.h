@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "../debugConfig.h"
+#include <hdlConvertor/debugConfig.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

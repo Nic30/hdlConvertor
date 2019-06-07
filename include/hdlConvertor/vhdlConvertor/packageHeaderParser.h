@@ -1,15 +1,15 @@
 #pragma once
 
 #include <vector>
-#include "vhdlParser/vhdlParser.h"
-#include "../notImplementedLogger.h"
-#include "../hdlObjects/named.h"
-#include "../hdlObjects/entity.h"
-#include "../hdlObjects/expr.h"
-#include "../hdlObjects/function.h"
-#include "../hdlObjects/variable.h"
-#include "../hdlObjects/packageHeader.h"
-#include "../hdlObjects/process.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/entity.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/function.h>
+#include <hdlConvertor/hdlObjects/variable.h>
+#include <hdlConvertor/hdlObjects/packageHeader.h>
+#include <hdlConvertor/hdlObjects/process.h>
 
 namespace hdlConvertor {
 namespace vhdl {

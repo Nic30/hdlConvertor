@@ -2,19 +2,19 @@
 
 #include <vector>
 
-#include "vhdlParser/vhdlParser.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include "../hdlObjects/statement.h"
-#include "../hdlObjects/package.h"
-#include "../hdlObjects/packageHeader.h"
-#include "../hdlObjects/symbolType.h"
-#include "../hdlObjects/named.h"
-#include "../hdlObjects/expr.h"
-#include "../hdlObjects/function.h"
-#include "../hdlObjects/variable.h"
-#include "../hdlObjects/process.h"
-#include "../hdlObjects/package.h"
-#include "../hdlObjects/packageHeader.h"
+#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/hdlObjects/package.h>
+#include <hdlConvertor/hdlObjects/packageHeader.h>
+#include <hdlConvertor/hdlObjects/symbolType.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/function.h>
+#include <hdlConvertor/hdlObjects/variable.h>
+#include <hdlConvertor/hdlObjects/process.h>
+#include <hdlConvertor/hdlObjects/package.h>
+#include <hdlConvertor/hdlObjects/packageHeader.h>
 
 namespace hdlConvertor {
 namespace vhdl {

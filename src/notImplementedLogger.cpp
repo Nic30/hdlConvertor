@@ -1,5 +1,5 @@
-#include "notImplementedLogger.h"
-#include "convertor.h"
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/convertor.h>
 
 namespace hdlConvertor {
 

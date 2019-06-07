@@ -6,30 +6,30 @@
 #include <fstream>
 #include <streambuf>
 
-#include "hdlObjects/context.h"
+#include <hdlConvertor/hdlObjects/context.h>
 
-#include "vhdlConvertor/vhdlParser/vhdlLexer.h"
-#include "vhdlConvertor/vhdlParser/vhdlParser.h"
-#include "vhdlConvertor/designFileParser.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlLexer.h>
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/vhdlConvertor/designFileParser.h>
 
-#include "verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h"
-#include "verilogConvertor/Verilog2001Parser/Verilog2001Parser.h"
-#include "verilogConvertor/source_textParser.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h>
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
+#include <hdlConvertor/verilogConvertor/source_textParser.h>
 
 #define SV_PARSER
 
 #ifdef SV_PARSER
-#include "svConverter/sv2012Parser/sv2012Lexer.h"
-#include "svConverter/sv2012Parser/sv2012Parser.h"
-#include "svConverter/source_textParser.h"
+#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Lexer.h>
+#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Parser.h>
+#include <hdlConvertor/svConvertor/source_textParser.h>
 #endif
 
-#include "verilogPreproc/vPreprocessor.h"
+#include <hdlConvertor/verilogPreproc/vPreprocessor.h>
 
-#include <conversion_exception.h>
-#include "syntaxErrorLogger.h"
-#include "language.h"
-#include "parserContainer.h"
+#include <hdlConvertor/conversion_exception.h>
+#include <hdlConvertor/syntaxErrorLogger.h>
+#include <hdlConvertor/language.h>
+#include <hdlConvertor/parserContainer.h>
 
 namespace hdlConvertor {
 

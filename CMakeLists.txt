@@ -28,3 +28,4 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 add_subdirectory(src)
+add_subdirectory(hdlConvertor)

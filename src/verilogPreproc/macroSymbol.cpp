@@ -1,5 +1,5 @@
-#include "macroSymbol.h"
-#include "vPreprocessor.h"
+#include <hdlConvertor/verilogPreproc/macroSymbol.h>
+#include <hdlConvertor/verilogPreproc/vPreprocessor.h>
 
 using namespace std;
 

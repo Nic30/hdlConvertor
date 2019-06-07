@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "expr.h"
-#include "named.h"
-#include "iHdlObj.h"
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/iHdlObj.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

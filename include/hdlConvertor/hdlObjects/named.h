@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "position.h"
+#include <hdlConvertor/hdlObjects/position.h>
 
 
 namespace hdlConvertor {

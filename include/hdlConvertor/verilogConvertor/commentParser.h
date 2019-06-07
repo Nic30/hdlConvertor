@@ -3,7 +3,7 @@
 
 #include <string>
 #include <antlr4-runtime.h>
-#include "verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h>
 
 namespace hdlConvertor {
 namespace verilog {

@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
-#include "named.h"
-#include "expr.h"
-#include "variable.h"
-#include "statement.h"
-#include "iHdlObj.h"
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/variable.h>
+#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/hdlObjects/iHdlObj.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

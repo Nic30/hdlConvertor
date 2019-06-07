@@ -1,6 +1,6 @@
-#include "moduleParamParser.h"
-#include "utils.h"
-#include "exprParser.h"
+#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+#include <hdlConvertor/verilogConvertor/utils.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
 
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;

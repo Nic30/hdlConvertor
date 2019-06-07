@@ -1,6 +1,6 @@
-#include "constantParser.h"
-#include "interfaceParser.h"
-#include "notImplementedLogger.h"
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
 namespace vhdl {

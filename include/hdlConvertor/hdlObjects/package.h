@@ -1,5 +1,5 @@
 #pragma once
-#include "aPackage.h"
+#include <hdlConvertor/hdlObjects/aPackage.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

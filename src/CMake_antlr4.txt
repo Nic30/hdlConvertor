@@ -1,0 +1,156 @@
+##############################################################################################
+# antlr4 settings
+##############################################################################################
+# there are two types of distribution the all in one antlr4-complete.jar or group of antrl4 jars
+find_jar(_ANTLR_JAR_LOCATION_antlr4_complete "antlr4-complete"
+	PATHS "/usr/share/java/antlr4-complete.jar"
+		  "antlr4-complete.jar")
+if(_ANTLR_JAR_LOCATION_antlr4_complete)
+	MESSAGE(STATUS "using antlr4-complete.jar found in ${_ANTLR_JAR_LOCATION_antlr4_complete}")
+	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION_antlr4_complete}")
+else()
+	set(ANTLR_CLASSPATH "")
+	set(ANTLR_JARS "stringtemplate4;antlr4;antlr4-runtime;antlr3-runtime;treelayout")
+	FOREACH(antlr_jar ${ANTLR_JARS})
+	  find_jar(_ANTLR_JAR_LOCATION_${antlr_jar} "${antlr_jar}"
+	  		PATHS "/usr/share/java/${antlr_jar}.jar")
+	  set(_ANTLR_JAR_LOCATION ${_ANTLR_JAR_LOCATION_${antlr_jar}})
+	  MESSAGE(STATUS "using ${antlr_jar} found in ${_ANTLR_JAR_LOCATION}")
+	  if (NOT _ANTLR_JAR_LOCATION)
+	    MESSAGE(FATAL_ERROR "Can not find ${antlr_jar}")
+	  endif()
+	  if(ANTLR_CLASSPATH)
+	  	set(ANTLR_CLASSPATH "${ANTLR_CLASSPATH}:${_ANTLR_JAR_LOCATION}")
+	  else()
+	  	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION}")
+	  endif()
+	ENDFOREACH()
+endif()
+
+# search for antlr4 include dir and library
+if(ANTLR4CPP_ROOT)
+	MESSAGE(STATUS "Antlr4 cpp runtime root set to: ${ANTLR4CPP_ROOT}")
+endif()
+find_path(ANTLR4CPP_INCLUDE_DIRS antlr4-runtime.h
+	HINTS "${ANTLR4CPP_ROOT}/usr/include/antlr4-runtime/"
+	      "${ANTLR4CPP_ROOT}/include/antlr4-runtime/"
+    PATH_SUFFIXES antlr4-runtime)
+if(NOT ANTLR4CPP_INCLUDE_DIRS)
+	MESSAGE(FATAL_ERROR "Can not find ANTLR4CPP_INCLUDE_DIRS")
+else()
+	MESSAGE(STATUS "ANTLR4CPP_INCLUDE_DIRS=${ANTLR4CPP_INCLUDE_DIRS}")
+endif()
+include_directories(${ANTLR4CPP_INCLUDE_DIRS})
+
+find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so antlr4-runtime-static.lib
+    HINTS "${ANTLR4CPP_ROOT}/usr/lib"
+          "${ANTLR4CPP_ROOT}/lib")
+if(NOT ANTLR4CPP_LIBRARIES)
+	MESSAGE(FATAL_ERROR "Can not find ANTLR4CPP_LIBRARIES")
+else()
+	MESSAGE(STATUS "ANTLR4CPP_LIBRARIES=${ANTLR4CPP_LIBRARIES}")
+endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	add_compile_definitions(ANTLR4CPP_STATIC)
+endif()
+
+##############################################################################################
+# antlr4 utils
+##############################################################################################
+function(GetAntlrParserFileNamesSpecDir root name result dir_prefix)
+	set(result_tmp
+		${root}/${dir_prefix}Parser/${name}Lexer.cpp
+		${root}/${dir_prefix}Parser/${name}Parser.cpp
+	)
+
+	foreach( src_file ${result_tmp} )
+	      set_source_files_properties(
+	          ${src_file}
+	          PROPERTIES
+	          GENERATED TRUE
+	      )
+	endforeach()
+	set(${result} "${result_tmp}" PARENT_SCOPE)
+endfunction()
+
+macro(GetAntlrParserFileNames root name result)
+	GetAntlrParserFileNamesSpecDir(${root} ${name} ${result} ${name})
+endmacro()
+
+
+set(PARSER_GEN_ONLY_VISITOR "-visitor" "-no-listener")
+set(PARSER_GEN_ONLY_LISTENER "-listener" "-no-visitor")
+set(ANTLR_GRAMMAR_ROOT "${PROJECT_SOURCE_DIR}/grammars")
+set(_HDLCONVERTOR_INCLUDE_ROOT "${HDLCONVERTOR_SOURCE_DIR}/include/hdlConvertor")
+
+# https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
+macro(AddParserToBuild name folder_name sources parser_gen_ops)
+	# @param name the name of the parser grammar and parser itself
+	# @param folder_name name of folder where convertor is stored
+	#	(which is using this parser)
+	# @param sources the list of the source files which will be benerated
+	#	(use GetAntlrParserFileNamesSpecDir functions)
+	# @param parser_gen_ops ANTL4 options
+
+	# delete generated files on clean
+	set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+	   "${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser"
+	   "${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser")
+
+	# create source directory
+	# create include directory
+	# run antlr to generate parser
+	# mv headers to include directory
+	add_custom_command(
+	  OUTPUT
+	  "${sources}"
+	  COMMAND
+	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+	  COMMAND
+	  ${CMAKE_COMMAND} -E make_directory ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
+	  COMMAND
+	  "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool"
+	  -Dlanguage=Cpp ${parser_gen_ops} -package ${name}_antlr -encoding utf-8
+	  -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+	  ${ANTLR_GRAMMAR_ROOT}/${name}.g4
+	  COMMAND
+	  ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/*.h ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
+	  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
+	  COMMENT "generating sources for ${name}Parser"
+	)
+	# WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+	add_custom_target(generateParsers${name}
+	  DEPENDS
+	  ${sources}
+	)
+endmacro()
+
+macro(AddParserToBuildWithLexer name folder_name sources)
+	# @note look at doc in AddParserToBuild
+
+	set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+	   "${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser"
+	   "${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser")
+
+    add_custom_command(
+      OUTPUT
+      "${sources}"
+      COMMAND
+	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+      COMMAND
+	  ${CMAKE_COMMAND} -E make_directory ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
+      COMMAND
+        "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool"
+        -Dlanguage=Cpp -visitor -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+        ${ANTLR_GRAMMAR_ROOT}/${name}Lexer.g4
+        ${ANTLR_GRAMMAR_ROOT}/${name}Parser.g4
+	  COMMAND
+	  ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/*.h ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
+      DEPENDS ${ANTLR_GRAMMAR_ROOT}/${name}Parser.g4 ${ANTLR_GRAMMAR_ROOT}/${name}Lexer.g4
+      COMMENT "generating sources for ${name}Parser (with separate lexer)"
+    )
+    add_custom_target(generateParsers${name}
+      DEPENDS
+      ${sources}
+    )
+endmacro()

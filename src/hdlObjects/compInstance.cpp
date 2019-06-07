@@ -1,5 +1,5 @@
-#include "compInstance.h"
-#include "../hdlObjects/symbolType.h"
+#include <hdlConvertor/hdlObjects/compInstance.h>
+#include <hdlConvertor/hdlObjects/symbolType.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "macro_replace.h"
+#include <hdlConvertor/verilogPreproc/macro_replace.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {

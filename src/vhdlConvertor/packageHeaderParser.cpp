@@ -1,18 +1,18 @@
-#include "packageHeaderParser.h"
-#include "compInstanceParser.h"
-#include "constantParser.h"
-#include "entityParser.h"
-#include "exprParser.h"
-#include "interfaceParser.h"
-#include "interfaceParser.h"
-#include "literalParser.h"
-#include "referenceParser.h"
-#include "signalParser.h"
-#include "statementParser.h"
-#include "subProgramDeclarationParser.h"
-#include "subProgramParser.h"
-#include "subtypeDeclarationParser.h"
-#include "variableParser.h"
+#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+#include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/signalParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

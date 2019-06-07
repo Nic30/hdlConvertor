@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "operatorType.h"
-#include "expr.h"
-#include "exprItem.h"
+#include <hdlConvertor/hdlObjects/operatorType.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/exprItem.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

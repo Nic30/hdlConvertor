@@ -1,4 +1,4 @@
-#include "symbolType.h"
+#include <hdlConvertor/hdlObjects/symbolType.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

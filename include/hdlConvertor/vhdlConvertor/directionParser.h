@@ -1,8 +1,8 @@
 #pragma once
 
 #include <assert.h>
-#include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/direction.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/hdlObjects/direction.h>
 
 namespace hdlConvertor {
 namespace vhdl {

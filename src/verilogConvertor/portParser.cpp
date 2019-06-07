@@ -1,8 +1,8 @@
-#include "portParser.h"
-#include "../notImplementedLogger.h"
-#include "utils.h"
-#include "exprParser.h"
-#include "../hdlObjects/direction.h"
+#include <hdlConvertor/verilogConvertor/portParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/verilogConvertor/utils.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/hdlObjects/direction.h>
 
 namespace hdlConvertor {
 namespace verilog {

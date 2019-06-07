@@ -11,7 +11,7 @@ from hdlConvertor.language import Language as PyHdlLanguageEnum
 from hdlConvertor.hdlAst import HdlContext
 import sys
 
-cdef extern from "hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
+cdef extern from "hdlConvertor/hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass Context:
         pass
 
@@ -22,10 +22,10 @@ cdef extern from "toPy.h" namespace "hdlConvertor":
         @staticmethod
         PyObject * toPy(const Context * c) except NULL
 
-cdef extern from "conversion_exception.h" namespace "hdlConvertor":
+cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
     cdef const char * get_my_py_error_message()
 
-cdef extern from "language.h" namespace "hdlConvertor":
+cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
         VHDL, VERILOG, SYSTEM_VERILOG
 
@@ -40,7 +40,7 @@ cdef int raise_my_py_error() except * :
 
     raise ParseException(msg)
 
-cdef extern from "convertor.h" namespace "hdlConvertor":
+cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
 
         string filename

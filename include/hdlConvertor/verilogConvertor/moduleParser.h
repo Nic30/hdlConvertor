@@ -2,14 +2,14 @@
 
 #include <vector>
 
-#include "Verilog2001Parser/Verilog2001Parser.h"
-#include "../hdlObjects/arch.h"
-#include "../hdlObjects/compInstance.h"
-#include "../hdlObjects/context.h"
-#include "../hdlObjects/entity.h"
-#include "../hdlObjects/variable.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
+#include <hdlConvertor/hdlObjects/arch.h>
+#include <hdlConvertor/hdlObjects/compInstance.h>
+#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/entity.h>
+#include <hdlConvertor/hdlObjects/variable.h>
 
-#include "commentParser.h"
+#include <hdlConvertor/verilogConvertor/commentParser.h>
 
 namespace hdlConvertor {
 namespace verilog {

@@ -1,4 +1,4 @@
-#include "../verilogPreproc/macro_replace.h"
+#include <hdlConvertor/verilogPreproc/macro_replace.h>
 
 using namespace std;
 
@@ -15,7 +15,7 @@ macro_replace::macro_replace(string macro_name, string replace,
 macro_replace::~macro_replace() {
 }
 
-// return false to skip this find because it is 
+// return false to skip this find because it is
 // from an already substitution of the same macro replacement
 bool macro_replace::check_interval(size_t start) {
 	for (auto paire : _substituate) {

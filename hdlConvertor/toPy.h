@@ -3,20 +3,20 @@
 #include <vector>
 #include <typeinfo>
 
-#include "hdlObjects/arch.h"
-#include "hdlObjects/compInstance.h"
-#include "hdlObjects/context.h"
-#include "hdlObjects/entity.h"
-#include "hdlObjects/expr.h"
-#include "hdlObjects/function.h"
-#include "hdlObjects/named.h"
-#include "hdlObjects/operator.h"
-#include "hdlObjects/operatorType.h"
-#include "hdlObjects/package.h"
-#include "hdlObjects/packageHeader.h"
-#include "hdlObjects/process.h"
-#include "hdlObjects/statement.h"
-#include "hdlObjects/variable.h"
+#include <hdlConvertor/hdlObjects/arch.h>
+#include <hdlConvertor/hdlObjects/compInstance.h>
+#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/entity.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/function.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/operator.h>
+#include <hdlConvertor/hdlObjects/operatorType.h>
+#include <hdlConvertor/hdlObjects/package.h>
+#include <hdlConvertor/hdlObjects/packageHeader.h>
+#include <hdlConvertor/hdlObjects/process.h>
+#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/hdlObjects/variable.h>
 
 
 namespace hdlConvertor {

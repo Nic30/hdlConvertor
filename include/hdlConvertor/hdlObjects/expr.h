@@ -5,13 +5,13 @@
 #include <string.h>
 #include <assert.h>
 
-#include "bigInteger.h"
-#include "symbolType.h"
-#include "operatorType.h"
-#include "exprItem.h"
-#include "symbol.h"
-#include "named.h"
-#include "iHdlObj.h"
+#include <hdlConvertor/hdlObjects/bigInteger.h>
+#include <hdlConvertor/hdlObjects/symbolType.h>
+#include <hdlConvertor/hdlObjects/operatorType.h>
+#include <hdlConvertor/hdlObjects/exprItem.h>
+#include <hdlConvertor/hdlObjects/symbol.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/iHdlObj.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

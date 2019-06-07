@@ -1,4 +1,4 @@
-#include "operatorType.h"
+#include <hdlConvertor/hdlObjects/operatorType.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

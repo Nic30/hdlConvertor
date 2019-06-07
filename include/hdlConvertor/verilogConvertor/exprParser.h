@@ -5,12 +5,12 @@
 #include <string>
 #include <memory>
 
-#include "Verilog2001Parser/Verilog2001Parser.h"
-#include "../hdlObjects/operatorType.h"
-#include "../hdlObjects/expr.h"
-#include "../notImplementedLogger.h"
-#include "literalParser.h"
-#include "attributeParser.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
+#include <hdlConvertor/hdlObjects/operatorType.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/verilogConvertor/literalParser.h>
+#include <hdlConvertor/verilogConvertor/attributeParser.h>
 
 namespace hdlConvertor {
 namespace verilog {

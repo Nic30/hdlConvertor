@@ -1,0 +1,29 @@
+
+file(GLOB libhdlConvertor_py_SRC
+  "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+)
+include_directories(
+	${PYTHON_INCLUDE_DIRS}
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../include/"
+	"${ANTLR4CPP_INCLUDE_DIRS}"
+)
+
+add_cython_target(_hdlConvertor CXX)
+add_library(_hdlConvertor MODULE ${_hdlConvertor}
+								${libhdlConvertor_py_SRC})
+python_extension_module(_hdlConvertor)
+
+target_link_libraries(_hdlConvertor
+	${hdlConvertor_LIBS}
+)
+
+#set_target_properties(_hdlConvertor
+#	PROPERTIES VERSION "1.0.0"
+#	OUTPUT_NAME _hdlConvertor
+#	LIBRARY_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+#	RUNTIME_OUTPUT_DIRECTORY "${HDLCONVERTOR_SOURCE_DIR}/dist"
+#)
+
+install(TARGETS _hdlConvertor LIBRARY DESTINATION
+	hdlConvertor)

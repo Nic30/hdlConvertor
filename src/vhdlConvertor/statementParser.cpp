@@ -1,11 +1,11 @@
-#include "statementParser.h"
-#include "exprParser.h"
-#include "../notImplementedLogger.h"
-#include "literalParser.h"
-#include "referenceParser.h"
-#include "processParser.h"
-#include "generateStatementParser.h"
-#include "compInstanceParser.h"
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/processParser.h>
+#include <hdlConvertor/vhdlConvertor/generateStatementParser.h>
+#include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

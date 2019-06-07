@@ -1,11 +1,11 @@
-#include "attributeParser.h"
-#include "../notImplementedLogger.h"
-
-using namespace Verilog2001_antlr;
-using namespace hdlConvertor::hdlObjects;
+#include <hdlConvertor/verilogConvertor/attributeParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
 namespace verilog {
+
+using namespace Verilog2001_antlr;
+using namespace hdlConvertor::hdlObjects;
 
 std::vector<Expr*>* AttributeParser::visitAttribute_instance(
 		Verilog2001Parser::Attribute_instanceContext * ctx) {

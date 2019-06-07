@@ -1,6 +1,6 @@
-#include "statementParser.h"
-#include "../notImplementedLogger.h"
-#include "exprParser.h"
+#include <hdlConvertor/verilogConvertor/statementParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
 
 namespace hdlConvertor {
 namespace verilog {

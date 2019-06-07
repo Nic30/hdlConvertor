@@ -1,13 +1,13 @@
-#include "processParser.h"
-#include "statementParser.h"
-#include "constantParser.h"
-#include "variableParser.h"
-#include "literalParser.h"
-#include "subtypeDeclarationParser.h"
-#include "notImplementedLogger.h"
-#include "referenceParser.h"
-#include "subProgramDeclarationParser.h"
-#include "subProgramParser.h"
+#include <hdlConvertor/vhdlConvertor/processParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

@@ -5,9 +5,9 @@
 #include <functional>
 #include <antlr4-runtime.h>
 
-#include "hdlObjects/context.h"
-#include "syntaxErrorLogger.h"
-#include "notImplementedLogger.h"
+#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/syntaxErrorLogger.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
 

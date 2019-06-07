@@ -1,6 +1,6 @@
-#include "statement.h"
+#include <hdlConvertor/hdlObjects/statement.h>
 #include <tuple>
-#include "process.h"
+#include <hdlConvertor/hdlObjects/process.h>
 
 using namespace std;
 

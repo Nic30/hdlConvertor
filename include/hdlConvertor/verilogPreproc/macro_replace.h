@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "conversion_exception.h"
+#include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {

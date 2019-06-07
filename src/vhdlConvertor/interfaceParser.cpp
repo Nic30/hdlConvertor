@@ -1,8 +1,8 @@
-#include "interfaceParser.h"
-#include "exprParser.h"
-#include "directionParser.h"
-#include "literalParser.h"
-#include "../notImplementedLogger.h"
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/vhdlConvertor/directionParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
 namespace vhdl {

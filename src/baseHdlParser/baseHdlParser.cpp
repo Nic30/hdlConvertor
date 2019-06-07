@@ -1,8 +1,8 @@
-#include "baseHdlParser.h"
-
-using namespace hdlConvertor::hdlObjects;
+#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
 
 namespace hdlConvertor {
+
+using namespace hdlConvertor::hdlObjects;
 
 BaseHdlParser::BaseHdlParser(antlr4::TokenStream* tokens, Context * ctx, bool _hierarchyOnly) {
 	if (ctx == nullptr)

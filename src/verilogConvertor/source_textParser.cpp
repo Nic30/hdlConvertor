@@ -1,7 +1,7 @@
-#include "source_textParser.h"
-#include "commentParser.h"
-#include "moduleParser.h"
-#include "notImplementedLogger.h"
+#include <hdlConvertor/verilogConvertor/source_textParser.h>
+#include <hdlConvertor/verilogConvertor/commentParser.h>
+#include <hdlConvertor/verilogConvertor/moduleParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using namespace hdlConvertor::hdlObjects;

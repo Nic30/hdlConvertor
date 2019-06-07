@@ -1,5 +1,6 @@
-#include "source_textParser.h"
-#include "../notImplementedLogger.h"
+#include <hdlConvertor/svConvertor/source_textParser.h>
+
+#include <hdlConvertor/notImplementedLogger.h>
 
 using namespace hdlConvertor::hdlObjects;
 

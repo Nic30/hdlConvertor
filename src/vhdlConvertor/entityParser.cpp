@@ -1,7 +1,7 @@
-#include "entityParser.h"
-#include "../notImplementedLogger.h"
-#include "../hdlObjects/expr.h"
-#include "interfaceParser.h"
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

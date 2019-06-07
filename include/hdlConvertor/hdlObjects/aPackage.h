@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "named.h"
-#include "iHdlObj.h"
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/iHdlObj.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "statement.h"
+#include <hdlConvertor/hdlObjects/statement.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/entity.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/hdlObjects/entity.h>
 
 namespace hdlConvertor {
 namespace vhdl {

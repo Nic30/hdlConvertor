@@ -1,6 +1,6 @@
-#include "expr.h"
-#include "symbol.h"
-#include "operator.h"
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/symbol.h>
+#include <hdlConvertor/hdlObjects/operator.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

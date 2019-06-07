@@ -1,9 +1,9 @@
-#include "compInstanceParser.h"
+#include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 
-#include "../notImplementedLogger.h"
-#include "literalParser.h"
-#include "referenceParser.h"
-#include "exprParser.h"
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

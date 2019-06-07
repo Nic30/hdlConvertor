@@ -5,14 +5,14 @@
 #include <sys/stat.h>
 #include <typeinfo>
 
-#include "verilogPreprocParser/verilogPreprocLexer.h"
-#include "verilogPreprocParser/verilogPreprocParser.h"
-#include "verilogPreprocParser/verilogPreprocParserBaseVisitor.h"
+#include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocLexer.h>
+#include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>
+#include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParserBaseVisitor.h>
 
-#include "macroPrototype.h"
-#include "macroSymbol.h"
-#include "../syntaxErrorLogger.h"
-#include "conversion_exception.h"
+#include <hdlConvertor/verilogPreproc/macroPrototype.h>
+#include <hdlConvertor/verilogPreproc/macroSymbol.h>
+#include <hdlConvertor/syntaxErrorLogger.h>
+#include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {

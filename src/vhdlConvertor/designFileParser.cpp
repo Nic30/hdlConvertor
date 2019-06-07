@@ -1,10 +1,10 @@
-#include "designFileParser.h"
-#include "../notImplementedLogger.h"
-#include "archParser.h"
-#include "packageParser.h"
-#include "entityParser.h"
-#include "packageHeaderParser.h"
-#include "referenceParser.h"
+#include <hdlConvertor/vhdlConvertor/designFileParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/archParser.h>
+#include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
+#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

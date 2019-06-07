@@ -1,7 +1,7 @@
-#include "moduleInstanceParser.h"
-#include "../notImplementedLogger.h"
-#include "../hdlObjects/expr.h"
-#include "exprParser.h"
+#include <hdlConvertor/verilogConvertor/moduleInstanceParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
 
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;

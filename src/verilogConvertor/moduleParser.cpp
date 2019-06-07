@@ -1,13 +1,13 @@
-#include "moduleParser.h"
-#include "../notImplementedLogger.h"
+#include <hdlConvertor/verilogConvertor/moduleParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
-#include "attributeParser.h"
-#include "portParser.h"
-#include "exprParser.h"
-#include "statementParser.h"
-#include "moduleInstanceParser.h"
-#include "utils.h"
-#include "moduleParamParser.h"
+#include <hdlConvertor/verilogConvertor/attributeParser.h>
+#include <hdlConvertor/verilogConvertor/portParser.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/verilogConvertor/statementParser.h>
+#include <hdlConvertor/verilogConvertor/moduleInstanceParser.h>
+#include <hdlConvertor/verilogConvertor/utils.h>
+#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
 
 using namespace std;
 using namespace Verilog2001_antlr;

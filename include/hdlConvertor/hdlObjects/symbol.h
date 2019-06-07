@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "bigInteger.h"
-#include "symbolType.h"
-#include "exprItem.h"
+#include <hdlConvertor/hdlObjects/bigInteger.h>
+#include <hdlConvertor/hdlObjects/symbolType.h>
+#include <hdlConvertor/hdlObjects/exprItem.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

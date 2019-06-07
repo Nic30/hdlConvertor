@@ -1,4 +1,4 @@
-#include "process.h"
+#include <hdlConvertor/hdlObjects/process.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

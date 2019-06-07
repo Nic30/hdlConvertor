@@ -1,10 +1,11 @@
-#include "vPreprocessor.h"
+#include <hdlConvertor/verilogPreproc/vPreprocessor.h>
 
-using namespace antlr4;
-using namespace std;
 
 namespace hdlConvertor {
 namespace verilog_pp {
+
+using namespace antlr4;
+using namespace std;
 
 
 void ReplaceStringInPlace(string& subject, const string& search,

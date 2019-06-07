@@ -1,4 +1,4 @@
-#include "named.h"
+#include <hdlConvertor/hdlObjects/named.h>
 #include <stdlib.h>
 
 namespace hdlConvertor {

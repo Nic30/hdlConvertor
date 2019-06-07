@@ -1,4 +1,4 @@
-#include "variable.h"
+#include <hdlConvertor/hdlObjects/variable.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

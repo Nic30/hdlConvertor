@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/expr.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/hdlObjects/expr.h>
 
 namespace hdlConvertor {
 namespace vhdl {

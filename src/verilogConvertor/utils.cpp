@@ -1,7 +1,7 @@
-#include "utils.h"
-#include "exprParser.h"
+#include <hdlConvertor/verilogConvertor/utils.h>
+#include <hdlConvertor/verilogConvertor/exprParser.h>
 #include "Verilog2001Parser/Verilog2001Lexer.h"
-#include "../hdlObjects/symbolType.h"
+#include <hdlConvertor/hdlObjects/symbolType.h>
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using Verilog2001Lexer = Verilog2001_antlr::Verilog2001Lexer;

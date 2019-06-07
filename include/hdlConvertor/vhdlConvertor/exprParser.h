@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/expr.h"
-#include "../hdlObjects/operatorType.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/operatorType.h>
 
 namespace hdlConvertor {
 namespace vhdl {

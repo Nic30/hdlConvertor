@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "../hdlObjects/compInstance.h"
-#include "Verilog2001Parser/Verilog2001Parser.h"
+#include <hdlConvertor/hdlObjects/compInstance.h>
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
 
 namespace hdlConvertor {
 namespace verilog {

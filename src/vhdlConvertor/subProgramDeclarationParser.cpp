@@ -1,9 +1,9 @@
-#include "subProgramDeclarationParser.h"
-#include "literalParser.h"
-#include "exprParser.h"
-#include "notImplementedLogger.h"
-#include "interfaceParser.h"
-#include "variableParser.h"
+#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

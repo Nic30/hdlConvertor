@@ -1,4 +1,4 @@
-#include "conversion_exception.h"
+#include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
 

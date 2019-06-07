@@ -2,11 +2,11 @@
 #include <vector>
 #include <antlr4-common.h>
 
-#include "vhdlParser/vhdlParser.h"
-#include "../hdlObjects/context.h"
-#include "../hdlObjects/expr.h"
-#include "../hdlObjects/statement.h"
-#include "../baseHdlParser/baseHdlParser.h"
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

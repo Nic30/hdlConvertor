@@ -1,4 +1,4 @@
-#include "context.h"
+#include <hdlConvertor/hdlObjects/context.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

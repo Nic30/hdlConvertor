@@ -1,4 +1,4 @@
-#include "entity.h"
+#include <hdlConvertor/hdlObjects/entity.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

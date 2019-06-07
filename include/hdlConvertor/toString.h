@@ -2,15 +2,16 @@
 
 #include <vector>
 #include <iostream>
-#include "debugConfig.h"
-#include "hdlObjects/context.h"
-#include "hdlObjects/operator.h"
-#include "hdlObjects/named.h"
-#include "hdlObjects/process.h"
-#include "hdlObjects/aPackage.h"
-#include "hdlObjects/arch.h"
-#include "hdlObjects/entity.h"
-#include "hdlObjects/statement.h"
+
+#include <hdlConvertor/debugConfig.h>
+#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/operator.h>
+#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlObjects/process.h>
+#include <hdlConvertor/hdlObjects/aPackage.h>
+#include <hdlConvertor/hdlObjects/arch.h>
+#include <hdlConvertor/hdlObjects/entity.h>
+#include <hdlConvertor/hdlObjects/statement.h>
 
 
 namespace hdlConvertor {

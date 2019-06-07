@@ -1,4 +1,4 @@
-#include "aPackage.h"
+#include <hdlConvertor/hdlObjects/aPackage.h>
 
 using namespace std;
 

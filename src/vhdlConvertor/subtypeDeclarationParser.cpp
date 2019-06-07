@@ -1,5 +1,5 @@
-#include "subtypeDeclarationParser.h"
-#include "exprParser.h"
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

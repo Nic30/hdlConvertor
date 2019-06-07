@@ -4,8 +4,8 @@
 #include <map>
 #include <vector>
 
-#include "macro_replace.h"
-#include "macro_replace_sv.h"
+#include <hdlConvertor/verilogPreproc/macro_replace.h>
+#include <hdlConvertor/verilogPreproc/macro_replace_sv.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {

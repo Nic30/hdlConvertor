@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Verilog2001Parser/Verilog2001Parser.h"
-#include "../baseHdlParser/baseHdlParser.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
+#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
 #include <antlr4-common.h>
 
 namespace hdlConvertor {

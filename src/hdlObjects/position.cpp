@@ -1,4 +1,4 @@
-#include "position.h"
+#include <hdlConvertor/hdlObjects/position.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

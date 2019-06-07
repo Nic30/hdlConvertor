@@ -1,8 +1,8 @@
-#include "archParser.h"
+#include <hdlConvertor/vhdlConvertor/archParser.h>
 
-#include "blockDeclarationParser.h"
-#include "referenceParser.h"
-#include "statementParser.h"
+#include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
 
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;

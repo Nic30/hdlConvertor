@@ -1,16 +1,16 @@
-#include "blockDeclarationParser.h"
+#include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
 
 #include <string.h>
 
-#include "packageHeaderParser.h"
-#include "packageParser.h"
-#include "subProgramDeclarationParser.h"
-#include "subProgramParser.h"
-#include "subtypeDeclarationParser.h"
-#include "constantParser.h"
-#include "signalParser.h"
-#include "variableParser.h"
-#include "entityParser.h"
+#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+#include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
+#include <hdlConvertor/vhdlConvertor/signalParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

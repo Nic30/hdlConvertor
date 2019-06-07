@@ -1,5 +1,5 @@
-#include "literalParser.h"
-#include "../notImplementedLogger.h"
+#include <hdlConvertor/verilogConvertor/literalParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using namespace hdlConvertor::hdlObjects;

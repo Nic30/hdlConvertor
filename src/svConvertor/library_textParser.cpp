@@ -1,4 +1,4 @@
-#include "library_textParser.h"
+#include <hdlConvertor/svConvertor/library_textParser.h>
 
 using namespace sv2012_antlr;
 using namespace hdlConvertor::hdlObjects;

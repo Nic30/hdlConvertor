@@ -1,10 +1,10 @@
-#include "literalParser.h"
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
 
-#include "../notImplementedLogger.h"
-#include "referenceParser.h"
+#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {

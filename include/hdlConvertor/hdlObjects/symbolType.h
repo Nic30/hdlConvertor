@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bigInteger.h"
+#include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <string.h>
 #include <assert.h>
 

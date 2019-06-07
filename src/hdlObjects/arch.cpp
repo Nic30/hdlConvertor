@@ -1,4 +1,4 @@
-#include "arch.h"
+#include <hdlConvertor/hdlObjects/arch.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

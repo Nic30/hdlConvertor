@@ -1,5 +1,5 @@
 #pragma once
-#include "../hdlObjects/context.h"
+#include <hdlConvertor/hdlObjects/context.h>
 #include <antlr4-runtime.h>
 
 namespace hdlConvertor {

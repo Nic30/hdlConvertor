@@ -5,8 +5,8 @@
 #include <string>
 #include <algorithm>
 
-#include "Verilog2001Parser/Verilog2001Parser.h"
-#include "../hdlObjects/expr.h"
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
+#include <hdlConvertor/hdlObjects/expr.h>
 
 namespace hdlConvertor {
 namespace verilog {
