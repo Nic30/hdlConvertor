@@ -7,6 +7,8 @@ namespace verilog_pp {
 using namespace antlr4;
 using namespace std;
 
+using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
+using verilogPreprocLexer = verilogPreproc_antlr::verilogPreprocLexer;
 
 void ReplaceStringInPlace(string& subject, const string& search,
 		const string& replace) {

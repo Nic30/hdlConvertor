@@ -1,5 +1,5 @@
 
-file(GLOB libhdlConvertor_py_SRC
+file(GLOB hdlConvertor_py_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 include_directories(
@@ -11,11 +11,12 @@ include_directories(
 
 add_cython_target(_hdlConvertor CXX)
 add_library(_hdlConvertor MODULE ${_hdlConvertor}
-								${libhdlConvertor_py_SRC})
+								 ${hdlConvertor_py_SRC})
 python_extension_module(_hdlConvertor)
 
 target_link_libraries(_hdlConvertor
-	${hdlConvertor_LIBS}
+	hdlConvertor_cpp_static
+	#${hdlConvertor_cpp_static_LIBRARIES}
 )
 
 #set_target_properties(_hdlConvertor

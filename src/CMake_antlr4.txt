@@ -57,100 +57,101 @@ endif()
 ##############################################################################################
 # antlr4 utils
 ##############################################################################################
-function(GetAntlrParserFileNamesSpecDir root name result dir_prefix)
-	set(result_tmp
-		${root}/${dir_prefix}Parser/${name}Lexer.cpp
-		${root}/${dir_prefix}Parser/${name}Parser.cpp
-	)
-
-	foreach( src_file ${result_tmp} )
-	      set_source_files_properties(
-	          ${src_file}
-	          PROPERTIES
-	          GENERATED TRUE
-	      )
-	endforeach()
-	set(${result} "${result_tmp}" PARENT_SCOPE)
-endfunction()
-
-macro(GetAntlrParserFileNames root name result)
-	GetAntlrParserFileNamesSpecDir(${root} ${name} ${result} ${name})
-endmacro()
-
 
 set(PARSER_GEN_ONLY_VISITOR "-visitor" "-no-listener")
 set(PARSER_GEN_ONLY_LISTENER "-listener" "-no-visitor")
+set(PARSER_GEN_VISITOR "-visitor")
+
 set(ANTLR_GRAMMAR_ROOT "${PROJECT_SOURCE_DIR}/grammars")
 set(_HDLCONVERTOR_INCLUDE_ROOT "${HDLCONVERTOR_SOURCE_DIR}/include/hdlConvertor")
 
+
 # https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
-macro(AddParserToBuild name folder_name sources parser_gen_ops)
+#https://stackoverflow.com/questions/7862300/how-to-make-cmake-target-executed-whether-specified-file-was-changed
+macro(AddParserToBuild name folder_name parser_gen_ops lexer_parser_separate)
 	# @param name the name of the parser grammar and parser itself
 	# @param folder_name name of folder where convertor is stored
 	#	(which is using this parser)
-	# @param sources the list of the source files which will be benerated
-	#	(use GetAntlrParserFileNamesSpecDir functions)
-	# @param parser_gen_ops ANTL4 options
+	# @param parser_gen_ops ANTL4 options (type: name of variable)
+	# @param lexer_parser_separate if ON the ${name}Lexer.g4 ${name}Parser.g4 is used otherwise just ${name}.g4
+	set(GENERATED_SRC
+		${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/${name}Lexer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/${name}Parser.cpp
+	)
+	if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+		#Suppress warnings on generated code.
+		set_property(SOURCE ${GENERATED_SRC} PROPERTY
+			COMPILE_FLAGS -Wno-unused-parameter)
+	endif()
+
+	set(GEN_INC_DIR
+		${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser)
+	set(GENERATED_INC
+		${GEN_INC_DIR}/${name}Lexer.h
+		${GEN_INC_DIR}/${name}Parser.h
+	)
+	set(PARSER_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser)
 
 	# delete generated files on clean
 	set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 	   "${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser"
-	   "${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser")
+	   "${GEN_INC_DIR}")
+
+	if(${lexer_parser_separate})
+		set(GRAMMARS
+			${ANTLR_GRAMMAR_ROOT}/${name}Lexer.g4
+        	${ANTLR_GRAMMAR_ROOT}/${name}Parser.g4)
+	else()
+		set(GRAMMARS
+			${ANTLR_GRAMMAR_ROOT}/${name}.g4)
+	endif()
 
 	# create source directory
 	# create include directory
 	# run antlr to generate parser
 	# mv headers to include directory
 	add_custom_command(
-	  OUTPUT
-	  "${sources}"
-	  COMMAND
-	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
-	  COMMAND
-	  ${CMAKE_COMMAND} -E make_directory ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
-	  COMMAND
-	  "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool"
-	  -Dlanguage=Cpp ${parser_gen_ops} -package ${name}_antlr -encoding utf-8
-	  -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
-	  ${ANTLR_GRAMMAR_ROOT}/${name}.g4
-	  COMMAND
-	  ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/*.h ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
-	  DEPENDS ${PROJECT_SOURCE_DIR}/grammars/${name}.g4
-	  COMMENT "generating sources for ${name}Parser"
+		OUTPUT
+		${GENERATED_INC} ${GENERATED_SRC}
+		COMMAND
+		${CMAKE_COMMAND} -E make_directory ${PARSER_SRC_DIR}
+		COMMAND
+		${CMAKE_COMMAND} -E make_directory ${GEN_INC_DIR}
+		COMMAND
+		"${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool"
+		-Dlanguage=Cpp ${${parser_gen_ops}} -package ${name}_antlr -encoding utf-8
+		-o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
+		${GRAMMARS}
+		COMMAND
+		${CMAKE_COMMAND} -E copy ${PARSER_SRC_DIR}/*.h ${GEN_INC_DIR}
+		DEPENDS ${GRAMMARS}
+		COMMENT "generating sources for ${name}Parser"
 	)
-	# WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-	add_custom_target(generateParsers${name}
-	  DEPENDS
-	  ${sources}
+
+	file(GLOB SRC
+	     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 	)
-endmacro()
 
-macro(AddParserToBuildWithLexer name folder_name sources)
-	# @note look at doc in AddParserToBuild
+	# dummy header only library to add headers as a dependency for dependent libs
+	add_library(${folder_name}_GENERATED_HEDER_LIB
+		${GENERATED_INC})
+	set_target_properties(${folder_name}_GENERATED_HEDER_LIB
+		PROPERTIES LINKER_LANGUAGE C)
 
-	set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
-	   "${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser"
-	   "${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser")
+	add_library(${folder_name}_static STATIC
+		${SRC}
+	  	${GENERATED_SRC})
+	target_link_libraries(${folder_name}_static
+		${folder_name}_GENERATED_HEDER_LIB)
 
-    add_custom_command(
-      OUTPUT
-      "${sources}"
-      COMMAND
-	  ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
-      COMMAND
-	  ${CMAKE_COMMAND} -E make_directory ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
-      COMMAND
-        "${Java_JAVA_EXECUTABLE}" -cp "${ANTLR_CLASSPATH}" "org.antlr.v4.Tool"
-        -Dlanguage=Cpp -visitor -o ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser
-        ${ANTLR_GRAMMAR_ROOT}/${name}Lexer.g4
-        ${ANTLR_GRAMMAR_ROOT}/${name}Parser.g4
-	  COMMAND
-	  ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${name}Parser/*.h ${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser
-      DEPENDS ${ANTLR_GRAMMAR_ROOT}/${name}Parser.g4 ${ANTLR_GRAMMAR_ROOT}/${name}Lexer.g4
-      COMMENT "generating sources for ${name}Parser (with separate lexer)"
-    )
-    add_custom_target(generateParsers${name}
-      DEPENDS
-      ${sources}
-    )
+	#target_include_directories(parsersVhdl_static
+	#	INTERFACE
+	#	${CMAKE_CURRENT_SOURCE_DIR}
+	#)
+
+	set_target_properties(${folder_name}_static
+		PROPERTIES VERSION "1.0.0"
+		OUTPUT_NAME ${folder_name}
+		POSITION_INDEPENDENT_CODE ON
+	)
 endmacro()

@@ -23,7 +23,7 @@ namespace verilog_pp {
  * :ivar _incdir: directories where to search for included files (last will be searched first)
  * :ivar _stack_incfile: stack of include files which are currently parsed (used for detection of cycle in includes)
  **/
-class vPreprocessor: public verilogPreprocParserBaseVisitor {
+class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
 	macroSymbol & _defineDB;
 	antlr4::CommonTokenStream * _tokens;
 	std::vector<std::string> _incdir;
@@ -36,6 +36,7 @@ class vPreprocessor: public verilogPreprocParserBaseVisitor {
 	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
 
 public:
+	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 	enum {
 		VERILOG2001, VERILOG2005, SV2012
 	};
