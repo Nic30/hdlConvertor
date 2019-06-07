@@ -216,7 +216,8 @@ void ModuleParser::visitModule_or_generate_item(
 
 	auto a = ctx->always_construct();
 	if (a) {
-		auto stm = VerStatementParser::visitAlways_construct(a);
+		VerStatementParser vsp(commentParser);
+		auto stm = vsp.visitAlways_construct(a);
 		if (stm.first)
 			objs.push_back(stm.first);
 		else if (stm.second) {

@@ -123,7 +123,9 @@ Statement * VerStatementParser::visitBlocking_assignment(
 	}
 	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
 	auto src = VerExprParser::visitExpression(ctx->expression());
-	return Statement::ASSIG(dst, src);
+	auto assig = Statement::ASSIG(dst, src);
+	assig->__doc__ = commentParser.parse(ctx);
+	return assig;
 }
 
 Statement * VerStatementParser::visitCase_statement(
@@ -155,7 +157,9 @@ Statement * VerStatementParser::visitCase_statement(
 			}
 		}
 	}
-	return Statement::CASE(switchOn, cases, default_);
+	auto cs = Statement::CASE(switchOn, cases, default_);
+	cs->__doc__ = commentParser.parse(ctx);
+	return cs;
 
 }
 std::vector<Statement::case_t> VerStatementParser::visitCase_item(
@@ -196,7 +200,9 @@ Statement * VerStatementParser::visitNonblocking_assignment(
 	}
 	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
 	auto src = VerExprParser::visitExpression(ctx->expression());
-	return Statement::ASSIG(dst, src);
+	auto assig = Statement::ASSIG(dst, src);
+	assig->__doc__ = commentParser.parse(ctx);
+	return assig;
 }
 std::vector<Statement*> * VerStatementParser::visitSeq_block(
 		Verilog2001Parser::Seq_blockContext * ctx) {
@@ -243,7 +249,10 @@ Statement * VerStatementParser::visitConditional_statement(
 				ctx->statement_or_null(0));
 		auto _ifFalse = ctx->statement_or_null(1);
 		auto ifFalse = visitStatement_or_null__wrapped(_ifFalse);
-		return Statement::IF(cond, ifTrue, ifFalse);
+		auto _if = Statement::IF(cond, ifTrue, ifFalse);
+		_if ->__doc__ = commentParser.parse(ctx);
+		return _if;
+
 	}
 	// [TODO] must have feature
 	// if_else_if_statement
@@ -262,7 +271,9 @@ Statement * VerStatementParser::visitProcedural_timing_control_statement(
 	auto stms =
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__wrapped(
 					ctx->statement_or_null()));
-	return Statement::PROCESS(sens_list, stms);
+	auto p = Statement::PROCESS(sens_list, stms);
+	p ->__doc__ = commentParser.parse(ctx);
+	return p;
 }
 
 vector<Statement *> * VerStatementParser::visitStatement_or_null__wrapped(
