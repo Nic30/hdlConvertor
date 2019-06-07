@@ -108,7 +108,7 @@ class ToVerilog():
             w(")")
         ps = e.ports
         if ps:
-            w("(\n")
+            w(" (\n")
             with Indent(self.out):
                 for last, p in iter_with_last_flag(ps):
                     self.print_port_declr(p)
