@@ -50,7 +50,7 @@ class ToVerilog():
             for last, d in iter_with_last_flag(doc):
                 if last and d == "":
                     break
-                w("// ")
+                w("//")
                 w(d)
                 w("\n")
 
@@ -119,7 +119,7 @@ class ToVerilog():
             w(")")
         w(";\n")
 
-    def print_expr(self, expr):
+    def print_expr(self, expr, sensitivity=False):
         w = self.out.write
         if isinstance(expr, str):
             w(expr)
@@ -142,75 +142,82 @@ class ToVerilog():
             w("*")
             return
         elif isinstance(expr, HdlCall):
+            def pe(e):
+                return self.print_expr(e, sensitivity=sensitivity)
+
             o = expr
             op = expr.fn
             symbol = self.GENERIC_BIN_OPS.get(op, None)
             if symbol is not None:
+                if sensitivity and op == HdlBuildinFn.OR:
+                    symbol = "or"
                 w("(")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 w(" ")
                 w(symbol)
                 w(" ")
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 w(")")
                 return
             if op == HdlBuildinFn.DOWNTO:
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 w(":")
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 return
             elif op == HdlBuildinFn.TO:
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 w(":")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.NOT:
                 w("!")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.NEG:
                 w("~")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.RISING:
+                assert sensitivity
                 w("posedge ")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.FALLING:
+                assert sensitivity
                 w("negedge ")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.NEG:
                 w("~")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 return
             elif op == HdlBuildinFn.CONCAT:
                 w("{")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 w(", ")
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 w("}")
                 return
             elif op == HdlBuildinFn.INDEX:
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 w("[")
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 w("]")
                 return
             elif op == HdlBuildinFn.REPL_CONCAT:
                 w("{(")
-                self.print_expr(o.ops[0])
+                pe(o.ops[0])
                 w("){")
-                self.print_expr(o.ops[1])
+                pe(o.ops[1])
                 w("}}")
                 return
             elif op == HdlBuildinFn.TERNARY:
-                self.print_expr(o.op[0])
+                pe(o.ops[0])
                 w(" ? ")
                 o0, o1 = o.ops[1:]
-                self.print_expr(o0)
+                pe(o0)
                 w(" : ")
-                self.print_expr(o1)
+                pe(o1)
                 return
             else:
                 raise NotImplementedError(op)
@@ -281,7 +288,7 @@ class ToVerilog():
 
         w("always @ (")
         for last, item in iter_with_last_flag(sens):
-            self.print_expr(item)
+            self.print_expr(item, sensitivity=True)
             if not last:
                 w(", ")
         w(") begin\n")
@@ -306,7 +313,7 @@ class ToVerilog():
                 self.print_statement(s)
 
         if len(stms) != 1:
-            w("end\n")
+            w("end")
             return True
         return False
 
@@ -334,6 +341,8 @@ class ToVerilog():
                 w(" ")
             w("else")
             self.print_block(ifFalse)
+        if need_space:
+            w("\n")
 
     def print_assignment(self, a, is_top=False):
         s = a.src
@@ -365,9 +374,10 @@ class ToVerilog():
                     w("\n")
             defal = cstm.default
             if defal is not None:
-                w("default:")
+                is_block = w("default:")
                 self.print_block(defal)
-
+                if is_block:
+                    w("\n")
         w("endcase\n")
 
     def print_statement(self, stm, is_top=False):
