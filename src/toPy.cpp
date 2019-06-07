@@ -625,17 +625,22 @@ PyObject* ToPy::toPy(const Statement * o) {
 	} else if (type == s_CONTINUE) {
 		py_inst = PyObject_CallObject(HdlContinueStmCls, NULL);
 	} else if (type == s_ASSIGMENT) {
-		auto src = toPy(o->exprs[0]);
+		auto src = toPy(o->exprs[1]);
 		if (!src)
 			e = -1;
 		if (!e) {
 			auto dst = toPy(o->exprs[0]);
-			if (!dst)
+			if (!dst) {
 				e = -1;
+				Py_DECREF(src);
+			}
 			if (!e) {
-
 				py_inst = PyObject_CallFunctionObjArgs(HdlAssignStmCls, src,
 						dst, NULL);
+				if (!py_inst) {
+					Py_DECREF(src);
+					Py_DECREF(dst);
+				}
 			}
 		}
 		if (e || !py_inst) {
