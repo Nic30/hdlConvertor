@@ -16,7 +16,7 @@ add_subdirectory(vhdlConvertor)
 file(GLOB hdlConvertor_core_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/hdlObjects/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/baseHdlParser/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+)
 
 list(APPEND hdlConvertor_core_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/notImplementedLogger.cpp"
