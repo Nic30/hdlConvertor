@@ -1,4 +1,5 @@
 #include <hdlConvertor/convertor.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 using namespace antlr4;
 using namespace antlr4::tree;
@@ -37,6 +38,7 @@ Context * Convertor::parse(std::vector<std::string> _fileNames, Language _lang,
 	Context * c = nullptr;
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
+	NotImplementedLogger::ENABLE = _debug;
 	for (const auto & _fileName : _fileNames) {
 		struct stat buffer;
 		fileName = _fileName;

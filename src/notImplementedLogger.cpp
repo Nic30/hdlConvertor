@@ -1,10 +1,11 @@
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/convertor.h>
 
 namespace hdlConvertor {
 
+bool NotImplementedLogger::ENABLE = true;
+
 void NotImplementedLogger::print(const char * msg) {
-	if (Convertor::debug) {
+	if (NotImplementedLogger::ENABLE) {
 		std::cerr << "Conversion to Python object not implemented: " << msg
 				<< std::endl;
 	}
