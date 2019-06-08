@@ -159,22 +159,10 @@ macro(AddParserToBuild name folder_name
 	     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 	)
 
-	# dummy header only library to add headers as a dependency for dependent libs
-	add_library(${folder_name}_GENERATED_HEDER_LIB
-		${GENERATED_INC})
-	set_target_properties(${folder_name}_GENERATED_HEDER_LIB
-		PROPERTIES LINKER_LANGUAGE C)
-
 	add_library(${folder_name}_static STATIC
 		${SRC}
-	  	${GENERATED_SRC})
-	target_link_libraries(${folder_name}_static
-		${folder_name}_GENERATED_HEDER_LIB)
-
-	#target_include_directories(parsersVhdl_static
-	#	INTERFACE
-	#	${CMAKE_CURRENT_SOURCE_DIR}
-	#)
+	  	${GENERATED_SRC}
+	  	${GENERATED_INC})
 
 	set_target_properties(${folder_name}_static
 		PROPERTIES VERSION "1.0.0"
