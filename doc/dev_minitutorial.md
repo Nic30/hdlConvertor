@@ -19,6 +19,12 @@
        * set build directory to project root
        * in Behavior tab change target Build (increamental) from "all" to "build"
 
+   * in place debuggin (if you just run `python3 setup.py build` the library with c-extension is not accessible)
+     you need to copy or link library to it's package folder
+     ```
+     cd hdlConvertor
+     ln ../_skbuild/linux-*/setuptools/lib/hdlConvertor/_hdlConvertor.*.so . -s
+	 ```
 # Debuging in Eclipse
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
