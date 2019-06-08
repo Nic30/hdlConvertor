@@ -85,7 +85,7 @@ class ToVerilog():
         t = p.type
         is_array = self.print_type_first_part(t)
         if is_array:
-            raise NotImplementedError()
+            raise NotImplementedError(t)
 
         w(p.name)
 
@@ -245,7 +245,7 @@ class ToVerilog():
                 size_expr = ops[0]
                 is_signed = bool(ops[1])
                 if is_signed:
-                    raise NotImplementedError()
+                    raise NotImplementedError(op)
                 self.print_expr(size_expr)
                 w("] ")
             else:
@@ -253,7 +253,7 @@ class ToVerilog():
                 if o == HdlBuildinFn.INDEX:
                     self.print_type_first_part(op.ops[0])
                     return True
-                raise NotImplementedError()
+                raise NotImplementedError(op)
 
         return False
 
@@ -454,7 +454,7 @@ class ToVerilog():
                 elif isinstance(o, iHdlStatement):
                     self.print_statement(o, is_top=True)
                 else:
-                    raise NotImplementedError()
+                    raise NotImplementedError(o)
 
         self.out.write("endmodule\n")
 
