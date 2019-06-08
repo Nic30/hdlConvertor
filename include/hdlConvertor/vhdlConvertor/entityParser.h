@@ -1,19 +1,23 @@
 #pragma once
 
 #include <vector>
-#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+
 #include <hdlConvertor/hdlObjects/entity.h>
+
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/vhdlConvertor/commentParser.h>
+
 
 namespace hdlConvertor {
 namespace vhdl {
 
 class EntityParser {
-
+	CommentParser & commentParser;
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 	bool hierarchyOnly;
 
-	EntityParser(bool _hierarchyOnly);
+	EntityParser(CommentParser & commentParser, bool _hierarchyOnly);
 
 	hdlObjects::Entity * visitEntity_declaration(
 			vhdlParser::Entity_declarationContext* ctx);

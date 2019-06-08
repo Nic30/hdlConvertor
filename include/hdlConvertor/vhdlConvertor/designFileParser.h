@@ -2,16 +2,19 @@
 #include <vector>
 #include <antlr4-common.h>
 
-#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
 #include <hdlConvertor/hdlObjects/context.h>
 #include <hdlConvertor/hdlObjects/expr.h>
 #include <hdlConvertor/hdlObjects/statement.h>
-#include <hdlConvertor/baseHdlParser/baseHdlParser.h>
+#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/vhdlConvertor/commentParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
 class DesignFileParser: public BaseHdlParser {
+	CommentParser commentParser;
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 	using Expr = hdlObjects::Expr;

@@ -9,8 +9,8 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlObjects;
 
-EntityParser::EntityParser(bool _hierarchyOnly) {
-	hierarchyOnly = _hierarchyOnly;
+EntityParser::EntityParser(CommentParser & _commentParser, bool _hierarchyOnly) :
+		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 Entity * EntityParser::visitEntity_declaration(
 		vhdlParser::Entity_declarationContext* ctx) {
@@ -25,6 +25,7 @@ Entity * EntityParser::visitEntity_declaration(
 
 	Entity * e = new Entity();
 	e->name = strdup(ctx->identifier()->getText().c_str());
+	e->__doc__ = commentParser.parse(ctx);
 	// entity_declarative_part
 	// : ( entity_declarative_item )*
 	// ;

@@ -1273,8 +1273,9 @@ generate_statement_body: ( block_declarative_part
       ( END ( label )? SEMI )?
 ;
 label: identifier;
+// only one selected_name as selected_name can contain "." and previous expr was uselless
 use_clause:
-      USE selected_name ( COMMA selected_name )* SEMI
+      USE selected_name SEMI
 ;
 design_file: design_unit ( design_unit )*;
 design_unit: context_clause library_unit;

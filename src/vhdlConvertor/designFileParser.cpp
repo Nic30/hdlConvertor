@@ -1,10 +1,12 @@
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlObjects/operator.h>
 #include <hdlConvertor/vhdlConvertor/archParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
+
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -14,7 +16,7 @@ using namespace hdlConvertor::hdlObjects;
 
 DesignFileParser::DesignFileParser(antlr4::TokenStream* tokens, Context * ctx,
 		bool _hierarchyOnly) :
-		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
+		BaseHdlParser(tokens, ctx, _hierarchyOnly), commentParser(tokens) {
 }
 
 void DesignFileParser::visitDesign_file(vhdlParser::Design_fileContext* ctx) {
@@ -90,7 +92,7 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
 	// ;
 	auto ed = ctx->entity_declaration();
 	if (ed) {
-		EntityParser eParser(hierarchyOnly);
+		EntityParser eParser(commentParser, hierarchyOnly);
 		Entity * e = eParser.visitEntity_declaration(ed);
 		context->objs.push_back(e);
 		return;
@@ -117,7 +119,7 @@ void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext* ctx) {
 	auto l = ctx->library_clause();
 	if (l) {
 		NotImplementedLogger::print(
-						"DesignFileParser.visitContext_item - library_clause");
+				"DesignFileParser.visitContext_item - library_clause");
 		return; //libraries are ignored
 	}
 	auto u = ctx->use_clause();
@@ -126,17 +128,31 @@ void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext* ctx) {
 	}
 }
 
+void flatten_doted_expr(Expr * e, std::vector<Expr*> & arr) {
+	auto o = dynamic_cast<Operator*>(e->data);
+	if (o) {
+		if(o->op == OperatorType::DOT) {
+			for (auto _o: o->operands) {
+				flatten_doted_expr(_o, arr);
+			}
+			o->operands.clear();
+			return;
+		}
+	}
+	arr.push_back(e);
+}
+
 Statement * DesignFileParser::visitUse_clause(
 		vhdlParser::Use_clauseContext* ctx) {
-	// use_clause
-	// : USE selected_name ( COMMA selected_name )* SEMI
+	// use_clause: USE selected_name SEMI
 	// ;
-	std::vector<Expr*> refL;
-	for (auto sn : ctx->selected_name()) {
-		Expr * r = ReferenceParser::visitSelected_name(sn);
-		refL.push_back(r);
-	}
-	return Statement::IMPORT(refL);
+	auto sn = ctx->selected_name();
+	Expr * r = ReferenceParser::visitSelected_name(sn);
+	std::vector<Expr*> ref;
+	flatten_doted_expr(r, ref);
+	delete r;
+
+	return Statement::IMPORT(ref);
 }
 
 }
