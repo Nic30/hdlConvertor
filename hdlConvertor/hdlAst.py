@@ -123,6 +123,9 @@ class HdlIntValue(object):
     def __bool__(self):
         return bool(self.val)
 
+    def __nonzero__(self):
+        return self.__bool__()
+
 
 # None is equivalent of HDL null
 iHdlExpr = Union[HdlName, HdlIntValue, float, str, None, List["iHdlExpr"], HdlAll, "HdlCall"]
