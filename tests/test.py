@@ -1,12 +1,5 @@
-import sys
 from os import path
-from pprint import pprint
 import unittest
-
-try:
-    from .use_build_version import BASE_DIR, TEST_DIR
-except ImportError:
-    from use_build_version import BASE_DIR, TEST_DIR
 
 try:
     # python2
@@ -14,6 +7,11 @@ try:
 except ImportError:
     # python3
     from io import StringIO
+
+try:
+    from tests.test_constants import *
+except ImportError:
+    from test_constants import *
 
 from hdlConvertor import HdlConvertor, ParseException
 from hdlConvertor.language import Language

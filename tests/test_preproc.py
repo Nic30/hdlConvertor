@@ -1,13 +1,10 @@
-import sys
-import traceback
 from os import path
-from pprint import pprint
 import unittest
-
 try:
-    from .use_build_version import *
+    from tests.test_constants import *
 except ImportError:
-    from use_build_version import *
+    from test_constants import *
+
 
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language

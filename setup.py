@@ -1,5 +1,4 @@
 from skbuild import setup
-from os import path
 
 setup(
     cmake_args= [
