@@ -1,1 +1,1 @@
-AddParserToBuild("Verilog2001" "verilogConvertor" PARSER_GEN_ONLY_LISTENER OFF)
+AddParserToBuild("Verilog2001" "verilogConvertor" OFF OFF OFF)

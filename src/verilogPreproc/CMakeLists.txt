@@ -1,1 +1,1 @@
-AddParserToBuild("verilogPreproc" "verilogPreproc" PARSER_GEN_VISITOR ON)
+AddParserToBuild("verilogPreproc" "verilogPreproc" ON OFF ON)

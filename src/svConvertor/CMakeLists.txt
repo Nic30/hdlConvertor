@@ -1,1 +1,1 @@
-AddParserToBuild("sv2012" "svConvertor" PARSER_GEN_ONLY_LISTENER OFF)
+AddParserToBuild("sv2012" "svConvertor" OFF OFF OFF)
