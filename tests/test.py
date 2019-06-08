@@ -1,5 +1,6 @@
 from os import path
 import unittest
+from hdlConvertor.toVhdl import ToVhdl
 
 try:
     # python2
@@ -18,7 +19,6 @@ from hdlConvertor.language import Language
 from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 from hdlConvertor.toVerilog import ToVerilog
 
-
 VHDL = Language.VHDL
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
@@ -35,18 +35,24 @@ def parseFile(fname, language):
     return f, res
 
 
-
 class BasicTC(unittest.TestCase):
+
     def parseWithRef(self, fname, language):
         _, res = parseFile(fname, language)
         buff = StringIO()
-        ser = ToVerilog(buff)
+        if language == VERILOG:
+            ser = ToVerilog(buff)
+        elif language == VHDL:
+            ser = ToVhdl(buff)
+        else:
+            raise NotImplementedError(language)
+
         ser.print_context(res)
         _language = language
         if language == SV:
             _language = VERILOG
 
-        ref_file =  path.join(BASE_DIR, "tests", _language.value,
+        ref_file = path.join(BASE_DIR, "tests", _language.value,
                               "expected", fname)
         res_str = buff.getvalue()
         # with open(ref_file, "w") as f:
@@ -89,6 +95,9 @@ class BasicTC(unittest.TestCase):
     def test_vhdl_mux2i(self):
         f, res = parseFile("mux2i.vhd", VHDL)
         str(res)
+
+    def test_vhdl_ram(self):
+        self.parseWithRef("ram.vhd", VHDL)
 
     def test_verilog_uart(self):
         self.parseWithRef("uart.v", VERILOG)

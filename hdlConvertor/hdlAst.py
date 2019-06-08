@@ -329,14 +329,12 @@ class HdlImport(iHdlStatement):
 
     :note: note that this does not corresponds to include as include is processed by preprocessor
     :ivar path: the list of namemes which are in the import
-    :ivar wildcard: flag if true all objects from specified namespace should be imported
     """
-    __slots__ = ["path", "wildcard"]
+    __slots__ = ["path", ]
 
     def __init__(self):
         super(HdlImport, self).__init__()
         self.path = []  # type: List[str]
-        self.wildcard = False  # type: bool
 
 
 class HdlStatementBlock(iHdlStatement):

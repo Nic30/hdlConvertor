@@ -121,11 +121,13 @@ class ToVerilog():
 
     def print_expr(self, expr, sensitivity=False):
         w = self.out.write
-        if isinstance(expr, str):
+        if isinstance(expr, HdlName):
             w(expr)
             return
-
-        if isinstance(expr, HdlIntValue):
+        elif isinstance(expr, str):
+            w('"%s"' % expr)
+            return
+        elif isinstance(expr, HdlIntValue):
             v = expr.val
             bits = expr.bits
             if bits is None:
@@ -363,7 +365,7 @@ class ToVerilog():
         w = self.out.write
         w("case(")
         self.print_expr(cstm.switch_on)
-        w(")")
+        w(")\n")
         with Indent(self.out):
             cases = cstm.cases
             for k, stms in cases:
@@ -391,7 +393,7 @@ class ToVerilog():
         elif isinstance(stm, HdlCaseStm):
             self.print_case(stm)
         else:
-            raise NotImplementedError(t)
+            raise NotImplementedError(stm)
 
     def print_map_item(self, item):
         if isinstance(item, HdlCall) and item.fn == HdlBuildinFn.MAP_ASSOCIATION:
@@ -467,6 +469,8 @@ class ToVerilog():
             if isinstance(o, HdlModuleDec):
                 self.print_module_header(o)
             elif isinstance(o, HdlModuleDef):
+                assert isinstance(last, HdlModuleDec) \
+                        and o.module_name == last.name, (last, o)
                 self.print_module_body(o)
             else:
                 raise NotImplementedError(o)
