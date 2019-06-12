@@ -1,5 +1,3 @@
-# from libc cimport errno, string
-
 from libc.string cimport strerror
 from libc.errno cimport errno
 from libcpp cimport bool
