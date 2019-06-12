@@ -15,6 +15,8 @@ typedef long long int BigInteger;
 inline BigInteger BigInteger_fromStr(const char * str, int base) {
 #ifdef USE_PYTHON
 	auto v = PyLong_FromString((char *)str, NULL, base);
+	if (!v)
+		throw std::runtime_error(std::string("can not parse \"") + std::string(str) + "\" to integer");
 	return v;
 #else
 	return atoi(str);
