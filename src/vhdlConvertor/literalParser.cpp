@@ -103,11 +103,15 @@ Expr * LiteralParser::visitNumeric_literal(
 Expr * LiteralParser::visitPhysical_literal(
 		vhdlParser::Physical_literalContext* ctx) {
 	// physical_literal: ( abstract_literal )? name;
-	auto _al = ctx->abstract_literal();
-	if (_al)
-		NotImplementedLogger::print("LiteralParser.visitPhysical_literal - abstract_literal");
 	auto _n = ctx->name();
-	return ReferenceParser::visitName(_n);
+	auto n = ReferenceParser::visitName(_n);
+	auto _al = ctx->abstract_literal();
+	if (_al) {
+		// used for units (e.g. 1 ns)
+		auto al = visitAbstract_literal(_al);
+		return new Expr(al, OperatorType::MUL, n);
+	}
+	return n;
 }
 Expr * LiteralParser::visitAbstract_literal(
 		vhdlParser::Abstract_literalContext* ctx) {
@@ -161,7 +165,10 @@ Expr * LiteralParser::visitEnumeration_literal(
 	if (id)
 		return visitIdentifier(id);
 
-	return visitCharacter_literal(ctx->CHARACTER_LITERAL()->getText());
+	auto _cl = ctx->CHARACTER_LITERAL()->getText();
+	auto cl = visitCharacter_literal(_cl);
+	dynamic_cast<Symbol*>(cl->data)->bits = 8;
+	return cl;
 }
 Expr * LiteralParser::visitString_literal(const std::string & ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
