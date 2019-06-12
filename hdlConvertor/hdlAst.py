@@ -49,6 +49,11 @@ class HdlAll(object):
     """
     __slots__ = []
 
+class HdlOthers(object):
+    """
+    Constant which corresponds to VHDL "others" keyword
+    """
+    __slots__ = []
 
 class HdlTypeType(object):
     """
@@ -97,19 +102,19 @@ class HdlTypeAuto(object):
 
 class iHdlObj(object):
     """
-    Object with direct represenation in HDL
+    Object with direct representation in HDL
 
     :ivar doc: doc from the HDL related probably to this object
     """
     __slots__ = ["doc"]
 
     def __init__(self):
-        self.doc = "" # type: str
+        self.doc = ""  # type: str
 
 
 class HdlIntValue(object):
     """
-    Object for represenation of int value in in HDL (= also for the bitstrings)
+    Object for representation of int value in in HDL (= also for the bitstrings)
     """
     __slots__ = ["val", "bits"]
 
@@ -128,7 +133,9 @@ class HdlIntValue(object):
 
 
 # None is equivalent of HDL null
-iHdlExpr = Union[HdlName, HdlIntValue, float, str, None, List["iHdlExpr"], HdlAll, "HdlCall"]
+iHdlExpr = Union[HdlName, HdlIntValue, float, str,
+                 None, List["iHdlExpr"], HdlAll, "HdlCall",
+                 HdlTypeTime]
 
 
 class HdlBuildinFn(Enum):
@@ -241,10 +248,11 @@ class HdlNamespace(iHdlObjWithName):
     """
     Corresponds to VHDL package/package body or System Verilog namespace
     """
-    __slots__ = ["objs"]
+    __slots__ = ["objs", "declaration_only"]
 
     def __init__(self):
         super(HdlNamespace, self).__init__()
+        self.declaration_only = False # type: bool
         self.objs = []  # type: List[iHdlObj]
 
 
@@ -309,7 +317,7 @@ class HdlFunction(iHdlObjWithName, iInModuleHdlObj):
 
 class iHdlStatement(iHdlObj, iInModuleHdlObj):
     """
-    :ivar labels: list of labes, the first label is for this statement
+    :ivar labels: list of labels, the first label is for this statement
         the others are for it's branches
     :ivar in_preproc: if True the statement is VHDL generate
             or other different of type of statement which should be evaluated complile time
@@ -442,6 +450,17 @@ class HdlReturnStm(iHdlStatement):
     def __init__(self):
         super(HdlReturnStm, self).__init__()
         self.val = None  # type: iHdlExpr
+
+
+class HdlWaitStm(iHdlStatement):
+    """
+    HDL wait statement
+    """
+    __slots__ = ["val"]
+
+    def __init__(self):
+        super(HdlWaitStm, self).__init__()
+        self.val = [] # type: List[iHdlExpr]
 
 
 class HdlBreakStm(iHdlStatement):
