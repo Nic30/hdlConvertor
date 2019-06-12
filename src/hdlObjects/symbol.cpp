@@ -17,7 +17,7 @@ Symbol::Symbol(BigInteger value, int bits) {
 	value_arr = NULL;
 }
 
-Symbol::Symbol(const std::vector<Symbol> * arr) {
+Symbol::Symbol(const std::vector<Expr*> * arr) {
 	type = symb_ARRAY;
 	value._str = NULL;
 	bits = -1;
@@ -52,7 +52,7 @@ Symbol::Symbol(const Symbol & s) {
 	type = s.type;
 	value = LiteralVal_clone(s.value, s.type);
 	if (s.value_arr) {
-		value_arr = new std::vector<Symbol>(*s.value_arr);
+		value_arr = new std::vector<Expr*>(*s.value_arr);
 	} else {
 		value_arr = NULL;
 	}

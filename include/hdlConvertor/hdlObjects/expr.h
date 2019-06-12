@@ -24,6 +24,7 @@ public:
 	// @note deepcopy
 	Expr(const Expr & expr);
 
+	Expr(OperatorType operatorType, Expr * op0);
 	Expr(Expr * op0, OperatorType operatorType, Expr * op1);
 	Expr(SymbolType type, LiteralVal value);
 	Expr(Symbol * value);

@@ -19,7 +19,10 @@ Expr::Expr(const Expr & expr) {
 		data = expr.data->clone();
 	}
 }
-
+Expr::Expr(OperatorType operatorType, Expr * op0) {
+	assert(op0);
+	data = new Operator(operatorType, op0);
+}
 Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
 	assert(op0);
 	data = new Operator(op0, operatorType, op1);
@@ -73,15 +76,7 @@ Expr * Expr::STR(std::string strVal) {
 }
 
 Expr * Expr::ARRAY(const std::vector<Expr*> & arr) {
-	auto _arr = new std::vector<Symbol>();
-	for (auto item : arr) {
-		auto s = dynamic_cast<Symbol*>(item->data);
-		assert(s);
-		_arr->push_back(*s);
-		item->data = NULL;
-		delete item;
-	}
-
+	auto _arr = new std::vector<Expr*>(arr);
 	return new Expr(new Symbol(_arr));
 }
 
