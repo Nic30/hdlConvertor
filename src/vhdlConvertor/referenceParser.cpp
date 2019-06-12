@@ -48,10 +48,10 @@ Expr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
 }
 
 Expr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
-	// name
-	//   : name_part ( DOT name_part)*
-	//   | external_name
-	//   ;
+	// name:
+	//       name_part ( DOT name_part)*
+	//       | external_name
+	// ;
 	auto en = ctx->external_name();
 	if (en) {
 		NotImplementedLogger::print("ExprParser.visitName - external_name");
@@ -111,12 +111,10 @@ Expr * ReferenceParser::visitAttribute_designator(
 
 Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
 		vhdlParser::Name_part_specificatorContext* ctx) {
-	// name_part_specificator
-	// : name_attribute_part
-	// | name_function_call_or_indexed_part
-	// | name_slice_part
-	// ;
-
+	// name_part_specificator:
+	//      name_attribute_part
+	//    | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
+	//    ;
 	auto na = ctx->name_attribute_part();
 	if (na) {
 		return new Expr(selectedName, OperatorType::DOT,
@@ -124,9 +122,7 @@ Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
 	}
 	auto callOrIndx = ctx->name_function_call_or_indexed_part();
 	if (callOrIndx) {
-		// name_function_call_or_indexed_part
-		// : LPAREN actual_parameter_part? RPAREN
-		// ;
+		// name_function_call_or_indexed_part:  actual_parameter_part?;
 		auto args = ExprParser::visitActual_parameter_part(
 				callOrIndx->actual_parameter_part());
 		auto c = Expr::call(selectedName, *args);
