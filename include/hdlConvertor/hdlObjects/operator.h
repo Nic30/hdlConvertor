@@ -14,6 +14,7 @@ public:
 	OperatorType op;
 	std::vector<Expr*> operands;
 	Operator(const Operator & o);
+	Operator(OperatorType operatorType, Expr* op0);
 	Operator(Expr* op0, OperatorType operatorType, Expr* op1);
 
 	static Operator * call(Expr* fn, const std::vector<Expr*> & operands);

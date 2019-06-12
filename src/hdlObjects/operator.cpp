@@ -16,10 +16,15 @@ Operator::Operator(const Operator & o) {
 	op = o.op;
 }
 
+Operator::Operator(OperatorType operatorType, Expr* op0) {
+	operands.push_back(op0);
+	this->op = operatorType;
+
+}
 Operator::Operator(Expr* op0, OperatorType operatorType, Expr* op1) {
 	if (op0) {
 		operands.push_back(op0);
-		assert(!op1);
+		//assert(!op1);
 	}
 	if (op1)
 		operands.push_back(op1);
