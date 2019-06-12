@@ -22,11 +22,13 @@ enum StatementType {
 	s_FOR,
 	s_ASSIGMENT,
 	s_PROCESS,
+	s_WAIT,
 	s_IMPORT,
 };
 
 const char * StatementType_toString(StatementType type);
 
+// [TODO] to separate classes
 class Statement: public WithDoc, public WithPos, public iHdlObj {
 public:
 	using case_t = std::pair<Expr*, std::vector<iHdlObj*>*>;
@@ -66,6 +68,7 @@ public:
 			std::vector<iHdlObj*>* default_);
 	static Statement* RETURN(Expr* val);
 	static Statement* RETURN();
+	static Statement* WAIT(const std::vector<Expr*> & val);
 	static Statement* ASSIG(Expr* dst, Expr * src);
 	static Statement* WHILE(Expr* cond, std::vector<iHdlObj*>* body);
 	static Statement* BREAK();

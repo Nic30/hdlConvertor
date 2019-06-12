@@ -8,6 +8,7 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 const char * StatementType_toString(StatementType type) {
+	// [TODO] to array of names
 	switch (type) {
 	case s_EXPR:
 		return "EXPR";
@@ -29,6 +30,10 @@ const char * StatementType_toString(StatementType type) {
 		return "ASSIGMENT";
 	case s_PROCESS:
 		return "PROCESS";
+	case s_WAIT:
+		return "WAIT";
+	case s_IMPORT:
+		return "IMPORT";
 	default:
 		throw runtime_error("Invalid StatementType");
 	}
@@ -121,6 +126,13 @@ Statement* Statement::RETURN(Expr * val) {
 }
 Statement* Statement::RETURN() {
 	return new Statement(s_RETURN);
+}
+Statement* Statement::WAIT(const std::vector<Expr*> & val) {
+	Statement * s = new Statement(s_WAIT);
+	for (auto v: val) {
+		s->exprs.push_back(v);
+	}
+	return s;
 }
 Statement* Statement::ASSIG(Expr * dst, Expr * src) {
 	if (dst == nullptr || src == nullptr) {
