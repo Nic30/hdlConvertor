@@ -20,6 +20,28 @@ class Indent():
         s.indent_str = self.original_indent
 
 
+class UnIndent():
+    """
+    unindentation context
+    """
+
+    def __init__(self, autoIndentStream):
+        self.s = autoIndentStream
+        self.original_indent = None
+
+    def __enter__(self):
+        s = self.s
+        self.original_indent = s.indent_str
+        assert s.indent_cnt > 0
+        s.indent_cnt -= 1
+        s.indent_str = s.indent_str[0:len(s.indent_str) - len(s.INDENT_STEP)]
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        s = self.s
+        s.indent_cnt += 1
+        s.indent_str = self.original_indent
+
+
 class AutoIndentingStream():
 
     def __init__(self, stream, indent_step):
@@ -45,7 +67,10 @@ class AutoIndentingStream():
 def iter_with_last_flag(it):
     # Ensure it's an iterator and get the first field
     it = iter(it)
-    prev = next(it)
+    try:
+        prev = next(it)
+    except StopIteration:
+        return
     for item in it:
         # Lag by one item so I know I'm not at the end
         yield False, prev
