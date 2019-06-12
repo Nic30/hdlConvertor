@@ -31,8 +31,6 @@ public:
 			vhdlParser::Package_declarative_itemContext* ctx);
 	hdlObjects::Entity * visitComponent_declaration(
 			vhdlParser::Component_declarationContext* ctx);
-	static std::vector<Variable*> * visitConstant_declaration(
-			vhdlParser::Constant_declarationContext* ctx);
 	static Variable * visitSubtype_declaration(
 			vhdlParser::Subtype_declarationContext* ctx);
 };
