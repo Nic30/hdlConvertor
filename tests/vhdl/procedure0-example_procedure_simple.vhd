@@ -1,8 +1,8 @@
--- https://www.nandland.com/vhdl/examples/example-procedure-simple.html
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+-- https://www.nandland.com/vhdl/examples/example-procedure-simple.html
 entity example_procedure_simple is
 end example_procedure_simple;
 
