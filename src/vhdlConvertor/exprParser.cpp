@@ -4,6 +4,7 @@
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/operatoTypeParser.h>
 #include <hdlConvertor/vhdlConvertor/directionParser.h>
+#include <hdlConvertor/hdlObjects/operator.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -151,21 +152,20 @@ Expr* ExprParser::visitActual_part(vhdlParser::Actual_partContext* ctx) {
 }
 Expr* ExprParser::visitActual_designator(
 		vhdlParser::Actual_designatorContext* ctx) {
-	// actual_designator
-	// : expression
-	// | OPEN
-	// ;
+	//actual_designator:
+	//      ( INERTIAL )? expression
+	//      | subtype_indication
+	//      | OPEN
+	//;
 	if (ctx->OPEN())
 		return Expr::OPEN();
-
+	auto sti = ctx->subtype_indication();
+	if (sti)
+		return visitSubtype_indication(sti);
 	return visitExpression(ctx->expression());
 }
 Expr* ExprParser::visitSubtype_indication(
 		vhdlParser::Subtype_indicationContext* ctx) {
-	// subtype_indication
-	// : selected_name ( selected_name )? ( constraint )* ( tolerance_aspect )?
-	// ;
-
 	// subtype_indication:
 	//       ( resolution_indication )? type_mark ( constraint )?
 	// ;
@@ -329,18 +329,18 @@ Expr* ExprParser::visitSimple_expression(
 	return op0;
 }
 Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
-	//expression
-	//	: CONDITION_OPERATOR primary
-	//	| logical_expression
-	//	;
+	// expression:
+	//       condition_operator primary
+	//       | logical_expression
+	// ;
 	auto le = ctx->logical_expression();
 	if (le) {
 		auto vle = visitLogical_expression(le);
 		return vle;
 	}
 
-	NotImplementedLogger::print("ExprParser.visitExpression - CONDITION_OPERATOR");
-
+	NotImplementedLogger::print(
+			"ExprParser.visitExpression - CONDITION_OPERATOR");
 	auto p = ctx->primary();
 	assert(p);
 	auto vp = visitPrimary(p);
@@ -518,11 +518,18 @@ Expr* ExprParser::visitElement_association(
 	// ement_association
 	//   : (  choices ARROW )? expression
 	//   ;
-	if (ctx->choices()) {
-		NotImplementedLogger::print(
-				"ExprParser.visitElement_association - choices");
+	auto e = visitExpression(ctx->expression());
+	auto _c = ctx->choices();
+	if (_c) {
+		auto ch = visitChoices(_c);
+		if (ch.size() > 1) {
+			NotImplementedLogger::print(
+					"ExprParser.visitElement_association - multiple choices");
+		}
+		assert(ch.size());
+		return new Expr(ch[0], OperatorType::MAP_ASSOCIATION, e);
 	}
-	return visitExpression(ctx->expression());
+	return e;
 }
 
 Expr* ExprParser::visitTarget(vhdlParser::TargetContext* ctx) {
@@ -591,14 +598,16 @@ Expr * ExprParser::visitChoice(vhdlParser::ChoiceContext * ctx) {
 	if (se) {
 		return ExprParser::visitSimple_expression(se);
 	}
+#ifndef NDEBUG
 	auto o = ctx->OTHERS();
 	assert(o);
+#endif
 	return Expr::others();
 }
 std::vector<Expr *> ExprParser::visitChoices(vhdlParser::ChoicesContext * ctx) {
 	// choices: choice ( choice )*;
 	std::vector<Expr *> res;
-	auto _choice =ctx->choice();
+	auto _choice = ctx->choice();
 	for (auto c : _choice) {
 		res.push_back(visitChoice(c));
 	}
@@ -618,13 +627,15 @@ Expr * ExprParser::visitProcedure_call_statement(
 }
 Expr * ExprParser::visitProcedure_call(
 		vhdlParser::Procedure_callContext * ctx) {
-	// procedure_call: name ( LPAREN actual_parameter_part RPAREN )?;
-	Expr * fnName = ReferenceParser::visitName(ctx->name());
-	auto args = ExprParser::visitActual_parameter_part(
-			ctx->actual_parameter_part());
-	auto c = Expr::call(fnName, *args);
-	delete args;
-	return c;
+	// procedure_call: name;
+	Expr * fnCall = ReferenceParser::visitName(ctx->name());
+	auto c = dynamic_cast<Operator*>(fnCall->data);
+
+	if (c == nullptr || c->op != OperatorType::CALL) {
+		std::vector<Expr*> args;
+		return Expr::call(fnCall, args);
+	}
+	return fnCall;
 }
 
 Expr * ExprParser::visitType_mark(vhdlParser::Type_markContext * ctx) {

@@ -15,9 +15,12 @@ std::vector<Variable*> * ConstantParser::visitConstant_declaration(
 	//    ( VARASGN expression )? SEMI
 	//  ;
 
-	return InterfaceParser::extractVariables(ctx->identifier_list(),
+	auto vars = InterfaceParser::extractVariables(ctx->identifier_list(),
 			ctx->subtype_indication(), ctx->expression());
+	for (auto v: *vars)
+		v->is_const = true;
 
+	return vars;
 }
 
 }

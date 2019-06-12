@@ -21,6 +21,8 @@ std::vector<Variable*> * VariableParser::visitVariable_declaration(
 	std::vector<Variable*> * vl = InterfaceParser::extractVariables(
 			ctx->identifier_list(), ctx->subtype_indication(),
 			ctx->expression());
+	for (auto v: *vl)
+		v->latched = true;
 
 	return vl;
 }
