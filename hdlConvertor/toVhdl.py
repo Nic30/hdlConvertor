@@ -1,5 +1,7 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
+    UnIndent
 from hdlConvertor.hdlAst import *
+from _ast import Not
 
 
 class ToVhdl():
@@ -37,6 +39,8 @@ class ToVhdl():
         HdlBuildinFn.SRL: "SRL",
         HdlBuildinFn.TO: "TO",
         HdlBuildinFn.DOWNTO: "DOWNTO",
+        HdlBuildinFn.ARROW: "=>",
+        HdlBuildinFn.MAP_ASSOCIATION: "=>"
     }
 
     def __init__(self, out_stream):
@@ -77,10 +81,15 @@ class ToVhdl():
             w(" := ")
             self.print_expr(v)
 
-    def print_module_header(self, e):
+    def print_module_header(self, e, vhdl_obj_name="ENTITY"):
+        """
+        :param e: Entity
+        :type e: HdlModuleDec
+        """
         self.print_doc(e)
         w = self.out.write
-        w("ENTITY ")
+        w(vhdl_obj_name)
+        w(" ")
         w(e.name)
         w(" IS\n")
         gs = e.params
@@ -108,7 +117,41 @@ class ToVhdl():
                         else:
                             w(",\n")
                 w(");\n")
-        w("END ENTITY;\n")
+        w("END ")
+        w(vhdl_obj_name)
+        w(";\n")
+
+    def print_component(self, o):
+        """
+        :type o: HdlModuleDec
+        """
+        self.print_module_header(o, vhdl_obj_name="COMPONENT")
+
+    def print_assert(self, args):
+        """
+        :type args: List[iHdlExpr]
+        """
+        w = self.out.write
+        w("ASSERT ")
+        for is_last, (prefix, a) in iter_with_last_flag(
+                zip(("", "REPORT ", "SEVERITY "), args)):
+            w(prefix)
+            self.print_expr(a)
+            if not is_last:
+                w(" ")
+
+    def print_report(self, args):
+        """
+        :type args: List[iHdlExpr]
+        """
+        w = self.out.write
+        w("REPORT ")
+        for is_last, (prefix, a) in iter_with_last_flag(
+                zip(("", "SEVERITY "), args)):
+            w(prefix)
+            self.print_expr(a)
+            if not is_last:
+                w(" ")
 
     def print_expr(self, expr):
         w = self.out.write
@@ -124,11 +167,11 @@ class ToVhdl():
             if bits is None:
                 w(str(v))
             elif bits % 8 == 0:
-                f = '"{0:0%dX}"' % (bits % 8)
-                w(f % v)
+                f = 'X"{0:0%dX}"' % (bits / 8)
+                w(f.format(v))
             else:
                 f = '"{0:0%db}"' % (bits)
-                w(f % v)
+                w(f.format(v))
 
             return
         elif isinstance(expr, HdlName):
@@ -139,6 +182,13 @@ class ToVhdl():
             return
         elif isinstance(expr, HdlCall):
             pe = self.print_expr
+            fn = expr.ops[0]
+            if fn == HdlName("assert"):
+                self.print_assert(expr.ops[1:])
+                return
+            elif fn == HdlName("report"):
+                self.print_report(expr.ops[1:])
+                return
 
             o = expr
             op = expr.fn
@@ -181,10 +231,13 @@ class ToVhdl():
                 pe(o.ops[1])
                 w("}")
                 return
-            elif op == HdlBuildinFn.INDEX:
+            elif op == HdlBuildinFn.INDEX or op == HdlBuildinFn.CALL:
                 pe(o.ops[0])
                 w("(")
-                pe(o.ops[1])
+                for isLast, a in iter_with_last_flag(o.ops[1:]):
+                    pe(a)
+                    if not isLast:
+                        w(", ")
                 w(")")
                 return
             elif op == HdlBuildinFn.DOT:
@@ -205,7 +258,21 @@ class ToVhdl():
         elif expr is HdlAll:
             w("ALL")
             return
-
+        elif isinstance(expr, list):
+            w("(\n")
+            with Indent(self.out):
+                for is_last, elem in iter_with_last_flag(expr):
+                    self.print_expr(elem)
+                    if not is_last:
+                        w(",\n")
+            w(")")
+            return
+        elif expr is HdlAll:
+            w("ALL")
+            return
+        elif expr is HdlOthers:
+            w("OTHERS")
+            return
         raise NotImplementedError(expr)
 
     def print_type(self, t):
@@ -213,38 +280,50 @@ class ToVhdl():
         """
         self.print_expr(t)
 
-    def print_variable(self, var):
+    def print_variable(self, var, end=";\n"):
         self.print_doc(var)
         name = var.name
         t = var.type
-        l = var.latched
+        latch = var.latched
+        c = var.is_const
         w = self.out.write
-        if l:
-            w("reg ")
+        if c:
+            w("CONSTANT ")
+        elif latch:
+            w("VARIABLE ")
         else:
-            w("wire ")
-        is_array = self.print_type_first_part(t)
+            w("SIGNAL ")
         w(name)
-        if is_array:
-            w(" ")
-            self.print_type_array_part(t)
+        w(" : ")
+        self.print_type(t)
+        v = var.value
+        if v is not None:
+            w(" := ")
+            self.print_expr(v)
+        w(end)
 
     def print_process(self, proc):
         sens = proc.sensitivity
         body = proc.body
         w = self.out.write
 
-        w("PROCESS(")
-        for last, item in iter_with_last_flag(sens):
-            self.print_expr(item)
-            if not last:
-                w(", ")
-        w(")\n")
+        w("PROCESS")
+        if sens:
+            w("(")
+            for last, item in iter_with_last_flag(sens):
+                self.print_expr(item)
+                if not last:
+                    w(", ")
+            w(")")
+        w("\n")
         w("BEGIN\n")
         with Indent(self.out):
-            for stm in body:
-                self.print_statement(stm)
-
+            for _o in body:
+                if isinstance(_o, iHdlStatement):
+                    self.print_statement(_o)
+                else:
+                    self.print_expr(_o)
+                    w(";\n")
         w("END PROCESS;\n")
 
     def print_block(self, stms):
@@ -259,7 +338,11 @@ class ToVhdl():
 
         with Indent(self.out):
             for s in stms:
-                self.print_statement(s)
+                if isinstance(s, iHdlStatement):
+                    self.print_statement(s)
+                else:
+                    self.print_expr(s)
+                    w(";\n")
 
         if len(stms) != 1:
             w("END")
@@ -274,15 +357,15 @@ class ToVhdl():
 
         w("IF ")
         self.print_expr(c)
-        w(" ")
+        w(" THEN ")
         need_space = self.print_block(ifTrue)
 
         for cond, stms in stm.elifs:
             if need_space:
                 w(" ")
-            w("ELSE IF ")
+            w("ELSIF ")
             self.print_expr(cond)
-            w(" ")
+            w(" THEN ")
             need_space = self.print_block(stms)
 
         if ifFalse is not None:
@@ -292,6 +375,7 @@ class ToVhdl():
             self.print_block(ifFalse)
         if need_space:
             w("\n")
+        w("END IF;\n")
 
     def print_assignment(self, a):
         s = a.src
@@ -324,31 +408,73 @@ class ToVhdl():
                     w("\n")
         w("END CASE;\n")
 
-    def print_statement(self, stm):
-        self.print_doc(stm)
-        if isinstance(stm, HdlProcessStm):
-            self.print_process(stm)
-        elif isinstance(stm, HdlIfStm):
-            self.print_if(stm)
-        elif isinstance(stm, HdlAssignStm):
-            self.print_assignment(stm)
-        elif isinstance(stm, HdlCaseStm):
-            self.print_case(stm)
+    def print_statement(self, o):
+        """
+        :type o: iHdlStatement
+        """
+        self.print_doc(o)
+        if isinstance(o, HdlProcessStm):
+            self.print_process(o)
+        elif isinstance(o, HdlIfStm):
+            self.print_if(o)
+        elif isinstance(o, HdlAssignStm):
+            self.print_assignment(o)
+        elif isinstance(o, HdlCaseStm):
+            self.print_case(o)
+        elif isinstance(o, HdlWaitStm):
+            self.print_wait(o)
+        elif isinstance(o, HdlReturnStm):
+            self.print_return(o)
+        elif isinstance(o, HdlForStm):
+            self.print_for(o)
         else:
-            raise NotImplementedError(stm)
+            raise NotImplementedError(o)
+
+    def print_return(self, o):
+        """
+        :type o: HdlReturnStm
+        """
+        w = self.out.write
+        w("RETURN")
+        if o.val is not None:
+            w(" ")
+            self.print_expr(o.val)
+        w(";\n")
+
+    def print_for(self, o):
+        """
+        :type o: HdlForStm
+        """
+        w = self.out.write
+        w("FOR ")
+        self.print_expr(o.params[0])
+        w(" IN ")
+        self.print_expr(o.params[1])
+        w(" LOOP\n")
+        with Indent(self.out):
+            for b in o.body:
+                self.print_statement(b)
+        w("END FOR;\n")
+
+    def print_wait(self, o):
+        """
+        :type o: HdlWaitStm
+        """
+        w = self.out.write
+        w("WAIT")
+        for e in o.val:
+            if isinstance(e, HdlCall) and e.fn == HdlBuildinFn.MUL:
+                w(" FOR ")
+                self.print_expr(e.ops[0])
+                w(" ")
+                self.print_expr(e.ops[1])
+            else:
+                w(" ON ")
+                self.print_expr(e)
+        w(";\n")
 
     def print_map_item(self, item):
-        if isinstance(item, HdlCall) and item.fn == HdlBuildinFn.MAP_ASSOCIATION:
-            w = self.out.write
-            # k, v pair
-            k, v = item.ops
-            w(".")
-            self.print_expr(k)
-            w("(")
-            self.print_expr(v)
-            w(")")
-        else:
-            self.print_expr(item)
+        self.print_expr(item)
 
     def print_map(self, map_):
         w = self.out.write
@@ -366,21 +492,54 @@ class ToVhdl():
         """
         self.print_doc(c)
         w = self.out.write
-        self.print_expr(c.module_name)
-        w(" ")
         self.print_expr(c.name)
+        w(": ")
+        self.print_expr(c.module_name)
         gms = c.param_map
         if gms:
-            w(" #(\n")
+            w(" GENERIC MAP(\n")
             self.print_map(gms)
             w(")")
 
         pms = c.port_map
         if pms:
-            w(" (\n")
+            w(" PORT MAP(\n")
             self.print_map(pms)
             w(")")
         w(";")
+
+    def print_body_items(self, objs):
+        w = self.out.write
+        in_def_section = True
+        with Indent(self.out):
+            for o in objs:
+                if isinstance(o, HdlVariableDef):
+                    assert in_def_section, o
+                    self.print_variable(o)
+                    continue
+                elif isinstance(o, HdlModuleDec):
+                    assert in_def_section, o
+                    self.print_component(o)
+                    continue
+                elif isinstance(o, HdlFunction):
+                    assert in_def_section, o
+                    self.print_function(o)
+                    continue
+
+                if in_def_section:
+                    with UnIndent(self.out):
+                        w("BEGIN\n")
+                    in_def_section = False
+
+                if isinstance(o, HdlComponentInst):
+                    self.print_component_instance(o)
+                    w("\n")
+                elif isinstance(o, iHdlStatement):
+                    self.print_statement(o)
+                else:
+                    raise NotImplementedError(o)
+        if in_def_section:
+            w("BEGIN\n")
 
     def print_module_body(self, a):
         """
@@ -392,21 +551,37 @@ class ToVhdl():
         w(" OF ")
         w(a.module_name)
         w(" IS\n")
-        w("BEGIN\n")
-        with Indent(self.out):
-            for o in a.objs:
-                if isinstance(o, HdlVariableDef):
-                    self.print_variable(o)
-                    w(";\n")
-                elif isinstance(o, HdlComponentInst):
-                    self.print_component_instance(o)
-                    w("\n")
-                elif isinstance(o, iHdlStatement):
-                    self.print_statement(o)
-                else:
-                    raise NotImplementedError()
+        self.print_body_items(a.objs)
+        self.out.write("END ARCHITECTURE;\n")
 
-        self.out.write("END ARCHITECTURE\n")
+    def print_function(self, o):
+        """
+        :type o: HdlFunction
+        """
+        w = self.out.write
+        self.print_doc(o)
+        is_procedure = o.return_t is None
+        if is_procedure:
+            w("PROCEDURE ")
+        else:
+            w("FUNCTION ")
+
+        w(o.name)
+
+        w(" (")
+        with Indent(self.out):
+            for is_last, par in iter_with_last_flag(o.params):
+                self.print_variable(par, end="")
+                if not is_last:
+                    w(",\n")
+        w(")")
+        if not is_procedure:
+            w(" RETURN ")
+            self.print_type(o.return_t)
+        w("\n")
+        w("IS\n")
+        self.print_body_items(o.body)
+        w("END FUNCTION;\n")
 
     def print_library(self, o):
         w = self.out.write
@@ -423,6 +598,7 @@ class ToVhdl():
         lib_name = o.path[0]
         if lib_name not in self.used_libraries:
             self.print_library(lib_name)
+            self.used_libraries.add(lib_name)
 
         w("USE ")
         for last, p in iter_with_last_flag(o.path):
@@ -430,25 +606,49 @@ class ToVhdl():
             if not last:
                 w(".")
         w(";\n")
+    def print_namespace(self, o):
+        """
+        :type o: HdlNamespace
+        """
+        self.print_doc(o)
+        w = self.out.write
+        #if o.declaration_only:
+        w("PACKAGE ")
+        w(o.name)
+        w(" IS\n")
+        with Indent(self.out):
+            for _o in o.objs:
+                self.print_main_obj(_o)
+
+        w("END PACKAGE;\n")
+
+
+    def print_main_obj(self, o):
+        w = self.out.write
+        if isinstance(o, HdlModuleDec):
+            w("\n")
+            self.print_module_header(o)
+            w("\n")
+        elif isinstance(o, HdlModuleDef):
+            self.print_module_body(o)
+        elif isinstance(o, HdlNamespace):
+            self.print_namespace(o)
+        elif isinstance(o, HdlVariableDef):
+            self.print_variable(o)
+        elif isinstance(o, HdlFunction):
+            self.print_function(o)
+        else:
+            raise NotImplementedError(o)
 
     def print_context(self, context):
         """
         :type context: HdlContext
         """
-
-        w = self.out.write
         for o in context.objs:
-            if isinstance(o, HdlModuleDec):
-                w("\n")
-                self.print_module_header(o)
-                w("\n")
-            elif isinstance(o, HdlModuleDef):
-                self.print_module_body(o)
-            elif isinstance(o, HdlImport):
+            if isinstance(o, HdlImport):
                 self.print_hdl_import(o)
             else:
-                raise NotImplementedError(o)
-
+                self.print_main_obj(o)
 
 if __name__ == "__main__":
     import os
@@ -458,7 +658,7 @@ if __name__ == "__main__":
     from hdlConvertor.language import Language
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
-    filenames = [os.path.join(TEST_DIR, "mux.vhd")]
-    d = c.parse(filenames, Language.VHDL, [], False, False)
+    filenames = [os.path.join(TEST_DIR, "package_constants.vhd")]
+    d = c.parse(filenames, Language.VHDL, [], False, True)
     tv = ToVhdl(sys.stdout)
     tv.print_context(d)
