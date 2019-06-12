@@ -1,7 +1,6 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
     UnIndent
 from hdlConvertor.hdlAst import *
-from _ast import Not
 
 
 class ToVhdl():
