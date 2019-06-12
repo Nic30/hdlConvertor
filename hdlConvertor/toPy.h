@@ -34,6 +34,7 @@ class ToPy {
 	PyObject* HdlNameCls;
 	PyObject* HdlDirectionEnum;
 	PyObject* HdlAllCls;
+	PyObject* HdlOthersCls;
 	PyObject* HdlTypeTypeCls;
 	PyObject* HdlIfStmCls;
 	PyObject* HdlAssignStmCls;
@@ -45,8 +46,10 @@ class ToPy {
 	PyObject* HdlBreakStmCls;
 	PyObject* HdlContinueStmCls;
 	PyObject* HdlImportCls;
+	PyObject* HdlWaitStmCls;
 	PyObject* HdlComponentInstCls;
 	PyObject* HdlFunctionCls;
+	PyObject* HdlNamespaceCls;
 
 	std::string PyObject_repr(PyObject * o);
 
@@ -99,7 +102,7 @@ public:
 	PyObject* toPy(const hdlObjects::iHdlObj * o);
 	PyObject* toPy(const hdlObjects::Operator * o);
 	PyObject* toPy(const hdlObjects::OperatorType o);
-	PyObject* toPy(const hdlObjects::Package* o);
+	PyObject* toPy(const hdlObjects::Package* o, bool declaration_only=false);
 	PyObject* toPy(const hdlObjects::PackageHeader* o);
 	PyObject* toPy(const hdlObjects::Statement * o);
 	PyObject* toPy(const hdlObjects::Symbol * o);
