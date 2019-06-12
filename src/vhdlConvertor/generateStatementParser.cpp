@@ -110,7 +110,6 @@ Statement * GenerateStatementParser::visitIf_generate_statement(
 		++cIt;
 		++sIt;
 	}
-	++sIt;
 	Statement * ifStm = nullptr;
 	std::vector<iHdlObj*> * ifFalse = nullptr;
 	if (sIt != s.end()) {

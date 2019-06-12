@@ -59,6 +59,12 @@ public:
 			vhdlParser::Iteration_schemeContext* ctx);
 	static Statement * visitNull_statement(
 			vhdlParser::Null_statementContext * ctx);
+	static Statement * visitAssertion_statement(
+			vhdlParser::Assertion_statementContext * ctx);
+	static Statement * visitReport_statement(
+			vhdlParser::Report_statementContext *ctx);
+	static Statement * visitWait_statement(
+			vhdlParser::Wait_statementContext * ctx);
 	static Statement * visitCase_statement(
 			vhdlParser::Case_statementContext* ctx);
 	static std::vector<hdlObjects::iHdlObj*> * visitSequence_of_statements(

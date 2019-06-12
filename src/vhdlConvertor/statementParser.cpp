@@ -36,22 +36,6 @@ vector<iHdlObj*> * StatementParser::visitSequence_of_statements(
 
 Statement * StatementParser::visitSequential_statement(
 		vhdlParser::Sequential_statementContext* ctx) {
-	// sequential_statement :
-	// wait_statement
-	// | assertion_statement
-	// | report_statement
-	// | signal_assignment_statement
-	// | variable_assignment_statement
-	// | if_statement
-	// | case_statement
-	// | loop_statement
-	// | next_statement
-	// | exit_statement
-	// | return_statement
-	// | ( label_colon )? NULL_SYM SEMI
-	// | break_statement
-	// | procedure_call_statement
-	// ;
 	// sequential_statement:
 	//       wait_statement
 	//       | assertion_statement
@@ -69,26 +53,16 @@ Statement * StatementParser::visitSequential_statement(
 	// ;
 	auto ws = ctx->wait_statement();
 	if (ws) {
-		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - wait_statement");
-		return nullptr;
+		return visitWait_statement(ws);
 	}
 
 	auto as = ctx->assertion_statement();
-	if (as) {
-		// [todo] convert to regular call
-		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - assertion_statement");
-		return nullptr;
-	}
+	if (as)
+		return visitAssertion_statement(as);
 
 	auto r = ctx->report_statement();
-	if (r) {
-		// [todo] convert to regular call
-		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - report_statement");
-		return nullptr;
-	}
+	if (r)
+		return visitReport_statement(r);
 
 	auto sas = ctx->signal_assignment_statement();
 	if (sas)
@@ -138,6 +112,90 @@ Statement * StatementParser::visitSequential_statement(
 	assert(nl);
 	return visitNull_statement(nl);
 }
+
+Statement * StatementParser::visitAssertion_statement(
+		vhdlParser::Assertion_statementContext * ctx) {
+	// assertion_statement: ( label COLON )? assertion SEMI;
+	// assertion:
+	//       ASSERT condition
+	//           ( REPORT expression )?
+	//           ( SEVERITY expression )?
+	// ;
+
+	auto fn_name = Expr::ID("assert");
+
+	std::vector<Expr *> args;
+	auto c = visitCondition(ctx->assertion()->condition());
+	args.push_back(c);
+	auto exprs = ctx->assertion()->expression();
+	for (auto _e : exprs) {
+		// [FIXME] not correct it is not possible to distinguish between report and severity
+		auto e = ExprParser::visitExpression(_e);
+		args.push_back(e);
+	}
+	auto call = Expr::call(fn_name, args);
+	if (ctx->label())
+		NotImplementedLogger::print(
+				"StatementParser.visitAssertion_statement - label");
+	return Statement::EXPR(call);
+}
+
+Statement * StatementParser::visitReport_statement(
+		vhdlParser::Report_statementContext *ctx) {
+	// report_statement:
+	//       ( label COLON )?
+	//           REPORT expression
+	//               ( SEVERITY expression )? SEMI
+	// ;
+	auto fn_name = Expr::ID("report");
+
+	std::vector<Expr *> args;
+	auto exprs = ctx->expression();
+	for (auto _e : exprs) {
+		auto e = ExprParser::visitExpression(_e);
+		args.push_back(e);
+	}
+	auto c = Expr::call(fn_name, args);
+	if (ctx->label())
+		NotImplementedLogger::print(
+				"StatementParser.visitReport_statement - label");
+	return Statement::EXPR(c);
+}
+
+Statement * StatementParser::visitWait_statement(
+		vhdlParser::Wait_statementContext * ctx) {
+	// wait_statement:
+	//       ( label COLON )? WAIT ( sensitivity_clause )? ( condition_clause )? ( timeout_clause )? SEMI
+	// ;
+	if (ctx->label())
+		NotImplementedLogger::print(
+				"StatementParser.visitWait_statement - label");
+
+	auto sc = ctx->sensitivity_clause();
+	auto cc = ctx->condition_clause();
+	auto tc = ctx->timeout_clause();
+
+	vector<Expr*> sens;
+	if (sc) {
+		// sensitivity_clause: ON sensitivity_list;
+		// sensitivity_list: name ( COMMA name )*;
+		ProcessParser::visitSensitivity_list(sc->sensitivity_list(), sens);
+	}
+	if (cc) {
+		// condition_clause: UNTIL condition;
+		auto e = visitCondition(cc->condition());
+		e = new Expr(OperatorType::NOT, e);
+		sens.push_back(e);
+	}
+
+	if (tc) {
+		// timeout_clause: FOR expression;
+		auto e = ExprParser::visitExpression(tc->expression());
+		sens.push_back(e);
+	}
+	return Statement::WAIT(sens);
+}
+
 Statement * StatementParser::visitNull_statement(
 		vhdlParser::Null_statementContext * ctx) {
 	// null_statement:
@@ -438,7 +496,6 @@ Statement * StatementParser::visitIf_statement(
 		++cIt;
 		++sIt;
 	}
-	++sIt;
 	Statement * ifStm = nullptr;
 	vector<iHdlObj*> * ifFalse = nullptr;
 	if (sIt != s.end()) {
