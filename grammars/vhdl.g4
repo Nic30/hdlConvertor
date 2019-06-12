@@ -156,8 +156,9 @@ fragment GRAPHIC_CHARACTER:
       | LETTER_OR_DIGIT
       | OTHER_SPECIAL_CHARACTER
 ;
+// [TODO] DBLQUOTE |
 fragment SPECIAL_CHARACTER:
-    DBLQUOTE | HASHTAG | AMPERSAND | APOSTROPHE | LPAREN | RPAREN | MUL | PLUS
+    HASHTAG | AMPERSAND | APOSTROPHE | LPAREN | RPAREN | MUL | PLUS
   | COMMA | MINUS | DOT | DIV | COLON | SEMI | LT | EQ
   | GT | QUESTIONMARK | AT | '[' | ']' | UNDERSCORE | GRAVE_ACCENT | BAR;
 
@@ -204,35 +205,35 @@ fragment LETTER: 'A'..'Z' | 'a'..'z';
 // changed to avoid left-recursion to name (from selected_name, indexed_name,
 // slice_name, and attribute_name, respectively)
 // (2.2.2004, e.f.)
-name
-  : name_part ( DOT name_part)*
-  | external_name
-  ;
+name:
+      name_part ( DOT name_part)*
+      | external_name
+;
 
-name_part
-   : selected_name (name_part_specificator)*
-   ;
+name_part:
+      selected_name (name_part_specificator)*
+;
 
 name_part_specificator:
-     name_attribute_part
-   | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
-   ;
+      name_attribute_part
+      | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
+;
 
 name_attribute_part:
-   APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
-   ;
+      APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
+;
 
 name_function_call_or_indexed_part:  actual_parameter_part?;
 
 name_slice_part: explicit_range ( COMMA explicit_range )*;
 
-explicit_range
-  : simple_expression direction simple_expression
-  ;
+explicit_range:
+      simple_expression direction simple_expression
+;
 
-selected_name :
-   identifier (DOT suffix)*
-   ;
+selected_name:
+      identifier (DOT suffix)*
+;
 entity_declaration:
       ENTITY identifier IS
           entity_header
@@ -1092,7 +1093,8 @@ selected_variable_assignment:
           target VARASGN selected_expressions SEMI
 ;
 procedure_call_statement: ( label COLON )? procedure_call SEMI;
-procedure_call: name ( LPAREN actual_parameter_part RPAREN )?;
+//  ( LPAREN actual_parameter_part RPAREN )? can be part of the "name"
+procedure_call: name;
 if_statement:
       ( label COLON )?
           IF condition THEN
