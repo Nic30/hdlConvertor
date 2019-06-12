@@ -134,8 +134,7 @@ class HdlIntValue(object):
 
 # None is equivalent of HDL null
 iHdlExpr = Union[HdlName, HdlIntValue, float, str,
-                 None, List["iHdlExpr"], HdlAll, "HdlCall",
-                 HdlTypeTime]
+                 None, List["iHdlExpr"], HdlAll, "HdlCall"]
 
 
 class HdlBuildinFn(Enum):
