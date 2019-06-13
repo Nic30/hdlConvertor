@@ -1,12 +1,13 @@
 #include <hdlConvertor/hdlObjects/expr.h>
-#include <hdlConvertor/hdlObjects/symbol.h>
+#include <hdlConvertor/hdlObjects/literalVal.h>
 #include <hdlConvertor/hdlObjects/operator.h>
+#include <stdexcept>
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-LiteralVal __v = { NULL };
-static Symbol Type_t(symb_T, __v); // symbol representing that expr is type of type;
+LiteralVal __v = { BigInteger(0) };
+static LiteralVal Type_t(LiteralValType::symb_T); // symbol representing that expr is type of type;
 
 Expr::Expr() {
 	data = NULL;
@@ -27,64 +28,43 @@ Expr::Expr(Expr * op0, OperatorType operatorType, Expr * op1) {
 	assert(op0);
 	data = new Operator(op0, operatorType, op1);
 }
-Expr::Expr(SymbolType type, LiteralVal value) {
-	data = new Symbol(type, value);
+Expr::Expr(const LiteralVal & value) :
+		data(new LiteralVal(value)) {
 }
-Expr::Expr(Symbol * value) {
-	data = value;
+Expr::Expr(LiteralVal * value) :
+		data(value) {
 }
 
-Expr::Expr(BigInteger value, int bits) {
-	data = new Symbol(value, bits);
+Expr::Expr(const BigInteger & value, int bits) {
+	data = new LiteralVal(value, bits);
 }
-Expr::Expr(BigInteger value) {
-	LiteralVal v;
-	v._int = value;
-	data = new Symbol(symb_INT, v);
+Expr::Expr(const BigInteger & value) :
+		data(new LiteralVal(value, -1)) {
 }
-Expr * Expr::INT(std::string strVal, int base) {
-	return Expr::INT(strVal.c_str(), base);
+Expr * Expr::INT(const std::string & strVal, int base) {
+	return new Expr(BigInteger(strVal, base));
 }
-Expr * Expr::INT(const char * strVal, int base) {
-	LiteralVal v;
-	v._int = BigInteger_fromStr(strVal, base);
-	return new Expr(symb_INT, v);
+Expr * Expr::INT(const std::string & strVal, int bits, int base) {
+	return new Expr(new LiteralVal(BigInteger(strVal, base), bits));
 }
-Expr * Expr::INT(const char * strVal, int bits, int base) {
-	auto val = BigInteger_fromStr(strVal, base);
-	return new Expr(val, bits);
-}
-Expr * Expr::INT(std::string strVal, int bits, int base) {
-	return INT(strVal.c_str(), bits, base);
-}
-Expr * Expr::INT(long long val) {
-	LiteralVal v;
-	v._int = BigInteger_fromLong(val);
-
-	return new Expr(symb_INT, v);
+Expr * Expr::INT(int64_t val) {
+	return new Expr(BigInteger(val));
 }
 Expr * Expr::FLOAT(double val) {
-	LiteralVal v;
-	v._float = val;
-	return new Expr(symb_FLOAT, v);
+	return new Expr(new LiteralVal(val));
 }
 
 Expr * Expr::STR(std::string strVal) {
-	LiteralVal v;
-	v._str = strdup(strVal.c_str());
-	return new Expr(symb_STRING, v);
+	return new Expr(new LiteralVal(strVal));
 }
 
 Expr * Expr::ARRAY(const std::vector<Expr*> & arr) {
 	auto _arr = new std::vector<Expr*>(arr);
-	return new Expr(new Symbol(_arr));
+	return new Expr(new LiteralVal(_arr));
 }
 
 Expr * Expr::OPEN() {
-	Expr * e = new Expr();
-	LiteralVal v;
-	v._str = NULL;
-	e->data = new Symbol(symb_OPEN, v);
+	Expr * e = new Expr(new LiteralVal(LiteralValType::symb_OPEN));
 	return e;
 }
 Expr* Expr::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
@@ -102,13 +82,10 @@ Expr * Expr::slice(Expr * fnId, const std::vector<Expr*> & operands) {
 	e->data = Operator::slice(fnId, operands);
 	return e;
 }
-Expr * Expr::ID(const char * value) {
-	LiteralVal v;
-	v._str = strdup(value);
-	return new Expr(symb_ID, v);
-}
-Expr * Expr::ID(std::string value) {
-	return Expr::ID(value.c_str());
+Expr * Expr::ID(const std::string & value) {
+	auto s = new LiteralVal(value);
+	s->type = LiteralValType::symb_ID;
+	return new Expr(s);
 }
 
 Expr * Expr::TYPE_T() {
@@ -118,29 +95,20 @@ Expr * Expr::TYPE_T() {
 }
 
 Expr * Expr::all() {
-	Expr * e = new Expr();
-	LiteralVal v;
-	v._str = NULL;
-	e->data = new Symbol(symb_ALL, v);
-	return e;
+	return new Expr(new LiteralVal(LiteralValType::symb_ALL));
 }
 Expr * Expr::null() {
-	Expr * e = new Expr();
-	LiteralVal v;
-	v._str = NULL;
-	e->data = new Symbol(symb_NULL, v);
-	return e;
+	return new Expr(new LiteralVal(LiteralValType::symb_NULL));
 }
 Expr * Expr::others() {
-	Expr * e = new Expr();
-	LiteralVal v;
-	v._str = NULL;
-	e->data = new Symbol(symb_OTHERS, v);
-	return e;
+	return new Expr(new LiteralVal(LiteralValType::symb_OTHERS));
 }
-char * Expr::extractStr() {
-	Symbol * literal = dynamic_cast<Symbol*>(data);
-	return literal->value._str;
+const std::string & Expr::extractStr() const {
+	LiteralVal * literal = dynamic_cast<LiteralVal*>(data);
+	if (!literal)
+		throw std::runtime_error(
+				"Expr::extractStr called on expression which is not string or id");
+	return literal->_str;
 }
 
 Expr::~Expr() {

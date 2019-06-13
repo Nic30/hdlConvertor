@@ -105,7 +105,7 @@ public:
 	PyObject* toPy(const hdlObjects::Package* o, bool declaration_only=false);
 	PyObject* toPy(const hdlObjects::PackageHeader* o);
 	PyObject* toPy(const hdlObjects::Statement * o);
-	PyObject* toPy(const hdlObjects::Symbol * o);
+	PyObject* toPy(const hdlObjects::LiteralVal * o);
 	PyObject* toPy(const hdlObjects::Variable * o);
 	PyObject* toPy(const std::string & o);
 

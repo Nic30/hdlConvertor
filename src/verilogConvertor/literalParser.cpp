@@ -83,7 +83,10 @@ Expr * VerLiteralParser::parseIntNumber(antlr4::tree::TerminalNode* n,
 
 	if (size != -1)
 		return Expr::INT(strVal, size, radix);
-
+	if (radix == 10) {
+		auto v = atoi(strVal.c_str());
+		return Expr::INT(v);
+	}
 	return Expr::INT(strVal, radix);
 }
 

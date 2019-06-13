@@ -3,9 +3,10 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-Function::Function(char * name, bool isOperator, Expr * returnT,
+Function::Function(const std::string & name, bool isOperator, Expr * returnT,
 		std::vector<Variable*> * params) :
-		WithNameAndDoc(name), isOperator(isOperator), returnT(returnT), params(params) {
+		WithNameAndDoc(name), isOperator(isOperator), returnT(returnT),
+		params(params) {
 }
 
 Function::~Function() {

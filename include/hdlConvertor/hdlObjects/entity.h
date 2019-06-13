@@ -14,7 +14,7 @@ public:
 	std::vector<Variable*> ports;
 
 	Entity();
-	Variable * getPortByName(const char * name);
+	Variable * getPortByName(const std::string & name);
 	~Entity();
 };
 

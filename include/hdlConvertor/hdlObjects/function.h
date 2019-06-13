@@ -18,7 +18,7 @@ public:
 	std::vector<Variable*> locals;
 	std::vector<Statement*> body;
 
-	Function(char * name, bool isOperator, Expr * returnT,
+	Function(const std::string & name, bool isOperator, Expr * returnT,
 			std::vector<Variable*> * params);
 	~Function();
 };

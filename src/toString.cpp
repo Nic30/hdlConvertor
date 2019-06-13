@@ -33,7 +33,7 @@ void ToString::dump(const Expr * e, int indent) {
 	if (op) {
 		dumpItemP("binOperator", indent + INDENT_INCR, op) << "\n";
 	} else {
-		Symbol * literal = dynamic_cast<Symbol*>(e->data);
+		LiteralVal * literal = dynamic_cast<LiteralVal*>(e->data);
 		if (literal) {
 			dumpItemP("literal", indent + INDENT_INCR, literal) << "\n";
 		} else
@@ -83,39 +83,37 @@ void ToString::dump(const WithNameAndDoc * wnd, int indent) {
 	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << wnd->__doc__.c_str()
 			<< "\",\n";
 }
-void ToString::dump(const Symbol * s, int indent) {
+void ToString::dump(const LiteralVal * s, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
-	dumpVal("type", indent, SymbolType_toString(s->type)) << ",\n";
+	dumpVal("type", indent, LiteralValType_toString(s->type)) << ",\n";
 	const char * _v;
 
 	switch (s->type) {
-	case symb_ID:
-	case symb_STRING:
+	case LiteralValType::symb_ID:
+	case LiteralValType::symb_STRING:
 		dumpVal("value", indent, s->value._str) << "\n";
 		break;
-	case symb_FLOAT:
+	case LiteralValType::symb_FLOAT:
 		dumpVal("value", indent, s->value._float) << "\n";
 		break;
-	case symb_ARRAY:
+	case LiteralValType::symb_ARRAY:
 		assert(0 && "not implemented");
 		break;
-	case symb_INT:
+	case LiteralValType::symb_INT:
 		if (s->bits > 0)
 			dumpVal("bits", indent, s->bits) << ",\n";
-#ifdef USE_PYTHON
-#if PY_MAJOR_VERSION < 3
-		_v = PyString_AsString(PyObject_Str(s->value._int));
-#else
-		_v = PyUnicode_AsUTF8(PyObject_Str(s->value._int));
-#endif
-#else
-		_v = std::to_string(s->value._int).c_str();
-#endif
+		auto & i = s->value._int;
+		if (i.is_bitstring()) {
+			dumpVal("base", indent, i.bitstring_base) << ",\n";
+			_v = i.bitstring.c_str();
+		} else {
+			_v = std::to_string(i.val).c_str();
+		}
 		dumpVal("value", indent, _v) << "\n";
 		break;
-	case symb_ALL:
-	case symb_OPEN:
+	case LiteralValType::symb_ALL:
+	case LiteralValType::symb_OPEN:
 	default:
 		break;
 	}

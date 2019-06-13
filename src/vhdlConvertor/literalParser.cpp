@@ -69,7 +69,7 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 
 	s[s.length() - 1] = 0; // cut of "
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
-	char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
+	const char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
 	int bits;
 	if (integer != 0) {
 		bits = integer;
@@ -77,15 +77,11 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 		bits = strlen(strVal) * bitRatio;
 	}
 
-// TODO: Not correct implementation for don't care.
+	// [TODO]: Not correct implementation for don't care.
 	if (s.find('-') != std::string::npos) {
-		BigInteger val = BigInteger_fromStr("0", radix);
-		return new Expr(val, bits);
-	} else {
-		BigInteger val = BigInteger_fromStr(strVal, radix);
-		return new Expr(val, bits);
+		strVal = "0";
 	}
-
+	return Expr::INT(strVal, bits, radix);
 }
 
 Expr * LiteralParser::visitNumeric_literal(
@@ -129,9 +125,10 @@ Expr * LiteralParser::visitAbstract_literal(
 		}
 		if (is_float)
 			return Expr::FLOAT(atof(n.c_str()));
-		else
-			return Expr::INT(n, 10);
-
+		else {
+			auto _n = atoi(n.c_str());
+			return Expr::INT(_n);
+		}
 	}
 	auto bl = ctx->based_literal();
 	assert(bl);
@@ -150,7 +147,7 @@ Expr * LiteralParser::visitAbstract_literal(
 	// [TODO] exponent
 	auto n = bl->BASE();
 	int base = atoi(n->getText().c_str());
-	BigInteger val = BigInteger_fromStr(bl->BASED_INTEGER(0)->getText().c_str(),
+	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(),
 			base);
 	if (bl->EXPONENT()) {
 		NotImplementedLogger::print(
@@ -167,7 +164,7 @@ Expr * LiteralParser::visitEnumeration_literal(
 
 	auto _cl = ctx->CHARACTER_LITERAL()->getText();
 	auto cl = visitCharacter_literal(_cl);
-	dynamic_cast<Symbol*>(cl->data)->bits = 8;
+	dynamic_cast<LiteralVal*>(cl->data)->bits = 8;
 	return cl;
 }
 Expr * LiteralParser::visitString_literal(const std::string & ctx) {
@@ -186,7 +183,7 @@ bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator: identifier | operator_symbol
 	return ctx->identifier() == nullptr;
 }
-char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
+std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator: identifier | operator_symbol
 	// operator_symbol: string_literal;;
 	Expr * e;
@@ -195,10 +192,10 @@ char * LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	} else {
 		e = visitIdentifier(ctx->identifier());
 	}
-	Symbol* s = dynamic_cast<Symbol*>(e->data);
+	LiteralVal* s = dynamic_cast<LiteralVal*>(e->data);
 	e->data = NULL;
 	delete e;
-	return s->value._str;
+	return s->_str;
 }
 
 std::string LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
@@ -206,7 +203,7 @@ std::string LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
 	// : identifier COLON
 	// ;
 	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
-	std::string s = dynamic_cast<Symbol*>(e->data)->value._str;
+	std::string s = dynamic_cast<LiteralVal*>(e->data)->_str;
 	delete e;
 	return s;
 }

@@ -1,7 +1,7 @@
 #include <hdlConvertor/verilogConvertor/utils.h>
 #include <hdlConvertor/verilogConvertor/exprParser.h>
-#include "Verilog2001Parser/Verilog2001Lexer.h"
-#include <hdlConvertor/hdlObjects/symbolType.h>
+#include <hdlConvertor/hdlObjects/literalVal.h>
+#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h>
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using Verilog2001Lexer = Verilog2001_antlr::Verilog2001Lexer;
@@ -19,7 +19,7 @@ Expr *Utils::mkWireT() {
 }
 
 Expr *Utils::mkWireT(Expr * range, bool signed_) {
-	std::vector<Expr*> operands = { range, Expr::INT(signed_) };
+	std::vector<Expr*> operands = { range, Expr::INT(signed_ ? 1: 0) };
 	return Expr::call(mkWireT(), operands);
 }
 

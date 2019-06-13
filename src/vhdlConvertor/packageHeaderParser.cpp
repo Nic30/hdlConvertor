@@ -39,6 +39,7 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 
 	Expr * name = LiteralParser::visitIdentifier(ctx->identifier());
 	ph->name = name->extractStr();
+	delete name;
 	visitPackage_declarative_part(ctx->package_declarative_part());
 	return ph;
 }

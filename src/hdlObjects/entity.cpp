@@ -6,10 +6,10 @@ namespace hdlObjects {
 Entity::Entity() :
 		WithNameAndDoc() {
 }
-Variable * Entity::getPortByName(const char * name) {
+Variable * Entity::getPortByName(const std::string & name) {
 	for (auto p : ports) {
 		assert(p->name);
-		if (strcmp(p->name, name) == 0)
+		if (p->name == name)
 			return p;
 	}
 	return nullptr;

@@ -12,11 +12,11 @@ namespace hdlObjects {
  * */
 class Named {
 public:
-	char * name;
+	std::string name;
 
 	Named();
-	Named(char * name);
-	~Named();
+	Named(const std::string & name);
+	virtual ~Named();
 };
 
 /*
@@ -41,7 +41,7 @@ public:
 class WithNameAndDoc: public Named, public WithDoc, public WithPos {
 public:
 	WithNameAndDoc();
-	WithNameAndDoc(char * name);
+	WithNameAndDoc(const std::string & name);
 
 };
 

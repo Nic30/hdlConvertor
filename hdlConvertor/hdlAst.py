@@ -49,11 +49,13 @@ class HdlAll(object):
     """
     __slots__ = []
 
+
 class HdlOthers(object):
     """
     Constant which corresponds to VHDL "others" keyword
     """
     __slots__ = []
+
 
 class HdlTypeType(object):
     """
@@ -115,15 +117,20 @@ class iHdlObj(object):
 class HdlIntValue(object):
     """
     Object for representation of int value in in HDL (= also for the bitstrings)
-    """
-    __slots__ = ["val", "bits"]
 
-    def __init__(self, val, bits):
-        self.val = val  # type: int
+    :ivar val: int value or bitstring string
+    :ivar bits: number of bits if specified
+    :ivar base: base for bitstring
+    """
+    __slots__ = ["val", "bits", "base"]
+
+    def __init__(self, val, bits, base):
+        self.val = val  # type: Union[int, str]
         self.bits = bits  # type: Optional[int]
+        self.base = base  # type: Optional[Union[2,8,10,16]]
 
     def __int__(self):
-        return self.val
+        return int(self.val)
 
     def __bool__(self):
         return bool(self.val)
@@ -251,7 +258,7 @@ class HdlNamespace(iHdlObjWithName):
 
     def __init__(self):
         super(HdlNamespace, self).__init__()
-        self.declaration_only = False # type: bool
+        self.declaration_only = False  # type: bool
         self.objs = []  # type: List[iHdlObj]
 
 
@@ -459,7 +466,7 @@ class HdlWaitStm(iHdlStatement):
 
     def __init__(self):
         super(HdlWaitStm, self).__init__()
-        self.val = [] # type: List[iHdlExpr]
+        self.val = []  # type: List[iHdlExpr]
 
 
 class HdlBreakStm(iHdlStatement):

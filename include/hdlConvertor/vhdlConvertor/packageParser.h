@@ -7,7 +7,6 @@
 #include <hdlConvertor/hdlObjects/statement.h>
 #include <hdlConvertor/hdlObjects/package.h>
 #include <hdlConvertor/hdlObjects/packageHeader.h>
-#include <hdlConvertor/hdlObjects/symbolType.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/expr.h>
 #include <hdlConvertor/hdlObjects/function.h>
@@ -15,6 +14,7 @@
 #include <hdlConvertor/hdlObjects/process.h>
 #include <hdlConvertor/hdlObjects/package.h>
 #include <hdlConvertor/hdlObjects/packageHeader.h>
+#include "../hdlObjects/literalVal.h"
 
 namespace hdlConvertor {
 namespace vhdl {

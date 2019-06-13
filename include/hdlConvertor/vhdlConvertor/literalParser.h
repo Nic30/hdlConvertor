@@ -23,7 +23,7 @@ public:
 	static Expr * visitCharacter_literal(const std::string & ctx);
 	static Expr * visitIdentifier(vhdlParser::IdentifierContext* ctx);
 	static bool isStrDesignator(vhdlParser::DesignatorContext* ctx);
-	static char * visitDesignator(vhdlParser::DesignatorContext* ctx);
+	static std::string visitDesignator(vhdlParser::DesignatorContext* ctx);
 	static std::string visitLabel(vhdlParser::LabelContext * ctx);
 };
 

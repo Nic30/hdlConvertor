@@ -233,8 +233,8 @@ Statement * StatementParser::visitCase_statement(
 		for (auto ch : ExprParser::visitChoices(a->choices())) {
 			auto s = a->sequence_of_statements();
 			auto stms = visitSequence_of_statements(s);
-			auto _ch = dynamic_cast<Symbol*>(ch->data);
-			if (_ch && _ch->type == SymbolType::symb_OTHERS) {
+			auto _ch = dynamic_cast<LiteralVal*>(ch->data);
+			if (_ch && _ch->type == LiteralValType::symb_OTHERS) {
 				delete ch;
 				assert(_default == nullptr);
 				_default = stms;

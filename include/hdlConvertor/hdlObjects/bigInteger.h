@@ -1,37 +1,29 @@
 #pragma once
 
 #include <string>
-#include <hdlConvertor/debugConfig.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-#ifdef USE_PYTHON
-typedef PyObject * BigInteger;
-#else
-typedef long long int BigInteger;
-#endif
+/*
+ * Container of the bitstring or the exact integer value
+ *
+ * @note if bitstring_base == INVALID_BASE the integer value "val" is used
+ * 		otherwise the "bitstring" is used
+ * */
+class BigInteger {
+public:
+	static constexpr int INVALID_BASE = -1;
+	int64_t val;
+	std::string bitstring;
+	int bitstring_base;
 
-inline BigInteger BigInteger_fromStr(const char * str, int base) {
-#ifdef USE_PYTHON
-	auto v = PyLong_FromString((char *)str, NULL, base);
-	if (!v)
-		throw std::runtime_error(std::string("can not parse \"") + std::string(str) + "\" to integer");
-	return v;
-#else
-	return atoi(str);
-#endif
-}
-inline BigInteger BigInteger_fromStr(std::string str, int base) {
-	return BigInteger_fromStr(str.c_str(), base);
-}
-inline BigInteger BigInteger_fromLong(long long val) {
-#ifdef USE_PYTHON
-	return PyLong_FromLongLong(val);
-#else
-	return val;
-#endif
-}
+	BigInteger(int64_t v);
+	BigInteger(const std::string & _bit_string, int base);
+
+	bool is_bitstring() const;
+};
+
 
 }
 }

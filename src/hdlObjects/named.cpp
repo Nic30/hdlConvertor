@@ -5,22 +5,20 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 Named::Named() {
-	name = nullptr;
 }
 
-Named::Named(char * name) :
+Named::Named(const std::string & name) :
 		name(name) {
 }
 
 Named::~Named() {
-	free(name);
 }
 
 WithNameAndDoc::WithNameAndDoc() :
 		Named() {
 }
 
-WithNameAndDoc::WithNameAndDoc(char * name) :
+WithNameAndDoc::WithNameAndDoc(const std::string & name) :
 		Named(name) {
 }
 

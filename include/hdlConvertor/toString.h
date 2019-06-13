@@ -68,7 +68,7 @@ public:
 	static void dump(const hdlObjects::Position * o, int indent);
 	static void dump(const hdlObjects::Process * p, int indent);
 	static void dump(const hdlObjects::Statement * p, int indent);
-	static void dump(const hdlObjects::Symbol * p, int indent);
+	static void dump(const hdlObjects::LiteralVal * p, int indent);
 	static void dump(const hdlObjects::Variable * v, int indent);
 	static void dump(const hdlObjects::WithDoc * wd, int indent);
 	static void dump(const hdlObjects::WithNameAndDoc * wnd, int indent);

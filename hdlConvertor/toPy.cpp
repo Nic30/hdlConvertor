@@ -117,8 +117,8 @@ int ToPy::toPy(const WithNameAndDoc * o, PyObject * py_inst) {
 		return -1;
 	}
 	int e;
-	if (o->name) {
-		auto n = PyUnicode_FromString(o->name);
+	if (o->name.size()) {
+		auto n = PyUnicode_FromString(o->name.c_str());
 		if (!n) {
 			PyErr_SetString(PyExc_ValueError,
 					"ToPy::toPy invalid WithNameAndDoc->name");
@@ -223,7 +223,7 @@ PyObject* ToPy::toPy(const Expr * o) {
 	if (op) {
 		return toPy(op);
 	} else {
-		Symbol * literal = dynamic_cast<Symbol*>(o->data);
+		LiteralVal * literal = dynamic_cast<LiteralVal*>(o->data);
 		if (literal)
 			return toPy(literal);
 		else if (o->data)
@@ -271,49 +271,61 @@ PyObject* ToPy::toPy(const Function * o) {
 	return nullptr;
 }
 
-PyObject* ToPy::toPy(const Symbol * o) {
+PyObject* ToPy::toPy(const LiteralVal * o) {
 	auto t = o->type;
 
 	if (t == symb_ID) {
 		assert(o->value._str);
-		auto v = PyUnicode_FromString(o->value._str);
+		auto v = PyUnicode_FromString(o->_str.c_str());
+		if (!v)
+			return nullptr;
 		return PyObject_CallFunctionObjArgs(HdlNameCls, v, NULL);
 	} else if (t == symb_INT) {
-		PyObject* v = o->value._int;
-		PyObject* b;
-		if (v) {
-			Py_INCREF(v);
+		auto & _v = o->_int;
+		PyObject * v, * bits, * base = nullptr;
+		if (_v.is_bitstring()) {
+			v = PyUnicode_FromString(_v.bitstring.c_str());
 		} else {
-			PyErr_SetString(PyExc_AssertionError,
-					"int symbol is missing value");
+			v = PyLong_FromLong(_v.val);
+		}
+		if (!v)
 			return nullptr;
+		if (_v.is_bitstring()) {
+			base =  PyLong_FromLong(_v.bitstring_base);
+			if (!base) {
+				Py_DECREF(v);
+				return nullptr;
+			}
+		}else {
+			Py_INCREF(Py_None);
+			base = Py_None;
 		}
 		if (o->bits > 0) {
-			b = PyLong_FromLong(o->bits);
-			if (!b) {
+			bits = PyLong_FromLong(o->bits);
+			if (!bits) {
+				Py_XDECREF(base);
 				Py_DECREF(v);
 				return nullptr;
 			}
 		} else {
 			Py_INCREF(Py_None);
-			b = Py_None;
+			bits = Py_None;
 		}
 
-		return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, b, NULL);
+		return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, bits, base, NULL);
 	} else if (t == symb_FLOAT) {
-		return PyFloat_FromDouble(o->value._float);
+		return PyFloat_FromDouble(o->_float);
 	} else if (t == symb_STRING) {
-		assert(o->value._str);
-		return PyUnicode_FromString(o->value._str);
+		return PyUnicode_FromString(o->_str.c_str());
 	} else if (t == symb_OPEN) {
 		Py_RETURN_NONE;
 	} else if (t == symb_ARRAY) {
 		assert(o->value_arr);
-		auto val = PyList_New(o->value_arr->size());
+		auto val = PyList_New(o->_arr->size());
 		if (!val)
 			return nullptr;
 		size_t indx = 0;
-		for (auto elem : *o->value_arr) {
+		for (auto elem : *o->_arr) {
 			auto tmp = toPy(elem);
 			if (!tmp) {
 				Py_DECREF(val);

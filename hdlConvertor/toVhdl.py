@@ -164,6 +164,14 @@ class ToVhdl():
             v = expr.val
             bits = expr.bits
             if bits is None:
+                if expr.base is not None:
+                    bases = {
+                        2: "B",
+                        8: "O",
+                        16: "X",
+                    }
+                    b = bases[expr.base]
+                    w('%s"%"' % (b, v))
                 w(str(v))
             elif bits % 8 == 0:
                 f = 'X"{0:0%dX}"' % (bits / 8)

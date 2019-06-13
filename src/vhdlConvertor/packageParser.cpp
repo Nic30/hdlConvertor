@@ -38,7 +38,7 @@ Package * PackageParser::visitPackage_body(
 	//       END ( PACKAGE BODY )? ( simple_name )? SEMI
 	// ;
 	Expr * id = ReferenceParser::visitSimple_name(ctx->simple_name(0));
-	p->name = strdup(id->extractStr());
+	p->name = id->extractStr();
 	delete id;
 
 	if (!hierarchyOnly) {

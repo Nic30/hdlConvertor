@@ -1,5 +1,6 @@
 #include <hdlConvertor/hdlObjects/compInstance.h>
-#include <hdlConvertor/hdlObjects/symbolType.h>
+
+#include <hdlConvertor/hdlObjects/literalVal.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

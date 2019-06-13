@@ -128,17 +128,27 @@ class ToVerilog():
             w('"%s"' % expr)
             return
         elif isinstance(expr, HdlIntValue):
-            v = expr.val
-            bits = expr.bits
-            if bits is None:
-                w(str(v))
+            if expr.bits is None:
+                w(str(expr.val))
             else:
-                w(str(bits))
-                w("'h")
-                w("%x" % v)
+                if expr.base is None:
+                    f = "{0}'h{1:x}"
+                else:
+                    b = expr.base
+                    if b == 2:
+                        f = "{0}b'{1}"
+                    elif b == 8:
+                        f = "{0}O'{1}"
+                    elif b == 10:
+                        f = "{0}d'{1}"
+                    elif b == 16:
+                        f = "{0}h'{1}"
+                    else:
+                        raise NotImplementedError(b)
+                w(f.format(expr.bits, expr.val))
             return
         elif isinstance(expr, HdlName):
-            w(v)
+            w(expr.val)
             return
         elif isinstance(expr, HdlAll):
             w("*")
