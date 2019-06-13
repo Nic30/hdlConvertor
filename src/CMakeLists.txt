@@ -5,7 +5,6 @@
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMake_antlr4.txt)
 
 include_directories(
-	${PYTHON_INCLUDE_DIRS}
 	"${CMAKE_CURRENT_SOURCE_DIR}/../include/")
 
 add_subdirectory(svConvertor)
@@ -32,7 +31,6 @@ add_library(hdlConvertor_core_static STATIC  ${hdlConvertor_core_SRC})
 target_include_directories(hdlConvertor_core_static
 	INTERFACE
 	"${CMAKE_CURRENT_SOURCE_DIR}/../include/"
-	${PYTHON_INCLUDE_DIRS}
 )
 set_target_properties(hdlConvertor_core_static
 	PROPERTIES VERSION "1.0.0"
