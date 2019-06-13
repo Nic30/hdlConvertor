@@ -8,7 +8,7 @@
 
 The System Verilog and VHDL parser for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
 
-It is also possible to convert this AST back to original HDL (curently only for Verilog).
+It is also possible to convert this AST back to original HDL.
 
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
@@ -74,7 +74,7 @@ for o in d.objs:
 * [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) compatible
 * VHDL 2008, (currently only without `tool_directive` and `PSL`) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (without preprocessor) (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP)
+* System Verilog 2012 (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP, currently only on C++ level)
 
 
 ### Similar projects:
