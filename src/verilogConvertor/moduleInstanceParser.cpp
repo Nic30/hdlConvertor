@@ -16,7 +16,7 @@ vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 	//    : module_identifier (parameter_value_assignment)? module_instance (',' module_instance)* ';'
 	//    ;
 	auto module_name =
-			ctx->module_identifier()->identifier()->getText().c_str();
+			ctx->module_identifier()->getText();
 
 	auto pva = ctx->parameter_value_assignment();
 	vector<Expr*> genericMap;

@@ -200,7 +200,7 @@ Entity * GenerateStatementParser::visitComponent_declaration(
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
 	Entity * e = new Entity();
-	e->name = strdup(ctx->identifier()->getText().c_str());
+	e->name = ctx->identifier()->getText();
 	auto gc = ctx->generic_clause();
 	if (gc)
 		EntityParser::visitGeneric_clause(gc, &e->generics);

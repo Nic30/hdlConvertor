@@ -24,7 +24,7 @@ Arch * ArchParser::visitArchitecture_body(
 	//       END ( ARCHITECTURE )? ( simple_name )? SEMI
 	// ;
 
-	a->name = strdup(ctx->identifier()->getText().c_str());
+	a->name = ctx->identifier()->getText();
 	a->entityName = ReferenceParser::visitName(ctx->name());
 	a->position.update_from_elem(ctx);
 

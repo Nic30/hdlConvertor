@@ -192,7 +192,7 @@ Entity * PackageHeaderParser::visitComponent_declaration(
 	// ;
 
 	Entity * e = new Entity();
-	e->name = strdup(ctx->identifier()->getText().c_str());
+	e->name = ctx->identifier()->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)

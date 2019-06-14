@@ -192,7 +192,7 @@ hdlObjects::Entity * BlockDeclarationParser::visitComponent_declaration(
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
 	auto e = new hdlObjects::Entity();
-	e->name = strdup(ctx->identifier()->getText().c_str());
+	e->name = ctx->identifier()->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)

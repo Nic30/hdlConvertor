@@ -146,7 +146,8 @@ Expr * LiteralParser::visitAbstract_literal(
 
 	// [TODO] exponent
 	auto n = bl->BASE();
-	int base = atoi(n->getText().c_str());
+	auto _n = n->getText();
+	int base = atoi(_n.c_str());
 	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(),
 			base);
 	if (bl->EXPONENT()) {

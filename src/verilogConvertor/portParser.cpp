@@ -84,7 +84,7 @@ Variable * PortParser::visitPort_reference(
 	// ;
 	// port_identifier : identifier ;
 
-	Expr * t = NULL;
+	Expr * t = nullptr;
 	auto c = ctx->constant_expression();
 	if (c) {
 		t = VerExprParser::visitConstant_expression(c);
@@ -94,7 +94,7 @@ Variable * PortParser::visitPort_reference(
 		t = VerExprParser::visitRange_expression(r);
 
 	auto p = new Variable(
-			ctx->port_identifier()->identifier()->getText().c_str(), t, NULL);
+			ctx->port_identifier()->identifier()->getText(), t, nullptr);
 	p->direction = Direction::DIR_UNKNOWN;
 	return p;
 

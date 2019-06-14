@@ -24,7 +24,7 @@ Entity * EntityParser::visitEntity_declaration(
 	// ;
 
 	Entity * e = new Entity();
-	e->name = strdup(ctx->identifier()->getText().c_str());
+	e->name = ctx->identifier()->getText();
 	e->__doc__ = commentParser.parse(ctx);
 	// entity_declarative_part
 	// : ( entity_declarative_item )*

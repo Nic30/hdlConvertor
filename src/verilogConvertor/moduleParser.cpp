@@ -37,8 +37,7 @@ void ModuleParser::visitModule_declaration(
 	// 'endmodule'
 	// ;
 	ent->__doc__ = commentParser.parse(ctx);
-	ent->name = strdup(
-			ctx->module_identifier()->identifier()->getText().c_str());
+	ent->name = ctx->module_identifier()->getText();
 	for (auto a : ctx->attribute_instance()) {
 		NotImplementedLogger::print(
 				"ModuleParser.visitModule_declaration.attribute_instance");
