@@ -43,7 +43,7 @@ public:
 	static Expr * STR(std::string strVal);
 	static Expr * ARRAY(const std::vector<Expr*> & arr);
 	static Expr * ternary(Expr * cond, Expr * ifTrue, Expr * ifFalse);
-	static Expr * call(Expr * fnId, const std::vector<Expr*> & operands);
+	static Expr * call(Expr * fnId, const std::vector<Expr*> & args);
 	static Expr * slice(Expr * fnId, const std::vector<Expr*> & operands);
 
 	static Expr * OPEN();

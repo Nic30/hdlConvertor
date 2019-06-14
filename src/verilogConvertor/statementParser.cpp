@@ -386,8 +386,9 @@ Statement* VerStatementParser::visitNet_assignment(
 		Verilog2001Parser::Net_assignmentContext * ctx) {
 	// net_assignment : net_lvalue '=' expression
 	// ;
-	return Statement::ASSIG(VerExprParser::visitNet_lvalue(ctx->net_lvalue()),
-			VerExprParser::visitExpression(ctx->expression()));
+	auto nv = VerExprParser::visitNet_lvalue(ctx->net_lvalue());
+	auto e = VerExprParser::visitExpression(ctx->expression());
+	return Statement::ASSIG(nv,	e);
 }
 
 }

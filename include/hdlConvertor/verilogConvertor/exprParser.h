@@ -47,6 +47,8 @@ public:
 			Verilog2001Parser::System_function_callContext * ctx);
 	static Expr * visitFunction_call(
 			Verilog2001Parser::Function_callContext * ctx);
+	static Expr * visitHierarchical_function_identifier(
+			Verilog2001Parser::Hierarchical_function_identifierContext * ctx);
 	static Expr * visitMultiple_concatenation(
 			Verilog2001Parser::Multiple_concatenationContext * ctx);
 	static Expr * visitConcatenation(

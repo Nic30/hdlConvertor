@@ -163,13 +163,20 @@ class ToVerilog():
             if symbol is not None:
                 if sensitivity and op == HdlBuildinFn.OR:
                     symbol = "or"
-                w("(")
-                pe(o.ops[0])
-                w(" ")
-                w(symbol)
-                w(" ")
-                pe(o.ops[1])
-                w(")")
+                op_cnt = len(o.ops)
+                if op_cnt == 1:
+                    w("(")
+                    w(symbol)
+                    pe(o.ops[0])
+                    w(")")
+                elif op_cnt == 2:
+                    w("(")
+                    pe(o.ops[0])
+                    w(" ")
+                    w(symbol)
+                    w(" ")
+                    pe(o.ops[1])
+                    w(")")
                 return
             if op == HdlBuildinFn.DOWNTO:
                 pe(o.ops[0])
@@ -230,6 +237,15 @@ class ToVerilog():
                 pe(o0)
                 w(" : ")
                 pe(o1)
+                return
+            elif op == HdlBuildinFn.CALL:
+                pe(o.ops[0])
+                w("(")
+                for is_last, o_n in iter_with_last_flag(o.ops[1:]):
+                    pe(o_n)
+                    if not is_last:
+                        w(", ")
+                w(")")
                 return
             else:
                 raise NotImplementedError(op)
@@ -434,6 +450,7 @@ class ToVerilog():
         """
         self.print_doc(c)
         w = self.out.write
+        assert c.module_name
         self.print_expr(c.module_name)
         w(" ")
         self.print_expr(c.name)
@@ -497,7 +514,7 @@ if __name__ == "__main__":
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
     # filenames = [os.path.join(TEST_DIR, "sram.v")]
-    filenames = [os.path.join(TEST_DIR, "fifo_rx.v")]
-    d = c.parse(filenames, Language.VERILOG, [], False, False)
+    filenames = [os.path.join(TEST_DIR, "aes.v")]
+    d = c.parse(filenames, Language.VERILOG, [TEST_DIR, ], False, True)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)

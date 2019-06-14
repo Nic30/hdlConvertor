@@ -210,7 +210,9 @@ Expr * VerExprParser::visitNet_concatenation(
 	//    ;
 	// collect operands of concatenation
 	vector<Expr *> parts;
-	for (auto ncv : ctx->net_concatenation_value()) {
+	auto ncvs = ctx->net_concatenation_value();
+	assert(ncvs.size());
+	for (auto ncv : ncvs) {
 		auto hi = ncv->hierarchical_net_identifier();
 		if (hi) {
 			Expr * id = visitHierarchical_net_identifier(hi);
@@ -223,9 +225,11 @@ Expr * VerExprParser::visitNet_concatenation(
 				auto r = visitRange_expression(re);
 				id = new Expr(id, OperatorType::INDEX, r);
 			}
-			return id;
+			parts.push_back(id);
 		} else {
-			parts.push_back(visitNet_concatenation(ncv->net_concatenation()));
+			auto _nc = ncv->net_concatenation();
+			auto nc = visitNet_concatenation(_nc);
+			parts.push_back(nc);
 		}
 	}
 
@@ -395,8 +399,22 @@ Expr * VerExprParser::visitFunction_call(
 	// : hierarchical_function_identifier attribute_instance*
 	// '(' (expression ( ',' expression )*)? ')'
 	// ;
-	NotImplementedLogger::print("ExpressionParser.visitFunction_call");
-	return NULL;
+	auto hfi = ctx->hierarchical_function_identifier();
+	Expr * fn = visitHierarchical_function_identifier(hfi);
+	std::vector<Expr*> args;
+	auto exprs = ctx->expression();
+	for (auto e : exprs) {
+		Expr * a = visitExpression(e);
+		args.push_back(a);
+	}
+	return Expr::call(fn, args);
+}
+Expr * VerExprParser::visitHierarchical_function_identifier(
+		Verilog2001Parser::Hierarchical_function_identifierContext * ctx) {
+	// hierarchical_function_identifier
+	//    : hierarchical_identifier
+	//    ;
+	return visitHierarchical_identifier(ctx->hierarchical_identifier());
 }
 Expr * VerExprParser::visitMultiple_concatenation(
 		Verilog2001Parser::Multiple_concatenationContext * ctx) {

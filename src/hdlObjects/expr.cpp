@@ -72,9 +72,9 @@ Expr* Expr::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	e->data = Operator::ternary(cond, ifTrue, ifFalse);
 	return e;
 }
-Expr * Expr::call(Expr * fnId, const std::vector<Expr*> & operands) {
+Expr * Expr::call(Expr * fnId, const std::vector<Expr*> & args) {
 	Expr * e = new Expr();
-	e->data = Operator::call(fnId, operands);
+	e->data = Operator::call(fnId, args);
 	return e;
 }
 Expr * Expr::slice(Expr * fnId, const std::vector<Expr*> & operands) {
