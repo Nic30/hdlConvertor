@@ -3,8 +3,8 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-Variable::Variable(std::string id, Expr * _type, Expr * val) {
-	name = strdup(id.c_str());
+Variable::Variable(const std::string & id, Expr * _type, Expr * val) {
+	name = id;
 	type = _type;
 	value = val;
 	latched = false;

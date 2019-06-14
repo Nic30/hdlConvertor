@@ -22,7 +22,7 @@ public:
 	bool is_const;
 	Direction direction;
 
-	Variable(std::string id, Expr * type, Expr * val);
+	Variable(const std::string & id, Expr * type, Expr * val);
 	~Variable();
 };
 
