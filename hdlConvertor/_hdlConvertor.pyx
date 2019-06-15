@@ -25,7 +25,7 @@ cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
 
 cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
-        VHDL, VERILOG, SYSTEM_VERILOG, VERILOG2001, VERILOG2005, SV2012
+        VHDL, VERILOG, SYSTEM_VERILOG, VERILOG2001, VERILOG2005, SV2012, SV2017
 
 cdef class ParseException(Exception):
     pass
@@ -93,6 +93,8 @@ cdef class HdlConvertor:
             return VERILOG2005
         elif mode == L.SYSTEM_VERILOG_2012 or mode == L.SYSTEM_VERILOG:
             return SV2012
+        elif mode == L.SYSTEM_VERILOG_2017:
+            return SV2017
         else:
             raise ValueError(mode + " is not recognized (expected " + repr(PyHdlLanguageEnum) + ")")
 
