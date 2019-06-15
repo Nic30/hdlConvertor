@@ -36,17 +36,32 @@ namespace hdlConvertor {
 class Convertor {
 
 public:
-	std::string fileName;
-	Language lang;
 	bool hierarchyOnly;
 	static bool debug;
+	hdlObjects::Context * c;
 
-	hdlObjects::Context * parse(std::vector<std::string> fileNames,
-			Language lang, std::vector<std::string>,
-			bool hierarchyOnly, bool debug);
+	void parse_vhdl(antlr4::ANTLRInputStream & input);
+	void parse_verilog_file(const std::string & fileName,
+			std::vector<std::string> & incdir);
+	void parse_verilog_str(const std::string & verilog_str,
+			std::vector<std::string> & incdir);
+#ifdef SV_PARSER
+	void parse_sv_file(const std::string & fileName,
+			std::vector<std::string> & incdir);
+	void parse_sv_str(const std::string & verilog_str,
+			std::vector<std::string> & incdir);
+#endif
 
-	std::string verilog_pp(const std::string, std::vector<std::string> incdir,
-			unsigned int mode);
+	hdlObjects::Context * parse(const std::vector<std::string> & fileNames,
+			Language lang, std::vector<std::string> incdirs, bool hierarchyOnly,
+			bool debug);
+	hdlObjects::Context * parse_str(const std::string & hdl_str, Language lang,
+			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);
+
+	std::string verilog_pp(const std::string & filename,
+			const std::vector<std::string> incdirs, Language mode);
+	std::string verilog_pp_str(const std::string & verilog_str,
+			const std::vector<std::string> incdirs, Language mode);
 
 };
 

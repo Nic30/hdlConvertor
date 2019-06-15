@@ -8,7 +8,7 @@ namespace verilog_pp {
 
 void macroSymbol::insert(const pair<string, macro_replace*> item,
 		vector<string> &incdir, vector<string> &stack_incfile,
-		unsigned int mode) {
+		Language mode) {
 
 	//string new_replacement = return_preprocessed(item.second->data.tmplate,
 	//			incdir, *this,stack_incfile, mode);

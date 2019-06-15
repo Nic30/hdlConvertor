@@ -5,7 +5,6 @@ try:
 except ImportError:
     from test_constants import *
 
-
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
 
@@ -14,20 +13,21 @@ SV = Language.SYSTEM_VERILOG_2012
 
 def _test_run(test_file, golden_file):
     c = HdlConvertor()
+
+    incdirs = ['.', '..', path.join('sv_pp', 'src')]
     test_result = c.verilog_pp(
-        path.join(TEST_DIR, test_file),
-        ['.', '..', path.join('sv_pp', 'src')],
-        SV)
-    with open(path.join(TEST_DIR, golden_file), 'r') as myfile:
+        test_file, incdirs, SV)
+
+    with open(golden_file) as myfile:
         test_golden = myfile.read()
-    myfile.close()
+
     return test_result, test_golden
 
 
 def _test_run_rel(test_file, golden_file):
     return _test_run(
-            path.join('sv_pp', 'src', test_file),
-            path.join('sv_pp', 'expected', golden_file)
+            path.join(TEST_DIR, 'sv_pp', 'src', test_file),
+            path.join(TEST_DIR, 'sv_pp', 'expected', golden_file)
     )
 
 
@@ -60,11 +60,11 @@ class PreprocessorTC(unittest.TestCase):
     def test_2012_p644(self):
         self.assertPPWorks('2012_p644.txt')
 
-    def assertPPError(self, file, err_msg, use_rel_path=False):
+    def assertPPError(self, file, err_msg):
         with self.assertRaises(ParseException) as context:
             f = path.join(TEST_DIR, 'sv_pp', 'src', file)
             c = HdlConvertor()
-            result = c.verilog_pp(
+            c.verilog_pp(
                 f,
                 ['.', '..', path.join('sv_pp', 'src')],
                 SV
@@ -72,6 +72,7 @@ class PreprocessorTC(unittest.TestCase):
         self.assertEqual(err_msg, context.exception.__str__())
 
     def test_2012_p644_2(self):
+        # [TODO] platform dependent path
         self.assertPPError(
             '2012_p644_2.txt',
             '/home/mydir/myfile was not found in include directories\n'
@@ -120,15 +121,15 @@ class PreprocessorTC(unittest.TestCase):
 
     def test_FILE_LINE(self):
         c = HdlConvertor()
-        test_result = c.verilog_pp(
-            path.join(path.dirname(__file__),'sv_pp', 'src', 'test_FILE_LINE.sv'),
-            ['.', '..', path.join('sv_pp', 'src')],
-            SV
-        )
-        test_golden = "module tb();\n\ninitial\n\t$display(\"Internal error: null handle at %s, line %d.\",\n"
-        test_golden += "\"" + path.join(path.dirname(__file__),
-                      'sv_pp', 'src', 'test_FILE_LINE.sv'
-                     ) + "\", 5);\n\n\nendmodule\n"
+        f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
+        incdirs = ['.', '..', path.join('sv_pp', 'src')]
+        test_result = c.verilog_pp(f, incdirs, SV)
+        expected_val = path.join(path.dirname(__file__),
+                                 'sv_pp', 'src', 'test_FILE_LINE.sv'
+                                 )
+        test_golden = ("module tb();\n\ninitial\n\t$display("
+                      "\"Internal error: null handle at %s, line %d.\",\n")
+        test_golden += "\"" + expected_val + "\", 5);\n\n\nendmodule\n"
         self.assertEqual(test_result, test_golden)
 
 
@@ -144,15 +145,14 @@ class PreprocessorGrammar(unittest.TestCase):
     def run_pp_by_methodname(self):
         test_name = self.getTestName()
         c = HdlConvertor()
-        c.verilog_pp(path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt'),
-                   ['.', '..', path.join('sv_pp', 'raw')],
-                   SV
-        )
+        f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
+        incdirs = ['.', '..', path.join('sv_pp', 'raw')]
+        return c.verilog_pp(f, incdirs, SV)
 
     def check_pp_error_by_methodname(self, err_msg):
         with self.assertRaises(ParseException) as context:
             self.run_pp_by_methodname()
-        # print ('|'+context.exception.__str__()+'|')
+
         self.assertTrue(err_msg == context.exception.__str__())
 
     def test_celldefine(self):
@@ -219,7 +219,8 @@ class PreprocessorGrammar(unittest.TestCase):
         self.run_pp_by_methodname()
 
     def test_include(self):
-        self.check_pp_error_by_methodname('file1.txt was not found in include directories\n')
+        self.check_pp_error_by_methodname(
+            'file1.txt was not found in include directories\n')
 
     def test_keywords1(self):
         self.run_pp_by_methodname()

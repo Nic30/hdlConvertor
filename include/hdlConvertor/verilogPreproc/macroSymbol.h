@@ -6,6 +6,7 @@
 
 #include <hdlConvertor/verilogPreproc/macro_replace.h>
 #include <hdlConvertor/verilogPreproc/macro_replace_sv.h>
+#include <hdlConvertor/language.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
@@ -23,7 +24,7 @@ public:
 	// template where already presented macro are already expended
 	void insert(const std::pair<std::string, macro_replace*> item,
 			std::vector<std::string> & incdir,
-			std::vector<std::string> & stack_incfile, unsigned int mode);
+			std::vector<std::string> & stack_incfile, Language mode);
 
 };
 

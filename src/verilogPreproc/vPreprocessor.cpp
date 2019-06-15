@@ -1,5 +1,6 @@
 #include <hdlConvertor/verilogPreproc/vPreprocessor.h>
-
+#include <antlr4-common.h>
+#include <antlr4-runtime.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
@@ -20,13 +21,22 @@ void ReplaceStringInPlace(string& subject, const string& search,
 	}
 }
 
-vPreprocessor::vPreprocessor(TokenStream *tokens, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> &stack_incfile,
-		unsigned int mode, size_t include_depth_limit) :
-		_defineDB(defineDB), _tokens((CommonTokenStream *) tokens), _incdir(
+vPreprocessor::vPreprocessor(TokenStream & tokens, vector<string> &incdir,
+		macroSymbol & defineDB, vector<string> &stack_incfile, Language mode,
+		size_t include_depth_limit) :
+		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
 				incdir), _stack_incfile(stack_incfile), _mode(mode), include_depth_limit(
-				include_depth_limit), _rewriter(tokens) {
+				include_depth_limit), _rewriter(&tokens) {
 	// [TODO] add dir of current file into _incdir if not present
+	switch (mode) {
+	case Language::VERILOG2001:
+	case Language::VERILOG2005:
+	case Language::SV2012:
+	case Language::SV2017:
+		break;
+	default:
+		throw std::runtime_error("vPreprocessor: unsupported mode");
+	}
 }
 
 vPreprocessor::~vPreprocessor() {
@@ -134,7 +144,7 @@ antlrcpp::Any vPreprocessor::visitFile_nb(
 		verilogPreprocParser::File_nbContext * ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
 	misc::Interval token = ctx->getSourceInterval();
-	string replacement = "\"" + _tokens->getSourceName() + "\"";
+	string replacement = "\"" + _tokens.getSourceName() + "\"";
 	_rewriter.replace(token.a, token.b, replacement);
 	return NULL;
 }
@@ -184,8 +194,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 		 */
 		// get the template
 		if (ctx->replacement() != nullptr) {
-			rep_data = _tokens->getText(
-					ctx->replacement()->getSourceInterval());
+			rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
 			remove_comment(ctx->replacement()->getStart(),
 					ctx->replacement()->getStop(), &rep_data);
 
@@ -195,7 +204,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 		}
 
 		// add the macro to the macroDB object
-		if (_mode == SV2012) {
+		if (_mode == Language::SV2012) {
 			item = new macro_replace_sv(macroName, rep_data, data,
 					default_args);
 		} else {
@@ -211,12 +220,11 @@ antlrcpp::Any vPreprocessor::visitDefine(
 			// a template is provide.
 			// So we add a macro with an empty argument list to the macroDB
 			// object
-			rep_data = _tokens->getText(
-					ctx->replacement()->getSourceInterval());
+			rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
 			remove_comment(ctx->replacement()->getStart(),
 					ctx->replacement()->getStop(), &rep_data);
 			rep_data = rtrim(rep_data);
-			if (_mode == SV2012) {
+			if (_mode == Language::SV2012) {
 				item = new macro_replace_sv(macroName, rep_data, data,
 						default_args);
 			} else {
@@ -228,7 +236,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 			// no template is provided
 			// So we add a macro with empty string as template and no argument
 			// to the macroDB object
-			if (_mode == SV2012) {
+			if (_mode == Language::SV2012) {
 				item = new macro_replace_sv(macroName, rep_data, data,
 						default_args);
 			} else {
@@ -286,7 +294,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 			} else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(
 					ctx->children[i])) {
 				string data;
-				data = _tokens->getText(ctx->children[i]->getSourceInterval());
+				data = _tokens.getText(ctx->children[i]->getSourceInterval());
 				data = trim(data);
 				args.push_back(data);
 			}
@@ -315,7 +323,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 	string replacement = _defineDB[macro.macroName]->replace(macro.args);
 	//printf("=>%s\n",replacement.c_str());
 
-	if (_mode == SV2012) {
+	if (_mode == Language::SV2012) {
 		size_t start_pos = 0;
 		while ((start_pos = replacement.find("``", start_pos)) != string::npos) {
 			replacement.erase(start_pos, 2);
@@ -335,7 +343,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 	}
 
 	if (replacement.find("`", 0) != string::npos) {
-		replacement = return_preprocessed(replacement, _incdir, _defineDB,
+		replacement = run_verilog_preproc_str(replacement, _incdir, _defineDB,
 				_stack_incfile, _mode);
 	}
 
@@ -440,9 +448,8 @@ antlrcpp::Any vPreprocessor::visitIfndef_directive(
 
 antlrcpp::Any vPreprocessor::visitStringLiteral(
 		verilogPreprocParser::StringLiteralContext *ctx) {
-	string filestring;
-	filestring = return_preprocessed(ctx->getText(), _incdir, _defineDB,
-			_stack_incfile, _mode);
+	string filestring = run_verilog_preproc_str(ctx->getText(), _incdir,
+			_defineDB, _stack_incfile, _mode);
 	return filestring;
 }
 
@@ -503,7 +510,7 @@ antlrcpp::Any vPreprocessor::visitInclude(
 
 		// read the file
 		// run the pre-processor on it
-		replacement = return_preprocessed_file(filename, _incdir, _defineDB,
+		replacement = run_verilog_preproc_file(filename, _incdir, _defineDB,
 				_stack_incfile, _mode);
 
 		//printf("%s pop\n",filename.c_str());
@@ -517,81 +524,43 @@ antlrcpp::Any vPreprocessor::visitInclude(
 	return NULL;
 }
 
-string return_preprocessed(const string input_str, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> & stack_incfile,
-		unsigned int mode) {
-
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-
-	ANTLRInputStream input(input_str);
-	verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
-	lexer->mode = mode;
-	lexer->reset(); // bug ?
-	CommonTokenStream * tokens = new CommonTokenStream(lexer);
+string run_verilog_preproc(ANTLRInputStream & input, vector<string> &incdir,
+		macroSymbol & defineDB, vector<string> & stack_incfile, Language mode) {
+	verilogPreprocLexer lexer(&input);
+	lexer.mode = mode;
+	lexer.reset(); // bug ?
+	CommonTokenStream tokens(&lexer);
 	/*
 	 tokens->fill();
 	 for (auto token : tokens->getTokens()) {
 	 cout << token->toString() << endl;
 	 }
 	 */
-	verilogPreprocParser * parser = new verilogPreprocParser(tokens);
-	parser->mode = mode;
-	tree::ParseTree *tree = parser->file();
+	verilogPreprocParser parser(&tokens);
+	parser.mode = mode;
+	tree::ParseTree *tree = parser.file();
 	/*
 	 cout << tree->toStringTree(parser) << endl << endl;
 	 */
-	vPreprocessor * extractor = new vPreprocessor(tokens, incdir, defineDB,
-			stack_incfile, mode);
-	extractor->visit(tree);
-	string return_value = extractor->_rewriter.getText();
-
-	delete extractor;
-	delete parser;
-	delete tokens;
-	delete lexer;
-
-	return return_value;
+	vPreprocessor extractor(tokens, incdir, defineDB, stack_incfile, mode);
+	extractor.visit(tree);
+	string res = extractor._rewriter.getText();
+	return res;
 }
 
-string return_preprocessed_file(const string fileName, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> & stack_incfile,
-		unsigned int mode) {
+string run_verilog_preproc_str(const string & input_str,
+		vector<string> & incdir, macroSymbol & defineDB,
+		vector<string> & stack_incfile, Language mode) {
 
-	//printf("@%s\n",__PRETTY_FUNCTION__);
+	ANTLRInputStream input(input_str);
+	input.name = "<string>";
+	return run_verilog_preproc(input, incdir, defineDB, stack_incfile, mode);
+}
 
+string run_verilog_preproc_file(const string & fileName, vector<string> &incdir,
+		macroSymbol & defineDB, vector<string> & stack_incfile, Language mode) {
 	ANTLRFileStream input(fileName);
-	verilogPreprocLexer * lexer = new verilogPreprocLexer(&input);
-	lexer->mode = mode;
-	lexer->reset(); // bug ?
-	CommonTokenStream * tokens = new CommonTokenStream(lexer);
-
-	/*
-	 tokens->fill();
-	 for (auto token : tokens->getTokens()) {
-	 cout << token->toString() << endl;
-	 }
-	 */
-
-	verilogPreprocParser * parser = new verilogPreprocParser(tokens);
-	parser->removeErrorListeners();
-	SyntaxErrorLogger * syntaxErrLogger = new SyntaxErrorLogger;
-	parser->addErrorListener(syntaxErrLogger);
-	parser->mode = mode;
-	tree::ParseTree *tree = parser->file();
-	/*
-	 cout << tree->toStringTree(parser) << endl << endl;
-	 */
-	vPreprocessor * extractor = new vPreprocessor(tokens, incdir, defineDB,
-			stack_incfile, mode);
-	extractor->visit(tree);
-	string return_value = extractor->_rewriter.getText();
-
-	delete extractor;
-	delete parser;
-	delete tokens;
-	delete lexer;
-
-	return return_value;
+	return run_verilog_preproc(input, incdir, defineDB, stack_incfile, mode);
 }
 
 string& rtrim(string& str, const string& chars) {
@@ -613,16 +582,14 @@ string& trim(string& str, const string& chars) {
  * Line escape and Line comment have to be removed
  */
 void vPreprocessor::remove_comment(Token * start, Token * end, string * str) {
-
 	vector<Token *> cmtChannel;
 	//Get the list of token between the start and the end of replacement rule.
-	cmtChannel = _tokens->getTokens(start->getTokenIndex(),
+	cmtChannel = _tokens.getTokens(start->getTokenIndex(),
 			end->getTokenIndex());
 	//For all those token we are going to their channel.
 	//If the channel is of the kind we search then we search and removed it from the string.
 	//TODO : replace by " " to preserve charactere position of the original source code
 	for (auto cmt : cmtChannel) {
-
 		if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_ESCAPE) {
 			string comment_txt = cmt->getText();
 			ReplaceStringInPlace(*str, comment_txt, "\n");

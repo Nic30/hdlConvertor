@@ -2,37 +2,27 @@ parser grammar verilogPreprocParser;
 
 options { tokenVocab=verilogPreprocLexer;}
 
+@parser::header {
+
+#include <hdlConvertor/language.h>
+
+}
+
 @parser::members {
 
-enum { VERILOG2001=0, VERILOG2005=1, SV2012=2, SV2017};
-unsigned int mode = VERILOG2001;
+unsigned int mode;
 
-bool isVerilog2005() {
-  if (mode == 1) {
-     return true;
-  } else {
-     return false;
-  }
+inline bool isVerilog2005() {
+  return mode == hdlConvertor::Language::VERILOG2005;
 }
 
-bool isSV2012() {
-  if (mode == 1 || mode == 2) {
-    return true;
-  }
-  else {
-    return false;
-  }
+inline bool isSV2012() {
+  return isVerilog2005() || mode == hdlConvertor::Language::SV2012;
 }
 
-bool isSV2017() {
-  if (mode == 1 || mode == 2 || mode == 3) {
-    return true;
-  }
-  else {
-    return false;
-  }
+inline bool isSV2017() {
+  return isSV2012() || mode == hdlConvertor::Language::SV2017;
 }
-
 
 }
 
@@ -41,7 +31,7 @@ file
     ;
 
 text :
-    code 
+    code
    | preprocess_directive
    ;
 
@@ -50,7 +40,7 @@ code
 ;
 
 
-preprocess_directive 
+preprocess_directive
     :
     define NEW_LINE
     | conditional
@@ -65,12 +55,12 @@ preprocess_directive
     | default_nettype
     | line_directive
     | timing_spec
-    | {isSV2012() || isSV2017()}? file_nb 
+    | {isSV2012() || isSV2017()}? file_nb
     | {isSV2012() || isSV2017()}? line_nb
     | {isSV2012() || isSV2017()}? undefineall
-    | {isVerilog2005() || isSV2012() || isSV2017()}? keywords_directive  
+    | {isVerilog2005() || isSV2012() || isSV2017()}? keywords_directive
     | {isVerilog2005() || isSV2012() || isSV2017()}? endkeywords_directive
-    | {isVerilog2005() || isSV2012() ||  isSV2017()}? pragma
+    | {isVerilog2005() || isSV2012() || isSV2017()}? pragma
     ;
 
 define
@@ -93,17 +83,17 @@ conditional
     | ifndef_directive
     ;
 
-ifdef_directive 
-    : IFDEF cond_id ifdef_group_of_lines 
-      ( ELSIF cond_id elsif_group_of_lines )* 
+ifdef_directive
+    : IFDEF cond_id ifdef_group_of_lines
+      ( ELSIF cond_id elsif_group_of_lines )*
       ( ELSE else_group_of_lines )? ENDIF
     ;
 
 
-ifndef_directive 
-    : IFNDEF cond_id ifndef_group_of_lines 
-      ( ELSIF cond_id elsif_group_of_lines )* 
-      ( ELSE else_group_of_lines )? ENDIF 
+ifndef_directive
+    : IFNDEF cond_id ifndef_group_of_lines
+      ( ELSIF cond_id elsif_group_of_lines )*
+      ( ELSE else_group_of_lines )? ENDIF
     ;
 
 ifdef_group_of_lines
@@ -133,7 +123,7 @@ token_id
 value
     : MR_CODE+
     ;
- 
+
 macro_id
     : DM_ID
     ;
@@ -191,7 +181,7 @@ default_nettype_value
 line_directive
    : LINE DIGIT+ StringLiteral_double_quote DIGIT NEW_LINE
    ;
-   
+
 timing_spec
    : TIMESCALE Time_Identifier SLASH Time_Identifier NEW_LINE
    ;
@@ -216,7 +206,7 @@ keywords_directive
   : BEGIN_KEYWORDS version_specifier NEW_LINE
   ;
 
-version_specifier 
+version_specifier
   : {isSV2017()}? V18002017
   | {isSV2012()}? V18002012
   | {isSV2012()}? V18002009
@@ -239,7 +229,7 @@ stringLiteral
     : StringLiteral_double_quote | StringLiteral_chevrons | {isSV2012() || isSV2017()}? token_id
     ;
 
-pragma 
+pragma
   : PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? NEW_LINE
   ;
 

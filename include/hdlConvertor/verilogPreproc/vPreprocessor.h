@@ -13,6 +13,7 @@
 #include <hdlConvertor/verilogPreproc/macroSymbol.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/conversion_exception.h>
+#include <hdlConvertor/language.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
@@ -25,10 +26,10 @@ namespace verilog_pp {
  **/
 class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
 	macroSymbol & _defineDB;
-	antlr4::CommonTokenStream * _tokens;
+	antlr4::CommonTokenStream & _tokens;
 	std::vector<std::string> _incdir;
 	std::vector<std::string> & _stack_incfile;
-	unsigned int _mode = VERILOG2001;
+	Language _mode;
 
 	void remove_comment(antlr4::Token * start, antlr4::Token * end,
 			std::string * str);
@@ -37,15 +38,13 @@ class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisito
 
 public:
 	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
-	enum {
-		VERILOG2001, VERILOG2005, SV2012
-	};
 	size_t include_depth_limit;
 	antlr4::TokenStreamRewriter _rewriter;
 
-	vPreprocessor(antlr4::TokenStream *tokens, std::vector<std::string> &incdir,
-			macroSymbol & defineDB, std::vector<std::string> &stack_incfile,
-			unsigned int mode = VERILOG2001, size_t include_depth_limit = 100);
+	vPreprocessor(antlr4::TokenStream & tokens,
+			std::vector<std::string> &incdir, macroSymbol & defineDB,
+			std::vector<std::string> &stack_incfile, Language mode =
+					Language::VERILOG2001, size_t include_depth_limit = 100);
 	virtual ~vPreprocessor();
 
 	virtual antlrcpp::Any visitResetall(
@@ -101,18 +100,16 @@ public:
 
 };
 
-//call the preprocessor tool.
-//argument are
-// a string token
-// a list of include directory (std::vector<std::string>)
-// a object representing the list of already defined macro
-std::string return_preprocessed(const std::string input_token,
+std::string run_verilog_preproc(antlr4::ANTLRInputStream & input,
 		std::vector<std::string> &incdir, macroSymbol & defineDB,
-		std::vector<std::string> & stack_incfile, unsigned int mode = 0);
+		std::vector<std::string> & stack_incfile, Language mode);
+std::string run_verilog_preproc_str(const std::string& verilog_str,
+		std::vector<std::string> &incdir, macroSymbol & defineDB,
+		std::vector<std::string> & stack_incfile, Language mode);
 
-std::string return_preprocessed_file(const std::string fileName,
+std::string run_verilog_preproc_file(const std::string & fileName,
 		std::vector<std::string> &incdir, macroSymbol & defineDB,
-		std::vector<std::string> & stack_incfile, unsigned int mode = 0);
+		std::vector<std::string> & stack_incfile, Language mode);
 
 std::string& rtrim(std::string& str, const std::string& chars = " \t\n\r");
 std::string& ltrim(std::string& str, const std::string& chars = " \t\n\r");
