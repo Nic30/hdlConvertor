@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <hdlConvertor/verilogPreproc/macro_replace.h>
-#include <hdlConvertor/verilogPreproc/macro_replace_sv.h>
 #include <hdlConvertor/language.h>
 
 namespace hdlConvertor {

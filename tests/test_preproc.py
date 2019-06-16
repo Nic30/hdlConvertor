@@ -81,29 +81,33 @@ class PreprocessorTC(unittest.TestCase):
     def test_2012_p641_il1(self):
         self.assertPPError(
             '2012_p641_il1.txt',
-            'Mismatch in number of argument macro declaration D (2) and macro usage (1)'
+            'Macro D missing value for parameter y'
+            ' (2 arguments expected but 1 provided).'
         )
 
     def test_2012_p641_il2(self):
         self.assertPPError(
             '2012_p641_il2.txt',
-            'Mismatch in number of argument macro declaration D (2) and macro usage (0)'
+            'Macro D missing value for parameter x and for parameters'
+            ' after (2 arguments expected but 0 provided).'
         )
 
     def test_2012_p641_il3(self):
         self.assertPPError(
             '2012_p641_il3.txt',
-            'Mismatch in number of argument macro declaration D (2) and macro usage (3)'
+            'Macro D expected 2 arguments but 3 provided.'
         )
 
     def test_2012_p642_il1(self):
         self.assertPPError(
             '2012_p642_il1.txt',
-            'Mismatch in number of argument macro declaration MACRO1 (3) and macro usage (2)'
+            'Macro MACRO1 missing value for parameter c'
+            ' (1 to 3 arguments expected but 2 provided).'
         )
 
     # `MACRO3 must have parentesis according to the SV specification.
     # Currently the code is not able to detect this issue
+    @unittest.expectedFailure
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',

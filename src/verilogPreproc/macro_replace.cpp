@@ -5,11 +5,11 @@ using namespace std;
 namespace hdlConvertor {
 namespace verilog_pp {
 
-macro_replace::macro_replace(string macro_name, string replace,
-		vector<string> arg) {
-	data.tmplate_name = macro_name;
-	data.tmplate = replace;
-	data.args = arg;
+macro_replace::macro_replace(string _macro_name, string _body,
+		vector<string> _params,
+		std::map<std::string, std::string> _default_args) :
+		name(_macro_name), body(_body), params(_params), default_args(
+				_default_args) {
 }
 
 macro_replace::~macro_replace() {
@@ -59,17 +59,12 @@ void macro_replace::replaceAll(string& str, const string& from,
 		 printf("-->%s\n",to.c_str());
 		 */
 		auto c = str[start_pos + from.length()];
-		if (!((('a' <= c) && (c <= 'z'))
-			  || (('A' <= c) && (c <= 'Z'))
-			  || (('0' <= c) && (c <= '9'))
-			  || ('_' == c)
-			  || ('$' == c)
-			  || ('(' == c)
-			  || ('[' == c)
-			  || ('{' == c)
-			  || check_interval(start_pos)
-			  //check the find is in the result of a substitution of the same
-			  // macro_replacement
+		if (!((('a' <= c) && (c <= 'z')) || (('A' <= c) && (c <= 'Z'))
+				|| (('0' <= c) && (c <= '9')) || ('_' == c) || ('$' == c)
+				|| ('(' == c) || ('[' == c) || ('{' == c)
+				|| check_interval(start_pos)
+		//check the find is in the result of a substitution of the same
+		// macro_replacement
 
 		)) {
 			//printf("replacement\n");
@@ -104,34 +99,79 @@ void macro_replace::replaceAll(string& str, const string& from,
 	}
 }
 
-string macro_replace::replace(vector<string> arg) {
+string macro_replace::replace(vector<string> args) {
 	string returnString;
-
-	if (!data.tmplate.empty()) {
-		returnString = data.tmplate;
-
-		if (arg.size() != data.args.size()) {
-			string message =
-					"Missmatch in number of argument macro declaration "
-							+ data.tmplate_name + " ("
-							+ to_string(data.args.size())
-							+ ") and macro usage (" + to_string(arg.size())
-							+ ')';
-			throw ParseException(message);
+	if (args.size() < params.size()) {
+		for (size_t i = args.size(); i < params.size(); i++) {
+			auto missing_arg = default_args.find(params[i]);
+			if (missing_arg != default_args.end()) {
+				args.push_back(missing_arg->second);
+			} else {
+				break;
+			}
 		}
+	}
+
+	returnString = body;
+
+	//printf("before replacement: %s\n",returnString.c_str());
+
+	// the number of provided argument is fewer than the number defined by the prototype.
+	// So we complete the list with default value.
+	if (args.size() < params.size()) {
+		auto orig_args_cnt = args.size();
+		for (size_t i = args.size(); i < params.size(); i++) {
+			auto def = default_args.find(params[i]);
+			if (def == default_args.end()) {
+				string msg = "Macro " + name + " missing value for parameter "
+						+ params[i] + " ";
+				bool is_last = i == params.size() - 1;
+				if (!is_last)
+					msg += "and for parameters after ";
+				if (default_args.size()) {
+					msg += "("
+							+ std::to_string(
+									params.size() - default_args.size())
+							+ " to ";
+				} else {
+					msg += "(";
+				}
+				msg += std::to_string(params.size())
+						+ " arguments expected but " + to_string(orig_args_cnt)
+						+ " provided).";
+				throw ParseException(msg);
+			}
+			args.push_back(def->second);
+		}
+	} else if (args.size() > params.size()) {
+		string msg = "Macro " + name + " expected ";
+		if (default_args.size()) {
+			msg += std::to_string(params.size() - default_args.size()) + " to ";
+		}
+		msg += std::to_string(params.size()) + " arguments but "
+				+ to_string(args.size()) + " provided.";
+		throw ParseException(msg);
+	}
+
+	if (!body.empty()) {
 		_substituate.clear();
-		vector<string>::iterator macro = data.args.begin();
-		vector<string>::iterator instance = arg.begin();
-		for (; macro != data.args.end(); macro++, instance++) {
-			replaceAll(returnString, *macro, *instance);
+		look4stringLiteral(returnString);
+
+		vector<string>::iterator macro = params.begin();
+		vector<string>::iterator instance = args.begin();
+		for (; macro != params.end(); macro++, instance++) {
+			string rpld_argument = *instance;
+			// if no argument was provided we use the default argument
+			if (rpld_argument == ""
+					&& default_args.find(*macro) != default_args.end()) {
+				rpld_argument = default_args[*macro];
+			}
+			//printf("%s@%s@%s\n",returnString.c_str(),(*macro).c_str(),rpld_argument.c_str() );
+			replaceAll(returnString, *macro, rpld_argument);
 		}
-	} else {
-		//Macro can be empty
-		//Example `define MODE1
-		returnString = "";
+		//printf("after replacement: %s\n",returnString.c_str());
 	}
 	return returnString;
-
 }
 
 string macro_replace::replace() {

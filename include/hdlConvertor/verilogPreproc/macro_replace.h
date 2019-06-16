@@ -9,23 +9,14 @@ namespace hdlConvertor {
 namespace verilog_pp {
 
 /**
- * class macro_replace_data is the object to represent macro data.
+ * class macro_replace is an object to to store a verilog preprocessor macro definition
+ * and to perform it's function
+
  * Example:
  *  `define my_super_macro(a,b) a + b ;
  *  "a + b ;" is store in the tmplate property
  *  while args is a simple vector of string to store the list of argument is
  *  apparition order.
- */
-class macro_replace_data {
-
-public:
-	std::string tmplate_name;
-	std::string tmplate;
-	std::vector<std::string> args;
-};
-
-/**
- * class macro_replace is an object to manipulate macro_replace_data
  */
 class macro_replace {
 
@@ -37,9 +28,15 @@ protected:
 	void look4stringLiteral(std::string);
 
 public:
-	macro_replace_data data;
+	std::string name;
+	std::string body;
+	std::vector<std::string> params;
+	std::map<std::string, std::string> default_args;
+
 	// class constructor
-	macro_replace(std::string, std::string, std::vector<std::string>);
+	macro_replace(std::string name, std::string body,
+			std::vector<std::string> params,
+			std::map<std::string, std::string> default_args);
 	// class desctructor
 	virtual ~macro_replace();
 	// replace method

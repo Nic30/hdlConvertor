@@ -166,7 +166,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	//printf("%s\n", macroName.c_str());
 	string rep_data;
 
-	macro_replace * item;
+
 	map<string, string> default_args;
 
 	for (unsigned int i = 0; i < ctx->children.size(); i++) {
@@ -195,11 +195,10 @@ antlrcpp::Any vPreprocessor::visitDefine(
 				ctx->replacement()->getStop(), &rep_data);
 		rep_data = rtrim(rep_data);
 	}
-	if (_mode == Language::SV2012) {
-		item = new macro_replace_sv(macroName, rep_data, data, default_args);
-	} else {
-		item = new macro_replace(macroName, rep_data, data);
+	if (_mode < Language::SV2012) {
+		assert(default_args.size() == 0);
 	}
+	macro_replace * item = new macro_replace(macroName, rep_data, data, default_args);
 	_defineDB.insert(pair<string, macro_replace*>(macroName, item), _incdir,
 			_stack_incfile, _mode);
 
