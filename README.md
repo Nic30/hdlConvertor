@@ -83,12 +83,13 @@ for o in d.objs:
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
+* [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
+* [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
-* [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 
 ### License
 
