@@ -164,7 +164,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	//printf("@%s - %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
 	// get the macro name
 	string macroName = ctx->macro_id()->getText();
-	//printf("%s\n",macroName.c_str());
+	//printf("%s\n", macroName.c_str());
 	string rep_data;
 
 	macro_replace * item;
@@ -173,79 +173,36 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	for (unsigned int i = 0; i < ctx->children.size(); i++) {
 		if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(
 				ctx->children[i])) {
-			//printf("arg: %s defaut: %s\n",ctx->children[i-2]->getText().c_str(), ctx->children[i]->getText().c_str());
 			auto kw_name = ctx->children[i - 2]->getText();
-			default_args[kw_name] =	ctx->children[i]->getText();
+			auto kw_val = ctx->children[i]->getText();
+			//printf("arg: %s defaut: %s\n",kw_name.c_str(), kw_val.c_str());
+			default_args[kw_name] = ctx->children[i]->getText();
 		}
 	}
 
+	vector<string> data;
 	// test the number of argument
-	if (ctx->var_id().size() != 0) {
-		// the macro has argument so we take each of them and register them in
-		// a vector<string>
-		vector<string> data;
-		for (auto arg : ctx->var_id()) {
-			data.push_back(arg->getText());
-		}
-		/*
-		 for (auto a:data) {
-		 printf("  *%s*\n",a.c_str());
-		 }
-		 */
-		// get the template
-		if (ctx->replacement() != nullptr) {
-			rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
-			remove_comment(ctx->replacement()->getStart(),
-					ctx->replacement()->getStop(), &rep_data);
-
-			rep_data = rtrim(rep_data);
-		} else {
-			rep_data = "";
-		}
-
-		// add the macro to the macroDB object
-		if (_mode == Language::SV2012) {
-			item = new macro_replace_sv(macroName, rep_data, data,
-					default_args);
-		} else {
-			item = new macro_replace(macroName, rep_data, data);
-		}
-		_defineDB.insert(pair<string, macro_replace*>(macroName, item), _incdir,
-				_stack_incfile, _mode);
-	} else {
-		// The macro has no argument
-		vector<string> data;
-		// test if a template is provided
-		if (ctx->replacement() != NULL) {
-			// a template is provide.
-			// So we add a macro with an empty argument list to the macroDB
-			// object
-			rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
-			remove_comment(ctx->replacement()->getStart(),
-					ctx->replacement()->getStop(), &rep_data);
-			rep_data = rtrim(rep_data);
-			if (_mode == Language::SV2012) {
-				item = new macro_replace_sv(macroName, rep_data, data,
-						default_args);
-			} else {
-				item = new macro_replace(macroName, rep_data, data);
-			}
-			_defineDB.insert(pair<string, macro_replace*>(macroName, item),
-					_incdir, _stack_incfile, _mode);
-		} else {
-			// no template is provided
-			// So we add a macro with empty string as template and no argument
-			// to the macroDB object
-			if (_mode == Language::SV2012) {
-				item = new macro_replace_sv(macroName, rep_data, data,
-						default_args);
-			} else {
-				item = new macro_replace(macroName, rep_data, data);
-			}
-			_defineDB.insert(pair<string, macro_replace*>(macroName, item),
-					_incdir, _stack_incfile, _mode);
-		}
+	auto _params = ctx->var_id();
+	// the macro has argument so we take each of them and register them in
+	// a vector<string>
+	for (auto arg : _params) {
+		data.push_back(arg->getText());
 	}
+	// for (auto a:data) { printf("  *%s*\n",a.c_str()); }
+	// get the template
+	if (ctx->replacement() != nullptr) {
+		rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
+		remove_comment(ctx->replacement()->getStart(),
+				ctx->replacement()->getStop(), &rep_data);
+		rep_data = rtrim(rep_data);
+	}
+	if (_mode == Language::SV2012) {
+		item = new macro_replace_sv(macroName, rep_data, data, default_args);
+	} else {
+		item = new macro_replace(macroName, rep_data, data);
+	}
+	_defineDB.insert(pair<string, macro_replace*>(macroName, item), _incdir,
+			_stack_incfile, _mode);
 
 	// the macro definition is replace by an empty string in the original
 	// source code
