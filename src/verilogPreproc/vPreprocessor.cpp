@@ -466,7 +466,7 @@ string run_verilog_preproc_str(const string & input_str,
 string run_verilog_preproc_file(const filesystem::path & filename,
 		vector<filesystem::path> &incdir, macroSymbol & defineDB,
 		vector<filesystem::path> & stack_incfile, Language mode) {
-	ANTLRFileStream input(filename);
+	ANTLRFileStream input(filename.u8string());
 
 	filesystem::path dir = filename.parent_path();
 	bool add_to_inc_dir = std::find(incdir.begin(), incdir.end(), dir)
