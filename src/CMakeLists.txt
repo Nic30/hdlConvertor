@@ -48,6 +48,7 @@ target_link_libraries(hdlConvertor_cpp_static
 	vhdlConvertor_static
 	hdlConvertor_core_static
 	${ANTLR4CPP_LIBRARIES}
+	stdc++fs
 )
 set_target_properties(hdlConvertor_cpp_static
 	PROPERTIES VERSION "1.0.0"

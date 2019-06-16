@@ -84,29 +84,18 @@ conditional
     ;
 
 ifdef_directive
-    : IFDEF cond_id ifdef_group_of_lines
-      ( ELSIF cond_id elsif_group_of_lines )*
+    : IFDEF cond_id group_of_lines
+      ( ELSIF cond_id group_of_lines )*
       ( ELSE else_group_of_lines )? ENDIF
     ;
 
 
 ifndef_directive
-    : IFNDEF cond_id ifndef_group_of_lines
-      ( ELSIF cond_id elsif_group_of_lines )*
+    : IFNDEF cond_id group_of_lines
+      ( ELSIF cond_id group_of_lines )*
       ( ELSE else_group_of_lines )? ENDIF
     ;
 
-ifdef_group_of_lines
-    : group_of_lines
-    ;
-
-ifndef_group_of_lines
-    : group_of_lines
-    ;
-
-elsif_group_of_lines
-    : group_of_lines
-    ;
 else_group_of_lines
     : group_of_lines
     ;

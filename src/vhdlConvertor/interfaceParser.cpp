@@ -114,12 +114,12 @@ vector<Variable*> * InterfaceParser::visitInterface_declaration(
 				"InterfaceParser.visitInterface_declaration - interface_type_declaration");
 	}
 	auto isd = ctx->interface_subprogram_declaration();
-	if (itd) {
+	if (isd) {
 		NotImplementedLogger::print(
 				"InterfaceParser.visitInterface_declaration - interface_subprogram_declaration");
 	}
 	auto ipd = ctx->interface_package_declaration();
-	if (itd) {
+	if (ipd) {
 		NotImplementedLogger::print(
 				"InterfaceParser.visitInterface_declaration - interface_package_declaration");
 	}

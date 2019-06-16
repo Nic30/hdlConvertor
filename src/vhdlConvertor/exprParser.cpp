@@ -226,8 +226,10 @@ Expr* ExprParser::visitConstraint(Expr* selectedName,
 			op = INDEX;
 			op1 = visitArray_constraint(i);
 		} else {
+#ifndef NDEBUG
 			auto r = ctx->record_constraint();
 			assert(r);
+#endif
 			NotImplementedLogger::print(
 					"ExprParser.visitConstraint - record_constraint");
 			op = DOT;

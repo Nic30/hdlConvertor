@@ -20,13 +20,13 @@ void replaceStringInPlace(string& subject, const string& search,
 	}
 }
 
-vPreprocessor::vPreprocessor(TokenStream & tokens, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> &stack_incfile, Language mode,
+vPreprocessor::vPreprocessor(TokenStream & tokens,
+		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+		std::vector<std::filesystem::path> &stack_incfile, Language mode,
 		size_t include_depth_limit) :
 		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
 				incdir), _stack_incfile(stack_incfile), _mode(mode), include_depth_limit(
 				include_depth_limit), _rewriter(&tokens) {
-	// [TODO] add dir of current file into _incdir if not present
 	switch (mode) {
 	case Language::VERILOG2001:
 	case Language::VERILOG2005:
@@ -39,7 +39,44 @@ vPreprocessor::vPreprocessor(TokenStream & tokens, vector<string> &incdir,
 }
 
 vPreprocessor::~vPreprocessor() {
-	// [TODO] pop dir of this file if was added to incdir
+}
+
+template<typename CTX_T>
+void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
+		macroSymbol & defineDB, antlr4::TokenStreamRewriter & rewriter) {
+	//printf("@%s\n",__PRETTY_FUNCTION__);
+	bool en_in = !is_negated;
+	auto cond_ids = ctx->cond_id();
+	auto group_of_lines = ctx->group_of_lines();
+	auto group_of_line = group_of_lines.begin();
+	bool matched = false;
+	misc::Interval token_to_keep;
+	for (auto cond_id : cond_ids) {
+		auto macro_name = cond_id->getText();
+		auto is_defined = defineDB.find(macro_name) != defineDB.end();
+		if (is_defined == en_in) {
+			auto gl = *group_of_line;
+			assert(gl);
+			sefl.visitGroup_of_lines(gl);
+			token_to_keep = gl->getSourceInterval();
+			matched = true;
+			break;
+		}
+		++group_of_line;
+	}
+	if (!matched && ctx->ELSE() != nullptr) {
+		auto eg = ctx->else_group_of_lines();
+		sefl.visitElse_group_of_lines(eg);
+		token_to_keep = eg->getSourceInterval();
+		matched = true;
+	}
+	auto token = ctx->getSourceInterval();
+	if (matched) {
+		rewriter.replace(token.a, token_to_keep.a, "");
+		rewriter.replace(token_to_keep.b, token.b, "");
+	} else {
+		rewriter.replace(token.a, token.b, "");
+	}
 }
 
 string vPreprocessor::genBlank(size_t n) {
@@ -201,7 +238,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 			&& ctx->children[2]->getText() == "(";
 	auto item = new macro_replace(macroName, has_params, params, default_args,
 			body);
-	_defineDB.insert( { macroName, item }, _incdir, _stack_incfile, _mode);
+	_defineDB.insert( { macroName, item });
 
 	// the macro definition is replace by an empty string in the original
 	// source code
@@ -307,62 +344,15 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 	//printf("%s->%s\n",ctx->getText().c_str(),replacement.c_str());
 	misc::Interval token = ctx->getSourceInterval();
 	_rewriter.replace(token.a, token.b, replacement);
-	return NULL;
+	return nullptr;
 }
 
 // methode call after `ifdef `elsif `else is found
 antlrcpp::Any vPreprocessor::visitIfdef_directive(
 		verilogPreprocParser::Ifdef_directiveContext * ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
-
-	uint32_t cond_id_cpt = 0;
-	macroSymbol::iterator search;
-	string replacement = "";
-
-	//get the source code match by the rule
-	misc::Interval token = ctx->getSourceInterval();
-
-	//search if the macro cond_id is in the macroDB object
-	search = _defineDB.find(ctx->cond_id(0)->getText());
-
-	if (search != _defineDB.end()) {
-		//the macro cond_id object is defined
-		//Get the source code to use when the macro is found
-		visitIfdef_group_of_lines(ctx->ifdef_group_of_lines());
-	} else {
-		// process `elsif and `else
-		cond_id_cpt++; // cond_id(0) is the one for the `ifdef so we start to cond_id(1)
-
-		// process the multiple `elsif. There is ctx-cond_id().size() number of
-		// `elsif
-		while (cond_id_cpt < ctx->cond_id().size()) {
-			// lookup if the current macro exist
-			search = _defineDB.find(ctx->cond_id(cond_id_cpt)->getText());
-			if (search != _defineDB.end()) {
-				// the define exist so we process the relevant source code part
-				visitElsif_group_of_lines(
-						ctx->elsif_group_of_lines(cond_id_cpt));
-				// Then we jump inconditionnaly to the end of the method
-				goto exit_label;
-
-			}
-			//next cond_id
-			cond_id_cpt++;
-		}
-		// all `elsif has been test
-		// we test if the rule has match an else statement. That may or may not
-		// exist
-		if (ctx->ELSE() != nullptr) {
-			visitElse_group_of_lines(ctx->else_group_of_lines());
-		}
-	}
-
-	//perform the replacement of code.
-	//But not if the cond_id is not one that match and if there is no `else
-	//then we will replace the `ifdef `elsif by an empty string.
-	//Because by default replacement is ""
-	exit_label: _rewriter.replace(token.a, token.b, replacement);
-	return NULL;
+	processIfdef(*this, ctx, false, _defineDB, _rewriter);
+	return nullptr;
 
 }
 
@@ -371,34 +361,8 @@ antlrcpp::Any vPreprocessor::visitIfdef_directive(
 antlrcpp::Any vPreprocessor::visitIfndef_directive(
 		verilogPreprocParser::Ifndef_directiveContext * ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
-
-	uint32_t cond_id_cpt = 0;
-	macroSymbol::iterator search;
-	string replacement = "";
-	misc::Interval token = ctx->getSourceInterval();
-
-	search = _defineDB.find(ctx->cond_id(0)->getText());
-	if (search == _defineDB.end()) {
-		visitIfndef_group_of_lines(ctx->ifndef_group_of_lines());
-	} else {
-		cond_id_cpt++;
-		while (cond_id_cpt < ctx->cond_id().size()) {
-			search = _defineDB.find(ctx->cond_id(cond_id_cpt)->getText());
-			if (search != _defineDB.end()) {
-				visitElsif_group_of_lines(
-						ctx->elsif_group_of_lines(cond_id_cpt));
-				goto exit_label;
-
-			}
-			cond_id_cpt++;
-		}
-		if (ctx->ELSE() != nullptr) {
-			visitElse_group_of_lines(ctx->else_group_of_lines());
-		}
-	}
-
-	exit_label: _rewriter.replace(token.a, token.b, replacement);
-	return NULL;
+	processIfdef(*this, ctx, true, _defineDB, _rewriter);
+	return nullptr;
 }
 
 antlrcpp::Any vPreprocessor::visitStringLiteral(
@@ -413,21 +377,18 @@ antlrcpp::Any vPreprocessor::visitInclude(
 		verilogPreprocParser::IncludeContext * ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
 
-	struct stat buffer;
-
 	//iterator on the list of directoy
-	vector<string>::iterator incdir_iter = _incdir.begin();
+	auto incdir_iter = _incdir.begin();
 	bool found = false;
 	string StringLiteral = visit(ctx->stringLiteral());
-	string filename;
+	filesystem::path filename;
 	// iterate on list of directory until we found the file.
 	while (incdir_iter != _incdir.end() && found == false) {
 		// build the filename
-		// TODO: this code is not system agnostic ... it won't work on window.
-		filename = (*incdir_iter) + '/'
-				+ StringLiteral.substr(1, StringLiteral.size() - 2);
+		filename = (*incdir_iter)
+				/ StringLiteral.substr(1, StringLiteral.size() - 2);
 		//Test if the file exist
-		if (stat(filename.c_str(), &buffer) == 0) {
+		if (filesystem::exists(filename)) {
 			// the file exist. we rise the flag to leave the loop over the
 			// directory list
 			found = true;
@@ -453,34 +414,24 @@ antlrcpp::Any vPreprocessor::visitInclude(
 	} else {
 		//Well done. we are going to replace the content of the `include
 		//directive by the content of the processed file
-
 		misc::Interval token = ctx->getSourceInterval();
 		//string replacement = genBlank(ctx->getText().size());
-		string replacement;
 		_rewriter.Delete(token.a, token.b);
 
-		// register the include file on the include file stack
-		_stack_incfile.push_back(filename);
-		//printf("%s (%li)\n",filename.c_str(),buffer.st_size);
-
-		// read the file
 		// run the pre-processor on it
-		replacement = run_verilog_preproc_file(filename, _incdir, _defineDB,
-				_stack_incfile, _mode);
-
-		//printf("%s pop\n",filename.c_str());
-		//pop back the include file
-		_stack_incfile.pop_back();
+		auto replacement = run_verilog_preproc_file(filename, _incdir,
+				_defineDB, _stack_incfile, _mode);
 
 		//update the current source code
 		_rewriter.insertAfter(ctx->getStop(), replacement);
 
 	}
-	return NULL;
+	return nullptr;
 }
 
-string run_verilog_preproc(ANTLRInputStream & input, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> & stack_incfile, Language mode) {
+string run_verilog_preproc(ANTLRInputStream & input,
+		vector<filesystem::path> &incdir, macroSymbol & defineDB,
+		vector<filesystem::path> & stack_incfile, Language mode) {
 	verilogPreprocLexer lexer(&input);
 	lexer.mode = mode;
 	lexer.reset(); // bug ?
@@ -504,18 +455,34 @@ string run_verilog_preproc(ANTLRInputStream & input, vector<string> &incdir,
 }
 
 string run_verilog_preproc_str(const string & input_str,
-		vector<string> & incdir, macroSymbol & defineDB,
-		vector<string> & stack_incfile, Language mode) {
+		vector<filesystem::path> & incdir, macroSymbol & defineDB,
+		vector<filesystem::path> & stack_incfile, Language mode) {
 
 	ANTLRInputStream input(input_str);
 	input.name = "<string>";
 	return run_verilog_preproc(input, incdir, defineDB, stack_incfile, mode);
 }
 
-string run_verilog_preproc_file(const string & fileName, vector<string> &incdir,
-		macroSymbol & defineDB, vector<string> & stack_incfile, Language mode) {
-	ANTLRFileStream input(fileName);
-	return run_verilog_preproc(input, incdir, defineDB, stack_incfile, mode);
+string run_verilog_preproc_file(const filesystem::path & filename,
+		vector<filesystem::path> &incdir, macroSymbol & defineDB,
+		vector<filesystem::path> & stack_incfile, Language mode) {
+	ANTLRFileStream input(filename);
+
+	filesystem::path dir = filename.parent_path();
+	bool add_to_inc_dir = std::find(incdir.begin(), incdir.end(), dir)
+			== incdir.end();
+	// register the include file on the include file stack
+	stack_incfile.push_back(filename);
+
+	if (add_to_inc_dir)
+		incdir.push_back(dir);
+
+	auto res = run_verilog_preproc(input, incdir, defineDB, stack_incfile,
+			mode);
+	if (add_to_inc_dir)
+		incdir.pop_back();
+	stack_incfile.pop_back();
+	return res;
 }
 
 string& rtrim(string& str, const string& chars) {

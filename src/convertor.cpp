@@ -42,13 +42,17 @@ void Convertor::parse_vhdl(ANTLRInputStream & input) {
 }
 
 void Convertor::parse_verilog_file(const string & fileName,
-		vector<string> & incdir) {
+		vector<string> & _incdirs) {
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	string str = verilog_pp::run_verilog_preproc_file(fileName, incdir,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+	string str = verilog_pp::run_verilog_preproc_file(fileName, incdirs,
 			defineDB, stack_incfile, Language::VERILOG2001);
 
 	ANTLRInputStream input(str);
@@ -60,13 +64,17 @@ void Convertor::parse_verilog_file(const string & fileName,
 }
 
 void Convertor::parse_verilog_str(const string & verilog_str,
-		vector<string> & incdir) {
+		vector<string> & _incdirs) {
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	string str = verilog_pp::run_verilog_preproc_str(verilog_str, incdir,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+	string str = verilog_pp::run_verilog_preproc_str(verilog_str, incdirs,
 			defineDB, stack_incfile, Language::VERILOG2001);
 
 	ANTLRInputStream input(str);
@@ -79,13 +87,17 @@ void Convertor::parse_verilog_str(const string & verilog_str,
 
 #ifdef SV_PARSER
 void Convertor::parse_sv_file(const string & fileName,
-		vector<string> & incdir) {
+		vector<string> & _incdirs) {
 	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	string str = verilog_pp::run_verilog_preproc_file(fileName, incdir,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+	string str = verilog_pp::run_verilog_preproc_file(fileName, incdirs,
 			defineDB, stack_incfile, Language::SV2012);
 
 	ANTLRInputStream input(str);
@@ -97,13 +109,17 @@ void Convertor::parse_sv_file(const string & fileName,
 }
 
 void Convertor::parse_sv_str(const string & verilog_str,
-		vector<string> & incdir) {
+		vector<string> & _incdirs) {
 	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	string str = verilog_pp::run_verilog_preproc_str(verilog_str, incdir,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+	string str = verilog_pp::run_verilog_preproc_str(verilog_str, incdirs,
 			defineDB, stack_incfile, Language::SV2012);
 
 	ANTLRInputStream input(str);
@@ -168,21 +184,29 @@ Context * Convertor::parse_str(const string & hdl_str, Language lang,
 }
 
 string Convertor::verilog_pp(const string & fileName,
-		const vector<string> incdirs, Language mode) {
+		const vector<string> _incdirs, Language mode) {
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	vector<string> _incdirs(incdirs);
-	string result = run_verilog_preproc_file(fileName, _incdirs, defineDB,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+
+	string result = run_verilog_preproc_file(fileName, incdirs, defineDB,
 			stack_incfile, mode);
 	return result;
 }
 
 string Convertor::verilog_pp_str(const string & verilog_str,
-		const vector<string> incdirs, Language mode) {
+		const vector<string> _incdirs, Language mode) {
 	verilog_pp::macroSymbol defineDB;
-	vector<string> stack_incfile;
-	vector<string> _incdirs(incdirs);
-	string result = run_verilog_preproc_str(verilog_str, _incdirs, defineDB,
+	vector<filesystem::path> stack_incfile;
+	vector<filesystem::path> incdirs;
+	incdirs.reserve(_incdirs.size());
+	for (auto p : _incdirs)
+		incdirs.push_back(p);
+
+	string result = run_verilog_preproc_str(verilog_str, incdirs, defineDB,
 			stack_incfile, mode);
 	return result;
 }
