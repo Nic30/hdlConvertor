@@ -106,7 +106,6 @@ class PreprocessorTC(unittest.TestCase):
         )
 
     # `MACRO3 must have parentesis according to the SV specification.
-    # Currently the code is not able to detect this issue
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',
