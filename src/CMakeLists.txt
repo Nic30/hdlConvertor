@@ -41,6 +41,13 @@ set_target_properties(hdlConvertor_core_static
 # [note] hdlConvertor_core_static and hdlConvertor_cpp_static has to be separated
 #        otherwise it is not possible to link this library
 add_library(hdlConvertor_cpp_static STATIC  ${hdlConvertor_cpp_SRC})
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	set(CPP_STD_FILESYSTEM_LIB_NAME c++experimental)
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set(CPP_STD_FILESYSTEM_LIB_NAME stdc++fs)
+endif()
+
 target_link_libraries(hdlConvertor_cpp_static
 	svConvertor_static
 	verilogConvertor_static
@@ -48,7 +55,7 @@ target_link_libraries(hdlConvertor_cpp_static
 	vhdlConvertor_static
 	hdlConvertor_core_static
 	${ANTLR4CPP_LIBRARIES}
-	stdc++fs
+	${CPP_STD_FILESYSTEM_LIB_NAME}
 )
 set_target_properties(hdlConvertor_cpp_static
 	PROPERTIES VERSION "1.0.0"
