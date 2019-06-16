@@ -58,19 +58,18 @@ void macro_replace::replaceAll(string& str, const string& from,
 		 printf("-->%li %li\n",start_pos,from.length());
 		 printf("-->%s\n",to.c_str());
 		 */
-		if (!((('a' <= str[start_pos + from.length()])
-				&& (str[start_pos + from.length()] <= 'z'))
-				|| (('A' <= str[start_pos + from.length()])
-						&& (str[start_pos + from.length()] <= 'Z'))
-				|| (('0' <= str[start_pos + from.length()])
-						&& (str[start_pos + from.length()] <= '9'))
-				|| ('_' == str[start_pos + from.length()])
-				|| ('$' == str[start_pos + from.length()])
-				|| ('(' == str[start_pos + from.length()])
-				|| ('[' == str[start_pos + from.length()])
-				|| ('{' == str[start_pos + from.length()]) ||
-
-				check_interval(start_pos) //check the find is in the result of a substitution of the same macro_replacement
+		auto c = str[start_pos + from.length()];
+		if (!((('a' <= c) && (c <= 'z'))
+			  || (('A' <= c) && (c <= 'Z'))
+			  || (('0' <= c) && (c <= '9'))
+			  || ('_' == c)
+			  || ('$' == c)
+			  || ('(' == c)
+			  || ('[' == c)
+			  || ('{' == c)
+			  || check_interval(start_pos)
+			  //check the find is in the result of a substitution of the same
+			  // macro_replacement
 
 		)) {
 			//printf("replacement\n");

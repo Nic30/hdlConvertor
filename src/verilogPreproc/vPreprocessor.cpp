@@ -174,8 +174,8 @@ antlrcpp::Any vPreprocessor::visitDefine(
 		if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(
 				ctx->children[i])) {
 			//printf("arg: %s defaut: %s\n",ctx->children[i-2]->getText().c_str(), ctx->children[i]->getText().c_str());
-			default_args[ctx->children[i - 2]->getText()] =
-					ctx->children[i]->getText();
+			auto kw_name = ctx->children[i - 2]->getText();
+			default_args[kw_name] =	ctx->children[i]->getText();
 		}
 	}
 

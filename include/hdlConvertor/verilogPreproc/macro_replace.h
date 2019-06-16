@@ -22,7 +22,6 @@ public:
 	std::string tmplate_name;
 	std::string tmplate;
 	std::vector<std::string> args;
-	std::vector<std::string> default_arg;
 };
 
 /**
