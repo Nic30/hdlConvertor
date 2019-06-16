@@ -24,6 +24,8 @@ namespace verilog_pp {
  * :ivar _defineDB: database of defines
  * :ivar _incdir: directories where to search for included files
  * 		    (last will be searched first, unique items)
+ * :ivar added_incdir: true if the new incdir was added exactly for this file
+ * 			and last incdir should be removed before processing of new file
  * :ivar _stack_incfile: stack of include files which are
  * 			currently parsed (used for detection of cycle in includes)
  * :ivar did_added_incdir: the flag which tells if the directory of this folder
@@ -33,6 +35,7 @@ class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisito
 	macroSymbol & _defineDB;
 	antlr4::CommonTokenStream & _tokens;
 	std::vector<std::filesystem::path> _incdir;
+	bool added_incdir;
 	std::vector<std::filesystem::path> & _stack_incfile;
 	Language _mode;
 
@@ -47,7 +50,8 @@ public:
 	antlr4::TokenStreamRewriter _rewriter;
 
 	vPreprocessor(antlr4::TokenStream & tokens,
-			std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+			std::vector<std::filesystem::path> &incdir, bool added_incdir,
+			macroSymbol & defineDB,
 			std::vector<std::filesystem::path> &stack_incfile, Language mode =
 					Language::VERILOG2001, size_t include_depth_limit = 100);
 
@@ -107,7 +111,8 @@ public:
 };
 
 std::string run_verilog_preproc(antlr4::ANTLRInputStream & input,
-		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+		std::vector<std::filesystem::path> &incdir, bool added_incdir,
+		macroSymbol & defineDB,
 		std::vector<std::filesystem::path> & stack_incfile, Language mode);
 std::string run_verilog_preproc_str(const std::string& verilog_str,
 		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,

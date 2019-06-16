@@ -21,11 +21,13 @@ void replaceStringInPlace(string& subject, const string& search,
 }
 
 vPreprocessor::vPreprocessor(TokenStream & tokens,
-		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+		std::vector<std::filesystem::path> &incdir, bool _added_incdir,
+		macroSymbol & defineDB,
 		std::vector<std::filesystem::path> &stack_incfile, Language mode,
 		size_t include_depth_limit) :
 		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
-				incdir), _stack_incfile(stack_incfile), _mode(mode), include_depth_limit(
+				incdir), added_incdir(_added_incdir), _stack_incfile(
+				stack_incfile), _mode(mode), include_depth_limit(
 				include_depth_limit), _rewriter(&tokens) {
 	switch (mode) {
 	case Language::VERILOG2001:
@@ -72,10 +74,10 @@ void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
 	}
 	auto token = ctx->getSourceInterval();
 	if (matched) {
-		rewriter.replace(token.a, token_to_keep.a, "");
-		rewriter.replace(token_to_keep.b, token.b, "");
+		rewriter.Delete(token.a, token_to_keep.a);
+		rewriter.Delete(token_to_keep.b, token.b);
 	} else {
-		rewriter.replace(token.a, token.b, "");
+		rewriter.Delete(token.a, token.b);
 	}
 }
 
@@ -417,11 +419,17 @@ antlrcpp::Any vPreprocessor::visitInclude(
 		misc::Interval token = ctx->getSourceInterval();
 		//string replacement = genBlank(ctx->getText().size());
 		_rewriter.Delete(token.a, token.b);
-
+		filesystem::path my_incdir;
+		if (added_incdir) {
+			my_incdir = _incdir.back();
+			_incdir.pop_back();
+		}
 		// run the pre-processor on it
 		auto replacement = run_verilog_preproc_file(filename, _incdir,
 				_defineDB, _stack_incfile, _mode);
-
+		if (added_incdir) {
+			_incdir.push_back(my_incdir);
+		}
 		//update the current source code
 		_rewriter.insertAfter(ctx->getStop(), replacement);
 
@@ -430,8 +438,9 @@ antlrcpp::Any vPreprocessor::visitInclude(
 }
 
 string run_verilog_preproc(ANTLRInputStream & input,
-		vector<filesystem::path> &incdir, macroSymbol & defineDB,
-		vector<filesystem::path> & stack_incfile, Language mode) {
+		vector<filesystem::path> &incdir, bool added_incdir,
+		macroSymbol & defineDB, vector<filesystem::path> & stack_incfile,
+		Language mode) {
 	verilogPreprocLexer lexer(&input);
 	lexer.mode = mode;
 	lexer.reset(); // bug ?
@@ -448,7 +457,8 @@ string run_verilog_preproc(ANTLRInputStream & input,
 	/*
 	 cout << tree->toStringTree(parser) << endl << endl;
 	 */
-	vPreprocessor extractor(tokens, incdir, defineDB, stack_incfile, mode);
+	vPreprocessor extractor(tokens, incdir, added_incdir, defineDB,
+			stack_incfile, mode);
 	extractor.visit(tree);
 	string res = extractor._rewriter.getText();
 	return res;
@@ -460,7 +470,8 @@ string run_verilog_preproc_str(const string & input_str,
 
 	ANTLRInputStream input(input_str);
 	input.name = "<string>";
-	return run_verilog_preproc(input, incdir, defineDB, stack_incfile, mode);
+	return run_verilog_preproc(input, incdir, false, defineDB, stack_incfile,
+			mode);
 }
 
 string run_verilog_preproc_file(const filesystem::path & filename,
@@ -477,8 +488,8 @@ string run_verilog_preproc_file(const filesystem::path & filename,
 	if (add_to_inc_dir)
 		incdir.push_back(dir);
 
-	auto res = run_verilog_preproc(input, incdir, defineDB, stack_incfile,
-			mode);
+	auto res = run_verilog_preproc(input, incdir, add_to_inc_dir, defineDB,
+			stack_incfile, mode);
 	if (add_to_inc_dir)
 		incdir.pop_back();
 	stack_incfile.pop_back();
