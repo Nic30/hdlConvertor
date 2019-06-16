@@ -81,34 +81,33 @@ class PreprocessorTC(unittest.TestCase):
     def test_2012_p641_il1(self):
         self.assertPPError(
             '2012_p641_il1.txt',
-            'Missmatch in number of argument macro declaration D (2) and macro usage (1)'
+            'Mismatch in number of argument macro declaration D (2) and macro usage (1)'
         )
 
     def test_2012_p641_il2(self):
         self.assertPPError(
             '2012_p641_il2.txt',
-            'Missmatch in number of argument macro declaration D (2) and macro usage (0)'
+            'Mismatch in number of argument macro declaration D (2) and macro usage (0)'
         )
 
     def test_2012_p641_il3(self):
         self.assertPPError(
             '2012_p641_il3.txt',
-            'Missmatch in number of argument macro declaration D (2) and macro usage (3)'
+            'Mismatch in number of argument macro declaration D (2) and macro usage (3)'
         )
 
     def test_2012_p642_il1(self):
         self.assertPPError(
             '2012_p642_il1.txt',
-            'Missmatch in number of argument macro declaration MACRO1 (3) and macro usage (2)'
+            'Mismatch in number of argument macro declaration MACRO1 (3) and macro usage (2)'
         )
 
     # `MACRO3 must have parentesis according to the SV specification.
     # Currently the code is not able to detect this issue
-    @unittest.expectedFailure
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',
-            'Missmatch in number of argument macro declaration (3) and macro usage (0)'
+            'Mismatch in number of argument macro declaration (3) and macro usage (0)'
         )
 
     # No check that string are not split
