@@ -9,7 +9,6 @@
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParserBaseVisitor.h>
 
-#include <hdlConvertor/verilogPreproc/macroPrototype.h>
 #include <hdlConvertor/verilogPreproc/macroSymbol.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/conversion_exception.h>

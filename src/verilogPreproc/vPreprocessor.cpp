@@ -164,8 +164,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	// get the macro name
 	string macroName = ctx->macro_id()->getText();
 	//printf("%s\n", macroName.c_str());
-	string rep_data;
-
+	string body;
 
 	map<string, string> default_args;
 
@@ -179,28 +178,30 @@ antlrcpp::Any vPreprocessor::visitDefine(
 		}
 	}
 
-	vector<string> data;
+	vector<string> params;
 	// test the number of argument
 	auto _params = ctx->var_id();
 	// the macro has argument so we take each of them and register them in
 	// a vector<string>
 	for (auto arg : _params) {
-		data.push_back(arg->getText());
+		params.push_back(arg->getText());
 	}
 	// for (auto a:data) { printf("  *%s*\n",a.c_str()); }
 	// get the template
 	if (ctx->replacement() != nullptr) {
-		rep_data = _tokens.getText(ctx->replacement()->getSourceInterval());
+		body = _tokens.getText(ctx->replacement()->getSourceInterval());
 		remove_comment(ctx->replacement()->getStart(),
-				ctx->replacement()->getStop(), &rep_data);
-		rep_data = rtrim(rep_data);
+				ctx->replacement()->getStop(), &body);
+		body = rtrim(body);
 	}
 	if (_mode < Language::SV2012) {
 		assert(default_args.size() == 0);
 	}
-	macro_replace * item = new macro_replace(macroName, rep_data, data, default_args);
-	_defineDB.insert(pair<string, macro_replace*>(macroName, item), _incdir,
-			_stack_incfile, _mode);
+	bool has_params = ctx->children.size() >= 3
+			&& ctx->children[2]->getText() == "(";
+	auto item = new macro_replace(macroName, has_params, params, default_args,
+			body);
+	_defineDB.insert( { macroName, item }, _incdir, _stack_incfile, _mode);
 
 	// the macro definition is replace by an empty string in the original
 	// source code
@@ -226,66 +227,71 @@ antlrcpp::Any vPreprocessor::visitUndef(
 //method call when `macro is found in the source code
 antlrcpp::Any vPreprocessor::visitToken_id(
 		verilogPreprocParser::Token_idContext * ctx) {
-	//printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
+	// printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
+	// token_id
+	//     : BACKTICK macro_toreplace LP value? (MR_COMMA value? )* RP
+	//     | BACKTICK macro_toreplace
+	//     ;
+
+	auto macroName = ctx->macro_toreplace()->getText();
 
 	//create a macroPrototype object
 	vector<string> args;
-
-	if (ctx->children.size() <= 4) {
-	} else {
-		string prevText;
-		for (size_t i = 0; i < ctx->children.size(); i++) {
-			//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
-			auto ch_text = ctx->children[i]->getText();
-			if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-				if ((prevText == ctx->LP()->getText() && ch_text == string(","))
-						|| (prevText == string(",") && ch_text == string(","))
-						|| (prevText == string(",")
-								&& ch_text == ctx->RP()->getText())) {
+	bool has_args = ctx->children.size() > 2;
+	if (has_args) {
+		bool expected_value = true;
+		bool last_was_comma = false;
+		auto end = ctx->children.end();
+		for (auto _c = ctx->children.begin() + 3; _c != end; ++_c) {
+			auto & c = *_c;
+			//printf("%s\n", c->getText().c_str());
+			auto ch_text = c->getText();
+			if (antlrcpp::is<tree::TerminalNode *>(c)) {
+				if (expected_value
+						&& (ch_text == "," || (last_was_comma && ch_text == ")"))) {
+					// the case for macro(,)
+					// must prevent case of macro()
 					args.push_back("");
 				}
-			} else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(
-					ctx->children[i])) {
-				string data;
-				data = _tokens.getText(ctx->children[i]->getSourceInterval());
+				expected_value = true;
+				last_was_comma = ch_text == ",";
+			} else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(c)) {
+				string data = _tokens.getText(c->getSourceInterval());
 				data = trim(data);
 				args.push_back(data);
+				expected_value = false;
+				last_was_comma = false;
 			}
-			prevText = ch_text;
 		}
 	}
-	/*
-	 printf("%s\n", ctx->macro_toreplace()->getText().c_str());
-	 for (auto a:args) {
-	 printf("  *%s*\n",a.c_str());
-	 }
-	 */
 
-	macroPrototype macro(ctx->macro_toreplace()->getText(), args);
+	//printf("%s\n", ctx->macro_toreplace()->getText().c_str());
+	//for (auto a : args) {
+	//	printf("  *%s*\n", a.c_str());
+	//}
 
 	//test if the macro has already been defined
-	if (_defineDB.find(macro.macroName) == _defineDB.end()) {
+	if (_defineDB.find(macroName) == _defineDB.end()) {
 		//The  macro has not yet been defined. It is an issue we throw an
 		//exception
-		string msg = macro.macroName + " is not defined";
+		string msg = macroName + " is not defined";
 		throw ParseException(msg);
 	}
 
 	//build the replacement string by calling the replacement method of the
 	//macro_replace object and the provided argument of the macro.
-	string replacement = _defineDB[macro.macroName]->replace(macro.args);
+	string replacement = _defineDB[macroName]->replace(args, has_args);
 	//printf("=>%s\n",replacement.c_str());
 
 	if (_mode == Language::SV2012) {
-		auto rm_str =
-				[&replacement](string s, int n) {
-					size_t start_pos = 0;
-					while ((start_pos = replacement.find(s, start_pos))
-								!= string::npos) {
-						replacement.erase(start_pos, n);
-						start_pos += 1;
-					}
-				};
+		auto rm_str = [&replacement](string s, int n) {
+			size_t start_pos = 0;
+			while ((start_pos = replacement.find(s, start_pos))
+					!= string::npos) {
+				replacement.erase(start_pos, n);
+				start_pos += 1;
+			}
+		};
 		rm_str("``", 2);
 		rm_str("`\\", 1);
 		rm_str("`\"", 1);

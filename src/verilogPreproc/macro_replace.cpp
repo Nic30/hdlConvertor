@@ -5,11 +5,12 @@ using namespace std;
 namespace hdlConvertor {
 namespace verilog_pp {
 
-macro_replace::macro_replace(string _macro_name, string _body,
-		vector<string> _params,
-		std::map<std::string, std::string> _default_args) :
-		name(_macro_name), body(_body), params(_params), default_args(
-				_default_args) {
+macro_replace::macro_replace(const string & _name, bool _has_params,
+		const vector<string> & _params,
+		const std::map<std::string, std::string> & _default_args,
+		const string & _body) :
+		name(_name), has_params(_has_params), params(_params), default_args(
+				_default_args), body(_body) {
 }
 
 macro_replace::~macro_replace() {
@@ -99,8 +100,24 @@ void macro_replace::replaceAll(string& str, const string& from,
 	}
 }
 
-string macro_replace::replace(vector<string> args) {
-	string returnString;
+string macro_replace::replace(vector<string> args, bool args_specified) {
+	if (has_params && !args_specified) {
+		string msg = "Macro " + name + " requires braces and expects ";
+		if (default_args.size()) {
+			msg += "(" + std::to_string(params.size() - default_args.size())
+					+ " to ";
+		} else {
+			msg += "(";
+		}
+		msg += std::to_string(params.size()) + " arguments).";
+		throw ParseException(msg);
+	}
+	if (!has_params && args_specified) {
+		string msg = "Macro " + name
+				+ " does not expect any argumets or braces.";
+		throw ParseException(msg);
+	}
+	// resolve default args
 	if (args.size() < params.size()) {
 		for (size_t i = args.size(); i < params.size(); i++) {
 			auto missing_arg = default_args.find(params[i]);
@@ -111,8 +128,6 @@ string macro_replace::replace(vector<string> args) {
 			}
 		}
 	}
-
-	returnString = body;
 
 	//printf("before replacement: %s\n",returnString.c_str());
 
@@ -154,8 +169,9 @@ string macro_replace::replace(vector<string> args) {
 	}
 
 	if (!body.empty()) {
+		string res = body;
 		_substituate.clear();
-		look4stringLiteral(returnString);
+		look4stringLiteral(res);
 
 		vector<string>::iterator macro = params.begin();
 		vector<string>::iterator instance = args.begin();
@@ -167,16 +183,12 @@ string macro_replace::replace(vector<string> args) {
 				rpld_argument = default_args[*macro];
 			}
 			//printf("%s@%s@%s\n",returnString.c_str(),(*macro).c_str(),rpld_argument.c_str() );
-			replaceAll(returnString, *macro, rpld_argument);
+			replaceAll(res, *macro, rpld_argument);
 		}
 		//printf("after replacement: %s\n",returnString.c_str());
+		return res;
 	}
-	return returnString;
-}
-
-string macro_replace::replace() {
-	vector<string> null_vector;
-	return replace(null_vector);
+	return "";
 }
 
 }

@@ -107,11 +107,10 @@ class PreprocessorTC(unittest.TestCase):
 
     # `MACRO3 must have parentesis according to the SV specification.
     # Currently the code is not able to detect this issue
-    @unittest.expectedFailure
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',
-            'Mismatch in number of argument macro declaration (3) and macro usage (0)'
+            'Macro MACRO3 requires braces and expects (0 to 3 arguments).'
         )
 
     # No check that string are not split
@@ -281,4 +280,10 @@ class PreprocessorGrammar(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    suite = unittest.TestSuite()
+    # suite.addTest(PreprocessorTC('test_2012_p641'))
+    suite.addTest(unittest.makeSuite(PreprocessorTC))
+    suite.addTest(unittest.makeSuite(PreprocessorGrammar))
+
+    runner = unittest.TextTestRunner(verbosity=3)
+    runner.run(suite)

@@ -29,20 +29,21 @@ protected:
 
 public:
 	std::string name;
-	std::string body;
+	bool has_params;
 	std::vector<std::string> params;
 	std::map<std::string, std::string> default_args;
+	std::string body;
 
 	// class constructor
-	macro_replace(std::string name, std::string body,
-			std::vector<std::string> params,
-			std::map<std::string, std::string> default_args);
+	macro_replace(const std::string & name, bool has_params,
+			const std::vector<std::string> & params,
+			const std::map<std::string, std::string> & default_args,
+			const std::string & body);
 	// class desctructor
 	virtual ~macro_replace();
-	// replace method
-	virtual std::string replace();
 	// replace method without argument
-	virtual std::string replace(std::vector<std::string>);
+	virtual std::string replace(std::vector<std::string> args,
+			bool args_specified = false);
 
 };
 
