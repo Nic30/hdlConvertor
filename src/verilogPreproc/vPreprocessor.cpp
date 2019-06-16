@@ -11,9 +11,8 @@ using namespace std;
 using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 using verilogPreprocLexer = verilogPreproc_antlr::verilogPreprocLexer;
 
-void ReplaceStringInPlace(string& subject, const string& search,
+void replaceStringInPlace(string& subject, const string& search,
 		const string& replace) {
-
 	size_t pos = 0;
 	while ((pos = subject.find(search, pos)) != string::npos) {
 		subject.replace(pos, search.length(), replace);
@@ -238,14 +237,12 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 		string prevText;
 		for (size_t i = 0; i < ctx->children.size(); i++) {
 			//printf("%li : %s\n",i,ctx->children[i]->getText().c_str());
+			auto ch_text = ctx->children[i]->getText();
 			if (antlrcpp::is<tree::TerminalNode *>(ctx->children[i])) {
-				if ((prevText == ctx->LP()->getText()
-						&& ctx->children[i]->getText() == string(","))
+				if ((prevText == ctx->LP()->getText() && ch_text == string(","))
+						|| (prevText == string(",") && ch_text == string(","))
 						|| (prevText == string(",")
-								&& ctx->children[i]->getText() == string(","))
-						|| (prevText == string(",")
-								&& ctx->children[i]->getText()
-										== ctx->RP()->getText())) {
+								&& ch_text == ctx->RP()->getText())) {
 					args.push_back("");
 				}
 			} else if (antlrcpp::is<verilogPreprocParser::ValueContext *>(
@@ -255,7 +252,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 				data = trim(data);
 				args.push_back(data);
 			}
-			prevText = ctx->children[i]->getText();
+			prevText = ch_text;
 		}
 	}
 	/*
@@ -281,22 +278,18 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 	//printf("=>%s\n",replacement.c_str());
 
 	if (_mode == Language::SV2012) {
-		size_t start_pos = 0;
-		while ((start_pos = replacement.find("``", start_pos)) != string::npos) {
-			replacement.erase(start_pos, 2);
-			start_pos += 1;
-		}
-		start_pos = 0;
-		while ((start_pos = replacement.find("`\\", start_pos)) != string::npos) {
-			replacement.erase(start_pos, 1);
-			start_pos += 1;
-		}
-		start_pos = 0;
-		while ((start_pos = replacement.find("`\"", start_pos)) != string::npos) {
-			replacement.erase(start_pos, 1);
-			start_pos += 1;
-		}
-
+		auto rm_str =
+				[&replacement](string s, int n) {
+					size_t start_pos = 0;
+					while ((start_pos = replacement.find(s, start_pos))
+								!= string::npos) {
+						replacement.erase(start_pos, n);
+						start_pos += 1;
+					}
+				};
+		rm_str("``", 2);
+		rm_str("`\\", 1);
+		rm_str("`\"", 1);
 	}
 
 	if (replacement.find("`", 0) != string::npos) {
@@ -549,10 +542,10 @@ void vPreprocessor::remove_comment(Token * start, Token * end, string * str) {
 	for (auto cmt : cmtChannel) {
 		if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_ESCAPE) {
 			string comment_txt = cmt->getText();
-			ReplaceStringInPlace(*str, comment_txt, "\n");
+			replaceStringInPlace(*str, comment_txt, "\n");
 		} else if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_COMMENT) {
 			string comment_txt = cmt->getText();
-			ReplaceStringInPlace(*str, comment_txt, "");
+			replaceStringInPlace(*str, comment_txt, "");
 		}
 	}
 }
