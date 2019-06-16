@@ -47,7 +47,7 @@ Also if it is something which is not unique to your system, tell us so we can fi
 
 
 ## Usage
-The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`. 
+The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`.
 In the meantime when there is no wiki yet you can take look at src/hdlAst.py.
 There are classes for objects in HDL langues and there is also type specified for every properrty.
 
@@ -88,7 +88,7 @@ for o in d.objs:
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
-
+* [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 
 ### License
 
