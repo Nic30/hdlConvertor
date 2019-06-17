@@ -1,11 +1,6 @@
 sudo: required
 dist: xenial
 language: python
-python:
-  - '2.7'
-  - '3.5'
-  - '3.6'
-# - "nightly"
 
 git:
   depth: 1
@@ -14,8 +9,17 @@ cache:
   - apt: true
   - pip : true
 
-# clang is required because there is not enought ram for gcc
-compiler: gcc
+matrix:
+  include:
+    - name: "Python 2.7 gcc-8"
+      python: 2.7           
+      env: CC=gcc-8 CXX=g++-8 
+    - name: "Python 3.5 gcc-8"
+      python: 3.5           
+      env: CC=gcc-8 CXX=g++-8 
+    - name: "Python 3.7 gcc-8"
+      python: 3.7           
+      env: CC=gcc-8 CXX=g++-8 
 
 addons:
    apt:
@@ -27,9 +31,6 @@ addons:
          - cython
          - g++-8
          - gcc-8
-         #- clang-3.9
-#env: CC=clang-3.9 CXX=clang-3.9
-env: CC=gcc-8 CXX=g++-8 
 
 
 # command to install dependencies
