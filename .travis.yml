@@ -19,6 +19,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - g++-8
             - gcc-8
 
     - name: "Python 3.5 gcc-8"
@@ -29,6 +30,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - g++-8
             - gcc-8
 
     - name: "Python 3.7 gcc-8"
@@ -39,6 +41,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - g++-8
             - gcc-8
 
     - name: "Python 3.7 gcc-7"
@@ -49,6 +52,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - g++-7
             - gcc-7
             - ninja-build
 
