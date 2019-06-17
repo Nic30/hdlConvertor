@@ -16,6 +16,8 @@ matrix:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-8
 
@@ -24,6 +26,8 @@ matrix:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-8
 
@@ -32,6 +36,8 @@ matrix:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-8
 
@@ -40,6 +46,8 @@ matrix:
       env: CC=gcc-7 CXX=g++-7
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-7
             - ninja-build
