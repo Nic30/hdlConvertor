@@ -439,7 +439,7 @@ class HdlWhileStm(iHdlStatement):
     """
     HDL case statement
     """
-    __slots__ = ["params", "body"]
+    __slots__ = ["params", "body", "cond"]
 
     def __init__(self):
         super(HdlWhileStm, self).__init__()
