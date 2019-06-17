@@ -231,13 +231,23 @@ class iHdlObjWithName(iHdlObj):
 
 class iInModuleHdlObj(object):
     """
-    Object which can apear in the module body
+    Object which can appear in the module body
     """
     __slots__ = []
 
 
 class HdlVariableDef(iHdlObj, iInModuleHdlObj):
-    __slots__ = ["type", "name", "value", "latched", "is_const", "direction"]
+    """
+    Definition of port/param/type etc in HDL
+
+    :ivar name: name of newly defined object
+    :ivar type: type of the defined variable (or type etc.)
+    :ivar value: initialisation of variable (typedef etc.)
+    :ivar latched: flag if true the object corresponds to VHDL variable/verilog reg
+    :ivar is_const: flag if true the value is constants
+    :ivar direction: direction if the variable is port
+    """
+    __slots__ = ["name", "type", "value", "latched", "is_const", "direction"]
 
     def __init__(self):
         iHdlObj.__init__(self)
@@ -265,6 +275,7 @@ class HdlNamespace(iHdlObjWithName):
 class HdlModuleDec(HdlNamespace):
     """
     HDL Module declaration
+    (ports, params header of module in Verilog/ VHDL Entity)
 
     Corresponds to VHDL entity and the first first part of the module with the ports and parameters
     """
@@ -278,6 +289,8 @@ class HdlModuleDec(HdlNamespace):
 
 class HdlModuleDef(iHdlObjWithName):
     """
+    HDL module definition (body of module in Verilog/vhdl architecture)
+
     :ivar name: name of the architecture in VHDL or name of module in Verilog
     :ivar module_name: the name of entity in VHDL or same as name in Verilog
     """
@@ -365,7 +378,7 @@ class HdlStatementBlock(iHdlStatement):
 
 class HdlAssignStm(iHdlStatement):
     """
-    HDL assignment (blocking/non blocking is resolved from type of the variable)
+    HDL assignment statement (blocking/non blocking is resolved from type of the variable)
     """
     __slots__ = ["src", "dst"]
 
@@ -396,7 +409,7 @@ class HdlIfStm(iHdlStatement):
 
 class HdlProcessStm(iHdlStatement):
     """
-    HdlProcess statement
+    HDL process statement
     the container of statements with the sensitivity specified
 
     :ivar sensitivity: optional list of expessions which specifies
@@ -437,7 +450,7 @@ class HdlForStm(iHdlStatement):
 
 class HdlWhileStm(iHdlStatement):
     """
-    HDL case statement
+    HDL while statement
     """
     __slots__ = ["params", "body"]
 
@@ -478,7 +491,7 @@ class HdlBreakStm(iHdlStatement):
 
 class HdlContinueStm(iHdlStatement):
     """
-    HDL break statement
+    HDL continue statement
     """
     __slots__ = []
 
