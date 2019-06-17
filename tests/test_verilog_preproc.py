@@ -108,7 +108,6 @@ class VerilogPreprocTC(unittest.TestCase):
             ' (1 to 3 arguments expected but 2 provided).'
         )
 
-    # `MACRO3 must have parentesis according to the SV specification.
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',
