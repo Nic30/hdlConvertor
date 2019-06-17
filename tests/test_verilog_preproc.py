@@ -11,11 +11,13 @@ from hdlConvertor.language import Language
 
 SV = Language.SYSTEM_VERILOG_2012
 
+SRC_DIR = [path.dirname(__file__), 'sv_pp', 'src']
+
 
 def _test_run(test_file, golden_file):
     c = HdlConvertor()
 
-    incdirs = ['.', '..', path.join('sv_pp', 'src')]
+    incdirs = [path.join('sv_pp', 'src'), ]
     test_result = c.verilog_pp(
         test_file, incdirs, SV)
 
@@ -67,7 +69,7 @@ class VerilogPreprocTC(unittest.TestCase):
             c = HdlConvertor()
             c.verilog_pp(
                 f,
-                ['.', '..', path.join('sv_pp', 'src')],
+                [path.join('sv_pp', 'src'), ],
                 SV
             )
         self.assertEqual(err_msg, context.exception.__str__())
@@ -124,7 +126,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_FILE_LINE(self):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
-        incdirs = ['.', '..', path.join('sv_pp', 'src')]
+        incdirs = [path.join('sv_pp', 'src'), ]
         test_result = c.verilog_pp(f, incdirs, SV)
         expected_val = path.join(path.dirname(__file__),
                                  'sv_pp', 'src', 'test_FILE_LINE.sv'
@@ -134,6 +136,15 @@ class VerilogPreprocTC(unittest.TestCase):
         test_golden += "\"" + expected_val + "\", 5);\n\n\nendmodule\n"
         self.assertEqual(test_result, test_golden)
 
+    # def test_debug_macro(self):
+    #     c = HdlConvertor()
+    #     f = path.join(*SRC_DIR,'debug_macro.sv')
+    #     incdirs = [path.join(*SRC_DIR), ]
+    #     test_result = c.verilog_pp(f, incdirs, SV)
+    #     expected_val = path.join(*SRC_DIR, 'debug_macro.sv')
+    #     test_golden = ("")
+    #     print(test_result)
+    #     self.assertEqual(test_result, test_golden)
 
 
 if __name__ == "__main__":

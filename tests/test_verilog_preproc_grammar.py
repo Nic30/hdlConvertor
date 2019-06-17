@@ -21,7 +21,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         test_name = self.getTestName()
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
-        incdirs = ['.', '..', path.join('sv_pp', 'raw')]
+        incdirs = [path.join('sv_pp', 'raw'), ]
         return c.verilog_pp(f, incdirs, SV)
 
     def check_pp_error_by_methodname(self, err_msg):

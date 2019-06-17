@@ -5,7 +5,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 
 SV = Language.SYSTEM_VERILOG_2012
-RAW_DIR = path.join(path.dirname(__file__), 'sv_pp', 'raw')
+SRC_DIR = path.join(path.dirname(__file__), 'sv_pp', 'src')
 EXPECTED_DIR = path.join(path.dirname(__file__), 'sv_pp', 'expected')
 
 
@@ -18,7 +18,7 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
         c = HdlConvertor()
         if not isinstance(file, list):
             file = [file, ]
-        f = path.join(RAW_DIR, *file)
+        f = path.join(SRC_DIR, *file)
         res = c.verilog_pp(f, incdirs, SV)
         ref_file = path.join(EXPECTED_DIR, *file)
         with open(ref_file) as exp_f:
