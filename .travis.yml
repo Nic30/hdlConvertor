@@ -54,7 +54,6 @@ matrix:
           packages:
             - g++-7
             - gcc-7
-            - ninja-build
 
 
 addons:
