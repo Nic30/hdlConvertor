@@ -21,9 +21,9 @@ void replaceStringInPlace(string& subject, const string& search,
 }
 
 vPreprocessor::vPreprocessor(TokenStream & tokens,
-		std::vector<std::filesystem::path> &incdir, bool _added_incdir,
+		std::vector<filesystem::path> &incdir, bool _added_incdir,
 		macroSymbol & defineDB,
-		std::vector<std::filesystem::path> &stack_incfile, Language mode,
+		std::vector<filesystem::path> &stack_incfile, Language mode,
 		size_t include_depth_limit) :
 		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
 				incdir), added_incdir(_added_incdir), _stack_incfile(

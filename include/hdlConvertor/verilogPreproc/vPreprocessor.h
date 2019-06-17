@@ -13,7 +13,8 @@
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/language.h>
-#include <filesystem>
+#include <hdlConvertor/universal_fs.h>
+
 
 namespace hdlConvertor {
 namespace verilog_pp {

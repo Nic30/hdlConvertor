@@ -44,6 +44,7 @@ add_library(hdlConvertor_cpp_static STATIC  ${hdlConvertor_cpp_SRC})
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CPP_STD_FILESYSTEM_LIB_NAME c++experimental)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(CPP_STD_FILESYSTEM_LIB_NAME stdc++fs)
 endif()
