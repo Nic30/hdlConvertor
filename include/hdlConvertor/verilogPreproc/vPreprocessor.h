@@ -42,7 +42,6 @@ class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisito
 
 	void remove_comment(antlr4::Token * start, antlr4::Token * end,
 			std::string * str);
-	std::string genBlank(size_t n);
 	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
 
 public:

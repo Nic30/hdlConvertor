@@ -2,6 +2,8 @@
 #include <antlr4-common.h>
 #include <antlr4-runtime.h>
 
+// https://www.hiveworkshop.com/threads/antlr4-preprocessor-compiler-compiler-fun.261568/
+// https://www.ibm.com/developerworks/aix/library/au-c_plusplus_antlr/index.html
 namespace hdlConvertor {
 namespace verilog_pp {
 
@@ -22,9 +24,8 @@ void replaceStringInPlace(string& subject, const string& search,
 
 vPreprocessor::vPreprocessor(TokenStream & tokens,
 		std::vector<filesystem::path> &incdir, bool _added_incdir,
-		macroSymbol & defineDB,
-		std::vector<filesystem::path> &stack_incfile, Language mode,
-		size_t include_depth_limit) :
+		macroSymbol & defineDB, std::vector<filesystem::path> &stack_incfile,
+		Language mode, size_t include_depth_limit) :
 		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
 				incdir), added_incdir(_added_incdir), _stack_incfile(
 				stack_incfile), _mode(mode), include_depth_limit(
@@ -46,7 +47,7 @@ vPreprocessor::~vPreprocessor() {
 template<typename CTX_T>
 void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
 		macroSymbol & defineDB, antlr4::TokenStreamRewriter & rewriter) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
+	// printf("@%s\n", __PRETTY_FUNCTION__);
 	bool en_in = !is_negated;
 	auto cond_ids = ctx->cond_id();
 	auto group_of_lines = ctx->group_of_lines();
@@ -74,23 +75,16 @@ void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
 	}
 	auto token = ctx->getSourceInterval();
 	if (matched) {
-		rewriter.Delete(token.a, token_to_keep.a);
-		rewriter.Delete(token_to_keep.b, token.b);
+		rewriter.Delete(token.a, token_to_keep.a-1);
+		rewriter.Delete(token_to_keep.b+1, token.b);
 	} else {
 		rewriter.Delete(token.a, token.b);
 	}
 }
 
-string vPreprocessor::genBlank(size_t n) {
-	string a_string;
-	a_string.resize(n, ' ');
-	return a_string;
-}
-
 void vPreprocessor::replace_context_by_bank(antlr4::ParserRuleContext * ctx) {
 	misc::Interval token = ctx->getSourceInterval();
-	string replacement = "";
-	_rewriter.replace(token.a, token.b, replacement);
+	_rewriter.Delete(token.a, token.b);
 }
 
 antlrcpp::Any vPreprocessor::visitResetall(
@@ -417,7 +411,6 @@ antlrcpp::Any vPreprocessor::visitInclude(
 		//Well done. we are going to replace the content of the `include
 		//directive by the content of the processed file
 		misc::Interval token = ctx->getSourceInterval();
-		//string replacement = genBlank(ctx->getText().size());
 		_rewriter.Delete(token.a, token.b);
 		filesystem::path my_incdir;
 		if (added_incdir) {
