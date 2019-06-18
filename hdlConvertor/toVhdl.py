@@ -1,5 +1,5 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
-    UnIndent
+    UnIndent, is_str
 from hdlConvertor.hdlAst import *
 
 
@@ -157,7 +157,7 @@ class ToVhdl():
         if isinstance(expr, HdlName):
             w(expr)
             return
-        elif isinstance(expr, str):
+        elif is_str(expr):
             w('"%s"' % expr)
             return
         elif isinstance(expr, HdlIntValue):

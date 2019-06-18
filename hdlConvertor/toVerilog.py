@@ -1,4 +1,4 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
 from hdlConvertor.hdlAst import *
 
 WIRE = HdlName('wire')
@@ -124,7 +124,7 @@ class ToVerilog():
         if isinstance(expr, HdlName):
             w(expr)
             return
-        elif isinstance(expr, str):
+        elif is_str(expr):
             w('"%s"' % expr)
             return
         elif isinstance(expr, HdlIntValue):
