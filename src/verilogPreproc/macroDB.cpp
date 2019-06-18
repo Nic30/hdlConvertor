@@ -6,8 +6,10 @@ using namespace std;
 namespace hdlConvertor {
 namespace verilog_pp {
 
-void MacroDB::insert(const pair<string, MacroDef*> item) {
-	map<string, MacroDef*>::insert(item);
+MacroDB::~MacroDB() {
+	for (auto item : *this) {
+		delete item.second;
+	}
 }
 
 }

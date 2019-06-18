@@ -17,11 +17,7 @@ namespace verilog_pp {
 class MacroDB: public std::map<std::string, MacroDef*> {
 public:
 
-	// specialisation of the insert method to add element in the map.
-	// The list of include directory is required to be able to register a
-	// template where already presented macro are already expended
-	void insert(const std::pair<std::string, MacroDef*> item);
-
+	virtual ~MacroDB();
 };
 
 }
