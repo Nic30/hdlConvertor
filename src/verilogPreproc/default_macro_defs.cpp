@@ -12,7 +12,7 @@ MacroDef__LINE__::MacroDef__LINE__() :
 		aMacroDef("__line__") {
 }
 // [TODO] MacroDef__LINE__, MacroDef__FILE__ are showing the position in current file
-//        ant they should return the value for the final source file
+//        See chapter 22.13 __FILE__ and __LINE__ of system verilog 2012 spec.
 std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
 		bool args_specified, vPreprocessor * unused(pp),
 		antlr4::ParserRuleContext * ctx) {
