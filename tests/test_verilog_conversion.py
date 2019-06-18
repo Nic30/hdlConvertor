@@ -88,8 +88,8 @@ class VerilogConversionTC(BasicTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(BasicTC('test_read'))
-    suite.addTest(unittest.makeSuite(VerilogConversionTC))
+    suite.addTest(VerilogConversionTC('test_macro'))
+    #suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

@@ -105,7 +105,7 @@ class VerilogPreprocTC(unittest.TestCase):
         self.assertPPError(
             '2012_p642_il1.txt',
             'Macro MACRO1 missing value for parameter c'
-            ' (1 to 3 arguments expected but 2 provided).'
+            ' (1 to 3 arguments expected but 1 provided).'
         )
 
     def test_2012_p642_il2(self):
@@ -114,12 +114,10 @@ class VerilogPreprocTC(unittest.TestCase):
             'Macro MACRO3 requires braces and expects (0 to 3 arguments).'
         )
 
-    # No check that string are not split
-    @unittest.expectedFailure
     def test_2012_p642_il3(self):
         self.assertPPError(
             '2012_p642_il3.txt',
-            'an error message'
+            'Unfinished string in definition of macro first_half.'
         )
 
     def test_FILE_LINE(self):
@@ -148,7 +146,7 @@ class VerilogPreprocTC(unittest.TestCase):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocTC('test_2012_p641'))
+    # suite.addTest(VerilogPreprocTC('test_2012_p642'))
     suite.addTest(unittest.makeSuite(VerilogPreprocTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
