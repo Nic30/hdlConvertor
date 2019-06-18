@@ -38,6 +38,34 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
     def test_basic_include2times(self):
         self.run_test(["include_same_dir", "basic_include2times.txt"], [])
 
+    def test_from_subdirectory(self):
+        self.run_test(["include_many_dir", "from_subdirectory.txt"], [])
+
+    def test_local_include_higher_priority(self):
+        self.run_test(
+            ["include_many_dir", "dir0-a", "local_include_higher_priority.txt"],
+            [])
+
+    def test_spec_incdir(self):
+        incdir = [
+            path.join(SRC_DIR, "include_many_dir", "dir0-a"),
+        ]
+        self.run_test(
+            ["include_many_dir", "dir0-a", "dir1-a", "spec_incdir.txt"],
+            incdir)
+
+    def test_spec_incdir2(self):
+        incdir = [
+            path.join(SRC_DIR, "include_many_dir", "dir0-a"),
+            path.join(SRC_DIR, "include_many_dir", ),
+        ]
+        self.run_test(
+            ["include_many_dir", "dir0-a", "dir1-a", "spec_incdir.txt"],
+            incdir)
+    def test_transitive(self):
+        self.run_test(
+            ["include_many_dir", "transitive.txt"],
+            [])
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

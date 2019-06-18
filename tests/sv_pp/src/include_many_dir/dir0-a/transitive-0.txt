@@ -1,0 +1,2 @@
+"transitive-0"
+`include "dir1-a/transitive-1.txt"
