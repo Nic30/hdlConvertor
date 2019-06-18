@@ -16,14 +16,14 @@ SV = Language.SYSTEM_VERILOG
 
 class VerilogConversionTC(BasicTC):
 
-    def test_verilog_uart(self):
+    def test_uart(self):
         self.parseWithRef("uart.v", VERILOG)
 
-    def test_verilog_adder_implicit(self):
+    def test_adder_implicit(self):
         f, res = parseFile("adder_implicit.v", VERILOG)
         str(res)
 
-    def test_verilog_arbiter(self):
+    def test_arbiter(self):
         f, res = parseFile("arbiter.v", VERILOG)
         str(res)
         a = self.find_obj_by_name(res, HdlModuleDec, "arbiter")
@@ -45,16 +45,16 @@ class VerilogConversionTC(BasicTC):
         _ports = { p.name: p.direction for p in a.ports }
         self.assertDictEqual(_ports, ports)
 
-    def test_verilog_include(self):
+    def test_include(self):
         f, res = parseFile("include.v", VERILOG)
         str(res)
         self.check_obj_names(res, HdlModuleDec, ["arbiter", "uart"])
 
-    def test_verilog_define(self):
+    def test_define(self):
         f, res = parseFile("define.v", VERILOG)
         str(res)
 
-    def test_verilog_fifo_rx(self):
+    def test_fifo_rx(self):
         f, res = parseFile("fifo_rx.v", VERILOG)
         f = self.find_obj_by_name(res, HdlModuleDec, "fifo_rx")
         self.assertEqual(len(f.params), 2)
@@ -73,7 +73,7 @@ class VerilogConversionTC(BasicTC):
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
 
-    def test_verilog_macro(self):
+    def test_macro(self):
         f, res = parseFile("macro.v", VERILOG)
         str(res)
 
