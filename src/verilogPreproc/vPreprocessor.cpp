@@ -2,8 +2,6 @@
 #include <antlr4-common.h>
 #include <antlr4-runtime.h>
 
-// https://www.hiveworkshop.com/threads/antlr4-preprocessor-compiler-compiler-fun.261568/
-// https://www.ibm.com/developerworks/aix/library/au-c_plusplus_antlr/index.html
 namespace hdlConvertor {
 namespace verilog_pp {
 
