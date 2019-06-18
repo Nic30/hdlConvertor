@@ -1,5 +1,6 @@
 #include <hdlConvertor/convertor.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/verilogPreproc/default_macro_defs.h>
 
 namespace hdlConvertor {
 
@@ -47,6 +48,7 @@ void Convertor::parse_verilog_file(const string & fileName,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -69,6 +71,7 @@ void Convertor::parse_verilog_str(const string & verilog_str,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -92,6 +95,7 @@ void Convertor::parse_sv_file(const string & fileName,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -114,6 +118,7 @@ void Convertor::parse_sv_str(const string & verilog_str,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -186,6 +191,7 @@ Context * Convertor::parse_str(const string & hdl_str, Language lang,
 string Convertor::verilog_pp(const string & fileName,
 		const vector<string> _incdirs, Language mode) {
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -200,6 +206,7 @@ string Convertor::verilog_pp(const string & fileName,
 string Convertor::verilog_pp_str(const string & verilog_str,
 		const vector<string> _incdirs, Language mode) {
 	verilog_pp::MacroDB defineDB;
+	macroDB_add_default_defs(defineDB);
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());

@@ -4,12 +4,14 @@
 #include <vector>
 #include <map>
 #include <hdlConvertor/conversion_exception.h>
+#include <hdlConvertor/verilogPreproc/a_macro_def.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
 
+class vPreprocessor;
 /**
- * class MacroDef is an object to to store a verilog preprocessor macro definition
+ * class MacroDefVerilog is an object to to store a verilog preprocessor macro definition
  * and to perform it's function
 
  * Example:
@@ -18,7 +20,7 @@ namespace verilog_pp {
  *  while args is a simple vector of string to store the list of argument is
  *  apparition order.
  */
-class MacroDef {
+class MacroDefVerilog: public aMacroDef {
 
 protected:
 	std::vector<std::pair<size_t, size_t> > _string_intervals;
@@ -42,25 +44,23 @@ public:
 		}
 	};
 
-	std::string name;
 	bool has_params;
 	std::vector<std::string> params;
 	std::map<std::string, std::string> default_args;
 	std::vector<Fragment> body;
 
 	// class constructor
-	MacroDef(const std::string & name, bool has_params,
+	MacroDefVerilog(const std::string & name, bool has_params,
 			const std::vector<std::string> & params,
 			const std::map<std::string, std::string> & default_args,
 			const std::string & body);
 	void parse_body(const std::vector<std::string> & params,
-			const std::string & body, std::vector<MacroDef::Fragment> & res);
-	// class desctructor
-	virtual ~MacroDef() = default;
+			const std::string & body,
+			std::vector<MacroDefVerilog::Fragment> & res);
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
-			bool args_specified = false);
-
+			bool args_specified, vPreprocessor * pp,
+			antlr4::ParserRuleContext * ctx) override;
 };
 
 }

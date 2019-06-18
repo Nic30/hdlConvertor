@@ -55,12 +55,12 @@ preprocess_directive
     | default_nettype
     | line_directive
     | timing_spec
-    | {isSV2012() || isSV2017()}? file_nb
-    | {isSV2012() || isSV2017()}? line_nb
     | {isSV2012() || isSV2017()}? undefineall
-    | {isVerilog2005() || isSV2012() || isSV2017()}? keywords_directive
-    | {isVerilog2005() || isSV2012() || isSV2017()}? endkeywords_directive
-    | {isVerilog2005() || isSV2012() || isSV2017()}? pragma
+    | {isVerilog2005() || isSV2012() || isSV2017()}? (
+		keywords_directive
+        | endkeywords_directive
+        | pragma
+        )
     ;
 
 define
@@ -177,14 +177,6 @@ timing_spec
 
 resetall
    : RESETALL
-   ;
-
-file_nb
-   : FILE_NB
-   ;
-
-line_nb
-   : LINE_NB
    ;
 
 undefineall

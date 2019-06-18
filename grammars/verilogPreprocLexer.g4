@@ -27,22 +27,20 @@ ELSE: [ \t]* '`else' [ \t\r\n]*;
 ENDIF: [ \t]* '`endif' [ \t\r\n]*;
 
 DOUBLE_BACKTICK: '``';
-FILE_NB: '`__FILE__';
-LINE_NB: '`__LINE__';
 BEGIN_KEYWORDS: [ \t]* '`begin_keywords' [ \t] ->mode(KEYWOORDS_MODE);
 END_KEYWORDS: [ \t]* '`end_keywords' CRLF;
 PRAGMA: [ \t]* '`pragma' [ \t] -> mode(PRAGMA_MODE);
 UNDEFINEALL: [ \t]* '`undefineall' CRLF;
 RESETALL: [ \t]* '`resetall' [ \t]* CRLF;
-CELLDEFINE: [ \t]* '`celldefine' [ \t]* CRLF; 
+CELLDEFINE: [ \t]* '`celldefine' [ \t]* CRLF;
 ENDCELLDEFINE: [ \t]* '`endcelldefine' [ \t]* CRLF ;
 TIMESCALE: [ \t]* '`timescale' [ \t]+ ->mode(TIMING_SPEC_MODE);
 DEFAULT_NETTYPE: [ \t]* '`default_nettype' [ \t]+ -> mode(DEFAULT_NETTYPE_MODE);
 LINE: [ \t]* '`line' [ \t]+ -> mode(LINE_MODE) ;
 UNCONNECTED_DRIVE: [ \t]* '`unconnected_drive' [ \t]* CRLF;
-NOUNCONNECTED_DRIVE: [ \t]* '`nounconnected_drive' [ \t]* CRLF; 
+NOUNCONNECTED_DRIVE: [ \t]* '`nounconnected_drive' [ \t]* CRLF;
 
-DStringLiteral_double_quote 
+DStringLiteral_double_quote
     :  '"' ( ~('\\'|'"') )* '"' ->type(CODE)
     ;
 
@@ -100,7 +98,7 @@ DM_LINE_COMMENT : '//' ~[\r\n]* CRLF
                 ;
 DM_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 DM_NEW_LINE: CRLF
-           {  
+           {
               setType(NEW_LINE);
               if (define_parentesis_count == 0) {
                   setMode(DEFAULT_MODE);
@@ -112,7 +110,7 @@ DM_NEW_LINE: CRLF
            ;
 
 DM_WS : [ \t]+ {
-   
+
    if (define_parentesis_count == 0) {
      setMode(DEFINE_NEXT_MODE);
      setType(DM_WS);
@@ -172,7 +170,7 @@ MR_LP: [ \t]* '('
        setType(LP);
        setMode(MACRO_DEFAULT_TEXT);
        token_id_parentesis_count = 1;
-     }; 
+     };
 
 MR_ANY: . ->type(CODE),mode(DEFAULT_MODE);
 
@@ -187,7 +185,7 @@ MR_COMMA: ','
           }
         }
         ;
-MDT_LP: '(' 
+MDT_LP: '('
      {
        token_id_parentesis_count ++;
        setType(MR_CODE);
@@ -232,7 +230,7 @@ DEFAULT_NETTYPE_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 mode LINE_MODE;
 LINE_MODE_DIGIT : [0-9] ->type(DIGIT);
-StringLiteral_double_quote 
+StringLiteral_double_quote
     :  '"' ( ~('\\'|'"') )* '"'
     ;
 LM_WS: [ \t] ->skip;
@@ -254,7 +252,7 @@ KEYWOORDS_COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 V18002017 : '"1800-2017"' ;
 V18002012 : '"1800-2012"' ;
 V18002009 : '"1800-2009"' ;
-V18002005 : '"1800-2005"' ; 
+V18002005 : '"1800-2005"' ;
 V13642005 : '"1364-2005"' ;
 V13642001 : '"1364-2001"' ;
 V13642001noconfig : '"1364-2001-noconfig"' ;
@@ -263,10 +261,10 @@ KEYWOORDS_MODE_NEW_LINE : CRLF ->type(NEW_LINE),mode(DEFAULT_MODE);
 
 
 mode INCLUDE_MODE;
-INCLUDE_MODE_StringLiteral_double_quote 
+INCLUDE_MODE_StringLiteral_double_quote
     :  '"' ( ~('\\'|'"') )* '"' ->type(StringLiteral_double_quote),mode(DEFAULT_MODE)
     ;
-StringLiteral_chevrons 
+StringLiteral_chevrons
     :  '<' ( ~('\\'|'"') )* '>' ->mode(DEFAULT_MODE)
     ;
 IM_WS : [ \t] ->skip;
@@ -276,7 +274,7 @@ mode PRAGMA_MODE;
 PRAGMA_WS : [ \t]+ -> skip;
 PRAGMA_DIGIT    : [0-9] ->type(DIGIT);
 PRAGMA_ID : ID_FIRST (ID_FIRST | DIGIT)* ->type(ID);
-PRAGMA_StringLiteral_double_quote 
+PRAGMA_StringLiteral_double_quote
     :  '"' ( ~('\\'|'"') )* '"' ->type(StringLiteral_double_quote)
     ;
 PRAGMA_COMMA :  ',' ->type(COMMA);

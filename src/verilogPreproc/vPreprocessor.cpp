@@ -1,5 +1,5 @@
 #include <hdlConvertor/verilogPreproc/vPreprocessor.h>
-#include <antlr4-common.h>
+#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 #include <antlr4-runtime.h>
 
 namespace hdlConvertor {
@@ -170,24 +170,6 @@ antlrcpp::Any vPreprocessor::visitUndefineall(
 	return NULL;
 }
 
-antlrcpp::Any vPreprocessor::visitFile_nb(
-		verilogPreprocParser::File_nbContext * ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	misc::Interval token = ctx->getSourceInterval();
-	string replacement = "\"" + _tokens.getSourceName() + "\"";
-	_rewriter.replace(token.a, token.b, replacement);
-	return NULL;
-}
-
-antlrcpp::Any vPreprocessor::visitLine_nb(
-		verilogPreprocParser::Line_nbContext * ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	misc::Interval token = ctx->getSourceInterval();
-	string replacement = to_string(ctx->getStart()->getLine());
-	_rewriter.replace(token.a, token.b, replacement);
-	return NULL;
-}
-
 //method call when the definition of a macro is found
 antlrcpp::Any vPreprocessor::visitDefine(
 		verilogPreprocParser::DefineContext * ctx) {
@@ -230,7 +212,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	}
 	bool has_params = ctx->children.size() >= 3
 			&& ctx->children[2]->getText() == "(";
-	auto item = new MacroDef(macroName, has_params, params, default_args,
+	auto item = new MacroDefVerilog(macroName, has_params, params, default_args,
 			body);
 	_defineDB.insert( { macroName, item });
 
@@ -311,7 +293,7 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 
 	//build the replacement string by calling the replacement method of the
 	//macro_replace object and the provided argument of the macro.
-	string replacement = _defineDB[macroName]->replace(args, has_args);
+	string replacement = _defineDB[macroName]->replace(args, has_args, this, ctx);
 	//printf("=>%s\n",replacement.c_str());
 
 	if (_mode == Language::SV2012) {

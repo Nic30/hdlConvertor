@@ -33,6 +33,12 @@ namespace verilog_pp {
  * 			was added to include directories and thus should be removed after parser ends
  **/
 class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
+
+	void remove_comment(antlr4::Token * start, antlr4::Token * end,
+			std::string * str);
+	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
+
+public:
 	MacroDB & _defineDB;
 	antlr4::CommonTokenStream & _tokens;
 	std::vector<std::filesystem::path> _incdir;
@@ -40,11 +46,6 @@ class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisito
 	std::vector<std::filesystem::path> & _stack_incfile;
 	Language _mode;
 
-	void remove_comment(antlr4::Token * start, antlr4::Token * end,
-			std::string * str);
-	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
-
-public:
 	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 	size_t include_depth_limit;
 	antlr4::TokenStreamRewriter _rewriter;
@@ -102,11 +103,6 @@ public:
 
 	virtual antlrcpp::Any visitUndefineall(
 			verilogPreprocParser::UndefineallContext * ctx);
-
-	virtual antlrcpp::Any visitFile_nb(
-			verilogPreprocParser::File_nbContext * ctx);
-	virtual antlrcpp::Any visitLine_nb(
-			verilogPreprocParser::Line_nbContext * ctx);
 
 };
 
