@@ -9,11 +9,11 @@
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParserBaseVisitor.h>
 
-#include <hdlConvertor/verilogPreproc/macroSymbol.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/language.h>
 #include <hdlConvertor/universal_fs.h>
+#include <hdlConvertor/verilogPreproc/macroDB.h>
 
 
 namespace hdlConvertor {
@@ -33,7 +33,7 @@ namespace verilog_pp {
  * 			was added to include directories and thus should be removed after parser ends
  **/
 class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
-	macroSymbol & _defineDB;
+	MacroDB & _defineDB;
 	antlr4::CommonTokenStream & _tokens;
 	std::vector<std::filesystem::path> _incdir;
 	bool added_incdir;
@@ -51,7 +51,7 @@ public:
 
 	vPreprocessor(antlr4::TokenStream & tokens,
 			std::vector<std::filesystem::path> &incdir, bool added_incdir,
-			macroSymbol & defineDB,
+			MacroDB & defineDB,
 			std::vector<std::filesystem::path> &stack_incfile, Language mode =
 					Language::VERILOG2001, size_t include_depth_limit = 100);
 
@@ -112,14 +112,14 @@ public:
 
 std::string run_verilog_preproc(antlr4::ANTLRInputStream & input,
 		std::vector<std::filesystem::path> &incdir, bool added_incdir,
-		macroSymbol & defineDB,
+		MacroDB & defineDB,
 		std::vector<std::filesystem::path> & stack_incfile, Language mode);
 std::string run_verilog_preproc_str(const std::string& verilog_str,
-		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+		std::vector<std::filesystem::path> &incdir, MacroDB & defineDB,
 		std::vector<std::filesystem::path> & stack_incfile, Language mode);
 
 std::string run_verilog_preproc_file(const std::filesystem::path & filename,
-		std::vector<std::filesystem::path> &incdir, macroSymbol & defineDB,
+		std::vector<std::filesystem::path> &incdir, MacroDB & defineDB,
 		std::vector<std::filesystem::path> & stack_incfile, Language mode);
 
 std::string& rtrim(std::string& str, const std::string& chars = " \t\n\r");

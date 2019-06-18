@@ -1,11 +1,11 @@
-#include <hdlConvertor/verilogPreproc/macro_replace.h>
+#include <hdlConvertor/verilogPreproc/macro_def.h>
 
 using namespace std;
 
 namespace hdlConvertor {
 namespace verilog_pp {
 
-macro_replace::macro_replace(const string & _name, bool _has_params,
+MacroDef::MacroDef(const string & _name, bool _has_params,
 		const vector<string> & _params,
 		const std::map<std::string, std::string> & _default_args,
 		const string & _body) :
@@ -13,12 +13,12 @@ macro_replace::macro_replace(const string & _name, bool _has_params,
 				_default_args), body(_body) {
 }
 
-macro_replace::~macro_replace() {
+MacroDef::~MacroDef() {
 }
 
 // return false to skip this find because it is
 // from an already substitution of the same macro replacement
-bool macro_replace::check_interval(size_t start) {
+bool MacroDef::check_interval(size_t start) {
 	for (auto paire : _substituate) {
 		//printf("{%li,%li}\n",paire.first,paire.second);
 		if ((paire.first <= start) && (start < paire.first + paire.second)) {
@@ -30,7 +30,7 @@ bool macro_replace::check_interval(size_t start) {
 /*
  * Look for String literal. In order to forbid them to be change by replacement
  */
-void macro_replace::look4stringLiteral(string tmpl) {
+void MacroDef::look4stringLiteral(string tmpl) {
 	size_t start_pos = 0;
 	auto npos = string::npos;
 	size_t pos1 = npos;
@@ -48,7 +48,7 @@ void macro_replace::look4stringLiteral(string tmpl) {
 	}
 }
 
-void macro_replace::replaceAll(string& str, const string& from,
+void MacroDef::replaceAll(string& str, const string& from,
 		const string& to) {
 	if (from.empty())
 		return;
@@ -100,7 +100,7 @@ void macro_replace::replaceAll(string& str, const string& from,
 	}
 }
 
-string macro_replace::replace(vector<string> args, bool args_specified) {
+string MacroDef::replace(vector<string> args, bool args_specified) {
 	if (has_params && !args_specified) {
 		string msg = "Macro " + name + " requires braces and expects ";
 		if (default_args.size()) {

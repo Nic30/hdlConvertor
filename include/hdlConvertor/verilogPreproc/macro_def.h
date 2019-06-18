@@ -9,7 +9,7 @@ namespace hdlConvertor {
 namespace verilog_pp {
 
 /**
- * class macro_replace is an object to to store a verilog preprocessor macro definition
+ * class MacroDef is an object to to store a verilog preprocessor macro definition
  * and to perform it's function
 
  * Example:
@@ -18,7 +18,7 @@ namespace verilog_pp {
  *  while args is a simple vector of string to store the list of argument is
  *  apparition order.
  */
-class macro_replace {
+class MacroDef {
 
 protected:
 	void replaceAll(std::string& str, const std::string& from,
@@ -35,12 +35,12 @@ public:
 	std::string body;
 
 	// class constructor
-	macro_replace(const std::string & name, bool has_params,
+	MacroDef(const std::string & name, bool has_params,
 			const std::vector<std::string> & params,
 			const std::map<std::string, std::string> & default_args,
 			const std::string & body);
 	// class desctructor
-	virtual ~macro_replace();
+	virtual ~MacroDef();
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
 			bool args_specified = false);

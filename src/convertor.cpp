@@ -46,7 +46,7 @@ void Convertor::parse_verilog_file(const string & fileName,
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -68,7 +68,7 @@ void Convertor::parse_verilog_str(const string & verilog_str,
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -91,7 +91,7 @@ void Convertor::parse_sv_file(const string & fileName,
 	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -113,7 +113,7 @@ void Convertor::parse_sv_str(const string & verilog_str,
 	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
 			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
 
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -185,7 +185,7 @@ Context * Convertor::parse_str(const string & hdl_str, Language lang,
 
 string Convertor::verilog_pp(const string & fileName,
 		const vector<string> _incdirs, Language mode) {
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());
@@ -199,7 +199,7 @@ string Convertor::verilog_pp(const string & fileName,
 
 string Convertor::verilog_pp_str(const string & verilog_str,
 		const vector<string> _incdirs, Language mode) {
-	verilog_pp::macroSymbol defineDB;
+	verilog_pp::MacroDB defineDB;
 	vector<filesystem::path> stack_incfile;
 	vector<filesystem::path> incdirs;
 	incdirs.reserve(_incdirs.size());

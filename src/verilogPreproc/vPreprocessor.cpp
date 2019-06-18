@@ -22,7 +22,7 @@ void replaceStringInPlace(string& subject, const string& search,
 
 vPreprocessor::vPreprocessor(TokenStream & tokens,
 		std::vector<filesystem::path> &incdir, bool _added_incdir,
-		macroSymbol & defineDB, std::vector<filesystem::path> &stack_incfile,
+		MacroDB & defineDB, std::vector<filesystem::path> &stack_incfile,
 		Language mode, size_t include_depth_limit) :
 		_defineDB(defineDB), _tokens(*(CommonTokenStream *) &tokens), _incdir(
 				incdir), added_incdir(_added_incdir), _stack_incfile(
@@ -44,7 +44,7 @@ vPreprocessor::~vPreprocessor() {
 
 template<typename CTX_T>
 void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
-		macroSymbol & defineDB, antlr4::TokenStreamRewriter & rewriter) {
+		MacroDB & defineDB, antlr4::TokenStreamRewriter & rewriter) {
 	// printf("@%s\n", __PRETTY_FUNCTION__);
 	bool en_in = !is_negated;
 	auto cond_ids = ctx->cond_id();
@@ -230,7 +230,7 @@ antlrcpp::Any vPreprocessor::visitDefine(
 	}
 	bool has_params = ctx->children.size() >= 3
 			&& ctx->children[2]->getText() == "(";
-	auto item = new macro_replace(macroName, has_params, params, default_args,
+	auto item = new MacroDef(macroName, has_params, params, default_args,
 			body);
 	_defineDB.insert( { macroName, item });
 
@@ -430,7 +430,7 @@ antlrcpp::Any vPreprocessor::visitInclude(
 
 string run_verilog_preproc(ANTLRInputStream & input,
 		vector<filesystem::path> &incdir, bool added_incdir,
-		macroSymbol & defineDB, vector<filesystem::path> & stack_incfile,
+		MacroDB & defineDB, vector<filesystem::path> & stack_incfile,
 		Language mode) {
 	verilogPreprocLexer lexer(&input);
 	lexer.mode = mode;
@@ -456,7 +456,7 @@ string run_verilog_preproc(ANTLRInputStream & input,
 }
 
 string run_verilog_preproc_str(const string & input_str,
-		vector<filesystem::path> & incdir, macroSymbol & defineDB,
+		vector<filesystem::path> & incdir, MacroDB & defineDB,
 		vector<filesystem::path> & stack_incfile, Language mode) {
 
 	ANTLRInputStream input(input_str);
@@ -466,7 +466,7 @@ string run_verilog_preproc_str(const string & input_str,
 }
 
 string run_verilog_preproc_file(const filesystem::path & filename,
-		vector<filesystem::path> &incdir, macroSymbol & defineDB,
+		vector<filesystem::path> &incdir, MacroDB & defineDB,
 		vector<filesystem::path> & stack_incfile, Language mode) {
 	ANTLRFileStream input(filename.u8string());
 
