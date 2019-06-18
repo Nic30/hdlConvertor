@@ -22,7 +22,8 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
         incdirs = [path.join('sv_pp', 'raw'), ]
-        return c.verilog_pp(f, incdirs, SV)
+        res = c.verilog_pp(f, incdirs, SV)
+        return res
 
     def check_pp_error_by_methodname(self, err_msg):
         with self.assertRaises(ParseException) as context:
@@ -153,7 +154,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(PreprocessorGrammar('test_undef'))
+    # suite.addTest(VerilogPreprocGrammarTC('test_real2'))
     suite.addTest(unittest.makeSuite(VerilogPreprocGrammarTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
