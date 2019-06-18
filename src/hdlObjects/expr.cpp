@@ -55,7 +55,9 @@ Expr * Expr::FLOAT(double val) {
 }
 
 Expr * Expr::STR(std::string strVal) {
-	return new Expr(new LiteralVal(strVal));
+	auto l = new LiteralVal(strVal);
+	l->type == LiteralValType::symb_STRING;
+	return new Expr(l);
 }
 
 Expr * Expr::ARRAY(const std::vector<Expr*> & arr) {
