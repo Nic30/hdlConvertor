@@ -10,6 +10,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
+// [TODO] make methods non static and parse code positions and comments
 class StatementParser {
 public:
 	using Statement = hdlObjects::Statement;
@@ -52,9 +53,12 @@ public:
 			vhdlParser::Return_statementContext* ctx);
 	static Statement * visitLoop_statement(
 			vhdlParser::Loop_statementContext* ctx);
-	static Expr * visitCondition(vhdlParser::ConditionContext* ctx);
 	static std::vector<Expr*> * visitParameter_specification(
 			vhdlParser::Parameter_specificationContext *ctx);
+	static Statement * visitSelected_waveforms(
+			vhdlParser::Selected_waveformsContext *ctx, Expr * dst);
+	static Statement * visitConcurrent_selected_signal_assignment(
+			vhdlParser::Concurrent_selected_signal_assignmentContext * ctx);
 	static Statement * visitIteration_scheme(
 			vhdlParser::Iteration_schemeContext* ctx);
 	static Statement * visitNull_statement(
@@ -69,6 +73,8 @@ public:
 			vhdlParser::Case_statementContext* ctx);
 	static std::vector<hdlObjects::iHdlObj*> * visitSequence_of_statements(
 			vhdlParser::Sequence_of_statementsContext* ctx);
+	static Statement * visitConcurrent_signal_assignment_statement(
+			vhdlParser::Concurrent_signal_assignment_statementContext * ctx);
 	void visitConcurrent_statement(
 			vhdlParser::Concurrent_statementContext * ctx,
 			std::vector<hdlObjects::iHdlObj*> & stms);

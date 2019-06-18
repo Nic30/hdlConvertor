@@ -52,7 +52,11 @@ Operator * Operator::slice(Expr* fn, const std::vector<Expr*> & operands) {
 Operator * Operator::ternary(Expr* cond, Expr* ifTrue, Expr* ifFalse) {
 	Operator * op = new Operator();
 	op->op = TERNARY;
-	op->operands = {cond, ifTrue, ifFalse};
+	if (ifFalse)
+		op->operands = {cond, ifTrue, ifFalse};
+	else
+		op->operands = {cond, ifTrue};
+
 	return op;
 }
 Operator::~Operator() {

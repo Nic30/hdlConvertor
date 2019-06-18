@@ -96,14 +96,14 @@ Statement * GenerateStatementParser::visitIf_generate_statement(
 	auto s = ctx->generate_statement_body();
 	auto sIt = s.begin();
 
-	Expr * cond = StatementParser::visitCondition(*cIt);
+	Expr * cond = ExprParser::visitCondition(*cIt);
 	auto ifTrue = new vector<iHdlObj*>();
 	visitGenerate_statement_body(*sIt, *ifTrue);
 	++cIt;
 	++sIt;
 	std::vector<Statement::case_t> elseIfs;
 	while (cIt != c.end()) {
-		auto c = StatementParser::visitCondition(*cIt);
+		auto c = ExprParser::visitCondition(*cIt);
 		auto stms = new vector<iHdlObj*>();
 		visitGenerate_statement_body(*sIt, *stms);
 		elseIfs.push_back( { c, stms });

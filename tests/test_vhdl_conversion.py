@@ -46,10 +46,13 @@ class VhdlConversionTC(BasicTC):
         with self.assertRaises(ParseException):
             f, res = parseFile("malformed.vhdl")
 
+    def test_arch_with_assig(self):
+        self.parseWithRef("arch_with_assig.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(BasicTC('test_read'))
+    # suite.addTest(VhdlConversionTC('test_arch_with_assig'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

@@ -568,6 +568,40 @@ Expr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 
 	return top;
 }
+Expr* ExprParser::visitCondition(vhdlParser::ConditionContext* ctx) {
+	// condition
+	// : expression
+	// ;
+	return ExprParser::visitExpression(ctx->expression());
+}
+Expr * ExprParser::visitConditional_waveforms(
+		vhdlParser::Conditional_waveformsContext * ctx) {
+	// conditional_waveforms:
+	//       waveform WHEN condition
+	//       ( ELSE waveform WHEN condition )*
+	//       ( ELSE waveform )?
+	// ;
+	auto waveforms = ctx->waveform();
+	auto conditions = ctx->condition();
+	auto c = conditions.rbegin();
+	Expr * res = nullptr;
+	for (auto w = waveforms.rbegin(); w != waveforms.rend(); ++w) {
+		auto w_expr = visitWaveform(*w);
+		if (res == nullptr) {
+			// the first iteration
+			bool has_default_else = waveforms.size() > conditions.size();
+			if (has_default_else) {
+				// this waveform is a default else
+				res = w_expr;
+				continue;
+			}
+		}
+		auto c_expr = visitCondition(*c);
+		res = Expr::ternary(c_expr, w_expr, res);
+		c++;
+	}
+	return res;
+}
 
 Expr *ExprParser::visitWaveform_element(
 		vhdlParser::Waveform_elementContext* ctx) {

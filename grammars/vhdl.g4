@@ -1078,9 +1078,11 @@ selected_expressions:
       expression WHEN choices
 ;
 variable_assignment_statement:
-      ( label COLON )? simple_variable_assignment
-      | ( label COLON )? conditional_variable_assignment
-      | ( label COLON )? selected_variable_assignment
+      ( label COLON )? (
+          simple_variable_assignment
+	      | conditional_variable_assignment
+	      | selected_variable_assignment
+      )
 ;
 simple_variable_assignment:
       target VARASGN expression SEMI
@@ -1211,16 +1213,23 @@ concurrent_procedure_call_statement:
 concurrent_assertion_statement:
       ( label COLON )? ( POSTPONED )? assertion SEMI
 ;
+// simplified: concurrent_signal_assignment_statement,
+//             concurrent_simple_signal_assignment,
+//             concurrent_conditional_signal_assignment
 concurrent_signal_assignment_statement:
-      ( label COLON )? ( POSTPONED )? concurrent_simple_signal_assignment
-      | ( label COLON )? ( POSTPONED )? concurrent_conditional_signal_assignment
-      | ( label COLON )? ( POSTPONED )? concurrent_selected_signal_assignment
+      ( label COLON )? ( POSTPONED )? (
+	      (target CONASGN ( GUARDED )? ( delay_mechanism )?
+	          (concurrent_simple_signal_assignment_body
+	      		| concurrent_conditional_signal_assignment_body)
+	      )
+	      | concurrent_selected_signal_assignment
+      )
 ;
-concurrent_simple_signal_assignment:
-      target CONASGN ( GUARDED )? ( delay_mechanism )? waveform SEMI
+concurrent_simple_signal_assignment_body:
+      waveform SEMI
 ;
-concurrent_conditional_signal_assignment:
-      target CONASGN ( GUARDED )? ( delay_mechanism )? conditional_waveforms SEMI
+concurrent_conditional_signal_assignment_body:
+      conditional_waveforms SEMI
 ;
 concurrent_selected_signal_assignment:
       WITH expression SELECT ( QUESTIONMARK )?

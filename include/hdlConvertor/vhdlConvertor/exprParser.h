@@ -58,6 +58,9 @@ public:
 			vhdlParser::Element_associationContext* ctx);
 	static Expr* visitTarget(vhdlParser::TargetContext* ctx);
 	static Expr* visitWaveform(vhdlParser::WaveformContext* ctx);
+	static Expr * visitCondition(vhdlParser::ConditionContext* ctx);
+	static Expr * visitConditional_waveforms(
+			vhdlParser::Conditional_waveformsContext * ctx);
 	static Expr* visitWaveform_element(
 			vhdlParser::Waveform_elementContext* ctx);
 	/*
