@@ -409,8 +409,6 @@ def get_used_non_terminals(rules: List[ANTLR4_rule]):
 
     def collect_non_terminals(obj):
         if isinstance(obj, ANTLR4_rule.Symbol) and not obj.is_terminal:
-            if obj.symbol == "package":
-                print("")
             nts.add(obj.symbol)
 
     for r in rules:
@@ -430,7 +428,7 @@ def rm_newline_from_simple_rules(rules):
 
         def count_nl(obj):
             if isinstance(obj, ANTLR4_rule.VisualNewline):
-               Cntr.nls += 1
+                Cntr.nls += 1
 
         r.walk(count_nl)
         if Cntr.nls == 1:

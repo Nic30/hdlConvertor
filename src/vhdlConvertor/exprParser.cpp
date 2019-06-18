@@ -393,7 +393,8 @@ Expr* ExprParser::visitShift_expression(
 	// : simple_expression
 	// ( : shift_operator simple_expression )?
 	// ;
-	Expr * op0 = visitSimple_expression(ctx->simple_expression(0));
+	auto se = ctx->simple_expression(0);
+	Expr * op0 = visitSimple_expression(se);
 	auto op = ctx->shift_operator();
 	if (op) {
 		Expr * op1 = visitSimple_expression(ctx->simple_expression(1));
@@ -447,7 +448,8 @@ Expr* ExprParser::visitFactor(vhdlParser::FactorContext* ctx) {
 	// | ABS primary
 	// | NOT primary
 	// ;
-	Expr * op0 = visitPrimary(ctx->primary(0));
+	auto p0 = ctx->primary(0);
+	Expr * op0 = visitPrimary(p0);
 	auto p1 = ctx->primary(1);
 	if (p1)
 		return new Expr(op0, POW, visitPrimary(p1));

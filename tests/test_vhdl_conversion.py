@@ -49,10 +49,13 @@ class VhdlConversionTC(BasicTC):
     def test_arch_with_assig(self):
         self.parseWithRef("arch_with_assig.vhd", Language.VHDL)
 
+    def test_with_select(self):
+        self.parseWithRef("with_select.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_arch_with_assig'))
+    # suite.addTest(VhdlConversionTC('test_with_select'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

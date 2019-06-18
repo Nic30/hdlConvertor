@@ -584,7 +584,7 @@ vector<Expr*> * StatementParser::visitParameter_specification(
 	return e;
 }
 Statement * StatementParser::visitSelected_waveforms(
-		vhdlParser::Selected_waveformsContext *ctx, Expr * dst) {
+		vhdlParser::Selected_waveformsContext *ctx, Expr * sel, Expr * dst) {
 	// selected_waveforms:
 	//       ( waveform WHEN choices COMMA )*
 	//       waveform WHEN choices
@@ -611,7 +611,7 @@ Statement * StatementParser::visitSelected_waveforms(
 		++wf;
 	}
 
-	return Statement::CASE(dst, cases, default_);
+	return Statement::CASE(sel, cases, default_);
 }
 Statement * StatementParser::visitConcurrent_selected_signal_assignment(
 		vhdlParser::Concurrent_selected_signal_assignmentContext * ctx) {
@@ -634,8 +634,9 @@ Statement * StatementParser::visitConcurrent_selected_signal_assignment(
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_selected_signal_assignment - delay_mechanism");
 	}
-	auto dst = ExprParser::visitExpression(ctx->expression());
-	auto case_stm = visitSelected_waveforms(ctx->selected_waveforms(), dst);
+	auto sel = ExprParser::visitExpression(ctx->expression());
+	auto dst = ExprParser::visitTarget(ctx->target());
+	auto case_stm = visitSelected_waveforms(ctx->selected_waveforms(), sel, dst);
 	return case_stm;
 }
 

@@ -56,7 +56,7 @@ public:
 	static std::vector<Expr*> * visitParameter_specification(
 			vhdlParser::Parameter_specificationContext *ctx);
 	static Statement * visitSelected_waveforms(
-			vhdlParser::Selected_waveformsContext *ctx, Expr * dst);
+			vhdlParser::Selected_waveformsContext *ctx, Expr * sel, Expr * dst);
 	static Statement * visitConcurrent_selected_signal_assignment(
 			vhdlParser::Concurrent_selected_signal_assignmentContext * ctx);
 	static Statement * visitIteration_scheme(

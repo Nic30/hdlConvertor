@@ -171,7 +171,6 @@ Expr * LiteralParser::visitEnumeration_literal(
 Expr * LiteralParser::visitString_literal(const std::string & ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
 	return Expr::STR(str);
-
 }
 Expr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
 	return Expr::INT(ctx[1] - '0');

@@ -1,6 +1,28 @@
 #include "toPy.h"
+
+#include <abstract.h>
 #include <assert.h>
+#include <boolobject.h>
+#include <floatobject.h>
+#include <import.h>
+#include <listobject.h>
+#include <longobject.h>
+#include <modsupport.h>
+#include <object.h>
+#include <pyerrors.h>
+#include <pythonrun.h>
+#include <stddef.h>
+#include <tupleobject.h>
+#include <unicodeobject.h>
+#include <iterator>
+#include <stdexcept>
+#include <string>
 #include <tuple>
+#include <utility>
+
+#include "../include/hdlConvertor/hdlObjects/bigInteger.h"
+#include "../include/hdlConvertor/hdlObjects/direction.h"
+#include "../include/hdlConvertor/hdlObjects/literalVal.h"
 
 namespace hdlConvertor {
 
@@ -612,7 +634,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 		if (sub_statements.size() > c_cnt) {
-			auto & def = *sub_statements.at(c_cnt - 1);
+			auto & def = *sub_statements.at(c_cnt);
 			auto py_def = PyList_New(0);
 			if (!py_def)
 				e = -1;
