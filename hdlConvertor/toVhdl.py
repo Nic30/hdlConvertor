@@ -1,7 +1,10 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
     UnIndent, is_str
-from hdlConvertor.hdlAst import *
-
+from hdlConvertor.hdlAst import HdlDirection, HdlBuildinFn, HdlName, HdlIntValue, \
+    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlProcessStm, HdlIfStm,\
+    HdlAssignStm, HdlCaseStm, HdlWaitStm, HdlReturnStm, HdlForStm, \
+    HdlVariableDef, HdlModuleDec, HdlFunction, HdlComponentInst, HdlModuleDef, \
+    HdlNamespace, HdlImport
 
 class ToVhdl():
     """
@@ -39,7 +42,8 @@ class ToVhdl():
         HdlBuildinFn.TO: "TO",
         HdlBuildinFn.DOWNTO: "DOWNTO",
         HdlBuildinFn.ARROW: "=>",
-        HdlBuildinFn.MAP_ASSOCIATION: "=>"
+        HdlBuildinFn.MAP_ASSOCIATION: "=>",
+        HdlBuildinFn.APOSTROPHE: "'",
     }
 
     def __init__(self, out_stream):

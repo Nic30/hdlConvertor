@@ -94,7 +94,7 @@ Expr* ReferenceParser::visitAttribute_name(
 		NotImplementedLogger::print(
 				"ExprParser.visitAttribute_name - signature");
 	auto ad = ctx->attribute_designator();
-	Expr * res = new Expr(p, OperatorType::DOT, visitAttribute_designator(ad));
+	Expr * res = new Expr(p, OperatorType::APOSTROPHE, visitAttribute_designator(ad));
 	auto e = ctx->expression();
 	if (e)
 		res = new Expr(res, OperatorType::INDEX,
@@ -105,8 +105,14 @@ Expr* ReferenceParser::visitAttribute_name(
 
 Expr * ReferenceParser::visitAttribute_designator(
 		vhdlParser::Attribute_designatorContext* ctx) {
-	// attribute_designator: simple_name;
-	return visitSimple_name(ctx->simple_name());
+	// attribute_designator: simple_name | any_keyword;
+	auto sn = ctx->simple_name();
+	if (sn)
+		return visitSimple_name(sn);
+	else {
+		std::string s = ctx->any_keyword()->getText();
+		return Expr::ID(s);
+	}
 }
 
 Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
@@ -117,7 +123,7 @@ Expr * ReferenceParser::visitName_part_specificator(Expr * selectedName,
 	//    ;
 	auto na = ctx->name_attribute_part();
 	if (na) {
-		return new Expr(selectedName, OperatorType::DOT,
+		return new Expr(selectedName, OperatorType::APOSTROPHE,
 				visitName_attribute_part(na));
 	}
 	auto callOrIndx = ctx->name_function_call_or_indexed_part();

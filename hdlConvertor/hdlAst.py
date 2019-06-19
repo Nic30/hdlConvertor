@@ -192,6 +192,7 @@ class HdlBuildinFn(Enum):
     ROR,  # rotate right
     TERNARY,
     DOT,
+    APOSTROPHE, # vhdl attribute access
     CALL,
     ARROW,  # arrow operator used in vhdl type descriptions
     RISING,  # rising edge/posedge event operator
@@ -203,7 +204,7 @@ class HdlBuildinFn(Enum):
     MATCH_LE,
     MATCH_GT,
     MATCH_GE,
-    ) = range(54)
+    ) = range(55)
     # note that in verilog bitewise operators can have only one argument
 
 

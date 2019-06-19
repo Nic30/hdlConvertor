@@ -118,6 +118,121 @@ WHEN: W H E N;
 PORT: P O R T;
 NULL_SYM: N U L L;
 
+any_keyword:
+    PROCESS
+    |CONTEXT
+    |POSTPONED
+    |LINKAGE
+    |COMPONENT
+    |ABS
+    |DEFAULT
+    |UX
+    |THEN
+    |BLOCK
+    |REM
+    |INERTIAL
+    |NEXT
+    |ENTITY
+    |ON
+    |GROUP
+    |XNOR
+    |FILE
+    |PURE
+    |GUARDED
+    |GENERIC
+    |RANGE
+    |ELSE
+    |USE
+    |SHARED
+    |MOD
+    |LOOP
+    |RECORD
+    |SIGNAL
+    |REJECT
+    |BEGIN
+    |SLA
+    |DISCONNECT
+    |OF
+    |PROCEDURE
+    |SRL
+    |SO
+    |VUNIT
+    |ATTRIBUTE
+    |VARIABLE
+    |PROPERTY
+    |UNAFFECTED
+    |XOR
+    |REGISTER
+    |SUBTYPE
+    |UO
+    |TO
+    |NEW
+    |REPORT
+    |CONSTANT
+    |BUFFER
+    |BODY
+    |AFTER
+    |TRANSPORT
+    |FUNCTION
+    |END
+    |SELECT
+    |OR
+    |LIBRARY
+    |SX
+    |ELSIF
+    |SLL
+    |MAP
+    |SRA
+    |PROTECTED
+    |DOWNTO
+    |LABEL
+    |ALL
+    |ALIAS
+    |GENERATE
+    |NOR
+    |IN
+    |RELEASE
+    |SB
+    |EXIT
+    |RETURN
+    |WITH
+    |UNTIL
+    |AND
+    |INOUT
+    |WAIT
+    |NAND
+    |ARRAY
+    |FORCE
+    |UB
+    |WHILE
+    |IMPURE
+    |PACKAGE
+    |UNITS
+    |ASSERT
+    |PARAMETER
+    |SEVERITY
+    |LITERAL
+    |FOR
+    |ROR
+    |IF
+    |OUT
+    |ROL
+    |IS
+    |SEQUENCE
+    |OTHERS
+    |TYPE
+    |CASE
+    |NOT
+    |CONFIGURATION
+    |OPEN
+    |ARCHITECTURE
+    |BUS
+    |ACCESS
+    |WHEN
+    |PORT
+    |NULL_SYM
+;
+
 
 // case insensitive chars
 fragment A:('a'|'A');
@@ -862,7 +977,7 @@ suffix:
 attribute_name:
       prefix ( signature )? APOSTROPHE attribute_designator ( LPAREN expression RPAREN )?
 ;
-attribute_designator: simple_name;
+attribute_designator: simple_name | any_keyword;
 external_name:
       SHIFT_LEFT (VARIABLE | CONSTANT | SIGNAL) external_pathname COLON subtype_indication SHIFT_RIGHT
 ;
@@ -956,8 +1071,9 @@ function_call:
 ;
 actual_parameter_part: association_list;
 qualified_expression:
-      type_mark APOSTROPHE LPAREN expression RPAREN
-      | type_mark APOSTROPHE aggregate
+      type_mark APOSTROPHE
+      	(LPAREN expression RPAREN)
+      	| aggregate
 ;
 type_conversion: type_mark LPAREN expression RPAREN;
 allocator:
@@ -1218,19 +1334,15 @@ concurrent_assertion_statement:
 //             concurrent_conditional_signal_assignment
 concurrent_signal_assignment_statement:
       ( label COLON )? ( POSTPONED )? (
-	      (target CONASGN ( GUARDED )? ( delay_mechanism )?
-	          (concurrent_simple_signal_assignment_body
-	      		| concurrent_conditional_signal_assignment_body)
-	      )
+          concurrent_signal_assignment_any
 	      | concurrent_selected_signal_assignment
       )
 ;
-concurrent_simple_signal_assignment_body:
-      waveform SEMI
+concurrent_signal_assignment_any:
+	  target CONASGN ( GUARDED )? ( delay_mechanism )?
+ 	  ( waveform | conditional_waveforms ) SEMI
 ;
-concurrent_conditional_signal_assignment_body:
-      conditional_waveforms SEMI
-;
+
 concurrent_selected_signal_assignment:
       WITH expression SELECT ( QUESTIONMARK )?
           target CONASGN ( GUARDED )? ( delay_mechanism )? selected_waveforms SEMI

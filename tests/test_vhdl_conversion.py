@@ -52,6 +52,9 @@ class VhdlConversionTC(BasicTC):
     def test_with_select(self):
         self.parseWithRef("with_select.vhd", Language.VHDL)
 
+    def test_call(self):
+        self.parseWithRef("call.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

@@ -47,6 +47,7 @@ enum OperatorType {
 	ROR, // rotate right
 	TERNARY,
 	DOT,
+	APOSTROPHE, // vhdl attribute access
 	CALL,
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator

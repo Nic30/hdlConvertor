@@ -642,15 +642,13 @@ Statement * StatementParser::visitConcurrent_selected_signal_assignment(
 
 Statement * StatementParser::visitConcurrent_signal_assignment_statement(
 		vhdlParser::Concurrent_signal_assignment_statementContext * ctx) {
-	// concurrent_signal_assignment_statement:
-	//       ( label COLON )? ( POSTPONED )? (
-	// 	      (target CONASGN ( GUARDED )? ( delay_mechanism )?
-	// 	          (concurrent_simple_signal_assignment_body
-	// 	      		| concurrent_conditional_signal_assignment_body)
-	// 	      )
-	// 	      | concurrent_selected_signal_assignment
-	//       )
-	// ;
+	//concurrent_signal_assignment_statement:
+	//      ( label COLON )? ( POSTPONED )? (
+	//          concurrent_signal_assignment_any
+	//	      | concurrent_selected_signal_assignment
+	//      )
+	//;
+
 	if (ctx->label()) {
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_signal_assignment_statement - label");
@@ -659,35 +657,36 @@ Statement * StatementParser::visitConcurrent_signal_assignment_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED");
 	}
-	if (ctx->GUARDED()) {
-		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
-	}
-	if (ctx->delay_mechanism()) {
-		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
-	}
+
 	auto cssa = ctx->concurrent_selected_signal_assignment();
 	if (cssa) {
 		return visitConcurrent_selected_signal_assignment(cssa);
 	}
 
-	auto t = ctx->target();
+	auto csaa = ctx->concurrent_signal_assignment_any();
+	// concurrent_signal_assignment_any:
+	// 	  target CONASGN ( GUARDED )? ( delay_mechanism )?
+	//  	  ( waveform | conditional_waveforms ) SEMI
+	// ;
+	if (csaa->GUARDED()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
+	}
+	if (csaa->delay_mechanism()) {
+		NotImplementedLogger::print(
+				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
+	}
+
+	auto t = csaa->target();
 	auto dst = ExprParser::visitTarget(t);
-	auto cssab = ctx->concurrent_simple_signal_assignment_body();
+	auto wf = csaa->waveform();
 	Expr * src = nullptr;
-	if (cssab) {
-		// concurrent_simple_signal_assignment_body:
-		// 		      waveform SEMI
-		// 		;
-		src = ExprParser::visitWaveform(cssab->waveform());
+	if (wf) {
+		src = ExprParser::visitWaveform(wf);
 	} else {
-		auto ccsab = ctx->concurrent_conditional_signal_assignment_body();
-		// concurrent_conditional_signal_assignment_body:
-		//       conditional_waveforms SEMI
-		// ;
-		src = ExprParser::visitConditional_waveforms(
-				ccsab->conditional_waveforms());
+		auto cwf = csaa->conditional_waveforms();
+		assert(cwf);
+		src = ExprParser::visitConditional_waveforms(cwf);
 	}
 	return Statement::ASSIG(dst, src);
 }

@@ -47,6 +47,7 @@ static const char* const opTypeToStr[] = {
 		"ROR",
 		"TERNARY",
 		"DOT",
+		"APOSTROPHE",
 		"CALL",
 		"ARROW",
 		"RISING",
