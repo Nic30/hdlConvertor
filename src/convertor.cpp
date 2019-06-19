@@ -11,25 +11,31 @@ using namespace hdlConvertor::hdlObjects;
 
 bool Convertor::debug = false;
 
-void parseFnVerilog(Verilog2001_antlr::Verilog2001Parser * antlrParser,
+void parseFnVerilog(SyntaxErrorLogger * syntaxErrLogger,
+		Verilog2001_antlr::Verilog2001Parser * antlrParser,
 		verilog::Source_textParser * hdlParser) {
 	Verilog2001_antlr::Verilog2001Parser::Source_textContext *tree =
 			antlrParser->source_text();
+	syntaxErrLogger->CheckErrors(); // Throw exception if errors
 	hdlParser->visitSource_text(tree);
 }
 
-void parseFnVHDL(vhdl_antlr::vhdlParser * antlrParser,
+void parseFnVHDL(SyntaxErrorLogger * syntaxErrLogger,
+		vhdl_antlr::vhdlParser * antlrParser,
 		vhdl::DesignFileParser * hdlParser) {
 	vhdl_antlr::vhdlParser::Design_fileContext *tree =
 			antlrParser->design_file();
+	syntaxErrLogger->CheckErrors(); // Throw exception if errors
 	hdlParser->visitDesign_file(tree);
 }
 
 #ifdef SV_PARSER
-void parseFnSystemVerilog(sv2012_antlr::sv2012Parser * antlrParser,
+void parseFnSystemVerilog(SyntaxErrorLogger * syntaxErrLogger,
+		sv2012_antlr::sv2012Parser * antlrParser,
 		sv::source_textParser * hdlParser) {
 	sv2012_antlr::sv2012Parser::Source_textContext *tree =
 			antlrParser->source_text();
+	syntaxErrLogger->CheckErrors(); // Throw exception if errors
 	hdlParser->visitSource_text(tree);
 }
 #endif

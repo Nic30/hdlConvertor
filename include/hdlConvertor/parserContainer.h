@@ -48,19 +48,33 @@ public:
 			bool hierarchyOnly,
 			std::function<
 					void(
-						antlrParserT * antlrParser,
+					    SyntaxErrorLogger * syntaxErrLogger,
+					    antlrParserT * antlrParser,
 						hdlParserT * hdlParser
 					    )
 				     > parseFn) {
 
 		initParser(fileName);
 
-		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context, hierarchyOnly);
+		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context,
+				hierarchyOnly);
 		// begin parsing at init rule
-		parseFn(antlrParser, hdlParser);
+		parseFn(syntaxErrLogger, antlrParser, hdlParser);
 		context = hdlParser->getContext();
-
 		syntaxErrLogger->CheckErrors(); // Throw exception if errors
+
+		delete hdlParser;
+		hdlParser = nullptr;
+		delete syntaxErrLogger;
+		syntaxErrLogger = nullptr;
+		delete antlrParser;
+		antlrParser = nullptr;
+		delete tokens;
+		tokens = nullptr;
+		delete lexer;
+		lexer = nullptr;
+	}
+	virtual ~ParserContainer() {
 		delete hdlParser;
 		delete syntaxErrLogger;
 		delete antlrParser;

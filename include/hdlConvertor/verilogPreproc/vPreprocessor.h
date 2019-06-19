@@ -39,16 +39,17 @@ class vPreprocessor: public verilogPreproc_antlr::verilogPreprocParserBaseVisito
 	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
 
 public:
+	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
+
 	MacroDB & _defineDB;
 	antlr4::CommonTokenStream & _tokens;
 	std::vector<std::filesystem::path> _incdir;
 	bool added_incdir;
 	std::vector<std::filesystem::path> & _stack_incfile;
 	Language _mode;
-
-	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 	size_t include_depth_limit;
 	antlr4::TokenStreamRewriter _rewriter;
+
 
 	vPreprocessor(antlr4::TokenStream & tokens,
 			std::vector<std::filesystem::path> &incdir, bool added_incdir,

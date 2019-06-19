@@ -418,18 +418,14 @@ string run_verilog_preproc(ANTLRInputStream & input,
 	lexer.mode = mode;
 	lexer.reset(); // bug ?
 	CommonTokenStream tokens(&lexer);
-	/*
-	 tokens->fill();
-	 for (auto token : tokens->getTokens()) {
-	 cout << token->toString() << endl;
-	 }
-	 */
+
 	verilogPreprocParser parser(&tokens);
 	parser.mode = mode;
+	auto syntaxErrLogger = make_unique<SyntaxErrorLogger>();
+	parser.addErrorListener(syntaxErrLogger.get());
+	syntaxErrLogger->CheckErrors();
+
 	tree::ParseTree *tree = parser.file();
-	/*
-	 cout << tree->toStringTree(parser) << endl << endl;
-	 */
 	vPreprocessor extractor(tokens, incdir, added_incdir, defineDB,
 			stack_incfile, mode);
 	extractor.visit(tree);
