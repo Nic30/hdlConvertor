@@ -297,7 +297,7 @@ PyObject* ToPy::toPy(const LiteralVal * o) {
 	auto t = o->type;
 
 	if (t == symb_ID) {
-		assert(o->value._str);
+		assert(!o->_str.empty());
 		auto v = PyUnicode_FromString(o->_str.c_str());
 		if (!v)
 			return nullptr;
@@ -342,7 +342,7 @@ PyObject* ToPy::toPy(const LiteralVal * o) {
 	} else if (t == symb_OPEN) {
 		Py_RETURN_NONE;
 	} else if (t == symb_ARRAY) {
-		assert(o->value_arr);
+		assert(o->_arr);
 		auto val = PyList_New(o->_arr->size());
 		if (!val)
 			return nullptr;
