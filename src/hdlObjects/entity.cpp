@@ -8,7 +8,7 @@ Entity::Entity() :
 }
 Variable * Entity::getPortByName(const std::string & name) {
 	for (auto p : ports) {
-		assert(p->name);
+		assert(!p->name.empty());
 		if (p->name == name)
 			return p;
 	}
