@@ -49,6 +49,7 @@ public:
 			vhdlParser::Shift_expressionContext* ctx);
 	static Expr* visitTerm(vhdlParser::TermContext* ctx);
 	static Expr* visitFactor(vhdlParser::FactorContext* ctx);
+	static Expr* visitType_conversion(vhdlParser::Type_conversionContext * ctx);
 	static Expr* visitPrimary(vhdlParser::PrimaryContext* ctx);
 	static Expr* visitQualified_expression(
 			vhdlParser::Qualified_expressionContext* ctx);

@@ -1026,12 +1026,12 @@ factor:
 ;
 primary:
         literal
-      | qualified_expression
       | LPAREN expression RPAREN
-      | function_call
-      | type_conversion
       | allocator
       | aggregate
+      | function_call
+      | type_conversion
+      | qualified_expression
       | name
 ;
 condition_operator: COND_OP;

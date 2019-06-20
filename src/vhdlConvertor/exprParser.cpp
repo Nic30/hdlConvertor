@@ -385,7 +385,6 @@ Expr* ExprParser::visitRelation(vhdlParser::RelationContext* ctx) {
 	}
 
 	return op0;
-
 }
 Expr* ExprParser::visitShift_expression(
 		vhdlParser::Shift_expressionContext* ctx) {
@@ -460,20 +459,19 @@ Expr* ExprParser::visitFactor(vhdlParser::FactorContext* ctx) {
 	return op0;
 }
 Expr * ExprParser::visitPrimary(vhdlParser::PrimaryContext* ctx) {
-	// primary
-	// : literal
-	// | qualified_expression
-	// | LPAREN expression RPAREN
-	// | allocator
-	// | aggregate
-	// | name
+	// primary:
+	//         literal
+	//       | LPAREN expression RPAREN
+	//       | allocator
+	//       | aggregate
+	//       | function_call
+	//       | type_conversion
+	//       | qualified_expression
+	//       | name
 	// ;
 	auto l = ctx->literal();
 	if (l)
 		return LiteralParser::visitLiteral(l);
-	auto qe = ctx->qualified_expression();
-	if (qe)
-		return visitQualified_expression(qe);
 	auto e = ctx->expression();
 	if (e)
 		return visitExpression(e);
@@ -483,24 +481,63 @@ Expr * ExprParser::visitPrimary(vhdlParser::PrimaryContext* ctx) {
 	auto ag = ctx->aggregate();
 	if (ag)
 		return visitAggregate(ag);
+	auto fc = ctx->function_call();
+	if (fc)
+		return visitFunction_call(fc);
+	auto tc = ctx->type_conversion();
+	if (tc)
+		return visitType_conversion(tc);
+	auto qe = ctx->qualified_expression();
+	if (qe)
+		return visitQualified_expression(qe);
+
 	auto n = ctx->name();
+	assert(n);
 	return ReferenceParser::visitName(n);
+}
+Expr* ExprParser::visitType_conversion(
+		vhdlParser::Type_conversionContext * ctx) {
+	// type_conversion: type_mark LPAREN expression RPAREN;
+	auto _tm = ctx->type_mark();
+	auto tm = visitType_mark(_tm);
+	auto _e = ctx->expression();
+	auto e = visitExpression(_e);
+
+	return new Expr(tm, OperatorType::CALL, e);
 }
 Expr* ExprParser::visitQualified_expression(
 		vhdlParser::Qualified_expressionContext* ctx) {
-	// qualified_expression
-	// : subtype_indication APOSTROPHE ( aggregate | LPAREN expression
-	// RPAREN )
+	// qualified_expression:
+	//       type_mark APOSTROPHE
+	//       	(LPAREN expression RPAREN)
+	//       	| aggregate
 	// ;
-	NotImplementedLogger::print("ExprParser visitQualified_expression");
-	return nullptr;
+	auto _tm = ctx->type_mark();
+	Expr * tm = visitType_mark(_tm);
+	Expr * e = nullptr;
+	auto _e = ctx->expression();
+	if (_e)
+		e = visitExpression(_e);
+	else {
+		auto a = ctx->aggregate();
+		e = visitAggregate(a);
+	}
+	return new Expr(tm, OperatorType::APOSTROPHE, e);
 }
 Expr* ExprParser::visitAllocator(vhdlParser::AllocatorContext* ctx) {
 	// allocator
 	// : NEW ( qualified_expression | subtype_indication )
 	// ;
-	NotImplementedLogger::print("ExprParser visitAllocator");
-	return nullptr;
+	auto n = Expr::ID("new");
+	Expr * e;
+	auto qe = ctx->qualified_expression();
+	if (qe)
+		e = visitQualified_expression(qe);
+	else {
+		auto si = ctx->subtype_indication();
+		e = visitSubtype_indication(si);
+	}
+	return new Expr(n, OperatorType::CALL, e);
 
 }
 Expr* ExprParser::visitAggregate(vhdlParser::AggregateContext* ctx) {
@@ -678,7 +715,8 @@ Expr * ExprParser::visitProcedure_call(
 
 Expr * ExprParser::visitType_mark(vhdlParser::Type_markContext * ctx) {
 	// type_mark: name;
-	return ReferenceParser::visitName(ctx->name());
+	auto n = ctx->name();
+	return ReferenceParser::visitName(n);
 }
 
 }

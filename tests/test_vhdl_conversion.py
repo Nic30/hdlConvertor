@@ -55,6 +55,9 @@ class VhdlConversionTC(BasicTC):
     def test_call(self):
         self.parseWithRef("call.vhd", Language.VHDL)
 
+    def test_type_attribute_designator(self):
+        self.parseWithRef("type_attribute_designator.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
