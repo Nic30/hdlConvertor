@@ -40,6 +40,7 @@ class VerilogPreprocTC(unittest.TestCase):
         golden_file = test_file  # same name but will get a diffent folder
 
         result, ref = _test_run_rel(test_file, golden_file)
+        # print(result)
         self.assertEqual(result, ref)
 
     def test_2012_p641(self):
@@ -63,7 +64,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p644(self):
         self.assertPPWorks('2012_p644.txt')
 
-    def assertPPError(self, file, err_msg):
+    def assertPPError(self, file, err_msg, contains=False):
         with self.assertRaises(ParseException) as context:
             f = path.join(TEST_DIR, 'sv_pp', 'src', file)
             c = HdlConvertor()
@@ -72,13 +73,24 @@ class VerilogPreprocTC(unittest.TestCase):
                 [path.join('sv_pp', 'src'), ],
                 SV
             )
-        self.assertEqual(err_msg, context.exception.__str__())
+        e = str(context.exception)
+        if contains:
+            self.assertIn(err_msg, e)
+        else:
+            self.assertGreaterEqual(len(e), len(err_msg))
+            _e = e[-len(err_msg):]
+            if err_msg != _e:
+                # print whole error if there is some problem
+                self.assertEqual(err_msg, e)
+            else:
+                self.assertEqual(err_msg, _e)
 
     def test_2012_p644_2(self):
         # [TODO] platform dependent path
         self.assertPPError(
             '2012_p644_2.txt',
-            '/home/mydir/myfile was not found in include directories\n'
+            "SyntaxError:mismatched input",
+            contains=True
         )
 
     def test_2012_p641_il1(self):
@@ -111,7 +123,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p642_il2(self):
         self.assertPPError(
             '2012_p642_il2.txt',
-            'Macro MACRO3 requires braces and expects (0 to 3 arguments).'
+            'Macro MACRO3 requires braces and expects 0 to 3 arguments.'
         )
 
     def test_2012_p642_il3(self):

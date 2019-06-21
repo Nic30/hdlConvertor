@@ -29,8 +29,15 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         with self.assertRaises(ParseException) as context:
             self.run_pp_by_methodname()
 
-        e = context.exception.__str__()
-        self.assertEqual(err_msg, e)
+        e = str(context.exception)
+        # print(e)
+        self.assertGreaterEqual(len(e), len(err_msg))
+        _e = e[-len(err_msg):]
+        if err_msg != _e:
+            # print whole error if there is some problem
+            self.assertEqual(err_msg, e)
+        else:
+            self.assertEqual(err_msg, _e)
 
     def test_celldefine(self):
         self.run_pp_by_methodname()
@@ -158,7 +165,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocGrammarTC('test_real2'))
+    # suite.addTest(VerilogPreprocGrammarTC('test_comments'))
     suite.addTest(unittest.makeSuite(VerilogPreprocGrammarTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
