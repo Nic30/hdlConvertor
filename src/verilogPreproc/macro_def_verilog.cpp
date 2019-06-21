@@ -2,24 +2,40 @@
 #include <algorithm>
 #include <sstream>
 #include <assert.h>
-#include "../../include/hdlConvertor/verilogPreproc/macro_def_verilog.h"
-
+#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
+#include <iostream>
 using namespace std;
 
 namespace hdlConvertor {
 namespace verilog_pp {
 
 MacroDefVerilog::MacroDefVerilog(const string & _name, bool _has_params,
-		const vector<string> & _params,
-		const std::map<std::string, std::string> & _default_args,
-		const string & _body) :
-		aMacroDef(_name), has_params(_has_params), params(_params), default_args(
-				_default_args) {
+		const vector<param_info_t> & _params, const string & _body) :
+		aMacroDef(_name), has_params(_has_params), params(_params) {
 	parse_body(_params, _body, body);
 }
 
-void MacroDefVerilog::parse_body(const std::vector<std::string> & params,
-		const std::string & body, std::vector<MacroDefVerilog::Fragment> & res) {
+std::pair<size_t, size_t> MacroDefVerilog::get_possible_arg_cnt() const {
+	size_t max_arg_cnt = params.size();
+	size_t optional_arg_cnt = 0;
+	for (auto & p : params) {
+		if (p.has_def_val)
+			optional_arg_cnt++;
+	}
+	return {max_arg_cnt- optional_arg_cnt, max_arg_cnt};
+}
+string MacroDefVerilog::get_possible_arg_cnt_str() const {
+	auto cnt = get_possible_arg_cnt();
+	if (cnt.first != cnt.second) {
+		return std::to_string(cnt.first) + " to " + std::to_string(cnt.second);
+	} else {
+		return std::to_string(cnt.second);
+	}
+}
+
+void MacroDefVerilog::parse_body(const std::vector<param_info_t> & params,
+		const std::string & body,
+		std::vector<MacroDefVerilog::Fragment> & res) {
 	collect_string_intervals(body);
 	bool no_body = body.size() == 0;
 	if (no_body || params.size() == 0) {
@@ -35,7 +51,7 @@ void MacroDefVerilog::parse_body(const std::vector<std::string> & params,
 	for (size_t p_i = 0; p_i < params.size(); p_i++) {
 		const auto & p = params[p_i];
 		size_t start_pos = 0;
-		while ((start_pos = body.find(p, start_pos)) != string::npos) {
+		while ((start_pos = body.find(p.name, start_pos)) != string::npos) {
 			if (start_pos > 0) {
 				auto c_pre = body[start_pos - 1];
 				auto is_part_of_literal = isalnum(c_pre) || '_' == c_pre
@@ -44,14 +60,8 @@ void MacroDefVerilog::parse_body(const std::vector<std::string> & params,
 					start_pos += 1;
 					continue;
 				}
-				auto s = check_is_in_string(start_pos);
-				if (s) {
-					assert(start_pos < s->second);
-					start_pos = s->second;
-					continue;
-				}
 			}
-			auto c_post = body[start_pos + p.length()];
+			auto c_post = body[start_pos + p.name.length()];
 
 			/*
 			 * Test what is next character. If next character is part of [a-zA-Z0-9_$([{] then it is not what we have to replace.
@@ -76,8 +86,8 @@ void MacroDefVerilog::parse_body(const std::vector<std::string> & params,
 			}
 			auto s = check_is_in_string(start_pos);
 			if (s) {
-				assert(start_pos < s->second);
-				start_pos = s->second;
+				assert(start_pos < s->first + s->second);
+				start_pos = s->first + s->second;
 				continue;
 			}
 			found_param_usage.push_back( { start_pos, p_i });
@@ -93,7 +103,7 @@ void MacroDefVerilog::parse_body(const std::vector<std::string> & params,
 			res.push_back(Fragment(s));
 		}
 		res.push_back(Fragment(fp.second));
-		start = fp.first + params[fp.second].length();
+		start = fp.first + params[fp.second].name.length();
 	}
 	if (start != body.length()) {
 		auto s = body.substr(start);
@@ -135,17 +145,12 @@ void MacroDefVerilog::collect_string_intervals(const string & tmpl) {
 				"Unfinished string in definition of macro " + name + ".");
 }
 
-string MacroDefVerilog::replace(std::vector<std::string> args, bool args_specified,
-		vPreprocessor * pp, antlr4::ParserRuleContext * ctx) {
+string MacroDefVerilog::replace(std::vector<std::string> args,
+		bool args_specified, vPreprocessor * pp,
+		antlr4::ParserRuleContext * ctx) {
 	if (has_params && !args_specified) {
 		string msg = "Macro " + name + " requires braces and expects ";
-		if (default_args.size()) {
-			msg += "(" + std::to_string(params.size() - default_args.size())
-					+ " to ";
-		} else {
-			msg += "(";
-		}
-		msg += std::to_string(params.size()) + " arguments).";
+		msg += get_possible_arg_cnt_str() + " arguments.";
 		throw ParseException(msg);
 	}
 	if (!has_params && args_specified) {
@@ -160,44 +165,31 @@ string MacroDefVerilog::replace(std::vector<std::string> args, bool args_specifi
 			bool value_required = i >= orig_args_cnt;
 			bool use_defult_value = value_required || args[i].length() == 0;
 			if (use_defult_value) {
-				const auto & p_name = params[i];
-				auto def = default_args.find(p_name);
-				if (def == default_args.end()) {
+				const auto & p = params[i];
+				if (!p.has_def_val) {
 					if (!value_required)
 						continue;
 					string msg = "Macro " + name
-							+ " missing value for parameter " + p_name + " ";
+							+ " missing value for parameter " + p.name + " ";
 					bool is_last = i == params.size() - 1;
 					if (!is_last)
 						msg += "and for parameters after ";
-					if (default_args.size()) {
-						msg += "("
-								+ std::to_string(
-										params.size() - default_args.size())
-								+ " to ";
-					} else {
-						msg += "(";
-					}
-					msg += std::to_string(params.size())
+					msg += "(" + get_possible_arg_cnt_str()
 							+ " arguments expected but "
 							+ to_string(orig_args_cnt) + " provided).";
 					throw ParseException(msg);
 				}
 				if (i < orig_args_cnt) {
-					args[i] = def->second;
+					args[i] = p.def_val;
 				} else {
-					args.push_back(def->second);
+					args.push_back(p.def_val);
 				}
 
 			}
 		}
 	} else if (args.size() > params.size()) {
-		string msg = "Macro " + name + " expected ";
-		if (default_args.size()) {
-			msg += std::to_string(params.size() - default_args.size()) + " to ";
-		}
-		msg += std::to_string(params.size()) + " arguments but "
-				+ to_string(args.size()) + " provided.";
+		string msg = "Macro " + name + " expected " + get_possible_arg_cnt_str()
+				+ " arguments but " + to_string(args.size()) + " provided.";
 		throw ParseException(msg);
 	}
 

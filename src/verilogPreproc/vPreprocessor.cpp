@@ -73,8 +73,8 @@ void processIfdef(vPreprocessor& sefl, CTX_T * ctx, bool is_negated,
 	}
 	auto token = ctx->getSourceInterval();
 	if (matched) {
-		rewriter.Delete(token.a, token_to_keep.a-1);
-		rewriter.Delete(token_to_keep.b+1, token.b);
+		rewriter.Delete(token.a, token_to_keep.a - 1);
+		rewriter.Delete(token_to_keep.b + 1, token.b);
 	} else {
 		rewriter.Delete(token.a, token.b);
 	}
@@ -170,36 +170,62 @@ antlrcpp::Any vPreprocessor::visitUndefineall(
 	return NULL;
 }
 
+antlrcpp::Any vPreprocessor::visitDefine_args_with_def_val(
+		verilogPreprocParser::Define_args_with_def_valContext *ctx) {
+	auto params = ctx->param_with_def_val();
+	auto res = new vector<MacroDefVerilog::param_info_t>();
+	res->reserve(params.size());
+	// define_args_with_def_val:
+	// 	param_with_def_val ( DM_COMMA param_with_def_val )*
+	// ;
+	for (auto p : params) {
+		// param_with_def_val:
+		// 	var_id (DM_EQUAL default_text?) ?
+		// ;
+		MacroDefVerilog::param_info_t i;
+		i.name = p->var_id()->getText();
+		i.has_def_val = p->EQUAL() != nullptr;
+		if (i.has_def_val) {
+			auto dt = p->default_text();
+			if (dt)
+				i.def_val = dt->getText();
+		}
+		res->push_back(i);
+	}
+	return res;
+}
+
+antlrcpp::Any vPreprocessor::visitDefine_args_basic(
+		verilogPreprocParser::Define_args_basicContext *ctx) {
+	// define_args_basic:
+	// 	var_id ( DM_COMMA var_id )*
+	// ;
+	auto params = ctx->var_id();
+	auto res = new vector<MacroDefVerilog::param_info_t>();
+	res->reserve(params.size());
+	for (auto p : params) {
+		res->push_back( { p->getText(), false, "" });
+	}
+	return res;
+}
+
 //method call when the definition of a macro is found
 antlrcpp::Any vPreprocessor::visitDefine(
 		verilogPreprocParser::DefineContext * ctx) {
 	//printf("@%s - %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
 	// get the macro name
-	string macroName = ctx->macro_id()->getText();
+	string def_name = ctx->macro_id()->getText();
 	//printf("%s\n", macroName.c_str());
 	string body;
 
-	map<string, string> default_args;
-
-	for (unsigned int i = 0; i < ctx->children.size(); i++) {
-		if (antlrcpp::is<verilogPreprocParser::Default_textContext *>(
-				ctx->children[i])) {
-			auto kw_name = ctx->children[i - 2]->getText();
-			auto kw_val = ctx->children[i]->getText();
-			//printf("arg: %s defaut: %s\n",kw_name.c_str(), kw_val.c_str());
-			default_args[kw_name] = ctx->children[i]->getText();
-		}
+	auto da = ctx->define_args();
+	vector<MacroDefVerilog::param_info_t> * params;
+	vector<MacroDefVerilog::param_info_t> params_dummy;
+	if (da)
+		params = visitDefine_args(da);
+	else {
+		params = &params_dummy;
 	}
-
-	vector<string> params;
-	// test the number of argument
-	auto _params = ctx->var_id();
-	// the macro has argument so we take each of them and register them in
-	// a vector<string>
-	for (auto arg : _params) {
-		params.push_back(arg->getText());
-	}
-	// for (auto a:data) { printf("  *%s*\n",a.c_str()); }
 	// get the template
 	if (ctx->replacement() != nullptr) {
 		body = _tokens.getText(ctx->replacement()->getSourceInterval());
@@ -207,19 +233,18 @@ antlrcpp::Any vPreprocessor::visitDefine(
 				ctx->replacement()->getStop(), &body);
 		body = rtrim(body);
 	}
-	if (_mode < Language::SV2012) {
-		assert(default_args.size() == 0);
+	bool has_params = da != nullptr;
+	try {
+		auto item = new MacroDefVerilog(def_name, has_params, *params, body);
+		_defineDB.insert( { def_name, item });
+	} catch (const ParseException & e) {
+		throw_input_caused_error(ctx, e.what());
 	}
-	bool has_params = ctx->children.size() >= 3
-			&& ctx->children[2]->getText() == "(";
-	auto item = new MacroDefVerilog(macroName, has_params, params, default_args,
-			body);
-	_defineDB.insert( { macroName, item });
+	if (da)
+		delete params;
 
 	// the macro definition is replace by an empty string in the original
 	// source code
-	//misc::Interval token = ctx->getSourceInterval();
-	//_rewriter.replace(token.a, token.b, string(""));
 	replace_context_by_bank(ctx);
 
 	return NULL;
@@ -241,23 +266,36 @@ antlrcpp::Any vPreprocessor::visitUndef(
 antlrcpp::Any vPreprocessor::visitToken_id(
 		verilogPreprocParser::Token_idContext * ctx) {
 	// printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
-	// token_id
-	//     : BACKTICK macro_toreplace LP value? (MR_COMMA value? )* RP
-	//     | BACKTICK macro_toreplace
-	//     ;
+	// token_id:
+	// 	OTHER_MACRO_NO_ARGS
+	// 	| OTHER_MACRO_WITH_ARGS value? (COMMA value? )* RP )?
+	// ;
 
-	auto macroName = ctx->macro_toreplace()->getText();
-
-	//create a macroPrototype object
+	string macro_name;
 	vector<string> args;
-	bool has_args = ctx->children.size() > 2;
-	if (has_args) {
+	bool has_args = false;
+	auto no_args = ctx->OTHER_MACRO_NO_ARGS();
+	if (no_args) {
+		macro_name = no_args->getText().substr(1);
+	} else {
+		auto with_args = ctx->OTHER_MACRO_WITH_ARGS();
+		assert(with_args);
+		auto _macro_name = with_args->getText();
+		size_t end_of_name = 1;
+		for (; end_of_name < _macro_name.size(); end_of_name++) {
+			auto c = _macro_name[end_of_name];
+			if (!isalnum(c) && c != '_')
+				break;
+		}
+		macro_name = _macro_name.substr(1, end_of_name - 1);
+
+		has_args = true;
+		//create a macroPrototype object
 		bool expected_value = true;
 		bool last_was_comma = false;
 		auto end = ctx->children.end();
-		for (auto _c = ctx->children.begin() + 3; _c != end; ++_c) {
+		for (auto _c = ctx->children.begin() + 1; _c != end; ++_c) {
 			auto & c = *_c;
-			//printf("%s\n", c->getText().c_str());
 			auto ch_text = c->getText();
 			if (antlrcpp::is<tree::TerminalNode *>(c)) {
 				if (expected_value
@@ -278,24 +316,20 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 		}
 	}
 
-	//printf("%s\n", ctx->macro_toreplace()->getText().c_str());
-	//for (auto a : args) {
-	//	printf("  *%s*\n", a.c_str());
-	//}
-
 	//test if the macro has already been defined
-	if (_defineDB.find(macroName) == _defineDB.end()) {
-		//The  macro has not yet been defined. It is an issue we throw an
-		//exception
-		string msg = macroName + " is not defined";
-		throw ParseException(msg);
+	auto m = _defineDB.find(macro_name);
+	if (m == _defineDB.end()) {
+		throw_input_caused_error(ctx, macro_name + " is not defined");
 	}
 
 	//build the replacement string by calling the replacement method of the
 	//macro_replace object and the provided argument of the macro.
-	string replacement = _defineDB[macroName]->replace(args, has_args, this, ctx);
-	//printf("=>%s\n",replacement.c_str());
-
+	string replacement;
+	try {
+		replacement = m->second->replace(args, has_args, this, ctx);
+	} catch (const ParseException & e) {
+		throw_input_caused_error(ctx, e.what());
+	}
 	if (_mode == Language::SV2012) {
 		auto rm_str = [&replacement](string s, int n) {
 			size_t start_pos = 0;
@@ -317,19 +351,17 @@ antlrcpp::Any vPreprocessor::visitToken_id(
 
 	// replace the original macro in the source code by the replacement string
 	// we just setup
-	//printf("%s->%s\n",ctx->getText().c_str(),replacement.c_str());
 	misc::Interval token = ctx->getSourceInterval();
 	_rewriter.replace(token.a, token.b, replacement);
 	return nullptr;
 }
 
-// methode call after `ifdef `elsif `else is found
+// method call after `ifdef `elsif `else is found
 antlrcpp::Any vPreprocessor::visitIfdef_directive(
 		verilogPreprocParser::Ifdef_directiveContext * ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
+	//  printf("@%s\n",__PRETTY_FUNCTION__);
 	processIfdef(*this, ctx, false, _defineDB, _rewriter);
 	return nullptr;
-
 }
 
 // method call after `ifndef `elif `else tree is found
@@ -351,8 +383,7 @@ antlrcpp::Any vPreprocessor::visitStringLiteral(
 //method call when `include is found
 antlrcpp::Any vPreprocessor::visitInclude(
 		verilogPreprocParser::IncludeContext * ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-
+	// printf("@%s\n",__PRETTY_FUNCTION__);
 	//iterator on the list of directoy
 	auto incdir_iter = _incdir.begin();
 	bool found = false;
@@ -377,7 +408,7 @@ antlrcpp::Any vPreprocessor::visitInclude(
 		// The file was not found. We throw a exception
 		string msg = StringLiteral.substr(1, StringLiteral.size() - 2)
 				+ " was not found in include directories\n";
-		throw ParseException(msg);
+		throw_input_caused_error(ctx, msg);
 	} else if (_stack_incfile.size() > include_depth_limit) {
 		// test the number of nested include.
 		// If so throw an exception
@@ -386,7 +417,7 @@ antlrcpp::Any vPreprocessor::visitInclude(
 		for (auto f : _stack_incfile) {
 			msg << "    " << f << endl;
 		}
-		throw ParseException(msg.str());
+		throw_input_caused_error(ctx, msg.str());
 	} else {
 		//Well done. we are going to replace the content of the `include
 		//directive by the content of the processed file
@@ -410,22 +441,44 @@ antlrcpp::Any vPreprocessor::visitInclude(
 	return nullptr;
 }
 
+void vPreprocessor::throw_input_caused_error(antlr4::ParserRuleContext * ctx,
+		const std::string & _msg) {
+	auto ts = _tokens.getTokenSource();
+	auto s = ctx->start;
+	stringstream msg;
+	msg << ts->getSourceName() << ":";
+	if (s)
+		msg << ctx->start->getLine() << ":"
+				<< ctx->start->getCharPositionInLine() << ":";
+	msg << _msg;
+	throw ParseException(msg.str());
+}
+
 string run_verilog_preproc(ANTLRInputStream & input,
-		vector<filesystem::path> &incdir, bool added_incdir,
-		MacroDB & defineDB, vector<filesystem::path> & stack_incfile,
-		Language mode) {
+		vector<filesystem::path> &incdir, bool added_incdir, MacroDB & defineDB,
+		vector<filesystem::path> & stack_incfile, Language mode) {
 	verilogPreprocLexer lexer(&input);
 	lexer.mode = mode;
 	lexer.reset(); // bug ?
+	auto syntaxErrLogger = make_unique<SyntaxErrorLogger>();
+	lexer.removeErrorListeners();
+	lexer.addErrorListener(syntaxErrLogger.get());
+
 	CommonTokenStream tokens(&lexer);
 
 	verilogPreprocParser parser(&tokens);
-	parser.mode = mode;
-	auto syntaxErrLogger = make_unique<SyntaxErrorLogger>();
+	parser.removeErrorListeners();
 	parser.addErrorListener(syntaxErrLogger.get());
-	syntaxErrLogger->CheckErrors();
+	parser.mode = mode;
 
 	tree::ParseTree *tree = parser.file();
+	// cout << "tokens.size()=" << tokens.size() << endl;
+	// for (size_t i = 0; i < tokens.size(); i++) {
+	// 	cout << tokens.get(i)->toString() << endl;
+	// }
+
+	syntaxErrLogger->CheckErrors();
+
 	vPreprocessor extractor(tokens, incdir, added_incdir, defineDB,
 			stack_incfile, mode);
 	extractor.visit(tree);
@@ -436,7 +489,6 @@ string run_verilog_preproc(ANTLRInputStream & input,
 string run_verilog_preproc_str(const string & input_str,
 		vector<filesystem::path> & incdir, MacroDB & defineDB,
 		vector<filesystem::path> & stack_incfile, Language mode) {
-
 	ANTLRInputStream input(input_str);
 	input.name = "<string>";
 	return run_verilog_preproc(input, incdir, false, defineDB, stack_incfile,
@@ -490,7 +542,7 @@ void vPreprocessor::remove_comment(Token * start, Token * end, string * str) {
 			end->getTokenIndex());
 	//For all those token we are going to their channel.
 	//If the channel is of the kind we search then we search and removed it from the string.
-	//TODO : replace by " " to preserve charactere position of the original source code
+	//TODO : replace by " " to preserve character position of the original source code
 	for (auto cmt : cmtChannel) {
 		if (cmt->getChannel() == verilogPreprocLexer::CH_LINE_ESCAPE) {
 			string comment_txt = cmt->getText();

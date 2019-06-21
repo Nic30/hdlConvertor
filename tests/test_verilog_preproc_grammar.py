@@ -29,7 +29,8 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         with self.assertRaises(ParseException) as context:
             self.run_pp_by_methodname()
 
-        self.assertTrue(err_msg == context.exception.__str__())
+        e = context.exception.__str__()
+        self.assertEqual(err_msg, e)
 
     def test_celldefine(self):
         self.run_pp_by_methodname()
@@ -150,6 +151,9 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         self.run_pp_by_methodname()
 
     def test_undef(self):
+        self.run_pp_by_methodname()
+
+    def test_space_between_comments(self):
         self.run_pp_by_methodname()
 
 if __name__ == "__main__":

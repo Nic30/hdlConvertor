@@ -26,23 +26,22 @@ inline bool isSV2017() {
 
 }
 
-file
-    :  text* EOF
-    ;
+file: text* EOF;
 
-text :
-    code
-   | preprocess_directive
-   ;
-
-code
- : LINE_COMMENT|CODE
+text:
+   preprocess_directive
+  | LINE_COMMENT
+  | CODE
+  | NEW_LINE
+  | NUM
+  | ID
+  | STR
+  | NEW_LINE
+  | COMMENT
 ;
 
-
-preprocess_directive
-    :
-    define NEW_LINE
+preprocess_directive:
+    define
     | conditional
     | token_id
     | resetall
@@ -62,95 +61,71 @@ preprocess_directive
         | pragma
         )
     ;
+define:
+    DEFINE macro_id ( LP define_args RP )? WS* replacement? (LINE_COMMENT | NEW_LINE)
+;
 
-define
-    : { isSV2012() || isSV2017() }? DEFINE macro_id DM_LP var_id (DM_EQUAL default_text?) ? ( DM_COMMA var_id (DM_EQUAL default_text?)? )* DM_RP DM_WS? replacement?
-    | {!( isSV2012() || isSV2017()) }?DEFINE macro_id DM_LP var_id ( DM_COMMA var_id )* DM_RP DM_WS? replacement?
-    | DEFINE macro_id DM_WS? replacement?
-    ;
+define_args:
+     { isSV2012() || isSV2017() }? define_args_with_def_val
+ 	| { !( isSV2012() || isSV2017()) }? define_args_basic
+;
 
-replacement
-    : DNM_CODE+
-    ;
+define_args_with_def_val:
+	param_with_def_val ( COMMA param_with_def_val )*
+;
+param_with_def_val:
+	var_id (EQUAL default_text?) ?
+;
+define_args_basic:
+	var_id ( COMMA var_id )*
+;
 
-default_text
-    : DM_DTXT+
-    ;
+replacement: CODE+;
+default_text: CODE+;
 
 
-conditional
-    : ifdef_directive
+conditional:
+    ifdef_directive
     | ifndef_directive
     ;
 
-ifdef_directive
-    : IFDEF cond_id group_of_lines
+ifdef_directive:
+      IFDEF cond_id group_of_lines
       ( ELSIF cond_id group_of_lines )*
-      ( ELSE else_group_of_lines )? ENDIF
-    ;
+      ( ELSE else_group_of_lines )?
+      ENDIF
+;
 
 
-ifndef_directive
-    : IFNDEF cond_id group_of_lines
+ifndef_directive:
+      IFNDEF cond_id group_of_lines
       ( ELSIF cond_id group_of_lines )*
-      ( ELSE else_group_of_lines )? ENDIF
-    ;
+      ( ELSE else_group_of_lines )?
+      ENDIF
+;
 
-else_group_of_lines
-    : group_of_lines
-    ;
+else_group_of_lines: group_of_lines;
+group_of_lines: text*;
 
-group_of_lines
-    : text*
-    ;
+token_id:
+	OTHER_MACRO_NO_ARGS
+	| OTHER_MACRO_WITH_ARGS value? (COMMA value? )* RP
+;
 
-token_id
-    : BACKTICK macro_toreplace LP value? (MR_COMMA value? )* RP
-    | BACKTICK macro_toreplace
-    ;
+value: text+;
 
-value
-    : MR_CODE+
-    ;
+macro_id: ID;
+var_id: COMMENT* ID COMMENT*;
+cond_id: ID;
+undef: UNDEF ID NEW_LINE;
+celldefine: CELLDEFINE;
+endcelldefine: ENDCELLDEFINE;
+unconnected_drive: UNCONNECTED_DRIVE;
+nounconnected_drive: NOUNCONNECTED_DRIVE;
 
-macro_id
-    : DM_ID
-    ;
-var_id
-    : DM_ID
-    ;
-
-macro_toreplace
-    : ID
-    ;
-
-cond_id
-    : ID
-    ;
-
-undef
-    : UNDEF ID NEW_LINE
-    ;
-
-celldefine
-    : CELLDEFINE
-    ;
-
-endcelldefine
-    : ENDCELLDEFINE
-    ;
-
-unconnected_drive
-    : UNCONNECTED_DRIVE
-    ;
-
-nounconnected_drive
-    : NOUNCONNECTED_DRIVE
-    ;
-
-default_nettype
-    : DEFAULT_NETTYPE default_nettype_value NEW_LINE
-    ;
+default_nettype:
+    DEFAULT_NETTYPE default_nettype_value
+;
 
 default_nettype_value
     : WIRE
@@ -167,66 +142,57 @@ default_nettype_value
     | {isVerilog2005()}? UWIRE
     ;
 
-line_directive
-   : LINE DIGIT+ StringLiteral_double_quote DIGIT NEW_LINE
-   ;
+line_directive:
+   LINE NUM STR NUM
+;
 
-timing_spec
-   : TIMESCALE Time_Identifier SLASH Time_Identifier NEW_LINE
-   ;
+timing_spec:
+   TIMESCALE Time_Identifier TIMING_SPEC_MODE_SLASH Time_Identifier
+;
 
-resetall
-   : RESETALL
-   ;
+resetall: RESETALL;
+undefineall: UNDEFINEALL;
 
-undefineall
-   : UNDEFINEALL
-   ;
+keywords_directive:
+   BEGIN_KEYWORDS version_specifier
+;
 
-keywords_directive
-  : BEGIN_KEYWORDS version_specifier NEW_LINE
-  ;
+version_specifier:
+     {isSV2017()}? V18002017
+   | {isSV2012()}? V18002012
+   | {isSV2012()}? V18002009
+   | {isSV2012()}? V18002005
+   | {isVerilog2005()}? V13642005
+   | V13642001
+   | V13642001noconfig
+   | V13641995
+;
 
-version_specifier
-  : {isSV2017()}? V18002017
-  | {isSV2012()}? V18002012
-  | {isSV2012()}? V18002009
-  | {isSV2012()}? V18002005
-  | {isVerilog2005()}? V13642005
-  | V13642001
-  | V13642001noconfig
-  | V13641995
-  ;
+endkeywords_directive: END_KEYWORDS;
+include: INCLUDE stringLiteral;
 
-endkeywords_directive
-  : END_KEYWORDS
-  ;
+stringLiteral:
+    STR
+    | INCLUDE_MODE_StringLiteral_chevrons
+    | {isSV2012() || isSV2017()}? token_id
+;
 
-include
-  : INCLUDE stringLiteral
-  ;
-
-stringLiteral
-    : StringLiteral_double_quote | StringLiteral_chevrons | {isSV2012() || isSV2017()}? token_id
-    ;
-
-pragma
-  : PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? NEW_LINE
-  ;
+pragma:
+    PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? NEW_LINE
+;
 
 pragma_name : ID;
-
-pragma_expression :
-pragma_keyword
-| pragma_keyword EQUAL pragma_value
-| pragma_value
+pragma_expression:
+    pragma_keyword
+    | pragma_keyword EQUAL pragma_value
+    | pragma_value
 ;
 
 pragma_value :
-LP pragma_expression ( COMMA pragma_expression )* RP
-| DIGIT+
-| StringLiteral_double_quote
-| ID
+    LP pragma_expression ( COMMA pragma_expression )* RP
+    | NUM
+    | STR
+    | ID
 ;
 
 pragma_keyword : ID;

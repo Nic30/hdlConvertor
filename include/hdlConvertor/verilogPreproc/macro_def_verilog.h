@@ -33,6 +33,11 @@ protected:
 	void collect_string_intervals(const std::string & str);
 
 public:
+	struct param_info_t {
+		std::string name;
+		bool has_def_val;
+		std::string def_val;
+	};
 	/*
 	 * Fragment of the macro body, can be string or reference to an argument of a macro
 	 * */
@@ -50,22 +55,22 @@ public:
 	};
 
 	bool has_params;
-	std::vector<std::string> params;
-	std::map<std::string, std::string> default_args;
+	std::vector<param_info_t> params;
 	std::vector<Fragment> body;
 
 	// class constructor
 	MacroDefVerilog(const std::string & name, bool has_params,
-			const std::vector<std::string> & params,
-			const std::map<std::string, std::string> & default_args,
-			const std::string & body);
-	void parse_body(const std::vector<std::string> & params,
+			const std::vector<param_info_t> & params, const std::string & body);
+	void parse_body(const std::vector<param_info_t> & params,
 			const std::string & body,
 			std::vector<MacroDefVerilog::Fragment> & res);
+	std::pair<size_t, size_t> get_possible_arg_cnt() const;
+	std::string get_possible_arg_cnt_str() const;
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
 			bool args_specified, vPreprocessor * pp,
 			antlr4::ParserRuleContext * ctx) override;
+
 };
 
 }
