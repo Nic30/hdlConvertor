@@ -51,6 +51,7 @@ public:
 			Verilog2001Parser::Continuous_assignContext * ctx);
 	static Statement* visitNet_assignment(
 			Verilog2001Parser::Net_assignmentContext * ctx);
+	Statement * visitInitial_construct(Verilog2001Parser::Initial_constructContext * ctx);
 };
 
 }

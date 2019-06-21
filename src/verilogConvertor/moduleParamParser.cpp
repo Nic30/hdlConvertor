@@ -13,6 +13,13 @@ ModuleParamParser::ModuleParamParser(CommentParser & commentParser) :
 		commentParser(commentParser) {
 }
 
+Expr * ModuleParamParser::visitParameter_identifier(
+		Verilog2001Parser::Parameter_identifierContext * ctx) {
+	// parameter_identifier
+	//    : identifier
+	//    ;
+	return VerExprParser::visitIdentifier(ctx->identifier());
+}
 vector<Variable*>* ModuleParamParser::visitModule_parameter_port_list(
 		Verilog2001Parser::Module_parameter_port_listContext* ctx) {
 	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','

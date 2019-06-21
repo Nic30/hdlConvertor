@@ -1,4 +1,6 @@
 #include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
@@ -61,7 +63,7 @@ Expr * VerExprParser::visitRange_expression(
 	// lsb_constant_expression : constant_expression ;
 	// width_constant_expression : constant_expression ;
 	// base_expression : expression ;
-	NotImplementedLogger::print("ExpressionParser.visitRange_expression");
+	NotImplementedLogger::print("VerExprParser.visitRange_expression");
 	return nullptr;
 }
 Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
@@ -76,103 +78,7 @@ Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
 					ctx->lsb_constant_expression()->constant_expression()));
 
 }
-OperatorType VerExprParser::visitUnary_operator(
-		Verilog2001Parser::Unary_operatorContext * ctx) {
-	// unary_operator
-	//    : '+'
-	//    | '-'
-	//    | '!'
-	//    | '~'
-	//    | '&'
-	//    | '~&'
-	//    | '|'
-	//    | '~|'
-	//    | '^'
-	//    | '~^'
-	//    | '^~'
-	//    ;
-	std::string op = ctx->getText();
 
-	if (op == "+") {
-		return ADD;
-	} else if (op == "-") {
-		return SUB;
-	} else if (op == "!") {
-		return NOT;
-	} else if (op == "~") {
-		return NEG;
-	} else if (op == "&") {
-		return AND;
-	} else if (op == "~&") {
-		return NAND;
-	} else if (op == "|") {
-		return OR;
-	} else if (op == "~|") {
-		return NOR;
-	} else if (op == "^") {
-		return XOR;
-	} else if (op == "~^") {
-		return XNOR;
-	} else if (op == "^~") {
-		return XNOR;
-	}
-
-	throw std::runtime_error("Unsupported unary operator " + op);
-}
-OperatorType VerExprParser::visitBinary_operator(
-		Verilog2001Parser::Binary_operatorContext * ctx) {
-	// binary_operator : '+' | '-' | '*' | '/' | '%' | '==' | '!=' | '===' |
-	// '!==' | '&&' | '||' | '**' | '<' | '<=' | '>' | '>=' | '&' | '|' |
-	// '^' | '^~' | '~^' | '>>' | '<<' | '>>>' | '<<<' ;
-	// [TODO] log eq, neq
-	std::string op = ctx->getText();
-
-	if (op.compare("+") == 0)
-		return ADD;
-	else if (op.compare("-") == 0)
-		return SUB;
-	else if (op.compare("*") == 0)
-		return MUL;
-	else if (op.compare("/") == 0)
-		return DIV;
-	else if (op.compare("%") == 0)
-		return MOD;
-	else if (op.compare("==") == 0 || op.compare("===") == 0)
-		return EQ;
-	else if (op.compare("!=") == 0 || op.compare("!==") == 0)
-		return NEQ;
-	else if (op.compare("&&") == 0)
-		return LOG_AND;
-	else if (op.compare("||") == 0)
-		return LOG_OR;
-	else if (op.compare("**") == 0)
-		return POW;
-	else if (op.compare("<") == 0)
-		return LT;
-	else if (op.compare("<=") == 0)
-		return LE;
-	else if (op.compare(">") == 0)
-		return GT;
-	else if (op.compare(">=") == 0)
-		return GE;
-	else if (op.compare("&") == 0)
-		return AND;
-	else if (op.compare("|") == 0)
-		return OR;
-	else if (op.compare("^") == 0)
-		return XOR;
-	else if (op.compare("^~") == 0 || op.compare("~^") == 0
-			|| op.compare(">>") == 0)
-		return SRL;
-	else if (op.compare("<<") == 0)
-		return SLL;
-	else if (op.compare(">>>") == 0)
-		return SRA;
-
-	assert(op.compare("<<<") == 0);
-	return SLA;
-
-}
 Expr * VerExprParser::visitNet_lvalue(
 		Verilog2001Parser::Net_lvalueContext * ctx) {
 	// net_lvalue
@@ -242,6 +148,53 @@ Expr * VerExprParser::visitHierarchical_net_identifier(
 	//    ;
 	return visitHierarchical_identifier(ctx->hierarchical_identifier());
 }
+Expr * VerExprParser::visitDelay_control(
+		Verilog2001Parser::Delay_controlContext * ctx) {
+	// delay_control
+	//    : '#' delay_value
+	//    | '#' '(' mintypmax_expression ')'
+	//    ;
+	auto dv = ctx->delay_value();
+	if (dv)
+		return visitDelay_value(dv);
+	else {
+		auto me = ctx->mintypmax_expression();
+		return visitMintypmax_expression(me);
+	}
+
+}
+Expr * VerExprParser::visitDelay_value(
+		Verilog2001Parser::Delay_valueContext * ctx) {
+	// delay_value
+	//    : Decimal_number
+	//    | parameter_identifier
+	//    | specparam_identifier
+	//    | mintypmax_expression
+	//    ;
+	auto dn = ctx->Decimal_number();
+	if (dn) {
+		return VerLiteralParser::parseIntNumber(dn, 10);
+	}
+	auto pi = ctx->parameter_identifier();
+	if (pi) {
+		ModuleParamParser::visitParameter_identifier(pi);
+	}
+	auto si = ctx->specparam_identifier();
+	if (si)
+		return visitSpecparam_identifier(si);
+	auto me = ctx->mintypmax_expression();
+	assert(me);
+	return visitMintypmax_expression(me);
+
+}
+Expr * VerExprParser::visitSpecparam_identifier(
+		Verilog2001Parser::Specparam_identifierContext * ctx) {
+	// specparam_identifier
+	//    : identifier
+	//    ;
+	return visitIdentifier(ctx->identifier());
+}
+
 Expr * VerExprParser::visitExpression(
 		Verilog2001Parser::ExpressionContext * ctx) {
 	// expression:
@@ -274,7 +227,7 @@ Expr * VerExprParser::visitExpression(
 					break;
 				}
 			}
-			top = new Expr(top, visitBinary_operator(binOp),
+			top = new Expr(top, VerLiteralParser::visitBinary_operator(binOp),
 					visitTerm((Verilog2001Parser::TermContext*) ch2));
 		} else {
 			while (true) {
@@ -313,7 +266,7 @@ Expr * VerExprParser::visitTerm(Verilog2001Parser::TermContext* ctx) {
 		auto e = visitPrimary(p);
 		auto uOp = ctx->unary_operator();
 		if (uOp) {
-			auto o = visitUnary_operator(uOp);
+			auto o = VerLiteralParser::visitUnary_operator(uOp);
 			return new Expr(e, o, nullptr);
 		} else {
 			return e;
@@ -382,16 +335,49 @@ Expr * VerExprParser::visitConstant_function_call(
 	// function_identifier attribute_instance* '('
 	// (constant_expression ( ',' constant_expression )*)? ')'
 	// ;
-	NotImplementedLogger::print("ExpressionParser.visitConstant_function_call");
-	return NULL;
+	if (ctx->attribute_instance().size()) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitConstant_function_call - attribute_instance");
+	}
+
+	auto fi = ctx->function_identifier();
+	Expr * fn = visitFunction_identifier(fi);
+	std::vector<Expr*> args;
+	auto exprs = ctx->constant_expression();
+	for (auto e : exprs) {
+		Expr * a = visitConstant_expression(e);
+		args.push_back(a);
+	}
+	return Expr::call(fn, args);
+}
+Expr * VerExprParser::visitFunction_identifier(
+		Verilog2001Parser::Function_identifierContext * ctx) {
+	// function_identifier
+	//    : identifier
+	//    ;
+	return visitIdentifier(ctx->identifier());
+}
+Expr * VerExprParser::visitSystem_function_identifier(
+		Verilog2001Parser::System_function_identifierContext *ctx) {
+	// system_function_identifier
+	//    : Dollar_Identifier
+	//    ;
+	return VerLiteralParser::visitDolar_identifier(ctx->Dollar_Identifier());
 }
 Expr * VerExprParser::visitSystem_function_call(
 		Verilog2001Parser::System_function_callContext* ctx) {
 	// system_function_call :
 	// system_function_identifier (expression ( ',' expression )*)?
 	// ;
-	NotImplementedLogger::print("ExpressionParser.visitSystem_function_call");
-	return NULL;
+	auto sfi = ctx->system_function_identifier();
+	Expr * fn = visitSystem_function_identifier(sfi);
+	std::vector<Expr*> args;
+	auto exprs = ctx->expression();
+	for (auto e : exprs) {
+		Expr * a = visitExpression(e);
+		args.push_back(a);
+	}
+	return Expr::call(fn, args);
 }
 Expr * VerExprParser::visitFunction_call(
 		Verilog2001Parser::Function_callContext* ctx) {
@@ -399,6 +385,10 @@ Expr * VerExprParser::visitFunction_call(
 	// : hierarchical_function_identifier attribute_instance*
 	// '(' (expression ( ',' expression )*)? ')'
 	// ;
+	if (ctx->attribute_instance().size()) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitFunction_call - attribute_instance");
+	}
 	auto hfi = ctx->hierarchical_function_identifier();
 	Expr * fn = visitHierarchical_function_identifier(hfi);
 	std::vector<Expr*> args;
@@ -545,7 +535,7 @@ Expr * VerExprParser::visitEscaped_hierarchical_branch(
 	// ( '.' Escaped_identifier ( '[' Decimal_number ']' )? )*
 	// ;
 	NotImplementedLogger::print(
-			"ExpressionParser.visitEscaped_hierarchical_branch");
+			"VerExprParser.visitEscaped_hierarchical_branch");
 	return NULL;
 }
 Expr * VerExprParser::visitMintypmax_expression(
@@ -555,7 +545,7 @@ Expr * VerExprParser::visitMintypmax_expression(
 	// ;
 	if (ctx->expression().size() > 1) {
 		NotImplementedLogger::print(
-				"ExpressionParser.visitMintypmax_expression - type and max specified");
+				"VerExprParser.visitMintypmax_expression - type and max specified");
 	}
 	return visitExpression(ctx->expression(0));
 }
@@ -621,19 +611,19 @@ Expr * VerExprParser::visitVariable_lvalue(
 	// hierarchical_variable_identifier
 	//    : hierarchical_identifier
 	//    ;
+
+	auto vc = ctx->variable_concatenation();
+	if (vc)
+		return visitVariable_concatenation(vc);
+
 	auto hi =
 			ctx->hierarchical_variable_identifier()->hierarchical_identifier();
-	if (hi) {
-		auto id = visitHierarchical_identifier(hi);
-		for (auto e : ctx->expression()) {
-			auto expr = visitExpression(e);
-			id = new Expr(id, OperatorType::INDEX, expr);
-		}
-		return id;
-	} else {
-		auto vc = ctx->variable_concatenation();
-		return visitVariable_concatenation(vc);
+	auto id = visitHierarchical_identifier(hi);
+	for (auto e : ctx->expression()) {
+		auto expr = visitExpression(e);
+		id = new Expr(id, OperatorType::INDEX, expr);
 	}
+	return id;
 }
 
 Expr * VerExprParser::visitVariable_concatenation(

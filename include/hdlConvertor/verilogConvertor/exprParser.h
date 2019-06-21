@@ -8,7 +8,6 @@
 #include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
 #include <hdlConvertor/hdlObjects/operatorType.h>
 #include <hdlConvertor/hdlObjects/expr.h>
-#include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/verilogConvertor/literalParser.h>
 #include <hdlConvertor/verilogConvertor/attributeParser.h>
 
@@ -18,7 +17,6 @@ namespace verilog {
 class VerExprParser {
 public:
 	typedef hdlObjects::Expr Expr;
-	typedef hdlObjects::OperatorType OperatorType;
 	typedef Verilog2001_antlr::Verilog2001Parser Verilog2001Parser;
 
 	static Expr * visitExpression(Verilog2001Parser::ExpressionContext * ctx);
@@ -27,6 +25,11 @@ public:
 			Verilog2001Parser::Net_concatenationContext * ctx);
 	static Expr * visitHierarchical_net_identifier(
 			Verilog2001Parser::Hierarchical_net_identifierContext * ctx);
+	static Expr * visitDelay_control(
+			Verilog2001Parser::Delay_controlContext * ctx);
+	static Expr * visitDelay_value(Verilog2001Parser::Delay_valueContext * ctx);
+	static Expr * visitSpecparam_identifier(
+			Verilog2001Parser::Specparam_identifierContext * ctx);
 	static Expr * visitConstant_expression(
 			Verilog2001Parser::Constant_expressionContext * ctx);
 	static Expr * visitDimension(Verilog2001Parser::DimensionContext * ctx);
@@ -35,14 +38,14 @@ public:
 	static Expr * visitRange_expression(
 			Verilog2001Parser::Range_expressionContext * ctx);
 	static Expr * visitRange_(Verilog2001Parser::Range_Context * ctx);
-	static OperatorType visitUnary_operator(
-			Verilog2001Parser::Unary_operatorContext * ctx);
-	static OperatorType visitBinary_operator(
-			Verilog2001Parser::Binary_operatorContext * ctx);
 	static Expr * visitTerm(Verilog2001Parser::TermContext * ctx);
 	static Expr * visitPrimary(Verilog2001Parser::PrimaryContext * ctx);
 	static Expr * visitConstant_function_call(
 			Verilog2001Parser::Constant_function_callContext * ctx);
+	static Expr * visitFunction_identifier(
+			Verilog2001Parser::Function_identifierContext * ctx);
+	static Expr * visitSystem_function_identifier(
+			Verilog2001Parser::System_function_identifierContext *ctx);
 	static Expr * visitSystem_function_call(
 			Verilog2001Parser::System_function_callContext * ctx);
 	static Expr * visitFunction_call(

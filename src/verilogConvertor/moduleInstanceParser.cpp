@@ -1,7 +1,7 @@
 #include <hdlConvertor/verilogConvertor/moduleInstanceParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/expr.h>
 #include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
 
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
@@ -45,13 +45,7 @@ vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 	}
 	return res;
 }
-Expr * ModuleInstanceParser::visitParameter_identifier(
-		Verilog2001Parser::Parameter_identifierContext * ctx) {
-	// parameter_identifier
-	//    : identifier
-	//    ;
-	return VerExprParser::visitIdentifier(ctx->identifier());
-}
+
 vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 		Verilog2001Parser::List_of_parameter_assignmentsContext * ctx) {
 
@@ -78,7 +72,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 			// named_parameter_assignment
 			//    : '.' parameter_identifier '(' (expression)? ')'
 			//    ;
-			auto k = visitParameter_identifier(pa->parameter_identifier());
+			auto k = ModuleParamParser::visitParameter_identifier(pa->parameter_identifier());
 			Expr * v;
 			auto e = pa->expression();
 			if (e) {

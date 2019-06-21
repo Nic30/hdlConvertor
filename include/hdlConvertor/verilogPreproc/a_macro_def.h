@@ -19,6 +19,7 @@ protected:
 	void throw_doest_not_support_args();
 
 public:
+
 	std::string name;
 
 	// class constructor

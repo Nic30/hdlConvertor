@@ -1,4 +1,5 @@
 #include <hdlConvertor/verilogConvertor/literalParser.h>
+#include <algorithm>
 #include <hdlConvertor/notImplementedLogger.h>
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
@@ -102,6 +103,108 @@ Expr * VerLiteralParser::parseIntNumber(antlr4::tree::TerminalNode* n,
 Expr * VerLiteralParser::visitString(antlr4::tree::TerminalNode* n) {
 	std::string s = n->getText();
 	return Expr::STR(s.substr(1, s.length() - 2)); // skipping " at the end
+}
+
+OperatorType VerLiteralParser::visitUnary_operator(
+		Verilog2001Parser::Unary_operatorContext * ctx) {
+	// unary_operator
+	//    : '+'
+	//    | '-'
+	//    | '!'
+	//    | '~'
+	//    | '&'
+	//    | '~&'
+	//    | '|'
+	//    | '~|'
+	//    | '^'
+	//    | '~^'
+	//    | '^~'
+	//    ;
+	std::string op = ctx->getText();
+
+	if (op == "+") {
+		return ADD;
+	} else if (op == "-") {
+		return SUB;
+	} else if (op == "!") {
+		return NOT;
+	} else if (op == "~") {
+		return NEG;
+	} else if (op == "&") {
+		return AND;
+	} else if (op == "~&") {
+		return NAND;
+	} else if (op == "|") {
+		return OR;
+	} else if (op == "~|") {
+		return NOR;
+	} else if (op == "^") {
+		return XOR;
+	} else if (op == "~^") {
+		return XNOR;
+	} else if (op == "^~") {
+		return XNOR;
+	}
+
+	throw std::runtime_error("Unsupported unary operator " + op);
+}
+OperatorType VerLiteralParser::visitBinary_operator(
+		Verilog2001Parser::Binary_operatorContext * ctx) {
+	// binary_operator : '+' | '-' | '*' | '/' | '%' | '==' | '!=' | '===' |
+	// '!==' | '&&' | '||' | '**' | '<' | '<=' | '>' | '>=' | '&' | '|' |
+	// '^' | '^~' | '~^' | '>>' | '<<' | '>>>' | '<<<' ;
+	// [TODO] log eq, neq
+	std::string op = ctx->getText();
+
+	if (op.compare("+") == 0)
+		return ADD;
+	else if (op.compare("-") == 0)
+		return SUB;
+	else if (op.compare("*") == 0)
+		return MUL;
+	else if (op.compare("/") == 0)
+		return DIV;
+	else if (op.compare("%") == 0)
+		return MOD;
+	else if (op.compare("==") == 0 || op.compare("===") == 0)
+		return EQ;
+	else if (op.compare("!=") == 0 || op.compare("!==") == 0)
+		return NEQ;
+	else if (op.compare("&&") == 0)
+		return LOG_AND;
+	else if (op.compare("||") == 0)
+		return LOG_OR;
+	else if (op.compare("**") == 0)
+		return POW;
+	else if (op.compare("<") == 0)
+		return LT;
+	else if (op.compare("<=") == 0)
+		return LE;
+	else if (op.compare(">") == 0)
+		return GT;
+	else if (op.compare(">=") == 0)
+		return GE;
+	else if (op.compare("&") == 0)
+		return AND;
+	else if (op.compare("|") == 0)
+		return OR;
+	else if (op.compare("^") == 0)
+		return XOR;
+	else if (op.compare("^~") == 0 || op.compare("~^") == 0
+			|| op.compare(">>") == 0)
+		return SRL;
+	else if (op.compare("<<") == 0)
+		return SLL;
+	else if (op.compare(">>>") == 0)
+		return SRA;
+
+	assert(op.compare("<<<") == 0);
+	return SLA;
+
+}
+
+Expr * VerLiteralParser::visitDolar_identifier(TerminalNode* n) {
+	return Expr::ID(n->getText());
 }
 
 }

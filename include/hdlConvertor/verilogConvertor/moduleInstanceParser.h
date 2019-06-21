@@ -16,8 +16,6 @@ public:
 
 	static std::vector<CompInstance *> visitModule_instantiation(
 			Verilog2001Parser::Module_instantiationContext* ctx);
-	static Expr * visitParameter_identifier(
-			Verilog2001Parser::Parameter_identifierContext * ctx);
 	static std::vector<Expr*> visitList_of_parameter_assignments(
 			Verilog2001Parser::List_of_parameter_assignmentsContext * ctx);
 	static CompInstance * visitModule_instance(

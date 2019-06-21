@@ -38,7 +38,7 @@ void ModuleParser::visitModule_declaration(
 	// ;
 	ent->__doc__ = commentParser.parse(ctx);
 	ent->name = ctx->module_identifier()->getText();
-	for (auto a : ctx->attribute_instance()) {
+	if (ctx->attribute_instance().size()) {
 		NotImplementedLogger::print(
 				"ModuleParser.visitModule_declaration.attribute_instance");
 		//auto ais = AttributeParser::visitAttribute_instance(a);
@@ -209,7 +209,9 @@ void ModuleParser::visitModule_or_generate_item(
 
 	auto ic = ctx->initial_construct();
 	if (ic) {
-		NotImplementedLogger::print("ModuleParser.initial_construct");
+		VerStatementParser vsp(commentParser);
+		auto p = vsp.visitInitial_construct(ic);
+		objs.push_back(p);
 		return;
 	}
 

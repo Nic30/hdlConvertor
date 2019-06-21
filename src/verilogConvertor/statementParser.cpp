@@ -198,8 +198,10 @@ Statement * VerStatementParser::visitNonblocking_assignment(
 		NotImplementedLogger::print(
 				"VerStatementParser.visitNonblocking_assignment.delay_or_event_control");
 	}
-	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
-	auto src = VerExprParser::visitExpression(ctx->expression());
+	auto vl = ctx->variable_lvalue();
+	auto dst = VerExprParser::visitVariable_lvalue(vl);
+	auto e = ctx->expression();
+	auto src = VerExprParser::visitExpression(e);
 	auto assig = Statement::ASSIG(dst, src);
 	assig->__doc__ = commentParser.parse(ctx);
 	return assig;
@@ -250,7 +252,7 @@ Statement * VerStatementParser::visitConditional_statement(
 		auto _ifFalse = ctx->statement_or_null(1);
 		auto ifFalse = visitStatement_or_null__wrapped(_ifFalse);
 		auto _if = Statement::IF(cond, ifTrue, ifFalse);
-		_if ->__doc__ = commentParser.parse(ctx);
+		_if->__doc__ = commentParser.parse(ctx);
 		return _if;
 
 	}
@@ -272,7 +274,7 @@ Statement * VerStatementParser::visitProcedural_timing_control_statement(
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__wrapped(
 					ctx->statement_or_null()));
 	auto p = Statement::PROCESS(sens_list, stms);
-	p ->__doc__ = commentParser.parse(ctx);
+	p->__doc__ = commentParser.parse(ctx);
 	return p;
 }
 
@@ -313,19 +315,19 @@ vector<Expr*>* VerStatementParser::visitDelay_or_event_control(
 	//    | event_control
 	//    | 'repeat' '(' expression ')' event_control
 	//    ;
-	auto d = ctx->delay_control();
-	if (d) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitDelay_or_event_control.delay_control");
-		return nullptr;
+	auto _d = ctx->delay_control();
+	if (_d) {
+		auto res = new vector<Expr*>(1);
+		(*res)[0] = VerExprParser::visitDelay_control(_d);
+		return res;
 	}
+	auto ec = ctx->event_control();
 	auto e = ctx->expression();
 	if (e) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitDelay_or_event_control.expression");
-		return nullptr;
+				"VerStatementParser.visitDelay_or_event_control - repeat");
 	}
-	return vistEvent_control(ctx->event_control());
+	return vistEvent_control(ec);
 }
 
 vector<Expr*> * VerStatementParser::vistEvent_control(
@@ -388,7 +390,26 @@ Statement* VerStatementParser::visitNet_assignment(
 	// ;
 	auto nv = VerExprParser::visitNet_lvalue(ctx->net_lvalue());
 	auto e = VerExprParser::visitExpression(ctx->expression());
-	return Statement::ASSIG(nv,	e);
+	return Statement::ASSIG(nv, e);
+}
+
+Statement * VerStatementParser::visitInitial_construct(
+		Verilog2001Parser::Initial_constructContext * ctx) {
+	// initial_construct
+	//    : 'initial' statement
+	//    ;
+	NotImplementedLogger::print(
+			"VerStatementParser.visitInitial_construct");
+	auto _stm = ctx->statement();
+	auto stm = visitStatement(_stm);
+	vector<Statement*> * body;
+	if (stm.first) {
+		body = new vector<Statement*>();
+		body->push_back(stm.first);
+	} else {
+		body = stm.second;
+	}
+	return Statement::PROCESS(nullptr, reinterpret_cast<vector<iHdlObj*>*>(body));
 }
 
 }

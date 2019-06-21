@@ -1,5 +1,8 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
-from hdlConvertor.hdlAst import *
+from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue,\
+    HdlCall, HdlAll, HdlWaitStm, HdlProcessStm, HdlIfStm, HdlAssignStm,\
+    HdlCaseStm, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec,\
+    HdlModuleDef
 
 WIRE = HdlName('wire')
 
@@ -314,12 +317,20 @@ class ToVerilog():
         body = proc.body
         w = self.out.write
 
-        w("always @ (")
-        for last, item in iter_with_last_flag(sens):
-            self.print_expr(item, sensitivity=True)
-            if not last:
-                w(", ")
-        w(") begin\n")
+        if sens is None:
+            if len(body) and isinstance(body[0], HdlWaitStm):
+                wait = body[0]
+                w("always #")
+                self.print_expr(wait.cond)
+            else:
+                w("initial begin\n")
+        else:
+            w("always @ (")
+            for last, item in iter_with_last_flag(sens):
+                self.print_expr(item, sensitivity=True)
+                if not last:
+                    w(", ")
+            w(") begin\n")
         with Indent(self.out):
             for stm in body:
                 self.print_statement(stm)
@@ -388,6 +399,9 @@ class ToVerilog():
         w(";\n")
 
     def print_case(self, cstm):
+        """
+        :type cstm: HdlCaseStm
+        """
         w = self.out.write
         w("case(")
         self.print_expr(cstm.switch_on)
@@ -408,6 +422,16 @@ class ToVerilog():
                     w("\n")
         w("endcase\n")
 
+    def print_wait(self, o):
+        """
+        :type o: HdlWaitStm
+        """
+        self.print_doc(o)
+        w = self.out.write
+        w("#")
+        self.print_expr(o.val);
+        w(";\n")
+
     def print_statement(self, stm, is_top=False):
         self.print_doc(stm)
         if isinstance(stm, HdlProcessStm):
@@ -418,6 +442,8 @@ class ToVerilog():
             self.print_assignment(stm, is_top=is_top)
         elif isinstance(stm, HdlCaseStm):
             self.print_case(stm)
+        elif isinstance(stm, HdlWaitStm):
+            self.print_wait(stm)
         else:
             raise NotImplementedError(stm)
 
@@ -514,7 +540,16 @@ if __name__ == "__main__":
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
     # filenames = [os.path.join(TEST_DIR, "sram.v")]
-    filenames = [os.path.join(TEST_DIR, "aes.v")]
-    d = c.parse(filenames, Language.VERILOG, [TEST_DIR, ], False, True)
+    AES = os.path.join(BASE_DIR, "..", "aes")
+    files = [
+        # "aes_cipher_top.v",
+        # "aes_key_expand_128.v",
+        # "aes_inv_cipher_top.v",  "aes_rcon.v",
+        "test_bench_top.v",
+        # "aes_inv_sbox.v",        "aes_sbox.v",
+    ]
+
+    filenames = [os.path.join(AES, f) for f in files]
+    d = c.parse(filenames, Language.VERILOG, [], False, True)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)

@@ -31,6 +31,9 @@ class ParserContainer {
 
 		antlrParser->removeErrorListeners();
 		syntaxErrLogger = new SyntaxErrorLogger();
+		// lexer->removeErrorListeners();
+		// lexer->addErrorListener(syntaxErrLogger);
+		antlrParser->removeErrorListeners();
 		antlrParser->addErrorListener(syntaxErrLogger);
 	}
 public:

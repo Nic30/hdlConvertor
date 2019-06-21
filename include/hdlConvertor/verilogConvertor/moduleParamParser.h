@@ -15,6 +15,9 @@ public:
 	typedef hdlObjects::Variable Variable;
 	typedef Verilog2001_antlr::Verilog2001Parser Verilog2001Parser;
 
+	static hdlObjects::Expr * visitParameter_identifier(
+			Verilog2001Parser::Parameter_identifierContext * ctx);
+
 	std::vector<Variable*>* visitModule_parameter_port_list(
 			Verilog2001Parser::Module_parameter_port_listContext * ctx);
 	std::vector<Variable*>* visitParameter_declaration_(
