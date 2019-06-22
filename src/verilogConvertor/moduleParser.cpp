@@ -108,10 +108,10 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 		for (auto declr : *portsDeclr) {
 			Variable * p = ent->getPortByName(declr->name);
 			p->direction = declr->direction;
-			assert(p == nullptr);
+			assert(p != nullptr);
 			p->type = declr->type;
-			assert(p->value == nullptr);
 			p->value = declr->value;
+			assert(p->value == nullptr);
 			p->latched |= declr->latched;
 			p->is_const |= declr->is_const;
 			if (p->direction == Direction::DIR_UNKNOWN)
