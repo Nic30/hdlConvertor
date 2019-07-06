@@ -90,6 +90,7 @@ for o in d.objs:
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
+* [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
 
 ### License
 
