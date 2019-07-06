@@ -234,6 +234,10 @@ PyObject* ToPy::toPy(const Statement * o) {
 			if (!py_inst) {
 				break;
 			}
+			auto _o = dynamic_cast<const HdlControlledAssignStm*>(o);
+			e = PyObject_SetAttrString(py_inst, "is_blocking",
+					PyBool_FromLong((long) _o->is_blocking));
+
 		} while (0);
 		if (e || !py_inst) {
 			Py_DECREF(src);
