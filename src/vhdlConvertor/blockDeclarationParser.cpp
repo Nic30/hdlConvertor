@@ -178,8 +178,8 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 				"ArchParser.visitGroup_template_declaration", gtd);
 		return;
 	}
-#ifndef NDEBUG
 	auto gd = ctx->group_declaration();
+#ifndef NDEBUG
 	assert(gd);
 #endif
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
