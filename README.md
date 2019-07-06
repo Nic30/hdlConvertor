@@ -30,6 +30,7 @@ Or the same for python 2.7 with other options just for demonstration.
 
 Installer also supports other commands.
 ```
+# note that setting PYTHONPATH and params after install are there just for example and are not required 
 export PYTHONPATH=/tmp/python_install/lib/python2.7/site-packages/
 python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=../../../antlr4/antlr-4.7.1-complete.jar -- VERBOSE=1
 
