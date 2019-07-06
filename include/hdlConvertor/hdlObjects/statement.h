@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <hdlConvertor/hdlObjects/statement.h>
 #include <hdlConvertor/hdlObjects/expr.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/position.h>
@@ -20,7 +19,9 @@ enum StatementType {
 	s_RETURN,
 	s_CONTINUE,
 	s_FOR,
-	s_ASSIGMENT,
+	s_FOR_IN,
+	s_ASSIGNMENT,
+	s_CONTROLLED_ASSIGNMENT,
 	s_PROCESS,
 	s_WAIT,
 	s_IMPORT,
@@ -69,13 +70,19 @@ public:
 	static Statement* RETURN(Expr* val);
 	static Statement* RETURN();
 	static Statement* WAIT(const std::vector<Expr*> & val);
-	static Statement* ASSIG(Expr* dst, Expr * src);
+	static Statement* WHILE(Expr* cond, std::vector<Statement*>* body);
 	static Statement* WHILE(Expr* cond, std::vector<iHdlObj*>* body);
 	static Statement* BREAK();
 	static Statement* CONTINUE();
 	static Statement* PROCESS(std::vector<Expr*>* sensitivity,
 			std::vector<iHdlObj*>* body);
-	static Statement* FOR(const std::vector<Expr*> & args,
+	static Statement* FOR(Statement* init, Expr* cond, Statement* step,
+			std::vector<iHdlObj*>* body);
+	static Statement* FOR(Statement* init, Expr* cond, Statement* step,
+			std::vector<Statement*>* body);
+	static Statement* FOR_IN(Statement* var, Expr *collection,
+			std::vector<iHdlObj*>* body);
+	static Statement* FOR_IN(Expr* _var, Expr *collection,
 			std::vector<iHdlObj*>* body);
 	virtual ~Statement() override;
 };

@@ -3,6 +3,7 @@
 #include <vector>
 #include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
 #include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/hdlObjects/statement_assign.h>
 #include <hdlConvertor/verilogConvertor/commentParser.h>
 
 namespace hdlConvertor {
@@ -12,6 +13,7 @@ class VerStatementParser {
 	CommentParser & commentParser;
 public:
 	using Statement = hdlObjects::Statement;
+	using HdlAssignStm = hdlObjects::HdlAssignStm;
 	using Expr = hdlObjects::Expr;
 	using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 	// single statement or many statements, only one is set at the time, other is nullptr
@@ -21,7 +23,10 @@ public:
 
 	stm_or_block_t visitAlways_construct(
 			Verilog2001Parser::Always_constructContext * ctx);
-	stm_or_block_t visitStatement(
+	stm_or_block_t visitStatement(Verilog2001Parser::StatementContext * ctx);
+	Statement * visitSystem_task_enable(
+			Verilog2001Parser::System_task_enableContext * ctx);
+	std::vector<Statement*> * visitStatement__as_block(
 			Verilog2001Parser::StatementContext * ctx);
 	Statement * visitBlocking_assignment(
 			Verilog2001Parser::Blocking_assignmentContext *ctx);
@@ -29,7 +34,11 @@ public:
 			Verilog2001Parser::Case_statementContext * ctx);
 	std::vector<Statement::case_t> visitCase_item(
 			Verilog2001Parser::Case_itemContext * ctx);
-	Statement * visitNonblocking_assignment(
+	HdlAssignStm * visitVariable_assignment(
+			Verilog2001Parser::Variable_assignmentContext *ctx);
+	Statement * visitLoop_statement(
+			Verilog2001Parser::Loop_statementContext * ctx);
+	HdlAssignStm * visitNonblocking_assignment(
 			Verilog2001Parser::Nonblocking_assignmentContext * ctx);
 	std::vector<Statement*> * visitSeq_block(
 			Verilog2001Parser::Seq_blockContext * ctx);
@@ -38,11 +47,12 @@ public:
 	Statement * visitProcedural_timing_control_statement(
 			Verilog2001Parser::Procedural_timing_control_statementContext * ctx);
 	// utility function which ensures that the statements are always wrapped in vector
-	std::vector<Statement *> * visitStatement_or_null__wrapped(
+	std::vector<Statement *> * visitStatement_or_null__as_block(
 			Verilog2001Parser::Statement_or_nullContext * ctx);
 	stm_or_block_t visitStatement_or_null(
 			Verilog2001Parser::Statement_or_nullContext * ctx);
-	static std::vector<Expr*> * visitDelay_or_event_control(
+	// @returns <delay, events>
+	static std::pair<Expr*, std::vector<Expr*>*> visitDelay_or_event_control(
 			Verilog2001Parser::Delay_or_event_controlContext * ctx);
 	// for event * returns nullptr as the explicit event list is not specified
 	static std::vector<Expr*> * vistEvent_control(
@@ -51,7 +61,8 @@ public:
 			Verilog2001Parser::Continuous_assignContext * ctx);
 	static Statement* visitNet_assignment(
 			Verilog2001Parser::Net_assignmentContext * ctx);
-	Statement * visitInitial_construct(Verilog2001Parser::Initial_constructContext * ctx);
+	Statement * visitInitial_construct(
+			Verilog2001Parser::Initial_constructContext * ctx);
 };
 
 }

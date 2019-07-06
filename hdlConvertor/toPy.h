@@ -38,9 +38,11 @@ class ToPy {
 	PyObject* HdlTypeTypeCls;
 	PyObject* HdlIfStmCls;
 	PyObject* HdlAssignStmCls;
+	PyObject* HdlControlledAssignStmCls;
 	PyObject* HdlProcessStmCls;
 	PyObject* HdlCaseStmCls;
 	PyObject* HdlForStmCls;
+	PyObject* HdlForInStmCls;
 	PyObject* HdlWhileStmCls;
 	PyObject* HdlReturnStmCls;
 	PyObject* HdlBreakStmCls;
@@ -67,15 +69,20 @@ class ToPy {
 			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 			return -1;
 		}
+		return toPy_arr<OBJ_T>(parent_list, objs);
+	}
+
+	template<typename OBJ_T>
+	int toPy_arr(PyObject * py_list, const std::vector<OBJ_T> & objs) {
 		for (auto o : objs) {
 			auto py_obj = toPy(o);
 			if (py_obj == nullptr) {
 				return -1;
 			}
-			auto e = PyList_Append(parent_list, py_obj);
+			auto e = PyList_Append(py_list, py_obj);
 			Py_DECREF(py_obj);
 			if (e) {
-				Py_DECREF(parent_list);
+				Py_DECREF(py_list);
 				return e;
 			}
 		}

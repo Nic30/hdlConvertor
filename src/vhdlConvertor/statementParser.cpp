@@ -280,7 +280,7 @@ Statement * StatementParser::visitSignal_assignment_statement(
 	return visitSelected_signal_assignment(ctx->selected_signal_assignment());
 }
 
-Statement * StatementParser::visitSimple_signal_assignment(
+HdlAssignStm * StatementParser::visitSimple_signal_assignment(
 		vhdlParser::Simple_signal_assignmentContext *ctx) {
 	//simple_signal_assignment
 	//  : simple_waveform_assignment
@@ -301,7 +301,7 @@ Statement * StatementParser::visitSimple_signal_assignment(
 	return visitSimple_release_assignment(ctx->simple_release_assignment());
 }
 
-Statement * StatementParser::visitSimple_waveform_assignment(
+HdlAssignStm * StatementParser::visitSimple_waveform_assignment(
 		vhdlParser::Simple_waveform_assignmentContext *ctx) {
 	//simple_waveform_assignment
 	//  : target LE (delay_mechanism)? waveform SEMI
@@ -311,11 +311,12 @@ Statement * StatementParser::visitSimple_waveform_assignment(
 		NotImplementedLogger::print(
 				"StatementParser.visitSimple_waveform_assignment - delay_mechanism");
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			ExprParser::visitWaveform(ctx->waveform()));
+	auto dst = ExprParser::visitTarget(ctx->target());
+	auto src = ExprParser::visitWaveform(ctx->waveform());
+	return new HdlAssignStm(dst, src, false);
 }
 
-Statement * StatementParser::visitSimple_force_assignment(
+HdlAssignStm * StatementParser::visitSimple_force_assignment(
 		vhdlParser::Simple_force_assignmentContext *ctx) {
 	//simple_force_assignment
 	//  : target LE FORCE (force_mode)? expression SEMI
@@ -324,11 +325,11 @@ Statement * StatementParser::visitSimple_force_assignment(
 		NotImplementedLogger::print(
 				"StatementParser.visitSimple_force_assignment - force_mode");
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			ExprParser::visitExpression(ctx->expression()));
+	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
+			ExprParser::visitExpression(ctx->expression()), false);
 }
 
-Statement * StatementParser::visitSimple_release_assignment(
+HdlAssignStm * StatementParser::visitSimple_release_assignment(
 		vhdlParser::Simple_release_assignmentContext *ctx) {
 	//simple_release_assignment
 	//  : target LE RELEASE (force_mode)? SEMI
@@ -338,8 +339,8 @@ Statement * StatementParser::visitSimple_release_assignment(
 		NotImplementedLogger::print(
 				"StatementParser.visitSimple_release_assignment - force_mode");
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			Expr::null());
+	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
+			Expr::null(), false);
 
 }
 
@@ -373,7 +374,7 @@ Statement * StatementParser::visitConditional_waveform_assignment(
 	auto src = ExprParser::visitTarget(ctx->target());
 	auto dst = ExprParser::visitConditional_waveforms(
 			ctx->conditional_waveforms());
-	return Statement::ASSIG(src, dst);
+	return new HdlAssignStm(src, dst, false);
 
 }
 
@@ -390,8 +391,8 @@ Statement * StatementParser::visitConditional_force_assignment(
 	NotImplementedLogger::print(
 			"StatementParser.visitConditional_force_assignment - conditional_expression");
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			Expr::null());
+	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
+			Expr::null(), false);
 
 }
 
@@ -435,17 +436,17 @@ Statement * StatementParser::visitVariable_assignment_statement(
 	return visitSelected_variable_assignment(sva);
 }
 
-Statement * StatementParser::visitSimple_variable_assignment(
+HdlAssignStm * StatementParser::visitSimple_variable_assignment(
 		vhdlParser::Simple_variable_assignmentContext *ctx) {
 	//simple_variable_assignment
 	//  : target VARASGN expression SEMI
 	//  ;
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			ExprParser::visitExpression(ctx->expression()));
+	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
+			ExprParser::visitExpression(ctx->expression()), true);
 }
 
-Statement * StatementParser::visitConditional_variable_assignment(
+HdlAssignStm * StatementParser::visitConditional_variable_assignment(
 		vhdlParser::Conditional_variable_assignmentContext *ctx) {
 	//conditional_variable_assignment
 	//  : target VARASGN conditional_expression SEMI
@@ -454,11 +455,11 @@ Statement * StatementParser::visitConditional_variable_assignment(
 	NotImplementedLogger::print(
 			"StatementParser.visitConditional_variable_assignment - conditional_expression");
 
-	return Statement::ASSIG(ExprParser::visitTarget(ctx->target()),
-			Expr::null());
+	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
+			Expr::null(), true);
 }
 
-Statement * StatementParser::visitSelected_variable_assignment(
+HdlAssignStm * StatementParser::visitSelected_variable_assignment(
 		vhdlParser::Selected_variable_assignmentContext *ctx) {
 	// selected_variable_assignment:
 	//       WITH expression SELECT ( QUESTIONMARK )?
@@ -468,7 +469,7 @@ Statement * StatementParser::visitSelected_variable_assignment(
 	NotImplementedLogger::print(
 			"StatementParser.visitSelected_variable_assignments");
 
-	return Statement::ASSIG(ExprParser::visitExpression(ctx->expression()),
+	return new HdlAssignStm(ExprParser::visitExpression(ctx->expression()),
 			Expr::null());
 }
 
@@ -556,14 +557,15 @@ Statement * StatementParser::visitLoop_statement(
 		// ;
 		if (ctx->iteration_scheme()->WHILE()) {
 			auto c = ExprParser::visitCondition(is->condition());
-			auto body = visitSequence_of_statements(ctx->sequence_of_statements());
+			auto body = visitSequence_of_statements(
+					ctx->sequence_of_statements());
 			loop = Statement::WHILE(c, body);
 		} else {
 			auto args = visitParameter_specification(
 					is->parameter_specification());
-			loop = Statement::FOR(*args,
-					visitSequence_of_statements(ctx->sequence_of_statements()));
-			delete args;
+			auto stms = visitSequence_of_statements(
+					ctx->sequence_of_statements());
+			loop = Statement::FOR_IN(args.first, args.second, stms);
 		}
 	} else {
 		loop = Statement::WHILE(Expr::ID("True"),
@@ -573,18 +575,17 @@ Statement * StatementParser::visitLoop_statement(
 	return loop;
 }
 
-vector<Expr*> * StatementParser::visitParameter_specification(
+pair<Expr*, Expr*> StatementParser::visitParameter_specification(
 		vhdlParser::Parameter_specificationContext *ctx) {
 	//parameter_specification
 	//  : identifier IN discrete_range
 	//  ;
-	vector<Expr*> * e = new vector<Expr*>();
-	e->push_back(LiteralParser::visitIdentifier(ctx->identifier()));
-	e->push_back(ExprParser::visitDiscrete_range(ctx->discrete_range()));
-	return e;
+	auto i = LiteralParser::visitIdentifier(ctx->identifier());
+	auto r = ExprParser::visitDiscrete_range(ctx->discrete_range());
+	return {i, r};
 }
 Statement * StatementParser::visitSelected_waveforms(
-		vhdlParser::Selected_waveformsContext *ctx, Expr * sel, Expr * dst) {
+		vhdlParser::Selected_waveformsContext *ctx, Expr * sel, Expr * dst, bool is_blocking) {
 	// selected_waveforms:
 	//       ( waveform WHEN choices COMMA )*
 	//       waveform WHEN choices
@@ -599,13 +600,13 @@ Statement * StatementParser::visitSelected_waveforms(
 		auto choices = ExprParser::visitChoices(_choices);
 		for (auto c : choices) {
 			Expr * wf_expr = ExprParser::visitWaveform(*wf);
-			auto assig = Statement::ASSIG(dst, wf_expr);
+			auto assig = new HdlAssignStm(dst, wf_expr, is_blocking);
 			if (is_others(c)) {
 				default_ = new vector<iHdlObj*>();
 				default_->push_back(assig);
 			} else {
-				auto stms = new vector<iHdlObj*>({assig, });
-				cases.push_back({ c, stms });
+				auto stms = new vector<iHdlObj*>( { assig, });
+				cases.push_back( { c, stms });
 			}
 		}
 		++wf;
@@ -636,7 +637,8 @@ Statement * StatementParser::visitConcurrent_selected_signal_assignment(
 	}
 	auto sel = ExprParser::visitExpression(ctx->expression());
 	auto dst = ExprParser::visitTarget(ctx->target());
-	auto case_stm = visitSelected_waveforms(ctx->selected_waveforms(), sel, dst);
+	auto case_stm = visitSelected_waveforms(ctx->selected_waveforms(), sel,
+			dst, false);
 	return case_stm;
 }
 
@@ -688,7 +690,7 @@ Statement * StatementParser::visitConcurrent_signal_assignment_statement(
 		assert(cwf);
 		src = ExprParser::visitConditional_waveforms(cwf);
 	}
-	return Statement::ASSIG(dst, src);
+	return new HdlAssignStm(dst, src, false);
 }
 
 void StatementParser::visitConcurrent_statement(

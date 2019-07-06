@@ -64,6 +64,8 @@ public:
 			Verilog2001Parser::Simple_hierarchical_identifierContext * ctx);
 	static Expr * visitSimple_hierarchical_branch(
 			Verilog2001Parser::Simple_hierarchical_branchContext * ctx);
+	static Expr * visitSystem_task_identifier(
+			Verilog2001Parser::System_task_identifierContext *ctx);
 	static Expr * visitIdentifier(Verilog2001Parser::IdentifierContext * ctx);
 	static Expr * visitEscaped_hierarchical_branch(
 			Verilog2001Parser::Escaped_hierarchical_branchContext * ctx);

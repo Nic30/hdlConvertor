@@ -516,6 +516,14 @@ Expr * VerExprParser::visitSimple_hierarchical_branch(
 	}
 	return top;
 }
+Expr * VerExprParser::visitSystem_task_identifier(
+		Verilog2001Parser::System_task_identifierContext *ctx) {
+	// system_task_identifier
+	//    : Dollar_Identifier
+	//    ;
+	auto di = ctx->Dollar_Identifier();
+	return Expr::ID(di->getText());
+}
 Expr * VerExprParser::visitIdentifier(
 		Verilog2001Parser::IdentifierContext * ctx) {
 	// identifier
@@ -555,24 +563,13 @@ std::vector<Expr*> * VerExprParser::visitEvent_expression(
 	// event_expression
 	//    : event_primary ('or' event_primary | ',' event_primary)*
 	//    ;
+	// @note 'or' and ',' is a Verilog-1995/2001 difference, they work exactly the same
+
 	auto res = new std::vector<Expr*>;
-	Expr * actual_exp = nullptr;
-	for (auto child : ctx->children) {
-		auto ep = dynamic_cast<Verilog2001Parser::Event_primaryContext *>(child);
-		if (ep) {
-			auto new_e = visitEvent_primary(ep);
-			if (actual_exp == nullptr) {
-				actual_exp = new_e;
-			} else {
-				actual_exp = new Expr(actual_exp, OperatorType::OR, new_e);
-			}
-		} else if (child->getText() == ",") {
-			res->push_back(actual_exp);
-			actual_exp = nullptr;
-		}
+	for (auto ep : ctx->event_primary()) {
+		auto e = visitEvent_primary(ep);
+		res->push_back(e);
 	}
-	if (actual_exp)
-		res->push_back(actual_exp);
 	return res;
 }
 

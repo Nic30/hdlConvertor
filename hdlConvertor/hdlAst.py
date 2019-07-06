@@ -2,15 +2,17 @@ from enum import Enum
 from typing import Dict, Union, Tuple, Optional, List
 
 """
-This module contains the containers for Hardware Description Language Abstract Syntax Tree (HDL AST)
+This module contains the containers
+for Hardware Description Language Abstract Syntax Tree (HDL AST)
 
 (System) Verilog/VHDL can be converted by this format and back using this library
 Main container is HdlContext which can store all other objects.
 
-:note: this module is using PEP484 type hints, and the typehints are in comments
+:note: this module is using PEP484 type hints, and the type hints are in comments
     to sustain Python 2.7 compatibility
 :attention: this module is just simple format of HDL and does not performs all check,
-    e.g. you can use a string as a type of the port, but such a module can not be synthetised
+    e.g. you can use a string as a type of the port,
+    but such a module generally can not be synthetised to a hardware
 
 :attention: classes in his module are used from C++
 """
@@ -45,7 +47,8 @@ class HdlName(str):
 
 class HdlAll(object):
     """
-    Constant which corresponds to VHDL "all" keyword or "*" in verilog sensitivitylist
+    Constant which corresponds to VHDL "all" keyword
+    or "*" in Verilog sensitivity list
     """
     __slots__ = []
 
@@ -66,6 +69,7 @@ class HdlTypeType(object):
 
 HdlTypeInt = int
 HdlTypeStr = str
+# Verilog real
 HdlTypeFloat = float
 HdlTypeEnum = Enum
 
@@ -74,7 +78,8 @@ HdlTypeEnum = Enum
 # [TODO] HdlTypeStruct/Union
 class HdlTypeBits(object):
     """
-    The type which represents bit or bit vector in HDL (std_logic/_vector in VHDL [0:8] in verilog)
+    The type which represents bit or bit vector in HDL (std_logic/_vector
+    in VHDL [0:8] in Verilog)
 
     :note: you should let lsb=0, it is there only for legacy issues
     """
@@ -97,7 +102,8 @@ class HdlTypeBits(object):
 
 class HdlTypeAuto(object):
     """
-    Type which means that the type is automatically resolved from the type of the value
+    Type which means that the type is automatically resolved
+    from the type of the value
     """
     __slots__ = []
 
@@ -192,7 +198,7 @@ class HdlBuildinFn(Enum):
     ROR,  # rotate right
     TERNARY,
     DOT,
-    APOSTROPHE, # vhdl attribute access
+    APOSTROPHE,  # vhdl attribute access
     CALL,
     ARROW,  # arrow operator used in vhdl type descriptions
     RISING,  # rising edge/posedge event operator
@@ -244,7 +250,7 @@ class HdlVariableDef(iHdlObj, iInModuleHdlObj):
     :ivar name: name of newly defined object
     :ivar type: type of the defined variable (or type etc.)
     :ivar value: initialisation of variable (typedef etc.)
-    :ivar latched: flag if true the object corresponds to VHDL variable/verilog reg
+    :ivar latched: flag if true the object corresponds to VHDL variable/Verilog reg
     :ivar is_const: flag if true the value is constants
     :ivar direction: direction if the variable is port
     """
@@ -310,7 +316,8 @@ class HdlComponentInst(iHdlObjWithName, iInModuleHdlObj):
     :ivar name: name of this component instance in this module
     :ivar module_name: HdlId or iHdlExpr made from HdlIds and dot operators
     :ivar param_map: same as port_map just port parameters of the component
-    :ivar port_map: the list of iHdlExpr with map operator for map assignment or any other iHdlExpr for positional mapping
+    :ivar port_map: the list of iHdlExpr with map operator for map assignment
+                    or any other iHdlExpr for positional mapping
     """
     __slots__ = ["module_name", "param_map", "port_map"]
 
@@ -340,7 +347,11 @@ class iHdlStatement(iHdlObj, iInModuleHdlObj):
     :ivar labels: list of labels, the first label is for this statement
         the others are for it's branches
     :ivar in_preproc: if True the statement is VHDL generate
-            or other different of type of statement which should be evaluated complile time
+            or other different of type of statement which should be evaluated
+            compile time (note that this correspond s to VHDL generate statements
+            and not to Verilog preprocessor ifdefs as they are processed before
+            Verilog code parsing and are not present in code read by parser
+            in the first place)
     """
     __slots__ = ["labels", "in_prepoc"]
 
@@ -355,8 +366,9 @@ class HdlImport(iHdlStatement):
     """
     The import statements used in VHDL
 
-    :note: note that this does not corresponds to include as include is processed by preprocessor
-    :ivar path: the list of namemes which are in the import
+    :note: note that this does not corresponds to include as include
+            is processed by preprocessor
+    :ivar path: the list of names which are in the import
     """
     __slots__ = ["path", ]
 
@@ -379,14 +391,41 @@ class HdlStatementBlock(iHdlStatement):
 
 class HdlAssignStm(iHdlStatement):
     """
-    HDL assignment statement (blocking/non blocking is resolved from type of the variable)
+    HDL assignment statement
+
+    :ivar src: the source
+    :ivar dst: the destination
+    :ivar is_blocking: flag if true assignment should be evaluated immediately
+        else the assignment is evaluated after end of the current event
+    :ivar
     """
-    __slots__ = ["src", "dst"]
+    __slots__ = ["src", "dst", 'is_blocking', 'delay']
 
     def __init__(self, src, dst):
         super(HdlAssignStm, self).__init__()
         self.src = src  # type: iHdlExpr
         self.dst = dst  # type: iHdlExpr
+        self.is_blocking = False
+
+
+class HdlControlledAssignStm(HdlAssignStm):
+    """
+    Assignment with some sort of delay specification
+    if statement is blocking the current statement waits until the condition is met
+    and then continues. If the assignment is not blocking the code continues and this statement
+    is executed asynchronously after condition is met.
+
+    This is generally not synthetisable to hardware and is used in simulations.
+
+    :ivar time_delay: delay which waits for a specified time
+    :ivar event_delay: delay which waits for a specified event
+
+    """
+
+    def __init__(self, src, dst, time_delay, event_delay):
+        super(HdlControlledAssignStm, self).__init__(src, dst)
+        self.time_delay = time_delay  # type Optional[iHdlExpr]
+        self.event_delay = event_delay # type Optional[List[iHdlExpr]]
 
 
 class HdlIfStm(iHdlStatement):
@@ -413,8 +452,12 @@ class HdlProcessStm(iHdlStatement):
     HDL process statement
     the container of statements with the sensitivity specified
 
-    :ivar sensitivity: optional list of expessions which specifies
-        the trigger of the evaluation of the process
+    :ivar sensitivity: optional list of expressions which specifies
+        the trigger signals of the evaluation of the process
+    :note: sensitivity = None means that the process is executed immediately
+        sensitivity = [] means the process is never executed
+    :note: Verilog always #time construct is translated to process without sensitivity and
+        wait #time as a first statement in body.
     """
     __slots__ = ["sensitivity", "body"]
 
@@ -440,20 +483,44 @@ class HdlCaseStm(iHdlStatement):
 class HdlForStm(iHdlStatement):
     """
     HDL for statement
+
+    for (init, cond, step)
+        body
     """
-    __slots__ = ["params", "body"]
+    __slots__ = ["init", "cond", "step", "body"]
 
     def __init__(self):
         super(HdlForStm, self).__init__()
-        self.params = []  # type: List[iHdlExpr]
-        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
+        self.init = []  # type: List[iHdlStatement]
+        self.cond = None # type: iHdlExpr
+        self.step = [] # type: List[iHdlStatement]
+        self.body = []  # type: List[iHdlStatement]
+
+
+class HdlForInStm(iHdlStatement):
+    """
+    HDL for in statement
+
+    for var in collection:
+        body
+    """
+    __slots__ = ["var", "collection", "body"]
+
+    def __init__(self):
+        super(HdlForStm, self).__init__()
+        self.var = []  # type: List[iHdlStatement]
+        self.collection = None # type: iHdlExpr
+        self.body = []  # type: List[iHdlStatement]
 
 
 class HdlWhileStm(iHdlStatement):
     """
     HDL while statement
+
+    while cond:
+        body
     """
-    __slots__ = ["params", "body", "cond"]
+    __slots__ = ["cond", "body"]
 
     def __init__(self):
         super(HdlWhileStm, self).__init__()
@@ -475,6 +542,8 @@ class HdlReturnStm(iHdlStatement):
 class HdlWaitStm(iHdlStatement):
     """
     HDL wait statement
+
+    This is generally not synthetisable to hardware and is used in simulations.
     """
     __slots__ = ["val"]
 

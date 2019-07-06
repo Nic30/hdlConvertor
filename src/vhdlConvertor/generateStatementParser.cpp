@@ -66,8 +66,7 @@ Statement * GenerateStatementParser::visitFor_generate_statement(
 			ctx->parameter_specification());
 	auto objs = new std::vector<iHdlObj*>();
 	visitGenerate_statement_body(ctx->generate_statement_body(), *objs);
-	auto fstm = Statement::FOR(*args, objs);
-	delete args;
+	auto fstm = Statement::FOR_IN(args.first, args.second, objs);
 	auto label = ctx->label();
 	if (label.size()) {
 		auto l = LiteralParser::visitLabel(label[0]);

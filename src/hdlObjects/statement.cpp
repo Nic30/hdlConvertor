@@ -24,10 +24,12 @@ const char * StatementType_toString(StatementType type) {
 		return "CONTINUE";
 	case s_FOR:
 		return "FOR";
+	case s_FOR_IN:
+		return "FOR_IN";
 	case s_RETURN:
 		return "RETURN";
-	case s_ASSIGMENT:
-		return "ASSIGMENT";
+	case s_ASSIGNMENT:
+		return "ASSIGNMENT";
 	case s_PROCESS:
 		return "PROCESS";
 	case s_WAIT:
@@ -51,7 +53,7 @@ Statement * Statement::EXPR(Expr * e) {
 }
 Statement * Statement::IMPORT(const std::vector<Expr *> & path) {
 	Statement * s = new Statement(s_IMPORT);
-	for (auto n: path)
+	for (auto n : path)
 		s->exprs.push_back(n);
 	return s;
 }
@@ -129,19 +131,14 @@ Statement* Statement::RETURN() {
 }
 Statement* Statement::WAIT(const std::vector<Expr*> & val) {
 	Statement * s = new Statement(s_WAIT);
-	for (auto v: val) {
+	for (auto v : val) {
 		s->exprs.push_back(v);
 	}
 	return s;
 }
-Statement* Statement::ASSIG(Expr * dst, Expr * src) {
-	if (dst == nullptr || src == nullptr) {
-		throw runtime_error("wrong assign initialisation");
-	}
-	Statement * s = new Statement(s_ASSIGMENT);
-	s->exprs.push_back(dst);
-	s->exprs.push_back(src);
-	return s;
+
+Statement* Statement::WHILE(Expr* cond, std::vector<Statement*>* body) {
+	return WHILE(cond, reinterpret_cast<std::vector<iHdlObj*>*>(body));
 }
 Statement* Statement::WHILE(Expr * cond, vector<iHdlObj*> * body) {
 	Statement * s = new Statement(s_WHILE);
@@ -160,10 +157,33 @@ Statement* Statement::PROCESS(vector<Expr*> * sensitivity,
 	return new Process(sensitivity, body);
 }
 
-Statement* Statement::FOR(const vector<Expr*> & args, vector<iHdlObj*>* body) {
+Statement* Statement::FOR(Statement* _init, Expr* cond, Statement* _step,
+		std::vector<iHdlObj*>* body) {
 	Statement * s = new Statement(s_FOR);
-	for (auto e : args)
-		s->exprs.push_back(e);
+	auto init = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_init) });
+	auto step = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_step) });
+
+	s->sub_statements.push_back(init);
+	s->exprs.push_back(cond);
+	s->sub_statements.push_back(step);
+	s->sub_statements.push_back(body);
+	return s;
+}
+Statement* Statement::FOR(Statement* init, Expr* cond, Statement* step,
+		std::vector<Statement*>* _body) {
+	auto body = reinterpret_cast<std::vector<iHdlObj*>*>(_body);
+	return FOR(init, cond, step, body);
+}
+Statement* Statement::FOR_IN(Expr* _var, Expr *collection,
+		std::vector<iHdlObj*>* body) {
+	return FOR_IN(Statement::EXPR(_var), collection, body);
+}
+Statement* Statement::FOR_IN(Statement* _var, Expr *collection,
+		std::vector<iHdlObj*>* body) {
+	Statement * s = new Statement(s_FOR_IN);
+	auto var = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_var) });
+	s->sub_statements.push_back(var);
+	s->exprs.push_back(collection);
 	s->sub_statements.push_back(body);
 	return s;
 }
