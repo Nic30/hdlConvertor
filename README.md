@@ -6,7 +6,7 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
 
 
-The System Verilog and VHDL parser for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
+The System Verilog and VHDL parser (and preprocessor) for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
 
 It is also possible to convert this AST back to original HDL.
 
@@ -30,6 +30,7 @@ Or the same for python 2.7 with other options just for demonstration.
 
 Installer also supports other commands.
 ```
+# note that setting PYTHONPATH and params after install are there just for example and are not required 
 export PYTHONPATH=/tmp/python_install/lib/python2.7/site-packages/
 python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=../../../antlr4/antlr-4.7.1-complete.jar -- VERBOSE=1
 
