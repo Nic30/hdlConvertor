@@ -11,6 +11,7 @@ public:
 	using Expr = hdlObjects::Expr;
 	static Expr* mkStringT();
 
+	static Expr* mkIntT();
 	// wire type is represented by wire id or call wire(range, signed)
 	static Expr* mkWireT();
 	static Expr* mkWireT(Expr * range, bool signed_);

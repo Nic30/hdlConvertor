@@ -108,7 +108,7 @@ void PackageParser::visitPackage_body_declarative_item(
     auto td = ctx->type_declaration();
 	if (td) {
 		NotImplementedLogger::print(
-				"PackageParser.visitType_declaration");
+				"PackageParser.visitType_declaration", td);
         return;
 	}
     auto st = ctx->subtype_declaration();
@@ -138,35 +138,35 @@ void PackageParser::visitPackage_body_declarative_item(
 	auto fd = ctx->file_declaration();
 	if (fd) {
 		NotImplementedLogger::print(
-				"PackageParser.visitFile_declaration");
+				"PackageParser.visitFile_declaration", fd);
         return;
 	}
 
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
 		NotImplementedLogger::print(
-				"PackageParser.visitAlias_declaration");
+				"PackageParser.visitAlias_declaration", aliasd);
         return;
 	}
     auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("PackageParser.visitUse_clause");
+		NotImplementedLogger::print("PackageParser.visitUse_clause", uc);
         return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"PackageParser.visitGroup_template_declaration");
+				"PackageParser.visitGroup_template_declaration", gtd);
         return;
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
 		NotImplementedLogger::print(
-				"PackageParser.visitGroup_declaration");
+				"PackageParser.visitGroup_declaration", gd);
         return;
 	}
 	NotImplementedLogger::print(
-			"PackageParser.visitProcess_declarative_item");
+			"PackageParser.visitProcess_declarative_item", ctx);
 }
 
 }

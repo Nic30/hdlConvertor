@@ -75,7 +75,7 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	auto sid = ctx->subprogram_instantiation_declaration();
 	if (sid) {
 		NotImplementedLogger::print(
-				"ArchParser.visitSubprogram_instantiation_declaration");
+				"ArchParser.visitSubprogram_instantiation_declaration", sid);
 		return;
 	}
 	auto pd = ctx->package_declaration();
@@ -95,12 +95,12 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	auto pid = ctx->package_instantiation_declaration();
 	if (pid) {
 		NotImplementedLogger::print(
-				"ArchParser.visitBlock_declarative_item - package_instantiation_declaration");
+				"ArchParser.visitBlock_declarative_item - package_instantiation_declaration", pid);
 		return;
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print("ArchParser.visitType_declaration");
+		NotImplementedLogger::print("ArchParser.visitType_declaration", td);
 		return;
 	}
 	auto st = ctx->subtype_declaration();
@@ -138,12 +138,12 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print("ArchParser.visitFile_declaration");
+		NotImplementedLogger::print("ArchParser.visitFile_declaration", fd);
 		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ArchParser.visitAlias_declaration");
+		NotImplementedLogger::print("ArchParser.visitAlias_declaration", aliasd);
 		return;
 	}
 	auto compd = ctx->component_declaration();
@@ -153,36 +153,36 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ArchParser.visitAttribute_declaration");
+		NotImplementedLogger::print("ArchParser.visitAttribute_declaration", atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
-		NotImplementedLogger::print("ArchParser.visitAttribute_specification");
+		NotImplementedLogger::print("ArchParser.visitAttribute_specification", as);
 		return;
 	}
 	auto discs = ctx->disconnection_specification();
 	if (discs) {
 		NotImplementedLogger::print(
-				"ArchParser.visitDisconnection_specification");
+				"ArchParser.visitDisconnection_specification", discs);
 		return;
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("ArchParser.visitUse_clause");
+		NotImplementedLogger::print("ArchParser.visitUse_clause", uc);
 		return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"ArchParser.visitGroup_template_declaration");
+				"ArchParser.visitGroup_template_declaration", gtd);
 		return;
 	}
 #ifndef NDEBUG
 	auto gd = ctx->group_declaration();
 	assert(gd);
 #endif
-	NotImplementedLogger::print("ArchParser.visitGroup_declaration");
+	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
 hdlObjects::Entity * BlockDeclarationParser::visitComponent_declaration(

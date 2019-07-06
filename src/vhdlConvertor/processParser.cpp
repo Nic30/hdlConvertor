@@ -109,7 +109,7 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print("ProcessParser.visitType_declaration");
+		NotImplementedLogger::print("ProcessParser.visitType_declaration", td);
 		return;
 	}
 	auto st = ctx->subtype_declaration();
@@ -138,42 +138,42 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print("ProcessParser.visitFile_declaration");
+		NotImplementedLogger::print("ProcessParser.visitFile_declaration", fd);
 		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ProcessParser.visitAlias_declaration");
+		NotImplementedLogger::print("ProcessParser.visitAlias_declaration", aliasd);
 		return;
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration");
+		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration", atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitAttribute_specification");
+				"ProcessParser.visitAttribute_specification", as);
 		return;
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("ProcessParser.visitUse_clause");
+		NotImplementedLogger::print("ProcessParser.visitUse_clause", uc);
 		return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitGroup_template_declaration");
+				"ProcessParser.visitGroup_template_declaration", gtd);
 		return;
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
-		NotImplementedLogger::print("ProcessParser.visitGroup_declaration");
+		NotImplementedLogger::print("ProcessParser.visitGroup_declaration", gd);
 		return;
 	}
-	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item");
+	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item", ctx);
 	return;
 }
 

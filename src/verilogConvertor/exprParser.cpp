@@ -63,7 +63,7 @@ Expr * VerExprParser::visitRange_expression(
 	// lsb_constant_expression : constant_expression ;
 	// width_constant_expression : constant_expression ;
 	// base_expression : expression ;
-	NotImplementedLogger::print("VerExprParser.visitRange_expression");
+	NotImplementedLogger::print("VerExprParser.visitRange_expression", ctx);
 	return nullptr;
 }
 Expr * VerExprParser::visitRange_(Verilog2001Parser::Range_Context * ctx) {
@@ -337,7 +337,7 @@ Expr * VerExprParser::visitConstant_function_call(
 	// ;
 	if (ctx->attribute_instance().size()) {
 		NotImplementedLogger::print(
-				"VerExprParser.visitConstant_function_call - attribute_instance");
+				"VerExprParser.visitConstant_function_call - attribute_instance", ctx);
 	}
 
 	auto fi = ctx->function_identifier();
@@ -387,7 +387,7 @@ Expr * VerExprParser::visitFunction_call(
 	// ;
 	if (ctx->attribute_instance().size()) {
 		NotImplementedLogger::print(
-				"VerExprParser.visitFunction_call - attribute_instance");
+				"VerExprParser.visitFunction_call - attribute_instance", ctx);
 	}
 	auto hfi = ctx->hierarchical_function_identifier();
 	Expr * fn = visitHierarchical_function_identifier(hfi);
@@ -543,7 +543,7 @@ Expr * VerExprParser::visitEscaped_hierarchical_branch(
 	// ( '.' Escaped_identifier ( '[' Decimal_number ']' )? )*
 	// ;
 	NotImplementedLogger::print(
-			"VerExprParser.visitEscaped_hierarchical_branch");
+			"VerExprParser.visitEscaped_hierarchical_branch", ctx);
 	return NULL;
 }
 Expr * VerExprParser::visitMintypmax_expression(
@@ -553,7 +553,8 @@ Expr * VerExprParser::visitMintypmax_expression(
 	// ;
 	if (ctx->expression().size() > 1) {
 		NotImplementedLogger::print(
-				"VerExprParser.visitMintypmax_expression - type and max specified");
+				"VerExprParser.visitMintypmax_expression - type and max specified",
+				ctx);
 	}
 	return visitExpression(ctx->expression(0));
 }

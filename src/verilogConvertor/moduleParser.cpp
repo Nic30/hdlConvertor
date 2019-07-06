@@ -40,7 +40,7 @@ void ModuleParser::visitModule_declaration(
 	ent->name = ctx->module_identifier()->getText();
 	if (ctx->attribute_instance().size()) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitModule_declaration.attribute_instance");
+				"ModuleParser.visitModule_declaration.attribute_instance", ctx);
 		//auto ais = AttributeParser::visitAttribute_instance(a);
 		//for (auto v : *ais)
 		//	delete v;
@@ -124,12 +124,13 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 	}
 	auto gi = ctx->generated_instantiation();
 	if (gi) {
-		NotImplementedLogger::print("ModuleParser.generated_instantiation");
+		NotImplementedLogger::print("ModuleParser.generated_instantiation", gi);
 		return;
 	}
 	auto lpd = ctx->local_parameter_declaration();
 	if (lpd) {
-		NotImplementedLogger::print("ModuleParser.local_parameter_declaration");
+		NotImplementedLogger::print("ModuleParser.local_parameter_declaration",
+				lpd);
 		return;
 	}
 	auto pad = ctx->parameter_declaration();
@@ -143,12 +144,12 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 	}
 	auto sb = ctx->specify_block();
 	if (sb) {
-		NotImplementedLogger::print("ModuleParser.specify_block");
+		NotImplementedLogger::print("ModuleParser.specify_block", sb);
 		return;
 	}
 	auto spd = ctx->specparam_declaration();
 	if (spd) {
-		NotImplementedLogger::print("ModuleParser.specparam_declaration");
+		NotImplementedLogger::print("ModuleParser.specparam_declaration", spd);
 		return;
 	}
 	throw std::runtime_error(
@@ -172,7 +173,8 @@ void ModuleParser::visitModule_or_generate_item(
 	auto ai = ctx->attribute_instance();
 	if (ai.size()) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitModule_or_generate_item.attribute_instance");
+				"ModuleParser.visitModule_or_generate_item.attribute_instance",
+				ctx);
 	}
 	auto mg = ctx->module_or_generate_item_declaration();
 	if (mg) {
@@ -181,7 +183,7 @@ void ModuleParser::visitModule_or_generate_item(
 	}
 	auto pa = ctx->parameter_override();
 	if (pa) {
-		NotImplementedLogger::print("ModuleParser.parameter_override");
+		NotImplementedLogger::print("ModuleParser.parameter_override", pa);
 		return;
 	}
 	auto ca = ctx->continuous_assign();
@@ -194,7 +196,7 @@ void ModuleParser::visitModule_or_generate_item(
 
 	auto ga = ctx->gate_instantiation();
 	if (ga) {
-		NotImplementedLogger::print("ModuleParser.gate_instantiation");
+		NotImplementedLogger::print("ModuleParser.gate_instantiation", ga);
 		return;
 	}
 
@@ -229,7 +231,8 @@ void ModuleParser::visitModule_or_generate_item(
 		return;
 	}
 
-	NotImplementedLogger::print("ModuleParser.visitModule_or_generate_item");
+	NotImplementedLogger::print("ModuleParser.visitModule_or_generate_item",
+			ctx);
 }
 
 void ModuleParser::visitModule_or_generate_item_declaration(
@@ -259,47 +262,58 @@ void ModuleParser::visitModule_or_generate_item_declaration(
 	}
 	auto id = ctx->integer_declaration();
 	if (id) {
-		NotImplementedLogger::print("ModuleParser.integer_declaration");
+		visitInteger_declaration(id);
 		return;
 	}
 	auto red = ctx->real_declaration();
 	if (red) {
-		NotImplementedLogger::print("ModuleParser.real_declaration");
+		NotImplementedLogger::print("ModuleParser.real_declaration", red);
 		return;
 	}
 	auto td = ctx->time_declaration();
 	if (td) {
-		NotImplementedLogger::print("ModuleParser.time_declaration");
+		NotImplementedLogger::print("ModuleParser.time_declaration", td);
 		return;
 	}
 	auto rtd = ctx->realtime_declaration();
 	if (rtd) {
-		NotImplementedLogger::print("ModuleParser.realtime_declaration");
+		NotImplementedLogger::print("ModuleParser.realtime_declaration", rtd);
 		return;
 	}
 	auto ed = ctx->event_declaration();
 	if (ed) {
-		NotImplementedLogger::print("ModuleParser.event_declaration");
+		NotImplementedLogger::print("ModuleParser.event_declaration", ed);
 		return;
 	}
 	auto gd = ctx->genvar_declaration();
 	if (gd) {
-		NotImplementedLogger::print("ModuleParser.genvar_declaration");
+		NotImplementedLogger::print("ModuleParser.genvar_declaration", gd);
 		return;
 	}
 	auto tad = ctx->task_declaration();
 	if (tad) {
-		NotImplementedLogger::print("ModuleParser.task_declaration");
+		NotImplementedLogger::print("ModuleParser.task_declaration", tad);
 		return;
 	}
 	auto fd = ctx->function_declaration();
 	if (fd) {
-		NotImplementedLogger::print("ModuleParser.function_declaration");
+		NotImplementedLogger::print("ModuleParser.function_declaration", fd);
 		return;
 	}
 
 	NotImplementedLogger::print(
-			"ModuleParser.module_or_generate_item_declaration");
+			"ModuleParser.module_or_generate_item_declaration", ctx);
+}
+
+void ModuleParser::visitInteger_declaration(
+		Verilog2001Parser::Integer_declarationContext* ctx) {
+	// integer_declaration
+	//    : 'integer' list_of_variable_identifiers ';'
+	//    ;
+	auto t = Utils::mkIntT();
+	auto doc = commentParser.parse(ctx);
+	visitList_of_variable_identifiers(ctx->list_of_variable_identifiers(), t,
+			true, doc);
 }
 
 void ModuleParser::visitReg_declaration(
@@ -330,21 +344,22 @@ void ModuleParser::visitNet_declaration(
 		NotImplementedLogger::print(
 				string(
 						"ModuleParser.visitNet_declaration.net_type different than wire (")
-						+ nt->getText() + ")");
+						+ nt->getText() + ")", nt);
 	}
 	auto del = ctx->delay3();
 	if (del) {
-		NotImplementedLogger::print("ModuleParser.visitNet_declaration.delay3");
+		NotImplementedLogger::print("ModuleParser.visitNet_declaration.delay3",
+				del);
 	}
 	auto ds = ctx->drive_strength();
 	if (ds) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNet_declaration.drive_strength");
+				"ModuleParser.visitNet_declaration.drive_strength", ds);
 	}
 	auto cs = ctx->charge_strength();
 	if (cs) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNet_declaration.charge_strength");
+				"ModuleParser.visitNet_declaration.charge_strength", cs);
 	}
 
 	bool is_signed = Utils::is_signed(ctx);
@@ -513,13 +528,15 @@ void ModuleParser::visitNon_port_module_item(
 	auto gi = ctx->generated_instantiation();
 	if (gi) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNon_port_module_item.generated_instantiation");
+				"ModuleParser.visitNon_port_module_item.generated_instantiation",
+				gi);
 		return;
 	}
 	auto lp = ctx->local_parameter_declaration();
 	if (lp) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNon_port_module_item.local_parameter_declaration");
+				"ModuleParser.visitNon_port_module_item.local_parameter_declaration",
+				lp);
 		return;
 	}
 	auto mg = ctx->module_or_generate_item();
@@ -530,19 +547,21 @@ void ModuleParser::visitNon_port_module_item(
 	auto pd = ctx->parameter_declaration();
 	if (pd) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNon_port_module_item.parameter_declaration");
+				"ModuleParser.visitNon_port_module_item.parameter_declaration",
+				pd);
 		return;
 	}
 	auto sb = ctx->specify_block();
 	if (sb) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNon_port_module_item.specify_block");
+				"ModuleParser.visitNon_port_module_item.specify_block", sb);
 		return;
 	}
 	auto sd = ctx->specparam_declaration();
 	if (sd) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitNon_port_module_item.specparam_declaration");
+				"ModuleParser.visitNon_port_module_item.specparam_declaration",
+				sd);
 		return;
 	}
 	throw runtime_error(

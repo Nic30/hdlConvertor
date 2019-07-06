@@ -15,8 +15,7 @@ vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 	// module_instantiation
 	//    : module_identifier (parameter_value_assignment)? module_instance (',' module_instance)* ';'
 	//    ;
-	auto module_name =
-			ctx->module_identifier()->getText();
+	auto module_name = ctx->module_identifier()->getText();
 
 	auto pva = ctx->parameter_value_assignment();
 	vector<Expr*> genericMap;
@@ -72,7 +71,8 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 			// named_parameter_assignment
 			//    : '.' parameter_identifier '(' (expression)? ')'
 			//    ;
-			auto k = ModuleParamParser::visitParameter_identifier(pa->parameter_identifier());
+			auto k = ModuleParamParser::visitParameter_identifier(
+					pa->parameter_identifier());
 			Expr * v;
 			auto e = pa->expression();
 			if (e) {
@@ -80,7 +80,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 			} else {
 				v = Expr::null();
 			}
-			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v ));
+			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v));
 		}
 	}
 	return pcs;
@@ -134,7 +134,8 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 			//
 			if (pc->attribute_instance().size())
 				NotImplementedLogger::print(
-						"ModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance");
+						"ModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance",
+						pc);
 			auto _e = pc->expression();
 			Expr * e;
 			if (_e) {
@@ -153,7 +154,8 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 			// port_identifier : identifier;
 			if (pc->attribute_instance().size())
 				NotImplementedLogger::print(
-						"ModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance");
+						"ModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance",
+						pc);
 
 			Expr * k = VerExprParser::visitIdentifier(
 					pc->port_identifier()->identifier());
@@ -164,7 +166,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 			} else {
 				v = Expr::null();
 			}
-			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v ));
+			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v));
 		}
 	}
 	return pcs;

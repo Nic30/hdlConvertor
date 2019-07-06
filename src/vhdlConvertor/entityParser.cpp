@@ -68,7 +68,7 @@ void EntityParser::visitEntity_declarative_item(
 	// | terminal_declaration
 	// ;
 
-	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item");
+	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item", ctx);
 }
 void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 		std::vector<Variable*> * generics) {
@@ -122,10 +122,10 @@ void EntityParser::visitEntity_statement_part(
 		vhdlParser::Entity_statement_partContext* ctx) {
 	if (!ctx)
 		return;
-// entity_statement_part
-// : ( entity_statement )*
-// ;
-	NotImplementedLogger::print("EntityParser.visitEntity_statement_part");
+	// entity_statement_part
+	// : ( entity_statement )*
+	// ;
+	NotImplementedLogger::print("EntityParser.visitEntity_statement_part", ctx);
 }
 
 }

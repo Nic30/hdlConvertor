@@ -14,6 +14,9 @@ Expr *Utils::mkStringT() {
 	return Expr::ID("__str__");
 }
 
+Expr* Utils::mkIntT() {
+	return Expr::ID("integer");
+}
 Expr *Utils::mkWireT() {
 	return Expr::ID("wire");
 }

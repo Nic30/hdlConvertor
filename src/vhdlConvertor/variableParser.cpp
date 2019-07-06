@@ -16,7 +16,7 @@ std::vector<Variable*> * VariableParser::visitVariable_declaration(
 
 	if (ctx->SHARED())
 		NotImplementedLogger::print(
-				"VariableParser.visitVariable_declaration - SHARED");
+				"VariableParser.visitVariable_declaration - SHARED", ctx);
 
 	std::vector<Variable*> * vl = InterfaceParser::extractVariables(
 			ctx->identifier_list(), ctx->subtype_indication(),

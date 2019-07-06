@@ -100,7 +100,7 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext* ctx) {
 	auto cd = ctx->configuration_declaration();
 	if (cd) {
 		NotImplementedLogger::print(
-				"DesignFileParser.visitConfiguration_declaration");
+				"DesignFileParser.visitConfiguration_declaration", cd);
 		return;
 	}
 	auto pd = ctx->package_declaration();
@@ -119,7 +119,7 @@ void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext* ctx) {
 	auto l = ctx->library_clause();
 	if (l) {
 		NotImplementedLogger::print(
-				"DesignFileParser.visitContext_item - library_clause");
+				"DesignFileParser.visitContext_item - library_clause", l);
 		return; //libraries are ignored
 	}
 	auto u = ctx->use_clause();

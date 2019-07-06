@@ -175,7 +175,7 @@ Expr* ExprParser::visitSubtype_indication(
 	if (_ri) {
 		ri = visitResolution_indication(_ri);
 		NotImplementedLogger::print(
-				"ExprParser.visitResolution_indication - element_resolution");
+				"ExprParser.visitResolution_indication - element_resolution", _ri);
 		delete ri;
 	}
 
@@ -199,7 +199,7 @@ Expr * ExprParser::visitResolution_indication(
 	}
 
 	NotImplementedLogger::print(
-			"ExprParser.visitResolution_indication - element_resolution");
+			"ExprParser.visitResolution_indication - element_resolution", ctx);
 	return nullptr;
 }
 
@@ -231,7 +231,7 @@ Expr* ExprParser::visitConstraint(Expr* selectedName,
 			assert(r);
 #endif
 			NotImplementedLogger::print(
-					"ExprParser.visitConstraint - record_constraint");
+					"ExprParser.visitConstraint - record_constraint", r);
 			op = DOT;
 			op1 = nullptr;
 		}
@@ -250,7 +250,7 @@ Expr* ExprParser::visitArray_constraint(
 	auto aec = ctx->array_element_constraint();
 	if (aec) {
 		NotImplementedLogger::print(
-				"ExprParser.visitArray_constraint - array_element_constraint");
+				"ExprParser.visitArray_constraint - array_element_constraint", aec);
 	}
 	if (ic) {
 		auto e = visitIndex_constraint(ic);
@@ -266,7 +266,7 @@ Expr* ExprParser::visitIndex_constraint(
 	// ;
 	if (ctx->discrete_range().size() > 1) {
 		NotImplementedLogger::print(
-				"ExprParser.visitIndex_constraint multiple discrete_range");
+				"ExprParser.visitIndex_constraint multiple discrete_range", ctx);
 	}
 	return visitDiscrete_range(ctx->discrete_range(0));
 }
@@ -342,7 +342,7 @@ Expr* ExprParser::visitExpression(vhdlParser::ExpressionContext* ctx) {
 	}
 
 	NotImplementedLogger::print(
-			"ExprParser.visitExpression - CONDITION_OPERATOR");
+			"ExprParser.visitExpression - CONDITION_OPERATOR", ctx);
 	auto p = ctx->primary();
 	assert(p);
 	auto vp = visitPrimary(p);
@@ -565,7 +565,7 @@ Expr* ExprParser::visitElement_association(
 		auto ch = visitChoices(_c);
 		if (ch.size() > 1) {
 			NotImplementedLogger::print(
-					"ExprParser.visitElement_association - multiple choices");
+					"ExprParser.visitElement_association - multiple choices", _c);
 		}
 		assert(ch.size());
 		return new Expr(ch[0], OperatorType::MAP_ASSOCIATION, e);
@@ -592,7 +592,7 @@ Expr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 	// | UNAFFECTED
 	// ;
 	if (ctx->UNAFFECTED()) {
-		NotImplementedLogger::print("ExprParser.visitWaveform - UNAFFECTED");
+		NotImplementedLogger::print("ExprParser.visitWaveform - UNAFFECTED", ctx);
 		return nullptr;
 	}
 	auto we = ctx->waveform_element();
@@ -653,7 +653,7 @@ Expr *ExprParser::visitWaveform_element(
 	++e;
 	if (e != ex.end()) {
 		NotImplementedLogger::print(
-				"ExprParser.visitWaveform_element - AFTER expression");
+				"ExprParser.visitWaveform_element - AFTER expression", ctx);
 	}
 	return top;
 }
@@ -696,7 +696,7 @@ Expr * ExprParser::visitProcedure_call_statement(
 	//   ;
 	if (ctx->label()) {
 		NotImplementedLogger::print(
-				"ExprParser.visitProcedure_call_statement - label_colon");
+				"ExprParser.visitProcedure_call_statement - label_colon", ctx);
 	}
 	return visitProcedure_call(ctx->procedure_call());
 }

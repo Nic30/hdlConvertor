@@ -21,7 +21,8 @@ vector<Variable*>* PortParser::addTypeSpecToPorts(Direction direction,
 		vector<Variable*> * ports) {
 	if ((net_type != nullptr) && (net_type->getText() != "wire")) {
 		NotImplementedLogger::print(
-				"PortParser.addTypeSpecToPorts.net_type different than wire");
+				"PortParser.addTypeSpecToPorts.net_type different than wire",
+				net_type);
 	}
 	bool first = true;
 	for (auto p : *ports) {
@@ -55,7 +56,7 @@ vector<Variable*> * PortParser::visitPort(Verilog2001Parser::PortContext* ctx) {
 	auto pi = ctx->port_identifier();
 	if (pi) {
 		NotImplementedLogger::print(
-				"Source_textParser.visitPort - port identifier");
+				"Source_textParser.visitPort - port identifier", pi);
 		return new vector<Variable*>();
 	} else {
 		return visitPort_expression(ctx->port_expression());
@@ -93,8 +94,8 @@ Variable * PortParser::visitPort_reference(
 	if (r)
 		t = VerExprParser::visitRange_expression(r);
 
-	auto p = new Variable(
-			ctx->port_identifier()->identifier()->getText(), t, nullptr);
+	auto p = new Variable(ctx->port_identifier()->identifier()->getText(), t,
+			nullptr);
 	p->direction = Direction::DIR_UNKNOWN;
 	return p;
 
@@ -126,7 +127,8 @@ vector<Variable*> * PortParser::visitPort_declaration(
 	auto attribs = ctx->attribute_instance();
 	if (attribs.size() > 0) {
 		NotImplementedLogger::print(
-				"ModuleParser.visitPort_declaration - attribs not implemented");
+				"ModuleParser.visitPort_declaration - attribs not implemented",
+				ctx);
 	}
 
 	bool signed_ = Utils::is_signed(ctx);

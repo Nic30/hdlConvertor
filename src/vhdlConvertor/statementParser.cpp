@@ -97,7 +97,7 @@ Statement * StatementParser::visitSequential_statement(
 	if (ns) {
 		// [todo] convert to wait statement
 		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - next_statement");
+				"StatementParser.visitSequential_statement - next_statement", ns);
 		return nullptr;
 	}
 
@@ -105,7 +105,7 @@ Statement * StatementParser::visitSequential_statement(
 	if (es) {
 		// [todo] convert to regular call
 		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - exit_statement");
+				"StatementParser.visitSequential_statement - exit_statement", es);
 		return nullptr;
 	}
 
@@ -141,7 +141,7 @@ Statement * StatementParser::visitAssertion_statement(
 	auto call = Expr::call(fn_name, args);
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitAssertion_statement - label");
+				"StatementParser.visitAssertion_statement - label", ctx);
 	return Statement::EXPR(call);
 }
 
@@ -163,7 +163,7 @@ Statement * StatementParser::visitReport_statement(
 	auto c = Expr::call(fn_name, args);
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitReport_statement - label");
+				"StatementParser.visitReport_statement - label", ctx);
 	return Statement::EXPR(c);
 }
 
@@ -174,7 +174,7 @@ Statement * StatementParser::visitWait_statement(
 	// ;
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitWait_statement - label");
+				"StatementParser.visitWait_statement - label", ctx);
 
 	auto sc = ctx->sensitivity_clause();
 	auto cc = ctx->condition_clause();
@@ -208,7 +208,7 @@ Statement * StatementParser::visitNull_statement(
 	// ;
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitNull_statement - label");
+				"StatementParser.visitNull_statement - label", ctx);
 
 	return nullptr;
 }
@@ -224,7 +224,7 @@ Statement * StatementParser::visitCase_statement(
 
 	if (ctx->QUESTIONMARK().size()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitCase_statement - QUESTIONMARK");
+				"StatementParser.visitCase_statement - QUESTIONMARK", ctx);
 	}
 
 	auto _e = ctx->expression();
@@ -265,7 +265,7 @@ Statement * StatementParser::visitSignal_assignment_statement(
 	//  ;
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitSignal_assignment_statement - label_colon");
+				"StatementParser.visitSignal_assignment_statement - label_colon", ctx);
 
 	if (ctx->simple_signal_assignment()) {
 		return visitSimple_signal_assignment(ctx->simple_signal_assignment());
@@ -309,7 +309,7 @@ HdlAssignStm * StatementParser::visitSimple_waveform_assignment(
 
 	if (ctx->delay_mechanism())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_waveform_assignment - delay_mechanism");
+				"StatementParser.visitSimple_waveform_assignment - delay_mechanism", ctx);
 
 	auto dst = ExprParser::visitTarget(ctx->target());
 	auto src = ExprParser::visitWaveform(ctx->waveform());
@@ -323,7 +323,7 @@ HdlAssignStm * StatementParser::visitSimple_force_assignment(
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_force_assignment - force_mode");
+				"StatementParser.visitSimple_force_assignment - force_mode", ctx);
 
 	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
 			ExprParser::visitExpression(ctx->expression()), false);
@@ -337,7 +337,7 @@ HdlAssignStm * StatementParser::visitSimple_release_assignment(
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_release_assignment - force_mode");
+				"StatementParser.visitSimple_release_assignment - force_mode", ctx);
 
 	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
 			Expr::null(), false);
@@ -369,7 +369,7 @@ Statement * StatementParser::visitConditional_waveform_assignment(
 
 	if (ctx->delay_mechanism())
 		NotImplementedLogger::print(
-				"StatementParser.visitConditional_waveform_assignment - delay_mechanism");
+				"StatementParser.visitConditional_waveform_assignment - delay_mechanism", ctx);
 
 	auto src = ExprParser::visitTarget(ctx->target());
 	auto dst = ExprParser::visitConditional_waveforms(
@@ -386,10 +386,10 @@ Statement * StatementParser::visitConditional_force_assignment(
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitConditional_force_assignment - force_mode");
+				"StatementParser.visitConditional_force_assignment - force_mode", ctx);
 
 	NotImplementedLogger::print(
-			"StatementParser.visitConditional_force_assignment - conditional_expression");
+			"StatementParser.visitConditional_force_assignment - conditional_expression", ctx);
 
 	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
 			Expr::null(), false);
@@ -403,7 +403,7 @@ Statement * StatementParser::visitSelected_signal_assignment(
 	//  ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitSelected_signal_assignment");
+			"StatementParser.visitSelected_signal_assignment", ctx);
 
 	return nullptr;
 }
@@ -419,7 +419,7 @@ Statement * StatementParser::visitVariable_assignment_statement(
 	// ;
 	if (ctx->label())
 		NotImplementedLogger::print(
-				"StatementParser.visitVariable_assignment_statement - label_colon");
+				"StatementParser.visitVariable_assignment_statement - label_colon", ctx);
 
 	if (ctx->simple_variable_assignment()) {
 		return visitSimple_variable_assignment(
@@ -453,7 +453,7 @@ HdlAssignStm * StatementParser::visitConditional_variable_assignment(
 	//  ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitConditional_variable_assignment - conditional_expression");
+			"StatementParser.visitConditional_variable_assignment - conditional_expression", ctx);
 
 	return new HdlAssignStm(ExprParser::visitTarget(ctx->target()),
 			Expr::null(), true);
@@ -467,10 +467,10 @@ HdlAssignStm * StatementParser::visitSelected_variable_assignment(
 	// ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitSelected_variable_assignments");
+			"StatementParser.visitSelected_variable_assignments", ctx);
 
 	return new HdlAssignStm(ExprParser::visitExpression(ctx->expression()),
-			Expr::null());
+			Expr::null(), true);
 }
 
 Statement * StatementParser::visitIf_statement(
@@ -523,7 +523,7 @@ Statement * StatementParser::visitReturn_statement(
 	// ;
 	if (ctx->label()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitReturn_statement - label_colon");
+				"StatementParser.visitReturn_statement - label_colon", ctx);
 	}
 	auto e = ctx->expression();
 	if (e) {
@@ -545,7 +545,7 @@ Statement * StatementParser::visitLoop_statement(
 
 	if (ctx->label().size()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitLoop_statement - label_colon");
+				"StatementParser.visitLoop_statement - label_colon", ctx);
 	}
 
 	Statement * loop;
@@ -625,15 +625,15 @@ Statement * StatementParser::visitConcurrent_selected_signal_assignment(
 
 	if (ctx->QUESTIONMARK()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - QUESTIONMARK");
+				"StatementParser.visitConcurrent_selected_signal_assignment - QUESTIONMARK", ctx);
 	}
 	if (ctx->GUARDED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - GUARDED");
+				"StatementParser.visitConcurrent_selected_signal_assignment - GUARDED", ctx);
 	}
 	if (ctx->delay_mechanism()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - delay_mechanism");
+				"StatementParser.visitConcurrent_selected_signal_assignment - delay_mechanism", ctx);
 	}
 	auto sel = ExprParser::visitExpression(ctx->expression());
 	auto dst = ExprParser::visitTarget(ctx->target());
@@ -653,11 +653,11 @@ Statement * StatementParser::visitConcurrent_signal_assignment_statement(
 
 	if (ctx->label()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - label");
+				"StatementParser.visitConcurrent_signal_assignment_statement - label", ctx);
 	}
 	if (ctx->POSTPONED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED");
+				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED", ctx);
 	}
 
 	auto cssa = ctx->concurrent_selected_signal_assignment();
@@ -672,11 +672,11 @@ Statement * StatementParser::visitConcurrent_signal_assignment_statement(
 	// ;
 	if (csaa->GUARDED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
+				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED", csaa);
 	}
 	if (csaa->delay_mechanism()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED");
+				"StatementParser.visitConcurrent_signal_assignment_statement - delay_mechanism", csaa);
 	}
 
 	auto t = csaa->target();
@@ -708,7 +708,7 @@ void StatementParser::visitConcurrent_statement(
 
 	auto b = ctx->block_statement();
 	if (b) {
-		NotImplementedLogger::print("ArchParser.visitBlock_statement");
+		NotImplementedLogger::print("ArchParser.visitBlock_statement", b);
 		return;
 	}
 	auto p = ctx->process_statement();
@@ -720,13 +720,13 @@ void StatementParser::visitConcurrent_statement(
 	auto cpc = ctx->concurrent_procedure_call_statement();
 	if (cpc) {
 		NotImplementedLogger::print(
-				"ArchParser.visitConcurrent_procedure_call_statement");
+				"ArchParser.visitConcurrent_procedure_call_statement", cpc);
 		return;
 	}
 	auto ca = ctx->concurrent_assertion_statement();
 	if (ca) {
 		NotImplementedLogger::print(
-				"ArchParser.visitConcurrent_assertion_statement");
+				"ArchParser.visitConcurrent_assertion_statement", ca);
 		return;
 	}
 	auto csa = ctx->concurrent_signal_assignment_statement();

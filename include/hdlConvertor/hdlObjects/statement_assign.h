@@ -10,7 +10,7 @@ namespace hdlObjects {
 class HdlAssignStm: public Statement {
 public:
 	bool is_blocking;
-	HdlAssignStm(Expr* dst, Expr * src, bool _is_blocking = false);
+	HdlAssignStm(Expr* dst, Expr * src, bool _is_blocking);
 };
 
 class HdlControlledAssignStm: public HdlAssignStm {

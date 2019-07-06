@@ -54,7 +54,7 @@ Expr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
 	// ;
 	auto en = ctx->external_name();
 	if (en) {
-		NotImplementedLogger::print("ExprParser.visitName - external_name");
+		NotImplementedLogger::print("ExprParser.visitName - external_name", en);
 		return nullptr;
 	}
 	auto np = ctx->name_part();
@@ -80,7 +80,7 @@ Expr * ReferenceParser::visitName_attribute_part(
 	auto expressions = ctx->expression();
 	if (expressions.size() > 0)
 		NotImplementedLogger::print(
-				"ExprParser.visitName_attribute_part - expression");
+				"ExprParser.visitName_attribute_part - expression", ctx);
 	return visitAttribute_designator(ctx->attribute_designator());
 }
 Expr* ReferenceParser::visitAttribute_name(
@@ -92,7 +92,7 @@ Expr* ReferenceParser::visitAttribute_name(
 	auto s = ctx->signature();
 	if (s)
 		NotImplementedLogger::print(
-				"ExprParser.visitAttribute_name - signature");
+				"ExprParser.visitAttribute_name - signature", s);
 	auto ad = ctx->attribute_designator();
 	Expr * res = new Expr(p, OperatorType::APOSTROPHE, visitAttribute_designator(ad));
 	auto e = ctx->expression();

@@ -55,7 +55,7 @@ CompInstance * CompInstanceParser::visitInstantiated_unit(
 	if (_id) {
 		Expr * id = LiteralParser::visitIdentifier(_id);
 		NotImplementedLogger::print(
-				"CompInstanceParser.visitInstantiated_unit - Identifier");
+				"CompInstanceParser.visitInstantiated_unit - Identifier", _id);
 		delete id;
 	}
 

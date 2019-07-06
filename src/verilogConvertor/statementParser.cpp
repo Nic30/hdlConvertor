@@ -40,7 +40,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	auto ai = ctx->attribute_instance();
 	if (ai.size()) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitStatement.attribute_instance");
+				"VerStatementParser.visitStatement.attribute_instance", ai[0]);
 	}
 	auto ba = ctx->blocking_assignment();
 	if (ba) {
@@ -56,12 +56,12 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	}
 	auto d = ctx->disable_statement();
 	if (d) {
-		NotImplementedLogger::print("VerStatementParser.disable_statement");
+		NotImplementedLogger::print("VerStatementParser.disable_statement", d);
 		return {nullptr, nullptr};
 	}
 	auto et = ctx->event_trigger();
 	if (et) {
-		NotImplementedLogger::print("VerStatementParser.event_trigger");
+		NotImplementedLogger::print("VerStatementParser.event_trigger", et);
 		return {nullptr, nullptr};
 	}
 	auto ls = ctx->loop_statement();
@@ -75,13 +75,13 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	}
 	auto pb = ctx->par_block();
 	if (pb) {
-		NotImplementedLogger::print("VerStatementParser.par_block");
+		NotImplementedLogger::print("VerStatementParser.par_block", pb);
 		return {nullptr, nullptr};
 	}
 	auto pca = ctx->procedural_continuous_assignments();
 	if (pca) {
 		NotImplementedLogger::print(
-				"VerStatementParser.procedural_continuous_assignments");
+				"VerStatementParser.procedural_continuous_assignments", pca);
 		return {nullptr, nullptr};
 	}
 	auto ptcs = ctx->procedural_timing_control_statement();
@@ -98,12 +98,12 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	}
 	auto ta = ctx->task_enable();
 	if (ta) {
-		NotImplementedLogger::print("VerStatementParser.task_enable");
+		NotImplementedLogger::print("VerStatementParser.task_enable", ta);
 		return {nullptr, nullptr};
 	}
 	auto ws = ctx->wait_statement();
 	if (ws) {
-		NotImplementedLogger::print("VerStatementParser.wait_statement");
+		NotImplementedLogger::print("VerStatementParser.wait_statement", ws);
 		return {nullptr, nullptr};
 	}
 	throw std::runtime_error(
@@ -158,7 +158,7 @@ Statement * VerStatementParser::visitCase_statement(
 	if (ctx->children[0]->getText() != "case") {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitCase_statement "
-						+ ctx->children[0]->getText());
+						+ ctx->children[0]->getText(), ctx);
 		return nullptr;
 	}
 	auto switchOn = VerExprParser::visitExpression(ctx->expression());
@@ -217,7 +217,7 @@ HdlAssignStm * VerStatementParser::visitVariable_assignment(
 	auto _e = ctx->expression();
 	auto vl = VerExprParser::visitVariable_lvalue(_vl);
 	auto e = VerExprParser::visitExpression(_e);
-	return new HdlAssignStm(vl, e, false);
+	return new HdlAssignStm(vl, e, true);
 }
 Statement * VerStatementParser::visitLoop_statement(
 		Verilog2001Parser::Loop_statementContext * ctx) {
@@ -234,7 +234,7 @@ Statement * VerStatementParser::visitLoop_statement(
 		return Statement::WHILE(Expr::INT(1), stm);
 	} else if (name == "repeat") {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitLoop_statement.repeat");
+				"VerStatementParser.visitLoop_statement.repeat", ctx);
 		return nullptr;
 	} else if (name == "while") {
 		auto _e = ctx->expression();
@@ -262,7 +262,8 @@ HdlAssignStm * VerStatementParser::visitNonblocking_assignment(
 	auto dec = ctx->delay_or_event_control();
 	if (dec) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitNonblocking_assignment.delay_or_event_control");
+				"VerStatementParser.visitNonblocking_assignment.delay_or_event_control",
+				dec);
 	}
 	auto vl = ctx->variable_lvalue();
 	auto dst = VerExprParser::visitVariable_lvalue(vl);
@@ -280,12 +281,13 @@ std::vector<Statement*> * VerStatementParser::visitSeq_block(
 	auto bi = ctx->block_identifier();
 	if (bi) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitSeq_block.block_identifier");
+				"VerStatementParser.visitSeq_block.block_identifier", bi);
 	}
 	auto bd = ctx->block_item_declaration();
 	if (bd.size()) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitSeq_block.block_item_declaration");
+				"VerStatementParser.visitSeq_block.block_item_declaration",
+				bd[0]);
 	}
 	auto _stms = ctx->statement();
 	auto stms = new vector<Statement*>;
@@ -329,7 +331,8 @@ Statement * VerStatementParser::visitConditional_statement(
 	//      ('else' statement_or_null)?
 	//    ;
 	NotImplementedLogger::print(
-			"VerStatementParser.conditional_statement.if_else_if_statement");
+			"VerStatementParser.conditional_statement.if_else_if_statement",
+			ctx);
 	return nullptr;
 }
 Statement * VerStatementParser::visitProcedural_timing_control_statement(
@@ -346,12 +349,12 @@ Statement * VerStatementParser::visitProcedural_timing_control_statement(
 		assert(sens_list.first == nullptr && "no event and delay at one");
 		p = Statement::PROCESS(sens_list.second, stms);
 	} else if (sens_list.first) {
-		auto wait = Statement::WAIT({sens_list.first, });
+		auto wait = Statement::WAIT( { sens_list.first, });
 		// push_front
-	    stms->push_back(wait);
-	    std::rotate(stms->rbegin(), stms->rbegin() + 1, stms->rend());
+		stms->push_back(wait);
+		std::rotate(stms->rbegin(), stms->rbegin() + 1, stms->rend());
 
-	    p = Statement::PROCESS(nullptr, stms);
+		p = Statement::PROCESS(nullptr, stms);
 	} else {
 		p = Statement::PROCESS(nullptr, stms);
 	}
@@ -385,8 +388,11 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
 	if (s) {
 		return visitStatement(s);
 	} else {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitStatement_or_null.attribute_instance or nop");
+		auto ai = ctx->attribute_instance();
+		if (ai.size())
+			NotImplementedLogger::print(
+					"VerStatementParser.visitStatement_or_null.attribute_instance for nop",
+					ctx);
 		return {nullptr, nullptr};
 	}
 }
@@ -407,7 +413,7 @@ pair<Expr*, vector<Expr*>*> VerStatementParser::visitDelay_or_event_control(
 	auto e = ctx->expression();
 	if (e) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitDelay_or_event_control - repeat");
+				"VerStatementParser.visitDelay_or_event_control - repeat", e);
 	}
 	return {nullptr, vistEvent_control(ec)};
 }
@@ -446,12 +452,12 @@ vector<Statement *> VerStatementParser::vistContinuous_assign(
 	auto ds = ctx->drive_strength();
 	if (ds) {
 		NotImplementedLogger::print(
-				"VerStatementParser.vistContinuous_assign.drive_strength");
+				"VerStatementParser.vistContinuous_assign.drive_strength", ds);
 	}
 	auto del = ctx->delay3();
 	if (del) {
 		NotImplementedLogger::print(
-				"VerStatementParser.vistContinuous_assign.delay3");
+				"VerStatementParser.vistContinuous_assign.delay3", del);
 	}
 	auto lna = ctx->list_of_net_assignments();
 	// list_of_net_assignments

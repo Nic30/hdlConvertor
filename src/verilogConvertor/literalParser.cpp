@@ -32,7 +32,7 @@ Expr * VerLiteralParser::visitNumber(Verilog2001Parser::NumberContext* ctx) {
 	if (n) {
 		return parseIntNumber(n, 16);
 	}
-	NotImplementedLogger::print("ExpressionParser.visitNumber - Real_number");
+	NotImplementedLogger::print("ExpressionParser.visitNumber - Real_number", ctx);
 	return NULL;
 
 }
@@ -75,13 +75,6 @@ Expr * VerLiteralParser::parseIntNumber(antlr4::tree::TerminalNode* n,
 	}
 
 	std::string strVal = s.substr(valuePartStart, s.length()); // cut off prefix
-	for (int i = 0; strVal[i]; i++) {
-		char ch = strVal[i];
-		if (ch == 'x' || ch == 'z') {
-			strVal[i] = '0';
-		}
-	}
-
 	if (size != -1)
 		return Expr::INT(strVal, size, radix);
 	if (radix == 10) {

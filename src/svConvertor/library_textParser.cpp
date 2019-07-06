@@ -13,7 +13,7 @@ Library_textParser::Library_textParser(antlr4::TokenStream* tokens,
 
 void Library_textParser::visitLibrary_text(
 		sv2012Parser::Library_textContext * ctx) {
-	NotImplementedLogger::print("visitLibrary_text");
+	NotImplementedLogger::print("visitLibrary_text", ctx);
 }
 
 }

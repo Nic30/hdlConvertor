@@ -37,6 +37,8 @@ public:
 			std::vector<hdlObjects::iHdlObj*> & objs);
 	void visitModule_or_generate_item_declaration(
 			Verilog2001Parser::Module_or_generate_item_declarationContext * ctx);
+	void visitInteger_declaration(
+			Verilog2001Parser::Integer_declarationContext* ctx);
 	void visitReg_declaration(Verilog2001Parser::Reg_declarationContext * ctx);
 	void visitNet_declaration(Verilog2001Parser::Net_declarationContext * ctx);
 	std::vector<Variable*> visitList_of_net_identifiers(

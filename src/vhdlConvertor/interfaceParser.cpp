@@ -61,7 +61,7 @@ vector<Variable*> * InterfaceParser::visitInterface_signal_declaration(
 	// ;
 	if (ctx->BUS()) {
 		NotImplementedLogger::print(
-				"InterfaceParser.visitInterface_signal_declaration - BUS");
+				"InterfaceParser.visitInterface_signal_declaration - BUS", ctx);
 	}
 	auto sigs = extractVariables(ctx->identifier_list(),
 			ctx->subtype_indication(), ctx->expression());
@@ -90,7 +90,7 @@ vector<Variable*> * InterfaceParser::visitInterface_file_declaration(
 	//       FILE identifier_list COLON subtype_indication
 	// ;
 	NotImplementedLogger::print(
-			"InterfaceParser.visitInterface_file_declaration");
+			"InterfaceParser.visitInterface_file_declaration", ctx);
 	return new vector<Variable*>();
 }
 
@@ -106,23 +106,32 @@ vector<Variable*> * InterfaceParser::visitInterface_declaration(
 	if (iod) {
 		return visitInterface_object_declaration(iod);
 	}
-	auto itd = ctx->interface_type_declaration();
-	if (itd) {
-		auto t = visitInterface_type_declaration(itd);
-		delete t;
-		NotImplementedLogger::print(
-				"InterfaceParser.visitInterface_declaration - interface_type_declaration");
-	}
-	auto isd = ctx->interface_subprogram_declaration();
-	if (isd) {
-		NotImplementedLogger::print(
-				"InterfaceParser.visitInterface_declaration - interface_subprogram_declaration");
-	}
-	auto ipd = ctx->interface_package_declaration();
-	if (ipd) {
-		NotImplementedLogger::print(
-				"InterfaceParser.visitInterface_declaration - interface_package_declaration");
-	}
+	do {
+		auto itd = ctx->interface_type_declaration();
+		if (itd) {
+			auto t = visitInterface_type_declaration(itd);
+			delete t;
+			NotImplementedLogger::print(
+					"InterfaceParser.visitInterface_declaration - interface_type_declaration",
+					itd);
+			break;
+		}
+		auto isd = ctx->interface_subprogram_declaration();
+		if (isd) {
+			NotImplementedLogger::print(
+					"InterfaceParser.visitInterface_declaration - interface_subprogram_declaration",
+					isd);
+			break;
+		}
+		auto ipd = ctx->interface_package_declaration();
+		if (ipd) {
+			NotImplementedLogger::print(
+					"InterfaceParser.visitInterface_declaration - interface_package_declaration",
+					ipd);
+			break;
+		}
+	} while (0);
+
 	return new vector<Variable*>();
 }
 Expr * InterfaceParser::visitInterface_type_declaration(

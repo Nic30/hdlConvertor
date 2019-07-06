@@ -148,11 +148,10 @@ Expr * LiteralParser::visitAbstract_literal(
 	auto n = bl->BASE();
 	auto _n = n->getText();
 	int base = atoi(_n.c_str());
-	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(),
-			base);
+	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(), base);
 	if (bl->EXPONENT()) {
 		NotImplementedLogger::print(
-				"LiteralParser.visitBased_literal - EXPONENT");
+				"LiteralParser.visitBased_literal - EXPONENT", ctx);
 	}
 	return new Expr(val);
 }
@@ -188,7 +187,8 @@ std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	// operator_symbol: string_literal;;
 	Expr * e;
 	if (isStrDesignator(ctx)) {
-		e = visitString_literal(ctx->operator_symbol()->STRING_LITERAL()->getText());
+		e = visitString_literal(
+				ctx->operator_symbol()->STRING_LITERAL()->getText());
 	} else {
 		e = visitIdentifier(ctx->identifier());
 	}

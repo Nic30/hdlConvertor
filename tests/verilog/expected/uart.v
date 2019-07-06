@@ -22,15 +22,15 @@ module uart (
     output rx_empty
 );
     // Internal Variables 
-    reg [7:0] tx_reg;
+    reg [7:0]  tx_reg;
     reg tx_empty;
     reg tx_over_run;
-    reg [3:0] tx_cnt;
+    reg [3:0]  tx_cnt;
     reg tx_out;
-    reg [7:0] rx_reg;
-    reg [7:0] rx_data;
-    reg [3:0] rx_sample_cnt;
-    reg [3:0] rx_cnt;
+    reg [7:0]  rx_reg;
+    reg [7:0]  rx_data;
+    reg [3:0]  rx_sample_cnt;
+    reg [3:0]  rx_cnt;
     reg rx_frame_err;
     reg rx_over_run;
     reg rx_empty;

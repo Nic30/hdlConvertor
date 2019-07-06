@@ -139,15 +139,16 @@ class ToVerilog():
                 else:
                     b = expr.base
                     if b == 2:
-                        f = "{0}b'{1}"
+                        base_char = 'b'
                     elif b == 8:
-                        f = "{0}O'{1}"
+                        base_char = 'O'
                     elif b == 10:
-                        f = "{0}d'{1}"
+                        base_char = 'd'
                     elif b == 16:
-                        f = "{0}h'{1}"
+                        base_char = 'h'
                     else:
                         raise NotImplementedError(b)
+                    f = "{0}'" + base_char + "{1}"
                 w(f.format(expr.bits, expr.val))
             return
         elif isinstance(expr, HdlName):
@@ -302,6 +303,8 @@ class ToVerilog():
         else:
             w("wire ")
         is_array = self.print_type_first_part(t)
+        if t != WIRE:
+            w(" ")
         w(name)
         if is_array:
             w(" ")
@@ -344,7 +347,7 @@ class ToVerilog():
 
         # to prevent useless newline for empty always/time waits
         if _body:
-            return self.print_block(body, True)
+            return self.print_block(_body, True)
         else:
             return True
 

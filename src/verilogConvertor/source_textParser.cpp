@@ -30,7 +30,7 @@ void Source_textParser::visitSource_text(
 void Source_textParser::visitTiming_spec(
 		Verilog2001Parser::Timing_specContext* ctx) {
 	// timing_spec : '`timescale' Time_Identifier '/' Time_Identifier;
-	NotImplementedLogger::print("Source_textParser.visitTiming_spec");
+	NotImplementedLogger::print("Source_textParser.visitTiming_spec", ctx);
 }
 void Source_textParser::visitDescription(
 		Verilog2001Parser::DescriptionContext* ctx) {
