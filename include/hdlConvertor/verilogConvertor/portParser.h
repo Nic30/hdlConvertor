@@ -20,7 +20,7 @@ public:
 	std::vector<hdlObjects::HdlVariableDef*>* addTypeSpecToPorts(
 			hdlObjects::HdlDirection direction,
 			Verilog2001Parser::Net_typeContext * net_type, bool signed_,
-			bool reg_, std::string doc,
+			bool reg_, const std::string & doc,
 			Verilog2001Parser::Range_Context * range_,
 			std::vector<hdlObjects::HdlVariableDef*> * ports);
 	std::vector<hdlObjects::HdlVariableDef*>* visitList_of_ports(

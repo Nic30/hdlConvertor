@@ -16,7 +16,6 @@ using namespace std;
 using namespace Verilog2001_antlr;
 using namespace hdlConvertor::hdlObjects;
 
-
 ModuleParser::ModuleParser(CommentParser & commentParser, HdlContext * _context,
 		bool _hierarchyOnly) :
 		commentParser(commentParser) {
@@ -100,10 +99,15 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 		visitModule_or_generate_item(mog, objs);
 		return;
 	}
-	string doc = commentParser.parse(ctx);
-	// [TODO] attribute_instance
+	auto ai = ctx->attribute_instance();
+	if (ai.size()) {
+		NotImplementedLogger::print(
+				"ModuleParser.module_item.attribute_instance", ctx);
+	}
 	auto pd = ctx->port_declaration();
 	if (pd) {
+		string doc = commentParser.parse(ctx);
+		bool first = true;
 		PortParser pp(commentParser);
 		auto portsDeclr = pp.visitPort_declaration(pd);
 		for (auto declr : *portsDeclr) {
@@ -117,7 +121,10 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 			p->is_const |= declr->is_const;
 			if (p->direction == HdlDirection::DIR_UNKNOWN)
 				p->direction = declr->direction;
-			p->__doc__ += doc;
+			if (first) {
+				p->__doc__ += doc;
+				first = false;
+			}
 			delete declr;
 		}
 		delete portsDeclr;
@@ -433,7 +440,8 @@ std::vector<HdlVariableDef*> ModuleParser::visitList_of_net_identifiers(
 	}
 	if (actual_id) {
 		// process leftover
-		res.push_back(new HdlVariableDef(actual_id->extractStr(), actual_t, nullptr));
+		res.push_back(
+				new HdlVariableDef(actual_id->extractStr(), actual_t, nullptr));
 	}
 
 	return res;
@@ -494,7 +502,8 @@ HdlVariableDef * ModuleParser::visitVariable_type(
 	auto vi = ctx->variable_identifier();
 	auto t = base_type;
 	for (auto d : ctx->dimension()) {
-		t = new iHdlExpr(t, HdlOperatorType::INDEX, VerExprParser::visitDimension(d));
+		t = new iHdlExpr(t, HdlOperatorType::INDEX,
+				VerExprParser::visitDimension(d));
 	}
 	iHdlExpr * def_val = nullptr;
 	auto c = ctx->constant_expression();

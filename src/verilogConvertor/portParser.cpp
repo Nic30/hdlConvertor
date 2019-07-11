@@ -17,7 +17,7 @@ PortParser::PortParser(CommentParser & commentParser) :
 
 vector<HdlVariableDef*>* PortParser::addTypeSpecToPorts(HdlDirection direction,
 		Verilog2001Parser::Net_typeContext* net_type, bool signed_, bool reg_,
-		string doc, Verilog2001Parser::Range_Context* range_,
+		const string & doc, Verilog2001Parser::Range_Context* range_,
 		vector<HdlVariableDef*> * ports) {
 	if ((net_type != nullptr) && (net_type->getText() != "wire")) {
 		NotImplementedLogger::print(
@@ -27,8 +27,10 @@ vector<HdlVariableDef*>* PortParser::addTypeSpecToPorts(HdlDirection direction,
 	bool first = true;
 	for (auto p : *ports) {
 		assert(!p->type);
-		if (first)
+		if (first) {
 			p->__doc__ = doc + p->__doc__;
+			first = false;
+		}
 		p->type = Utils::mkWireT(range_, signed_);
 		p->direction = direction;
 		p->is_latched = reg_;
@@ -49,7 +51,8 @@ vector<HdlVariableDef*>* PortParser::visitList_of_ports(
 	}
 	return ports;
 }
-vector<HdlVariableDef*> * PortParser::visitPort(Verilog2001Parser::PortContext* ctx) {
+vector<HdlVariableDef*> * PortParser::visitPort(
+		Verilog2001Parser::PortContext* ctx) {
 	// port: port_expression?
 	// | '.' port_identifier '(' ( port_expression )? ')'
 	// ;
@@ -94,8 +97,8 @@ HdlVariableDef * PortParser::visitPort_reference(
 	if (r)
 		t = VerExprParser::visitRange_expression(r);
 
-	auto p = new HdlVariableDef(ctx->port_identifier()->identifier()->getText(), t,
-			nullptr);
+	auto p = new HdlVariableDef(ctx->port_identifier()->identifier()->getText(),
+			t, nullptr);
 	p->direction = HdlDirection::DIR_UNKNOWN;
 	return p;
 
@@ -123,7 +126,6 @@ vector<HdlVariableDef*> * PortParser::visitPort_declaration(
 	// | attribute_instance* output_declaration
 	// ;
 	string doc = commentParser.parse(ctx);
-	// [TODO] attribs
 	auto attribs = ctx->attribute_instance();
 	if (attribs.size() > 0) {
 		NotImplementedLogger::print(
