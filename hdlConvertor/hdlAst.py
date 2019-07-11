@@ -250,11 +250,11 @@ class HdlVariableDef(iHdlObj, iInModuleHdlObj):
     :ivar name: name of newly defined object
     :ivar type: type of the defined variable (or type etc.)
     :ivar value: initialisation of variable (typedef etc.)
-    :ivar latched: flag if true the object corresponds to VHDL variable/Verilog reg
+    :ivar is_latched: flag if true the object corresponds to VHDL variable/Verilog reg
     :ivar is_const: flag if true the value is constants
     :ivar direction: direction if the variable is port
     """
-    __slots__ = ["name", "type", "value", "latched", "is_const", "direction"]
+    __slots__ = ["name", "type", "value", "is_latched", "is_const", "direction"]
 
     def __init__(self):
         iHdlObj.__init__(self)
@@ -262,7 +262,7 @@ class HdlVariableDef(iHdlObj, iInModuleHdlObj):
         self.name = None  # type HdlName
         self.type = None  # type: HdlType
         self.value = None  # iHdlExpr
-        self.latched = False  # type: bool
+        self.is_latched = False  # type: bool
         self.is_const = False  # type: bool
         self.direction = None  # type: HdlDirection
 
@@ -377,7 +377,7 @@ class HdlImport(iHdlStatement):
         self.path = []  # type: List[str]
 
 
-class HdlStatementBlock(iHdlStatement):
+class HdlStmBlock(iHdlStatement):
     """
     Block of statements in HDL
     List[Union[iHdlExpr, iHdlStatement, HdlVariableDef, iHdlTypeDef]]
@@ -385,11 +385,11 @@ class HdlStatementBlock(iHdlStatement):
     __slots__ = ["body"]
 
     def __init__(self):
-        super(HdlStatementBlock, self).__init__()
+        super(HdlStmBlock, self).__init__()
         self.body = []  # type: List[iHdlObj]
 
 
-class HdlAssignStm(iHdlStatement):
+class HdlStmAssign(iHdlStatement):
     """
     HDL assignment statement
 
@@ -402,13 +402,13 @@ class HdlAssignStm(iHdlStatement):
     __slots__ = ["src", "dst", 'is_blocking', 'delay']
 
     def __init__(self, src, dst):
-        super(HdlAssignStm, self).__init__()
+        super(HdlStmAssign, self).__init__()
         self.src = src  # type: iHdlExpr
         self.dst = dst  # type: iHdlExpr
         self.is_blocking = False
 
 
-class HdlControlledAssignStm(HdlAssignStm):
+class HdlStmAssignControlled(HdlStmAssign):
     """
     Assignment with some sort of delay specification
     if statement is blocking the current statement waits until the condition is met
@@ -423,12 +423,12 @@ class HdlControlledAssignStm(HdlAssignStm):
     """
 
     def __init__(self, src, dst, time_delay, event_delay):
-        super(HdlControlledAssignStm, self).__init__(src, dst)
+        super(HdlStmAssignControlled, self).__init__(src, dst)
         self.time_delay = time_delay  # type Optional[iHdlExpr]
-        self.event_delay = event_delay # type Optional[List[iHdlExpr]]
+        self.event_delay = event_delay  # type Optional[List[iHdlExpr]]
 
 
-class HdlIfStm(iHdlStatement):
+class HdlStmIf(iHdlStatement):
     """
     HDL if statement
 
@@ -440,14 +440,14 @@ class HdlIfStm(iHdlStatement):
     __slots__ = ["cond", "if_true", "elifs", "if_false"]
 
     def __init__(self):
-        super(HdlIfStm, self).__init__()
+        super(HdlStmIf, self).__init__()
         self.cond = None  # type: iHdlExpr
         self.if_true = []  # type: List[iHdlStatement]
         self.elifs = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
         self.if_false = None  # type: Optional[List[iHdlStatement]]
 
 
-class HdlProcessStm(iHdlStatement):
+class HdlStmProcess(iHdlStatement):
     """
     HDL process statement
     the container of statements with the sensitivity specified
@@ -462,25 +462,25 @@ class HdlProcessStm(iHdlStatement):
     __slots__ = ["sensitivity", "body"]
 
     def __init__(self):
-        super(HdlProcessStm, self).__init__()
+        super(HdlStmProcess, self).__init__()
         self.sensitivity = None  # type: Optional[iHdlExpr]
         self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
 
-class HdlCaseStm(iHdlStatement):
+class HdlStmCase(iHdlStatement):
     """
     HDL case statement
     """
     __slots__ = ["switch_on", "cases", "default"]
 
     def __init__(self):
-        super(HdlCaseStm, self).__init__()
+        super(HdlStmCase, self).__init__()
         self.switch_on = None  # type: iHdlExpr
         self.cases = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
         self.default = None  # type: Optional[List[iHdlStatement]]
 
 
-class HdlForStm(iHdlStatement):
+class HdlStmFor(iHdlStatement):
     """
     HDL for statement
 
@@ -490,14 +490,14 @@ class HdlForStm(iHdlStatement):
     __slots__ = ["init", "cond", "step", "body"]
 
     def __init__(self):
-        super(HdlForStm, self).__init__()
+        super(HdlStmFor, self).__init__()
         self.init = []  # type: List[iHdlStatement]
-        self.cond = None # type: iHdlExpr
-        self.step = [] # type: List[iHdlStatement]
+        self.cond = None  # type: iHdlExpr
+        self.step = []  # type: List[iHdlStatement]
         self.body = []  # type: List[iHdlStatement]
 
 
-class HdlForInStm(iHdlStatement):
+class HdlStmForIn(iHdlStatement):
     """
     HDL for in statement
 
@@ -507,13 +507,13 @@ class HdlForInStm(iHdlStatement):
     __slots__ = ["var", "collection", "body"]
 
     def __init__(self):
-        super(HdlForStm, self).__init__()
+        super(HdlStmForIn, self).__init__()
         self.var = []  # type: List[iHdlStatement]
-        self.collection = None # type: iHdlExpr
+        self.collection = None  # type: iHdlExpr
         self.body = []  # type: List[iHdlStatement]
 
 
-class HdlWhileStm(iHdlStatement):
+class HdlStmWhile(iHdlStatement):
     """
     HDL while statement
 
@@ -523,23 +523,23 @@ class HdlWhileStm(iHdlStatement):
     __slots__ = ["cond", "body"]
 
     def __init__(self):
-        super(HdlWhileStm, self).__init__()
+        super(HdlStmWhile, self).__init__()
         self.cond = None  # type: iHdlExpr
         self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
 
 
-class HdlReturnStm(iHdlStatement):
+class HdlStmReturn(iHdlStatement):
     """
     HDL return statement
     """
     __slots__ = ["val"]
 
     def __init__(self):
-        super(HdlReturnStm, self).__init__()
+        super(HdlStmReturn, self).__init__()
         self.val = None  # type: iHdlExpr
 
 
-class HdlWaitStm(iHdlStatement):
+class HdlStmWait(iHdlStatement):
     """
     HDL wait statement
 
@@ -548,18 +548,18 @@ class HdlWaitStm(iHdlStatement):
     __slots__ = ["val"]
 
     def __init__(self):
-        super(HdlWaitStm, self).__init__()
+        super(HdlStmWait, self).__init__()
         self.val = []  # type: List[iHdlExpr]
 
 
-class HdlBreakStm(iHdlStatement):
+class HdlStmBreak(iHdlStatement):
     """
     HDL break statement
     """
     __slots__ = []
 
 
-class HdlContinueStm(iHdlStatement):
+class HdlStmContinue(iHdlStatement):
     """
     HDL continue statement
     """

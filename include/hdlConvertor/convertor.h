@@ -6,7 +6,7 @@
 #include <fstream>
 #include <streambuf>
 
-#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/hdlContext.h>
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlLexer.h>
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
@@ -24,7 +24,7 @@
 #include <hdlConvertor/svConvertor/source_textParser.h>
 #endif
 
-#include <hdlConvertor/verilogPreproc/vPreprocessor.h>
+#include <hdlConvertor/verilogPreproc/verilogPreproc.h>
 
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
@@ -38,7 +38,7 @@ class Convertor {
 public:
 	bool hierarchyOnly;
 	static bool debug;
-	hdlObjects::Context * c;
+	hdlObjects::HdlContext * c;
 
 	void parse_vhdl(antlr4::ANTLRInputStream & input);
 	void parse_verilog_file(const std::string & fileName,
@@ -52,10 +52,10 @@ public:
 			std::vector<std::string> & incdir);
 #endif
 
-	hdlObjects::Context * parse(const std::vector<std::string> & fileNames,
+	hdlObjects::HdlContext * parse(const std::vector<std::string> & fileNames,
 			Language lang, std::vector<std::string> incdirs, bool hierarchyOnly,
 			bool debug);
-	hdlObjects::Context * parse_str(const std::string & hdl_str, Language lang,
+	hdlObjects::HdlContext * parse_str(const std::string & hdl_str, Language lang,
 			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);
 
 	std::string verilog_pp(const std::string & filename,

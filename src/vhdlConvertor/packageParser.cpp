@@ -7,7 +7,6 @@
 
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
@@ -17,6 +16,7 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/archParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 
@@ -28,16 +28,16 @@ using namespace hdlConvertor::hdlObjects;
 
 PackageParser::PackageParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
-	p = new Package();
+	p = new HdlNamespace();
 }
-Package * PackageParser::visitPackage_body(
+HdlNamespace * PackageParser::visitPackage_body(
 		vhdlParser::Package_bodyContext* ctx) {
 	// package_body:
 	//       PACKAGE BODY simple_name IS
 	//           package_body_declarative_part
 	//       END ( PACKAGE BODY )? ( simple_name )? SEMI
 	// ;
-	Expr * id = ReferenceParser::visitSimple_name(ctx->simple_name(0));
+	iHdlExpr * id = ReferenceParser::visitSimple_name(ctx->simple_name(0));
 	p->name = id->extractStr();
 	delete id;
 
@@ -101,7 +101,7 @@ void PackageParser::visitPackage_body_declarative_item(
 	}
     auto sb = ctx->subprogram_body();
 	if (sb) {
-		Function * f = SubProgramParser::visitSubprogram_body(sb);
+		auto f = SubProgramParser::visitSubprogram_body(sb);
 		p->objs.push_back(f);
 		return;
 	}

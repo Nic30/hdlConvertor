@@ -146,8 +146,7 @@ void MacroDefVerilog::collect_string_intervals(const string & tmpl) {
 }
 
 string MacroDefVerilog::replace(std::vector<std::string> args,
-		bool args_specified, vPreprocessor * pp,
-		antlr4::ParserRuleContext * ctx) {
+		bool args_specified, VerilogPreproc *, antlr4::ParserRuleContext *) {
 	if (has_params && !args_specified) {
 		string msg = "Macro " + name + " requires braces and expects ";
 		msg += get_possible_arg_cnt_str() + " arguments.";

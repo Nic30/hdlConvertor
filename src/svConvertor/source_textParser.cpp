@@ -2,12 +2,13 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 
-using namespace hdlConvertor::hdlObjects;
 
 namespace hdlConvertor {
 namespace sv {
 
-source_textParser::source_textParser(antlr4::TokenStream* tokens, Context * ctx,
+using namespace hdlConvertor::hdlObjects;
+
+source_textParser::source_textParser(antlr4::TokenStream* tokens, HdlContext * ctx,
 		bool _hierarchyOnly) :
 		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
 }

@@ -1,32 +1,34 @@
 #include <hdlConvertor/verilogConvertor/utils.h>
+
 #include <hdlConvertor/verilogConvertor/exprParser.h>
-#include <hdlConvertor/hdlObjects/literalVal.h>
+#include <hdlConvertor/hdlObjects/hdlValue.h>
 #include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h>
+
+namespace hdlConvertor {
+namespace verilog {
 
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using Verilog2001Lexer = Verilog2001_antlr::Verilog2001Lexer;
 using namespace hdlConvertor::hdlObjects;
 
-namespace hdlConvertor {
-namespace verilog {
-
-Expr *Utils::mkStringT() {
-	return Expr::ID("__str__");
+iHdlExpr *Utils::mkStringT() {
+	return iHdlExpr::ID("__str__");
 }
 
-Expr* Utils::mkIntT() {
-	return Expr::ID("integer");
+iHdlExpr* Utils::mkIntT() {
+	return iHdlExpr::ID("integer");
 }
-Expr *Utils::mkWireT() {
-	return Expr::ID("wire");
-}
-
-Expr *Utils::mkWireT(Expr * range, bool signed_) {
-	std::vector<Expr*> operands = { range, Expr::INT(signed_ ? 1: 0) };
-	return Expr::call(mkWireT(), operands);
+iHdlExpr *Utils::mkWireT() {
+	return iHdlExpr::ID("wire");
 }
 
-Expr *Utils::mkWireT(Verilog2001Parser::Range_Context * range, bool signed_) {
+iHdlExpr *Utils::mkWireT(iHdlExpr * range, bool signed_) {
+	std::vector<iHdlExpr*> operands = { range, iHdlExpr::INT(signed_ ? 1 : 0) };
+	return iHdlExpr::call(mkWireT(), operands);
+}
+
+iHdlExpr *Utils::mkWireT(Verilog2001Parser::Range_Context * range,
+		bool signed_) {
 	if (range)
 		return mkWireT(VerExprParser::visitRange_(range), signed_);
 	else {

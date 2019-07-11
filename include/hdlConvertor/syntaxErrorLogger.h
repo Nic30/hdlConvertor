@@ -1,8 +1,9 @@
 #pragma once
 
-#include <antlr4-runtime.h>
 #include <sstream>
 #include <string>
+
+#include <antlr4-runtime.h>
 
 namespace hdlConvertor {
 

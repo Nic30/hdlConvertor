@@ -3,6 +3,7 @@
 
 #include <string>
 #include <antlr4-runtime.h>
+
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlLexer.h>
 
 namespace hdlConvertor {

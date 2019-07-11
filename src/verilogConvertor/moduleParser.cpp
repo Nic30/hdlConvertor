@@ -9,20 +9,21 @@
 #include <hdlConvertor/verilogConvertor/utils.h>
 #include <hdlConvertor/verilogConvertor/moduleParamParser.h>
 
+namespace hdlConvertor {
+namespace verilog {
+
 using namespace std;
 using namespace Verilog2001_antlr;
 using namespace hdlConvertor::hdlObjects;
 
-namespace hdlConvertor {
-namespace verilog {
 
-ModuleParser::ModuleParser(CommentParser & commentParser, Context * _context,
+ModuleParser::ModuleParser(CommentParser & commentParser, HdlContext * _context,
 		bool _hierarchyOnly) :
 		commentParser(commentParser) {
 	context = _context;
 	hierarchyOnly = _hierarchyOnly;
-	ent = new Entity();
-	arch = new Arch();
+	ent = new HdlModuleDec();
+	arch = new HdlModuleDef();
 }
 
 void ModuleParser::visitModule_declaration(
@@ -79,7 +80,7 @@ void ModuleParser::visitModule_declaration(
 		visitNon_port_module_item(npmi);
 
 	context->objs.push_back(ent);
-	arch->entityName = Expr::ID(ent->name);
+	arch->entityName = iHdlExpr::ID(ent->name);
 	context->objs.push_back(arch);
 }
 
@@ -106,15 +107,15 @@ void ModuleParser::visitModule_item(Verilog2001Parser::Module_itemContext* ctx,
 		PortParser pp(commentParser);
 		auto portsDeclr = pp.visitPort_declaration(pd);
 		for (auto declr : *portsDeclr) {
-			Variable * p = ent->getPortByName(declr->name);
+			HdlVariableDef * p = ent->getPortByName(declr->name);
 			p->direction = declr->direction;
 			assert(p != nullptr);
 			p->type = declr->type;
 			p->value = declr->value;
 			assert(p->value == nullptr);
-			p->latched |= declr->latched;
+			p->is_latched |= declr->is_latched;
 			p->is_const |= declr->is_const;
-			if (p->direction == Direction::DIR_UNKNOWN)
+			if (p->direction == HdlDirection::DIR_UNKNOWN)
 				p->direction = declr->direction;
 			p->__doc__ += doc;
 			delete declr;
@@ -224,7 +225,7 @@ void ModuleParser::visitModule_or_generate_item(
 		if (stm.first)
 			objs.push_back(stm.first);
 		else if (stm.second) {
-			for (Statement * s : *stm.second) {
+			for (iHdlStatement * s : *stm.second) {
 				objs.push_back(s);
 			}
 		}
@@ -363,7 +364,7 @@ void ModuleParser::visitNet_declaration(
 	}
 
 	bool is_signed = Utils::is_signed(ctx);
-	Expr * t;
+	iHdlExpr * t;
 	auto r = ctx->range_();
 	if (r) {
 		t = Utils::mkWireT(r, is_signed);
@@ -392,9 +393,9 @@ void ModuleParser::visitNet_declaration(
 		}
 	}
 }
-std::vector<Variable*> ModuleParser::visitList_of_net_identifiers(
+std::vector<HdlVariableDef*> ModuleParser::visitList_of_net_identifiers(
 		Verilog2001Parser::List_of_net_identifiersContext * ctx,
-		Expr * base_type) {
+		iHdlExpr * base_type) {
 	// list_of_net_identifiers
 	//    : net_identifier (dimension (dimension)*)? (',' net_identifier (dimension (dimension)*)?)*
 	//    ;
@@ -403,9 +404,9 @@ std::vector<Variable*> ModuleParser::visitList_of_net_identifiers(
 	//    : identifier
 	//    ;
 
-	std::vector<Variable*> res;
-	Expr * actual_id = nullptr;
-	Expr * actual_t = base_type;
+	std::vector<HdlVariableDef*> res;
+	iHdlExpr * actual_id = nullptr;
+	iHdlExpr * actual_t = base_type;
 	for (auto &child : ctx->children) {
 		auto ni =
 				dynamic_cast<Verilog2001Parser::Net_identifierContext *>(child);
@@ -413,35 +414,35 @@ std::vector<Variable*> ModuleParser::visitList_of_net_identifiers(
 			if (actual_id) {
 				// store previous variable
 				res.push_back(
-						new Variable(actual_id->extractStr(), actual_t,
+						new HdlVariableDef(actual_id->extractStr(), actual_t,
 								nullptr));
 				// reset state of variable parsing
 				delete actual_id;
 				actual_id = nullptr;
-				actual_t = new Expr(*base_type);
+				actual_t = new iHdlExpr(*base_type);
 			}
 			actual_id = VerExprParser::visitIdentifier(ni->identifier());
 		} else {
 			// stack the dimensions on type
 			auto d = dynamic_cast<Verilog2001Parser::DimensionContext *>(child);
 			if (d) {
-				actual_t = new Expr(actual_t, OperatorType::INDEX,
+				actual_t = new iHdlExpr(actual_t, HdlOperatorType::INDEX,
 						VerExprParser::visitDimension(d));
 			}
 		}
 	}
 	if (actual_id) {
 		// process leftover
-		res.push_back(new Variable(actual_id->extractStr(), actual_t, nullptr));
+		res.push_back(new HdlVariableDef(actual_id->extractStr(), actual_t, nullptr));
 	}
 
 	return res;
 }
 
 // @note same as visitList_of_net_identifiers but without the dimensions and with the default value
-std::vector<Variable*> ModuleParser::visitList_of_net_decl_assignments(
+std::vector<HdlVariableDef*> ModuleParser::visitList_of_net_decl_assignments(
 		Verilog2001Parser::List_of_net_decl_assignmentsContext * ctx,
-		Expr * base_type) {
+		iHdlExpr * base_type) {
 	//	list_of_net_decl_assignments
 	//	   : net_decl_assignment (',' net_decl_assignment)*
 	//	   ;
@@ -454,12 +455,12 @@ std::vector<Variable*> ModuleParser::visitList_of_net_decl_assignments(
 	//    : identifier
 	//    ;
 
-	std::vector<Variable*> res;
+	std::vector<HdlVariableDef*> res;
 	for (auto & nd : ctx->net_decl_assignment()) {
-		Expr * id = VerExprParser::visitIdentifier(
+		iHdlExpr * id = VerExprParser::visitIdentifier(
 				nd->net_identifier()->identifier());
-		Expr * def_val = VerExprParser::visitExpression(nd->expression());
-		res.push_back(new Variable(id->extractStr(), base_type, def_val));
+		iHdlExpr * def_val = VerExprParser::visitExpression(nd->expression());
+		res.push_back(new HdlVariableDef(id->extractStr(), base_type, def_val));
 		delete id;
 	}
 	return res;
@@ -467,25 +468,25 @@ std::vector<Variable*> ModuleParser::visitList_of_net_decl_assignments(
 
 void ModuleParser::visitList_of_variable_identifiers(
 		Verilog2001Parser::List_of_variable_identifiersContext * ctx,
-		Expr * base_type, bool latched, const std::string & doc) {
+		iHdlExpr * base_type, bool latched, const std::string & doc) {
 	// list_of_variable_identifiers
 	//    : variable_type (',' variable_type)*
 	//    ;
 	bool first = true;
 	for (auto vt : ctx->variable_type()) {
 		if (!first)
-			base_type = new Expr(*base_type);
-		Variable * v = visitVariable_type(vt, base_type);
+			base_type = new iHdlExpr(*base_type);
+		HdlVariableDef * v = visitVariable_type(vt, base_type);
 		if (first)
 			v->__doc__ = doc;
-		v->latched = latched;
+		v->is_latched = latched;
 		arch->objs.push_back(v);
 		first = false;
 	}
 }
 
-Variable * ModuleParser::visitVariable_type(
-		Verilog2001Parser::Variable_typeContext * ctx, Expr * base_type) {
+HdlVariableDef * ModuleParser::visitVariable_type(
+		Verilog2001Parser::Variable_typeContext * ctx, iHdlExpr * base_type) {
 	// variable_type
 	//    : variable_identifier ('=' constant_expression)?
 	//    | variable_identifier dimension (dimension)*
@@ -493,9 +494,9 @@ Variable * ModuleParser::visitVariable_type(
 	auto vi = ctx->variable_identifier();
 	auto t = base_type;
 	for (auto d : ctx->dimension()) {
-		t = new Expr(t, OperatorType::INDEX, VerExprParser::visitDimension(d));
+		t = new iHdlExpr(t, HdlOperatorType::INDEX, VerExprParser::visitDimension(d));
 	}
-	Expr * def_val = nullptr;
+	iHdlExpr * def_val = nullptr;
 	auto c = ctx->constant_expression();
 	if (c) {
 		def_val = VerExprParser::visitConstant_expression(c);
@@ -503,14 +504,14 @@ Variable * ModuleParser::visitVariable_type(
 	return visitVariable_identifier(vi, t, def_val);
 }
 
-Variable * ModuleParser::visitVariable_identifier(
-		Verilog2001Parser::Variable_identifierContext * ctx, Expr * t,
-		Expr * def_val) {
+HdlVariableDef * ModuleParser::visitVariable_identifier(
+		Verilog2001Parser::Variable_identifierContext * ctx, iHdlExpr * t,
+		iHdlExpr * def_val) {
 	// variable_identifier
 	//    : identifier
 	//    ;
 	auto id = VerExprParser::visitIdentifier(ctx->identifier());
-	auto v = new Variable(id->extractStr(), t, def_val);
+	auto v = new HdlVariableDef(id->extractStr(), t, def_val);
 	delete id;
 	return v;
 }

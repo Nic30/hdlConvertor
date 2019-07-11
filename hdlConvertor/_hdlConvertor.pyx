@@ -6,11 +6,11 @@ from libcpp.vector cimport vector
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
 from hdlConvertor.language import Language as PyHdlLanguageEnum
-from hdlConvertor.hdlAst import HdlContext
+from hdlConvertor.hdlAst import HdlContext as PyHdlContext
 import sys
 
-cdef extern from "hdlConvertor/hdlObjects/context.h" namespace "hdlConvertor::hdlObjects":
-    cdef cppclass Context:
+cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
+    cdef cppclass HdlContext:
         pass
 
 cdef extern from "toPy.h" namespace "hdlConvertor":
@@ -18,7 +18,7 @@ cdef extern from "toPy.h" namespace "hdlConvertor":
         ToPy()
 
         @staticmethod
-        PyObject * toPy(const Context * c) except NULL
+        PyObject * toPy(const HdlContext * c) except NULL
 
 cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
     cdef const char * get_my_py_error_message()
@@ -41,13 +41,13 @@ cdef int raise_my_py_error() except * :
 cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
 
-        Context * parse(const vector[string] & hdl_file_names,
+        HdlContext * parse(const vector[string] & hdl_file_names,
                         Language language,
                         vector[string] include_dirs,
                         bool hierarchy_only,
                         bool debug) except +raise_my_py_error
 
-        Context * parse_str(const string & hdl_str,
+        HdlContext * parse_str(const string & hdl_str,
                         Language language,
                         vector[string] include_dirs,
                         bool hierarchy_only,
@@ -123,7 +123,7 @@ cdef class HdlConvertor:
             filenames = [item.encode('utf8') for item in filenames]
             incdirs = [item.encode('utf8') for item in incdirs]
 
-        cdef Context * c
+        cdef HdlContext * c
         cdef object d_py
         cdef PyObject * d
         cdef ToPy toPy
@@ -138,7 +138,7 @@ cdef class HdlConvertor:
             d_py = < object > d
             return d_py
         else:
-            return HdlContext()
+            return PyHdlContext()
 
     def parse_str(self, hdl_str, langue, incdirs, hierarchyOnly=False, debug=True):
         """
@@ -157,7 +157,7 @@ cdef class HdlConvertor:
             hdl_str = hdl_str.encode('utf8')
             incdirs = [item.encode('utf8') for item in incdirs]
 
-        cdef Context * c
+        cdef HdlContext * c
         cdef object d_py
         cdef PyObject * d
         cdef ToPy toPy
@@ -172,7 +172,7 @@ cdef class HdlConvertor:
             d_py = < object > d
             return d_py
         else:
-            return HdlContext()
+            return PyHdlContext()
 
     def verilog_pp(self, filename, incdirs=['.'], mode=PyHdlLanguageEnum.VERILOG):
         """

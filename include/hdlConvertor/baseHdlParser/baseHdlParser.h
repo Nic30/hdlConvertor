@@ -1,17 +1,19 @@
 #pragma once
-#include <hdlConvertor/hdlObjects/context.h>
+
 #include <antlr4-runtime.h>
+
+#include <hdlConvertor/hdlObjects/hdlContext.h>
 
 namespace hdlConvertor {
 
 class BaseHdlParser {
 public:
 	bool hierarchyOnly;
-	hdlObjects::Context * context;
+	hdlObjects::HdlContext * context;
 	antlr4::TokenStream* tokens;
-	BaseHdlParser(antlr4::TokenStream* tokens, hdlObjects::Context * ctx,
+	BaseHdlParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
 			bool _hierarchyOnly);
-	hdlObjects::Context * getContext();
+	hdlObjects::HdlContext * getContext();
 };
 
 }

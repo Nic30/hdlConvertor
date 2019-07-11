@@ -110,7 +110,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 			"VerStatementParser.visitStatement - probably unimplemented transition");
 }
 
-Statement * VerStatementParser::visitSystem_task_enable(
+iHdlStatement * VerStatementParser::visitSystem_task_enable(
 		Verilog2001Parser::System_task_enableContext * ctx) {
 	// system_task_enable
 	//    : system_task_identifier ('(' (expression (',' expression)*)? ')')? ';'
@@ -118,18 +118,18 @@ Statement * VerStatementParser::visitSystem_task_enable(
 	auto _id = ctx->system_task_identifier();
 	auto id = VerExprParser::visitSystem_task_identifier(_id);
 	auto _args = ctx->expression();
-	vector<Expr*> args(_args.size());
+	vector<iHdlExpr*> args(_args.size());
 	size_t i = 0;
 	for (auto _a : _args) {
 		auto a = VerExprParser::visitExpression(_a);
 		args[i] = a;
 		i++;
 	}
-	auto c = Expr::call(id, args);
-	return Statement::EXPR(c);
+	auto c = iHdlExpr::call(id, args);
+	return iHdlStatement::EXPR(c);
 }
 
-Statement * VerStatementParser::visitBlocking_assignment(
+iHdlStatement * VerStatementParser::visitBlocking_assignment(
 		Verilog2001Parser::Blocking_assignmentContext *ctx) {
 	// blocking_assignment
 	//    : variable_lvalue '=' (delay_or_event_control)? expression
@@ -137,18 +137,18 @@ Statement * VerStatementParser::visitBlocking_assignment(
 	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
 	auto src = VerExprParser::visitExpression(ctx->expression());
 	auto dec = ctx->delay_or_event_control();
-	Statement * assig;
+	iHdlStatement * assig;
 	if (dec) {
 		auto d = visitDelay_or_event_control(dec);
 		assig = new HdlControlledAssignStm(dst, src, d.first, d.second, true);
 	} else {
-		assig = new HdlAssignStm(dst, src, true);
+		assig = new HdlStmAssign(dst, src, true);
 	}
 	assig->__doc__ = commentParser.parse(ctx);
 	return assig;
 }
 
-Statement * VerStatementParser::visitCase_statement(
+iHdlStatement * VerStatementParser::visitCase_statement(
 		Verilog2001Parser::Case_statementContext * ctx) {
 	// case_statement
 	//    : 'case' '(' expression ')' case_item (case_item)* 'endcase'
@@ -162,7 +162,7 @@ Statement * VerStatementParser::visitCase_statement(
 		return nullptr;
 	}
 	auto switchOn = VerExprParser::visitExpression(ctx->expression());
-	std::vector<Statement::case_t> cases;
+	std::vector<iHdlStatement::case_t> cases;
 	vector<iHdlObj*> * default_ = nullptr;
 	auto _cases = ctx->case_item();
 	cases.reserve(_cases.size());
@@ -177,18 +177,18 @@ Statement * VerStatementParser::visitCase_statement(
 			}
 		}
 	}
-	auto cs = Statement::CASE(switchOn, cases, default_);
+	auto cs = iHdlStatement::CASE(switchOn, cases, default_);
 	cs->__doc__ = commentParser.parse(ctx);
 	return cs;
 
 }
-std::vector<Statement::case_t> VerStatementParser::visitCase_item(
+std::vector<iHdlStatement::case_t> VerStatementParser::visitCase_item(
 		Verilog2001Parser::Case_itemContext * ctx) {
 	// case_item
 	//    : expression (',' expression)* ':' statement_or_null
 	//    | 'default' (':')? statement_or_null
 	//    ;
-	std::vector<Statement::case_t> res;
+	std::vector<iHdlStatement::case_t> res;
 	auto conds = ctx->expression();
 	auto stms = ctx->statement_or_null();
 	if (conds.size()) {
@@ -208,7 +208,7 @@ std::vector<Statement::case_t> VerStatementParser::visitCase_item(
 	}
 	return res;
 }
-HdlAssignStm * VerStatementParser::visitVariable_assignment(
+HdlStmAssign * VerStatementParser::visitVariable_assignment(
 		Verilog2001Parser::Variable_assignmentContext *ctx) {
 	// variable_assignment
 	//    : variable_lvalue '=' expression
@@ -217,9 +217,9 @@ HdlAssignStm * VerStatementParser::visitVariable_assignment(
 	auto _e = ctx->expression();
 	auto vl = VerExprParser::visitVariable_lvalue(_vl);
 	auto e = VerExprParser::visitExpression(_e);
-	return new HdlAssignStm(vl, e, true);
+	return new HdlStmAssign(vl, e, true);
 }
-Statement * VerStatementParser::visitLoop_statement(
+iHdlStatement * VerStatementParser::visitLoop_statement(
 		Verilog2001Parser::Loop_statementContext * ctx) {
 	// loop_statement
 	//    : 'forever' statement
@@ -231,7 +231,7 @@ Statement * VerStatementParser::visitLoop_statement(
 	auto stm = visitStatement__as_block(_stm);
 	auto name = ctx->children[0]->getText();
 	if (name == "forever") {
-		return Statement::WHILE(Expr::INT(1), stm);
+		return iHdlStatement::WHILE(iHdlExpr::INT(1), stm);
 	} else if (name == "repeat") {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitLoop_statement.repeat", ctx);
@@ -239,7 +239,7 @@ Statement * VerStatementParser::visitLoop_statement(
 	} else if (name == "while") {
 		auto _e = ctx->expression();
 		auto c = VerExprParser::visitExpression(_e);
-		return Statement::WHILE(c, stm);
+		return iHdlStatement::WHILE(c, stm);
 	} else if (name == "for") {
 		auto _va = ctx->variable_assignment();
 		assert(_va.size() == 2);
@@ -248,13 +248,13 @@ Statement * VerStatementParser::visitLoop_statement(
 		auto e = VerExprParser::visitExpression(_e);
 		auto va1 = visitVariable_assignment(_va.at(1));
 
-		return Statement::FOR(va0, e, va1, stm);
+		return iHdlStatement::FOR(va0, e, va1, stm);
 	}
 	assert(false && "unknown statement");
 	return nullptr;
 }
 
-HdlAssignStm * VerStatementParser::visitNonblocking_assignment(
+HdlStmAssign * VerStatementParser::visitNonblocking_assignment(
 		Verilog2001Parser::Nonblocking_assignmentContext * ctx) {
 	// nonblocking_assignment
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
@@ -269,11 +269,11 @@ HdlAssignStm * VerStatementParser::visitNonblocking_assignment(
 	auto dst = VerExprParser::visitVariable_lvalue(vl);
 	auto e = ctx->expression();
 	auto src = VerExprParser::visitExpression(e);
-	auto a = new HdlAssignStm(dst, src, false);
+	auto a = new HdlStmAssign(dst, src, false);
 	a->__doc__ = commentParser.parse(ctx);
 	return a;
 }
-std::vector<Statement*> * VerStatementParser::visitSeq_block(
+std::vector<iHdlStatement*> * VerStatementParser::visitSeq_block(
 		Verilog2001Parser::Seq_blockContext * ctx) {
 	// seq_block
 	//    : 'begin' (':' block_identifier (block_item_declaration)*)? (statement)* 'end'
@@ -290,7 +290,7 @@ std::vector<Statement*> * VerStatementParser::visitSeq_block(
 				bd[0]);
 	}
 	auto _stms = ctx->statement();
-	auto stms = new vector<Statement*>;
+	auto stms = new vector<iHdlStatement*>;
 	stms->reserve(_stms.size());
 	for (auto stm : _stms) {
 		auto r = visitStatement(stm);
@@ -305,7 +305,7 @@ std::vector<Statement*> * VerStatementParser::visitSeq_block(
 	}
 	return stms;
 }
-Statement * VerStatementParser::visitConditional_statement(
+iHdlStatement * VerStatementParser::visitConditional_statement(
 		Verilog2001Parser::Conditional_statementContext * ctx) {
 	// conditional_statement
 	//    : 'if' '(' expression ')' statement_or_null ('else' statement_or_null)?
@@ -319,7 +319,7 @@ Statement * VerStatementParser::visitConditional_statement(
 				ctx->statement_or_null(0));
 		auto _ifFalse = ctx->statement_or_null(1);
 		auto ifFalse = visitStatement_or_null__as_block(_ifFalse);
-		auto _if = Statement::IF(cond, ifTrue, ifFalse);
+		auto _if = iHdlStatement::IF(cond, ifTrue, ifFalse);
 		_if->__doc__ = commentParser.parse(ctx);
 		return _if;
 
@@ -335,7 +335,7 @@ Statement * VerStatementParser::visitConditional_statement(
 			ctx);
 	return nullptr;
 }
-Statement * VerStatementParser::visitProcedural_timing_control_statement(
+iHdlStatement * VerStatementParser::visitProcedural_timing_control_statement(
 		Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
 	// procedural_timing_control_statement
 	//    : delay_or_event_control statement_or_null
@@ -344,37 +344,37 @@ Statement * VerStatementParser::visitProcedural_timing_control_statement(
 	auto stms =
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__as_block(
 					ctx->statement_or_null()));
-	Statement * p;
+	iHdlStatement * p;
 	if (sens_list.second) {
 		assert(sens_list.first == nullptr && "no event and delay at one");
-		p = Statement::PROCESS(sens_list.second, stms);
+		p = iHdlStatement::PROCESS(sens_list.second, stms);
 	} else if (sens_list.first) {
-		auto wait = Statement::WAIT( { sens_list.first, });
+		auto wait = iHdlStatement::WAIT( { sens_list.first, });
 		// push_front
 		stms->push_back(wait);
 		std::rotate(stms->rbegin(), stms->rbegin() + 1, stms->rend());
 
-		p = Statement::PROCESS(nullptr, stms);
+		p = iHdlStatement::PROCESS(nullptr, stms);
 	} else {
-		p = Statement::PROCESS(nullptr, stms);
+		p = iHdlStatement::PROCESS(nullptr, stms);
 	}
 	p->__doc__ = commentParser.parse(ctx);
 	return p;
 }
 
-vector<Statement *> * VerStatementParser::visitStatement_or_null__as_block(
+vector<iHdlStatement *> * VerStatementParser::visitStatement_or_null__as_block(
 		Verilog2001Parser::Statement_or_nullContext * ctx) {
 	if (ctx == nullptr)
 		return nullptr;
 	auto stm = visitStatement_or_null(ctx);
 	if (stm.first) {
-		auto body = new vector<Statement*>();
+		auto body = new vector<iHdlStatement*>();
 		body->push_back(stm.first);
 		return body;
 	} else if (stm.second) {
 		return stm.second;
 	} else {
-		return new vector<Statement*>();
+		return new vector<iHdlStatement*>();
 	}
 
 }
@@ -397,7 +397,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
 	}
 }
 
-pair<Expr*, vector<Expr*>*> VerStatementParser::visitDelay_or_event_control(
+pair<iHdlExpr*, vector<iHdlExpr*>*> VerStatementParser::visitDelay_or_event_control(
 		Verilog2001Parser::Delay_or_event_controlContext * ctx) {
 	// delay_or_event_control
 	//    : delay_control
@@ -418,7 +418,7 @@ pair<Expr*, vector<Expr*>*> VerStatementParser::visitDelay_or_event_control(
 	return {nullptr, vistEvent_control(ec)};
 }
 
-vector<Expr*> * VerStatementParser::vistEvent_control(
+vector<iHdlExpr*> * VerStatementParser::vistEvent_control(
 		Verilog2001Parser::Event_controlContext * ctx) {
 	//event_control
 	//   : '@' event_identifier
@@ -431,7 +431,7 @@ vector<Expr*> * VerStatementParser::vistEvent_control(
 		// event_identifier
 		//    : identifier
 		//    ;
-		auto res = new vector<Expr*>;
+		auto res = new vector<iHdlExpr*>;
 		res->push_back(VerExprParser::visitIdentifier(ei->identifier()));
 		return res;
 	}
@@ -439,12 +439,12 @@ vector<Expr*> * VerStatementParser::vistEvent_control(
 	if (ee) {
 		return VerExprParser::visitEvent_expression(ee);
 	}
-	auto res = new vector<Expr*>;
-	res->push_back(Expr::all());
+	auto res = new vector<iHdlExpr*>;
+	res->push_back(iHdlExpr::all());
 	return res;
 }
 
-vector<Statement *> VerStatementParser::vistContinuous_assign(
+vector<iHdlStatement *> VerStatementParser::vistContinuous_assign(
 		Verilog2001Parser::Continuous_assignContext * ctx) {
 	// continuous_assign
 	//    : 'assign' (drive_strength)? (delay3)? list_of_net_assignments ';'
@@ -463,7 +463,7 @@ vector<Statement *> VerStatementParser::vistContinuous_assign(
 	// list_of_net_assignments
 	//    : net_assignment (',' net_assignment)*
 	//    ;
-	vector<Statement*> res;
+	vector<iHdlStatement*> res;
 	for (auto na : lna->net_assignment()) {
 		auto stm = visitNet_assignment(na);
 		res.push_back(stm);
@@ -472,35 +472,35 @@ vector<Statement *> VerStatementParser::vistContinuous_assign(
 	return res;
 }
 
-Statement* VerStatementParser::visitNet_assignment(
+iHdlStatement* VerStatementParser::visitNet_assignment(
 		Verilog2001Parser::Net_assignmentContext * ctx) {
 	// net_assignment : net_lvalue '=' expression
 	// ;
 	auto nv = VerExprParser::visitNet_lvalue(ctx->net_lvalue());
 	auto e = VerExprParser::visitExpression(ctx->expression());
-	return new HdlAssignStm(nv, e, true);
+	return new HdlStmAssign(nv, e, true);
 }
-vector<Statement*> * VerStatementParser::visitStatement__as_block(
+vector<iHdlStatement*> * VerStatementParser::visitStatement__as_block(
 		Verilog2001Parser::StatementContext * ctx) {
 	auto stm = visitStatement(ctx);
 	if (stm.first) {
-		auto body = new vector<Statement*>();
+		auto body = new vector<iHdlStatement*>();
 		body->push_back(stm.first);
 		return body;
 	} else if (stm.second) {
 		return stm.second;
 	} else {
-		return new vector<Statement*>();
+		return new vector<iHdlStatement*>();
 	}
 }
-Statement * VerStatementParser::visitInitial_construct(
+iHdlStatement * VerStatementParser::visitInitial_construct(
 		Verilog2001Parser::Initial_constructContext * ctx) {
 	// initial_construct
 	//    : 'initial' statement
 	//    ;
 	auto _stm = ctx->statement();
-	vector<Statement*> * body = visitStatement__as_block(_stm);
-	return Statement::PROCESS(nullptr,
+	vector<iHdlStatement*> * body = visitStatement__as_block(_stm);
+	return iHdlStatement::PROCESS(nullptr,
 			reinterpret_cast<vector<iHdlObj*>*>(body));
 }
 

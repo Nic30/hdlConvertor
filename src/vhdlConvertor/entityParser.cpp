@@ -1,6 +1,7 @@
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
+
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 
 namespace hdlConvertor {
@@ -12,7 +13,7 @@ using namespace hdlObjects;
 EntityParser::EntityParser(CommentParser & _commentParser, bool _hierarchyOnly) :
 		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
-Entity * EntityParser::visitEntity_declaration(
+HdlModuleDec * EntityParser::visitEntity_declaration(
 		vhdlParser::Entity_declarationContext* ctx) {
 	// entity_declaration:
 	//       ENTITY identifier IS
@@ -23,7 +24,7 @@ Entity * EntityParser::visitEntity_declaration(
 	//       END ( ENTITY )? ( simple_name )? SEMI
 	// ;
 
-	Entity * e = new Entity();
+	HdlModuleDec * e = new HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	e->__doc__ = commentParser.parse(ctx);
 	// entity_declarative_part
@@ -71,7 +72,7 @@ void EntityParser::visitEntity_declarative_item(
 	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item", ctx);
 }
 void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
-		std::vector<Variable*> * generics) {
+		std::vector<HdlVariableDef*> * generics) {
 	// generic_clause:
 	//       GENERIC LPAREN generic_list RPAREN SEMI
 	// ;
@@ -85,7 +86,7 @@ void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 	delete gs;
 }
 void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
-		std::vector<Variable*> * ports) {
+		std::vector<HdlVariableDef*> * ports) {
 	// port_clause:
 	//       PORT LPAREN port_list RPAREN SEMI
 	// ;
@@ -98,14 +99,14 @@ void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 
 	for (auto ie : il->interface_element()) {
 		auto ps = InterfaceParser::visitInterface_element(ie);
-		for (Variable * p : *ps) {
+		for (HdlVariableDef * p : *ps) {
 			p->position.update_from_elem(ie);
 			ports->push_back(p);
 		}
 		delete ps;
 	}
 }
-void EntityParser::visitEntity_header(Entity * e,
+void EntityParser::visitEntity_header(HdlModuleDec * e,
 		vhdlParser::Entity_headerContext* ctx) {
 	// entity_header:
 	//       ( generic_clause )?

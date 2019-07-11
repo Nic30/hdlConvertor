@@ -1,7 +1,7 @@
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
@@ -12,6 +12,7 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
@@ -21,11 +22,12 @@ using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
 PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
-	ph = new PackageHeader();
+	ph = new HdlNamespace();
+	ph->defs_only = true;
 	hierarchyOnly = _hierarchyOnly;
 }
 
-PackageHeader * PackageHeaderParser::visitPackage_declaration(
+HdlNamespace * PackageHeaderParser::visitPackage_declaration(
 		vhdlParser::Package_declarationContext* ctx) {
 	// package_declaration:
 	//       PACKAGE identifier IS
@@ -37,7 +39,7 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 	NotImplementedLogger::print(
 			"PackageHeaderParser.visitPackage_declaration - package_header", ctx);
 
-	Expr * name = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr * name = LiteralParser::visitIdentifier(ctx->identifier());
 	ph->name = name->extractStr();
 	delete name;
 	visitPackage_declarative_part(ctx->package_declarative_part());
@@ -182,7 +184,7 @@ void PackageHeaderParser::visitPackage_declarative_item(
 				"PackageHeaderParser.visitGroup_declaration", gd);
 	}
 }
-Entity * PackageHeaderParser::visitComponent_declaration(
+HdlModuleDec * PackageHeaderParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext* ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -191,7 +193,7 @@ Entity * PackageHeaderParser::visitComponent_declaration(
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
 
-	Entity * e = new Entity();
+	HdlModuleDec * e = new HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

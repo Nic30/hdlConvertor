@@ -1,16 +1,17 @@
 #include <hdlConvertor/verilogConvertor/source_textParser.h>
+
 #include <hdlConvertor/verilogConvertor/commentParser.h>
 #include <hdlConvertor/verilogConvertor/moduleParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
-using namespace hdlConvertor::hdlObjects;
-
 namespace hdlConvertor {
 namespace verilog {
 
-Source_textParser::Source_textParser(antlr4::TokenStream* tokens, Context * ctx,
-		bool _hierarchyOnly) :
+using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using namespace hdlConvertor::hdlObjects;
+
+Source_textParser::Source_textParser(antlr4::TokenStream* tokens,
+		HdlContext * ctx, bool _hierarchyOnly) :
 		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
 }
 

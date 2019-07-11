@@ -1,16 +1,17 @@
 #include <hdlConvertor/verilogConvertor/moduleInstanceParser.h>
+
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/verilogConvertor/exprParser.h>
 #include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+
+namespace hdlConvertor {
+namespace verilog {
 
 using namespace std;
 using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 using namespace hdlConvertor::hdlObjects;
 
-namespace hdlConvertor {
-namespace verilog {
-
-vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
+vector<HdlCompInstance *> ModuleInstanceParser::visitModule_instantiation(
 		Verilog2001Parser::Module_instantiationContext* ctx) {
 	// module_instantiation
 	//    : module_identifier (parameter_value_assignment)? module_instance (',' module_instance)* ';'
@@ -18,7 +19,7 @@ vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 	auto module_name = ctx->module_identifier()->getText();
 
 	auto pva = ctx->parameter_value_assignment();
-	vector<Expr*> genericMap;
+	vector<iHdlExpr*> genericMap;
 	if (pva) {
 		// parameter_value_assignment
 		//    : '#' '(' list_of_parameter_assignments ')'
@@ -28,24 +29,24 @@ vector<CompInstance *> ModuleInstanceParser::visitModule_instantiation(
 	}
 	auto mis = ctx->module_instance();
 	bool first = true;
-	vector<CompInstance *> res;
+	vector<HdlCompInstance *> res;
 	for (auto mi : mis) {
-		CompInstance * c;
+		HdlCompInstance * c;
 		if (first) {
-			c = visitModule_instance(mi, Expr::ID(module_name), genericMap);
+			c = visitModule_instance(mi, iHdlExpr::ID(module_name), genericMap);
 			first = false;
 		} else {
-			vector<Expr*> gm;
+			vector<iHdlExpr*> gm;
 			for (auto e : genericMap)
-				gm.push_back(new Expr(*e));
-			c = visitModule_instance(mi, Expr::ID(module_name), gm);
+				gm.push_back(new iHdlExpr(*e));
+			c = visitModule_instance(mi, iHdlExpr::ID(module_name), gm);
 		}
 		res.push_back(c);
 	}
 	return res;
 }
 
-vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
+vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 		Verilog2001Parser::List_of_parameter_assignmentsContext * ctx) {
 
 	// list_of_parameter_assignments
@@ -55,7 +56,7 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 
 	//   ctx->parameter_identifier()->identifier()->getText()
 
-	vector<Expr*> pcs;
+	vector<iHdlExpr*> pcs;
 	auto opa = ctx->ordered_parameter_assignment();
 	if (opa.size()) {
 		for (auto pa : opa) {
@@ -73,22 +74,22 @@ vector<Expr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 			//    ;
 			auto k = ModuleParamParser::visitParameter_identifier(
 					pa->parameter_identifier());
-			Expr * v;
+			iHdlExpr * v;
 			auto e = pa->expression();
 			if (e) {
 				v = VerExprParser::visitExpression(e);
 			} else {
-				v = Expr::null();
+				v = iHdlExpr::null();
 			}
-			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v));
+			pcs.push_back(new iHdlExpr(k, HdlOperatorType::MAP_ASSOCIATION, v));
 		}
 	}
 	return pcs;
 }
 
-CompInstance * ModuleInstanceParser::visitModule_instance(
-		Verilog2001Parser::Module_instanceContext * ctx, Expr * module_id,
-		vector<Expr*> genericMap) {
+HdlCompInstance * ModuleInstanceParser::visitModule_instance(
+		Verilog2001Parser::Module_instanceContext * ctx, iHdlExpr * module_id,
+		vector<iHdlExpr*> genericMap) {
 	// @note genericMap became the owner of all Expr instances in the vector
 	//       that means that the instances can not be shared
 
@@ -107,24 +108,24 @@ CompInstance * ModuleInstanceParser::visitModule_instance(
 	auto _r = noi->range_();
 	if (_r) {
 		auto r = VerExprParser::visitRange_(_r);
-		name = new Expr(name, OperatorType::INDEX, r);
+		name = new iHdlExpr(name, HdlOperatorType::INDEX, r);
 	}
-	vector<Expr*> portMap = visitList_of_port_connections(
+	vector<iHdlExpr*> portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
-	auto c = new CompInstance(name, module_id);
+	auto c = new HdlCompInstance(name, module_id);
 	c->genericMap = genericMap;
 	c->portMap = portMap;
 	return c;
 }
 
-vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
+vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 		Verilog2001Parser::List_of_port_connectionsContext * ctx) {
 	// list_of_port_connections
 	//    : ordered_port_connection (',' ordered_port_connection)*
 	//    | named_port_connection (',' named_port_connection)*
 	//    ;
 	//
-	vector<Expr*> pcs;
+	vector<iHdlExpr*> pcs;
 	auto opc = ctx->ordered_port_connection();
 	if (opc.size()) {
 		for (auto pc : opc) {
@@ -137,11 +138,11 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 						"ModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance",
 						pc);
 			auto _e = pc->expression();
-			Expr * e;
+			iHdlExpr * e;
 			if (_e) {
 				e = VerExprParser::visitExpression(_e);
 			} else {
-				e = Expr::null();
+				e = iHdlExpr::null();
 			}
 			pcs.push_back(e);
 		}
@@ -157,16 +158,16 @@ vector<Expr*> ModuleInstanceParser::visitList_of_port_connections(
 						"ModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance",
 						pc);
 
-			Expr * k = VerExprParser::visitIdentifier(
+			iHdlExpr * k = VerExprParser::visitIdentifier(
 					pc->port_identifier()->identifier());
-			Expr * v;
+			iHdlExpr * v;
 			auto e = pc->expression();
 			if (e) {
 				v = VerExprParser::visitExpression(e);
 			} else {
-				v = Expr::null();
+				v = iHdlExpr::null();
 			}
-			pcs.push_back(new Expr(k, OperatorType::MAP_ASSOCIATION, v));
+			pcs.push_back(new iHdlExpr(k, HdlOperatorType::MAP_ASSOCIATION, v));
 		}
 	}
 	return pcs;

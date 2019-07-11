@@ -9,8 +9,8 @@
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/signalParser.h>
-#include <hdlConvertor/vhdlConvertor/variableParser.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -185,7 +185,7 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
-hdlObjects::Entity * BlockDeclarationParser::visitComponent_declaration(
+hdlObjects::HdlModuleDec * BlockDeclarationParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext* ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -193,7 +193,7 @@ hdlObjects::Entity * BlockDeclarationParser::visitComponent_declaration(
 	//           ( port_clause )?
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
-	auto e = new hdlObjects::Entity();
+	auto e = new hdlObjects::HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

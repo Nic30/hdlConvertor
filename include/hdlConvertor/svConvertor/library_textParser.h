@@ -8,7 +8,7 @@ namespace sv {
 
 class Library_textParser: public BaseHdlParser {
 public:
-	Library_textParser(antlr4::TokenStream* tokens, hdlObjects::Context * ctx,
+	Library_textParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
 			bool _hierarchyOnly);
 	void visitLibrary_text(sv2012_antlr::sv2012Parser::Library_textContext * ctx);
 };

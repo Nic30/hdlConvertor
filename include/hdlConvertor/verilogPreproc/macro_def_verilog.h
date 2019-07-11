@@ -14,7 +14,7 @@ typedef SSIZE_T ssize_t;
 namespace hdlConvertor {
 namespace verilog_pp {
 
-class vPreprocessor;
+class VerilogPreproc;
 /**
  * class MacroDefVerilog is an object to to store a verilog preprocessor macro definition
  * and to perform it's function
@@ -68,7 +68,7 @@ public:
 	std::string get_possible_arg_cnt_str() const;
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
-			bool args_specified, vPreprocessor * pp,
+			bool args_specified, VerilogPreproc * pp,
 			antlr4::ParserRuleContext * ctx) override;
 
 };

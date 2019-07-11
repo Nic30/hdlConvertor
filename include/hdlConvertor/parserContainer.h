@@ -3,9 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <functional>
+
 #include <antlr4-runtime.h>
 
-#include <hdlConvertor/hdlObjects/context.h>
+#include <hdlConvertor/hdlObjects/hdlContext.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
@@ -41,11 +42,11 @@ public:
 	 * :param context: if context is nullptr new context is generated
 	 *                 otherwise specified context is used
 	 * */
-	ParserContainer(hdlObjects::Context * context):
+	ParserContainer(hdlObjects::HdlContext * context):
 		syntaxErrLogger(nullptr), lexer(nullptr), tokens(nullptr),
 		antlrParser(nullptr), hdlParser(nullptr), context(context) {
 	}
-	hdlObjects::Context * context;
+	hdlObjects::HdlContext * context;
 	void parseFile(
 			antlr4::ANTLRInputStream &fileName,
 			bool hierarchyOnly,

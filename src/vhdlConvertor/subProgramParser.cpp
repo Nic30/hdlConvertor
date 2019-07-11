@@ -11,7 +11,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-Function * SubProgramParser::visitSubprogram_body(
+HdlFunction * SubProgramParser::visitSubprogram_body(
 		vhdlParser::Subprogram_bodyContext* ctx) {
 	// subprogram_body :
 	// subprogram_specification IS
@@ -20,7 +20,7 @@ Function * SubProgramParser::visitSubprogram_body(
 	// subprogram_statement_part
 	// END ( subprogram_kind )? ( designator )? SEMI
 	// ;
-	Function * f = visitSubprogram_specification(
+	HdlFunction * f = visitSubprogram_specification(
 			ctx->subprogram_specification());
 
 	auto vs = SubProgramDeclarationParser::visitSubprogram_declarative_part(
@@ -40,7 +40,7 @@ Function * SubProgramParser::visitSubprogram_body(
 	return f;
 }
 
-Function * SubProgramParser::visitSubprogram_specification(
+HdlFunction * SubProgramParser::visitSubprogram_specification(
 		vhdlParser::Subprogram_specificationContext* ctx) {
 	// subprogram_specification
 	// : procedure_specification
@@ -54,25 +54,25 @@ Function * SubProgramParser::visitSubprogram_specification(
 		return visitFunction_specification(ctx->function_specification());
 }
 
-Function * SubProgramParser::visitProcedure_specification(
+HdlFunction * SubProgramParser::visitProcedure_specification(
 		vhdlParser::Procedure_specificationContext* ctx) {
 	// procedure_specification
 	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
 	// ;
 	auto designator = ctx->designator();
-	Expr * returnT = NULL;
+	iHdlExpr * returnT = NULL;
 	bool isOperator = LiteralParser::isStrDesignator(designator);
 	auto name = LiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::vector<Variable*> * paramList = new std::vector<Variable*>();
+	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return new Function(name, isOperator, returnT, paramList);
+	return new HdlFunction(name, isOperator, returnT, paramList);
 }
 
-Function * SubProgramParser::visitFunction_specification(
+HdlFunction * SubProgramParser::visitFunction_specification(
 		vhdlParser::Function_specificationContext* ctx) {
 	// function_specification:
 	//       ( PURE IMPURE )? FUNCTION designator
@@ -80,21 +80,21 @@ Function * SubProgramParser::visitFunction_specification(
 	//           ( ( PARAMETER )? LPAREN formal_parameter_list RPAREN )? RETURN type_mark
 	// ;
 	auto designator = ctx->designator();
-	Expr * returnT = ExprParser::visitType_mark(ctx->type_mark());
+	iHdlExpr * returnT = ExprParser::visitType_mark(ctx->type_mark());
 	assert(returnT);
 
 	bool isOperator = LiteralParser::isStrDesignator(designator);
 	auto name = LiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::vector<Variable*> * paramList = new std::vector<Variable*>();
+	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return new Function(name, isOperator, returnT, paramList);
+	return new HdlFunction(name, isOperator, returnT, paramList);
 }
 
-std::vector<Variable*> * SubProgramParser::visitFormal_parameter_list(
+std::vector<HdlVariableDef*> * SubProgramParser::visitFormal_parameter_list(
 		vhdlParser::Formal_parameter_listContext* ctx) {
 	// formal_parameter_list
 	// : interface_list
@@ -102,12 +102,12 @@ std::vector<Variable*> * SubProgramParser::visitFormal_parameter_list(
 	return InterfaceParser::visitInterface_list(ctx->interface_list());
 }
 
-std::vector<Statement *> * SubProgramParser::visitSubprogram_statement_part(
+std::vector<iHdlStatement *> * SubProgramParser::visitSubprogram_statement_part(
 		vhdlParser::Subprogram_statement_partContext* ctx) {
 	// subprogram_statement_part
 	// : ( sequential_statement )*
 	// ;
-	std::vector<Statement *> * statements = new std::vector<Statement*>();
+	std::vector<iHdlStatement *> * statements = new std::vector<iHdlStatement*>();
 	for (auto s : ctx->sequential_statement()) {
 		statements->push_back(StatementParser::visitSequential_statement(s));
 	}

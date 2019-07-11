@@ -1,8 +1,8 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
 from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue, \
-    HdlCall, HdlAll, HdlWaitStm, HdlProcessStm, HdlIfStm, HdlAssignStm, \
-    HdlCaseStm, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
-    HdlModuleDef, HdlForStm, HdlForInStm, HdlWhileStm
+    HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
+    HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
+    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile
 
 WIRE = HdlName('wire')
 
@@ -81,7 +81,7 @@ class ToVerilog():
         self.print_doc(p)
         self.print_direction(p.direction)
         w(" ")
-        l = p.latched
+        l = p.is_latched
         if l:
             w("reg ")
 
@@ -93,6 +93,9 @@ class ToVerilog():
         w(p.name)
 
     def print_module_header(self, e):
+        """
+        :type e: HdlModuleDef
+        """
         self.print_doc(e)
         w = self.out.write
         w("module ")
@@ -123,6 +126,9 @@ class ToVerilog():
         w(";\n")
 
     def print_expr(self, expr):
+        """
+        :type expr: iHdlExpr
+        """
         w = self.out.write
         if isinstance(expr, HdlName):
             w(expr)
@@ -256,7 +262,8 @@ class ToVerilog():
 
     def print_type_first_part(self, t):
         """
-        :return: True if the type has also the array dimmension part
+        :type t: iHdlExpr
+        :return: True if the type has also the array dimension part
         """
         w = self.out.write
         if t != WIRE:
@@ -285,6 +292,9 @@ class ToVerilog():
         return False
 
     def print_type_array_part(self, t):
+        """
+        :type t: iHdlExpr
+        """
         w = self.out.write
         if isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
             self.print_type_array_part(t.ops[0])
@@ -293,10 +303,13 @@ class ToVerilog():
             w("]")
 
     def print_variable(self, var):
+        """
+        :type var: HdlVariableDef
+        """
         self.print_doc(var)
         name = var.name
         t = var.type
-        l = var.latched
+        l = var.is_latched
         w = self.out.write
         if l:
             w("reg ")
@@ -312,14 +325,14 @@ class ToVerilog():
 
     def print_process(self, proc, is_top=False):
         """
-        :type proc: HdlProcessStm
+        :type proc: HdlStmProcess
         """
         sens = proc.sensitivity
         body = proc.body
         w = self.out.write
         skip_first = False
         if sens is None:
-            if len(body) and isinstance(body[0], HdlWaitStm):
+            if len(body) and isinstance(body[0], HdlStmWait):
                 skip_first = True
                 wait = body[0]
                 if is_top:
@@ -353,6 +366,8 @@ class ToVerilog():
 
     def print_block(self, stms, space_before):
         """
+        :type stms: List[iHdlStatement]
+        :type space_before: bool
         :return: True if requires ;\n after end
         """
         w = self.out.write
@@ -379,6 +394,9 @@ class ToVerilog():
         return False
 
     def print_if(self, stm):
+        """
+        :type stm: HdlStmIf
+        """
         w = self.out.write
         c = stm.cond
         ifTrue = stm.if_true
@@ -411,7 +429,7 @@ class ToVerilog():
 
     def print_assignment(self, a, is_top=False):
         """
-        :type a: HdlAssignStm
+        :type a: HdlStmAssign
         :return: True if requires ;\n after end
         """
         s = a.src
@@ -434,7 +452,7 @@ class ToVerilog():
 
     def print_case(self, cstm):
         """
-        :type cstm: HdlCaseStm
+        :type cstm: HdlStmCase
 
         :return: True if requires ;\n after end
         """
@@ -465,7 +483,7 @@ class ToVerilog():
 
     def print_wait(self, o):
         """
-        :type o: HdlWaitStm
+        :type o: HdlStmWait
 
         :return: True if requires ;\n after end
         """
@@ -478,7 +496,7 @@ class ToVerilog():
 
     def print_for(self, o):
         """
-        :type o: HdlForStm
+        :type o: HdlStmFor
 
         :return: True if requires ;\n after end
         """
@@ -498,17 +516,16 @@ class ToVerilog():
         w(")")
         return self.print_block(o.body, True)
 
-
     def print_for_in(self, o):
         """
-        :type o: HdlForInStm
+        :type o: HdlStmForIn
         :return: True if requires ;\n after end
         """
         raise NotImplementedError()
 
     def print_while(self, o):
         """
-        :type o: HdlWhileStm
+        :type o: HdlStmWhile
         :return: True if requires ;\n after end
         """
         w = self.out.write
@@ -526,21 +543,21 @@ class ToVerilog():
         if isinstance(stm, iHdlStatement):
             self.print_doc(stm)
 
-        if isinstance(stm, HdlProcessStm):
+        if isinstance(stm, HdlStmProcess):
             return self.print_process(stm, is_top=is_top)
-        elif isinstance(stm, HdlIfStm):
+        elif isinstance(stm, HdlStmIf):
             return self.print_if(stm)
-        elif isinstance(stm, HdlAssignStm):
+        elif isinstance(stm, HdlStmAssign):
             return self.print_assignment(stm, is_top=is_top)
-        elif isinstance(stm, HdlCaseStm):
+        elif isinstance(stm, HdlStmCase):
             return self.print_case(stm)
-        elif isinstance(stm, HdlWaitStm):
+        elif isinstance(stm, HdlStmWait):
             return self.print_wait(stm)
-        elif isinstance(stm, HdlForStm):
+        elif isinstance(stm, HdlStmFor):
             return self.print_for(stm)
-        elif isinstance(stm, HdlForInStm):
+        elif isinstance(stm, HdlStmForIn):
             return self.print_for_int(stm)
-        elif isinstance(stm, HdlWhileStm):
+        elif isinstance(stm, HdlStmWhile):
             return self.print_while(stm)
         else:
             self.print_expr(stm)

@@ -1,12 +1,12 @@
 #include "toPy.h"
 #include <tuple>
-#include <hdlConvertor/hdlObjects/statement_assign.h>
+#include <hdlConvertor/hdlObjects/hdlStmAssign.h>
 
 namespace hdlConvertor {
 
 using namespace hdlObjects;
 
-PyObject* ToPy::toPy(const Statement * o) {
+PyObject* ToPy::toPy(const iHdlStatement * o) {
 	auto & exprs = o->exprs;
 	auto & sub_statements = o->sub_statements;
 	auto type = o->type;
@@ -16,7 +16,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 	if (type == s_EXPR) {
 		return toPy(exprs[0]);
 	} else if (type == s_IF) {
-		py_inst = PyObject_CallObject(HdlIfStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmIfCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -62,7 +62,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 		}
 
 	} else if (type == s_CASE) {
-		py_inst = PyObject_CallObject(HdlCaseStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmCaseCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -99,7 +99,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 		}
 
 	} else if (type == s_FOR) {
-		py_inst = PyObject_CallObject(HdlForStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmForCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -125,7 +125,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 	} else if (type == s_FOR_IN) {
-		py_inst = PyObject_CallObject(HdlForInStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmForInCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -146,7 +146,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 	} else if (type == s_RETURN) {
-		py_inst = PyObject_CallObject(HdlReturnStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmReturnCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -166,11 +166,11 @@ PyObject* ToPy::toPy(const Statement * o) {
 		}
 
 	} else if (type == s_BREAK) {
-		py_inst = PyObject_CallObject(HdlBreakStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmBreakCls, NULL);
 	} else if (type == s_CONTINUE) {
-		py_inst = PyObject_CallObject(HdlContinueStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmContinueCls, NULL);
 	} else if (type == s_ASSIGNMENT) {
-		auto _o = dynamic_cast<const HdlAssignStm*>(o);
+		auto _o = dynamic_cast<const HdlStmAssign*>(o);
 		auto src = toPy(o->exprs[1]);
 		if (!src)
 			e = -1;
@@ -181,7 +181,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 				Py_DECREF(src);
 			}
 			if (!e) {
-				py_inst = PyObject_CallFunctionObjArgs(HdlAssignStmCls, src,
+				py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignCls, src,
 						dst, NULL);
 				if (!py_inst) {
 					e = -1;
@@ -229,7 +229,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 				}
 			}
 
-			py_inst = PyObject_CallFunctionObjArgs(HdlControlledAssignStmCls,
+			py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignControlledCls,
 					src, dst, time_delay, event_delay, NULL);
 			if (!py_inst) {
 				break;
@@ -249,7 +249,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 		}
 
 	} else if (type == s_WHILE) {
-		py_inst = PyObject_CallObject(HdlWhileStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmWhileCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -265,10 +265,10 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 	} else if (type == s_PROCESS) {
-		auto p = dynamic_cast<const Process*>(o);
+		auto p = dynamic_cast<const HdlStmProcess*>(o);
 		assert(p);
 
-		py_inst = PyObject_CallObject(HdlProcessStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmProcessCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -292,7 +292,7 @@ PyObject* ToPy::toPy(const Statement * o) {
 			return nullptr;
 		}
 	} else if (type == s_WAIT) {
-		py_inst = PyObject_CallObject(HdlWaitStmCls, NULL);
+		py_inst = PyObject_CallObject(HdlStmWaitCls, NULL);
 		if (!py_inst) {
 			return nullptr;
 		}
@@ -327,8 +327,8 @@ PyObject* ToPy::toPy(const Statement * o) {
 }
 
 std::pair<PyObject *, size_t> ToPy::cases_toPy(
-		std::vector<Expr*>::const_iterator cond_begin,
-		std::vector<Expr*>::const_iterator cond_end,
+		std::vector<iHdlExpr*>::const_iterator cond_begin,
+		std::vector<iHdlExpr*>::const_iterator cond_end,
 		std::vector<std::vector<iHdlObj*>*>::const_iterator stms_begin) {
 	PyObject * cases = nullptr;
 	size_t size = cond_end - cond_begin;
@@ -353,7 +353,7 @@ std::pair<PyObject *, size_t> ToPy::cases_toPy(
 			return {nullptr, SIZE_T_ERR};
 		}
 
-		Expr* _c = *cond_begin;
+		iHdlExpr* _c = *cond_begin;
 		auto c = toPy(_c);
 		if (!c) {
 			Py_DECREF(cases);

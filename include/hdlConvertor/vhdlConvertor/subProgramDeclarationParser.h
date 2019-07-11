@@ -3,8 +3,9 @@
 #include <vector>
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/function.h>
-#include <hdlConvertor/hdlObjects/variable.h>
+
+#include <hdlConvertor/hdlObjects/hdlFunction.h>
+#include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -12,22 +13,20 @@ namespace vhdl {
 class SubProgramDeclarationParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
-	using Function = hdlObjects::Function;
-	using Variable = hdlObjects::Variable;
 
-	static Function * visitSubprogram_declaration(
+	static hdlObjects::HdlFunction * visitSubprogram_declaration(
 			vhdlParser::Subprogram_declarationContext* ctx);
-	static Function * visitSubprogram_specification(
+	static hdlObjects::HdlFunction * visitSubprogram_specification(
 			vhdlParser::Subprogram_specificationContext* ctx);
-	static Function * visitProcedure_specification(
+	static hdlObjects::HdlFunction * visitProcedure_specification(
 			vhdlParser::Procedure_specificationContext* ctx);
-	static Function * visitFunction_specification(
+	static hdlObjects::HdlFunction * visitFunction_specification(
 			vhdlParser::Function_specificationContext* ctx);
-	static std::vector<Variable*> * visitFormal_parameter_list(
+	static std::vector<hdlObjects::HdlVariableDef*> * visitFormal_parameter_list(
 			vhdlParser::Formal_parameter_listContext* ctx);
-	static std::vector<Variable*>* visitSubprogram_declarative_part(
+	static std::vector<hdlObjects::HdlVariableDef*>* visitSubprogram_declarative_part(
 			vhdlParser::Subprogram_declarative_partContext* ctx);
-	static std::vector<Variable*> * visitSubprogram_declarative_item(
+	static std::vector<hdlObjects::HdlVariableDef*> * visitSubprogram_declarative_item(
 			vhdlParser::Subprogram_declarative_itemContext* ctx);
 };
 

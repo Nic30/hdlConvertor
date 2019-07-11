@@ -5,6 +5,9 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+/*
+ * Container for position in code
+ * */
 class Position {
 public:
 	static constexpr size_t INVALID = std::numeric_limits<size_t>::max();
