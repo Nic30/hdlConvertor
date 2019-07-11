@@ -19,6 +19,12 @@ class VerilogConversionTC(BasicTC):
     def test_uart(self):
         self.parseWithRef("uart.v", VERILOG)
 
+    def test_pri_encoder_using_assign(self):
+        self.parseWithRef("pri_encoder_using_assign.v", VERILOG)
+
+    def test_pri_encoder_using_if(self):
+        self.parseWithRef("pri_encoder_using_if.v", VERILOG)
+
     def test_adder_implicit(self):
         f, res = parseFile("adder_implicit.v", VERILOG)
         str(res)

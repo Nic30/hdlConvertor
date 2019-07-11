@@ -236,12 +236,14 @@ class ToVerilog():
                 w("}}")
                 return
             elif op == HdlBuildinFn.TERNARY:
+                w("(")
                 pe(o.ops[0])
-                w(" ? ")
+                w(") ? (")
                 o0, o1 = o.ops[1:]
                 pe(o0)
-                w(" : ")
+                w(") : (")
                 pe(o1)
+                w(")")
                 return
             elif op == HdlBuildinFn.CALL:
                 pe(o.ops[0])
@@ -658,17 +660,17 @@ if __name__ == "__main__":
     from hdlConvertor.language import Language
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
-    # filenames = [os.path.join(TEST_DIR, "sram.v")]
-    AES = os.path.join(BASE_DIR, "..", "aes")
-    files = [
-        # "aes_cipher_top.v",
-        # "aes_key_expand_128.v",
-        # "aes_inv_cipher_top.v",  "aes_rcon.v",
-        "test_bench_top.v",
-        # "aes_inv_sbox.v",        "aes_sbox.v",
-    ]
-
-    filenames = [os.path.join(AES, f) for f in files]
+    filenames = [os.path.join(TEST_DIR, "pri_encoder_using_assign.v")]
+    #AES = os.path.join(BASE_DIR, "..", "aes")
+    #files = [
+    #    # "aes_cipher_top.v",
+    #    # "aes_key_expand_128.v",
+    #    # "aes_inv_cipher_top.v",  "aes_rcon.v",
+    #    "test_bench_top.v",
+    #    # "aes_inv_sbox.v",        "aes_sbox.v",
+    #]
+    #
+    #filenames = [os.path.join(AES, f) for f in files]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)

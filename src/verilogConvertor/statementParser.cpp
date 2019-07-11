@@ -308,33 +308,40 @@ std::vector<iHdlStatement*> * VerStatementParser::visitSeq_block(
 iHdlStatement * VerStatementParser::visitConditional_statement(
 		Verilog2001Parser::Conditional_statementContext * ctx) {
 	// conditional_statement
-	//    : 'if' '(' expression ')' statement_or_null ('else' statement_or_null)?
-	//    | if_else_if_statement
-	//    ;
+	// : 'if' '(' expression ')' statement_or_null
+	//   ('else' 'if' '(' expression ')' statement_or_null)*
+	//   ('else' statement_or_null)?
+	// ;
 	//
-	auto e = ctx->expression();
-	if (e) {
-		auto cond = VerExprParser::visitExpression(e);
-		auto ifTrue = visitStatement_or_null__as_block(
-				ctx->statement_or_null(0));
-		auto _ifFalse = ctx->statement_or_null(1);
-		auto ifFalse = visitStatement_or_null__as_block(_ifFalse);
-		auto _if = iHdlStatement::IF(cond, ifTrue, ifFalse);
-		_if->__doc__ = commentParser.parse(ctx);
-		return _if;
+	auto c = ctx->expression();
+	auto cIt = c.begin();
+	auto s = ctx->statement_or_null();
+	auto sIt = s.begin();
 
+	auto cond = VerExprParser::visitExpression(*cIt);
+	auto ifTrue = visitStatement_or_null__as_block(*sIt);
+	++cIt;
+	++sIt;
+	std::vector<iHdlStatement::case_t> elseIfs;
+	while (cIt != c.end()) {
+		auto c = VerExprParser::visitExpression(*cIt);
+		auto stms = visitStatement_or_null__as_block(*sIt);
+		elseIfs.push_back( { c, reinterpret_cast<vector<iHdlObj*>*>(stms) });
+		++cIt;
+		++sIt;
 	}
-	// [TODO] must have feature
-	// if_else_if_statement
-	//    : 'if' '(' expression ')' statement_or_null
-	//      ('else' 'if' '(' expression ')' statement_or_null)*
-	//      ('else' statement_or_null)?
-	//    ;
-	NotImplementedLogger::print(
-			"VerStatementParser.conditional_statement.if_else_if_statement",
-			ctx);
-	return nullptr;
+	iHdlStatement * ifStm = nullptr;
+	vector<iHdlStatement*> * ifFalse = nullptr;
+	if (sIt != s.end()) {
+		ifFalse = visitStatement_or_null__as_block(*sIt);
+	}
+	ifStm = iHdlStatement::IF(cond, reinterpret_cast<vector<iHdlObj*>*>(ifTrue),
+			elseIfs, reinterpret_cast<vector<iHdlObj*>*>(ifFalse));
+	ifStm->position.update_from_elem(ctx);
+	ifStm->__doc__ = commentParser.parse(ctx);
+	return ifStm;
 }
+
 iHdlStatement * VerStatementParser::visitProcedural_timing_control_statement(
 		Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
 	// procedural_timing_control_statement

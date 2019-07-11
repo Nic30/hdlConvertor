@@ -87,7 +87,7 @@ module uart (
                                     rx_empty <= 0;
                                     rx_frame_err <= 0;
                                     // Check if last rx data was not unloaded,
-                                    rx_over_run <= rx_empty ? 0 : 1;
+                                    rx_over_run <= (rx_empty) ? (0) : (1);
                                 end
                             end
                         end
