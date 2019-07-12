@@ -65,7 +65,7 @@ vector<HdlVariableDef*>* ModuleParamParser::visitParameter_declaration_(
 			ctx->list_of_param_assignments());
 
 	if (t == nullptr)
-		t = Utils::mkStringT();
+		t = iHdlExpr::AUTO_T();
 	bool first = true;
 	for (auto v : *params) {
 		if (first) {

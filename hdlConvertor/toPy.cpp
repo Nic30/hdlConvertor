@@ -40,6 +40,7 @@ ToPy::ToPy() {
 	import(HdlDirectionEnum, "HdlDirection");
 	import(HdlAllCls, "HdlAll");
 	import(HdlOthersCls, "HdlOthers");
+	import(HdlTypeAutoCls, "HdlTypeAuto");
 	import(HdlTypeTypeCls, "HdlTypeType");
 	import(HdlStmIfCls, "HdlStmIf");
 	import(HdlStmAssignCls, "HdlStmAssign");
@@ -284,13 +285,13 @@ PyObject* ToPy::toPy(const HdlFunction * o) {
 PyObject* ToPy::toPy(const HdlValue * o) {
 	auto t = o->type;
 
-	if (t == symb_ID) {
+	if (t == HdlValueType::symb_ID) {
 		assert(!o->_str.empty());
 		auto v = PyUnicode_FromString(o->_str.c_str());
 		if (!v)
 			return nullptr;
 		return PyObject_CallFunctionObjArgs(HdlNameCls, v, NULL);
-	} else if (t == symb_INT) {
+	} else if (t == HdlValueType::symb_INT) {
 		auto & _v = o->_int;
 		PyObject * v, * bits, * base = nullptr;
 		if (_v.is_bitstring()) {
@@ -323,13 +324,13 @@ PyObject* ToPy::toPy(const HdlValue * o) {
 		}
 
 		return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, bits, base, NULL);
-	} else if (t == symb_FLOAT) {
+	} else if (t == HdlValueType::symb_FLOAT) {
 		return PyFloat_FromDouble(o->_float);
-	} else if (t == symb_STRING) {
+	} else if (t == HdlValueType::symb_STRING) {
 		return PyUnicode_FromString(o->_str.c_str());
-	} else if (t == symb_OPEN) {
+	} else if (t == HdlValueType::symb_OPEN) {
 		Py_RETURN_NONE;
-	} else if (t == symb_ARRAY) {
+	} else if (t == HdlValueType::symb_ARRAY) {
 		assert(o->_arr);
 		auto val = PyList_New(o->_arr->size());
 		if (!val)
@@ -349,22 +350,25 @@ PyObject* ToPy::toPy(const HdlValue * o) {
 			indx++;
 		}
 		return val;
-	} else if (t == symb_ALL) {
+	} else if (t == HdlValueType::symb_ALL) {
 		Py_INCREF(HdlAllCls);
 		return HdlAllCls;
-	} else if (t == symb_NULL) {
+	} else if (t == HdlValueType::symb_NULL) {
 		Py_RETURN_NONE;
-	} else if (t == symb_T) {
+	} else if (t == HdlValueType::symb_T) {
 		Py_INCREF(HdlTypeTypeCls);
 		return HdlTypeTypeCls;
-	} else if (t == symb_ALL) {
+	} else if (t == HdlValueType::symb_AUTO) {
+		Py_INCREF(HdlTypeAutoCls);
+		return HdlTypeAutoCls;
+	} else if (t == HdlValueType::symb_ALL) {
 		Py_INCREF(HdlAllCls);
 		return HdlAllCls;
-	} else if (t == symb_OTHERS) {
+	} else if (t == HdlValueType::symb_OTHERS) {
 		Py_INCREF(HdlOthersCls);
 		return HdlOthersCls;
 	} else {
-		PyErr_SetString(PyExc_AssertionError, "invalid type of the symbol");
+		PyErr_SetString(PyExc_AssertionError, "invalid type of the HdlValue");
 		return nullptr;
 	}
 }
@@ -493,6 +497,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmIfCls);
 	Py_XDECREF(HdlOthersCls);
 	Py_XDECREF(HdlAllCls);
+	Py_XDECREF(HdlTypeAutoCls);
 	Py_XDECREF(HdlTypeTypeCls);
 	Py_XDECREF(HdlDirectionEnum);
 	Py_XDECREF(HdlNameCls);

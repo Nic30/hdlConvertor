@@ -2,7 +2,7 @@ from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_
 from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue, \
     HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
     HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
-    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile
+    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto
 
 WIRE = HdlName('wire')
 
@@ -258,6 +258,8 @@ class ToVerilog():
                 raise NotImplementedError(op)
         elif expr is HdlAll:
             w("*")
+            return
+        elif expr is HdlTypeAuto:
             return
 
         raise NotImplementedError(expr)
@@ -660,7 +662,7 @@ if __name__ == "__main__":
     from hdlConvertor.language import Language
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
-    filenames = [os.path.join(TEST_DIR, "pri_encoder_using_assign.v")]
+    filenames = [os.path.join(TEST_DIR, "arbiter_tb.v")]
     #AES = os.path.join(BASE_DIR, "..", "aes")
     #files = [
     #    # "aes_cipher_top.v",

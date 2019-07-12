@@ -35,6 +35,7 @@ class ToPy {
 	PyObject* HdlAllCls;
 	PyObject* HdlOthersCls;
 	PyObject* HdlTypeTypeCls;
+	PyObject* HdlTypeAutoCls;
 	PyObject* HdlStmIfCls;
 	PyObject* HdlStmAssignCls;
 	PyObject* HdlStmAssignControlledCls;
