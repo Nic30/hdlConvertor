@@ -1,10 +1,11 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, \
     UnIndent, is_str
 from hdlConvertor.hdlAst import HdlDirection, HdlBuildinFn, HdlName, HdlIntValue, \
-    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf,\
+    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf, \
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
     HdlVariableDef, HdlModuleDec, HdlFunction, HdlComponentInst, HdlModuleDef, \
     HdlNamespace, HdlImport
+
 
 class ToVhdl():
     """
@@ -169,6 +170,9 @@ class ToVhdl():
             bits = expr.bits
             if bits is None:
                 if expr.base is not None:
+                    if expr.base == 256:
+                        w("'%s'" % str(v))
+                        return
                     bases = {
                         2: "B",
                         8: "O",
@@ -177,12 +181,13 @@ class ToVhdl():
                     b = bases[expr.base]
                     w('%s"%"' % (b, v))
                 w(str(v))
+                return
+
             elif bits % 8 == 0:
                 f = 'X"{0:0%dX}"' % (bits / 8)
-                w(f.format(v))
             else:
                 f = '"{0:0%db}"' % (bits)
-                w(f.format(v))
+            w(f.format(v))
 
             return
         elif isinstance(expr, HdlName):
@@ -641,7 +646,7 @@ class ToVhdl():
         """
         self.print_doc(o)
         w = self.out.write
-        #if o.declaration_only:
+        # if o.declaration_only:
         w("PACKAGE ")
         w(o.name)
         w(" IS\n")

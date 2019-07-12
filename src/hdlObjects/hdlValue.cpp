@@ -1,5 +1,8 @@
-#include <stdexcept>
 #include <hdlConvertor/hdlObjects/hdlValue.h>
+
+#include <stdexcept>
+#include <string>
+#include <array>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -14,30 +17,30 @@ HdlValue::HdlValue(const HdlValue & other) :
 	}
 }
 HdlValue::HdlValue(BigInteger __int) :
-		type(LiteralValType::symb_INT), bits(-1), _int(__int), _float(0.0), _str(
+		type(HdlValueType::symb_INT), bits(-1), _int(__int), _float(0.0), _str(
 				""), _arr(nullptr) {
 }
 HdlValue::HdlValue(const BigInteger & __int, int _bits) :
-		type(LiteralValType::symb_INT), bits(_bits), _int(__int), _float(0.0), _str(
+		type(HdlValueType::symb_INT), bits(_bits), _int(__int), _float(0.0), _str(
 				""), _arr(nullptr) {
 
 }
 HdlValue::HdlValue(double __float) :
-		type(LiteralValType::symb_FLOAT), bits(-1), _int(0), _float(__float), _str(
+		type(HdlValueType::symb_FLOAT), bits(-1), _int(0), _float(__float), _str(
 				""), _arr(nullptr) {
 }
 HdlValue::HdlValue(std::string __str) :
-		type(LiteralValType::symb_ID), bits(-1), _int(0), _float(0.0), _str(__str), _arr(
+		type(HdlValueType::symb_ID), bits(-1), _int(0), _float(0.0), _str(__str), _arr(
 				nullptr) {
 }
 
-HdlValue::HdlValue(LiteralValType _type) :
+HdlValue::HdlValue(HdlValueType _type) :
 		type(_type), bits(-1), _int(0), _float(0.0), _str(""), _arr(nullptr) {
 
 }
 
 HdlValue::HdlValue(const std::vector<iHdlExpr*> * arr) :
-		type(LiteralValType::symb_ARRAY), bits(-1), _int(0), _float(0.0), _str(""), _arr(
+		type(HdlValueType::symb_ARRAY), bits(-1), _int(0), _float(0.0), _str(""), _arr(
 				arr) {
 
 }
@@ -47,33 +50,26 @@ iHdlExprItem * HdlValue::clone() const {
 }
 
 HdlValue::~HdlValue() {
-	if (type == LiteralValType::symb_ARRAY)
+	if (type == HdlValueType::symb_ARRAY)
 		delete _arr;
 }
 
-const char * HdlValueType_toString(LiteralValType t) {
-	switch (t) {
-	case LiteralValType::symb_ID:
-		return "ID";
-	case LiteralValType::symb_INT:
-		return "INT";
-	case LiteralValType::symb_FLOAT:
-		return "FLOAT";
-	case LiteralValType::symb_STRING:
-		return "STRING";
-	case LiteralValType::symb_OPEN:
-		return "OPEN";
-	case LiteralValType::symb_ARRAY:
-		return "ARRAY";
-	case LiteralValType::symb_ALL:
-		return "ALL";
-	case LiteralValType::symb_OTHERS:
-		return "OTHERS";
-	case LiteralValType::symb_T:
-		return "TYPE";
-	default:
-		return "NULL";
-	}
+const std::array<const std::string, 11> HdlValueType_str = {
+		"ID",
+		"INT",
+		"FLOAT",
+		"STRING",
+		"ARRAY",
+		"NULL",
+		"OPEN",
+	    "ALL",
+		"OTHERS",
+		"T",
+		"AUTO"
+};
+
+const char * HdlValueType_toString(HdlValueType t) {
+	return HdlValueType_str.at(t).c_str();
 }
 
 }

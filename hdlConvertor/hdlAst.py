@@ -133,7 +133,7 @@ class HdlIntValue(object):
     def __init__(self, val, bits, base):
         self.val = val  # type: Union[int, str]
         self.bits = bits  # type: Optional[int]
-        self.base = base  # type: Optional[Union[2,8,10,16]]
+        self.base = base  # type: Optional[Union[2, 8, 10, 16, 256]]
 
     def __int__(self):
         return int(self.val)

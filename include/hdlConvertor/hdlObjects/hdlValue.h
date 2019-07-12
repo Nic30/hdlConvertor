@@ -10,9 +10,13 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 
-enum LiteralValType {
-	symb_ID, symb_INT, symb_FLOAT, symb_STRING, symb_OPEN,
-	symb_ARRAY, symb_ALL, symb_NULL, symb_OTHERS, symb_T
+enum HdlValueType {
+	symb_ID, symb_INT, symb_FLOAT, symb_STRING, symb_ARRAY, symb_NULL,
+	symb_OPEN, // the unconnected
+    symb_ALL, // all items in destination
+	symb_OTHERS, // not explicitly specified items in destination
+	symb_T, // type of type
+	symb_AUTO // automatically derived type
 };
 
 
@@ -23,7 +27,7 @@ class iHdlExpr;
  * */
 class HdlValue: public virtual iHdlExprItem {
 public:
-	LiteralValType type;
+	HdlValueType type;
 	int bits;
 	BigInteger _int;
 	double _float;
@@ -32,7 +36,7 @@ public:
 
 
 	HdlValue();
-	HdlValue(LiteralValType type);
+	HdlValue(HdlValueType type);
 	HdlValue(const HdlValue & other);
 	HdlValue(BigInteger __int);
 	HdlValue(const BigInteger & value, int bits);
@@ -47,7 +51,7 @@ public:
 };
 
 
-const char * HdlValueType_toString(LiteralValType t);
+const char * HdlValueType_toString(HdlValueType t);
 
 }
 }

@@ -8,7 +8,8 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlValue __v = { BigInteger(0) };
-static HdlValue Type_t(LiteralValType::symb_T); // symbol representing that expr is type of type;
+static HdlValue AutoType_t(HdlValueType::symb_AUTO);
+static HdlValue Type_t(HdlValueType::symb_T); // symbol representing that expr is type of type;
 
 iHdlExpr::iHdlExpr() {
 	data = NULL;
@@ -58,7 +59,7 @@ iHdlExpr * iHdlExpr::FLOAT(double val) {
 
 iHdlExpr * iHdlExpr::STR(std::string strVal) {
 	auto l = new HdlValue(strVal);
-	l->type = LiteralValType::symb_STRING;
+	l->type = HdlValueType::symb_STRING;
 	return new iHdlExpr(l);
 }
 
@@ -68,7 +69,7 @@ iHdlExpr * iHdlExpr::ARRAY(const std::vector<iHdlExpr*> & arr) {
 }
 
 iHdlExpr * iHdlExpr::OPEN() {
-	iHdlExpr * e = new iHdlExpr(new HdlValue(LiteralValType::symb_OPEN));
+	iHdlExpr * e = new iHdlExpr(new HdlValue(HdlValueType::symb_OPEN));
 	return e;
 }
 iHdlExpr* iHdlExpr::ternary(iHdlExpr* cond, iHdlExpr* ifTrue,
@@ -91,7 +92,7 @@ iHdlExpr * iHdlExpr::slice(iHdlExpr * fnId,
 }
 iHdlExpr * iHdlExpr::ID(const std::string & value) {
 	auto s = new HdlValue(value);
-	s->type = LiteralValType::symb_ID;
+	s->type = HdlValueType::symb_ID;
 	return new iHdlExpr(s);
 }
 
@@ -100,15 +101,20 @@ iHdlExpr * iHdlExpr::TYPE_T() {
 	e->data = &Type_t;
 	return e;
 }
+iHdlExpr * iHdlExpr::AUTO_T() {
+	iHdlExpr * e = new iHdlExpr();
+	e->data = &AutoType_t;
+	return e;
+}
 
 iHdlExpr * iHdlExpr::all() {
-	return new iHdlExpr(new HdlValue(LiteralValType::symb_ALL));
+	return new iHdlExpr(new HdlValue(HdlValueType::symb_ALL));
 }
 iHdlExpr * iHdlExpr::null() {
-	return new iHdlExpr(new HdlValue(LiteralValType::symb_NULL));
+	return new iHdlExpr(new HdlValue(HdlValueType::symb_NULL));
 }
 iHdlExpr * iHdlExpr::others() {
-	return new iHdlExpr(new HdlValue(LiteralValType::symb_OTHERS));
+	return new iHdlExpr(new HdlValue(HdlValueType::symb_OTHERS));
 }
 const std::string & iHdlExpr::extractStr() const {
 	HdlValue * literal = dynamic_cast<HdlValue*>(data);
@@ -119,7 +125,7 @@ const std::string & iHdlExpr::extractStr() const {
 }
 
 iHdlExpr::~iHdlExpr() {
-	if (data && data != &Type_t)
+	if (data && data != &Type_t && data != &AutoType_t)
 		delete data;
 }
 

@@ -9,7 +9,6 @@ BigInteger::BigInteger(int64_t v) :
 
 BigInteger::BigInteger(const std::string & _bit_string, int base) :
 		val(0), bitstring(_bit_string), bitstring_base(base) {
-
 }
 
 bool BigInteger::is_bitstring() const {

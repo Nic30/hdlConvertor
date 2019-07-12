@@ -62,26 +62,19 @@ iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 		break;
 	}
 
-	int integer = 0;
+	int bits = 0;
 	if ((fdRadix > 0 && s[fdRadix - 1] != 'u')
 			|| (fdRadix > 1 && s[fdRadix - 1] == 'u')) {
-		integer = std::stoi(s);
+		bits = std::stoi(s);
 	}
 
 	s[s.length() - 1] = 0; // cut of "
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
 	const char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
-	int bits;
-	if (integer != 0) {
-		bits = integer;
-	} else {
+	if (bits == 0) {
 		bits = strlen(strVal) * bitRatio;
 	}
 
-	// [TODO]: Not correct implementation for don't care.
-	if (s.find('-') != std::string::npos) {
-		strVal = "0";
-	}
 	return iHdlExpr::INT(strVal, bits, radix);
 }
 
@@ -173,7 +166,7 @@ iHdlExpr * LiteralParser::visitString_literal(const std::string & ctx) {
 	return iHdlExpr::STR(str);
 }
 iHdlExpr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
-	return iHdlExpr::INT(ctx[1] - '0');
+	return iHdlExpr::INT(ctx.substr(1, 1), BigInteger::CHAR_BASE);
 }
 iHdlExpr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
 	std::string s = ctx->getText();

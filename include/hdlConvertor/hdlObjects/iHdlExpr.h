@@ -35,6 +35,7 @@ public:
 	static iHdlExpr * ID(const std::string & value);
 
 	static iHdlExpr * TYPE_T();
+	static iHdlExpr * AUTO_T();
 
 	static iHdlExpr * INT(int64_t val);
 	static iHdlExpr * INT(const std::string& strVal, int base);

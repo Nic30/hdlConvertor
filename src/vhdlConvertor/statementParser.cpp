@@ -16,7 +16,7 @@ using namespace hdlConvertor::hdlObjects;
 
 bool is_others(iHdlExpr * e) {
 	auto _e = dynamic_cast<HdlValue*>(e->data);
-	return (_e && _e->type == LiteralValType::symb_OTHERS);
+	return (_e && _e->type == HdlValueType::symb_OTHERS);
 }
 
 StatementParser::StatementParser(bool _hierarchyOnly) :

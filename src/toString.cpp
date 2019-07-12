@@ -90,17 +90,17 @@ void ToString::dump(const HdlValue * s, int indent) {
 	const char * _v;
 
 	switch (s->type) {
-	case LiteralValType::symb_ID:
-	case LiteralValType::symb_STRING:
+	case HdlValueType::symb_ID:
+	case HdlValueType::symb_STRING:
 		dumpVal("value", indent, s->_str) << "\n";
 		break;
-	case LiteralValType::symb_FLOAT:
+	case HdlValueType::symb_FLOAT:
 		dumpVal("value", indent, s->_float) << "\n";
 		break;
-	case LiteralValType::symb_ARRAY:
+	case HdlValueType::symb_ARRAY:
 		assert(0 && "not implemented");
 		break;
-	case LiteralValType::symb_INT:
+	case HdlValueType::symb_INT:
 		if (s->bits > 0)
 			dumpVal("bits", indent, s->bits) << ",\n";
 		auto & i = s->_int;
@@ -112,8 +112,8 @@ void ToString::dump(const HdlValue * s, int indent) {
 		}
 		dumpVal("value", indent, _v) << "\n";
 		break;
-	case LiteralValType::symb_ALL:
-	case LiteralValType::symb_OPEN:
+	case HdlValueType::symb_ALL:
+	case HdlValueType::symb_OPEN:
 	default:
 		break;
 	}
