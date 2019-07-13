@@ -44,7 +44,6 @@ ToPy::ToPy() {
 	import(HdlTypeTypeCls, "HdlTypeType");
 	import(HdlStmIfCls, "HdlStmIf");
 	import(HdlStmAssignCls, "HdlStmAssign");
-	import(HdlStmAssignControlledCls, "HdlStmAssignControlled");
 	import(HdlStmProcessCls, "HdlStmProcess");
 	import(HdlStmCaseCls, "HdlStmCase");
 	import(HdlStmForCls, "HdlStmFor");
@@ -56,7 +55,7 @@ ToPy::ToPy() {
 	import(HdlStmWaitCls, "HdlStmWait");
 	import(HdlImportCls, "HdlImport");
 	import(HdlComponentInstCls, "HdlComponentInst");
-	import(HdlFunctionCls, "HdlFunction");
+	import(HdlFunctionDefCls, "HdlFunctionDef");
 	import(HdlNamespaceCls, "HdlNamespace");
 }
 
@@ -112,7 +111,7 @@ PyObject* ToPy::toPy(const iHdlObj * o) {
 	auto ns = dynamic_cast<const HdlNamespace *>(o);
 	if (ns)
 		return toPy(ns);
-	auto fn = dynamic_cast<const HdlFunction*>(o);
+	auto fn = dynamic_cast<const HdlFunctionDef*>(o);
 	if (fn)
 		return toPy(fn);
 
@@ -247,8 +246,8 @@ PyObject* ToPy::toPy(const iHdlExpr * o) {
 	return nullptr;
 }
 
-PyObject* ToPy::toPy(const HdlFunction * o) {
-	PyObject* py_inst = PyObject_CallObject(HdlFunctionCls, NULL);
+PyObject* ToPy::toPy(const HdlFunctionDef * o) {
+	PyObject* py_inst = PyObject_CallObject(HdlFunctionDefCls, NULL);
 	if (py_inst == nullptr)
 		return nullptr;
 	for (;;) {
@@ -478,9 +477,8 @@ PyObject* ToPy::toPy(const std::string & o) {
 }
 
 ToPy::~ToPy() {
-
 	Py_XDECREF(HdlNamespaceCls);
-	Py_XDECREF(HdlFunctionCls);
+	Py_XDECREF(HdlFunctionDefCls);
 	Py_XDECREF(HdlComponentInstCls);
 	Py_XDECREF(HdlImportCls);
 	Py_XDECREF(HdlStmWaitCls);
@@ -492,7 +490,6 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmForInCls);
 	Py_XDECREF(HdlStmCaseCls);
 	Py_XDECREF(HdlStmProcessCls);
-	Py_XDECREF(HdlStmAssignControlledCls);
 	Py_XDECREF(HdlStmAssignCls);
 	Py_XDECREF(HdlStmIfCls);
 	Py_XDECREF(HdlOthersCls);

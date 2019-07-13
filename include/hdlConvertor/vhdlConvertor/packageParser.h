@@ -9,12 +9,12 @@
 #include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/hdlFunction.h>
 #include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 #include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/hdlValue.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
+#include "../hdlObjects/hdlFunctionDef.h"
 
 namespace hdlConvertor {
 namespace vhdl {

@@ -9,7 +9,7 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class HdlFunction: public WithNameAndDoc, public iHdlObj {
+class HdlFunctionDef: public WithNameAndDoc, public iHdlObj {
 public:
 	const iHdlExpr * returnT;
 	const std::vector<HdlVariableDef*> * params;
@@ -18,9 +18,9 @@ public:
 	const bool is_operator;
 	bool declaration_only;
 
-	HdlFunction(const std::string & name, bool is_operator, iHdlExpr * returnT,
+	HdlFunctionDef(const std::string & name, bool is_operator, iHdlExpr * returnT,
 			std::vector<HdlVariableDef*> * params);
-	~HdlFunction();
+	~HdlFunctionDef();
 };
 
 }

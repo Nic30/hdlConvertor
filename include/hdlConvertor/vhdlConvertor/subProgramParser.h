@@ -4,9 +4,9 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlObjects/hdlFunction.h>
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
+#include "../hdlObjects/hdlFunctionDef.h"
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -15,13 +15,13 @@ class SubProgramParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static hdlObjects::HdlFunction * visitSubprogram_body(
+	static hdlObjects::HdlFunctionDef * visitSubprogram_body(
 			vhdlParser::Subprogram_bodyContext* ctx);
-	static hdlObjects::HdlFunction * visitSubprogram_specification(
+	static hdlObjects::HdlFunctionDef * visitSubprogram_specification(
 			vhdlParser::Subprogram_specificationContext* ctx);
-	static hdlObjects::HdlFunction * visitProcedure_specification(
+	static hdlObjects::HdlFunctionDef * visitProcedure_specification(
 			vhdlParser::Procedure_specificationContext* ctx);
-	static hdlObjects::HdlFunction * visitFunction_specification(
+	static hdlObjects::HdlFunctionDef * visitFunction_specification(
 			vhdlParser::Function_specificationContext* ctx);
 	static std::vector<hdlObjects::HdlVariableDef*> * visitFormal_parameter_list(
 			vhdlParser::Formal_parameter_listContext* ctx);

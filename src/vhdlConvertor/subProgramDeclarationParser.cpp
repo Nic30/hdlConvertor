@@ -12,7 +12,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlFunction * SubProgramDeclarationParser::visitSubprogram_declaration(
+HdlFunctionDef * SubProgramDeclarationParser::visitSubprogram_declaration(
 		vhdlParser::Subprogram_declarationContext* ctx) {
 	// subprogram_declaration
 	// : subprogram_specification SEMI
@@ -20,7 +20,7 @@ HdlFunction * SubProgramDeclarationParser::visitSubprogram_declaration(
 	return visitSubprogram_specification(ctx->subprogram_specification());
 }
 
-HdlFunction * SubProgramDeclarationParser::visitSubprogram_specification(
+HdlFunctionDef * SubProgramDeclarationParser::visitSubprogram_specification(
 		vhdlParser::Subprogram_specificationContext* ctx) {
 	// subprogram_specification
 	// : procedure_specification
@@ -33,7 +33,7 @@ HdlFunction * SubProgramDeclarationParser::visitSubprogram_specification(
 		return visitFunction_specification(ctx->function_specification());
 }
 
-HdlFunction * SubProgramDeclarationParser::visitProcedure_specification(
+HdlFunctionDef * SubProgramDeclarationParser::visitProcedure_specification(
 		vhdlParser::Procedure_specificationContext* ctx) {
 	// procedure_specification
 	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
@@ -48,10 +48,10 @@ HdlFunction * SubProgramDeclarationParser::visitProcedure_specification(
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return new HdlFunction(name, isOperator, returnT, paramList);
+	return new HdlFunctionDef(name, isOperator, returnT, paramList);
 }
 
-HdlFunction * SubProgramDeclarationParser::visitFunction_specification(
+HdlFunctionDef * SubProgramDeclarationParser::visitFunction_specification(
 		vhdlParser::Function_specificationContext* ctx) {
 	// function_specification
 	// : ( PURE | IMPURE )? FUNCTION designator
@@ -75,7 +75,7 @@ HdlFunction * SubProgramDeclarationParser::visitFunction_specification(
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return new HdlFunction(name, isOperator, returnT, paramList);
+	return new HdlFunctionDef(name, isOperator, returnT, paramList);
 }
 
 std::vector<HdlVariableDef*> * SubProgramDeclarationParser::visitFormal_parameter_list(

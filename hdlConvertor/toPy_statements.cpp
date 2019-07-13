@@ -170,34 +170,6 @@ PyObject* ToPy::toPy(const iHdlStatement * o) {
 	} else if (type == s_CONTINUE) {
 		py_inst = PyObject_CallObject(HdlStmContinueCls, NULL);
 	} else if (type == s_ASSIGNMENT) {
-		auto _o = dynamic_cast<const HdlStmAssign*>(o);
-		auto src = toPy(o->exprs[1]);
-		if (!src)
-			e = -1;
-		if (!e) {
-			auto dst = toPy(o->exprs[0]);
-			if (!dst) {
-				e = -1;
-				Py_DECREF(src);
-			}
-			if (!e) {
-				py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignCls, src,
-						dst, NULL);
-				if (!py_inst) {
-					e = -1;
-					Py_DECREF(src);
-					Py_DECREF(dst);
-				} else {
-					if (!e)
-						e = PyObject_SetAttrString(py_inst, "is_blocking",
-								PyBool_FromLong((long) _o->is_blocking));
-				}
-			}
-		}
-		if (e) {
-			return nullptr;
-		}
-	} else if (type == s_CONTROLLED_ASSIGNMENT) {
 		PyObject *src = nullptr, *dst = nullptr, *time_delay = nullptr,
 				*event_delay = nullptr;
 		do {
@@ -229,12 +201,12 @@ PyObject* ToPy::toPy(const iHdlStatement * o) {
 				}
 			}
 
-			py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignControlledCls,
+			py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignCls,
 					src, dst, time_delay, event_delay, NULL);
 			if (!py_inst) {
 				break;
 			}
-			auto _o = dynamic_cast<const HdlControlledAssignStm*>(o);
+			auto _o = dynamic_cast<const HdlStmAssign*>(o);
 			e = PyObject_SetAttrString(py_inst, "is_blocking",
 					PyBool_FromLong((long) _o->is_blocking));
 

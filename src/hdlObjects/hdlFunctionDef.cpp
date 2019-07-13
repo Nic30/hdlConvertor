@@ -1,15 +1,15 @@
-#include <hdlConvertor/hdlObjects/hdlFunction.h>
+#include "../../include/hdlConvertor/hdlObjects/hdlFunctionDef.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-HdlFunction::HdlFunction(const std::string & name, bool isOperator,
+HdlFunctionDef::HdlFunctionDef(const std::string & name, bool isOperator,
 		iHdlExpr * returnT, std::vector<HdlVariableDef*> * params) :
 		WithNameAndDoc(name), returnT(returnT), params(params), is_operator(
 				isOperator), declaration_only(true) {
 }
 
-HdlFunction::~HdlFunction() {
+HdlFunctionDef::~HdlFunctionDef() {
 	for (auto p : *params)
 		delete p;
 	delete params;

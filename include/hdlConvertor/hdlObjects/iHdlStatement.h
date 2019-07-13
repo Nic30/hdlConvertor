@@ -22,7 +22,6 @@ enum StatementType {
 	s_FOR,
 	s_FOR_IN,
 	s_ASSIGNMENT,
-	s_CONTROLLED_ASSIGNMENT,
 	s_PROCESS,
 	s_WAIT,
 	s_IMPORT,
