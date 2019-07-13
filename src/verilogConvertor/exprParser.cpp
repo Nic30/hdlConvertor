@@ -624,6 +624,11 @@ iHdlExpr * VerExprParser::visitVariable_lvalue(
 		auto expr = visitExpression(e);
 		id = new iHdlExpr(id, HdlOperatorType::INDEX, expr);
 	}
+	auto re = ctx->range_expression();
+	if (re) {
+		auto expr = visitRange_expression(re);
+		id = new iHdlExpr(id, HdlOperatorType::INDEX, expr);
+	}
 	return id;
 }
 
