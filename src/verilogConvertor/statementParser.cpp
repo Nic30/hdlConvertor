@@ -140,7 +140,7 @@ iHdlStatement * VerStatementParser::visitBlocking_assignment(
 	iHdlStatement * assig;
 	if (dec) {
 		auto d = visitDelay_or_event_control(dec);
-		assig = new HdlControlledAssignStm(dst, src, d.first, d.second, true);
+		assig = new HdlStmAssign(dst, src, d.first, d.second, true);
 	} else {
 		assig = new HdlStmAssign(dst, src, true);
 	}
@@ -259,17 +259,18 @@ HdlStmAssign * VerStatementParser::visitNonblocking_assignment(
 	// nonblocking_assignment
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
 	//    ;
-	auto dec = ctx->delay_or_event_control();
-	if (dec) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitNonblocking_assignment.delay_or_event_control",
-				dec);
-	}
 	auto vl = ctx->variable_lvalue();
 	auto dst = VerExprParser::visitVariable_lvalue(vl);
 	auto e = ctx->expression();
 	auto src = VerExprParser::visitExpression(e);
-	auto a = new HdlStmAssign(dst, src, false);
+	HdlStmAssign * a;
+	auto dec = ctx->delay_or_event_control();
+	if (dec) {
+		auto d = visitDelay_or_event_control(dec);
+		a = new HdlStmAssign(dst, src, d.first, d.second, false);
+	} else {
+		a = new HdlStmAssign(dst, src, false);
+	}
 	a->__doc__ = commentParser.parse(ctx);
 	return a;
 }

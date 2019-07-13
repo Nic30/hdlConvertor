@@ -53,8 +53,9 @@ class BasicTC(unittest.TestCase):
         ref_file = path.join(BASE_DIR, "tests", _language.value,
                               "expected", fname)
         res_str = buff.getvalue()
-        # with open(ref_file, "w") as f:
-        #     f.write(res_str)
+        # if fname == "aes.v":
+        #     with open(ref_file, "w") as f:
+        #         f.write(res_str)
 
         with open(ref_file) as f:
             ref = f.read()

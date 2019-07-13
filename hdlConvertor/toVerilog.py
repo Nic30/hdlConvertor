@@ -444,14 +444,23 @@ class ToVerilog():
                 w("assign ")
             self.print_expr(d)
             w(" = ")
-            self.print_expr(s)
         else:
             self.print_expr(d)
             if a.is_blocking:
                 w(" = ")
             else:
                 w(" <= ")
-            self.print_expr(s)
+
+        if a.time_delay is not None:
+            w("#")
+            self.print_expr(a.time_delay)
+            w(" ")
+        if a.event_delay is not None:
+            w("@")
+            self.print_expr(a.event_delay)
+            w(" ")
+
+        self.print_expr(s)
         return True
 
     def print_case(self, cstm):

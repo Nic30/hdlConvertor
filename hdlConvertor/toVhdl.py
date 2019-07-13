@@ -3,7 +3,7 @@ from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_
 from hdlConvertor.hdlAst import HdlDirection, HdlBuildinFn, HdlName, HdlIntValue, \
     HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf, \
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
-    HdlVariableDef, HdlModuleDec, HdlFunction, HdlComponentInst, HdlModuleDef, \
+    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, HdlModuleDef, \
     HdlNamespace, HdlImport
 
 
@@ -411,6 +411,11 @@ class ToVhdl():
         s = a.src
         d = a.dst
         w = self.out.write
+        if a.time_delay is not None:
+            raise NotImplementedError()
+        if a.event_delay is not None:
+            raise NotImplementedError()
+
         self.print_expr(d)
         w(" <= ")
         self.print_expr(s)
@@ -554,7 +559,7 @@ class ToVhdl():
                     assert in_def_section, o
                     self.print_component(o)
                     continue
-                elif isinstance(o, HdlFunction):
+                elif isinstance(o, HdlFunctionDef):
                     assert in_def_section, o
                     self.print_function(o)
                     continue
@@ -589,7 +594,7 @@ class ToVhdl():
 
     def print_function(self, o):
         """
-        :type o: HdlFunction
+        :type o: HdlFunctionDef
         """
         w = self.out.write
         self.print_doc(o)
@@ -668,7 +673,7 @@ class ToVhdl():
             self.print_namespace(o)
         elif isinstance(o, HdlVariableDef):
             self.print_variable(o)
-        elif isinstance(o, HdlFunction):
+        elif isinstance(o, HdlFunctionDef):
             self.print_function(o)
         else:
             raise NotImplementedError(o)
