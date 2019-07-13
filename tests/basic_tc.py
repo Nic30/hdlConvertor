@@ -57,7 +57,7 @@ class BasicTC(unittest.TestCase):
         #     with open(ref_file, "w") as f:
         #         f.write(res_str)
 
-        with open(ref_file) as f:
+        with open(ref_file, encoding="utf-8") as f:
             ref = f.read()
 
         self.assertEqual(ref, res_str)
