@@ -25,7 +25,7 @@ module ram_sp_ar_sw #(
     //--------------Code Starts Here------------------
     // Tri-State Buffer control
     // output : When we = 0, oe = 1, cs = 1
-    data = (((cs && oe) && !we)) ? (data_out) : (8'bz);
+    assign data = (((cs && oe) && !we)) ? (data_out) : (8'bz);
     always @(posedge clk)
         if ((cs && we))
             mem[address] = data;

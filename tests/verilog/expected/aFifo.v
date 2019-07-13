@@ -47,8 +47,8 @@ module aFifo #(
 
     //Fifo addresses support logic:
     //'Next Addresses' enable logic:
-    NextWriteAddressEn = (WriteEn_in & ~Full_out);
-    NextReadAddressEn = (ReadEn_in & ~Empty_out);
+    assign NextWriteAddressEn = (WriteEn_in & ~Full_out);
+    assign NextReadAddressEn = (ReadEn_in & ~Empty_out);
     GrayCounter GrayCounter_pWr (
         .GrayCount_out(pNextWordToWrite),
         .Enable_in(NextWriteAddressEn),
@@ -64,10 +64,10 @@ module aFifo #(
     );
 
     //'EqualAddresses' logic:
-    EqualAddresses = (pNextWordToWrite == pNextWordToRead);
+    assign EqualAddresses = (pNextWordToWrite == pNextWordToRead);
     //'Quadrant selectors' logic:
-    Set_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] >> pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] ^ pNextWordToRead[(ADDRESS_WIDTH - 2)]));
-    Rst_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] ^ pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] >> pNextWordToRead[(ADDRESS_WIDTH - 2)]));
+    assign Set_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] >> pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] ^ pNextWordToRead[(ADDRESS_WIDTH - 2)]));
+    assign Rst_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] ^ pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] >> pNextWordToRead[(ADDRESS_WIDTH - 2)]));
     always @(Set_Status, Rst_Status, Clear_in)
         // Latch w/ Asynchronous Clear & Preset.
         if ((Rst_Status | Clear_in))
@@ -77,7 +77,7 @@ module aFifo #(
 
     //Going 'Full'.
     //'Full_out' logic for the writing port:
-    PresetFull = (Status & EqualAddresses);
+    assign PresetFull = (Status & EqualAddresses);
     always @(posedge WClk, posedge PresetFull)
         // Flip-Flop w/ Asynchronous Preset.
         if (PresetFull)
@@ -86,7 +86,7 @@ module aFifo #(
             Full_out <= 0;
 
     //'Empty_out' logic for the reading port:
-    PresetEmpty = (~Status & EqualAddresses);
+    assign PresetEmpty = (~Status & EqualAddresses);
     always @(posedge RClk, posedge PresetEmpty)
         // Flip-Flop w/ Asynchronous Preset.
         if (PresetEmpty)

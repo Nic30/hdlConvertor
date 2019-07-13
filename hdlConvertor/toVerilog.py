@@ -440,8 +440,7 @@ class ToVerilog():
         d = a.dst
         w = self.out.write
         if is_top:
-            if not a.is_blocking:
-                w("assign ")
+            w("assign ")
             self.print_expr(d)
             w(" = ")
         else:
@@ -457,7 +456,14 @@ class ToVerilog():
             w(" ")
         if a.event_delay is not None:
             w("@")
-            self.print_expr(a.event_delay)
+            if len(a.event_delay) > 1:
+                w("(")
+            for is_last, e in iter_with_last_flag(a.event_delay):
+                self.print_expr(e)
+                if not is_last:
+                    w(", ")
+            if len(a.event_delay) > 1:
+                w(")")
             w(" ")
 
         self.print_expr(s)
