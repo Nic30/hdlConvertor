@@ -4,6 +4,7 @@ import os
 try:
     # python2
     from StringIO import StringIO
+    from io import open
 except ImportError:
     # python3
     from io import StringIO
