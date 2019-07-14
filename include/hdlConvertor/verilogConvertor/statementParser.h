@@ -6,6 +6,7 @@
 
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
 #include <hdlConvertor/hdlObjects/hdlStmAssign.h>
+#include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 #include <hdlConvertor/verilogConvertor/commentParser.h>
 
 namespace hdlConvertor {
@@ -43,7 +44,7 @@ public:
 			Verilog2001Parser::Seq_blockContext * ctx);
 	hdlObjects::iHdlStatement * visitConditional_statement(
 			Verilog2001Parser::Conditional_statementContext * ctx);
-	hdlObjects::iHdlStatement * visitProcedural_timing_control_statement(
+	hdlObjects::HdlStmProcess * visitProcedural_timing_control_statement(
 			Verilog2001Parser::Procedural_timing_control_statementContext * ctx);
 	// utility function which ensures that the statements are always wrapped in vector
 	std::vector<hdlObjects::iHdlStatement *> * visitStatement_or_null__as_block(
@@ -60,7 +61,7 @@ public:
 			Verilog2001Parser::Continuous_assignContext * ctx);
 	static hdlObjects::iHdlStatement* visitNet_assignment(
 			Verilog2001Parser::Net_assignmentContext * ctx);
-	hdlObjects::iHdlStatement * visitInitial_construct(
+	hdlObjects::HdlStmProcess * visitInitial_construct(
 			Verilog2001Parser::Initial_constructContext * ctx);
 };
 

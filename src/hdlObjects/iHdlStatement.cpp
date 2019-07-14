@@ -1,6 +1,5 @@
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
 #include <tuple>
-#include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 
 using namespace std;
 
@@ -151,10 +150,6 @@ iHdlStatement* iHdlStatement::BREAK() {
 }
 iHdlStatement* iHdlStatement::CONTINUE() {
 	return new iHdlStatement(s_CONTINUE);
-}
-iHdlStatement* iHdlStatement::PROCESS(vector<iHdlExpr*> * sensitivity,
-		vector<iHdlObj*>* body) {
-	return new HdlStmProcess(sensitivity, body);
 }
 
 iHdlStatement* iHdlStatement::FOR(iHdlStatement* _init, iHdlExpr* cond, iHdlStatement* _step,

@@ -343,7 +343,7 @@ iHdlStatement * VerStatementParser::visitConditional_statement(
 	return ifStm;
 }
 
-iHdlStatement * VerStatementParser::visitProcedural_timing_control_statement(
+HdlStmProcess * VerStatementParser::visitProcedural_timing_control_statement(
 		Verilog2001Parser::Procedural_timing_control_statementContext * ctx) {
 	// procedural_timing_control_statement
 	//    : delay_or_event_control statement_or_null
@@ -352,19 +352,19 @@ iHdlStatement * VerStatementParser::visitProcedural_timing_control_statement(
 	auto stms =
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__as_block(
 					ctx->statement_or_null()));
-	iHdlStatement * p;
+	HdlStmProcess * p;
 	if (sens_list.second) {
 		assert(sens_list.first == nullptr && "no event and delay at one");
-		p = iHdlStatement::PROCESS(sens_list.second, stms);
+		p = new HdlStmProcess(sens_list.second, stms);
 	} else if (sens_list.first) {
 		auto wait = iHdlStatement::WAIT( { sens_list.first, });
 		// push_front
 		stms->push_back(wait);
 		std::rotate(stms->rbegin(), stms->rbegin() + 1, stms->rend());
 
-		p = iHdlStatement::PROCESS(nullptr, stms);
+		p = new HdlStmProcess(nullptr, stms);
 	} else {
-		p = iHdlStatement::PROCESS(nullptr, stms);
+		p = new HdlStmProcess(nullptr, stms);
 	}
 	p->__doc__ = commentParser.parse(ctx);
 	return p;
@@ -501,14 +501,14 @@ vector<iHdlStatement*> * VerStatementParser::visitStatement__as_block(
 		return new vector<iHdlStatement*>();
 	}
 }
-iHdlStatement * VerStatementParser::visitInitial_construct(
+HdlStmProcess * VerStatementParser::visitInitial_construct(
 		Verilog2001Parser::Initial_constructContext * ctx) {
 	// initial_construct
 	//    : 'initial' statement
 	//    ;
 	auto _stm = ctx->statement();
 	vector<iHdlStatement*> * body = visitStatement__as_block(_stm);
-	return iHdlStatement::PROCESS(nullptr,
+	return new HdlStmProcess(nullptr,
 			reinterpret_cast<vector<iHdlObj*>*>(body));
 }
 

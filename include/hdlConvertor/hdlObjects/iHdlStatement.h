@@ -79,8 +79,6 @@ public:
 	static iHdlStatement* WHILE(iHdlExpr* cond, std::vector<iHdlObj*>* body);
 	static iHdlStatement* BREAK();
 	static iHdlStatement* CONTINUE();
-	static iHdlStatement* PROCESS(std::vector<iHdlExpr*>* sensitivity,
-			std::vector<iHdlObj*>* body);
 	static iHdlStatement* FOR(iHdlStatement* init, iHdlExpr* cond,
 			iHdlStatement* step, std::vector<iHdlObj*>* body);
 	static iHdlStatement* FOR(iHdlStatement* init, iHdlExpr* cond,
