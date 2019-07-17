@@ -98,3 +98,4 @@ for o in d.objs:
 
 License in top folder applies to this project only.
 In this repository there are also ANTLR4 grammars (.g4 files - BSD 3, GPL-3, GPL, however they are not present in installation).
+
