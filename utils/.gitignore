@@ -1,3 +1,4 @@
 *.pdf
 vhdl.g4
+sv2017.g4
 *.g4_proto
