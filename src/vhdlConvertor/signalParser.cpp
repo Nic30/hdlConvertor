@@ -7,7 +7,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-std::vector<Variable*> * SignalParser::visitSignal_declaration(
+std::vector<HdlVariableDef*> * SignalParser::visitSignal_declaration(
 		vhdlParser::Signal_declarationContext* ctx) {
 	//signal_declaration
 	//	: SIGNAL identifier_list COLON

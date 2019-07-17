@@ -1,5 +1,7 @@
-#include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
+#include <antlr4-runtime.h>
+
+#include <hdlConvertor/conversion_exception.h>
 
 #if defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
 #define UNUSED(x) x __attribute__((unused))

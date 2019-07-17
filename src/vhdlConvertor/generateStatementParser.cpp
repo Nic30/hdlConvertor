@@ -3,7 +3,6 @@
 #include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
@@ -16,6 +15,7 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
@@ -29,7 +29,7 @@ GenerateStatementParser::GenerateStatementParser(bool _hierarchyOnly) :
 		hierarchyOnly(_hierarchyOnly) {
 }
 
-Statement * GenerateStatementParser::visitGenerate_statement(
+iHdlStatement * GenerateStatementParser::visitGenerate_statement(
 		vhdlParser::Generate_statementContext *ctx) {
 	//generate_statement
 	//  : for_generate_statement
@@ -53,7 +53,7 @@ Statement * GenerateStatementParser::visitGenerate_statement(
 
 }
 
-Statement * GenerateStatementParser::visitFor_generate_statement(
+iHdlStatement * GenerateStatementParser::visitFor_generate_statement(
 		vhdlParser::For_generate_statementContext *ctx) {
 	// for_generate_statement:
 	//       label COLON
@@ -66,8 +66,7 @@ Statement * GenerateStatementParser::visitFor_generate_statement(
 			ctx->parameter_specification());
 	auto objs = new std::vector<iHdlObj*>();
 	visitGenerate_statement_body(ctx->generate_statement_body(), *objs);
-	auto fstm = Statement::FOR(*args, objs);
-	delete args;
+	auto fstm = iHdlStatement::FOR_IN(args.first, args.second, objs);
 	auto label = ctx->label();
 	if (label.size()) {
 		auto l = LiteralParser::visitLabel(label[0]);
@@ -78,7 +77,7 @@ Statement * GenerateStatementParser::visitFor_generate_statement(
 	return fstm;
 }
 
-Statement * GenerateStatementParser::visitIf_generate_statement(
+iHdlStatement * GenerateStatementParser::visitIf_generate_statement(
 		vhdlParser::If_generate_statementContext *ctx) {
 	// if_generate_statement:
 	//       label COLON
@@ -96,12 +95,12 @@ Statement * GenerateStatementParser::visitIf_generate_statement(
 	auto s = ctx->generate_statement_body();
 	auto sIt = s.begin();
 
-	Expr * cond = ExprParser::visitCondition(*cIt);
+	iHdlExpr * cond = ExprParser::visitCondition(*cIt);
 	auto ifTrue = new vector<iHdlObj*>();
 	visitGenerate_statement_body(*sIt, *ifTrue);
 	++cIt;
 	++sIt;
-	std::vector<Statement::case_t> elseIfs;
+	std::vector<iHdlStatement::case_t> elseIfs;
 	while (cIt != c.end()) {
 		auto c = ExprParser::visitCondition(*cIt);
 		auto stms = new vector<iHdlObj*>();
@@ -110,14 +109,14 @@ Statement * GenerateStatementParser::visitIf_generate_statement(
 		++cIt;
 		++sIt;
 	}
-	Statement * ifStm = nullptr;
+	iHdlStatement * ifStm = nullptr;
 	std::vector<iHdlObj*> * ifFalse = nullptr;
 	if (sIt != s.end()) {
 		ifFalse = new std::vector<iHdlObj*>();
 		visitGenerate_statement_body(*sIt, *ifFalse);
 	}
 
-	ifStm = Statement::IF(cond, ifTrue, elseIfs, ifFalse);
+	ifStm = iHdlStatement::IF(cond, ifTrue, elseIfs, ifFalse);
 	ifStm->position.update_from_elem(ctx);
 	auto labels = ctx->label();
 	if (labels.size()) {
@@ -126,7 +125,7 @@ Statement * GenerateStatementParser::visitIf_generate_statement(
 	return ifStm;
 }
 
-Statement * GenerateStatementParser::visitCase_generate_statement(
+iHdlStatement * GenerateStatementParser::visitCase_generate_statement(
 		vhdlParser::Case_generate_statementContext *ctx) {
 	// case_generate_statement:
 	//       label COLON
@@ -138,7 +137,7 @@ Statement * GenerateStatementParser::visitCase_generate_statement(
 
 	auto _e = ctx->expression();
 	auto e = ExprParser::visitExpression(_e);
-	vector<Statement::case_t> alternatives;
+	vector<iHdlStatement::case_t> alternatives;
 	vector<iHdlObj*>* _default = nullptr;
 	vector<std::string> labels;
 	if (ctx->label().size()) {
@@ -166,7 +165,7 @@ Statement * GenerateStatementParser::visitCase_generate_statement(
 			}
 		}
 	}
-	auto cstm = Statement::CASE(e, alternatives, _default);
+	auto cstm = iHdlStatement::CASE(e, alternatives, _default);
 	cstm->in_preproc = true;
 	cstm->position.update_from_elem(ctx);
 	return cstm;
@@ -191,7 +190,7 @@ void GenerateStatementParser::visitGenerate_statement_body(
 	}
 }
 
-Entity * GenerateStatementParser::visitComponent_declaration(
+HdlModuleDec * GenerateStatementParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext* ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -199,7 +198,7 @@ Entity * GenerateStatementParser::visitComponent_declaration(
 	//           ( port_clause )?
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
-	Entity * e = new Entity();
+	HdlModuleDec * e = new HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	auto gc = ctx->generic_clause();
 	if (gc)

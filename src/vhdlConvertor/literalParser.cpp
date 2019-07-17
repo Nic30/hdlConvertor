@@ -1,4 +1,5 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
+
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
@@ -12,7 +13,7 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
+iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	// literal:
 	//       numeric_literal
 	//       | enumeration_literal
@@ -33,7 +34,7 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 		return visitString_literal(sl->getText());
 
 	if (ctx->NULL_SYM())
-		return Expr::null();
+		return iHdlExpr::null();
 
 	auto n = ctx->BIT_STRING_LITERAL();
 	assert(n);
@@ -61,30 +62,23 @@ Expr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 		break;
 	}
 
-	int integer = 0;
+	int bits = 0;
 	if ((fdRadix > 0 && s[fdRadix - 1] != 'u')
 			|| (fdRadix > 1 && s[fdRadix - 1] == 'u')) {
-		integer = std::stoi(s);
+		bits = std::stoi(s);
 	}
 
 	s[s.length() - 1] = 0; // cut of "
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
 	const char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
-	int bits;
-	if (integer != 0) {
-		bits = integer;
-	} else {
+	if (bits == 0) {
 		bits = strlen(strVal) * bitRatio;
 	}
 
-	// [TODO]: Not correct implementation for don't care.
-	if (s.find('-') != std::string::npos) {
-		strVal = "0";
-	}
-	return Expr::INT(strVal, bits, radix);
+	return iHdlExpr::INT(strVal, bits, radix);
 }
 
-Expr * LiteralParser::visitNumeric_literal(
+iHdlExpr * LiteralParser::visitNumeric_literal(
 		vhdlParser::Numeric_literalContext* ctx) {
 	// numeric_literal
 	// : abstract_literal
@@ -96,7 +90,7 @@ Expr * LiteralParser::visitNumeric_literal(
 	else
 		return visitPhysical_literal(ctx->physical_literal());
 }
-Expr * LiteralParser::visitPhysical_literal(
+iHdlExpr * LiteralParser::visitPhysical_literal(
 		vhdlParser::Physical_literalContext* ctx) {
 	// physical_literal: ( abstract_literal )? name;
 	auto _n = ctx->name();
@@ -105,11 +99,11 @@ Expr * LiteralParser::visitPhysical_literal(
 	if (_al) {
 		// used for units (e.g. 1 ns)
 		auto al = visitAbstract_literal(_al);
-		return new Expr(al, OperatorType::MUL, n);
+		return new iHdlExpr(al, HdlOperatorType::MUL, n);
 	}
 	return n;
 }
-Expr * LiteralParser::visitAbstract_literal(
+iHdlExpr * LiteralParser::visitAbstract_literal(
 		vhdlParser::Abstract_literalContext* ctx) {
 	// abstract_literal: DECIMAL_LITERAL | BASED_LITERAL;
 	auto dl = ctx->DECIMAL_LITERAL();
@@ -124,10 +118,10 @@ Expr * LiteralParser::visitAbstract_literal(
 			}
 		}
 		if (is_float)
-			return Expr::FLOAT(atof(n.c_str()));
+			return iHdlExpr::FLOAT(atof(n.c_str()));
 		else {
 			auto _n = atoi(n.c_str());
-			return Expr::INT(_n);
+			return iHdlExpr::INT(_n);
 		}
 	}
 	auto bl = ctx->based_literal();
@@ -148,15 +142,14 @@ Expr * LiteralParser::visitAbstract_literal(
 	auto n = bl->BASE();
 	auto _n = n->getText();
 	int base = atoi(_n.c_str());
-	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(),
-			base);
+	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(), base);
 	if (bl->EXPONENT()) {
 		NotImplementedLogger::print(
-				"LiteralParser.visitBased_literal - EXPONENT");
+				"LiteralParser.visitBased_literal - EXPONENT", ctx);
 	}
-	return new Expr(val);
+	return new iHdlExpr(val);
 }
-Expr * LiteralParser::visitEnumeration_literal(
+iHdlExpr * LiteralParser::visitEnumeration_literal(
 		vhdlParser::Enumeration_literalContext* ctx) {
 	// enumeration_literal: identifier | character_literal;
 	auto id = ctx->identifier();
@@ -165,19 +158,19 @@ Expr * LiteralParser::visitEnumeration_literal(
 
 	auto _cl = ctx->CHARACTER_LITERAL()->getText();
 	auto cl = visitCharacter_literal(_cl);
-	dynamic_cast<LiteralVal*>(cl->data)->bits = 8;
+	dynamic_cast<HdlValue*>(cl->data)->bits = 8;
 	return cl;
 }
-Expr * LiteralParser::visitString_literal(const std::string & ctx) {
+iHdlExpr * LiteralParser::visitString_literal(const std::string & ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
-	return Expr::STR(str);
+	return iHdlExpr::STR(str);
 }
-Expr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
-	return Expr::INT(ctx[1] - '0');
+iHdlExpr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
+	return iHdlExpr::INT(ctx.substr(1, 1), BigInteger::CHAR_BASE);
 }
-Expr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
+iHdlExpr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
 	std::string s = ctx->getText();
-	return Expr::ID(s);
+	return iHdlExpr::ID(s);
 }
 bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator: identifier | operator_symbol
@@ -186,13 +179,14 @@ bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext* ctx) {
 std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	// designator: identifier | operator_symbol
 	// operator_symbol: string_literal;;
-	Expr * e;
+	iHdlExpr * e;
 	if (isStrDesignator(ctx)) {
-		e = visitString_literal(ctx->operator_symbol()->STRING_LITERAL()->getText());
+		e = visitString_literal(
+				ctx->operator_symbol()->STRING_LITERAL()->getText());
 	} else {
 		e = visitIdentifier(ctx->identifier());
 	}
-	LiteralVal* s = dynamic_cast<LiteralVal*>(e->data);
+	auto s = dynamic_cast<HdlValue*>(e->data);
 	e->data = NULL;
 	delete e;
 	return s->_str;
@@ -202,8 +196,8 @@ std::string LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
 	// label_colon
 	// : identifier COLON
 	// ;
-	Expr * e = LiteralParser::visitIdentifier(ctx->identifier());
-	std::string s = dynamic_cast<LiteralVal*>(e->data)->_str;
+	iHdlExpr * e = LiteralParser::visitIdentifier(ctx->identifier());
+	std::string s = dynamic_cast<HdlValue*>(e->data)->_str;
 	delete e;
 	return s;
 }

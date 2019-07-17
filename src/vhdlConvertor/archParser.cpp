@@ -4,18 +4,18 @@
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 
-using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
-
 namespace hdlConvertor {
 namespace vhdl {
+
+using vhdlParser = vhdl_antlr::vhdlParser;
+using namespace hdlConvertor::hdlObjects;
 
 ArchParser::ArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
-Arch * ArchParser::visitArchitecture_body(
+HdlModuleDef * ArchParser::visitArchitecture_body(
 		vhdlParser::Architecture_bodyContext * ctx) {
-	auto a = new Arch();
+	auto a = new HdlModuleDef();
 	// architecture_body:
 	//       ARCHITECTURE identifier OF name IS
 	//           architecture_declarative_part

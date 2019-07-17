@@ -4,6 +4,7 @@ import os
 try:
     # python2
     from StringIO import StringIO
+    from io import open
 except ImportError:
     # python3
     from io import StringIO
@@ -53,10 +54,11 @@ class BasicTC(unittest.TestCase):
         ref_file = path.join(BASE_DIR, "tests", _language.value,
                               "expected", fname)
         res_str = buff.getvalue()
-        # with open(ref_file, "w") as f:
-        #     f.write(res_str)
+        # if fname == "aes.v":
+        #     with open(ref_file, "w") as f:
+        #         f.write(res_str)
 
-        with open(ref_file) as f:
+        with open(ref_file, encoding="utf-8") as f:
             ref = f.read()
 
         self.assertEqual(ref, res_str)

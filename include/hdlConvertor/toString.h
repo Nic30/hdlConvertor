@@ -3,15 +3,14 @@
 #include <vector>
 #include <iostream>
 
-#include <hdlConvertor/debugConfig.h>
-#include <hdlConvertor/hdlObjects/context.h>
-#include <hdlConvertor/hdlObjects/operator.h>
+#include <hdlConvertor/hdlObjects/hdlContext.h>
+#include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/hdlObjects/named.h>
-#include <hdlConvertor/hdlObjects/process.h>
-#include <hdlConvertor/hdlObjects/aPackage.h>
-#include <hdlConvertor/hdlObjects/arch.h>
-#include <hdlConvertor/hdlObjects/entity.h>
-#include <hdlConvertor/hdlObjects/statement.h>
+#include <hdlConvertor/hdlObjects/hdlStmProcess.h>
+#include <hdlConvertor/hdlObjects/hdlNamespace.h>
+#include <hdlConvertor/hdlObjects/iHdlStatement.h>
+#include <hdlConvertor/hdlObjects/hdlModuleDec.h>
+#include <hdlConvertor/hdlObjects/hdlModuleDef.h>
 
 
 namespace hdlConvertor {
@@ -57,21 +56,21 @@ class ToString {
 		return std::cout;
 	}
 public:
-	static void dump(const hdlObjects::aPackage * p, int indent);
-	static void dump(const hdlObjects::Arch * p, int indent);
-	static void dump(const hdlObjects::Context * c, int indent);
-	static void dump(const hdlObjects::Entity * e, int indent);
-	static void dump(const hdlObjects::Expr * e, int indent);
+	static void dump(const hdlObjects::HdlNamespace * o, int indent);
+	static void dump(const hdlObjects::HdlModuleDef * o, int indent);
+	static void dump(const hdlObjects::HdlContext * o, int indent);
+	static void dump(const hdlObjects::HdlModuleDec * o, int indent);
+	static void dump(const hdlObjects::iHdlExpr * o, int indent);
 	static void dump(const hdlObjects::iHdlObj * o, int indent);
-	static void dump(const hdlObjects::Named * n, int indent);
-	static void dump(const hdlObjects::Operator * v, int indent);
+	static void dump(const hdlObjects::Named * o, int indent);
+	static void dump(const hdlObjects::HdlCall * o, int indent);
 	static void dump(const hdlObjects::Position * o, int indent);
-	static void dump(const hdlObjects::Process * p, int indent);
-	static void dump(const hdlObjects::Statement * p, int indent);
-	static void dump(const hdlObjects::LiteralVal * p, int indent);
-	static void dump(const hdlObjects::Variable * v, int indent);
-	static void dump(const hdlObjects::WithDoc * wd, int indent);
-	static void dump(const hdlObjects::WithNameAndDoc * wnd, int indent);
+	static void dump(const hdlObjects::HdlStmProcess * o, int indent);
+	static void dump(const hdlObjects::iHdlStatement * o, int indent);
+	static void dump(const hdlObjects::HdlValue * o, int indent);
+	static void dump(const hdlObjects::HdlVariableDef * o, int indent);
+	static void dump(const hdlObjects::WithDoc * o, int indent);
+	static void dump(const hdlObjects::WithNameAndDoc * o, int indent);
 };
 
 }

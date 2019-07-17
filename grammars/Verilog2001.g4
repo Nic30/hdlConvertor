@@ -968,23 +968,20 @@ wait_statement
    : 'wait' '(' expression ')' statement_or_null
    ;
 
+// [TODO] useless  x_if_else_if_statement because every normal if_else
+//        can also be the version with elif
+//
 // 6.6 Conditional statements
 conditional_statement
-   : 'if' '(' expression ')' statement_or_null ('else' statement_or_null)?
-   | if_else_if_statement
-   ;
-
-if_else_if_statement
-   : 'if' '(' expression ')' statement_or_null ('else' 'if' '(' expression ')' statement_or_null)* ('else' statement_or_null)?
+   : 'if' '(' expression ')' statement_or_null
+     ('else' 'if' '(' expression ')' statement_or_null)*
+     ('else' statement_or_null)?
    ;
 
 function_conditional_statement
-   : 'if' '(' expression ')' function_statement_or_null ('else' function_statement_or_null)?
-   | function_if_else_if_statement
-   ;
-
-function_if_else_if_statement
-   : 'if' '(' expression ')' function_statement_or_null ('else' 'if' '(' expression ')' function_statement_or_null)* ('else' function_statement_or_null)?
+   : 'if' '(' expression ')' function_statement_or_null
+     ('else' 'if' '(' expression ')' function_statement_or_null)*
+     ('else' function_statement_or_null)?
    ;
 
 // 6.7 Case statements
@@ -1117,9 +1114,17 @@ path_delay_value
 list_of_path_delay_expressions
    : t_path_delay_expression
    | trise_path_delay_expression ',' tfall_path_delay_expression
-   | trise_path_delay_expression ',' tfall_path_delay_expression ',' tz_path_delay_expression
-   | t01_path_delay_expression ',' t10_path_delay_expression ',' t0z_path_delay_expression ',' tz1_path_delay_expression ',' t1z_path_delay_expression ',' tz0_path_delay_expression
-   | t01_path_delay_expression ',' t10_path_delay_expression ',' t0z_path_delay_expression ',' tz1_path_delay_expression ',' t1z_path_delay_expression ',' tz0_path_delay_expression ',' t0x_path_delay_expression ',' tx1_path_delay_expression ',' t1x_path_delay_expression ',' tx0_path_delay_expression ',' txz_path_delay_expression ',' tzx_path_delay_expression
+   | trise_path_delay_expression ',' tfall_path_delay_expression ','
+     tz_path_delay_expression
+   | t01_path_delay_expression ',' t10_path_delay_expression ','
+     t0z_path_delay_expression ',' tz1_path_delay_expression ','
+     t1z_path_delay_expression ',' tz0_path_delay_expression
+   | t01_path_delay_expression ',' t10_path_delay_expression ','
+     t0z_path_delay_expression ',' tz1_path_delay_expression ','
+     t1z_path_delay_expression ',' tz0_path_delay_expression ','
+     t0x_path_delay_expression ',' tx1_path_delay_expression ','
+     t1x_path_delay_expression ',' tx0_path_delay_expression ','
+     txz_path_delay_expression ',' tzx_path_delay_expression
    ;
 
 t_path_delay_expression

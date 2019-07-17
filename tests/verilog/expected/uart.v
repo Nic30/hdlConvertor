@@ -22,22 +22,22 @@ module uart (
     output rx_empty
 );
     // Internal Variables 
-    reg [7:0] tx_reg;
+    reg [7:0]  tx_reg;
     reg tx_empty;
     reg tx_over_run;
-    reg [3:0] tx_cnt;
+    reg [3:0]  tx_cnt;
     reg tx_out;
-    reg [7:0] rx_reg;
-    reg [7:0] rx_data;
-    reg [3:0] rx_sample_cnt;
-    reg [3:0] rx_cnt;
+    reg [7:0]  rx_reg;
+    reg [7:0]  rx_data;
+    reg [3:0]  rx_sample_cnt;
+    reg [3:0]  rx_cnt;
     reg rx_frame_err;
     reg rx_over_run;
     reg rx_empty;
     reg rx_d1;
     reg rx_d2;
     reg rx_busy;
-    always @ ((posedge rxclk or posedge reset)) begin
+    always @(posedge rxclk, posedge reset)
         if (reset) begin
             rx_reg <= 0;
             rx_data <= 0;
@@ -87,15 +87,17 @@ module uart (
                                     rx_empty <= 0;
                                     rx_frame_err <= 0;
                                     // Check if last rx data was not unloaded,
-                                    rx_over_run <= rx_empty ? 0 : 1;
-                                endend
-                        endend
+                                    rx_over_run <= (rx_empty) ? (0) : (1);
+                                end
+                            end
+                        end
+                end
             end
             if (!rx_enable)
                 rx_busy <= 0;
         end
-    end
-    always @ ((posedge txclk or posedge reset)) begin
+
+    always @(posedge txclk, posedge reset)
         if (reset) begin
             tx_reg <= 0;
             tx_empty <= 1;
@@ -109,7 +111,8 @@ module uart (
                 else begin
                     tx_reg <= tx_data;
                     tx_empty <= 0;
-                endif ((tx_enable && !tx_empty)) begin
+                end
+            if ((tx_enable && !tx_empty)) begin
                 tx_cnt <= (tx_cnt + 1);
                 if ((tx_cnt == 0))
                     tx_out <= 0;
@@ -124,5 +127,5 @@ module uart (
             if (!tx_enable)
                 tx_cnt <= 0;
         end
-    end
+
 endmodule

@@ -1,4 +1,5 @@
 #include <hdlConvertor/convertor.h>
+
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/verilogPreproc/default_macro_defs.h>
 
@@ -142,7 +143,7 @@ void Convertor::parse_sv_str(const string & verilog_str,
 }
 #endif
 
-Context * Convertor::parse(const vector<string> & _fileNames, Language lang,
+HdlContext * Convertor::parse(const vector<string> & _fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 
 	hierarchyOnly = _hierarchyOnly;
@@ -172,7 +173,7 @@ Context * Convertor::parse(const vector<string> & _fileNames, Language lang,
 	}
 	return c;
 }
-Context * Convertor::parse_str(const string & hdl_str, Language lang,
+HdlContext * Convertor::parse_str(const string & hdl_str, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;

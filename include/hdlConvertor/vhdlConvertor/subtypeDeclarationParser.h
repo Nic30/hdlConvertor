@@ -3,19 +3,18 @@
 #include <vector>
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/variable.h>
+
+#include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
 class SubtypeDeclarationParser {
 public:
-	using Variable = hdlObjects::Variable;
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-
-	static Variable * visitSubtype_declaration(
-		vhdlParser::Subtype_declarationContext* ctx);
+	static hdlObjects::HdlVariableDef * visitSubtype_declaration(
+			vhdlParser::Subtype_declarationContext* ctx);
 
 };
 

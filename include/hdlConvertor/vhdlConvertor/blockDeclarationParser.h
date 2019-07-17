@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vector>
+
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
-#include <hdlConvertor/hdlObjects/entity.h>
+#include <hdlConvertor/hdlObjects/hdlModuleDec.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -11,6 +13,7 @@ namespace vhdl {
 class BlockDeclarationParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
+
 	bool hierarchyOnly;
 	BlockDeclarationParser(bool hierarchyOnly);
 
@@ -20,7 +23,7 @@ public:
 	void visitBlock_declarative_item(
 			vhdlParser::Block_declarative_itemContext * ctx,
 			std::vector<hdlObjects::iHdlObj*> & objs);
-	hdlObjects::Entity * visitComponent_declaration(
+	hdlObjects::HdlModuleDec * visitComponent_declaration(
 			vhdlParser::Component_declarationContext* ctx);
 };
 

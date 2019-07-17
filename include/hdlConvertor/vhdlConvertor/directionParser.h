@@ -1,31 +1,33 @@
 #pragma once
 
 #include <assert.h>
+
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/direction.h>
+
+#include <hdlConvertor/hdlObjects/hdlDirection.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-inline hdlObjects::Direction visitSignalMode(
+inline hdlObjects::HdlDirection visitSignalMode(
 		vhdl_antlr::vhdlParser::Signal_modeContext * ctx) {
-	using hdlObjects::Direction;
+	using hdlObjects::HdlDirection;
 
 	if (ctx == nullptr || ctx->IN())
-		return Direction::DIR_IN;
+		return HdlDirection::DIR_IN;
 	else if (ctx->OUT())
-		return Direction::DIR_OUT;
+		return HdlDirection::DIR_OUT;
 	else if (ctx->INOUT())
-		return Direction::DIR_INOUT;
+		return HdlDirection::DIR_INOUT;
 	else if (ctx->BUFFER())
-		return Direction::DIR_BUFFER;
+		return HdlDirection::DIR_BUFFER;
 	else {
 		//assert (sm->LINKAGE());
-		return Direction::DIR_LINKAGE;
+		return HdlDirection::DIR_LINKAGE;
 	}
 }
 
-inline hdlObjects::OperatorType visitDirection(
+inline hdlObjects::HdlOperatorType visitDirection(
 		vhdl_antlr::vhdlParser::DirectionContext * ctx) {
 	// direction: TO | DOWNTO;
 	if (ctx->TO())

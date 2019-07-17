@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/arch.h>
+#include <hdlConvertor/hdlObjects/hdlModuleDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -13,7 +13,7 @@ public:
 
 	bool hierarchyOnly;
 	ArchParser(bool _hierarchyOnly);
-	hdlObjects::Arch * visitArchitecture_body(
+	hdlObjects::HdlModuleDef * visitArchitecture_body(
 			vhdlParser::Architecture_bodyContext * ctx);
 
 };

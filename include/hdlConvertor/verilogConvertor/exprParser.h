@@ -1,13 +1,12 @@
 #pragma once
 
-#include <antlr4-runtime.h>
 #include <vector>
 #include <string>
 #include <memory>
 
 #include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
-#include <hdlConvertor/hdlObjects/operatorType.h>
-#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/verilogConvertor/literalParser.h>
 #include <hdlConvertor/verilogConvertor/attributeParser.h>
 
@@ -16,68 +15,77 @@ namespace verilog {
 
 class VerExprParser {
 public:
-	typedef hdlObjects::Expr Expr;
-	typedef Verilog2001_antlr::Verilog2001Parser Verilog2001Parser;
+	using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
 
-	static Expr * visitExpression(Verilog2001Parser::ExpressionContext * ctx);
-	static Expr * visitNet_lvalue(Verilog2001Parser::Net_lvalueContext * ctx);
-	static Expr * visitNet_concatenation(
+	static hdlObjects::iHdlExpr * visitExpression(
+			Verilog2001Parser::ExpressionContext * ctx);
+	static hdlObjects::iHdlExpr * visitNet_lvalue(
+			Verilog2001Parser::Net_lvalueContext * ctx);
+	static hdlObjects::iHdlExpr * visitNet_concatenation(
 			Verilog2001Parser::Net_concatenationContext * ctx);
-	static Expr * visitHierarchical_net_identifier(
+	static hdlObjects::iHdlExpr * visitHierarchical_net_identifier(
 			Verilog2001Parser::Hierarchical_net_identifierContext * ctx);
-	static Expr * visitDelay_control(
+	static hdlObjects::iHdlExpr * visitDelay_control(
 			Verilog2001Parser::Delay_controlContext * ctx);
-	static Expr * visitDelay_value(Verilog2001Parser::Delay_valueContext * ctx);
-	static Expr * visitSpecparam_identifier(
+	static hdlObjects::iHdlExpr * visitDelay_value(
+			Verilog2001Parser::Delay_valueContext * ctx);
+	static hdlObjects::iHdlExpr * visitSpecparam_identifier(
 			Verilog2001Parser::Specparam_identifierContext * ctx);
-	static Expr * visitConstant_expression(
+	static hdlObjects::iHdlExpr * visitConstant_expression(
 			Verilog2001Parser::Constant_expressionContext * ctx);
-	static Expr * visitDimension(Verilog2001Parser::DimensionContext * ctx);
-	static Expr * visitDimension_constant_expression(
+	static hdlObjects::iHdlExpr * visitDimension(
+			Verilog2001Parser::DimensionContext * ctx);
+	static hdlObjects::iHdlExpr * visitDimension_constant_expression(
 			Verilog2001Parser::Dimension_constant_expressionContext * ctx);
-	static Expr * visitRange_expression(
+	static hdlObjects::iHdlExpr * visitRange_expression(
 			Verilog2001Parser::Range_expressionContext * ctx);
-	static Expr * visitRange_(Verilog2001Parser::Range_Context * ctx);
-	static Expr * visitTerm(Verilog2001Parser::TermContext * ctx);
-	static Expr * visitPrimary(Verilog2001Parser::PrimaryContext * ctx);
-	static Expr * visitConstant_function_call(
+	static hdlObjects::iHdlExpr * visitRange_(
+			Verilog2001Parser::Range_Context * ctx);
+	static hdlObjects::iHdlExpr * visitTerm(
+			Verilog2001Parser::TermContext * ctx);
+	static hdlObjects::iHdlExpr * visitPrimary(
+			Verilog2001Parser::PrimaryContext * ctx);
+	static hdlObjects::iHdlExpr * visitConstant_function_call(
 			Verilog2001Parser::Constant_function_callContext * ctx);
-	static Expr * visitFunction_identifier(
+	static hdlObjects::iHdlExpr * visitFunction_identifier(
 			Verilog2001Parser::Function_identifierContext * ctx);
-	static Expr * visitSystem_function_identifier(
+	static hdlObjects::iHdlExpr * visitSystem_function_identifier(
 			Verilog2001Parser::System_function_identifierContext *ctx);
-	static Expr * visitSystem_function_call(
+	static hdlObjects::iHdlExpr * visitSystem_function_call(
 			Verilog2001Parser::System_function_callContext * ctx);
-	static Expr * visitFunction_call(
+	static hdlObjects::iHdlExpr * visitFunction_call(
 			Verilog2001Parser::Function_callContext * ctx);
-	static Expr * visitHierarchical_function_identifier(
+	static hdlObjects::iHdlExpr * visitHierarchical_function_identifier(
 			Verilog2001Parser::Hierarchical_function_identifierContext * ctx);
-	static Expr * visitMultiple_concatenation(
+	static hdlObjects::iHdlExpr * visitMultiple_concatenation(
 			Verilog2001Parser::Multiple_concatenationContext * ctx);
-	static Expr * visitConcatenation(
+	static hdlObjects::iHdlExpr * visitConcatenation(
 			Verilog2001Parser::ConcatenationContext * ctx);
-	static Expr * visitHierarchical_identifier(
+	static hdlObjects::iHdlExpr * visitHierarchical_identifier(
 			Verilog2001Parser::Hierarchical_identifierContext * ctx);
-	static Expr * visitEscaped_hierarchical_identifier(
+	static hdlObjects::iHdlExpr * visitEscaped_hierarchical_identifier(
 			Verilog2001Parser::Escaped_hierarchical_identifierContext * ctx);
-	static Expr * visitSimple_hierarchical_identifier(
+	static hdlObjects::iHdlExpr * visitSimple_hierarchical_identifier(
 			Verilog2001Parser::Simple_hierarchical_identifierContext * ctx);
-	static Expr * visitSimple_hierarchical_branch(
+	static hdlObjects::iHdlExpr * visitSimple_hierarchical_branch(
 			Verilog2001Parser::Simple_hierarchical_branchContext * ctx);
-	static Expr * visitIdentifier(Verilog2001Parser::IdentifierContext * ctx);
-	static Expr * visitEscaped_hierarchical_branch(
+	static hdlObjects::iHdlExpr * visitSystem_task_identifier(
+			Verilog2001Parser::System_task_identifierContext *ctx);
+	static hdlObjects::iHdlExpr * visitIdentifier(
+			Verilog2001Parser::IdentifierContext * ctx);
+	static hdlObjects::iHdlExpr * visitEscaped_hierarchical_branch(
 			Verilog2001Parser::Escaped_hierarchical_branchContext * ctx);
-	static Expr * visitMintypmax_expression(
+	static hdlObjects::iHdlExpr * visitMintypmax_expression(
 			Verilog2001Parser::Mintypmax_expressionContext * ctx);
-	static std::vector<Expr*> * visitEvent_expression(
+	static std::vector<hdlObjects::iHdlExpr*> * visitEvent_expression(
 			Verilog2001Parser::Event_expressionContext * ctx);
-	static Expr * visitEvent_primary(
+	static hdlObjects::iHdlExpr * visitEvent_primary(
 			Verilog2001Parser::Event_primaryContext * ctx);
-	static Expr * visitVariable_lvalue(
+	static hdlObjects::iHdlExpr * visitVariable_lvalue(
 			Verilog2001Parser::Variable_lvalueContext * ctx);
-	static Expr * visitVariable_concatenation(
+	static hdlObjects::iHdlExpr * visitVariable_concatenation(
 			Verilog2001Parser::Variable_concatenationContext* ctx);
-	static Expr * visitArrayed_identifier(
+	static hdlObjects::iHdlExpr * visitArrayed_identifier(
 			Verilog2001Parser::Arrayed_identifierContext * ctx);
 };
 

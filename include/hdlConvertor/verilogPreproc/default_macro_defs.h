@@ -8,7 +8,7 @@ class MacroDef__LINE__: public aMacroDef {
 public:
 	MacroDef__LINE__();
 	virtual std::string replace(std::vector<std::string> args,
-			bool args_specified, vPreprocessor * pp,
+			bool args_specified, VerilogPreproc * pp,
 			antlr4::ParserRuleContext * ctx) override;
 };
 
@@ -16,7 +16,7 @@ class MacroDef__FILE__: public aMacroDef {
 public:
 	MacroDef__FILE__();
 	virtual std::string replace(std::vector<std::string> args,
-			bool args_specified, vPreprocessor * pp,
+			bool args_specified, VerilogPreproc * pp,
 			antlr4::ParserRuleContext * ctx) override;
 };
 

@@ -1,13 +1,13 @@
 #include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/variableParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -15,7 +15,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-Process * ProcessParser::visitProcess_statement(
+HdlStmProcess * ProcessParser::visitProcess_statement(
 		vhdlParser::Process_statementContext * ctx) {
 	// process_statement:
 	//       ( label COLON )?
@@ -25,7 +25,7 @@ Process * ProcessParser::visitProcess_statement(
 	//               process_statement_part
 	//           END ( POSTPONED )? PROCESS ( label )? SEMI
 	// ;
-	Process * p = new Process();
+	auto p = new HdlStmProcess();
 	p->position.update_from_elem(ctx);
 	if (ctx->label(0)) {
 		auto l = LiteralParser::visitLabel(ctx->label(0));
@@ -50,10 +50,10 @@ Process * ProcessParser::visitProcess_statement(
 }
 void ProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
-		std::vector<Expr*> & sensitivity) {
+		std::vector<iHdlExpr*> & sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
 	if (ctx->ALL()) {
-		sensitivity.push_back(Expr::all());
+		sensitivity.push_back(iHdlExpr::all());
 	} else {
 		visitSensitivity_list(ctx->sensitivity_list(), sensitivity);
 	}
@@ -61,7 +61,7 @@ void ProcessParser::visitProcess_sensitivity_list(
 
 void ProcessParser::visitSensitivity_list(
 		vhdlParser::Sensitivity_listContext *ctx,
-		std::vector<Expr*> & sensitivity) {
+		std::vector<iHdlExpr*> & sensitivity) {
 	// sensitivity_list: name ( COMMA name )*;
 	for (auto n : ctx->name()) {
 		sensitivity.push_back(ReferenceParser::visitName(n));
@@ -69,7 +69,7 @@ void ProcessParser::visitSensitivity_list(
 }
 
 void ProcessParser::visitProcess_declarative_part(
-		vhdlParser::Process_declarative_partContext *ctx, Process * p) {
+		vhdlParser::Process_declarative_partContext *ctx, HdlStmProcess * p) {
 	//process_declarative_part
 	//  : ( process_declarative_item )*
 	//  ;
@@ -79,7 +79,7 @@ void ProcessParser::visitProcess_declarative_part(
 }
 
 void ProcessParser::visitProcess_declarative_item(
-		vhdlParser::Process_declarative_itemContext *ctx, Process * p) {
+		vhdlParser::Process_declarative_itemContext *ctx, HdlStmProcess * p) {
 	//process_declarative_item
 	//  : subprogram_declaration
 	//  | subprogram_body
@@ -109,7 +109,7 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print("ProcessParser.visitType_declaration");
+		NotImplementedLogger::print("ProcessParser.visitType_declaration", td);
 		return;
 	}
 	auto st = ctx->subtype_declaration();
@@ -138,51 +138,51 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print("ProcessParser.visitFile_declaration");
+		NotImplementedLogger::print("ProcessParser.visitFile_declaration", fd);
 		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ProcessParser.visitAlias_declaration");
+		NotImplementedLogger::print("ProcessParser.visitAlias_declaration", aliasd);
 		return;
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration");
+		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration", atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitAttribute_specification");
+				"ProcessParser.visitAttribute_specification", as);
 		return;
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("ProcessParser.visitUse_clause");
+		NotImplementedLogger::print("ProcessParser.visitUse_clause", uc);
 		return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitGroup_template_declaration");
+				"ProcessParser.visitGroup_template_declaration", gtd);
 		return;
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
-		NotImplementedLogger::print("ProcessParser.visitGroup_declaration");
+		NotImplementedLogger::print("ProcessParser.visitGroup_declaration", gd);
 		return;
 	}
-	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item");
+	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item", ctx);
 	return;
 }
 
-std::vector<Statement *> * ProcessParser::visitProcess_statement_part(
+std::vector<iHdlStatement *> * ProcessParser::visitProcess_statement_part(
 		vhdlParser::Process_statement_partContext *ctx) {
 	//process_statement_part
 	//  : ( sequential_statement )*
 	//  ;
-	std::vector<Statement *> * statements = new std::vector<Statement*>();
+	std::vector<iHdlStatement *> * statements = new std::vector<iHdlStatement*>();
 	for (auto s : ctx->sequential_statement()) {
 		statements->push_back(StatementParser::visitSequential_statement(s));
 	}

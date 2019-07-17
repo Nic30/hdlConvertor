@@ -1,5 +1,5 @@
 #include <hdlConvertor/verilogPreproc/default_macro_defs.h>
-#include <hdlConvertor/verilogPreproc/vPreprocessor.h>
+#include <hdlConvertor/verilogPreproc/verilogPreproc.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
@@ -14,7 +14,7 @@ MacroDef__LINE__::MacroDef__LINE__() :
 // [TODO] MacroDef__LINE__, MacroDef__FILE__ are showing the position in current file
 //        See chapter 22.13 __FILE__ and __LINE__ of system verilog 2012 spec.
 std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
-		bool args_specified, vPreprocessor * unused(pp),
+		bool args_specified, VerilogPreproc * unused(pp),
 		antlr4::ParserRuleContext * ctx) {
 	if (args_specified) {
 		throw_doest_not_support_args();
@@ -28,7 +28,7 @@ MacroDef__FILE__::MacroDef__FILE__() :
 }
 
 std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
-		bool args_specified, vPreprocessor * pp,
+		bool args_specified, VerilogPreproc * pp,
 		antlr4::ParserRuleContext * unused(ctx)) {
 	if (args_specified) {
 		throw_doest_not_support_args();

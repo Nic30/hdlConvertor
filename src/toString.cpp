@@ -5,7 +5,7 @@ namespace hdlConvertor {
 
 using namespace hdlObjects;
 
-void ToString::dump(const aPackage * p, int indent) {
+void ToString::dump(const HdlNamespace * p, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(p), indent);
 	indent += INDENT_INCR;
 	dumpArrP("objs", indent, p->objs) << ",\n";
@@ -13,27 +13,27 @@ void ToString::dump(const aPackage * p, int indent) {
 	mkIndent(indent) << "}";
 }
 
-void ToString::dump(const hdlObjects::Context * c, int indent) {
+void ToString::dump(const hdlObjects::HdlContext * c, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
 	dumpArrP("objs", indent, c->objs) << ",\n";
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
 }
-void ToString::dump(const Entity * e, int indent) {
+void ToString::dump(const HdlModuleDec * e, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(e), indent);
 	indent += INDENT_INCR;
 	dumpArrP("generics", indent, e->generics) << ",\n";
 	dumpArrP("ports", indent, e->ports) << "\n";
 	mkIndent(indent - INDENT_INCR) << "}";
 }
-void ToString::dump(const Expr * e, int indent) {
-	Operator * op = dynamic_cast<Operator*>(e->data);
+void ToString::dump(const iHdlExpr * e, int indent) {
+	HdlCall * op = dynamic_cast<HdlCall*>(e->data);
 	std::cout << "{\n";
 	if (op) {
 		dumpItemP("binOperator", indent + INDENT_INCR, op) << "\n";
 	} else {
-		LiteralVal * literal = dynamic_cast<LiteralVal*>(e->data);
+		auto literal = dynamic_cast<HdlValue*>(e->data);
 		if (literal) {
 			dumpItemP("literal", indent + INDENT_INCR, literal) << "\n";
 		} else
@@ -42,25 +42,25 @@ void ToString::dump(const Expr * e, int indent) {
 	mkIndent(indent) << "}";
 }
 void ToString::dump(const hdlObjects::iHdlObj * o, int indent) {
-	auto c = dynamic_cast<const Context*>(o);
+	auto c = dynamic_cast<const HdlContext*>(o);
 	if (c)
 		dump(c, indent);
-	auto md = dynamic_cast<const Entity*>(o);
+	auto md = dynamic_cast<const HdlModuleDec*>(o);
 	if (md)
 		dump(md, indent);
-	auto ex = dynamic_cast<const Expr*>(o);
+	auto ex = dynamic_cast<const iHdlExpr*>(o);
 	if (ex)
 		dump(ex, indent);
-	auto v = dynamic_cast<const Variable*>(o);
+	auto v = dynamic_cast<const HdlVariableDef*>(o);
 	if (v)
 		dump(v, indent);
-	auto s = dynamic_cast<const Statement*>(o);
+	auto s = dynamic_cast<const iHdlStatement*>(o);
 	if (s)
 		dump(s, indent);
 
 	assert(false);
 }
-void ToString::dump(const hdlObjects::Statement * o, int indent) {
+void ToString::dump(const hdlObjects::iHdlStatement * o, int indent) {
 	std::cout
 			<< "\"[TODO] void ToString::dump(const hdlObjects::Statement * o, int indent)\""
 			<< std::endl;
@@ -83,27 +83,27 @@ void ToString::dump(const WithNameAndDoc * wnd, int indent) {
 	mkIndent(indent + INDENT_INCR) << "\"__doc__\":\"" << wnd->__doc__.c_str()
 			<< "\",\n";
 }
-void ToString::dump(const LiteralVal * s, int indent) {
+void ToString::dump(const HdlValue * s, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
-	dumpVal("type", indent, LiteralValType_toString(s->type)) << ",\n";
+	dumpVal("type", indent, HdlValueType_toString(s->type)) << ",\n";
 	const char * _v;
 
 	switch (s->type) {
-	case LiteralValType::symb_ID:
-	case LiteralValType::symb_STRING:
-		dumpVal("value", indent, s->value._str) << "\n";
+	case HdlValueType::symb_ID:
+	case HdlValueType::symb_STRING:
+		dumpVal("value", indent, s->_str) << "\n";
 		break;
-	case LiteralValType::symb_FLOAT:
-		dumpVal("value", indent, s->value._float) << "\n";
+	case HdlValueType::symb_FLOAT:
+		dumpVal("value", indent, s->_float) << "\n";
 		break;
-	case LiteralValType::symb_ARRAY:
+	case HdlValueType::symb_ARRAY:
 		assert(0 && "not implemented");
 		break;
-	case LiteralValType::symb_INT:
+	case HdlValueType::symb_INT:
 		if (s->bits > 0)
 			dumpVal("bits", indent, s->bits) << ",\n";
-		auto & i = s->value._int;
+		auto & i = s->_int;
 		if (i.is_bitstring()) {
 			dumpVal("base", indent, i.bitstring_base) << ",\n";
 			_v = i.bitstring.c_str();
@@ -112,21 +112,21 @@ void ToString::dump(const LiteralVal * s, int indent) {
 		}
 		dumpVal("value", indent, _v) << "\n";
 		break;
-	case LiteralValType::symb_ALL:
-	case LiteralValType::symb_OPEN:
+	case HdlValueType::symb_ALL:
+	case HdlValueType::symb_OPEN:
 	default:
 		break;
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
 }
 
-void ToString::dump(const Variable * v, int indent) {
+void ToString::dump(const HdlVariableDef * v, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(v), indent);
 	indent += INDENT_INCR;
 	dumpKey("type", indent);
 	dump(v->type, indent);
 	std::cout << ",\n";
-	dumpVal("direction", indent, Direction_toString(v->direction)) << ",\n";
+	dumpVal("direction", indent, HdlDirection_toString(v->direction)) << ",\n";
 	if (v->value) {
 		dumpKey("value", indent) << "\n";
 		dump(v->value, indent);
@@ -135,15 +135,15 @@ void ToString::dump(const Variable * v, int indent) {
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
 }
-void ToString::dump(const Operator * o, int indent) {
+void ToString::dump(const HdlCall * o, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
-	dumpVal("operator", indent, OperatorType_toString(o->op)) << ",\n";
+	dumpVal("operator", indent, HdlOperatorType_toString(o->op)) << ",\n";
 	dumpArrP("operands", indent, o->operands) << "\n";
 	mkIndent(indent - INDENT_INCR) << "}";
 }
 
-void ToString::dump(const Process * p, int indent) {
+void ToString::dump(const HdlStmProcess * p, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
 	dumpArrP("objs", indent, p->objs()) << ",\n";

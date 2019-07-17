@@ -35,7 +35,7 @@ matrix:
 
     - name: "Python 3.7 gcc-8"
       python: 3.7           
-      env: CC=gcc-8 CXX=g++-8
+      env: CC=gcc-8 CXX=g++-8 BUILD_ARGS="--build-type Debug"
       addons:
         apt:
           sources:
@@ -72,6 +72,7 @@ install:
 - sudo apt update
 - sudo apt install libantlr4-runtime-dev antlr4
 - pip install -r requirements.txt
+- python setup.py build $BUILD_ARGS
 - python setup.py install
 
 deploy:

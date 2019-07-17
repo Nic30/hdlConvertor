@@ -1,20 +1,22 @@
 #pragma once
 
 #include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Parser.h>
-#include <hdlConvertor/hdlObjects/expr.h>
+#include <hdlConvertor/hdlObjects/iHdlExpr.h>
 
 namespace hdlConvertor {
 namespace verilog {
 
 class Utils {
 public:
-	using Expr = hdlObjects::Expr;
-	static Expr* mkStringT();
+	static hdlObjects::iHdlExpr* mkStringT();
 
+	static hdlObjects::iHdlExpr* mkIntT();
 	// wire type is represented by wire id or call wire(range, signed)
-	static Expr* mkWireT();
-	static Expr* mkWireT(Expr * range, bool signed_);
-	static Expr* mkWireT(Verilog2001_antlr::Verilog2001Parser::Range_Context * range,
+	static hdlObjects::iHdlExpr* mkWireT();
+	static hdlObjects::iHdlExpr* mkWireT(hdlObjects::iHdlExpr * range,
+			bool signed_);
+	static hdlObjects::iHdlExpr* mkWireT(
+			Verilog2001_antlr::Verilog2001Parser::Range_Context * range,
 			bool signed_);
 
 	static bool is_signed(antlr4::ParserRuleContext * ctx);

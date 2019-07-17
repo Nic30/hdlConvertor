@@ -1,7 +1,7 @@
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
@@ -12,6 +12,7 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
@@ -21,11 +22,12 @@ using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
 PackageHeaderParser::PackageHeaderParser(bool _hierarchyOnly) {
-	ph = new PackageHeader();
+	ph = new HdlNamespace();
+	ph->defs_only = true;
 	hierarchyOnly = _hierarchyOnly;
 }
 
-PackageHeader * PackageHeaderParser::visitPackage_declaration(
+HdlNamespace * PackageHeaderParser::visitPackage_declaration(
 		vhdlParser::Package_declarationContext* ctx) {
 	// package_declaration:
 	//       PACKAGE identifier IS
@@ -35,9 +37,9 @@ PackageHeader * PackageHeaderParser::visitPackage_declaration(
 	// ;
 
 	NotImplementedLogger::print(
-			"PackageHeaderParser.visitPackage_declaration - package_header");
+			"PackageHeaderParser.visitPackage_declaration - package_header", ctx);
 
-	Expr * name = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr * name = LiteralParser::visitIdentifier(ctx->identifier());
 	ph->name = name->extractStr();
 	delete name;
 	visitPackage_declarative_part(ctx->package_declarative_part());
@@ -84,7 +86,7 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	auto sid = ctx->subprogram_instantiation_declaration();
 	if (sid) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitPackage_declarative_item - subprogram_instantiation_declaration");
+				"PackageHeaderParser.visitPackage_declarative_item - subprogram_instantiation_declaration", sid);
 		return;
 	}
 	auto pd = ctx->package_declaration();
@@ -97,13 +99,13 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	auto pid = ctx->package_instantiation_declaration();
 	if (pid) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitPackage_declarative_item - package_instantiation_declaration");
+				"PackageHeaderParser.visitPackage_declarative_item - package_instantiation_declaration", pid);
 		return;
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitType_declaration");
+				"PackageHeaderParser.visitType_declaration", td);
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
@@ -141,12 +143,12 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	auto fd = ctx->file_declaration();
 	if (fd) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitFile_declaration");
+				"PackageHeaderParser.visitFile_declaration", fd);
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitAlias_declaration");
+				"PackageHeaderParser.visitAlias_declaration", aliasd);
 	}
 	auto compd = ctx->component_declaration();
 	if (compd) {
@@ -155,34 +157,34 @@ void PackageHeaderParser::visitPackage_declarative_item(
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitAttribute_declaration");
+				"PackageHeaderParser.visitAttribute_declaration", atrd);
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitAttribute_specification");
+				"PackageHeaderParser.visitAttribute_specification", as);
 	}
 	auto discs = ctx->disconnection_specification();
 	if (discs) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitDisconnection_specification");
+				"PackageHeaderParser.visitDisconnection_specification", discs);
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("PackageHeaderParser.visitUse_clause");
+		NotImplementedLogger::print("PackageHeaderParser.visitUse_clause", uc);
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitGroup_template_declaration");
+				"PackageHeaderParser.visitGroup_template_declaration", gtd);
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
 		NotImplementedLogger::print(
-				"PackageHeaderParser.visitGroup_declaration");
+				"PackageHeaderParser.visitGroup_declaration", gd);
 	}
 }
-Entity * PackageHeaderParser::visitComponent_declaration(
+HdlModuleDec * PackageHeaderParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext* ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -191,7 +193,7 @@ Entity * PackageHeaderParser::visitComponent_declaration(
 	//       END COMPONENT ( simple_name )? SEMI
 	// ;
 
-	Entity * e = new Entity();
+	HdlModuleDec * e = new HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

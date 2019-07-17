@@ -1,10 +1,11 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag,\
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, \
     UnIndent, is_str
 from hdlConvertor.hdlAst import HdlDirection, HdlBuildinFn, HdlName, HdlIntValue, \
-    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlProcessStm, HdlIfStm,\
-    HdlAssignStm, HdlCaseStm, HdlWaitStm, HdlReturnStm, HdlForStm, \
-    HdlVariableDef, HdlModuleDec, HdlFunction, HdlComponentInst, HdlModuleDef, \
+    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf, \
+    HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
+    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, HdlModuleDef, \
     HdlNamespace, HdlImport
+
 
 class ToVhdl():
     """
@@ -169,6 +170,9 @@ class ToVhdl():
             bits = expr.bits
             if bits is None:
                 if expr.base is not None:
+                    if expr.base == 256:
+                        w("'%s'" % str(v))
+                        return
                     bases = {
                         2: "B",
                         8: "O",
@@ -177,12 +181,13 @@ class ToVhdl():
                     b = bases[expr.base]
                     w('%s"%"' % (b, v))
                 w(str(v))
+                return
+
             elif bits % 8 == 0:
                 f = 'X"{0:0%dX}"' % (bits / 8)
-                w(f.format(v))
             else:
                 f = '"{0:0%db}"' % (bits)
-                w(f.format(v))
+            w(f.format(v))
 
             return
         elif isinstance(expr, HdlName):
@@ -288,14 +293,18 @@ class ToVhdl():
 
     def print_type(self, t):
         """
+        :type t: iHdlExpr
         """
         self.print_expr(t)
 
     def print_variable(self, var, end=";\n"):
+        """
+        :type var: HdlVariableDef
+        """
         self.print_doc(var)
         name = var.name
         t = var.type
-        latch = var.latched
+        latch = var.is_latched
         c = var.is_const
         w = self.out.write
         if c:
@@ -314,6 +323,9 @@ class ToVhdl():
         w(end)
 
     def print_process(self, proc):
+        """
+        :type proc: HdlStmProcess
+        """
         sens = proc.sensitivity
         body = proc.body
         w = self.out.write
@@ -339,6 +351,7 @@ class ToVhdl():
 
     def print_block(self, stms):
         """
+        :type stms: List[iHdlStatement]
         :return: True if statements are wrapped in begin-end block
         """
         w = self.out.write
@@ -361,6 +374,9 @@ class ToVhdl():
         return False
 
     def print_if(self, stm):
+        """
+        :type stm: HdlStmIf
+        """
         w = self.out.write
         c = stm.cond
         ifTrue = stm.if_true
@@ -389,15 +405,26 @@ class ToVhdl():
         w("END IF;\n")
 
     def print_assignment(self, a):
+        """
+        :type a: HdlStmAssign
+        """
         s = a.src
         d = a.dst
         w = self.out.write
+        if a.time_delay is not None:
+            raise NotImplementedError()
+        if a.event_delay is not None:
+            raise NotImplementedError()
+
         self.print_expr(d)
         w(" <= ")
         self.print_expr(s)
         w(";\n")
 
     def print_case(self, cstm):
+        """
+        :type cstm: HdlStmCase
+        """
         w = self.out.write
         w("CASE ")
         self.print_expr(cstm.switch_on)
@@ -424,26 +451,26 @@ class ToVhdl():
         :type o: iHdlStatement
         """
         self.print_doc(o)
-        if isinstance(o, HdlProcessStm):
+        if isinstance(o, HdlStmProcess):
             self.print_process(o)
-        elif isinstance(o, HdlIfStm):
+        elif isinstance(o, HdlStmIf):
             self.print_if(o)
-        elif isinstance(o, HdlAssignStm):
+        elif isinstance(o, HdlStmAssign):
             self.print_assignment(o)
-        elif isinstance(o, HdlCaseStm):
+        elif isinstance(o, HdlStmCase):
             self.print_case(o)
-        elif isinstance(o, HdlWaitStm):
+        elif isinstance(o, HdlStmWait):
             self.print_wait(o)
-        elif isinstance(o, HdlReturnStm):
+        elif isinstance(o, HdlStmReturn):
             self.print_return(o)
-        elif isinstance(o, HdlForStm):
+        elif isinstance(o, HdlStmFor):
             self.print_for(o)
         else:
             raise NotImplementedError(o)
 
     def print_return(self, o):
         """
-        :type o: HdlReturnStm
+        :type o: HdlStmReturn
         """
         w = self.out.write
         w("RETURN")
@@ -454,7 +481,7 @@ class ToVhdl():
 
     def print_for(self, o):
         """
-        :type o: HdlForStm
+        :type o: HdlStmFor
         """
         w = self.out.write
         w("FOR ")
@@ -469,7 +496,7 @@ class ToVhdl():
 
     def print_wait(self, o):
         """
-        :type o: HdlWaitStm
+        :type o: HdlStmWait
         """
         w = self.out.write
         w("WAIT")
@@ -532,7 +559,7 @@ class ToVhdl():
                     assert in_def_section, o
                     self.print_component(o)
                     continue
-                elif isinstance(o, HdlFunction):
+                elif isinstance(o, HdlFunctionDef):
                     assert in_def_section, o
                     self.print_function(o)
                     continue
@@ -567,7 +594,7 @@ class ToVhdl():
 
     def print_function(self, o):
         """
-        :type o: HdlFunction
+        :type o: HdlFunctionDef
         """
         w = self.out.write
         self.print_doc(o)
@@ -617,13 +644,14 @@ class ToVhdl():
             if not last:
                 w(".")
         w(";\n")
+
     def print_namespace(self, o):
         """
         :type o: HdlNamespace
         """
         self.print_doc(o)
         w = self.out.write
-        #if o.declaration_only:
+        # if o.declaration_only:
         w("PACKAGE ")
         w(o.name)
         w(" IS\n")
@@ -632,7 +660,6 @@ class ToVhdl():
                 self.print_main_obj(_o)
 
         w("END PACKAGE;\n")
-
 
     def print_main_obj(self, o):
         w = self.out.write
@@ -646,7 +673,7 @@ class ToVhdl():
             self.print_namespace(o)
         elif isinstance(o, HdlVariableDef):
             self.print_variable(o)
-        elif isinstance(o, HdlFunction):
+        elif isinstance(o, HdlFunctionDef):
             self.print_function(o)
         else:
             raise NotImplementedError(o)
@@ -660,6 +687,7 @@ class ToVhdl():
                 self.print_hdl_import(o)
             else:
                 self.print_main_obj(o)
+
 
 if __name__ == "__main__":
     import os
