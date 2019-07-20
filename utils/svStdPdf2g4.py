@@ -1,278 +1,382 @@
 #!/usr/bin/env python
 
-import pdfminer3
-from pdfminer3.pdfinterp import PDFResourceManager
-from pdfminer3.pdfinterp import PDFPageInterpreter
-from pdfminer3.layout import LAParams
-from pdfminer3.converter import PDFPageAggregator
-import re
-from typing import List, Set
+from typing import List, Set, Union
+
 from antlr4grammar import ANTLR4Rule, ANTLR4Symbol, ANTLR4Sequence, \
     ANTLR4VisualNewline, ANTLR4Selection, ANTLR4VisualIndent, ANTLR4Option, \
     ANTLR4Iteration, generate_renamer, rm_newline_from_simple_rules, \
-    get_used_non_terminals, get_defined_non_terminals, BaseGrammarConvertor
-from pdf_parsing import createPDFDoc
-from pdfminer3.pdfpage import PDFPage
-import sys
-from itertools import islice
+    get_used_non_terminals, get_defined_non_terminals, BaseGrammarConvertor, \
+    _Antlr4GrammarElem
+from proto_ast_loader import load_ast_file
+from proto_grammar.proto_grammarParser import proto_grammarParser
+from antlr4.tree.Tree import TerminalNode
+from pprint import pprint
+from svStd_pdf_parsing import parse_sv_pdf
 
-PAGE_OFFSET = 0
-
-
-def parse_sv_pdf():
-    file_name = 'sv2017.pdf'
-    document = createPDFDoc(file_name)
-    pages = PDFPage.create_pages(document)
-    out_file_name = "sv2017.g4_proto"
-    with open(out_file_name, "w") as f:
-        # f = sys.stdout
-        vp = SvSpecParser(f)
-        for page in islice(pages, PAGE_OFFSET + 1136, PAGE_OFFSET + 1181 + 2):
-        # for page in islice(pages, PAGE_OFFSET + 23, PAGE_OFFSET + 25):
-            # page = next(islice(pages, PAGE_OFFSET + 6, None))
-            vp.parse_page(page)
-
-    # post processing
-    RE_GRAM_OP = re.compile("((?<!<b>)([\+#\*]*)[\{\}\[\]|\|]+([\+#\*]*)(?!</b>))")
-    FIX_COMA_AS_TERMINAL = [
-        "strength0 , strength1",
-        "strength1 , strength0",
-        "strength0 , <b>highz1</b>",
-        "strength1 , <b>highz0</b>",
-        "<b>highz0</b> , strength",
-        "<b>highz1</b> , strength",
-    ]
-    with open(out_file_name) as f:
-        lines = f.readlines()
-
-    with open(out_file_name, "w") as f:
-        for line in lines:
-            line = re.sub("::=", " ::= ", line)
-            if line == ('    | <b>PATHPULSE$</b>'
-                    'specify_input_terminal_descriptor<b>$'
-                    '</b>specify_output_terminal_descriptor \n'):
-                line = re.sub("</b>", "</b> ", line)
-            else:
-                for to_fix in FIX_COMA_AS_TERMINAL:
-                    if to_fix in line:
-                        line = line.replace(",", "<b>,</b>")
-                        break
-
-            line = RE_GRAM_OP.sub(" \g<1> ", line)
-            line = line.replace("–", "-")
-            f.write(line)
-
-class SvSpecParser():
-    FONT_TRANSLATION = {  # "HEFBHG+TimesNewRomanPS-ItalicMT": "it",
-                        # "HEFBAE+TimesNewRomanPS-BoldMT": "b",
-                        'BVXWSQ+CourierNew,Bold': 'b',
-                        'BHDFJL+TimesNewRomanPSMT': None,
-                        None:None}
-    # FOOTER_STR = "Copyright © 2018 IEEE. All rights reserved."
-    FOOTER_STR = "Authorized licensed use limited to:"
-    # HEADER_STR = "IEEE Standard for SystemVerilog—Unified Hardware Design, Specification, and Verification Language"
-    HEADER_STR = "IEEE Std 1800-2017"
-
-    def __init__(self, ofile):
-        rsrcmgr = PDFResourceManager()
-        laparams = LAParams()
-        self.device = PDFPageAggregator(rsrcmgr, laparams=laparams)
-        self.interpreter = PDFPageInterpreter(rsrcmgr, self.device)
-        self.last_font = None
-        self.in_rule = False
-        self.font_print_pending = False
-        self.header_footer_skipping = False
-        self.ofile = ofile
-
-    def parse_page(self, page):
-        self.interpreter.process_page(page)
-        layout = self.device.get_result()
-        self.parse_obj(layout._objs)
-
-    def parse_obj(self, objs):
-        font_translation = self.FONT_TRANSLATION
-
-        f = None
-        for obj in objs:
-            if isinstance(obj, pdfminer3.layout.LTTextBox):
-                for o in obj._objs:
-                    if isinstance(o, pdfminer3.layout.LTTextLine):
-                        if self.header_footer_skipping:
-                            text = o.get_text()
-                            if text.startswith(self.HEADER_STR):
-                                self.header_footer_skipping = False
-                            continue
-
-                        text = o.get_text()
-                        # print(text)
-                        if text.startswith(self.FOOTER_STR):
-                            self.header_footer_skipping = True
-                            continue
-
-                        is_rule_header = "::=" in text
-                        if is_rule_header or self.in_rule:
-                            # if text.startswith("module_ansi_header"):
-                            #     print("----------")
-                            self.in_rule = True
-                            if not is_rule_header:
-                                if text and o.x0 < 95:
-                                    self.in_rule = False
-                                    continue
-                                self.ofile.write("    ")
-
-                            if text.strip():
-                                for c in  o._objs:
-                                    is_char = isinstance(c, pdfminer3.layout.LTChar)
-                                    if (isinstance(c, pdfminer3.layout.LTChar)
-                                        and c.matrix[-1] - o._objs[0].matrix[-1] > 3.5):
-                                        # sys.stderr.write(c.get_text())
-                                        # skipping hrefs, which are upper indexes
-                                        continue
-                                    if is_char and self.last_font != c.fontname:
-                                        # this character has different font need to propagate it to output
-                                        self.font_print_pending = True
-
-                                    if c.get_text().isspace() and font_translation[self.last_font] is not None:
-                                        # print the font enclosing string directly after this word (ignore whitespaces behind)
-                                        self.font_print_pending = True
-                                        self.ofile.write("</%s>" % f)
-                                        self.last_font = None
-
-                                    if self.font_print_pending and not (c.get_text().isspace()):
-                                        self.font_print_pending = False
-                                        f = font_translation[self.last_font]
-                                        if f:
-                                            self.ofile.write("</%s>" % f)
-
-                                        f = font_translation[c.fontname]
-                                        if f:
-                                            self.ofile.write("<%s>" % f)
-
-                                        self.last_font = c.fontname
-                                    # if text.startswith("list_of_port_declarations") and c.get_text() == "s":
-                                    #    print("----------")
-
-                                    self.ofile.write(c.get_text())
-            # if it's a container, recurse
-            elif isinstance(obj, pdfminer3.layout.LTFigure):
-                self.parse_obj(obj._objs)
-            else:
-                pass
+Proto_ruleContext = proto_grammarParser.Proto_ruleContext
+ElementContext = proto_grammarParser.ElementContext
+Element_blockContext = proto_grammarParser.Element_blockContext
+Element_selectionContext = proto_grammarParser.Element_selectionContext
+Element_sequenceContext = proto_grammarParser.Element_sequenceContext
+Element_iterationContext = proto_grammarParser.Element_iterationContext
+Element_optionalContext = proto_grammarParser.Element_optionalContext
+Element_textContext = proto_grammarParser.Element_textContext
 
 
 class SvRule2Antlr4Rule(BaseGrammarConvertor):
 
-    SPEC_SYMB = {";" : "SEMI",
-                 "(" : "LPAREN",
-                 ")" : "RPAREN",
-                 "'" : "APOSTROPHE",
-                 '"' : "DBLQUOTE",
-                 "<<" : "SHIFT_LEFT",
-                 ">>" : "SHIFT_RIGHT",
-                 # "@": "AT",
-                 # "#": "HASHTAG",
-                 ",": "COMMA",
-                 ".": "DOT",
-                 "?": "QUESTIONMARK",
-                 ":": "COLON",
-                 "=": "EQ",
-                 # "/=": "NEQ",
-                 "<": "LT",
-                 ">" : "GT",
-                 ">=": "GE",
-                 "<=": "LE",
-                 # "?=": "MATCH_EQ",
-                 # "?/=": "MATCH_NEQ",
-                 # "?<": "MATCH_LT",
-                 # "?<=": "MATCH_LE" ,
-                 # "?>": "MATCH_GT",
-                 # "?>=": "MATCH_GE" ,  # relational_operator
-                 "+": "PLUS",
-                 "-": "MINUS",
-                 "&": "AMPERSAND",  # adding_operator
-                 "|": "BAR",
-                 "\\": "BACKSLASH",
-                 "*": "MUL",
-                 "/": "DIV",  # multiplying_operator
-                 "**": "DOUBLESTAR",  # miscellaneous_operator
-                 "\\": "BACKSLASH",  # extended_identifier
-                 # "`": "GRAVE_ACCENT",  # tool_directive
-                 # "^": "UP",  # relative_pathname
-                 # ":=": "VARASGN",  # simple_variable_assignment
-                 # "<>": "BOX",  # constrained_array_definition
-                 # "=>": "ARROW",  # association_element
-                 # "??": "COND_OP",  # condition_operator
-                 }
+    SPEC_SYMB = {
+        ";" : "SEMI",
+        "(" : "LPAREN",
+        ")" : "RPAREN",
+        "[": "LSQUARE_BR",
+        "]": "RSQUARE_BR",
+        '{': "LBRACE",
+        '}': "RBRACE",
+
+        "'" : "APOSTROPHE",
+        '"' : "DBLQUOTE",
+        "<<" : "SHIFT_LEFT",
+        ">>" : "SHIFT_RIGHT",
+        "<<<" : "ARITH_SHIFT_LEFT",
+        ">>>" : "ARITH_SHIFT_RIGHT",
+        "$": "DOLAR",
+        "+:": "PLUS_COLON",
+        "-:": "MINUS_COLON",
+        "_": "UNDERSCORE",
+        "%": "MOD",
+        "!": "NOT",
+        "~": "NEG",
+        "~&": "NAND",
+        "~|": "NOR",
+        "^": "XOR",
+        "~^": "NXOR",
+        "^~": "XORN",
+        # "@": "AT",
+        # "#": "HASHTAG",
+        ",": "COMMA",
+        ".": "DOT",
+        "?": "QUESTIONMARK",
+        ":": "COLON",
+        "::": "DOUBLE_COLON",
+        "==": "EQ",
+        "!=": "NEQ",
+        "===": "CASE_EQ",
+        "!==": "CASE_NEQ",
+        '==?':"WILDCARD_EQ",
+        '!=?':"WILDCARD_NEQ",
+
+        "=": "ASSIGN",
+        "<": "LT",
+        ">" : "GT",
+        ">=": "GE",
+        "<=": "LE",
+        "+=": "PLUS_EQ",
+        "-=": "MINUS_EQ",
+        "*=": "MUL_EQ",
+        "/=": "DIV_EQ",
+        "%=": "MOD_EQ",
+        "&=": "AND_EQ",
+        "|=": "OR_EQ",
+        '^=': "XOR_EQ",
+        "<<=": "SHIFT_LEFT_EQ",
+        ">>=": "SHIFT_RIGHT_EQ",
+        "<<<=": "ARITH_SHIFT_LEFT_EQ",
+        ">>>=": "ARITH_SHIFT_RIGHT_EQ",
+
+        "+": "PLUS",
+        "-": "MINUS",
+        "&": "AMPERSAND",
+        "&&": "LOG_AND",
+        "|": "BAR",
+        "||": "LOG_OR",
+        "\\": "BACKSLASH",
+        "*": "MUL",
+        "/": "DIV",
+        "**": "DOUBLESTAR",
+        "\\": "BACKSLASH",
+        "<->": "DOUBLE_ARROW",
+        "->": "ARROW",
+        "++": "INCR",
+        "--": "DECR",
+
+        ':=': "DIST_WEIGHT_ASSIGN",
+        ':/': "DIST_WEIGHT_ASSIGN_DIV",
+
+        '|->': "OVERLAPPING_IMPL",
+        '|=>': "NONOVERLAPPING_IMPL",
+        '#-#': "HASH_MINUS_HASH",
+        '#=#': "HASH_EQ_HASH",
+        "@": "AT",
+        "@@": "DOUBLE_AT",
+        "#": "HASH",
+        "##": "DOUBLE_HASH",
+        "&&&": "TRIPLE_END",
+    }
     INDENT = "      "
 
-    def parse_rule(self, rule_buff):
-        tokens = []
-        for part in rule_buff:
-            ind = self.extract_indent(part)
-            if ind:
-                tokens.append(ind)
+    def parse_element(self, ctx: ElementContext) -> Union[ANTLR4Selection, ANTLR4Sequence]:
+        """
+        element:
+            element_sequence
+            | element_selection
+        ;
+        """
+        seq = ctx.element_sequence()
+        if seq is not None:
+            return self.parse_element_sequence(seq)
+        else:
+            sel = ctx.element_selection()
+            return self.parse_element_selection(sel)
 
-            p = [ _p for _p in part.split(" ") if _p]
-            for _p in p:
-                _p = _p.strip()
-                if _p:
-                    tokens.append(_p)
-            if part.endswith("\n"):
-                tokens.append(ANTLR4VisualNewline())
-        assert tokens
-        return self.parse_rule_tokens(tokens)
+    def parse_element_block(self, ctx: Element_blockContext) -> \
+            Union[ANTLR4Symbol, ANTLR4Iteration, ANTLR4Option]:
+        """
+        element_block:
+              element_text
+            | element_iteration
+            | element_optional
+        ;
+        """
+        t = ctx.element_text()
+        if t is not None:
+            return self.parse_element_text(t)
+        it = ctx.element_iteration()
+        if it is not None:
+            return self.parse_element_iteration(it)
+        else:
+            opt = ctx.element_optional()
+            return self.parse_element_optional(opt)
 
-    def convert(self, lines):
-        rule_buff = []
-        for l in lines:
-            if not l[0].isspace():
-                if rule_buff:
-                    r = self.parse_rule(rule_buff)
-                    self.rules.append(r)
-                rule_buff = [l, ]
+    def parse_element_optional(self, ctx: Element_optionalContext) -> ANTLR4Option:
+        """
+        element_optional: '[' element ']';
+        """
+        body = self.parse_element(ctx.element())
+        return ANTLR4Option(body)
+
+    def parse_element_iteration(self, ctx: Element_iterationContext) -> ANTLR4Iteration:
+        """
+        element_iteration: '{' element '}';
+        """
+        body = self.parse_element(ctx.element())
+        return ANTLR4Iteration(body)
+
+    def parse_element_text(self, ctx: Element_textContext) -> ANTLR4Symbol:
+        """
+        element_text: NAME | TERMINAL;
+        """
+        n = ctx.NAME()
+        if n is not None:
+            return ANTLR4Symbol(n.getText(), False)
+        else:
+            n = ctx.TERMINAL().getText()
+            n = n[len("<b>"):-len("</b>")]
+            return ANTLR4Symbol(n, True)
+
+    def parse_element_sequence(self, ctx: Element_sequenceContext) -> ANTLR4Sequence:
+        """
+        element_sequence: element_block (WS element_block)*;
+        """
+        body = []
+        for c in ctx.children:
+            if isinstance(c, Element_blockContext):
+                res = self.parse_element_block(c)
+                body.append(res)
             else:
-                rule_buff.append(l)
+                res = self.parse_ws(c)
+                body.extend(res)
+        return ANTLR4Sequence(body)
 
-        if rule_buff:
-            r = self.parse_rule(rule_buff)
+    def parse_element_selection(self, ctx: Element_selectionContext) -> ANTLR4Selection:
+        """
+        element_selection: element_sequence ('|' element_sequence)+;
+        """
+        body = []
+        for c in ctx.element_sequence():
+            body.append(self.parse_element_sequence(c))
+
+        return ANTLR4Selection(body)
+
+    def parse_rule(self, rule: Proto_ruleContext):
+        name = rule.NAME().getText()
+        body = self.parse_element(rule.element())
+        return ANTLR4Rule(name, body)
+
+    def parse_ws(self, n: TerminalNode) -> List[Union[ANTLR4VisualIndent, ANTLR4VisualNewline]]:
+        objs = []
+        actual_indent = 0
+        for c in n.getText():
+            if c == "\n":
+                if actual_indent // len("    ") != 0:
+                    i = ANTLR4VisualIndent(actual_indent // len("    "))
+                    objs.append(i)
+                    actual_indent = 0
+                objs.append(ANTLR4VisualNewline())
+            else:
+                actual_indent += 1
+        if actual_indent // len("    ") > 0:
+            i = ANTLR4VisualIndent(actual_indent // len("    "))
+            objs.append(i)
+
+        return objs
+
+    def convert(self, buff):
+        ast = load_ast_file(buff)
+        for rule in ast.children:
+            if isinstance(rule, TerminalNode) and rule.getText() == '<EOF>':
+                break
+            r = self.parse_rule(rule)
+            assert len(r.body) > 0
             self.rules.append(r)
 
 
-def main():
+def rm_redunt_whitespaces_on_end(rule: ANTLR4Rule):
+    s = rule.body
+    while True:
+        if isinstance(s, (ANTLR4Selection, ANTLR4Sequence)):
+            _s = s[-1]
+            if isinstance(_s, (ANTLR4VisualNewline, ANTLR4VisualIndent)):
+                s.pop()
+                continue
+            elif isinstance(_s, (ANTLR4Selection, ANTLR4Sequence)):
+                s = _s
+                continue
+        break
+
+
+def collect_simple_rules(rules: List[ANTLR4Rule], symbol_name: str):
+    for r in rules:
+        if len(r.body) == 1:
+            b = r.body[0]
+            if isinstance(b, ANTLR4Symbol) and b.symbol == symbol_name:
+                yield r
+
+
+def proto_grammar_to_g4():
     renames = {}
-    renames["E"] = "E_SIGN"
-    renames["NULL"] = "NULL_SYM"
+    # renames["E"] = "E_SIGN"
+    # renames["NULL"] = "NULL_SYM"
     for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
         renames[k] = v
 
     p = SvRule2Antlr4Rule()
     with open("sv2017.g4_proto") as f:
         p.convert(f)
-    rm_newline_from_simple_rules(p.rules)
+    # rm_newline_from_simple_rules(p.rules)
     # nts = get_used_non_terminals(p.rules)
     # def_nts = get_defined_non_terminals(p.rules)
 
-    apply_rename = generate_renamer(renames)
+    to_remove = {
+       "comment",
+       "one_line_comment",
+       "block_comment",
+       "comment_text",
+    }
+    # overspecified
+    # finish_number 0 - 2
+    # scalar_constant 1b number
+    # init_val 1b value
+    # edge_descriptor 2 tristate digits
+    # dpi_spec_string  two concrete strings
+
+    to_lexer = [
+        "c_identifier",
+        "unsigned_number",
+        "simple_identifier",
+        "system_tf_identifier",
+        #"real_number",
+        "unsigned_number",
+        "string_literal",
+        "binary_number",
+        "octal_number",
+        "hex_number",
+        "octal_number",
+        "hex_number",
+        #"decimal_number",
+        "fixed_point_number",
+        "escaped_identifier",
+    ]
+    for tl in to_lexer:
+        renames[tl] = tl.upper()
+
+    # to add
+    # Any_ASCII_Characters
+    # space, tab, newline, eof
+    # any_printable_ASCII_character_except_white_space
+
+    fragments = {
+        "binary_value",
+        "octal_value",
+        "hex_value",
+        "decimal_base",
+        "binary_base",
+        "octal_base",
+        "hex_base",
+        "non_zero_unsigned_number",
+        "size",
+        "sign",
+        "output_symbol",
+        "level_symbol",
+        "edge_symbol",
+        "non_zero_decimal_digit",
+        "decimal_digit",
+        "binary_digit",
+        "octal_digit",
+        "hex_digit",
+        "x_digit",
+        "z_digit",
+        "unbased_unsized_literal",
+        "exp",
+        'white_space',
+        'zero_or_one',
+        'z_or_x',
+    }
+    for fr in fragments:
+        for r in p.rules:
+            if r.name in fragments:
+                r.is_fragment = True
+        renames[fr] = fr.upper()
+
+    for r in p.rules:
+        rm_redunt_whitespaces_on_end(r)
+
+    identifier_rule_equivalents = {
+        r.name for r in collect_simple_rules(p.rules, "identifier")
+    }
+    hierarchical_identifier_rule_equivalents = {
+        r.name for r in collect_simple_rules(p.rules, "hierarchical_identifier")
+    }
+
+    to_remove.update(identifier_rule_equivalents)
+    to_remove.update(hierarchical_identifier_rule_equivalents)
+    p.rules = [r for r in p.rules if r.name not in to_remove ]
+
+    for idname in identifier_rule_equivalents:
+        renames[idname] = "identifier"
+
+    for idname in hierarchical_identifier_rule_equivalents:
+        renames[idname] = "hierarchical_identifier"
+
+    apply_rename = generate_renamer(renames, True)
     for r in p.rules:
         r.walk(apply_rename)
-        s = r.body
 
-        while True:
-            if isinstance(s, (ANTLR4Selection, ANTLR4Sequence)):
-                _s = s[-1]
-                if isinstance(_s, ANTLR4Sequence):
-                    all_to_remove = True
-                    # for s2 in _s:
-                    #    if (s2 not in IGNORED
-                    #            and s2 != ANTLR4VisualNewline()
-                    #            and not isinstance(s2, ANTLR4VisualIndent)):
-                    #        all_to_remove = False
-                    if _s and all_to_remove:
-                        s.pop()
-                        continue
-            break
+    # because C_IDENTIFIER is just normal identifier without $ and can match identifiers
+    for r in p.rules:
+        if r.name == "identifier":
+            r.body.insert(0, ANTLR4Symbol("C_IDENTIFIER", False))
+
+    p.rules.sort(key=lambda x: (x.name == x.name.upper(), x.is_fragment))
+
+    with open("sv2017.g4", "w") as f:
+        f.write("grammar sv2017;\n\n")
+        for r in p.rules:
+            #print(r)
+            f.write(r.toAntlr4())
+            f.write("\n")
 
 
 if __name__ == "__main__":
     parse_sv_pdf()
-    #main()
+    proto_grammar_to_g4()

@@ -1,28 +1,36 @@
 grammar proto_grammar;
 
 proto_file:
-	(proto_rule WS)* EOF;
+	(proto_rule)* EOF;
 
-proto_rule: NAME WS? IS element;
+proto_rule: NAME WS? IS element END WS;
 
 element:
+	element_sequence
+	| element_selection
+;
+
+element_block:
 	  element_text
-	| element_in_parenthesis
+//	| element_in_parenthesis
 	| element_iteration
 	| element_optional
-	| element ('|' element)+;
+;
+element_selection: element_sequence ('|' element_sequence)+;
+element_sequence: WS? element_block (WS element_block)* WS?;
 
-element_iteration: '{' element+ '}' WS?;
-element_in_parenthesis: WS? '(' element+ ')' WS?;
-element_optional: WS? '[' element+ ']' WS?;
-element_text_part: NAME | TERMINAL;
-element_text: WS? element_text_part (WS element_text_part)? WS?;
+
+element_iteration: '{' element '}';
+//element_in_parenthesis: '(' element ')';
+element_optional: '[' element ']';
+element_text: NAME | TERMINAL;
 
 
 //----------------- LEXER --------------
 
-TERMINAL: '<b>' .*? '</b>';
+TERMINAL: '<b>' .*? '</b>' ('-' '<b>' .*? '</b>')*;
 IS: '::=';
 WS: [ \n]+;
-NAME: [a-zA-Z0-9_]+;
+NAME: [a-zA-Z0-9_$]+;
 QUESTIONMARK: '?';
+END: '</br>';

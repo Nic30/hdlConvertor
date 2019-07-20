@@ -1,4 +1,4 @@
-from antlr4 import CommonTokenStream, ParseTreeWalker
+from antlr4 import CommonTokenStream
 from antlr4.FileStream import FileStream
 from antlr4.error.ErrorListener import ConsoleErrorListener
 
@@ -16,17 +16,26 @@ class MyErrorListener(ConsoleErrorListener):
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         super(MyErrorListener, self).syntaxError(recognizer, offendingSymbol, line, column, msg, e)
-        raise  Exception()
+        raise Exception()
 
 
-def main():
-    fname = "sv2017.g4_proto"
+def load_ast_file(file):
+    return load_ast_by_file_name(file.name)
+
+
+def load_ast_by_file_name(fname):
     f = FileStream(fname, encoding="utf-8")
     lexer = proto_grammarLexer(f)
     stream = CommonTokenStream(lexer)
     parser = proto_grammarParser(stream)
     parser.addErrorListener(MyErrorListener())
     tree = parser.proto_file()
+    return tree
+
+
+def main():
+    fname = "sv2017.g4_proto"
+    tree = load_ast_by_file_name(fname)
     return tree
     # printer = HelloPrintListener()
     # walker = ParseTreeWalker()

@@ -1,5 +1,5 @@
-from pdfminer3.pdfparser import PDFParser
-from pdfminer3.pdfdocument import PDFDocument
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
 
 
 def createPDFDoc(fpath):
