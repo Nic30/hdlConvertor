@@ -15,7 +15,7 @@ There is also Java version. But it seems that there is no use for it.
 
 
 ## Installation
-**Use version from this repo as the pip version is currently very old (The pip version will be updated after specified functionality is implemented [issues/48](https://github.com/Nic30/hdlConvertor/issues/48).).**
+**Use version from this repo as the pip package is currently very old (The pip package will be updated after specified functionality is implemented [issues/48](https://github.com/Nic30/hdlConvertor/issues/48).).**
 
 Linux:
 ```
