@@ -49,6 +49,7 @@ class VhdlSpecParser():
         self.font_print_pending = False
         self.header_footer_skipping = False
         self.ofile = ofile
+        self.first_rule = True
 
     def parse_page(self, page):
         self.interpreter.process_page(page)
@@ -75,6 +76,12 @@ class VhdlSpecParser():
 
                         # print(text)
                         is_rule_header = "::=" in text
+                        if is_rule_header:
+                            if not self.first_rule:
+                                self.ofile.write("</br>" % f)
+                            else:
+                                self.first_rule = False
+
                         if is_rule_header or self.in_rule:
                             self.in_rule = True
                             if not is_rule_header:
