@@ -9,6 +9,9 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+/*
+ * HDL AST node for definition or declaration of HDL function/task etc.
+ * */
 class HdlFunctionDef: public WithNameAndDoc, public iHdlObj {
 public:
 	const iHdlExpr * returnT;

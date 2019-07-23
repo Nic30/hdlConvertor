@@ -7,7 +7,9 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 /*
- * Class for representation of the process in HDL
+ * HDL AST node for HDL process construct
+ * (Verilog always and assign constructs, VHDL process and top level assignments)
+ *
  * @note the process may may be described only by statement in HDL
  * 		this means that it does not have to have name or sensitivity list
  * 		specified explicitly

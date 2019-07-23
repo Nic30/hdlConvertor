@@ -4,7 +4,7 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 /*
- * Base class for object which can appear in HDL
+ * Interface for object which can appear in HDL AST
  * */
 class iHdlObj {
 public:

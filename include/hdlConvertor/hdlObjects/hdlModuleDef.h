@@ -9,7 +9,7 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 /*
- * The container for the VHDL architecture or the body of the module in Verilog
+ * HDL AST node for module definition (the body of the module in Verilog, Architecture in VHDL)
  * */
 class HdlModuleDef: public WithNameAndDoc, public iHdlObj {
 public:

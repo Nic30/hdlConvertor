@@ -21,7 +21,7 @@ public:
 	Position(size_t startLine, size_t stopLine, size_t startColumn,
 			size_t stopColumn);
 	template<class ELEM_T>
-	void update_from_elem(ELEM_T * elem) {
+	void update_from_elem(ELEM_T *elem) {
 		startLine = elem->getStart()->getLine();
 		stopLine = elem->getStop()->getLine();
 	}

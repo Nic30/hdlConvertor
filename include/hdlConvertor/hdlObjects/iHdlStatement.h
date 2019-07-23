@@ -28,9 +28,12 @@ enum StatementType {
 };
 
 const char * StatementType_toString(StatementType type);
-
-// [TODO] to separate classes
-//        iHdlStatement is not an interface yet but it is planed to make it an interface
+/*
+ * Interface for statements which can appear in HDL AST
+ *
+ * [TODO] to separate classes
+ *        iHdlStatement is not an interface yet but it is planed to make it an interface
+ */
 class iHdlStatement: public WithDoc, public WithPos, public iHdlObj {
 public:
 	using case_t = std::pair<iHdlExpr*, std::vector<iHdlObj*>*>;

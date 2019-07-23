@@ -8,6 +8,10 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+/*
+ * HDL AST node for module declaration
+ * (part with ports and params for Verilog, Entity for VHDL)
+ * */
 class HdlModuleDec: public WithNameAndDoc, public iHdlObj {
 public:
 	std::vector<HdlVariableDef*> generics;

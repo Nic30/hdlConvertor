@@ -7,6 +7,9 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+/*
+ * HDL AST node for call of HDL function or operator
+ * */
 class HdlCall: public iHdlExprItem {
 	HdlCall();
 public:
