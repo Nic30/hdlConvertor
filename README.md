@@ -20,7 +20,7 @@ There is also Java version. But it seems that there is no use for it.
 Linux:
 ```
 # note that only last 2 are really required rest is downloaded automatically as dependency
-sudo apt install build-essential uuid-dev cmake default-jre python3 python3-pip libantlr4-runtime-dev antlr4
+sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4
 # note this may be older version than you see in repo
 sudo pip3 install hdlConvertor
 
@@ -81,20 +81,22 @@ for o in d.objs:
 
 
 ### Similar projects:
+(Tell us If you know about some other project!)
 
-* [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
+* [cl-vhdl](https://github.com/mabragor/cl-vhdl) - lisp, Parser of VHDL into lisp-expressions 
+* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
+* [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
+* [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
+* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
+* [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
+* [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
+* [veelox](https://github.com/martinda/veelox) - Java+ANTLR,  An experiment in SystemVerilog Preprocessing 
+* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
-* [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
-* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
-* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
-* [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
-* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
-* [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
-* [veelox](https://github.com/martinda/veelox) - Java+ANTLR,  An experiment in SystemVerilog Preprocessing 
 
 ### License
 
