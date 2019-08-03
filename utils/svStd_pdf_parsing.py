@@ -83,6 +83,13 @@ def parse_sv_pdf():
                 ("<b>if</b> ( expression_or_dist )", "<b>if</b> <b>(</b> expression_or_dist <b>)</b>"),
                 ("<b>case</b> ( expression_or_dist )", "<b>case</b> <b>(</b> expression_or_dist <b>)</b>"),
                 ("<b>#(</b>", "<b>#</b> <b>(</b>"),
+                ("<b>)matches</b>", "<b>)</b> <b>matches</b>"),
+                ("<b>[-></b>", "<b>[</b> <b>-></b>"),
+                ("constant _expression", "constant_expression"),
+                ("function_declaraton", "function_declaration"),
+                ("<b>);</b>", "<b>)</b> <b>;</b>"),
+                ("option.</b>", "option</b> <b>.</b>"),
+                ("<b>-incdir</b>", "<b>-</b> <b>incdir</b>"),
             ]
             for elm, repl in replaces:
                 line = line.replace(elm, repl)
@@ -95,7 +102,7 @@ class SvSpecParser():
                         'BVXWSQ+CourierNew,Bold': 'b',
                         'BHDFJL+TimesNewRomanPSMT': None,
                         'WTCCEL+TimesNewRoman,Italic': None,
-                        None:None}
+                        None: None}
 
     def __init__(self, ofile):
         rsrcmgr = PDFResourceManager()

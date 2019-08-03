@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 
-import pdfminer3
-from pdfminer3.pdfinterp import PDFResourceManager
-from pdfminer3.pdfinterp import PDFPageInterpreter
-from pdfminer3.layout import LAParams
-from pdfminer3.converter import PDFPageAggregator
+from itertools import islice
+import pdfminer
+from pdfminer.converter import PDFPageAggregator
+from pdfminer.layout import LAParams, LTFigure, LTChar, LTTextLine, LTTextBox
+from pdfminer.pdfinterp import PDFPageInterpreter
+from pdfminer.pdfinterp import PDFResourceManager
+from pdfminer.pdfpage import PDFPage
 import re
+import sys
 from typing import List, Set
-from antlr4grammar import ANTLR4Rule, ANTLR4Symbol, ANTLR4Sequence, \
-    ANTLR4VisualNewline, ANTLR4Selection, ANTLR4VisualIndent, ANTLR4Option, \
-    ANTLR4Iteration, generate_renamer, BaseGrammarConvertor, \
+
+from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
+    Antlr4Newline, Antlr4Selection, Antlr4Indent, Antlr4Option, \
+    Antlr4Iteration, generate_renamer, BaseGrammarConvertor, \
     rm_newline_from_simple_rules, get_used_non_terminals, \
     get_defined_non_terminals
 from pdf_parsing import createPDFDoc
-from pdfminer3.pdfpage import PDFPage
-import sys
-from itertools import islice
+
 
 PAGE_OFFSET = 13  # VHDL 2008
 
@@ -60,9 +62,9 @@ class VhdlSpecParser():
         font_translation = self.FONT_TRANSLATION
         f = None
         for obj in objs:
-            if isinstance(obj, pdfminer3.layout.LTTextBox):
+            if isinstance(obj, LTTextBox):
                 for o in obj._objs:
-                    if isinstance(o, pdfminer3.layout.LTTextLine):
+                    if isinstance(o, LTTextLine):
                         if self.header_footer_skipping:
                             text = o.get_text()
                             if text.startswith("Std 1076-"):
@@ -91,7 +93,7 @@ class VhdlSpecParser():
 
                             if text.strip():
                                 for c in  o._objs:
-                                    if isinstance(c, pdfminer3.layout.LTChar) and self.last_font != c.fontname:
+                                    if isinstance(c, LTChar) and self.last_font != c.fontname:
                                         # this character has different font need to propagate it to output
                                         self.font_print_pending = True
 
@@ -114,7 +116,7 @@ class VhdlSpecParser():
                                         self.last_font = c.fontname
                                     self.ofile.write(c.get_text())
             # if it's a container, recurse
-            elif isinstance(obj, pdfminer3.layout.LTFigure):
+            elif isinstance(obj, LTFigure):
                 self.parse_obj(obj._objs)
             else:
                 pass
@@ -126,51 +128,52 @@ class VhdlRule2Antlr4Rule(BaseGrammarConvertor):
     # to add an extra space if there is not
     RE_GRAM_OP = re.compile("(\{|\}|\[|\]|\|)")
 
-    ASSIGN        : '=='  ;
-    LBRACKET      : '['   ;
-    RBRACKET      : ']'   ;
+    ASSIGN: '=='
+    LBRACKET: '['
+    RBRACKET: ']'
     MINUS = "–"  # note it is not regular - char
-    SPEC_SYMB = {";" : "SEMI",
-                 "(" : "LPAREN",
-                 ")" : "RPAREN",
-                 "'" : "APOSTROPHE",
-                 '"' : "DBLQUOTE",
-                 "<<" : "SHIFT_LEFT",
-                 ">>" : "SHIFT_RIGHT",
-                 "@": "AT",
-                 "#": "HASHTAG",
-                 ",": "COMMA",
-                 ".": "DOT",
-                 "?": "QUESTIONMARK",
-                 ":": "COLON",
-                 "=": "EQ",
-                 "/=": "NEQ",
-                 "<": "LT",
-                 ">" : "GT",
-                 ">=": "GE",
-                 "?=": "MATCH_EQ",
-                 "?/=": "MATCH_NEQ",
-                 "?<": "MATCH_LT",
-                 "?<=": "MATCH_LE" ,
-                 "?>": "MATCH_GT",
-                 "?>=": "MATCH_GE" ,  # relational_operator
-                 "+": "PLUS",
-                 "-": "MINUS",
-                 "&": "AMPERSAND",  # adding_operator
-                 "|": "BAR",
-                 "\\": "BACKSLASH",
-                 "*": "MUL",
-                 "/": "DIV",  # multiplying_operator
-                 "**": "DOUBLESTAR",  # miscellaneous_operator
-                 "<=": "CONASGN",  # concurrent_simple_signal_assignment
-                 "\\": "BACKSLASH",  # extended_identifier
-                 "`": "GRAVE_ACCENT",  # tool_directive
-                 "^": "UP",  # relative_pathname
-                 ":=": "VARASGN",  # simple_variable_assignment
-                 "<>": "BOX",  # constrained_array_definition
-                 "=>": "ARROW",  # association_element
-                 "??": "COND_OP",  # condition_operator
-                 }
+    SPEC_SYMB = {
+        ";": "SEMI",
+        "(": "LPAREN",
+        ")": "RPAREN",
+        "'": "APOSTROPHE",
+        '"': "DBLQUOTE",
+        "<<": "SHIFT_LEFT",
+        ">>": "SHIFT_RIGHT",
+        "@": "AT",
+        "#": "HASHTAG",
+        ",": "COMMA",
+        ".": "DOT",
+        "?": "QUESTIONMARK",
+        ":": "COLON",
+        "=": "EQ",
+        "/=": "NEQ",
+        "<": "LT",
+        ">": "GT",
+        ">=": "GE",
+        "?=": "MATCH_EQ",
+        "?/=": "MATCH_NEQ",
+        "?<": "MATCH_LT",
+        "?<=": "MATCH_LE",
+        "?>": "MATCH_GT",
+        "?>=": "MATCH_GE",  # relational_operator
+        "+": "PLUS",
+        "-": "MINUS",
+        "&": "AMPERSAND",  # adding_operator
+        "|": "BAR",
+        "\\": "BACKSLASH",
+        "*": "MUL",
+        "/": "DIV",  # multiplying_operator
+        "**": "DOUBLESTAR",  # miscellaneous_operator
+        "<=": "CONASGN",  # concurrent_simple_signal_assignment
+        "\\": "BACKSLASH",  # extended_identifier
+        "`": "GRAVE_ACCENT",  # tool_directive
+        "^": "UP",  # relative_pathname
+        ":=": "VARASGN",  # simple_variable_assignment
+        "<>": "BOX",  # constrained_array_definition
+        "=>": "ARROW",  # association_element
+        "??": "COND_OP",  # condition_operator
+    }
     INDENT = "      "
     RE_IT_PREFIX = re.compile("<it>[a-zA-Z0-9_]+</it>_?")
 
@@ -191,7 +194,7 @@ class VhdlRule2Antlr4Rule(BaseGrammarConvertor):
                 if _p:
                     tokens.append(_p)
             if part.endswith("\n"):
-                tokens.append(ANTLR4VisualNewline())
+                tokens.append(Antlr4Newline())
         assert tokens
         return self.parse_rule_tokens(tokens)
 
@@ -203,17 +206,17 @@ class VhdlRule2Antlr4Rule(BaseGrammarConvertor):
         fix_pid = re.compile("package instantiation_declaration")
         fix_sn = re.compile("simple name")
         rule_buff = []
-        for l in lines:
-            l = fix_pid.sub("package_instantiation_declaration", l)
-            l = fix_sn.sub("simple_name", l)
+        for line in lines:
+            line = fix_pid.sub("package_instantiation_declaration", line)
+            line = fix_sn.sub("simple_name", line)
 
-            if not l[0].isspace():
+            if not line[0].isspace():
                 if rule_buff:
                     r = self.parse_rule(rule_buff)
                     self.rules.append(r)
-                rule_buff = [l, ]
+                rule_buff = [line, ]
             else:
-                rule_buff.append(l)
+                rule_buff.append(line)
 
         if rule_buff:
             r = self.parse_rule(rule_buff)
@@ -243,7 +246,7 @@ def left_recursion_remove(rules):
 # <HEFBHG+TimesNewRomanPS-ItalicMT>prefix<HEFBBF+TimesNewRomanPSMT>_name - rule equivalent to rule name
 # <HEFBAE+TimesNewRomanPS-BoldMT>keyword_literal<HEFBBF+TimesNewRomanPSMT>
 if __name__ == "__main__":
-    renames = { k: k.upper() for k in [
+    renames = {k: k.upper() for k in [
         "base_specifier", "lower_case_letter", "upper_case_letter",
         'special_character', 'other_special_character', 'digit',
         'format_effector', 'space_character', 'underline']}
@@ -254,7 +257,7 @@ if __name__ == "__main__":
         renames[k] = v
 
     IGNORED = [
-        ANTLR4Symbol(s, False)
+        Antlr4Symbol(s, False)
         for s in [
             "Property_Declaration",
             "Sequence_Declaration",
@@ -272,7 +275,7 @@ if __name__ == "__main__":
         keywords = set()
 
         def collect_keywords(obj):
-            if isinstance(obj, ANTLR4Symbol):
+            if isinstance(obj, Antlr4Symbol):
                 s = obj.symbol
                 if (s.isupper() and s not in VhdlRule2Antlr4Rule.SPEC_SYMB.values()
                         and s not in renames.values()
@@ -287,14 +290,14 @@ if __name__ == "__main__":
             s = r.body
 
             while True:
-                if isinstance(s, (ANTLR4Selection, ANTLR4Sequence)):
+                if isinstance(s, (Antlr4Selection, Antlr4Sequence)):
                     _s = s[-1]
-                    if isinstance(_s, ANTLR4Sequence):
+                    if isinstance(_s, Antlr4Sequence):
                         all_to_remove = True
                         for s2 in _s:
                             if (s2 not in IGNORED
-                                    and s2 != ANTLR4VisualNewline()
-                                    and not isinstance(s2, ANTLR4VisualIndent)):
+                                    and s2 != Antlr4Newline()
+                                    and not isinstance(s2, Antlr4Indent)):
                                 all_to_remove = False
                         if _s and all_to_remove:
                             s.pop()
@@ -306,10 +309,10 @@ if __name__ == "__main__":
                 a = a.body
                 b = b.body
                 # ( ( type_mark ( COMMA type_mark )* )? ( RETURN type_mark )? )?
-                r.body = ANTLR4Selection([
-                    ANTLR4Sequence([a, ANTLR4VisualNewline(), ANTLR4VisualIndent(1)]),
-                    ANTLR4Sequence([a, b, ANTLR4VisualNewline(), ANTLR4VisualIndent(1)]),
-                    ANTLR4Sequence([b, ANTLR4VisualNewline()]),
+                r.body = Antlr4Selection([
+                    Antlr4Sequence([a, Antlr4Newline(), Antlr4Indent(1)]),
+                    Antlr4Sequence([a, b, Antlr4Newline(), Antlr4Indent(1)]),
+                    Antlr4Sequence([b, Antlr4Newline()]),
                 ])
 
     HEADER = """/*
@@ -323,8 +326,8 @@ grammar vhdl;
         f.write("\n\n")
         f.write(HEADER)
         for kw in keywords:
-            r = ANTLR4Rule(kw, ANTLR4Sequence([
-                    ANTLR4Symbol(k, True) for k in kw
+            r = Antlr4Rule(kw, Antlr4Sequence([
+                    Antlr4Symbol(k, True) for k in kw
                 ]))
             f.write(r.toAntlr4())
             f.write("\n")
@@ -336,7 +339,7 @@ grammar vhdl;
                 k = "'\\\\'"
             else:
                 k = "'%s'" % k
-            r = ANTLR4Rule(v, ANTLR4Symbol(k, True))
+            r = Antlr4Rule(v, Antlr4Symbol(k, True))
             f.write(r.toAntlr4())
             f.write("\n")
 
