@@ -96,10 +96,10 @@ package_declaration:
       ( timeunits_declaration )? ( ( attribute_instance )* package_item )* 
       KW_ENDPACKAGE ( COLON identifier )?;
 timeunits_declaration:
-      KW_TIMEUNIT time_literal ( DIV time_literal )? SEMI 
-      | KW_TIMEPRECISION time_literal SEMI 
-      | KW_TIMEUNIT time_literal SEMI KW_TIMEPRECISION time_literal SEMI 
-      | KW_TIMEPRECISION time_literal SEMI KW_TIMEUNIT time_literal SEMI;
+      KW_TIMEUNIT TIME_LITERAL ( DIV TIME_LITERAL )? SEMI 
+      | KW_TIMEPRECISION TIME_LITERAL SEMI 
+      | KW_TIMEUNIT TIME_LITERAL SEMI KW_TIMEPRECISION TIME_LITERAL SEMI 
+      | KW_TIMEPRECISION TIME_LITERAL SEMI KW_TIMEUNIT TIME_LITERAL SEMI;
 parameter_port_list:
       HASH LPAREN ( list_of_param_assignments | parameter_port_declaration ) ( COMMA parameter_port_declaration )* RPAREN 
       | HASH LPAREN RPAREN;
@@ -481,7 +481,7 @@ delay_value:
       UNSIGNED_NUMBER 
       | real_number 
       | ps_identifier 
-      | time_literal 
+      | TIME_LITERAL 
       | KW_1STEP;
 list_of_defparam_assignments: defparam_assignment ( COMMA defparam_assignment )*;
 list_of_genvar_identifiers: identifier ( COMMA identifier )*;
@@ -1586,11 +1586,7 @@ class_qualifier: ( KW_LOCAL DOUBLE_COLON )? ( implicit_class_handle DOT | class_
 range_expression:
       expression 
       | part_select_range;
-primary_literal: number | time_literal | UNBASED_UNSIZED_LITERAL | STRING_LITERAL;
-time_literal:
-      ( UNSIGNED_NUMBER | FIXED_POINT_NUMBER ) time_unit 
-     ;
-time_unit: KW_S | KW_MS | KW_US | KW_NS | KW_PS | KW_FS;
+primary_literal: number | TIME_LITERAL | UNBASED_UNSIZED_LITERAL | STRING_LITERAL;
 implicit_class_handle: KW_THIS | KW_SUPER | KW_THIS DOT KW_SUPER;
 bit_select: ( LSQUARE_BR expression RSQUARE_BR )*;
 select:

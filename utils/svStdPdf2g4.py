@@ -366,6 +366,7 @@ def proto_grammar_to_g4():
         "fixed_point_number",
         "escaped_identifier",
         "unbased_unsized_literal",
+        "time_literal",
 
         # because it is very hard to switch mode to parse
         # edge_descriptor and it is easy to just parse coma separated list of 2 chars
@@ -407,6 +408,7 @@ def proto_grammar_to_g4():
         'z_or_x',
         'Any_ASCII_Characters',
         "any_printable_ASCII_character_except_white_space",
+        "time_unit"
     }
 
     for r in p.rules:
