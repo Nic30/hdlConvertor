@@ -185,7 +185,7 @@ def left_recurse_remove(rules):
     return rules
 
 
-def extract_rules_to_keywords(p: SvRule2Antlr4Rule):
+def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
     keywords = set()
 
     def collect_keywords(obj):
@@ -244,7 +244,7 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
         enter_rule = rule_by_name(rules, enter_token)
         enter_rule.lexer_actions.append(Antlr4LexerAction.pushMode(mode_name))
 
-    for t_name in tokens:
+    for t_name in sorted(tokens):
         t_rule = rule_by_name(rules, t_name)
         if t_name in shared_tokens:
             # copy the rule
@@ -258,7 +258,7 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
             t_rule = mode_specific_t_rule
 
         t_rule.lexer_mode = mode_name
-        if t_name in exit_tokens:
+        if t_name in sorted(exit_tokens):
             t_rule.lexer_actions.append(Antlr4LexerAction.popMode())
 
 
@@ -522,7 +522,7 @@ def proto_grammar_to_g4():
         r.walk(apply_rename)
         r.walk(mark_regex)
 
-    extract_rules_to_keywords(p)
+    extract_keywords_to_specific_rule(p)
 
     # because C_IDENTIFIER is just normal identifier without $ and can match identifiers
     for r in p.rules:

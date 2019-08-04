@@ -103,25 +103,24 @@ def char_options_to_regex(r: Antlr4Rule):
     '0' | '1' -> [01]
     """
 
-    def rm_single_item_sequences(o):
-        if isinstance(o, Antlr4Sequence) and len(o) == 1:
-            return o
-
-    replace_item_by_sequence(r, rm_single_item_sequences)
-
     def match_replace_fn(o):
         if isinstance(o, Antlr4Selection):
             char_symb_to_replace = []
-            for c in o:
+            for orig_c in o:
+                c = orig_c
+                c = list(iter_non_visuals(c))
+                if len(c) > 1:
+                    continue
+                c = c[0]
                 if isinstance(c, Antlr4Symbol) and c.is_terminal and len(c.symbol) == 1:
-                    char_symb_to_replace.append(c)
+                    char_symb_to_replace.append((orig_c, c))
             if len(char_symb_to_replace) > 1:
                 # build an regex out of them
                 # and replace them by the regex
-                for c in char_symb_to_replace:
+                for c, _ in char_symb_to_replace:
                     o.remove(c)
 
-                re_str = "[%s]" % ("".join([c.symbol for c in char_symb_to_replace]))
+                re_str = "[%s]" % ("".join([c.symbol for _, c in char_symb_to_replace]))
                 re = Antlr4Symbol(re_str, True, is_regex=True)
                 if len(list(iter_non_visuals(o))):
                     o.append(re)
