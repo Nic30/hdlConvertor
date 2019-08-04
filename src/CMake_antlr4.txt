@@ -63,8 +63,9 @@ set(PARSER_GEN_ONLY_VISITOR "-visitor" "-no-listener")
 set(PARSER_GEN_ONLY_LISTENER "-listener" "-no-visitor")
 set(PARSER_GEN_VISITOR "-visitor")
 
+# @attention this project dependent constants
 set(ANTLR_GRAMMAR_ROOT "${PROJECT_SOURCE_DIR}/grammars")
-set(_HDLCONVERTOR_INCLUDE_ROOT "${HDLCONVERTOR_SOURCE_DIR}/include/hdlConvertor")
+set(PROJECT_INCLUDE_ROOT "${PROJECT_SOURCE_DIR}/include/hdlConvertor")
 
 
 # https://samthursfield.wordpress.com/2015/11/21/cmake-dependencies-between-targets-and-files-and-custom-commands/
@@ -84,9 +85,10 @@ macro(AddParserToBuild name folder_name
 		set_property(SOURCE ${GENERATED_SRC} PROPERTY
 			COMPILE_FLAGS -Wno-unused-parameter)
 	endif()
-
+	
+	# @attention PROJECT_INCLUDE_ROOT depends on project name and has to be updated for other projects
 	set(GEN_INC_DIR
-		${_HDLCONVERTOR_INCLUDE_ROOT}/${folder_name}/${name}Parser)
+		${PROJECT_INCLUDE_ROOT}/${folder_name}/${name}Parser)
 	set(GENERATED_INC
 		${GEN_INC_DIR}/${name}Lexer.h
 		${GEN_INC_DIR}/${name}Parser.h
@@ -165,6 +167,12 @@ macro(AddParserToBuild name folder_name
 	  	${GENERATED_SRC}
 	  	${GENERATED_INC})
 
+	if(NOT HDLCONVERTOR_PYTHON)
+		# we do not want to install headers if we are building python module
+		set_target_properties(${folder_name}_static
+		    PROPERTIES PUBLIC_HEADER "${GENERATED_INC}")
+	endif()
+				
 	set_target_properties(${folder_name}_static
 		PROPERTIES VERSION "1.0.0"
 		OUTPUT_NAME ${folder_name}

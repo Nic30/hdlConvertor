@@ -40,6 +40,13 @@ Other commands:
 python setup.py --help-commands
 ```
 
+You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-builded library)
+```
+mkdir build && cd build
+cmake .. && cmake . --build
+cpack # to generate .deb package
+```
+
 If you having issues take a look at .travis.yml (build script for the ubuntu 16.04).
 
 Windows:
