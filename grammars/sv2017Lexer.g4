@@ -394,7 +394,7 @@ fragment OCTAL_DIGIT: X_DIGIT | Z_DIGIT | [0-7];
 fragment HEX_DIGIT: X_DIGIT | Z_DIGIT | [0-9a-fA-F];
 fragment X_DIGIT: [xX];
 fragment Z_DIGIT: QUESTIONMARK | [zZ];
-fragment ANY_ASCII_CHARACTERS: ~["\\r\n] | '\\\\n' | '\\\\r\\n' | '\\n' | '\\t' | '\\\\' | '\\"' | '\\v' | '\\f' | '\\a' | '\\' [0-9] [0-9]? [0-9]? | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?;
+fragment ANY_ASCII_CHARACTERS: ~["\\r\n] | '\\\\n' | '\\\\r\\n' | '\\t' | '\\\\' | '\\"' | '\\v' | '\\f' | '\\a' | '\\' [0-9] [0-9]? [0-9]? | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?;
 fragment ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE: '\u0021'..'\u007E';
 fragment FILE_PATH_SPEC_CHAR: [^ !$`&()+] | ( '\\' [ !$`&*()+] );
 

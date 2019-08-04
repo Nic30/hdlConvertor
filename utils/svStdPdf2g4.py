@@ -20,7 +20,6 @@ def add_string_literal_rules(p):
         Antlr4Symbol('~["\\\\r\\n]', True, True),
         Antlr4Symbol('\\\\n', True),
         Antlr4Symbol('\\\\r\\n', True),
-        Antlr4Symbol('\\n', True),
         Antlr4Symbol('\\t', True),
         Antlr4Symbol('\\\\', True),
         Antlr4Symbol('\\"', True),
