@@ -15,7 +15,6 @@ from optionality_optimiser import reduce_optionality
 
 
 def add_string_literal_rules(p):
-    # [TODO] make iteration of this in string literal rule
     string_char = Antlr4Rule("ANY_ASCII_CHARACTERS", Antlr4Selection([
         Antlr4Symbol('~["\\\\r\\n]', True, True),
         Antlr4Symbol('\\\\n', True),
