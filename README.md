@@ -19,6 +19,7 @@ There is also Java version. But it seems that there is no use for it.
 
 Linux:
 ```
+# note: use up to date compiler, gcc 5.4 is too old
 # note that only last 2 are really required rest is downloaded automatically as dependency
 sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4
 # note this may be older version than you see in repo
