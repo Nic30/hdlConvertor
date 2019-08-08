@@ -372,6 +372,9 @@ DOUBLE_AT: '@@';
 HASH: '#';
 DOUBLE_HASH: '##';
 TRIPLE_AND: '&&&';
+ONE_LINE_COMMENT: '//' .*? ( '\\r' )? '\\n' -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+WHITE_SPACE: [ \t\n\r] + -> skip;
 fragment EDGE_DESCRIPTOR: '01' | '10' | Z_OR_X ZERO_OR_ONE | ZERO_OR_ONE Z_OR_X;
 fragment ZERO_OR_ONE: [01];
 fragment Z_OR_X: [xXzZ];
@@ -400,33 +403,39 @@ fragment FILE_PATH_SPEC_CHAR: [^ !$`&()+] | ( '\\' [ !$`&*()+] );
 
 mode INCLUDE_MODE;
     FILE_PATH_SPEC: ( FILE_PATH_SPEC_CHAR ( SEMI FILE_PATH_SPEC_CHAR )? )+;
+    INCLUDE_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
+    INCLUDE_MODE_ONE_LINE_COMMENT: '//' .*? ( '\\r' )? '\\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
     INCLUDE_MODE_SEMI: ';' -> type(SEMI),popMode;
+    INCLUDE_MODE_WHITE_SPACE: [ \t\n\r] + -> skip,type(WHITE_SPACE);
 
 mode LIBRARY_IDENTIFIER_MODE;
+    LIBRARY_IDENTIFIER_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
     LIBRARY_IDENTIFIER_MODE_C_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_] )* -> type(C_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
     LIBRARY_IDENTIFIER_MODE_ESCAPED_IDENTIFIER: BACKSLASH ( ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE )* WHITE_SPACE -> type(ESCAPED_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
+    LIBRARY_IDENTIFIER_MODE_ONE_LINE_COMMENT: '//' .*? ( '\\r' )? '\\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
     LIBRARY_IDENTIFIER_MODE_SIMPLE_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_$] )* -> type(SIMPLE_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
+    LIBRARY_IDENTIFIER_MODE_WHITE_SPACE: [ \t\n\r] + -> skip,type(WHITE_SPACE);
 
 mode LIBRARY_PATH_MODE;
     KW_INCDIR: 'incdir';
+    LIBRARY_PATH_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
     LIBRARY_PATH_MODE_COMMA: ',' -> type(COMMA);
     LIBRARY_PATH_MODE_FILE_PATH_SPEC: ( FILE_PATH_SPEC_CHAR ( SEMI FILE_PATH_SPEC_CHAR )? )+ -> type(FILE_PATH_SPEC);
     LIBRARY_PATH_MODE_MINUS: '-' -> type(MINUS);
+    LIBRARY_PATH_MODE_ONE_LINE_COMMENT: '//' .*? ( '\\r' )? '\\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
     LIBRARY_PATH_MODE_SEMI: ';' -> type(SEMI),popMode;
+    LIBRARY_PATH_MODE_WHITE_SPACE: [ \t\n\r] + -> skip,type(WHITE_SPACE);
 
 mode TABLE_MODE;
     KW_ENDTABLE: 'endtable' -> popMode;
     OUTPUT_SYMBOL: [01xX];
     LEVEL_SYMBOL: QUESTIONMARK | [01xXbB];
     EDGE_SYMBOL: MUL | [rRfFpPnN];
+    TABLE_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
     TABLE_MODE_COLON: ':' -> type(COLON);
     TABLE_MODE_LPAREN: '(' -> type(LPAREN);
     TABLE_MODE_MINUS: '-' -> type(MINUS);
+    TABLE_MODE_ONE_LINE_COMMENT: '//' .*? ( '\\r' )? '\\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
     TABLE_MODE_RPAREN: ')' -> type(RPAREN);
     TABLE_MODE_SEMI: ';' -> type(SEMI);
-
-
-mode DEFAULT_MODE;
-ONE_LINE_COMMENT: '//' .*? '\r'? '\n' -> channel (HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel (HIDDEN);
-WHITE_SPACE: [ \t\n\r] + -> skip;
+    TABLE_MODE_WHITE_SPACE: [ \t\n\r] + -> skip,type(WHITE_SPACE);

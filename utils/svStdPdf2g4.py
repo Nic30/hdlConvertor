@@ -87,7 +87,7 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
         enter_rule = rule_by_name(rules, enter_token)
         enter_rule.lexer_actions.append(Antlr4LexerAction.pushMode(mode_name))
 
-    for t_name in sorted(tokens):
+    for t_name in sorted(tokens.union(shared_tokens)):
         t_rule = rule_by_name(rules, t_name)
         if t_name in shared_tokens:
             # copy the rule
@@ -95,7 +95,7 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
             mode_specific_t_rule = Antlr4Rule(
                 mode_name + "_" + t_name, deepcopy(t_rule.body),
                 lexer_mode=mode_name,
-                lexer_actions=[Antlr4LexerAction.type(t_name), ]
+                lexer_actions=[*deepcopy(t_rule.lexer_actions), Antlr4LexerAction.type(t_name), ]
             )
             rules.append(mode_specific_t_rule)
             t_rule = mode_specific_t_rule
@@ -374,7 +374,7 @@ def remove_useless_and_normalize_names(p):
     for r in p.rules:
         r.walk(apply_rename)
         r.walk(mark_regex)
-    
+
     for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
         body = Antlr4Symbol(k, True)
         r = Antlr4Rule(v, body)
@@ -386,13 +386,16 @@ def remove_useless_and_normalize_names(p):
             r.body.insert(0, Antlr4Symbol("C_IDENTIFIER", False))
 
 
+COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
+
+
 def fix_lexer_for_table_def(p):
     table_tokens = get_all_used_lexer_tokens(p.rules, "combinational_body")
     table_tokens2 = get_all_used_lexer_tokens(p.rules, "sequential_entry")
     table_tokens = table_tokens.union(table_tokens2)
     # [TODO] += comments, whitespaces
     table_tokens.remove("KW_TABLE")
-    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS'}
+    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS', *COMMENT_AND_WS_TOKENS}
     wrap_in_lexer_mode(p.rules, "TABLE_MODE", {"KW_TABLE", }, {"KW_ENDTABLE", },
                        table_tokens, table_shared_tokens)
 
@@ -403,7 +406,7 @@ def fix_lexer_for_library_def(p):
                        # all possible identifiers can appear and all of the ending this mode
                        library_identifier_tokens,
                        library_identifier_tokens,
-                       library_identifier_tokens)
+                       library_identifier_tokens.union(COMMENT_AND_WS_TOKENS))
     library_path_tokens = (get_all_used_lexer_tokens(p.rules, "library_declaration") 
                            -library_identifier_tokens 
                            -{"KW_LIBRARY", })
@@ -412,16 +415,42 @@ def fix_lexer_for_library_def(p):
                        {"KW_INCLUDE"},
                        {"SEMI"},
                        {"FILE_PATH_SPEC", "SEMI"},
-                       {"SEMI"})
+                       {"SEMI", *COMMENT_AND_WS_TOKENS})
 
     wrap_in_lexer_mode(p.rules, "LIBRARY_PATH_MODE",
                        # starts after library id
                        {"LIBRARY_IDENTIFIER_MODE_" + t for t in library_identifier_tokens},
                        {"SEMI"},
                        library_path_tokens,
-                       {"MINUS", "SEMI", "COMMA", "FILE_PATH_SPEC"})
+                       {"MINUS", "SEMI", "COMMA", "FILE_PATH_SPEC", *COMMENT_AND_WS_TOKENS})
 
-    
+
+def add_comments_and_ws(rules):
+    # ONE_LINE_COMMENT: '//' .*? '\\r'? '\\n' -> channel(HIDDEN);
+    olc = Antlr4Rule("ONE_LINE_COMMENT", Antlr4Sequence([
+            Antlr4Symbol("//", True),
+            Antlr4Symbol(".*?", True, is_regex=True),
+            Antlr4Option(Antlr4Symbol("\\r", True)),
+            Antlr4Symbol("\\n", True),
+        ]),
+        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
+    rules.append(olc)
+    # BLOCK_COMMENT: '/*' .*? '*/' -> channel (HIDDEN);
+    bc = Antlr4Rule("BLOCK_COMMENT", Antlr4Sequence([
+            Antlr4Symbol("/*", True),
+            Antlr4Symbol(".*?", True, is_regex=True),
+            Antlr4Symbol("*/", True),
+        ]),
+        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
+    rules.append(bc)
+    # WHITE_SPACE: [ \\t\\n\\r] + -> skip;
+    ws = Antlr4Rule("WHITE_SPACE", Antlr4Sequence([
+            Antlr4Symbol("[ \\t\\n\\r] +", True, is_regex=True),
+        ]),
+        lexer_actions=[Antlr4LexerAction.skip()])
+    rules.append(ws)
+
+
 def proto_grammar_to_g4():
 
     p = SvRule2Antlr4Rule()
@@ -436,6 +465,7 @@ def proto_grammar_to_g4():
 
     add_string_literal_rules(p)
     add_file_path_literal_rules(p)
+    add_comments_and_ws(p.rules)
     rm_option_from_eps_rules(p)
     p.rules = left_recurse_remove(p.rules)
     extract_option_as_rule(p.rules, "real_number", [1, ], "REAL_NUMBER_WITH_EXP")
@@ -459,11 +489,11 @@ def proto_grammar_to_g4():
     #    if r.is_fragment
     reduce_optionality(p.rules)
     pretify_regex(p.rules)
+   
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
                                 x.is_fragment))
-
     with open("sv2017Parser.g4", "w") as f:
         # f.write("\n// ---------- PARSER ----------\n\n")
         f.write("parser grammar sv2017Parser;\noptions { tokenVocab=sv2017Lexer; }\n\n")
@@ -486,13 +516,6 @@ def proto_grammar_to_g4():
                 f.write(r.toAntlr4(actual_lexer_node=lexer_mode))
                 f.write("\n")
                 lexer_mode = r.lexer_mode
-        f.write("""
-
-mode DEFAULT_MODE;
-ONE_LINE_COMMENT: '//' .*? '\\r'? '\\n' -> channel (HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel (HIDDEN);
-WHITE_SPACE: [ \\t\\n\\r] + -> skip;
-""")
 
 
 if __name__ == "__main__":
