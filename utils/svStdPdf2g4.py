@@ -1,64 +1,23 @@
 #!/usr/bin/env python
 
+"""
+"main" for scripts which extract, fixes and optimizes the grammar from pdf with 1800-2017 standard
+"""
+
 from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
-    Antlr4Selection, Antlr4Option, Antlr4Iteration, generate_renamer, \
+    Antlr4Selection, Antlr4Option, generate_renamer, \
     iAntlr4GramElem, rule_by_name, Antlr4LexerAction
-from left_recurse_remove import direct_left_recurse_rm, inline_rule, split_rule, \
+from left_recurse_remove import direct_left_recurse_rm, split_rule, \
     iterate_everything_except_first, left_recurse_print
 from selection_optimiser import optimise_selections
 from svRule2Antlr4Rule import SvRule2Antlr4Rule
 from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
     remove_simple_rule, rm_option_on_rule_usage, iter_non_visuals, \
-    extract_option_as_rule, replace_symbol_in_rule
+    extract_option_as_rule, replace_symbol_in_rule, inline_rule
 from copy import deepcopy
 from optionality_optimiser import reduce_optionality
-
-
-def add_string_literal_rules(p):
-    string_char = Antlr4Rule("ANY_ASCII_CHARACTERS", Antlr4Selection([
-        Antlr4Symbol('~["\\\\r\\n]', True, True),
-        Antlr4Symbol('\\\\n', True),
-        Antlr4Symbol('\\\\r\\n', True),
-        Antlr4Symbol('\\t', True),
-        Antlr4Symbol('\\\\', True),
-        Antlr4Symbol('\\"', True),
-        Antlr4Symbol('\\v', True),
-        Antlr4Symbol('\\f', True),
-        Antlr4Symbol('\\a', True),
-        Antlr4Symbol("'\\\\' [0-9] [0-9]? [0-9]?", True, True),
-        Antlr4Symbol("'\\\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?", True, True),
-        ]), is_fragment=True)
-    p.rules.append(string_char)
-
-    any_printable_ASCII_character_except_white_space = Antlr4Rule(
-        "ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE",
-        Antlr4Symbol("'\\u0021'..'\\u007E'", True, True),
-        is_fragment=True)
-    p.rules.append(any_printable_ASCII_character_except_white_space)
-
-
-def add_file_path_literal_rules(p):
-    FILE_PATH_SPEC_CHAR = Antlr4Rule(
-        "FILE_PATH_SPEC_CHAR",
-        Antlr4Symbol(
-            "[^ !$`&()+] | ( '\\\\' [ !$`&*()+] )",
-            True, True),
-        is_fragment=True)
-    p.rules.append(FILE_PATH_SPEC_CHAR)
-
-    file_spec_path = Antlr4Rule(
-        "FILE_PATH_SPEC",
-        Antlr4Iteration(Antlr4Sequence([
-                Antlr4Symbol("FILE_PATH_SPEC_CHAR", False),
-                Antlr4Option(Antlr4Sequence([
-                    Antlr4Symbol('SEMI', False),
-                    Antlr4Symbol("FILE_PATH_SPEC_CHAR", False),
-                ])),
-            ]),
-            positive=True
-        )
-    )
-    p.rules.append(file_spec_path)
+from sv_rules_defined_in_text import add_string_literal_rules, \
+    add_file_path_literal_rules
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -278,24 +237,30 @@ def pretify_regex(rules):
             r.walk(_pretify_regex)
 
 
-def proto_grammar_to_g4():
+def rm_option_from_eps_rules(p):
+    already_eps_rules = [
+        "tf_port_list",
+        "data_type_or_implicit",
+        "list_of_arguments",
+        "let_list_of_arguments",
+        "list_of_port_connections",
+        "list_of_checker_port_connections",
+        "sequence_list_of_arguments",
+        "property_list_of_arguments",
+    ]
+    # because it already can be eps
+    for r in already_eps_rules:
+        rm_option_on_rule_usage(p.rules, r)
+
+
+def remove_useless_and_normalize_names(p):
     renames = {}
     for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
         renames[k] = v
-
-    p = SvRule2Antlr4Rule()
-    with open("sv2017.g4_proto") as f:
-        p.convert(f)
     # rm_newline_from_simple_rules(p.rules)
     # nts = get_used_non_terminals(p.rules)
     # def_nts = get_defined_non_terminals(p.rules)
 
-    to_remove = {
-       "comment",
-       "one_line_comment",
-       "block_comment",
-       "comment_text",
-    }
     # overspecified
     # finish_number 0 - 2
     replace_rule("finish_number", "UNSIGNED_NUMBER", renames, p)
@@ -369,15 +334,12 @@ def proto_grammar_to_g4():
         # because it is very hard to switch mode to parse
         # edge_descriptor and it is easy to just parse coma separated list of 2 chars
         "edge_control_specifier",
-        # [TODO] lock in 'table'-'endtable' lexer mode (all following:)
         "level_symbol",
         "output_symbol",
         "edge_symbol",
 
-        # [TODO] lock in 'library'-';' lexer mode
         "file_path_spec",
     ]
-    # [TODO] extract second part of real_number (with EXP) as a lexer rule
     for tl in to_lexer:
         renames[tl] = tl.upper()
 
@@ -427,6 +389,13 @@ def proto_grammar_to_g4():
         r.name for r in collect_simple_rules(p.rules, "hierarchical_identifier")
     }
 
+    to_remove = {
+       "comment",
+       "one_line_comment",
+       "block_comment",
+       "comment_text",
+       "white_space",
+    }
     to_remove.update(identifier_rule_equivalents)
     to_remove.update(hierarchical_identifier_rule_equivalents)
     simple_rules_to_remove = [
@@ -519,40 +488,19 @@ def proto_grammar_to_g4():
     for r in p.rules:
         r.walk(apply_rename)
         r.walk(mark_regex)
-
-    extract_keywords_to_specific_rule(p)
+    
+    for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
+        body = Antlr4Symbol(k, True)
+        r = Antlr4Rule(v, body)
+        p.rules.append(r)
 
     # because C_IDENTIFIER is just normal identifier without $ and can match identifiers
     for r in p.rules:
         if r.name == "identifier":
             r.body.insert(0, Antlr4Symbol("C_IDENTIFIER", False))
 
-    add_string_literal_rules(p)
-    add_file_path_literal_rules(p)
-    already_eps_rules = [
-        "tf_port_list",
-        "data_type_or_implicit",
-        "list_of_arguments",
-        "let_list_of_arguments",
-        "list_of_port_connections",
-        "list_of_checker_port_connections",
-        "sequence_list_of_arguments",
-        "property_list_of_arguments",
-    ]
-    # because it already can be eps
-    for r in already_eps_rules:
-        rm_option_on_rule_usage(p.rules, r)
-    p.rules = [r for r in p.rules if r.name != "WHITE_SPACE"]
-    p.rules = left_recurse_remove(p.rules)
-    extract_option_as_rule(p.rules, "real_number", 1, "REAL_NUMBER_WITH_EXP")
-    extract_option_as_rule(p.rules, "decimal_number", 1, "DECIMAL_NUMBER_WITH_BASE")
-    extract_option_as_rule(p.rules, "decimal_number", 2, "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
 
-    for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
-        body = Antlr4Symbol(k, True)
-        r = Antlr4Rule(v, body)
-        p.rules.append(r)
-
+def fix_lexer_for_table_def(p):
     table_tokens = get_all_used_lexer_tokens(p.rules, "combinational_body")
     table_tokens2 = get_all_used_lexer_tokens(p.rules, "sequential_entry")
     table_tokens = table_tokens.union(table_tokens2)
@@ -562,6 +510,8 @@ def proto_grammar_to_g4():
     wrap_in_lexer_mode(p.rules, "TABLE_MODE", {"KW_TABLE", }, {"KW_ENDTABLE", },
                        table_tokens, table_shared_tokens)
 
+
+def fix_lexer_for_library_def(p):
     library_identifier_tokens = get_all_used_lexer_tokens(p.rules, "identifier")
     wrap_in_lexer_mode(p.rules, "LIBRARY_IDENTIFIER_MODE", {"KW_LIBRARY", },
                        # all possible identifiers can appear and all of the ending this mode
@@ -585,6 +535,29 @@ def proto_grammar_to_g4():
                        library_path_tokens,
                        {"MINUS", "SEMI", "COMMA", "FILE_PATH_SPEC"})
 
+    
+def proto_grammar_to_g4():
+
+    p = SvRule2Antlr4Rule()
+    with open("sv2017.g4_proto") as f:
+        p.convert(f)
+
+    for r in p.rules:
+        r.walk(mark_regex)
+
+    remove_useless_and_normalize_names(p)
+    extract_keywords_to_specific_rule(p)
+
+    add_string_literal_rules(p)
+    add_file_path_literal_rules(p)
+    rm_option_from_eps_rules(p)
+    p.rules = left_recurse_remove(p.rules)
+    extract_option_as_rule(p.rules, "real_number", 1, "REAL_NUMBER_WITH_EXP")
+    extract_option_as_rule(p.rules, "decimal_number", 1, "DECIMAL_NUMBER_WITH_BASE")
+    extract_option_as_rule(p.rules, "decimal_number", 2, "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
+
+    fix_lexer_for_table_def(p)
+    fix_lexer_for_library_def(p)
     # inline_to_fragments = [
     #     "X_DIGIT",
     #     "Z_DIGIT",
@@ -634,6 +607,7 @@ ONE_LINE_COMMENT: '//' .*? '\\r'? '\\n' -> channel (HIDDEN);
 BLOCK_COMMENT: '/*' .*? '*/' -> channel (HIDDEN);
 WHITE_SPACE: [ \\t\\n\\r] + -> skip;
 """)
+
 
 if __name__ == "__main__":
     # parse_sv_pdf()
