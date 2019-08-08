@@ -4,6 +4,7 @@ from antlr4grammar import iAntlr4GramElem, Antlr4Option, Antlr4Symbol, \
     Antlr4Indent, Antlr4Newline, Antlr4Iteration, Antlr4Sequence, \
     Antlr4Selection, Antlr4Rule, rule_by_name
 from typing import List
+from copy import deepcopy
 
 
 def rm_option_on_rule_usage(rules, rule_name):
@@ -97,22 +98,13 @@ def remove_simple_rule(name, p):
     assert r is not None, name
     assert len(r.body) == 1, r
     assert isinstance(r.body[0], Antlr4Symbol)
-    replace_symbol = r.body[0]
-    p.rules = [rule for rule in p.rules if rule is not r]
-
-    def renamer(obj: iAntlr4GramElem):
-        if isinstance(obj, Antlr4Symbol) and obj.symbol == r.name:
-            obj.symbol = replace_symbol.symbol
-            obj.is_terminal = replace_symbol.is_terminal
-            obj.is_regex = replace_symbol.is_regex
-
-    for rule in p.rules:
-        rule.walk(renamer)
+    inline_rule(p.rules, name)
 
 
 def get_simple_rules(rules):
     for r in rules:
-        if len(r.body) == 1 and isinstance(r.body[0], Antlr4Symbol):
+        body = list(iter_non_visuals(r.body))
+        if len(body) == 1 and isinstance(body[0], Antlr4Symbol):
             yield r
 
 
@@ -173,10 +165,11 @@ def extract_option_as_rule(rules, rule_name, option_i, new_rule_name):
     r = rule_by_name(rules, rule_name)
     assert isinstance(r.body, Antlr4Selection)
     new_r = Antlr4Rule(new_rule_name, r.body[option_i])
-    r.body[option_i] = Antlr4Sequence([Antlr4Symbol(new_rule_name, False),
-                                       Antlr4Newline(),
-                                       Antlr4Indent(1)
-                                       ])
+    r.body[option_i] = Antlr4Sequence([
+        Antlr4Symbol(new_rule_name, False),
+        Antlr4Newline(),
+        Antlr4Indent(1)
+    ])
     rules.insert(rules.index(r), new_r)
     return new_r
 
@@ -198,3 +191,16 @@ def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
         r.walk(renamer)
     except FirstFound:
         pass
+
+def inline_rule(rules, rule_name):
+    rule = rule_by_name(rules, rule_name)
+    replacement = rule.body
+
+    def match_replace_fn(o):
+        if isinstance(o, Antlr4Symbol) and o.symbol == rule_name:
+            return deepcopy(replacement)
+
+    for r in rules:
+        replace_item_by_sequence(r, match_replace_fn)
+
+    rules.remove(rule)

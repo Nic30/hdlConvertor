@@ -5,8 +5,6 @@ from antlr4grammar import iAntlr4GramElem, Antlr4Sequence, Antlr4Symbol, \
     Antlr4Iteration, Antlr4Selection, Antlr4Option, Antlr4Indent, \
     Antlr4Newline, rule_by_name, Antlr4Rule
 from selection_optimiser import iter_non_visuals
-from copy import deepcopy
-from antlr4_utils import replace_item_by_sequence
 
 
 def transitive_closure(graph: Dict[object, Set[object]], reflexive=False):
@@ -217,20 +215,6 @@ def direct_left_recurse_rm(rules, rule_name):
     body_new = choices_new[0] if len(choices_new) == 1 else choices_new
     r_new = Antlr4Rule(rule_name, body_new)
     rules.insert(rules.index(r), r_new)
-
-
-def inline_rule(rules, rule_name):
-    rule = rule_by_name(rules, rule_name)
-    replacement = rule.body
-
-    def match_replace_fn(o):
-        if isinstance(o, Antlr4Symbol) and o.symbol == rule_name:
-            return deepcopy(replacement)
-
-    for r in rules:
-        replace_item_by_sequence(r, match_replace_fn)
-
-    rules.remove(rule)
 
 
 def split_rule(rules, rule_name, symbols_to_extract: List[str], subrule_name: str):
