@@ -102,7 +102,7 @@ cdef class HdlConvertor:
         """
         :param filenames: sequence of filenames or filename
         :type filename: Union[str, List[str]]
-        :param language: hdlConvertor.language.Language enum value
+        :param langue: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
@@ -144,7 +144,7 @@ cdef class HdlConvertor:
         """
         :param hdl_str: HDL string to parse
         :type filename: str
-        :param language: hdlConvertor.language.Language enum value
+        :param langue: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
