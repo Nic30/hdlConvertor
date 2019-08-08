@@ -161,15 +161,25 @@ def len_without_visuals(s: Antlr4Sequence):
     return i
 
 
-def extract_option_as_rule(rules, rule_name, option_i, new_rule_name):
+def extract_option_as_rule(rules, rule_name, options_i, new_rule_name):
     r = rule_by_name(rules, rule_name)
     assert isinstance(r.body, Antlr4Selection)
-    new_r = Antlr4Rule(new_rule_name, r.body[option_i])
-    r.body[option_i] = Antlr4Sequence([
+    new_body = Antlr4Selection([])
+    for i in options_i:
+        new_body.append(r.body[i])
+
+    r.body[options_i[0]] = Antlr4Sequence([
         Antlr4Symbol(new_rule_name, False),
         Antlr4Newline(),
         Antlr4Indent(1)
     ])
+    r.body = Antlr4Selection([x for i, x in enumerate(r.body)
+                              if i not in options_i[1:]])
+
+    if len(new_body) == 1:
+        new_body = new_body[0]
+
+    new_r = Antlr4Rule(new_rule_name, new_body)
     rules.insert(rules.index(r), new_r)
     return new_r
 
@@ -191,6 +201,7 @@ def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
         r.walk(renamer)
     except FirstFound:
         pass
+
 
 def inline_rule(rules, rule_name):
     rule = rule_by_name(rules, rule_name)

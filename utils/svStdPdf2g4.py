@@ -7,17 +7,14 @@
 from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Selection, Antlr4Option, generate_renamer, \
     iAntlr4GramElem, rule_by_name, Antlr4LexerAction
-from left_recurse_remove import direct_left_recurse_rm, split_rule, \
-    iterate_everything_except_first, left_recurse_print
-from selection_optimiser import optimise_selections
 from svRule2Antlr4Rule import SvRule2Antlr4Rule
 from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
-    remove_simple_rule, rm_option_on_rule_usage, iter_non_visuals, \
-    extract_option_as_rule, replace_symbol_in_rule, inline_rule
+    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule
 from copy import deepcopy
 from optionality_optimiser import reduce_optionality
 from sv_rules_defined_in_text import add_string_literal_rules, \
     add_file_path_literal_rules
+from sv_lr_rm import left_recurse_remove
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -29,117 +26,6 @@ def mark_regex(obj: iAntlr4GramElem):
     if isinstance(obj, Antlr4Symbol) and obj.symbol in [
             '[a-zA-Z_]', '[a-zA-Z0-9_$]', '[a-zA-Z0-9_]']:
         obj.is_regex = True
-
-
-def subroutine_call_rm_lr(rules):
-    r = rule_by_name(rules, "subroutine_call")
-    assert isinstance(r.body, Antlr4Selection)
-    c = r.body[2]
-    _body = list(iter_non_visuals(c))
-    assert _body[-1].symbol == "method_call_body", _body[-1].symbol
-    start: Antlr4Selection = _body[0]
-    start.clear()
-    start.extend([
-        Antlr4Symbol("primary_no_cast_no_call", False),
-        Antlr4Symbol("cast", False),
-        Antlr4Symbol("implicit_class_handle", False)
-    ])
-
-
-def left_recurse_remove(rules):
-    """
-    Removing Left Recursion from Context-Free Grammars
-    https://www.microsoft.com/en-us/research/wp-content/uploads/2000/04/naacl2k-proc-rev.pdf
-
-    http://web.science.mq.edu.au/~mjohnson/papers/johnson-left-corner.pdf
-
-    :note: supports the '|',?,* in rules
-    """
-    # :note: higher priority = sooner in parse tree
-
-    rules = optimise_selections(rules)
-    direct_left_recurse_rm(rules, 'block_event_expression')
-    direct_left_recurse_rm(rules, 'event_expression')
-    direct_left_recurse_rm(rules, 'constant_expression')
-    # method_call_root - only in method_call
-    # method_call      - only in subroutine_call
-    inline_rule(rules, "method_call")
-    inline_rule(rules, "method_call_root")
-    split_rule(rules, "primary",
-               ["cast", "subroutine_call"],
-               "primary_no_cast_no_call")
-    split_rule(rules, "constant_primary",
-               ["constant_cast", "subroutine_call"],
-               "constant_primary_no_cast_no_call")
-
-    # inline_rule(rules, "cast")
-    # inline_rule(rules, "constant_cast")
-    iterate_everything_except_first(
-       rules, "cast")
-    iterate_everything_except_first(
-       rules, "constant_cast")
-    # [TODO] check if really all combinations of cast/call are possible
-    replace_symbol_in_rule(
-        rules, "casting_type",
-        "constant_primary",
-        "constant_primary_no_cast_no_call")
-    subroutine_call_rm_lr(rules)
-
-    inline_rule(rules, "module_path_conditional_expression")
-    direct_left_recurse_rm(rules, 'module_path_expression')
-
-    # inline_rule(rules, "inside_expression")
-    inline_rule(rules, "expression_or_cond_pattern")
-    inline_rule(rules, "cond_pattern")
-    # inline_rule(rules, "conditional_expression")
-    rules = optimise_selections(rules)
-
-    # solve expression - conditional_expression left recurse
-    # copy cond_predicate
-
-    split_rule(rules, "expression",
-               ["inside_expression"],
-               "expression_no_inside")
-    replace_symbol_in_rule(
-        rules, "inside_expression",
-        "expression",
-        "expression_no_inside")
-    iterate_everything_except_first(
-       rules, "inside_expression")
-
-    # cond_predicate starting with expression_no_conditional instead of expression
-    # expression_no_conditional
-    split_rule(rules, "expression_no_inside",
-               ["conditional_expression"],
-               "expression_no_conditional")
-    cond_predicate = rule_by_name(rules, "cond_predicate")
-    cond_expr_predicate = deepcopy(cond_predicate)
-    cond_expr_predicate.name = "cond_expr_predicate"
-    rules.insert(rules.index(cond_predicate), cond_expr_predicate)
-    replace_symbol_in_rule(
-        rules, "cond_expr_predicate",
-        "expression",
-        "expression_no_conditional", only_first=True)
-    replace_symbol_in_rule(
-        rules, "conditional_expression",
-        "cond_predicate",
-        "cond_expr_predicate", only_first=True)
-    iterate_everything_except_first(
-       rules, "conditional_expression")
-    # extract bin op
-    extract_option_as_rule(rules, "expression_no_conditional", 4, "expression_bin_op")
-    split_rule(rules, "expression_no_conditional",
-               ["expression_bin_op"],
-               "expression_no_bin_op")
-    replace_symbol_in_rule(
-        rules, "expression_bin_op",
-        "expression",
-        "expression_no_bin_op", only_first=True)
-    iterate_everything_except_first(
-       rules, "expression_bin_op")
-    left_recurse_print(rules)
-
-    return rules
 
 
 def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
@@ -552,9 +438,9 @@ def proto_grammar_to_g4():
     add_file_path_literal_rules(p)
     rm_option_from_eps_rules(p)
     p.rules = left_recurse_remove(p.rules)
-    extract_option_as_rule(p.rules, "real_number", 1, "REAL_NUMBER_WITH_EXP")
-    extract_option_as_rule(p.rules, "decimal_number", 1, "DECIMAL_NUMBER_WITH_BASE")
-    extract_option_as_rule(p.rules, "decimal_number", 2, "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
+    extract_option_as_rule(p.rules, "real_number", [1, ], "REAL_NUMBER_WITH_EXP")
+    extract_option_as_rule(p.rules, "decimal_number", [1, ], "DECIMAL_NUMBER_WITH_BASE")
+    extract_option_as_rule(p.rules, "decimal_number", [2, ], "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
 
     fix_lexer_for_table_def(p)
     fix_lexer_for_library_def(p)
