@@ -82,7 +82,7 @@ cdef class HdlConvertor:
         elif langue == PyHdlLanguageEnum.SYSTEM_VERILOG:
             return SYSTEM_VERILOG
         else:
-            raise ValueError(langue + " is not recognized (expected verilog, vhdl or systemVerilog)")
+            raise ValueError(str(langue) + " is not recognized (expected verilog, vhdl or systemVerilog)")
 
     @staticmethod
     def _get_verilog_pp_mode(mode):
