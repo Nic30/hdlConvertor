@@ -63,9 +63,11 @@ There are classes for objects in HDL langues and there is also type specified fo
 
 Example of usage:
 ```python
+import sys
 from hdlConvertor.language import Language
 from hdlConvertor.toVerilog import ToVerilog
 from hdlConvertor import HdlConvertor
+
 c = HdlConvertor()
 filenames = ["your.v", ]
 include_dirs = []
