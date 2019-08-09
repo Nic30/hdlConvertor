@@ -1,5 +1,4 @@
 from typing import List
-import re
 
 
 class _Antlr4GrammarElem():
@@ -123,6 +122,9 @@ class ANTLR4Symbol(_Antlr4GrammarElem):
         self.symbol = symbol
         self.is_terminal = is_terminal
 
+    def is_lexer_nonterminal(self):
+        return not self.is_terminal and self.symbol == self.symbol.upper()
+
     def __eq__(self, other):
         return (isinstance(other, ANTLR4Symbol)
                 and self.symbol == other.symbol
@@ -132,10 +134,16 @@ class ANTLR4Symbol(_Antlr4GrammarElem):
         return hash((self.symbol, self.is_terminal))
 
     def toAntlr4(self):
-        return self.symbol
+        if self.is_terminal:
+            return "'%s'" % self.symbol.translate(str.maketrans({"'":  "\'",
+                                                                 "\n": "\\n",
+                                                                 "\t": "\\t"
+                                                                 }))
+        else:
+            return self.symbol
 
 
-def generate_renamer(renames):
+def generate_renamer(renames, set_to_non_terminal=False):
 
     def apply_rename(obj):
         if isinstance(obj, ANTLR4Rule):
@@ -146,6 +154,8 @@ def generate_renamer(renames):
             n = renames.get(obj.symbol , None)
             if n is not None:
                 obj.symbol = n
+                if set_to_non_terminal:
+                    obj.is_terminal = False
 
     return apply_rename
 

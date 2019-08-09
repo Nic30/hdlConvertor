@@ -3,10 +3,10 @@
 [![Win Build status](https://ci.appveyor.com/api/projects/status/e3cvi3ig5y4vni7e?svg=true)](https://ci.appveyor.com/project/nic30/hdlconvertor)
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
 [![Python version](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)
-[ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing)
+[ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing) [![Gitter](https://badges.gitter.im/hdlConvertor/community.svg)](https://gitter.im/hdlConvertor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
-The System Verilog and VHDL parser (and preprocessor) for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST. So your project does not not have to care about Verilog/VHDL differences
+The System Verilog and VHDL parser (and preprocessor) for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST (Classes defined in [hdlConvertor::hdlObjects](https://github.com/Nic30/hdlConvertor/tree/master/include/hdlConvertor/hdlObjects) and it's [python equivalent](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/hdlAst).). So your project does not not have to care about Verilog/VHDL differences
 
 It is also possible to convert this AST back to original HDL.
 
@@ -15,10 +15,12 @@ There is also Java version. But it seems that there is no use for it.
 
 
 ## Installation
+**Use version from this repo as the pip package is currently very old (The pip package will be updated after specified functionality is implemented [issues/48](https://github.com/Nic30/hdlConvertor/issues/48).).**
+
 Linux:
 ```
 # note that only last 2 are really required rest is downloaded automatically as dependency
-sudo apt install build-essential uuid-dev cmake default-jre python3 python3-pip libantlr4-runtime-dev antlr4
+sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4
 # note this may be older version than you see in repo
 sudo pip3 install hdlConvertor
 
@@ -79,20 +81,22 @@ for o in d.objs:
 
 
 ### Similar projects:
+(Tell us If you know about some other project!)
 
-* [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
+* [cl-vhdl](https://github.com/mabragor/cl-vhdl) - lisp, Parser of VHDL into lisp-expressions 
+* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
+* [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
+* [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
+* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
+* [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
+* [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
+* [veelox](https://github.com/martinda/veelox) - Java+ANTLR,  An experiment in SystemVerilog Preprocessing 
+* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
-* [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
-* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
-* [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
-* [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
-* [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
-* [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
-* [veelox](https://github.com/martinda/veelox) - Java+ANTLR,  An experiment in SystemVerilog Preprocessing 
 
 ### License
 
