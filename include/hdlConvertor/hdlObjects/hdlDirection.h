@@ -13,7 +13,7 @@ enum HdlDirection {
 	DIR_UNKNOWN,
 };
 
-inline const char * HdlDirection_toString(HdlDirection d) {
+inline const char* HdlDirection_toString(HdlDirection d) {
 	switch (d) {
 	case DIR_IN:
 		return "IN";

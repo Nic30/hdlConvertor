@@ -22,12 +22,10 @@ list(APPEND hdlConvertor_core_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/syntaxErrorLogger.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/conversion_exception.cpp"
 )
-
 set(hdlConvertor_cpp_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/convertor.cpp"
 )
-
-add_library(hdlConvertor_core_static STATIC  ${hdlConvertor_core_SRC})
+add_library(hdlConvertor_core_static STATIC ${hdlConvertor_core_SRC})
 target_include_directories(hdlConvertor_core_static
 	INTERFACE
 	"${CMAKE_CURRENT_SOURCE_DIR}/../include/"
@@ -38,10 +36,6 @@ set_target_properties(hdlConvertor_core_static
 	POSITION_INDEPENDENT_CODE ON
 )
 
-# [note] hdlConvertor_core_static and hdlConvertor_cpp_static has to be separated
-#        otherwise it is not possible to link this library
-add_library(hdlConvertor_cpp_static STATIC  ${hdlConvertor_cpp_SRC})
-
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CPP_STD_FILESYSTEM_LIB_NAME c++experimental)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
@@ -49,17 +43,64 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set(CPP_STD_FILESYSTEM_LIB_NAME stdc++fs)
 endif()
 
-target_link_libraries(hdlConvertor_cpp_static
+
+set(HDL_CONVERTOR_INTERNAL_LIBS 
 	svConvertor_static
 	verilogConvertor_static
 	verilogPreproc_static
 	vhdlConvertor_static
 	hdlConvertor_core_static
-	${ANTLR4CPP_LIBRARIES}
-	${CPP_STD_FILESYSTEM_LIB_NAME}
 )
-set_target_properties(hdlConvertor_cpp_static
-	PROPERTIES VERSION "1.0.0"
-	OUTPUT_NAME hdlConvertor_cpp
-	POSITION_INDEPENDENT_CODE ON
-)
+
+if(HDLCONVERTOR_PYTHON)
+	# [note] hdlConvertor_core_static and hdlConvertor_cpp_static has to be separated
+	#        otherwise it is not possible to link this library
+	add_library(hdlConvertor_cpp_static STATIC ${hdlConvertor_cpp_SRC})
+
+	target_link_libraries(hdlConvertor_cpp_static
+		${HDL_CONVERTOR_INTERNAL_LIBS}
+		${ANTLR4CPP_LIBRARIES}
+		${CPP_STD_FILESYSTEM_LIB_NAME}
+	)
+
+	set_target_properties(hdlConvertor_cpp_static
+		PROPERTIES VERSION "1.0.0"
+		OUTPUT_NAME "hdlConvertor_cpp"
+		POSITION_INDEPENDENT_CODE ON
+	)
+else()
+	# add dummy file to make cmake happy
+	add_library(hdlConvertor_cpp_shared SHARED ${hdlConvertor_cpp_SRC})
+	set_target_properties(hdlConvertor_cpp_shared
+		PROPERTIES VERSION "1.0.0"
+		OUTPUT_NAME "hdlConvertor"
+		# POSITION_INDEPENDENT_CODE ON
+	)
+	target_link_libraries(hdlConvertor_cpp_shared
+		PRIVATE
+	    "-Wl,--whole-archive"
+		${HDL_CONVERTOR_INTERNAL_LIBS}
+	    "-Wl,--no-whole-archive"
+	)
+	target_link_libraries(hdlConvertor_cpp_shared
+		INTERFACE
+		${ANTLR4CPP_LIBRARIES}
+		${CPP_STD_FILESYSTEM_LIB_NAME}
+	)
+	install(TARGETS hdlConvertor_cpp_shared
+		EXPORT hdlConvertorConfig
+		LIBRARY DESTINATION lib
+  		# ARCHIVE DESTINATION lib
+  		# FILES DESTINATION include ${CMAKE_INSTALL_INCLUDEDIR}
+  		# PUBLIC_HEADER DESTINATION include
+  	)
+  	install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../include/"
+  	        DESTINATION include ${CMAKE_INSTALL_INCLUDEDIR})
+  	# This makes the project importable from the install directory
+	# Put config file in per-project dir (name MUST match), can also
+	# just go into 'cmake'.
+	install(EXPORT hdlConvertorConfig DESTINATION share/hdlConvertor/cmake)
+	
+	# This makes the project importable from the build directory
+	export(TARGETS hdlConvertor_cpp_shared FILE hdlConvertorConfig.cmake)
+endif()

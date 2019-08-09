@@ -1,3 +1,6 @@
+/*
+ * Grammar for parsing of grammar defined in PDFs with Verilog/VHDL standard 
+ **/
 grammar proto_grammar;
 
 proto_file:

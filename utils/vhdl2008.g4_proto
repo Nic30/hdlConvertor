@@ -1,0 +1,914 @@
+entity_declaration ::=
+      <b>entity</b> identifier <b>is</b>
+            entity_header
+            entity_declarative_part
+      [ <b>begin</b>
+            entity_statement_part ]
+      <b>end</b> [ <b>entity</b> ] [ <it>entity</it>_simple_name ] ;
+entity_header ::=
+      [<it>formal</it>_generic_clause ]
+      [<it>formal</it>_port_clause ]
+entity_declarative_part ::=
+      { entity_declarative_item }
+entity_declarative_item ::=
+        subprogram_declaration
+      | subprogram_body
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_body
+      | package_instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+      | constant_declaration
+      | signal_declaration
+      | <it>shared</it>_variable_declaration
+      | file_declaration
+      | alias_declaration
+entity_statement_part ::=
+      { entity_statement }
+entity_statement ::=
+        concurrent_assertion_statement
+      | <it>passive</it>_concurrent_procedure_call_statement
+architecture_body ::=
+      <b>architecture</b> identifier <b>of</b> <it>entity</it>_name <b>is</b>
+            architecture_declarative_part
+      <b>begin</b>
+            architecture_statement_part
+      <b>end</b> [ <b>architecture</b> ] [ <it>architecture</it>_simple_name ] ;
+architecture_declarative_part ::=
+      { block_declarative_item }
+block_declarative_item ::=
+        subprogram_declaration
+      | subprogram_body
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_body
+      | package_instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+      | constant_declaration
+      | signal_declaration
+      | <it>shared</it>_variable_declaration
+      | file_declaration
+      | alias_declaration
+      | component_declaration
+      | attribute_declaration
+      | attribute_specification
+      | configuration_specification
+      | disconnection_specification
+      | use_clause
+      | group_template_declaration
+      | group_declaration
+      | <it>PSL_</it>Property_Declaration
+      | <it>PSL_</it>Sequence_Declaration
+      | <it>PSL_</it>Clock_Declaration
+architecture_statement_part ::=
+      { concurrent_statement }
+configuration_declaration ::=
+      <b>configuration</b> identifier <b>of</b> <it>entity</it>_name <b>is</b>
+            configuration_declarative_part
+            { verification_unit_binding_indication ; }
+            block_configuration
+      <b>end</b> [ <b>configuration</b> ] [ <it>configuration</it>_simple_name ] ;
+configuration_declarative_part ::=
+      { configuration_declarative_item }
+configuration_declarative_item ::=
+        use_clause
+      | attribute_specification
+      | group_declaration
+block_configuration ::=
+      <b>for</b> block_specification
+            { use_clause }
+            { configuration_item }
+      <b>end</b> <b>for</b> ;
+block_specification ::=
+        <it>architecture</it>_name
+      | <it>block_statement</it>_label
+      | <it>generate_statement</it>_label [ ( generate_specification ) ]
+generate_specification ::=
+        <it>static</it>_discrete_range
+      | <it>static</it>_expression
+      | <it>alternative_</it>label
+configuration_item ::=
+        block_configuration
+      | component_configuration
+component_configuration ::=
+      <b>for</b> component_specification
+            [ binding_indication ; ]
+            { verification_unit_binding_indication ; }
+            [ block_configuration ]
+      <b>end</b> <b>for</b> ;
+subprogram_declaration ::=
+      subprogram_specification ;
+subprogram_specification ::=
+      procedure_specification | function_specification
+procedure_specification ::=
+      <b>procedure</b> designator
+            subprogram_header
+            [ [ <b>parameter</b> ] ( formal_parameter_list ) ]
+function_specification ::=
+      [ <b>pure</b> | <b>impure</b> ] <b>function</b> designator
+            subprogram_header
+            [ [ <b>parameter</b> ] ( formal_parameter_list ) ] <b>return</b> type_mark
+subprogram_header ::=
+      [ <b>generic</b> ( generic_list )
+      [ generic_map_aspect ] ]
+designator ::=  identifier  |  operator_symbol
+operator_symbol ::=  string_literal
+formal_parameter_list ::=  <it>parameter</it>_interface_list
+subprogram_body ::=
+      subprogram_specification <b>is</b>
+            subprogram_declarative_part
+      <b>begin</b>
+            subprogram_statement_part
+      <b>end</b> [ subprogram_kind ] [ designator ] ;
+subprogram_declarative_part ::=
+      { subprogram_declarative_item }
+subprogram_declarative_item ::=
+        subprogram_declaration
+      | subprogram_body
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_body
+      | package_instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+      | constant_declaration
+      | variable_declaration
+      | file_declaration
+      | alias_declaration
+      | attribute_declaration
+      | attribute_specification
+      | use_clause
+      | group_template_declaration
+      | group_declaration
+subprogram_statement_part ::=
+      { sequential_statement }
+subprogram_kind ::=  <b>procedure</b> | <b>function</b>
+subprogram_instantiation_declaration ::=
+      subprogram_kind designator <b>is</b> <b>new</b> <it>uninstantiated_subprogram_</it>name [ signature ]
+            [ generic_map_aspect ] ;
+signature ::=  [ [ type_mark { , type_mark }  ] [ <b>return</b> type_mark ] ]
+package_declaration ::=
+      <b>package</b> identifier <b>is</b>
+            package_header
+            package_declarative_part
+      <b>end</b> [ <b>package</b> ] [ <it>package</it>_simple_name ] ;
+package_header ::=
+      [ generic_clause
+      [ generic_map_aspect ; ] ]
+package_declarative_part ::=
+      { package_declarative_item }
+package_declarative_item ::=
+        subprogram_declaration
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+      | constant_declaration
+      | signal_declaration
+      | variable_declaration
+      | file_declaration
+      | alias_declaration
+      | component_declaration
+      | attribute_declaration
+      | attribute_specification
+      | disconnection_specification
+      | use_clause
+      | group_template_declaration
+      | group_declaration
+      | <it>PSL_</it>Property_Declaration
+      | <it>PSL_</it>Sequence_Declaration
+package_body ::=
+      <b>package</b> <b>body</b> <it>package</it>_simple_name <b>is</b>
+            package_body_declarative_part
+      <b>end</b> [ <b>package</b> <b>body</b> ] [ <it>package</it>_simple_name ] ;
+package_body_declarative_part ::=
+      { package_body_declarative_item }
+package_body_declarative_item ::=
+        subprogram_declaration
+package_instantiation_declaration ::=
+      <b>package</b> identifier <b>is</b> <b>new</b> <it>uninstantiated_package_</it>name
+            [ generic_map_aspect ] ;
+scalar_type_definition ::=
+        enumeration_type_definition
+      | integer_type_definition
+      | floating_type_definition
+      | physical_type_definition
+range_constraint ::=  <b>range</b> range
+range ::=
+        <it>range</it>_attribute_name
+      | simple_expression direction simple_expression
+direction ::=  <b>to</b> | <b>downto</b>
+enumeration_type_definition ::=
+      ( enumeration_literal { , enumeration_literal } )
+enumeration_literal ::=  identifier | character_literal
+integer_type_definition ::=  range_constraint
+physical_type_definition ::=
+      range_constraint
+            <b>units</b>
+                  primary_unit_declaration
+                  { secondary_unit_declaration }
+            <b>end</b> <b>units</b> [ <it>physical_type</it>_simple_name ]
+primary_unit_declaration ::=  identifier ;
+secondary_unit_declaration ::= identifier = physical_literal ;
+physical_literal ::=  [ abstract_literal ] <it>unit</it>_name
+floating_type_definition ::=  range_constraint
+composite_type_definition ::=
+        array_type_definition
+      | record_type_definition
+array_type_definition ::=
+      unbounded_array_definition | constrained_array_definition
+unbounded_array_definition ::=
+      <b>array</b> ( index_subtype_definition { , index_subtype_definition } )
+            <b>of</b> <it>element</it>_subtype_indication
+constrained_array_definition ::=
+      <b>array</b> index_constraint <b>of</b> <it>element</it>_subtype_indication
+index_subtype_definition ::= type_mark <b>range</b> <>
+array_constraint ::=
+        index_constraint [ array_element_constraint ]
+      | ( <b>open</b> ) [ array_element_constraint ]
+array_element_constraint ::= element_constraint
+index_constraint ::=  ( discrete_range { , discrete_range } )
+discrete_range ::=  <it>discrete</it>_subtype_indication | range
+record_type_definition ::=
+      <b>record</b>
+            element_declaration
+            { element_declaration }
+      <b>end</b> <b>record</b> [ <it>record_type</it>_simple_name ]
+element_declaration ::=
+      identifier_list : element_subtype_definition ;
+identifier_list ::=  identifier { , identifier }
+element_subtype_definition ::= subtype_indication
+record_constraint ::=
+      ( record_element_constraint { , record_element_constraint } )
+record_element_constraint ::= <it>record_element_</it>simple_name element_constraint
+access_type_definition ::=  <b>access</b> subtype_indication
+incomplete_type_declaration ::= <b>type</b> identifier ;
+file_type_definition ::= <b>file</b> <b>of</b> type_mark
+protected_type_definition  ::=
+        protected_type_declaration
+      | protected_type_body
+protected_type_declaration  ::=
+      <b>protected</b>
+            protected_type_declarative_part
+      <b>end</b> <b>protected</b> [ <it>protected_type</it>_simple_name ]
+protected_type_declarative_part  ::=
+      { protected_type_declarative_item }
+protected_type_declarative_item  ::=
+        subprogram_declaration
+      | subprogram_instantiation_declaration
+      | attribute_specification
+      | use_clause
+protected_type_body ::=
+      <b>protected</b> <b>body</b>
+            protected_type_body_declarative_part
+      <b>end</b> <b>protected</b> <b>body</b> [ <it>protected_type</it>_simple name ]
+protected_type_body_declarative_part ::=
+      { protected_type_body_declarative_item }
+protected_type_body_declarative_item ::=
+        subprogram_declaration
+      | subprogram_body
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_body
+      | package_instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+      | constant_declaration
+      | variable_declaration
+      | file_declaration
+      | alias_declaration
+      | attribute_declaration
+      | attribute_specification
+      | use_clause
+      | group_template_declaration
+      | group_declaration
+type_declaration ::=
+        full_type_declaration
+      | incomplete_type_declaration
+full_type_declaration ::=
+      <b>type</b> identifier <b>is</b> type_definition ;
+type_definition ::=
+        scalar_type_definition
+      | composite_type_definition
+      | access_type_definition
+      | file_type_definition
+      | protected_type_definition
+subtype_declaration ::=
+      <b>subtype</b> identifier <b>is</b> subtype_indication ;
+subtype_indication ::=
+      [ resolution_indication ] type_mark [ constraint ]
+resolution_indication ::=
+      <it>resolution_function_</it>name | ( element_resolution )
+element_resolution ::= array_element_resolution | record_resolution
+array_element_resolution ::= resolution_indication
+record_resolution ::= record_element_resolution { , record_element_resolution }
+record_element_resolution ::= <it>record_element_</it>simple_name resolution_indication
+type_mark ::=
+        <it>type</it>_name
+      | <it>subtype</it>_name
+constraint ::=
+        range_constraint
+      | array_constraint
+      | record_constraint
+element_constraint ::=
+        array_constraint
+      | record_constraint
+object_declaration ::=
+        constant_declaration
+      | signal_declaration
+      | variable_declaration
+      | file_declaration
+constant_declaration ::=
+      <b>constant</b> identifier_list : subtype_indication [ := expression ] ;
+signal_declaration ::=
+      <b>signal</b> identifier_list : subtype_indication [ signal_kind ] [ := expression ] ;
+signal_kind ::=  <b>register</b> | <b>bus</b>
+variable_declaration ::=
+      [ <b>shared</b> ] <b>variable</b> identifier_list : subtype_indication [ := expression ] ;
+file_declaration ::=
+      <b>file</b> identifier_list : subtype_indication [ file_open_information ] ;
+file_open_information ::=  [ <b>open</b> <it>file_open_kind</it>_expression ] <b>is</b> file_logical_name
+file_logical_name ::=  <it>string</it>_expression
+interface_declaration ::=
+        interface_object_declaration
+      | interface_type_declaration
+      | interface_subprogram_declaration
+      | interface_package_declaration
+interface_object_declaration ::=
+        interface_constant_declaration
+      | interface_signal_declaration
+      | interface_variable_declaration
+      | interface_file_declaration
+interface_constant_declaration ::=
+      [ <b>constant</b> ] identifier_list : [ <b>in</b> ] subtype_indication [ := <it>static</it>_expression ]
+interface_signal_declaration ::=
+      [ <b>signal</b> ] identifier_list : [ mode ] subtype_indication [ <b>bus</b> ] [ := <it>static</it>_expression ]
+interface_variable_declaration ::=
+      [ <b>variable</b> ] identifier_list : [ mode ] subtype_indication [ := <it>static</it>_expression ]
+interface_file_declaration ::=
+      <b>file</b> identifier_list : subtype_indication
+mode ::= <b>in</b> | <b>out</b> | <b>inout</b> | <b>buffer</b> | <b>linkage</b>
+interface_type_declaration ::=
+      interface_incomplete_type_declaration
+interface_incomplete_type_declaration ::= <b>type</b> identifier
+interface_subprogram_declaration ::=
+      interface_subprogram_specification [ <b>is</b> interface_subprogram_default ]
+interface_subprogram_specification ::=
+      interface_procedure_specification | interface_function_specification
+interface_procedure_specification ::=
+      <b>procedure</b> designator
+            [ [ <b>parameter</b> ] ( formal_parameter_list ) ]
+interface_function_specification ::=
+      [ <b>pure</b> | <b>impure</b> ] <b>function</b> designator
+            [ [ <b>parameter</b> ] ( formal_parameter_list ) ] <b>return</b> type_mark
+interface_subprogram_default ::= <it>subprogram_</it>name | <>
+interface_package_declaration ::=
+      <b>package</b> identifier <b>is</b> <b>new</b> <it>uninstantiated_package_</it>name interface_package_generic_map_aspect
+interface_package_generic_map_aspect ::=
+        generic_map_aspect
+      | <b>generic</b> <b>map</b> ( <> )
+      | <b>generic</b> <b>map</b> ( <b>default</b> )
+interface_list ::=
+      interface_element { ; interface_element }
+interface_element ::=  interface_declaration
+generic_clause ::=
+      <b>generic</b> ( generic_list ) ;
+generic_list ::=  <it>generic</it>_interface_list
+port_clause ::=
+      <b>port</b> ( port_list ) ;
+port_list ::=  <it>port</it>_interface_list
+association_list ::=
+      association_element { , association_element }
+association_element ::=
+      [ formal_part => ] actual_part
+formal_part ::=
+        formal_designator
+      | <it>function</it>_name ( formal_designator )
+      | type_mark ( formal_designator )
+formal_designator ::=
+        <it>generic</it>_name
+      | <it>port</it>_name
+      | <it>parameter</it>_name
+actual_part ::=
+        actual_designator
+      | <it>function</it>_name ( actual_designator )
+      | type_mark ( actual_designator )
+actual_designator ::=
+        [ <b>inertial</b> ] expression
+      | <it>signal</it>_name
+      | <it>variable</it>_name
+      | <it>file_</it>name
+      | subtype_indication
+      | <it>subprogram_</it>name
+      | <it>instantiated_package_</it>name
+      | <b>open</b>
+generic_map_aspect ::=
+      <b>generic</b> <b>map</b> ( <it>generic</it>_association_list )
+port_map_aspect ::=
+      <b>port</b> <b>map</b> ( <it>port</it>_association_list )
+alias_declaration ::=
+      <b>alias</b> alias_designator [ : subtype_indication ] <b>is</b> name [ signature ] ;
+alias_designator ::=  identifier | character_literal | operator_symbol
+attribute_declaration ::=
+      <b>attribute</b> identifier : type_mark ;
+component_declaration ::=
+      <b>component</b> identifier [ <b>is</b> ]
+            [ <it>local</it>_generic_clause ]
+            [ <it>local</it>_port_clause ]
+      <b>end</b> <b>component</b> [ <it>component</it>_simple_name ] ;
+group_template_declaration ::=
+      <b>group</b> identifier <b>is</b> ( entity_class_entry_list ) ;
+entity_class_entry_list ::=
+      entity_class_entry { , entity_class_entry }
+entity_class_entry ::=  entity_class [ <> ]
+group_declaration ::=
+      <b>group</b> identifier : <it>group_template</it>_name ( group_constituent_list ) ;
+group_constituent_list ::=  group_constituent { , group_constituent }
+group_constituent ::=  name | character_literal
+attribute_specification ::=
+      <b>attribute</b> attribute_designator <b>of</b> entity_specification <b>is</b> expression ;
+entity_specification ::=
+      entity_name_list : entity_class
+entity_class ::=
+        <b>entity</b>
+      | <b>architecture</b>
+      | <b>configuration</b>
+      | <b>procedure</b>
+      | <b>function</b>
+      | <b>package</b>
+      | <b>type</b>
+      | <b>subtype</b>
+      | <b>constant</b>
+      | <b>signal</b>
+      | <b>variable</b>
+      | <b>component</b>
+      | <b>label</b>
+      | <b>literal</b>
+      | <b>units</b>
+      | <b>group</b>
+      | <b>file</b>
+      | <b>property</b>
+      | <b>sequence</b>
+entity_name_list ::=
+        entity_designator { , entity_designator }
+      | <b>others</b>
+      | <b>all</b>
+entity_designator ::=  entity_tag [ signature ]
+entity_tag ::=  simple_name | character_literal | operator_symbol
+configuration_specification ::=
+        simple_configuration_specification
+      | compound_configuration_specification
+simple_configuration_specification ::=
+      <b>for</b> component_specification binding_indication ;
+      [ <b>end</b> <b>for</b> ; ]
+compound_configuration_specification ::=
+      <b>for</b> component_specification binding_indication ;
+            verification_unit_binding_indication ;
+            { verification_unit_binding_indication ; }
+      <b>end</b> <b>for</b> ;
+component_specification ::=
+      instantiation_list : <it>component</it>_name
+instantiation_list ::=
+        <it>instantiation</it>_label { , <it>instantiation</it>_label }
+      | <b>others</b>
+      | <b>all</b>
+binding_indication ::=
+      [ <b>use</b> entity_aspect ]
+      [ generic_map_aspect ]
+      [ port_map_aspect ]
+entity_aspect ::=
+        <b>entity</b> <it>entity</it>_name [ ( <it>architecture</it>_identifier ) ]
+      | <b>configuration</b> <it>configuration</it>_name
+      | <b>open</b>
+verification_unit_binding_indication ::=
+      <b>use</b> <b>vunit</b> verification_unit_list
+verification_unit_list ::= <it>verification_unit_</it>name { , <it>verification_unit_</it>name }
+disconnection_specification ::=
+      <b>disconnect</b> guarded_signal_specification <b>after</b> <it>time</it>_expression ;
+guarded_signal_specification ::=
+      <it>guarded</it>_signal_list : type_mark
+signal_list ::=
+        <it>signal</it>_name { , <it>signal</it>_name }
+      | <b>others</b>
+      | <b>all</b>
+name ::=
+        simple_name
+      | operator_symbol
+      | character_literal
+      | selected_name
+      | indexed_name
+      | slice_name
+      | attribute_name
+      | external_name
+prefix ::=
+        name
+      | function_call
+simple_name ::=  identifier
+selected_name ::=  prefix . suffix
+suffix ::=
+        simple_name
+      | character_literal
+      | operator_symbol
+      | <b>all</b>
+indexed_name ::=  prefix ( expression { , expression } )
+slice_name ::=  prefix ( discrete_range )
+attribute_name ::=
+      prefix [ signature ] ' attribute_designator [ ( expression ) ]
+attribute_designator ::=  <it>attribute</it>_simple_name
+external_name ::=
+        external_constant_name
+      | external_signal_name
+      | external_variable_name
+external_constant_name ::=
+      << <b>constant</b> external_pathname : subtype_indication >>
+external_signal_name ::=
+      << <b>signal</b> external_pathname : subtype_indication >>
+external_variable_name ::=
+      << <b>variable</b> external_pathname : subtype_indication >>
+external_pathname ::=
+        package_pathname
+      | absolute_pathname
+      | relative_pathname
+package_pathname ::=
+      @ <it>library_</it>logical_name . <it>package_</it>simple_name . { <it>package_</it>simple_name . } <it>object_</it>simple_name
+absolute_pathname ::= . partial_pathname
+relative_pathname ::= { ^ . } partial_pathname
+partial_pathname ::= { pathname_element . } <it>object_</it>simple_name
+pathname_element ::=
+        <it>entity_</it>simple_name
+      | <it>component_instantiation_</it>label
+      | <it>block_</it>label
+      | <it>generate_statement_</it>label [ ( <it>static_</it>expression ) ]
+      | <it>package_</it>simple_name
+expression ::=
+        condition_operator primary
+      | logical_expression
+logical_expression ::=
+        relation { <b>and</b> relation }
+      | relation { <b>or</b> relation }
+      | relation { <b>xor</b> relation }
+      | relation [ <b>nand</b> relation ]
+      | relation [ <b>nor</b> relation ]
+      | relation { <b>xnor</b> relation }
+relation ::=
+      shift_expression [ relational_operator shift_expression ]
+shift_expression ::=
+      simple_expression [ shift_operator simple_expression ]
+simple_expression ::=
+      [ sign ] term { adding_operator term }
+term ::=
+      factor { multiplying_operator factor }
+factor ::=
+        primary [ ** primary ]
+      | <b>abs</b> primary
+      | <b>not</b> primary
+      | logical_operator primary
+primary ::=
+        name
+      | literal
+      | aggregate
+      | function_call
+      | qualified_expression
+      | type_conversion
+      | allocator
+      | ( expression )
+condition_operator     ::=     ??
+logical_operator  ::=  <b>and</b>  |  <b>or</b>  |  <b>nand</b>  |  <b>nor</b>  |  <b>xor</b>  |  <b>xnor</b>
+relational_operator ::=  =  |  /=  |  <  |  <=  |  >  |  >=  |  ?=  |  ?/=  |  ?<  |  ?<=  |  ?>  |  ?>=
+shift_operator  ::=  <b>sll</b>  |  <b>srl</b>  |  <b>sla</b>  |  <b>sra</b>  |  <b>rol</b>  |  <b>ror</b>
+adding_operator  ::=  +  |  –  |  &
+sign  ::=  +  |  –
+multiplying_operator  ::=  *  |  /  |  <b>mod</b>  |  <b>rem</b>
+miscellaneous_operator  ::=  **  |  <b>abs</b>  |  <b>not</b>
+literal ::=
+        numeric_literal
+      | enumeration_literal
+      | string_literal
+      | bit_string_literal
+      | <b>null</b>
+numeric_literal ::=
+        abstract_literal
+      | physical_literal
+aggregate ::=
+      ( element_association { , element_association } )
+element_association ::=
+      [ choices => ] expression
+choices ::=  choice { | choice }
+choice ::=
+        simple_expression
+      | discrete_range
+      | <it>element</it>_simple_name
+function_call ::=
+      <it>function</it>_name [ ( actual_parameter_part ) ]
+actual_parameter_part ::=  <it>parameter</it>_association_list
+qualified_expression ::=
+        type_mark ' ( expression )
+      | type_mark ' aggregate
+type_conversion ::=  type_mark ( expression )
+allocator ::=
+        <b>new</b> subtype_indication
+      | <b>new</b> qualified_expression
+sequence_of_statements ::=
+      { sequential_statement }
+sequential_statement ::=
+        wait_statement
+      | assertion_statement
+      | report_statement
+      | signal_assignment_statement
+      | variable_assignment_statement
+      | procedure_call_statement
+      | if_statement
+      | case_statement
+      | loop_statement
+      | next_statement
+      | exit_statement
+      | return_statement
+      | null_statement
+wait_statement ::=
+      [ label : ] <b>wait</b> [ sensitivity_clause ] [ condition_clause ] [ timeout_clause ] ;
+sensitivity_clause ::=  <b>on</b> sensitivity_list
+sensitivity_list ::=  <it>signal</it>_name { , <it>signal</it>_name }
+condition_clause ::=  <b>until</b> condition
+condition ::= expression
+timeout_clause ::=  <b>for</b> <it>time</it>_expression
+assertion_statement ::=  [ label : ] assertion ;
+assertion ::=
+      <b>assert</b> condition
+            [ <b>report</b> expression ]
+            [ <b>severity</b> expression ]
+report_statement ::=
+      [ label : ]
+            <b>report</b> expression
+                  [ <b>severity</b> expression ] ;
+signal_assignment_statement ::=
+        [ label : ] simple_signal_assignment
+      | [ label : ] conditional_signal_assignment
+      | [ label : ] selected_signal_assignment
+simple_signal_assignment ::=
+        simple_waveform_assignment
+      | simple_force_assignment
+      | simple_release_assignment
+simple_waveform_assignment ::=
+      target <= [ delay_mechanism ] waveform ;
+simple_force_assignment ::=
+      target <= <b>force</b> [ force_mode ] expression ;
+simple_release_assignment ::=
+      target <= <b>release</b> [ force_mode ] ;
+force_mode ::= <b>in</b> | <b>out</b>
+delay_mechanism ::=
+        <b>transport</b>
+      | [ <b>reject</b> <it>time</it>_expression ] <b>inertial</b>
+target ::=
+        name
+      | aggregate
+waveform ::=
+        waveform_element { , waveform_element }
+      | <b>unaffected</b>
+waveform_element ::=
+        <it>value</it>_expression [ <b>after</b> <it>time</it>_expression ]
+      | <b>null</b> [ <b>after</b> <it>time</it>_expression ]
+conditional_signal_assignment ::=
+        conditional_waveform_assignment
+      | conditional_force_assignment
+conditional_waveform_assignment ::=
+      target  <=  [ delay_mechanism ] conditional_waveforms ;
+conditional_waveforms ::=
+      waveform <b>when</b> condition
+      { <b>else</b> waveform <b>when</b> condition }
+      [ <b>else</b> waveform ]
+conditional_force_assignment ::=
+      target <= <b>force</b> [ force_mode ] conditional_expressions ;
+conditional_expressions ::=
+      expression <b>when</b> condition
+      { <b>else</b> expression <b>when</b> condition }
+      [ <b>else</b> expression ]
+selected_signal_assignment ::=
+        selected_waveform_assignment
+      | selected_force_assignment
+selected_waveform_assignment ::=
+      <b>with</b> expression <b>select</b> [ ? ]
+            target <= [ delay_mechanism ] selected_waveforms ;
+selected_waveforms ::=
+      { waveform <b>when</b> choices , }
+      waveform <b>when</b> choices
+selected_force_assignment ::=
+      <b>with</b> expression <b>select</b> [ ? ]
+            target <= <b>force</b> [ force_mode ] selected_expressions ;
+selected_expressions ::=
+      { expression <b>when</b> choices , }
+      expression <b>when</b> choices
+variable_assignment_statement ::=
+        [ label : ] simple_variable_assignment
+      | [ label : ] conditional_variable_assignment
+      | [ label : ] selected_variable_assignment
+simple_variable_assignment ::=
+      target := expression ;
+conditional_variable_assignment ::=
+      target  :=  conditional_expressions ;
+selected_variable_assignment ::=
+      <b>with</b> expression <b>select</b> [ ? ]
+            target := selected_expressions ;
+procedure_call_statement ::=  [ label : ] procedure_call ;
+procedure_call ::=  <it>procedure</it>_name [ ( actual_parameter_part ) ]
+if_statement ::=
+      [ <it>if</it>_label : ]
+            <b>if</b> condition <b>then</b>
+                  sequence_of_statements
+            { <b>elsif</b> condition <b>then</b>
+                  sequence_of_statements }
+            [ <b>else</b>
+                  sequence_of_statements ]
+            <b>end</b> <b>if</b> [ <it>if</it>_label ] ;
+case_statement ::=
+      [ <it>case</it>_label : ]
+            <b>case</b> [ ? ] expression <b>is</b>
+                  case_statement_alternative
+                  { case_statement_alternative }
+            <b>end</b> <b>case</b> [ ? ] [ <it>case</it>_label ] ;
+case_statement_alternative ::=
+      <b>when</b> choices =>
+            sequence_of_statements
+loop_statement ::=
+      [ <it>loop</it>_label : ]
+            [ iteration_scheme ] <b>loop</b>
+                  sequence_of_statements
+            <b>end</b> <b>loop</b> [ <it>loop</it>_label ] ;
+iteration_scheme ::=
+        <b>while</b> condition
+      | <b>for</b> <it>loop</it>_parameter_specification
+parameter_specification ::=
+      identifier <b>in</b> discrete_range
+next_statement ::=
+      [ label : ] <b>next</b> [ <it>loop</it>_label ] [ <b>when</b> condition ] ;
+exit_statement ::=
+      [ label : ] <b>exit</b> [ <it>loop</it>_label ] [ <b>when</b> condition ] ;
+return_statement ::=
+      [ label : ] <b>return</b> [ expression ] ;
+null_statement ::=
+      [ label : ] <b>null</b> ;
+concurrent_statement ::=
+        block_statement
+      | process_statement
+      | concurrent_procedure_call_statement
+      | concurrent_assertion_statement
+      | concurrent_signal_assignment_statement
+      | component_instantiation_statement
+      | generate_statement
+      | <it>PSL_</it>PSL_Directive
+block_statement ::=
+      <it>block</it>_label :
+            <b>block</b> [ ( <it>guard</it>_condition ) ] [ <b>is</b> ]
+                  block_header
+                  block_declarative_part
+            <b>begin</b>
+                  block_statement_part
+            <b>end</b> <b>block</b> [ <it>block</it>_label ] ;
+block_header ::=
+      [ generic_clause
+      [ generic_map_aspect ; ] ]
+      [ port_clause
+      [ port_map_aspect ; ] ]
+block_declarative_part ::=
+      { block_declarative_item }
+block_statement_part ::=
+      { concurrent_statement }
+process_statement ::=
+      [ <it>process</it>_label : ]
+            [ <b>postponed</b> ] <b>process</b> [ ( process_sensitivity_list ) ] [ <b>is</b> ]
+                  process_declarative_part
+            <b>begin</b>
+                  process_statement_part
+            <b>end</b> [ <b>postponed</b> ] <b>process</b> [ <it>process_</it>label ] ;
+process_sensitivity_list ::= <b>all</b> | sensitivity_list
+process_declarative_part ::=
+      { process_declarative_item }
+process_declarative_item ::=
+        subprogram_declaration
+      | subprogram_body
+      | subprogram_instantiation_declaration
+      | package_declaration
+      | package_body
+      | package instantiation_declaration
+      | type_declaration
+      | subtype_declaration
+process_statement_part ::=
+      { sequential_statement }
+concurrent_procedure_call_statement ::=
+      [ label : ] [ <b>postponed</b> ] procedure_call ;
+concurrent_assertion_statement ::=
+      [ label : ] [ <b>postponed</b> ] assertion ;
+concurrent_signal_assignment_statement ::=
+        [ label : ] [ <b>postponed</b> ] concurrent_simple_signal_assignment
+      | [ label : ] [ <b>postponed</b> ] concurrent_conditional_signal_assignment
+      | [ label : ] [ <b>postponed</b> ] concurrent_selected_signal_assignment
+concurrent_simple_signal_assignment ::=
+      target <= [ <b>guarded</b> ] [ delay_mechanism ] waveform ;
+concurrent_conditional_signal_assignment ::=
+      target  <=  [ <b>guarded</b> ] [ delay_mechanism ] conditional_waveforms ;
+concurrent_selected_signal_assignment ::=
+      <b>with</b> expression <b>select</b> [ ? ]
+            target <= [ <b>guarded</b> ] [ delay_mechanism ] selected_waveforms ;
+component_instantiation_statement ::=
+      <it>instantiation</it>_label :
+            instantiated_unit
+                  [ generic_map_aspect ]
+                  [ port_map_aspect ] ;
+instantiated_unit ::=
+        [ <b>component</b> ] <it>component</it>_name
+      | <b>entity</b> <it>entity</it>_name [ ( <it>architecture</it>_identifier ) ]
+      | <b>configuration</b> <it>configuration</it>_name
+generate_statement ::=
+        for_generate_statement
+      | if_generate_statement
+      | case_generate_statement
+for_generate_statement ::=
+      <it>generate_</it>label :
+            <b>for</b> <it>generate_</it>parameter_specification <b>generate</b>
+                  generate_statement_body
+            <b>end</b> <b>generate</b> [ <it>generate_</it>label ] ;
+if_generate_statement ::=
+      <it>generate_</it>label :
+            <b>if</b> [ <it>alternative_</it>label : ] condition <b>generate</b>
+                  generate_statement_body
+            { <b>elsif</b> [ <it>alternative_</it>label : ] condition <b>generate</b>
+                  generate_statement_body }
+            [ <b>else</b> [ <it>alternative_</it>label : ] <b>generate</b>
+                  generate_statement_body ]
+            <b>end</b> <b>generate</b> [ <it>generate_</it>label ] ;
+case_generate_statement ::=
+      <it>generate_</it>label :
+            <b>case</b> expression <b>generate</b>
+                  case_generate_alternative
+                  { case_generate_alternative }
+            <b>end</b> <b>generate</b> [ <it>generate_</it>label ] ;
+case_generate_alternative ::=
+      <b>when</b> [ <it>alternative_</it>label : ] choices =>
+            generate_statement_body
+generate_statement_body ::= [ block_declarative_part
+      <b>begin</b> ]
+      { concurrent_statement }
+      [ <b>end</b> [ <it>alternative</it>_label ] ; ]
+label ::=  identifier
+use_clause ::=
+      <b>use</b> selected_name { , selected_name } ;
+design_file ::=  design_unit { design_unit }
+design_unit ::=  context_clause library_unit
+library_unit ::=
+        primary_unit
+      | secondary_unit
+primary_unit ::=
+        entity_declaration
+      | configuration_declaration
+      | package_declaration
+      | package_instantiation_declaration
+      | context_declaration
+      | <it>PSL_</it>Verification_Unit
+secondary_unit ::=
+        architecture_body
+      | package_body
+library_clause  ::=  <b>library</b> logical_name_list ;
+logical_name_list  ::=  logical_name { , logical_name }
+logical_name  ::=  identifier
+context_declaration ::=
+      <b>context</b> identifier <b>is</b>
+            context_clause
+      <b>end</b> [ <b>context</b> ] [ <it>context</it>_simple_name ] ;
+context_clause ::=  { context_item }
+context_item  ::=
+        library_clause
+      | use_clause
+      | context_reference
+context_reference ::=
+      <b>context</b> selected_name { , selected_name } ;
+basic_graphic_character ::=
+      upper_case_letter | digit | special_character | space_character
+graphic_character ::=
+      basic_graphic_character | lower_case_letter | other_special_character
+basic_character ::=
+      basic_graphic_character | format_effector
+identifier ::=  basic_identifier | extended_identifier
+basic_identifier ::=
+      letter  { [ underline ] letter_or_digit }
+letter_or_digit ::=  letter | digit
+letter ::=  upper_case_letter | lower_case_letter
+extended_identifier ::=
+      \ graphic_character { graphic_character } \
+abstract_literal ::=  decimal_literal | based_literal
+decimal_literal ::=  integer [ . integer ] [ exponent ]
+integer ::=  digit  { [ underline ] digit }
+exponent ::=  E [ + ] integer | E – integer
+based_literal ::=
+      base # based_integer [ . based_integer ] # [ exponent ]
+base ::=  integer
+based_integer ::=
+      extended_digit { [ underline ] extended_digit }
+extended_digit ::=  digit | letter
+character_literal ::= ' graphic_character '
+string_literal ::=  " { graphic_character } "
+bit_string_literal ::= [ integer ] base_specifier " [ bit_value ] "
+bit_value ::=  graphic_character { [ underline ] graphic_character }
+base_specifier ::=  B | O | X | UB | UO | UX | SB | SO | SX | D
+tool_directive ::= ` identifier { graphic_character }

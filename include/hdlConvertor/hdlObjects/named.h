@@ -3,7 +3,6 @@
 #include <string>
 #include <hdlConvertor/hdlObjects/position.h>
 
-
 namespace hdlConvertor {
 namespace hdlObjects {
 
@@ -15,7 +14,7 @@ public:
 	std::string name;
 
 	Named();
-	Named(const std::string & name);
+	Named(const std::string &name);
 	virtual ~Named();
 };
 
@@ -41,7 +40,7 @@ public:
 class WithNameAndDoc: public Named, public WithDoc, public WithPos {
 public:
 	WithNameAndDoc();
-	WithNameAndDoc(const std::string & name);
+	WithNameAndDoc(const std::string &name);
 
 };
 

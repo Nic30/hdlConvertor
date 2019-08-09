@@ -19,6 +19,7 @@ There is also Java version. But it seems that there is no use for it.
 
 Linux:
 ```
+# note: use up to date compiler, gcc 5.4 is too old
 # note that only last 2 are really required rest is downloaded automatically as dependency
 sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4
 # note this may be older version than you see in repo
@@ -40,6 +41,13 @@ Other commands:
 python setup.py --help-commands
 ```
 
+You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-builded library)
+```
+mkdir build && cd build
+cmake .. && cmake . --build
+cpack # to generate .deb package
+```
+
 If you having issues take a look at .travis.yml (build script for the ubuntu 16.04).
 
 Windows:
@@ -56,9 +64,11 @@ There are classes for objects in HDL langues and there is also type specified fo
 
 Example of usage:
 ```python
+import sys
 from hdlConvertor.language import Language
 from hdlConvertor.toVerilog import ToVerilog
 from hdlConvertor import HdlConvertor
+
 c = HdlConvertor()
 filenames = ["your.v", ]
 include_dirs = []

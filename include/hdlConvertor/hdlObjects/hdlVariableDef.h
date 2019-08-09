@@ -9,8 +9,8 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 /*
- * Class for representation of definition of
- * port, constant, signal, typedef,  VHDL generics, Verilog localparam, params
+ * HDL AST node for definition of
+ * port, constant, signal, typedef, VHDL generic, Verilog param and localparam
  *
  * @note if variable is a port the direction is set to something else than Direction::DIR_INTERNAL
  * @note latched flag corresponds to verilog "reg" or vhdl variable

@@ -2,21 +2,27 @@
 cmake_minimum_required(VERSION 3.10.0)
 
 # Set the project name
-project(HDLCONVERTOR)
+project(libhdlConvertor)
 
 # Java is used to generate source files for parsers, it is required only for installation
 find_package(Java COMPONENTS Runtime REQUIRED)
 include(UseJava)
-find_package(PythonExtensions REQUIRED)
-find_package(PythonLibs REQUIRED)
-find_package(Cython REQUIRED)
+
+if(SKBUILD)
+	set(HDLCONVERTOR_PYTHON ON)
+endif()
+
+if(HDLCONVERTOR_PYTHON)
+	message(STATUS "Building python hdlConvertor module with libhdlConvertor linked in")
+	find_package(PythonExtensions REQUIRED)
+	find_package(PythonLibs REQUIRED)
+	find_package(Cython REQUIRED)
+else()
+	message(STATUS "Building libhdlConvertor (C++ lib) only, to build python module use setup.py.")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(NOT SKBUILD)
-	message(STATUS "The project was ment to be used with scikit-build")
-endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
@@ -30,5 +36,13 @@ endif()
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
 
 add_subdirectory(src)
-add_subdirectory(hdlConvertor)
 
+if(HDLCONVERTOR_PYTHON)
+	add_subdirectory(hdlConvertor)
+else()
+	SET(CPACK_GENERATOR "DEB")
+	SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michal Orsak <michal.o.socials@gmail.com>")
+	SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/Nic30/hdlConvertor")
+	SET(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, default-jre, libantlr4-runtime-dev, antlr4")
+	INCLUDE(CPack)
+endif()

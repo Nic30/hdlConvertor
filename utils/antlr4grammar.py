@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Optional
 
 
-class _Antlr4GrammarElem():
+class iAntlr4GramElem():
 
     def walk(self, fn):
         fn(self)
@@ -10,54 +10,110 @@ class _Antlr4GrammarElem():
         return self.toAntlr4()
 
 
-class ANTLR4Rule(_Antlr4GrammarElem):
+class Antlr4Rule(iAntlr4GramElem):
     """
     Containers of ANTLR4 rule
     """
+
+    def __init__(self, name, body: iAntlr4GramElem, is_fragment: bool=False,
+                 lexer_mode=None,
+                 lexer_actions=None):
+        self.name = name
+        assert isinstance(body, iAntlr4GramElem), body
+        self.body = body
+        self.lexer_mode = lexer_mode
+        self.is_fragment = is_fragment
+        if lexer_actions is None:
+            lexer_actions = []
+        self.lexer_actions = lexer_actions
+        if lexer_mode or self.lexer_actions:
+            assert self.is_lexer_rule()
+
+    def is_lexer_rule(self):
+        return self.is_fragment or self.name == self.name.upper()
 
     def walk(self, fn):
         fn(self)
         self.body.walk(fn)
 
-    def __init__(self, name, body: list):
-        self.name = name
-        self.body = body
-        self.is_fragment = False
-
-    def toAntlr4(self):
+    def toAntlr4(self, actual_lexer_node=None):
         body = self.body.toAntlr4()
         if body and not body[0].isspace():
             body = " " + body
+        if actual_lexer_node != self.lexer_mode:
+            lm = self.lexer_mode
+            if lm is None:
+                lm = "DEFAULT_MODE"
+            mode = "\nmode %s;\n" % (lm)
+        else:
+            mode = ""
+
+        if self.lexer_mode is not None:
+            mode += Antlr4Indent.INDENT
+
+        if self.lexer_actions:
+            body += " -> %s" % (",".join(self.lexer_actions))
 
         if self.is_fragment:
-            f = "fragment %s:%s;"
+            f = "%sfragment %s:%s;"
         else:
-            f = "%s:%s;"
-        return f % (self.name, body)
+            f = "%s%s:%s;"
+        return f % (mode, self.name, body)
 
 
-class ANTLR4VisualIndent(_Antlr4GrammarElem):
+class Antlr4LexerAction():
+
+    @staticmethod
+    def mode(name):
+        return "mode(%s)" % name
+
+    @staticmethod
+    def type(name):
+        return "type(%s)" % name
+
+    @staticmethod
+    def skip():
+        return "skip"
+
+    @staticmethod
+    def popMode():
+        return "popMode"
+
+    @staticmethod
+    def pushMode(name):
+        return "pushMode(%s)" % name
+
+    @staticmethod
+    def channel(name):
+        return "channel(%s)" % name
+
+
+class Antlr4Indent(iAntlr4GramElem):
+    INDENT = "    "
 
     def __init__(self, indent_cnt: int):
         self.indent_cnt = indent_cnt
 
+    def __eq__(self, other):
+        return isinstance(other, Antlr4Indent)
+
     def toAntlr4(self):
-        return "".join("    " for _ in range(self.indent_cnt))
+        return "".join(self.INDENT for _ in range(self.indent_cnt))
 
 
-class ANTLR4VisualNewline(_Antlr4GrammarElem):
+class Antlr4Newline(iAntlr4GramElem):
 
     def toAntlr4(self):
         return "\n"
 
     def __eq__(self, other):
-        return isinstance(other, ANTLR4VisualNewline)
+        return isinstance(other, Antlr4Newline)
 
     def __ne__(self, other):
         return not (self == other)
 
 
-class ANTLR4Sequence(list, _Antlr4GrammarElem):
+class Antlr4Sequence(list, iAntlr4GramElem):
 
     def walk(self, fn):
         fn(self)
@@ -65,46 +121,60 @@ class ANTLR4Sequence(list, _Antlr4GrammarElem):
             i.walk(fn)
 
     def __eq__(self, other):
-        return isinstance(other, ANTLR4Sequence) and list.__eq__(self, other)
+        return isinstance(other, Antlr4Sequence) and list.__eq__(self, other)
 
     def toAntlr4(self):
-        return " ".join(i.toAntlr4() for i in self)
+        buff = []
+        for i in self:
+            if isinstance(i, Antlr4Selection):
+                buff.append("( %s )" % i.toAntlr4())
+            else:
+                buff.append(i.toAntlr4())
+        return " ".join(buff)
 
 
-class ANTLR4Iteration(_Antlr4GrammarElem):
+class Antlr4Iteration(iAntlr4GramElem):
 
-    def __init__(self, body):
+    def __init__(self, body: iAntlr4GramElem, positive: bool=False):
+        assert isinstance(body, iAntlr4GramElem)
         self.body = body
-
-    def walk(self, fn):
-        fn(self)
-        for i in self.body:
-            i.walk(fn)
-
-    def toAntlr4(self):
-        body = " ".join([b.toAntlr4() for b in self.body])
-        return "( %s )*" % body
-
-
-class ANTLR4Option(_Antlr4GrammarElem):
-
-    def __init__(self, body: 'Sequence'):
-        self.body = body
-
-    def walk(self, fn):
-        fn(self)
-        for i in self.body:
-            i.walk(fn)
+        self.positive = positive
 
     def __eq__(self, other):
-        return isinstance(other, ANTLR4Option) and self.body == other.body
+        return (isinstance(other, Antlr4Iteration)
+                and self.positive == other.positive
+                and self.body == other.body)
+
+    def walk(self, fn):
+        fn(self)
+        self.body.walk(fn)
 
     def toAntlr4(self):
-        body = " ".join([b.toAntlr4() for b in self.body])
-        return "( %s )?" % body
+        body = self.body.toAntlr4()
+        if self.positive:
+            return "( %s )+" % body
+        else:
+            return "( %s )*" % body
 
 
-class ANTLR4Selection(list, _Antlr4GrammarElem):
+class Antlr4Option(iAntlr4GramElem):
+
+    def __init__(self, body: iAntlr4GramElem):
+        assert isinstance(body, iAntlr4GramElem)
+        self.body = body
+
+    def walk(self, fn):
+        fn(self)
+        self.body.walk(fn)
+
+    def __eq__(self, other):
+        return isinstance(other, Antlr4Option) and self.body == other.body
+
+    def toAntlr4(self):
+        return "( %s )?" % (self.body.toAntlr4())
+
+
+class Antlr4Selection(list, iAntlr4GramElem):
 
     def walk(self, fn):
         fn(self)
@@ -112,33 +182,40 @@ class ANTLR4Selection(list, _Antlr4GrammarElem):
             i.walk(fn)
 
     def toAntlr4(self):
-        items = [ i.toAntlr4() for i in self]
+        items = [i.toAntlr4() for i in self]
         return " | ".join(items)
 
 
-class ANTLR4Symbol(_Antlr4GrammarElem):
+class Antlr4Symbol(iAntlr4GramElem):
 
-    def __init__(self, symbol:str, is_terminal: bool):
+    def __init__(self, symbol: str, is_terminal: bool, is_regex: bool=False):
         self.symbol = symbol
         self.is_terminal = is_terminal
+        self.is_regex = is_regex
 
     def is_lexer_nonterminal(self):
         return not self.is_terminal and self.symbol == self.symbol.upper()
 
     def __eq__(self, other):
-        return (isinstance(other, ANTLR4Symbol)
+        return (isinstance(other, Antlr4Symbol)
                 and self.symbol == other.symbol
-                and self.is_terminal == other.is_terminal)
+                and self.is_terminal == other.is_terminal
+                and self.is_regex == other.is_regex)
 
     def __hash__(self):
-        return hash((self.symbol, self.is_terminal))
+        return hash((self.symbol, self.is_terminal, self.is_regex))
 
     def toAntlr4(self):
         if self.is_terminal:
-            return "'%s'" % self.symbol.translate(str.maketrans({"'":  "\'",
-                                                                 "\n": "\\n",
-                                                                 "\t": "\\t"
-                                                                 }))
+            if self.is_regex:
+                return self.symbol
+            else:
+                tr = str.maketrans({"'":  "\\'",
+                                    "\n": "\\n",
+                                    "\t": "\\t",
+                                    "\\": "\\\\",
+                                    })
+                return "'%s'" % self.symbol.translate(tr)
         else:
             return self.symbol
 
@@ -146,12 +223,12 @@ class ANTLR4Symbol(_Antlr4GrammarElem):
 def generate_renamer(renames, set_to_non_terminal=False):
 
     def apply_rename(obj):
-        if isinstance(obj, ANTLR4Rule):
+        if isinstance(obj, Antlr4Rule):
             n = renames.get(obj.name, None)
             if n is not None:
                 obj.name = n
-        elif isinstance(obj, ANTLR4Symbol):
-            n = renames.get(obj.symbol , None)
+        elif isinstance(obj, Antlr4Symbol):
+            n = renames.get(obj.symbol, None)
             if n is not None:
                 obj.symbol = n
                 if set_to_non_terminal:
@@ -160,11 +237,11 @@ def generate_renamer(renames, set_to_non_terminal=False):
     return apply_rename
 
 
-def get_used_non_terminals(rules: List[ANTLR4Rule]):
+def get_used_non_terminals(rules: List[Antlr4Rule]):
     nts: Set[str] = set()
 
     def collect_non_terminals(obj):
-        if isinstance(obj, ANTLR4Symbol) and not obj.is_terminal:
+        if isinstance(obj, Antlr4Symbol) and not obj.is_terminal:
             nts.add(obj.symbol)
 
     for r in rules:
@@ -183,22 +260,22 @@ def rm_newline_from_simple_rules(rules):
             nls = 0
 
         def count_nl(obj):
-            if isinstance(obj, ANTLR4VisualNewline):
+            if isinstance(obj, Antlr4Newline):
                 Cntr.nls += 1
 
         r.walk(count_nl)
         if Cntr.nls == 1:
-            if isinstance(r.body, ANTLR4Sequence):
-                assert isinstance(r.body[-1], ANTLR4VisualNewline)
+            if isinstance(r.body, Antlr4Sequence):
+                assert isinstance(r.body[-1], Antlr4Newline)
                 r.body.pop()
-            elif isinstance(r.body, ANTLR4Selection):
-                assert isinstance(r.body[-1][-1], ANTLR4VisualNewline)
+            elif isinstance(r.body, Antlr4Selection):
+                assert isinstance(r.body[-1][-1], Antlr4Newline)
                 r.body[-1].pop()
             else:
                 raise NotImplementedError(r.body)
 
 
-def get_defined_non_terminals(rules: List[ANTLR4Rule]):
+def get_defined_non_terminals(rules: List[Antlr4Rule]):
     nts: Set[str] = set()
     for r in rules:
         nts.add(r.name)
@@ -206,6 +283,7 @@ def get_defined_non_terminals(rules: List[ANTLR4Rule]):
 
 
 class BaseGrammarConvertor():
+
     def __init__(self):
         self.rules = []
 
@@ -214,10 +292,10 @@ class BaseGrammarConvertor():
         return t.isupper() or t[0] == "'"
 
     def parse_option(self, body):
-        return ANTLR4Option(self.parse_rule_block(body))
+        return Antlr4Option(self.parse_rule_block(body))
 
     def parse_iteration(self, body):
-        return ANTLR4Iteration(self.parse_rule_block(body))
+        return Antlr4Iteration(self.parse_rule_block(body))
 
     def parse_symbol(self, symbol_token):
         if symbol_token.startswith("<b>"):
@@ -226,7 +304,7 @@ class BaseGrammarConvertor():
             symbol_token = symbol_token[len("<b>"):-len("</b>")]
             symbol_token = symbol_token.upper()
         is_t = self.is_terminal(symbol_token)
-        return ANTLR4Symbol(symbol_token, is_t)
+        return Antlr4Symbol(symbol_token, is_t)
 
     def parse_rule_block(self, block) -> list:
         objs = []
@@ -239,10 +317,10 @@ class BaseGrammarConvertor():
             if o == "|":
                 if not is_selection:
                     # convert all items in current sequence to option in selection
-                    objs = [ANTLR4Sequence(objs), ]
+                    objs = [Antlr4Sequence(objs), ]
                     is_selection = True
                 # push new selection option
-                objs.append(ANTLR4Sequence())
+                objs.append(Antlr4Sequence())
                 continue
             elif o == "[":
                 _o = self.parse_option(block)
@@ -250,7 +328,7 @@ class BaseGrammarConvertor():
                 _o = self.parse_iteration(block)
             elif o == "]" or o == "}":
                 break
-            elif isinstance(o, (ANTLR4VisualIndent, ANTLR4VisualNewline)):
+            elif isinstance(o, (Antlr4Indent, Antlr4Newline)):
                 _o = o
             else:
                 _o = self.parse_symbol(o)
@@ -261,24 +339,24 @@ class BaseGrammarConvertor():
                 objs.append(_o)
 
         if is_selection:
-            return ANTLR4Selection(objs)
+            return Antlr4Selection(objs)
         else:
-            return ANTLR4Sequence(objs)
+            return Antlr4Sequence(objs)
 
-    def parse_rule_tokens(self, tokens) -> ANTLR4Rule:
+    def parse_rule_tokens(self, tokens) -> Antlr4Rule:
         tokens = iter(tokens)
         name = next(tokens)
         t = next(tokens)
         if t != "::=":
             raise AssertionError(t)
         body = self.parse_rule_block(tokens)
-        return ANTLR4Rule(name, body)
+        return Antlr4Rule(name, body)
 
     def extract_indent(self, s):
         indent_cnt = (len(s) - len(s.lstrip())) // len(self.INDENT)
         if indent_cnt == 0:
             return None
-        return ANTLR4VisualIndent(indent_cnt)
+        return Antlr4Indent(indent_cnt)
 
     def parse_rule(self, rule_buff):
         tokens = []
@@ -288,15 +366,21 @@ class BaseGrammarConvertor():
                 tokens.append(ind)
 
             part = self.RE_GRAM_OP.sub(" \g<1> ", part)
-            p = [ _p for _p in part.split(" ") if _p]
+            p = [_p for _p in part.split(" ") if _p]
             for _p in p:
                 _p = _p.strip()
                 if _p:
                     tokens.append(_p)
             if part.endswith("\n"):
-                tokens.append(ANTLR4VisualNewline())
+                tokens.append(Antlr4Newline())
         assert tokens
         return self.parse_rule_tokens(tokens)
 
     def convert(self, lines):
         raise NotImplementedError("Implement in your convertor implementation")
+
+
+def rule_by_name(rules: List[Antlr4Rule], name: str) -> Optional[Antlr4Rule]:
+    for r in rules:
+        if r.name == name:
+            return r

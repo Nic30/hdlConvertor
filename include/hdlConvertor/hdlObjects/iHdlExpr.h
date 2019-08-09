@@ -15,8 +15,12 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-// @note iHdlExpr is not an interface yet but it is planed to make it an interface
-//     and get rid of iHdlExprItem
+/*
+ * HDL AST node for expressions
+ *
+ * @note iHdlExpr is not an interface yet but it is planed to make it an interface
+ *     and get rid of iHdlExprItem
+ */
 class iHdlExpr: public WithPos, public iHdlObj {
 public:
 	iHdlExprItem * data;
