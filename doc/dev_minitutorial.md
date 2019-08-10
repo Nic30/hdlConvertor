@@ -14,7 +14,7 @@
 
   ```
    * C/C++ build ->
-       * Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 threads)
+       * Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 concurrent process)
        * uncheck Generate makefile automatically
        * set build directory to project root
        * in Behavior tab change target Build (increamental) from "all" to "build"
