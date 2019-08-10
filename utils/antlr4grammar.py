@@ -212,6 +212,7 @@ class Antlr4Symbol(iAntlr4GramElem):
             else:
                 tr = str.maketrans({"'":  "\\'",
                                     "\n": "\\n",
+                                    "\r": "\\r",
                                     "\t": "\\t",
                                     "\\": "\\\\",
                                     })
