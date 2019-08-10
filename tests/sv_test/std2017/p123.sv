@@ -14,7 +14,7 @@ generate
     endproperty
     a1: assert property (quiet_time);
   end
-  if ( (min_quiet == 0) && ($isunbounded(max_quiet) )
+  if ( (min_quiet == 0) && $isunbounded(max_quiet) )
     $warning(warning_msg);
 endgenerate
 
