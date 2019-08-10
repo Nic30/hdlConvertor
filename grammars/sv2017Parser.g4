@@ -808,7 +808,7 @@ cross_item:
       identifier 
      ;
 cross_body:
-      LBRACE ( cross_body_item SEMI )* RBRACE 
+      LBRACE ( cross_body_item )* RBRACE 
       | SEMI;
 cross_body_item:
       function_declaration 

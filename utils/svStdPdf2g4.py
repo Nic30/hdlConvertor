@@ -456,8 +456,7 @@ def add_comments_and_ws(rules):
 
 
 def rm_ambiguity(rules):
-    vda = "variable_decl_assignment"
-    rule = rule_by_name(rules, vda)
+    rule = rule_by_name(rules, "variable_decl_assignment")
     to_repl = Antlr4Option(Antlr4Sequence([
         Antlr4Symbol("ASSIGN", False),
         Antlr4Symbol("class_new", False)
@@ -467,6 +466,19 @@ def rm_ambiguity(rules):
             return o.body
 
     replace_item_by_sequence(rule, match_replace_fn)
+
+def rm_semi_from_cross_body_item(rules):
+    """
+    Because SEMI is already part of cross_body_item
+    """
+    rule = rule_by_name(rules, "cross_body")
+    semi = Antlr4Symbol("SEMI", False)
+    def match_replace_fn(o):
+        if o == semi:
+            return Antlr4Sequence([])
+
+    replace_item_by_sequence(rule.body[0], match_replace_fn)
+    
 
 def proto_grammar_to_g4():
 
@@ -507,6 +519,7 @@ def proto_grammar_to_g4():
     reduce_optionality(p.rules)
     pretify_regex(p.rules)
     rm_ambiguity(p.rules)
+    rm_semi_from_cross_body_item(p.rules)
 
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
