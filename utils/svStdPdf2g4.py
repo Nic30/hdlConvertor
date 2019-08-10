@@ -92,10 +92,13 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
         if t_name in shared_tokens:
             # copy the rule
             # translate mode specific token to a original token
+            actions = deepcopy(t_rule.lexer_actions)
+            if not Antlr4LexerAction.skip() in actions:
+                actions.append( Antlr4LexerAction.type(t_name))
             mode_specific_t_rule = Antlr4Rule(
                 mode_name + "_" + t_name, deepcopy(t_rule.body),
                 lexer_mode=mode_name,
-                lexer_actions=[*deepcopy(t_rule.lexer_actions), Antlr4LexerAction.type(t_name), ]
+                lexer_actions=actions
             )
             rules.append(mode_specific_t_rule)
             t_rule = mode_specific_t_rule
@@ -430,8 +433,8 @@ def add_comments_and_ws(rules):
     olc = Antlr4Rule("ONE_LINE_COMMENT", Antlr4Sequence([
             Antlr4Symbol("//", True),
             Antlr4Symbol(".*?", True, is_regex=True),
-            Antlr4Option(Antlr4Symbol("\\r", True)),
-            Antlr4Symbol("\\n", True),
+            Antlr4Option(Antlr4Symbol("\r", True)),
+            Antlr4Symbol("\n", True),
         ]),
         lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
     rules.append(olc)
