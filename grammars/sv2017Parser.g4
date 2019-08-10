@@ -520,7 +520,7 @@ variable_decl_assignment:
       identifier ( variable_dimension )* ( ASSIGN expression )? 
       | dynamic_array_variable_identifier unsized_dimension ( variable_dimension )* 
       ( ASSIGN dynamic_array_new )? 
-      | identifier ( ASSIGN class_new )?;
+      | identifier ASSIGN class_new;
 class_new:
       ( class_scope )? KW_NEW ( LPAREN list_of_arguments RPAREN )? 
       | KW_NEW expression;
@@ -808,7 +808,7 @@ cross_item:
       identifier 
      ;
 cross_body:
-      LBRACE ( cross_body_item SEMI )* RBRACE 
+      LBRACE ( cross_body_item )* RBRACE 
       | SEMI;
 cross_body_item:
       function_declaration 
@@ -1611,10 +1611,10 @@ constant_bit_select: ( LSQUARE_BR constant_expression RSQUARE_BR )*;
 constant_select:
       ( ( DOT identifier constant_bit_select )* DOT identifier )? constant_bit_select 
       ( LSQUARE_BR constant_part_select_range RSQUARE_BR )?;
-constant_cast: casting_type ( APOSTROPHE LPAREN constant_expression RPAREN )* 
-     ;
-cast: casting_type ( APOSTROPHE LPAREN expression RPAREN )* 
-     ;
+constant_cast:
+      casting_type APOSTROPHE LPAREN constant_expression RPAREN;
+cast:
+      casting_type APOSTROPHE LPAREN expression RPAREN;
 net_lvalue:
       ps_or_hierarchical_identifier constant_select 
       | LBRACE net_lvalue ( COMMA net_lvalue )* RBRACE 
