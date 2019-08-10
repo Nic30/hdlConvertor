@@ -9,7 +9,8 @@ from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     iAntlr4GramElem, rule_by_name, Antlr4LexerAction
 from svRule2Antlr4Rule import SvRule2Antlr4Rule
 from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
-    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule
+    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule,\
+    replace_item_by_sequence
 from copy import deepcopy
 from optionality_optimiser import reduce_optionality
 from sv_rules_defined_in_text import add_string_literal_rules, \
@@ -454,6 +455,19 @@ def add_comments_and_ws(rules):
     rules.append(ws)
 
 
+def rm_ambiguity(rules):
+    vda = "variable_decl_assignment"
+    rule = rule_by_name(rules, vda)
+    to_repl = Antlr4Option(Antlr4Sequence([
+        Antlr4Symbol("ASSIGN", False),
+        Antlr4Symbol("class_new", False)
+    ]))
+    def match_replace_fn(o):
+        if o == to_repl:
+            return o.body
+
+    replace_item_by_sequence(rule, match_replace_fn)
+
 def proto_grammar_to_g4():
 
     p = SvRule2Antlr4Rule()
@@ -492,7 +506,8 @@ def proto_grammar_to_g4():
     #    if r.is_fragment
     reduce_optionality(p.rules)
     pretify_regex(p.rules)
-   
+    rm_ambiguity(p.rules)
+
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
