@@ -205,18 +205,24 @@ class Antlr4Symbol(iAntlr4GramElem):
     def __hash__(self):
         return hash((self.symbol, self.is_terminal, self.is_regex))
 
+    def _escaped(self):
+        tr = str.maketrans({
+                    "'":  "\\'",
+                    "\n": "\\n",
+                    "\r": "\\r",
+                    "\t": "\\t",
+                    "\\": "\\\\",
+                    '\v': '\\v',
+                    '\f': '\\f',
+                    '\a': '\\a',
+                })
+        return self.symbol.translate(tr)
     def toAntlr4(self):
         if self.is_terminal:
             if self.is_regex:
                 return self.symbol
             else:
-                tr = str.maketrans({"'":  "\\'",
-                                    "\n": "\\n",
-                                    "\r": "\\r",
-                                    "\t": "\\t",
-                                    "\\": "\\\\",
-                                    })
-                return "'%s'" % self.symbol.translate(tr)
+                return "'%s'" % self._escaped()
         else:
             return self.symbol
 

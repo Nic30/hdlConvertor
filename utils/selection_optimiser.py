@@ -120,7 +120,7 @@ def char_options_to_regex(r: Antlr4Rule):
                 for c, _ in char_symb_to_replace:
                     o.remove(c)
 
-                re_str = "[%s]" % ("".join([c.symbol for _, c in char_symb_to_replace]))
+                re_str = "[%s]" % ("".join([c._escaped() for _, c in char_symb_to_replace]))
                 re = Antlr4Symbol(re_str, True, is_regex=True)
                 if len(list(iter_non_visuals(o))):
                     o.append(re)
