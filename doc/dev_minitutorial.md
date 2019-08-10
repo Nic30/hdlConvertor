@@ -65,3 +65,5 @@
       && javac -cp $CLASSPATH vhdl*.java                       \
       && java -cp $CLASSPATH:$PWD "org.antlr.v4.gui.TestRig" vhdl design_file -gui ../../tests/vhdl/mux.vhd -help -diagnostics -trace -tokens
    ```
+   * note that for composite grammars (*Lexer.g4 + *Parser.g4) bout grammars should be agument of antlr4
+     and the name of grammar for org.antlr.v4.gui.TestRig is name without Parser/lexer.
