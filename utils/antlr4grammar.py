@@ -212,9 +212,9 @@ class Antlr4Symbol(iAntlr4GramElem):
                     "\r": "\\r",
                     "\t": "\\t",
                     "\\": "\\\\",
-                    '\v': '\\v',
+                    '\v': '\u000b',
                     '\f': '\\f',
-                    '\a': '\\a',
+                    '\a': '\u0007', # bell
                 })
         return self.symbol.translate(tr)
     def toAntlr4(self):
