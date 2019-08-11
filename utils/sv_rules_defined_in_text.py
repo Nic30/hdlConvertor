@@ -7,11 +7,10 @@ def add_string_literal_rules(p):
         Antlr4Symbol('~["\\\\\\r\\n]', True, True),
         Antlr4Symbol('\\\n', True),
         Antlr4Symbol('\\\r\n', True),
-        Antlr4Symbol('\t', True),
-        Antlr4Symbol('\\\\', True),
-        Antlr4Symbol('\v', True),
-        Antlr4Symbol('\f', True),
-        Antlr4Symbol('\a', True),
+        Antlr4Sequence([
+            Antlr4Symbol("\\", True),
+            Antlr4Symbol('[nt\\\\"vfa]', True, is_regex=True),
+        ]),
         Antlr4Symbol("'\\\\' [0-9] [0-9]? [0-9]?", True, True),
         Antlr4Symbol("'\\\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?", True, True),
         ]), is_fragment=True)

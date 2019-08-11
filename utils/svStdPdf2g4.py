@@ -383,6 +383,8 @@ def remove_useless_and_normalize_names(p):
     for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
         body = Antlr4Symbol(k, True)
         r = Antlr4Rule(v, body)
+        if k == '"':
+            r.is_fragment = True
         p.rules.append(r)
 
     # because C_IDENTIFIER is just normal identifier without $ and can match identifiers

@@ -212,11 +212,12 @@ class Antlr4Symbol(iAntlr4GramElem):
                     "\r": "\\r",
                     "\t": "\\t",
                     "\\": "\\\\",
-                    '\v': '\u000b',
+                    '\v': '\\u000b',
                     '\f': '\\f',
-                    '\a': '\u0007', # bell
+                    '\a': '\\u0007', # bell
                 })
         return self.symbol.translate(tr)
+
     def toAntlr4(self):
         if self.is_terminal:
             if self.is_regex:
