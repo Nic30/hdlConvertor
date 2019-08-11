@@ -12,7 +12,7 @@ module top;
 
   my_checker check( 
 	  p2(a, b, c), 
-	  @$global_clock a[*1:$] ##1 b);
+	  @($global_clock) a[*1:$] ##1 b);
 endmodule
 
 checker my_checker(property p, sequence s);
