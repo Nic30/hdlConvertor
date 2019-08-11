@@ -210,13 +210,16 @@ def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
 
 def inline_rule(rules, rule_name):
     rule = rule_by_name(rules, rule_name)
+    _inline_rule(rules, rule)
+    rules.remove(rule)
+
+def _inline_rule(rules, rule):
     replacement = rule.body
 
     def match_replace_fn(o):
-        if isinstance(o, Antlr4Symbol) and o.symbol == rule_name:
+        if isinstance(o, Antlr4Symbol) and o.symbol == rule.name:
             return deepcopy(replacement)
 
     for r in rules:
         replace_item_by_sequence(r, match_replace_fn)
 
-    rules.remove(rule)

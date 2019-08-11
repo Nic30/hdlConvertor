@@ -441,7 +441,9 @@ enum_base_type:
       | identifier ( packed_dimension )?;
 enum_name_declaration:
       identifier ( LSQUARE_BR integral_number ( COLON integral_number )? RSQUARE_BR )? ( ASSIGN constant_expression )?;
-class_scope: class_type DOUBLE_COLON;
+class_scope:
+      ps_identifier ( parameter_value_assignment )? 
+      ( DOUBLE_COLON identifier ( parameter_value_assignment )? )* DOUBLE_COLON;
 class_type:
       ps_identifier ( parameter_value_assignment )? 
       ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
