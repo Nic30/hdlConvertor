@@ -22,6 +22,8 @@ typedef interface class IntfD;
 
 class ClassB implements IntfD #(bit);
   virtual function bit[1:0] funcD();
+    return 2'b11;
+  endfunction : funcD
 endclass : ClassB
 
 // This interface class declaration must be declared before ClassB
