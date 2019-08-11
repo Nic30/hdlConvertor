@@ -1658,7 +1658,7 @@ dynamic_array_variable_identifier: identifier;
 hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
 identifier: C_IDENTIFIER | 
       SIMPLE_IDENTIFIER 
-      | ESCAPED_IDENTIFIER;
+      | ESCAPED_IDENTIFIER | KW_RANDOMIZE | KW_STD | KW_SAMPLE | KW_OPTION | KW_TYPE_OPTION;
 package_scope:
       ( identifier | KW_DOLAR_UNIT ) DOUBLE_COLON 
      ;

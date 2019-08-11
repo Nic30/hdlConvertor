@@ -17,6 +17,7 @@ from sv_rules_defined_in_text import add_string_literal_rules, \
     add_file_path_literal_rules
 from sv_lr_rm import left_recurse_remove
 import os
+from sv.keywords import IEEE1800_2017_KEYWORDS
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -30,17 +31,22 @@ def mark_regex(obj: iAntlr4GramElem):
         obj.is_regex = True
 
 
-def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
+def collect_keywords(rules):
     keywords = set()
 
-    def collect_keywords(obj):
+    def _collect_keywords(obj):
         if isinstance(obj, Antlr4Symbol) and obj.is_terminal:
             s = obj.symbol
             keywords.add(s)
 
-    for r in p.rules:
+    for r in rules:
         if not r.is_lexer_rule():
-            r.walk(collect_keywords)
+            r.walk(_collect_keywords)
+    return keywords
+
+
+def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
+    keywords = collect_keywords(p.rules)
 
     def get_kw_name(k):
         return "KW_" + k.replace("$", "DOLAR_").upper()
@@ -61,6 +67,7 @@ def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
         p.rules.append(kw_rule)
         # if not re.match("^[A-Za-z0-9_]*$", k):
         #    print(k)
+    return keywords
 
 
 def get_all_used_lexer_tokens(rules, rule_name):
@@ -388,9 +395,14 @@ def remove_useless_and_normalize_names(p):
         p.rules.append(r)
 
     # because C_IDENTIFIER is just normal identifier without $ and can match identifiers
-    for r in p.rules:
-        if r.name == "identifier":
-            r.body.insert(0, Antlr4Symbol("C_IDENTIFIER", False))
+    identifier = rule_by_name(p.rules, "identifier")
+    identifier.body.insert(0, Antlr4Symbol("C_IDENTIFIER", False))
+
+    kws = collect_keywords(p.rules)
+    for kw in kws:
+        if kw not in IEEE1800_2017_KEYWORDS and kw != "1step" and "$" not in kw:
+            print(kw)
+            identifier.body.append(Antlr4Symbol("KW_" + kw.upper(), False))
 
 
 COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
