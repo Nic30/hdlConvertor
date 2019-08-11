@@ -434,7 +434,7 @@ data_type:
 data_type_or_implicit:
       data_type 
       | implicit_data_type;
-implicit_data_type: signing ( packed_dimension )* | ( packed_dimension )+;
+implicit_data_type: ( signing )? ( packed_dimension )*;
 enum_base_type:
       integer_atom_type ( signing )? 
       | integer_vector_type ( signing )? ( packed_dimension )? 
