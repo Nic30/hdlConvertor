@@ -268,7 +268,7 @@ checker_generate_item:
       | generate_region 
       | elaboration_system_task;
 class_item:
-      ( attribute_instance )* ( class_property | class_method | class_constraint | class_declaration | covergroup_declaration ) 
+      ( attribute_instance )* ( class_property | class_method | class_constraint | class_declaration | interface_class_declaration | covergroup_declaration ) 
       | ( local_parameter_declaration | parameter_declaration ) SEMI 
       | SEMI;
 class_property:
@@ -349,7 +349,7 @@ package_or_generate_item_declaration:
       | checker_declaration 
       | dpi_import_export 
       | extern_constraint_declaration 
-      | class_declaration 
+      | ( class_declaration | interface_class_declaration ) 
       | class_constructor_declaration 
       | ( local_parameter_declaration | parameter_declaration ) SEMI 
       | covergroup_declaration 
@@ -359,7 +359,7 @@ anonymous_program: KW_PROGRAM SEMI ( anonymous_program_item )* KW_ENDPROGRAM;
 anonymous_program_item:
       task_declaration 
       | function_declaration 
-      | class_declaration 
+      | ( class_declaration | interface_class_declaration ) 
       | covergroup_declaration 
       | class_constructor_declaration 
       | SEMI;
@@ -441,7 +441,9 @@ enum_base_type:
       | identifier ( packed_dimension )?;
 enum_name_declaration:
       identifier ( LSQUARE_BR integral_number ( COLON integral_number )? RSQUARE_BR )? ( ASSIGN constant_expression )?;
-class_scope: class_type DOUBLE_COLON;
+class_scope:
+      ps_identifier ( parameter_value_assignment )? 
+      ( DOUBLE_COLON identifier ( parameter_value_assignment )? )* DOUBLE_COLON;
 class_type:
       ps_identifier ( parameter_value_assignment )? 
       ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
@@ -520,7 +522,7 @@ variable_decl_assignment:
       identifier ( variable_dimension )* ( ASSIGN expression )? 
       | dynamic_array_variable_identifier unsized_dimension ( variable_dimension )* 
       ( ASSIGN dynamic_array_new )? 
-      | identifier ( ASSIGN class_new )?;
+      | identifier ASSIGN class_new;
 class_new:
       ( class_scope )? KW_NEW ( LPAREN list_of_arguments RPAREN )? 
       | KW_NEW expression;
@@ -808,7 +810,7 @@ cross_item:
       identifier 
      ;
 cross_body:
-      LBRACE ( cross_body_item SEMI )* RBRACE 
+      LBRACE ( cross_body_item )* RBRACE 
       | SEMI;
 cross_body_item:
       function_declaration 
@@ -1611,10 +1613,10 @@ constant_bit_select: ( LSQUARE_BR constant_expression RSQUARE_BR )*;
 constant_select:
       ( ( DOT identifier constant_bit_select )* DOT identifier )? constant_bit_select 
       ( LSQUARE_BR constant_part_select_range RSQUARE_BR )?;
-constant_cast: casting_type ( APOSTROPHE LPAREN constant_expression RPAREN )* 
-     ;
-cast: casting_type ( APOSTROPHE LPAREN expression RPAREN )* 
-     ;
+constant_cast:
+      casting_type APOSTROPHE LPAREN constant_expression RPAREN;
+cast:
+      casting_type APOSTROPHE LPAREN expression RPAREN;
 net_lvalue:
       ps_or_hierarchical_identifier constant_select 
       | LBRACE net_lvalue ( COMMA net_lvalue )* RBRACE 
