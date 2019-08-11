@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 "main" for scripts which extract, fixes and optimizes the grammar from pdf with 1800-2017 standard
@@ -18,6 +18,7 @@ from sv_rules_defined_in_text import add_string_literal_rules, \
 from sv_lr_rm import left_recurse_remove
 import os
 from sv.keywords import IEEE1800_2017_KEYWORDS
+from svStd_pdf_parsing import parse_sv_pdf
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -401,7 +402,6 @@ def remove_useless_and_normalize_names(p):
     kws = collect_keywords(p.rules)
     for kw in kws:
         if kw not in IEEE1800_2017_KEYWORDS and kw != "1step" and "$" not in kw:
-            print(kw)
             identifier.body.append(Antlr4Symbol("KW_" + kw.upper(), False))
 
 
@@ -409,12 +409,24 @@ COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
 
 
 def fix_lexer_for_table_def(p):
+    # because OUTPUT_SYMBOL is a special case of LEVEL_SYMBOL
+    OUTPUT_SYMBOL = Antlr4Symbol("OUTPUT_SYMBOL", False)
+
+    def OUTPUT_SYMBOL_to_LEVEL_SYMBOL(o):
+        if o == OUTPUT_SYMBOL:
+            o.symbol = "LEVEL_SYMBOL"
+
+    for r in p.rules:
+        r.body.walk(OUTPUT_SYMBOL_to_LEVEL_SYMBOL)
+    p.rules.remove(rule_by_name(p.rules, "OUTPUT_SYMBOL"))
     table_tokens = get_all_used_lexer_tokens(p.rules, "combinational_body")
     table_tokens2 = get_all_used_lexer_tokens(p.rules, "sequential_entry")
     table_tokens = table_tokens.union(table_tokens2)
+
     # [TODO] += comments, whitespaces
     table_tokens.remove("KW_TABLE")
-    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS', *COMMENT_AND_WS_TOKENS}
+    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS',
+                           *COMMENT_AND_WS_TOKENS}
     wrap_in_lexer_mode(p.rules, "TABLE_MODE", {"KW_TABLE", }, {"KW_ENDTABLE", },
                        table_tokens, table_shared_tokens)
 
@@ -559,6 +571,25 @@ def fix_implicit_data_type(rules):
     ])
 
 
+def fix_SYSTEM_TF_IDENTIFIER(rules):
+    kws = collect_keywords(rules)
+    SYSTEM_TF_IDENTIFIER = Antlr4Symbol("SYSTEM_TF_IDENTIFIER", False)
+    any_system_tf_identifier = Antlr4Symbol("any_system_tf_identifier", False)
+
+    def match_replace_fn(o):
+        if o == SYSTEM_TF_IDENTIFIER:
+            return deepcopy(any_system_tf_identifier)
+
+    for rule in rules:
+        replace_item_by_sequence(rule, match_replace_fn)
+
+    rules.append(Antlr4Rule("any_system_tf_identifier", Antlr4Selection([
+        SYSTEM_TF_IDENTIFIER,
+        *[Antlr4Symbol(kw.replace("$", "KW_DOLAR_").upper(), False)
+          for kw in kws if kw.startswith("$")]
+        ])))
+
+
 def proto_grammar_to_g4():
     p = SvRule2Antlr4Rule()
     with open("sv2017.g4_proto") as f:
@@ -568,8 +599,8 @@ def proto_grammar_to_g4():
         r.walk(mark_regex)
 
     remove_useless_and_normalize_names(p)
+    fix_SYSTEM_TF_IDENTIFIER(p.rules)
     extract_keywords_to_specific_rule(p)
-
     add_string_literal_rules(p)
     add_file_path_literal_rules(p)
     add_comments_and_ws(p.rules)

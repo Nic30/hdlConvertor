@@ -304,8 +304,6 @@ SHIFT_RIGHT: '>>';
 ARITH_SHIFT_LEFT: '<<<';
 ARITH_SHIFT_RIGHT: '>>>';
 DOLAR: '$';
-PLUS_COLON: '+:';
-MINUS_COLON: '-:';
 UNDERSCORE: '_';
 MOD: '%';
 NOT: '!';
@@ -433,7 +431,6 @@ mode LIBRARY_PATH_MODE;
 
 mode TABLE_MODE;
     KW_ENDTABLE: 'endtable' -> popMode;
-    OUTPUT_SYMBOL: [01xX];
     LEVEL_SYMBOL: QUESTIONMARK | [01xXbB];
     EDGE_SYMBOL: MUL | [rRfFpPnN];
     TABLE_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);

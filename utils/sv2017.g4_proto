@@ -2640,8 +2640,8 @@ stream_expression  ::=  expression [ <b>with</b> <b>[</b> array_range_expression
 array_range_expression  ::=  
     expression 
     | expression <b>:</b> expression 
-    | expression <b>+:</b> expression 
-    | expression <b>-:</b> expression 
+    | expression <b>+</b> <b>:</b> expression 
+    | expression <b>-</b> <b>:</b> expression 
 
 </br>
 empty_unpacked_array_concatenation  ::=  <b>{</b> <b>}</b> 
@@ -2747,8 +2747,8 @@ constant_range  ::=  constant_expression <b>:</b> constant_expression
 
 </br>
 constant_indexed_range  ::=  
-    constant_expression <b>+:</b> constant_expression 
-    | constant_expression <b>-:</b> constant_expression 
+    constant_expression <b>+</b> <b>:</b> constant_expression 
+    | constant_expression <b>-</b> <b>:</b> constant_expression 
 
 </br>
 expression  ::=  
@@ -2800,8 +2800,8 @@ part_select_range  ::=  constant_range | indexed_range
 
 </br>
 indexed_range  ::=  
-    expression <b>+:</b> constant_expression 
-    | expression <b>-:</b> constant_expression 
+    expression <b>+</b> <b>:</b> constant_expression 
+    | expression <b>-</b> <b>:</b> constant_expression 
 
 </br>
 genvar_expression  ::=  constant_expression 

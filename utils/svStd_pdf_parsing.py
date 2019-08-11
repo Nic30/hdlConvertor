@@ -90,6 +90,8 @@ def parse_sv_pdf():
                 ("<b>);</b>", "<b>)</b> <b>;</b>"),
                 ("option.</b>", "option</b> <b>.</b>"),
                 ("<b>-incdir</b>", "<b>-</b> <b>incdir</b>"),
+                ("<b>+:</b>", "<b>+</b> <b>:</b>"),
+                ("<b>-:</b>", "<b>-</b> <b>:</b>"),
             ]
             for elm, repl in replaces:
                 line = line.replace(elm, repl)

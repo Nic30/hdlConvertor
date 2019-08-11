@@ -35,8 +35,6 @@ class SvRule2Antlr4Rule(BaseGrammarConvertor):
         "<<<": "ARITH_SHIFT_LEFT",
         ">>>": "ARITH_SHIFT_RIGHT",
         "$": "DOLAR",
-        "+:": "PLUS_COLON",
-        "-:": "MINUS_COLON",
         "_": "UNDERSCORE",
         "%": "MOD",
         "!": "NOT",
