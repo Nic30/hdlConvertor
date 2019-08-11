@@ -9,13 +9,14 @@ from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     iAntlr4GramElem, rule_by_name, Antlr4LexerAction
 from svRule2Antlr4Rule import SvRule2Antlr4Rule
 from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
-    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule,\
+    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule, \
     replace_item_by_sequence
 from copy import deepcopy
 from optionality_optimiser import reduce_optionality
 from sv_rules_defined_in_text import add_string_literal_rules, \
     add_file_path_literal_rules
 from sv_lr_rm import left_recurse_remove
+import os
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -95,7 +96,7 @@ def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shar
             # translate mode specific token to a original token
             actions = deepcopy(t_rule.lexer_actions)
             if not Antlr4LexerAction.skip() in actions:
-                actions.append( Antlr4LexerAction.type(t_name))
+                actions.append(Antlr4LexerAction.type(t_name))
             mode_specific_t_rule = Antlr4Rule(
                 mode_name + "_" + t_name, deepcopy(t_rule.body),
                 lexer_mode=mode_name,
@@ -461,11 +462,13 @@ def rm_ambiguity(rules):
         Antlr4Symbol("ASSIGN", False),
         Antlr4Symbol("class_new", False)
     ]))
+
     def match_replace_fn(o):
         if o == to_repl:
             return o.body
 
     replace_item_by_sequence(rule, match_replace_fn)
+
 
 def rm_semi_from_cross_body_item(rules):
     """
@@ -473,12 +476,29 @@ def rm_semi_from_cross_body_item(rules):
     """
     rule = rule_by_name(rules, "cross_body")
     semi = Antlr4Symbol("SEMI", False)
+
     def match_replace_fn(o):
         if o == semi:
             return Antlr4Sequence([])
 
     replace_item_by_sequence(rule.body[0], match_replace_fn)
-    
+
+
+def add_interface_class_declaration(rules):
+    """
+    Because interface_class_definition is not used anywhere
+    (is missing in specified rules)
+    """
+    intf = Antlr4Symbol("interface_class_declaration", False)
+    cls = Antlr4Symbol("class_declaration", False)
+
+    def match_replace_fn(o):
+        if o == cls:
+            return Antlr4Selection([o, deepcopy(intf)])
+
+    for rule in rules:
+        replace_item_by_sequence(rule, match_replace_fn)
+
 
 def proto_grammar_to_g4():
 
@@ -520,12 +540,15 @@ def proto_grammar_to_g4():
     pretify_regex(p.rules)
     rm_ambiguity(p.rules)
     rm_semi_from_cross_body_item(p.rules)
+    add_interface_class_declaration(p.rules)
 
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
                                 x.is_fragment))
-    with open("sv2017Parser.g4", "w") as f:
+    root = os.path.join("..", "grammars")
+    #root = ""
+    with open(os.path.join(root, "sv2017Parser.g4"), "w") as f:
         # f.write("\n// ---------- PARSER ----------\n\n")
         f.write("parser grammar sv2017Parser;\noptions { tokenVocab=sv2017Lexer; }\n\n")
         for r in p.rules:
@@ -536,7 +559,7 @@ def proto_grammar_to_g4():
                 assert r.lexer_mode is None
                 assert len(r.lexer_actions) == 0
 
-    with open("sv2017Lexer.g4", "w") as f:
+    with open(os.path.join(root, "sv2017Lexer.g4"), "w") as f:
         # f.write("// ---------- LEXER ----------\n\n")
         f.write("lexer grammar sv2017Lexer;\n\n")
 

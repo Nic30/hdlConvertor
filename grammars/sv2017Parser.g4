@@ -268,7 +268,7 @@ checker_generate_item:
       | generate_region 
       | elaboration_system_task;
 class_item:
-      ( attribute_instance )* ( class_property | class_method | class_constraint | class_declaration | covergroup_declaration ) 
+      ( attribute_instance )* ( class_property | class_method | class_constraint | class_declaration | interface_class_declaration | covergroup_declaration ) 
       | ( local_parameter_declaration | parameter_declaration ) SEMI 
       | SEMI;
 class_property:
@@ -349,7 +349,7 @@ package_or_generate_item_declaration:
       | checker_declaration 
       | dpi_import_export 
       | extern_constraint_declaration 
-      | class_declaration 
+      | ( class_declaration | interface_class_declaration ) 
       | class_constructor_declaration 
       | ( local_parameter_declaration | parameter_declaration ) SEMI 
       | covergroup_declaration 
@@ -359,7 +359,7 @@ anonymous_program: KW_PROGRAM SEMI ( anonymous_program_item )* KW_ENDPROGRAM;
 anonymous_program_item:
       task_declaration 
       | function_declaration 
-      | class_declaration 
+      | ( class_declaration | interface_class_declaration ) 
       | covergroup_declaration 
       | class_constructor_declaration 
       | SEMI;
