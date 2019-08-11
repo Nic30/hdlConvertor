@@ -27,7 +27,7 @@ countSlaves;
 $display ("number of slaves = %d", slaves);
 end
 endinterface: simple_bus
-module memMod #(parameter int minaddr=0, maxaddr=0;) (interface a);
+module memMod #(parameter int minaddr=0, maxaddr=0) (interface a);
 logic avail = 1;
 logic [7:0] mem[255:0];
 task a.countSlaves();
