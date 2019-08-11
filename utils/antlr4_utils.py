@@ -24,7 +24,14 @@ def rm_option_on_rule_usage(rules, rule_name):
         replace_item_by_sequence(r.body, match_replace_fn)
 
 
-def replace_item_by_sequence_in_sequence(arr, match_replace_fn):
+def replace_item_by_sequence_in_sequence(arr, match_replace_fn, do_inline_fn):
+    """
+    :param match_replace_fn: the function which takes element as an input
+        and optionaly returns the element which should replace this item
+    :param do_inline_fn: the function which specifies if current replacement
+        should just replace the element of if it should be inlined in to parent element
+        (e.g. inlining a | b in  (a | b) | c  leads to  a | b | c)
+    """
     i = 0
     while True:
         m = None
@@ -33,7 +40,7 @@ def replace_item_by_sequence_in_sequence(arr, match_replace_fn):
             m = match_replace_fn(e)
             if m is None:
                 replace_item_by_sequence(e, match_replace_fn)
-            elif not isinstance(m, Antlr4Sequence):
+            elif not do_inline_fn(m):
                 arr[i + _i] = m
                 m = None
             else:
@@ -51,9 +58,9 @@ def replace_item_by_sequence_in_sequence(arr, match_replace_fn):
                     arr[i] = e
                 else:
                     arr.insert(i + i2, e)
-
+            i += len(m)
             if not replace_with_something:
-                    del arr[i]
+                del arr[i]
 
 
 def replace_item_by_sequence(elem, match_replace_fn):
@@ -73,15 +80,13 @@ def replace_item_by_sequence(elem, match_replace_fn):
             assert isinstance(m, iAntlr4GramElem)
             elem.body = m
     elif isinstance(elem, Antlr4Sequence):
-        replace_item_by_sequence_in_sequence(elem, match_replace_fn)
+        def do_inline_fn(elem):
+            return isinstance(elem, Antlr4Sequence)
+        replace_item_by_sequence_in_sequence(elem, match_replace_fn, do_inline_fn)
     elif isinstance(elem, Antlr4Selection):
-        for i, c in enumerate(elem):
-            m = match_replace_fn(c)
-            if m is None:
-                replace_item_by_sequence(c, match_replace_fn)
-            else:
-                assert isinstance(m, iAntlr4GramElem)
-                elem[i] = m
+        def do_inline_fn(elem):
+            return isinstance(elem, Antlr4Selection)
+        replace_item_by_sequence_in_sequence(elem, match_replace_fn, do_inline_fn)
     elif isinstance(elem, Antlr4Rule):
         m = match_replace_fn(elem.body)
         if m is None:
@@ -205,13 +210,16 @@ def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
 
 def inline_rule(rules, rule_name):
     rule = rule_by_name(rules, rule_name)
+    _inline_rule(rules, rule)
+    rules.remove(rule)
+
+def _inline_rule(rules, rule):
     replacement = rule.body
 
     def match_replace_fn(o):
-        if isinstance(o, Antlr4Symbol) and o.symbol == rule_name:
+        if isinstance(o, Antlr4Symbol) and o.symbol == rule.name:
             return deepcopy(replacement)
 
     for r in rules:
         replace_item_by_sequence(r, match_replace_fn)
 
-    rules.remove(rule)
