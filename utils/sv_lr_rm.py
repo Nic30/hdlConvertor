@@ -251,16 +251,16 @@ def left_recurse_remove(rules):
     split_rule(rules, "primary",
                ["cast", "subroutine_call"],
                "primary_no_cast_no_call")
-    
+
     split_rule(rules, "constant_primary",
                ["constant_cast", "subroutine_call"],
                "constant_primary_no_cast_no_call")
 
     # inline_rule(rules, "cast")
     # inline_rule(rules, "constant_cast")
-    #iterate_everything_except_first(
+    # iterate_everything_except_first(
     #   rules, "cast")
-    #iterate_everything_except_first(
+    # iterate_everything_except_first(
     #   rules, "constant_cast")
     # [TODO] check if really all combinations of cast/call are possible
     replace_symbol_in_rule(
