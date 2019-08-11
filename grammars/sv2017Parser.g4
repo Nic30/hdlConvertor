@@ -434,7 +434,7 @@ data_type:
 data_type_or_implicit:
       data_type 
       | implicit_data_type;
-implicit_data_type: ( signing )? ( packed_dimension )*;
+implicit_data_type: signing ( packed_dimension )* | ( packed_dimension )+;
 enum_base_type:
       integer_atom_type ( signing )? 
       | integer_vector_type ( signing )? ( packed_dimension )? 
@@ -1455,7 +1455,7 @@ system_tf_call:
       SYSTEM_TF_IDENTIFIER ( LPAREN list_of_arguments RPAREN )? 
       | SYSTEM_TF_IDENTIFIER LPAREN data_type ( COMMA expression )? RPAREN 
       | SYSTEM_TF_IDENTIFIER LPAREN expression ( COMMA ( expression )? )* ( COMMA ( clocking_event )? )? RPAREN;
-subroutine_call:
+subroutine_call: ( class_qualifier )? method_call_body | 
       tf_call 
       | system_tf_call 
       | ( primary_no_cast_no_call | cast | implicit_class_handle ) DOT method_call_body 

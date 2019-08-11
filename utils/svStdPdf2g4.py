@@ -6,7 +6,7 @@
 
 from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Selection, Antlr4Option, generate_renamer, \
-    iAntlr4GramElem, rule_by_name, Antlr4LexerAction
+    iAntlr4GramElem, rule_by_name, Antlr4LexerAction, Antlr4Iteration
 from svRule2Antlr4Rule import SvRule2Antlr4Rule
 from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
     remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule, \
@@ -520,7 +520,29 @@ def fix_class_scope(rules):
     and it is not possible to recover
     """
     r = rule_by_name(rules, "class_scope")
-    _inline_rule([r, ], rule_by_name(rules, "class_type"))        
+    _inline_rule([r, ], rule_by_name(rules, "class_type"))
+
+
+def fix_call(rules):
+    # inline_rule(rules, "ps_identifier")
+    r = rule_by_name(rules, "subroutine_call")
+    r.body.insert(0, Antlr4Sequence([
+        Antlr4Option(Antlr4Symbol("class_qualifier", False)),
+        Antlr4Symbol("method_call_body", False)
+        ]))
+
+
+def fix_implicit_data_type(rules):
+    r = rule_by_name(rules, "implicit_data_type")
+    # : (signing)? (packed_dimension)*
+    # ->
+    # : signing (packed_dimension)*
+    # | (packed_dimension)+
+    # ;
+    r.body = Antlr4Selection([
+        Antlr4Sequence([Antlr4Symbol("signing", False), Antlr4Iteration(Antlr4Symbol("packed_dimension", False))]),
+        Antlr4Iteration(Antlr4Symbol("packed_dimension", False), positive=True)
+    ])
 
 
 def proto_grammar_to_g4():
@@ -565,6 +587,8 @@ def proto_grammar_to_g4():
     add_interface_class_declaration(p.rules)
     fix_priority_of__class_scope__package_scope(p.rules)
     fix_class_scope(p.rules)
+    # fix_implicit_data_type(p.rules)
+    fix_call(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
