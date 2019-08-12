@@ -1,4 +1,4 @@
-primitive dff1 (q, clk,
+primitive dff1 (q, clk,d);
 input clk, d;
 output q; reg q;
 initial q = 1'b1;
