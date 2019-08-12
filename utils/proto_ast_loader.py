@@ -2,8 +2,8 @@ from antlr4 import CommonTokenStream
 from antlr4.FileStream import FileStream
 from antlr4.error.ErrorListener import ConsoleErrorListener
 
-from proto_grammar.proto_grammarLexer import proto_grammarLexer
-from proto_grammar.proto_grammarParser import proto_grammarParser
+from utils.proto_grammar.proto_grammarLexer import proto_grammarLexer
+from utils.proto_grammar.proto_grammarParser import proto_grammarParser
 
 
 # class proto_grammarPrintListener(proto_grammarListener):

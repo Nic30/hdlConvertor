@@ -1,8 +1,8 @@
 from pdfminer.layout import LTChar, LAParams, LTTextBox, LTTextLine, LTFigure
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
-from pdf_parsing import createPDFDoc
 from pdfminer.pdfpage import PDFPage
+from utils.pdf_parsing import createPDFDoc
 
 
 def parse_sv_pdf():

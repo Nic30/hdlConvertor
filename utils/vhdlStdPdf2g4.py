@@ -11,12 +11,12 @@ import re
 import sys
 from typing import List, Set
 
-from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
+from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Newline, Antlr4Selection, Antlr4Indent, Antlr4Option, \
     Antlr4Iteration, generate_renamer, BaseGrammarConvertor, \
     rm_newline_from_simple_rules, get_used_non_terminals, \
     get_defined_non_terminals
-from pdf_parsing import createPDFDoc
+from utils.pdf_parsing import createPDFDoc
 
 
 PAGE_OFFSET = 13  # VHDL 2008
