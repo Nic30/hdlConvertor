@@ -1,11 +1,11 @@
 from antlr4.tree.Tree import TerminalNode
 from typing import Union, List
 
-from antlr4grammar import BaseGrammarConvertor, Antlr4Selection, Antlr4Sequence, \
+from utils.antlr4.grammar import BaseGrammarConvertor, Antlr4Selection, Antlr4Sequence, \
     Antlr4Symbol, Antlr4Iteration, Antlr4Option, Antlr4Rule, Antlr4Indent, \
     Antlr4Newline
-from proto_ast_loader import load_ast_file
-from proto_grammar.proto_grammarParser import proto_grammarParser
+from utils.proto_ast_loader import load_ast_file
+from utils.proto_grammar.proto_grammarParser import proto_grammarParser
 
 Proto_ruleContext = proto_grammarParser.Proto_ruleContext
 ElementContext = proto_grammarParser.ElementContext
@@ -35,8 +35,6 @@ class SvRule2Antlr4Rule(BaseGrammarConvertor):
         "<<<": "ARITH_SHIFT_LEFT",
         ">>>": "ARITH_SHIFT_RIGHT",
         "$": "DOLAR",
-        "+:": "PLUS_COLON",
-        "-:": "MINUS_COLON",
         "_": "UNDERSCORE",
         "%": "MOD",
         "!": "NOT",

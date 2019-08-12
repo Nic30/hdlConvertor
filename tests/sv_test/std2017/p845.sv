@@ -1,4 +1,3 @@
-delays for different ALU operations:
 module ALU (o1, i1, i2, opcode);
 input [7:0] i1, i2;
 input [2:1] opcode;

@@ -1,14 +1,14 @@
 from copy import deepcopy
 
-from antlr4_utils import inline_rule, replace_symbol_in_rule, iter_non_visuals, \
+from utils.antlr4.utils import inline_rule, replace_symbol_in_rule, iter_non_visuals, \
     extract_option_as_rule
-from antlr4grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
+from utils.antlr4.grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
     Antlr4Newline, Antlr4Indent, Antlr4Sequence, Antlr4Iteration, Antlr4Rule
-from left_recurse_remove import direct_left_recurse_rm, split_rule, \
+from utils.antlr4.left_recurse_remove import direct_left_recurse_rm, split_rule, \
     iterate_everything_except_first
-from selection_optimiser import optimise_selections
-from svRule2Antlr4Rule import SvRule2Antlr4Rule
-from sv_precedence_fix import get_bin_op_precedence
+from utils.antlr4.selection_optimiser import optimise_selections
+from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
+from utils.sv.precedence import get_bin_op_precedence
 
 
 def subroutine_call_rm_lr(rules):
@@ -119,7 +119,7 @@ def solve_left_recurse_and_op_precedence_for_expression(rules):
             new_rule_name = "expression_%d" % (i + 1)
         current_expr_rule = extract_bin_ops(
             rules, current_expr_rule, prec_group, new_rule_name,
-            "expression", handle_conditional_fn, handle_inside_fn)
+            handle_conditional_fn, handle_inside_fn)
 
     # split_rule(rules, "expression",
     #           ["conditional_expression"],
@@ -178,11 +178,11 @@ def solve_left_recurse_and_op_precedence_for_constant_expression(rules):
             new_rule_name = "constant_expression_%d" % (i + 1)
         current_expr_rule = extract_bin_ops(
             rules, current_expr_rule, prec_group, new_rule_name,
-            "constant_expression", handle_conditional_fn, handle_inside_fn)
+            handle_conditional_fn, handle_inside_fn)
 
 
 def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
-                    top_rule_name, handle_conditional_fn, handle_inside_fn):
+                    handle_conditional_fn, handle_inside_fn):
     # find option with binary op rule
     # expr = rule_by_name(rules, "expression")
     ops_no_special = [o for o in ops_to_extrat
@@ -201,7 +201,7 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
             Antlr4Iteration(Antlr4Sequence([
                 op,
                 Antlr4Iteration(Antlr4Symbol("attribute_instance", False)),
-                Antlr4Symbol(top_rule_name, False)
+                Antlr4Symbol(new_rule_name, False)
                 ]))
         ])
         bin_op_choices.append(bin_op_choice)

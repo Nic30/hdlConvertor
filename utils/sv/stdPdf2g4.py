@@ -1,23 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 "main" for scripts which extract, fixes and optimizes the grammar from pdf with 1800-2017 standard
 """
 
-from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
-    Antlr4Selection, Antlr4Option, generate_renamer, \
-    iAntlr4GramElem, rule_by_name, Antlr4LexerAction, Antlr4Iteration
-from svRule2Antlr4Rule import SvRule2Antlr4Rule
-from antlr4_utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
+from copy import deepcopy
+import os
+
+from utils.antlr4.utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
     remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule, \
     replace_item_by_sequence, inline_rule, _inline_rule
-from copy import deepcopy
-from optionality_optimiser import reduce_optionality
-from sv_rules_defined_in_text import add_string_literal_rules, \
+from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
+    Antlr4Selection, Antlr4Option, generate_renamer, \
+    iAntlr4GramElem, rule_by_name, Antlr4LexerAction, Antlr4Iteration
+from utils.antlr4.optionality_optimiser import reduce_optionality
+from utils.sv.keywords import IEEE1800_2017_KEYWORDS
+from utils.sv.lr_rm import left_recurse_remove
+from utils.sv.pdf_parsing import parse_sv_pdf
+from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
+from utils.sv.rules_defined_in_text import add_string_literal_rules, \
     add_file_path_literal_rules
-from sv_lr_rm import left_recurse_remove
-import os
-from sv.keywords import IEEE1800_2017_KEYWORDS
 
 
 def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
@@ -401,7 +403,6 @@ def remove_useless_and_normalize_names(p):
     kws = collect_keywords(p.rules)
     for kw in kws:
         if kw not in IEEE1800_2017_KEYWORDS and kw != "1step" and "$" not in kw:
-            print(kw)
             identifier.body.append(Antlr4Symbol("KW_" + kw.upper(), False))
 
 
@@ -409,12 +410,24 @@ COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
 
 
 def fix_lexer_for_table_def(p):
+    # because OUTPUT_SYMBOL is a special case of LEVEL_SYMBOL
+    OUTPUT_SYMBOL = Antlr4Symbol("OUTPUT_SYMBOL", False)
+
+    def OUTPUT_SYMBOL_to_LEVEL_SYMBOL(o):
+        if o == OUTPUT_SYMBOL:
+            o.symbol = "LEVEL_SYMBOL"
+
+    for r in p.rules:
+        r.body.walk(OUTPUT_SYMBOL_to_LEVEL_SYMBOL)
+    p.rules.remove(rule_by_name(p.rules, "OUTPUT_SYMBOL"))
     table_tokens = get_all_used_lexer_tokens(p.rules, "combinational_body")
     table_tokens2 = get_all_used_lexer_tokens(p.rules, "sequential_entry")
     table_tokens = table_tokens.union(table_tokens2)
+
     # [TODO] += comments, whitespaces
     table_tokens.remove("KW_TABLE")
-    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS', *COMMENT_AND_WS_TOKENS}
+    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS',
+                           *COMMENT_AND_WS_TOKENS}
     wrap_in_lexer_mode(p.rules, "TABLE_MODE", {"KW_TABLE", }, {"KW_ENDTABLE", },
                        table_tokens, table_shared_tokens)
 
@@ -558,18 +571,69 @@ def fix_implicit_data_type(rules):
         Antlr4Iteration(Antlr4Symbol("packed_dimension", False), positive=True)
     ])
 
+# def fix_cross_body_item(rules):
+#     """
+#     There is an extra ';' after bins_selection_or_option
+#     but the ';' is already in bins_selection_or_option rule
+#     """
+#     r = rule_by_name(rules, "cross_body_item")
+#     semi = Antlr4Symbol("SEMI", False)
+# 
+#     def match_replace_fn(o):
+#         if o == semi:
+#             return Antlr4Sequence([])
+# 
+#     replace_item_by_sequence(r.body, match_replace_fn)
+
+
+def fix_randomize_call(rules):
+    # randomize_call:
+    #   KW_RANDOMIZE ( attribute_instance )*
+    #   ( LPAREN ( variable_identifier_list | KW_NULL )? RPAREN )?
+    #   ( KW_WITH ( LPAREN ( identifier_list )? RPAREN )? constraint_block )?;
+    r = rule_by_name(rules, "randomize_call")
+
+    # def match_replace_fn(o):
+    #     for orig, repl in [("LPAREN", "LBRACE"), ("RPAREN", "RBRACE")]:
+    #         if o == Antlr4Symbol(orig, False):
+    #             return Antlr4Symbol(repl, False)
+    # 
+    # replace_item_by_sequence(r.body[-1], match_replace_fn)
+
+
+def fix_SYSTEM_TF_IDENTIFIER(rules):
+    kws = collect_keywords(rules)
+    SYSTEM_TF_IDENTIFIER = Antlr4Symbol("SYSTEM_TF_IDENTIFIER", False)
+    any_system_tf_identifier = Antlr4Symbol("any_system_tf_identifier", False)
+
+    def match_replace_fn(o):
+        if o == SYSTEM_TF_IDENTIFIER:
+            return deepcopy(any_system_tf_identifier)
+
+    for rule in rules:
+        replace_item_by_sequence(rule, match_replace_fn)
+
+    rules.append(Antlr4Rule("any_system_tf_identifier", Antlr4Selection([
+        SYSTEM_TF_IDENTIFIER,
+        *[Antlr4Symbol(kw.replace("$", "KW_DOLAR_").upper(), False)
+          for kw in kws if kw.startswith("$")]
+        ])))
+
+
+UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
+
 
 def proto_grammar_to_g4():
     p = SvRule2Antlr4Rule()
-    with open("sv2017.g4_proto") as f:
+    with open(os.path.join(UTILS_ROOT, "sv2017.g4_proto")) as f:
         p.convert(f)
 
     for r in p.rules:
         r.walk(mark_regex)
 
     remove_useless_and_normalize_names(p)
+    fix_SYSTEM_TF_IDENTIFIER(p.rules)
     extract_keywords_to_specific_rule(p)
-
     add_string_literal_rules(p)
     add_file_path_literal_rules(p)
     add_comments_and_ws(p.rules)
@@ -603,11 +667,13 @@ def proto_grammar_to_g4():
     fix_class_scope(p.rules)
     # fix_implicit_data_type(p.rules)
     fix_call(p.rules)
+    # fix_cross_body_item(p.rules)
+    fix_randomize_call(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
                                 x.is_fragment))
-    root = os.path.join("..", "grammars")
+    root = os.path.join(UTILS_ROOT, "..", "grammars")
     # root = ""
     with open(os.path.join(root, "sv2017Parser.g4"), "w") as f:
         # f.write("\n// ---------- PARSER ----------\n\n")

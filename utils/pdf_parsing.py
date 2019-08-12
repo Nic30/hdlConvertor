@@ -9,4 +9,3 @@ def createPDFDoc(fpath):
     # Check if the document allows text extraction. If not, abort.
     assert document.is_extractable
     return document
-

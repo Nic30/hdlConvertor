@@ -1,8 +1,8 @@
 from pdfminer.layout import LTChar, LAParams, LTTextBox, LTTextLine, LTFigure
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
-from pdf_parsing import createPDFDoc
 from pdfminer.pdfpage import PDFPage
+from utils.pdf_parsing import createPDFDoc
 
 
 def parse_sv_pdf():
@@ -90,6 +90,8 @@ def parse_sv_pdf():
                 ("<b>);</b>", "<b>)</b> <b>;</b>"),
                 ("option.</b>", "option</b> <b>.</b>"),
                 ("<b>-incdir</b>", "<b>-</b> <b>incdir</b>"),
+                ("<b>+:</b>", "<b>+</b> <b>:</b>"),
+                ("<b>-:</b>", "<b>-</b> <b>:</b>"),
             ]
             for elm, repl in replaces:
                 line = line.replace(elm, repl)

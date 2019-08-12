@@ -23,4 +23,5 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
+    test_suite="tests",
 )

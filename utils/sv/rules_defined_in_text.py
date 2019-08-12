@@ -1,4 +1,4 @@
-from antlr4grammar import Antlr4Rule, Antlr4Symbol, Antlr4Selection, \
+from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Selection, \
     Antlr4Sequence, Antlr4Iteration, Antlr4Option
 
 

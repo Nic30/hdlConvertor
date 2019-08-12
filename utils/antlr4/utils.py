@@ -1,6 +1,6 @@
 from itertools import islice
 
-from antlr4grammar import iAntlr4GramElem, Antlr4Option, Antlr4Symbol, \
+from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Option, Antlr4Symbol, \
     Antlr4Indent, Antlr4Newline, Antlr4Iteration, Antlr4Sequence, \
     Antlr4Selection, Antlr4Rule, rule_by_name
 from typing import List

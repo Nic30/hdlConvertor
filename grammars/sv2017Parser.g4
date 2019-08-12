@@ -988,7 +988,7 @@ udp_input_declaration: ( attribute_instance )* KW_INPUT list_of_udp_port_identif
 udp_reg_declaration: ( attribute_instance )* KW_REG identifier;
 udp_body: combinational_body | sequential_body;
 combinational_body: KW_TABLE combinational_entry ( combinational_entry )* KW_ENDTABLE;
-combinational_entry: level_input_list COLON OUTPUT_SYMBOL SEMI;
+combinational_entry: level_input_list COLON LEVEL_SYMBOL SEMI;
 sequential_body: ( udp_initial_statement )? KW_TABLE sequential_entry ( sequential_entry )* KW_ENDTABLE;
 udp_initial_statement: KW_INITIAL identifier ASSIGN integral_number SEMI;
 sequential_entry: seq_input_list COLON current_state COLON next_state SEMI;
@@ -997,7 +997,7 @@ level_input_list: LEVEL_SYMBOL ( LEVEL_SYMBOL )*;
 edge_input_list: ( LEVEL_SYMBOL )* edge_indicator ( LEVEL_SYMBOL )*;
 edge_indicator: LPAREN LEVEL_SYMBOL LEVEL_SYMBOL RPAREN | EDGE_SYMBOL;
 current_state: LEVEL_SYMBOL;
-next_state: OUTPUT_SYMBOL | MINUS;
+next_state: LEVEL_SYMBOL | MINUS;
 udp_instantiation: identifier ( drive_strength )? ( delay2 )? udp_instance ( COMMA udp_instance )* SEMI;
 udp_instance: ( name_of_instance )? LPAREN output_terminal COMMA input_terminal ( COMMA input_terminal )* RPAREN;
 continuous_assign:
@@ -1447,14 +1447,15 @@ stream_concatenation: LBRACE stream_expression ( COMMA stream_expression )* RBRA
 stream_expression: expression ( KW_WITH LSQUARE_BR array_range_expression RSQUARE_BR )?;
 array_range_expression:
       expression 
-      ( ( COLON | PLUS_COLON | MINUS_COLON ) expression 
-      )?;
+      ( COLON expression 
+      )? | expression ( PLUS | MINUS ) COLON expression 
+     ;
 empty_unpacked_array_concatenation: LBRACE RBRACE;
 tf_call: ps_or_hierarchical_identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?;
 system_tf_call:
-      SYSTEM_TF_IDENTIFIER ( LPAREN list_of_arguments RPAREN )? 
-      | SYSTEM_TF_IDENTIFIER LPAREN data_type ( COMMA expression )? RPAREN 
-      | SYSTEM_TF_IDENTIFIER LPAREN expression ( COMMA ( expression )? )* ( COMMA ( clocking_event )? )? RPAREN;
+      any_system_tf_identifier ( LPAREN list_of_arguments RPAREN )? 
+      | any_system_tf_identifier LPAREN data_type ( COMMA expression )? RPAREN 
+      | any_system_tf_identifier LPAREN expression ( COMMA ( expression )? )* ( COMMA ( clocking_event )? )? RPAREN;
 subroutine_call: ( class_qualifier )? method_call_body | 
       tf_call 
       | system_tf_call 
@@ -1486,17 +1487,17 @@ conditional_expression: cond_expr_predicate ( QUESTIONMARK ( attribute_instance 
      ;
 constant_expression: constant_expression_12 ( ( ARROW | BI_DIR_ARROW ) ( attribute_instance )* constant_expression )*;
 constant_expression_12: constant_expression_11 | ( QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression )*;
-constant_expression_11: constant_expression_10 ( LOG_OR ( attribute_instance )* constant_expression )*;
-constant_expression_10: constant_expression_9 ( LOG_AND ( attribute_instance )* constant_expression )*;
-constant_expression_9: constant_expression_8 ( BAR ( attribute_instance )* constant_expression )*;
-constant_expression_8: constant_expression_7 ( ( XOR | NXOR | XORN ) ( attribute_instance )* constant_expression )*;
-constant_expression_7: constant_expression_6 ( AMPERSAND ( attribute_instance )* constant_expression )*;
-constant_expression_6: constant_expression_5 ( ( EQ | NEQ | CASE_EQ | CASE_NEQ | WILDCARD_EQ | WILDCARD_NEQ ) ( attribute_instance )* constant_expression )*;
-constant_expression_5: constant_expression_4 ( ( LT | LE | GT | GE ) ( attribute_instance )* constant_expression )*;
-constant_expression_4: constant_expression_3 ( ( SHIFT_LEFT | SHIFT_RIGHT | ARITH_SHIFT_LEFT | ARITH_SHIFT_RIGHT ) ( attribute_instance )* constant_expression )*;
-constant_expression_3: constant_expression_2 ( ( PLUS | MINUS ) ( attribute_instance )* constant_expression )*;
-constant_expression_2: constant_expression_1 ( ( MUL | DIV | MOD ) ( attribute_instance )* constant_expression )*;
-constant_expression_1: constant_expression_0 ( DOUBLESTAR ( attribute_instance )* constant_expression )*;
+constant_expression_11: constant_expression_10 ( LOG_OR ( attribute_instance )* constant_expression_11 )*;
+constant_expression_10: constant_expression_9 ( LOG_AND ( attribute_instance )* constant_expression_10 )*;
+constant_expression_9: constant_expression_8 ( BAR ( attribute_instance )* constant_expression_9 )*;
+constant_expression_8: constant_expression_7 ( ( XOR | NXOR | XORN ) ( attribute_instance )* constant_expression_8 )*;
+constant_expression_7: constant_expression_6 ( AMPERSAND ( attribute_instance )* constant_expression_7 )*;
+constant_expression_6: constant_expression_5 ( ( EQ | NEQ | CASE_EQ | CASE_NEQ | WILDCARD_EQ | WILDCARD_NEQ ) ( attribute_instance )* constant_expression_6 )*;
+constant_expression_5: constant_expression_4 ( ( LT | LE | GT | GE ) ( attribute_instance )* constant_expression_5 )*;
+constant_expression_4: constant_expression_3 ( ( SHIFT_LEFT | SHIFT_RIGHT | ARITH_SHIFT_LEFT | ARITH_SHIFT_RIGHT ) ( attribute_instance )* constant_expression_4 )*;
+constant_expression_3: constant_expression_2 ( ( PLUS | MINUS ) ( attribute_instance )* constant_expression_3 )*;
+constant_expression_2: constant_expression_1 ( ( MUL | DIV | MOD ) ( attribute_instance )* constant_expression_2 )*;
+constant_expression_1: constant_expression_0 ( DOUBLESTAR ( attribute_instance )* constant_expression_1 )*;
 constant_expression_0:
       constant_primary 
       | unary_operator ( attribute_instance )* constant_primary 
@@ -1515,22 +1516,22 @@ constant_part_select_range:
       | constant_indexed_range;
 constant_range: constant_expression COLON constant_expression;
 constant_indexed_range:
-      constant_expression ( PLUS_COLON | MINUS_COLON ) constant_expression 
+      constant_expression ( PLUS | MINUS ) COLON constant_expression 
      ;
 expression: expression_12 ( ( ARROW | BI_DIR_ARROW ) ( attribute_instance )* expression )*;
 expression_12: expression_11 | conditional_expression;
-expression_11: expression_10 ( LOG_OR ( attribute_instance )* expression )*;
-expression_10: expression_9 ( LOG_AND ( attribute_instance )* expression )*;
-expression_9: expression_8 ( BAR ( attribute_instance )* expression )*;
-expression_8: expression_7 ( ( XOR | NXOR | XORN ) ( attribute_instance )* expression )*;
-expression_7: expression_6 ( AMPERSAND ( attribute_instance )* expression )*;
-expression_6: expression_5 ( ( EQ | NEQ | CASE_EQ | CASE_NEQ | WILDCARD_EQ | WILDCARD_NEQ ) ( attribute_instance )* expression )*;
-expression_5: expression_4 ( ( LT | LE | GT | GE ) ( attribute_instance )* expression )* 
+expression_11: expression_10 ( LOG_OR ( attribute_instance )* expression_11 )*;
+expression_10: expression_9 ( LOG_AND ( attribute_instance )* expression_10 )*;
+expression_9: expression_8 ( BAR ( attribute_instance )* expression_9 )*;
+expression_8: expression_7 ( ( XOR | NXOR | XORN ) ( attribute_instance )* expression_8 )*;
+expression_7: expression_6 ( AMPERSAND ( attribute_instance )* expression_7 )*;
+expression_6: expression_5 ( ( EQ | NEQ | CASE_EQ | CASE_NEQ | WILDCARD_EQ | WILDCARD_NEQ ) ( attribute_instance )* expression_6 )*;
+expression_5: expression_4 ( ( LT | LE | GT | GE ) ( attribute_instance )* expression_5 )* 
       | expression_4 ( KW_INSIDE LBRACE open_range_list RBRACE )*;
-expression_4: expression_3 ( ( SHIFT_LEFT | SHIFT_RIGHT | ARITH_SHIFT_LEFT | ARITH_SHIFT_RIGHT ) ( attribute_instance )* expression )*;
-expression_3: expression_2 ( ( PLUS | MINUS ) ( attribute_instance )* expression )*;
-expression_2: expression_1 ( ( MUL | DIV | MOD ) ( attribute_instance )* expression )*;
-expression_1: expression_0 ( DOUBLESTAR ( attribute_instance )* expression )*;
+expression_4: expression_3 ( ( SHIFT_LEFT | SHIFT_RIGHT | ARITH_SHIFT_LEFT | ARITH_SHIFT_RIGHT ) ( attribute_instance )* expression_4 )*;
+expression_3: expression_2 ( ( PLUS | MINUS ) ( attribute_instance )* expression_3 )*;
+expression_2: expression_1 ( ( MUL | DIV | MOD ) ( attribute_instance )* expression_2 )*;
+expression_1: expression_0 ( DOUBLESTAR ( attribute_instance )* expression_1 )*;
 expression_0:
       primary 
       | unary_operator ( attribute_instance )* primary 
@@ -1557,7 +1558,7 @@ module_path_mintypmax_expression:
       ( COLON module_path_expression COLON module_path_expression )?;
 part_select_range: constant_range | indexed_range;
 indexed_range:
-      expression ( PLUS_COLON | MINUS_COLON ) constant_expression 
+      expression ( PLUS | MINUS ) COLON constant_expression 
      ;
 genvar_expression: constant_expression;
 constant_primary_no_cast_no_call:
@@ -1658,7 +1659,7 @@ dynamic_array_variable_identifier: identifier;
 hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
 identifier: C_IDENTIFIER | 
       SIMPLE_IDENTIFIER 
-      | ESCAPED_IDENTIFIER | KW_RANDOMIZE | KW_STD | KW_SAMPLE | KW_OPTION | KW_TYPE_OPTION;
+      | ESCAPED_IDENTIFIER | KW_SAMPLE | KW_OPTION | KW_STD | KW_TYPE_OPTION | KW_RANDOMIZE;
 package_scope:
       ( identifier | KW_DOLAR_UNIT ) DOUBLE_COLON 
      ;
@@ -1671,3 +1672,4 @@ ps_parameter_identifier:
 ps_type_identifier: ( KW_LOCAL DOUBLE_COLON | package_scope | class_scope )? identifier;
 primitive_delay: HASH UNSIGNED_NUMBER;
 ps_or_hierarchical_identifier: ( package_scope )? identifier | hierarchical_identifier;
+any_system_tf_identifier: SYSTEM_TF_IDENTIFIER | KW_DOLAR_NOCHANGE | KW_DOLAR_WARNING | KW_DOLAR_RECREM | KW_DOLAR_SETUP | KW_DOLAR_FATAL | KW_DOLAR_PERIOD | KW_DOLAR_ERROR | KW_DOLAR_INFO | KW_DOLAR_RECOVERY | KW_DOLAR_TIMESKEW | KW_DOLAR_WIDTH | KW_DOLAR_SETUPHOLD | KW_DOLAR_HOLD | KW_DOLAR_ROOT | KW_DOLAR_FULLSKEW | KW_DOLAR_SKEW | KW_DOLAR_UNIT | KW_DOLAR_REMOVAL;

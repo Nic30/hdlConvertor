@@ -1,10 +1,10 @@
 from sortedcontainers.sortedset import SortedSet
 from typing import Set, Dict, List
 
-from antlr4grammar import iAntlr4GramElem, Antlr4Sequence, Antlr4Symbol, \
+from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Sequence, Antlr4Symbol, \
     Antlr4Iteration, Antlr4Selection, Antlr4Option, Antlr4Indent, \
     Antlr4Newline, rule_by_name, Antlr4Rule
-from selection_optimiser import iter_non_visuals
+from utils.antlr4.selection_optimiser import iter_non_visuals
 
 
 def transitive_closure(graph: Dict[object, Set[object]], reflexive=False):
