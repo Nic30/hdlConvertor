@@ -80,12 +80,16 @@ def replace_item_by_sequence(elem, match_replace_fn):
             assert isinstance(m, iAntlr4GramElem)
             elem.body = m
     elif isinstance(elem, Antlr4Sequence):
+
         def do_inline_fn(elem):
             return isinstance(elem, Antlr4Sequence)
+
         replace_item_by_sequence_in_sequence(elem, match_replace_fn, do_inline_fn)
     elif isinstance(elem, Antlr4Selection):
+
         def do_inline_fn(elem):
             return isinstance(elem, Antlr4Selection)
+
         replace_item_by_sequence_in_sequence(elem, match_replace_fn, do_inline_fn)
     elif isinstance(elem, Antlr4Rule):
         m = match_replace_fn(elem.body)
@@ -189,9 +193,8 @@ def extract_option_as_rule(rules, rule_name, options_i, new_rule_name):
     return new_r
 
 
-def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
+def _replace_symbol_in_rule(rule, symbol_name, symbol_name_replace,
                            only_first=False):
-    r = rule_by_name(rules, rule_name)
 
     class FirstFound(Exception):
         pass
@@ -203,15 +206,23 @@ def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
                 raise FirstFound()
 
     try:
-        r.walk(renamer)
+        rule.walk(renamer)
     except FirstFound:
         pass
 
+
+def replace_symbol_in_rule(rules, rule_name, symbol_name, symbol_name_replace,
+                           only_first=False):
+    rule = rule_by_name(rules, rule_name)
+    _replace_symbol_in_rule(rule, symbol_name, symbol_name_replace,
+                            only_first=only_first)
+    
 
 def inline_rule(rules, rule_name):
     rule = rule_by_name(rules, rule_name)
     _inline_rule(rules, rule)
     rules.remove(rule)
+
 
 def _inline_rule(rules, rule):
     replacement = rule.body

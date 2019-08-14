@@ -9,7 +9,8 @@ import os
 
 from utils.antlr4.utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
     remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule, \
-    replace_item_by_sequence, inline_rule, _inline_rule
+    replace_item_by_sequence, inline_rule, _inline_rule, replace_symbol_in_rule,\
+    _replace_symbol_in_rule
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Selection, Antlr4Option, generate_renamer, \
     iAntlr4GramElem, rule_by_name, Antlr4LexerAction, Antlr4Iteration
@@ -479,7 +480,7 @@ def add_comments_and_ws(rules):
     ws = Antlr4Rule("WHITE_SPACE", Antlr4Sequence([
             Antlr4Symbol("[ \\t\\n\\r] +", True, is_regex=True),
         ]),
-        lexer_actions=[Antlr4LexerAction.skip()])
+        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
     rules.append(ws)
 
 
@@ -591,14 +592,13 @@ def fix_randomize_call(rules):
     #   KW_RANDOMIZE ( attribute_instance )*
     #   ( LPAREN ( variable_identifier_list | KW_NULL )? RPAREN )?
     #   ( KW_WITH ( LPAREN ( identifier_list )? RPAREN )? constraint_block )?;
-    r = rule_by_name(rules, "randomize_call")
-
-    # def match_replace_fn(o):
-    #     for orig, repl in [("LPAREN", "LBRACE"), ("RPAREN", "RBRACE")]:
-    #         if o == Antlr4Symbol(orig, False):
-    #             return Antlr4Symbol(repl, False)
-    # 
-    # replace_item_by_sequence(r.body[-1], match_replace_fn)
+    
+    rnm  = generate_renamer({"variable_identifier_list": "randomize_arg_list"}, False)
+    for r in rules:
+        r.walk(rnm)
+        if r.name == "randomize_arg_list":
+            randomize_arg_list = r
+    _replace_symbol_in_rule(randomize_arg_list, "identifier", "hierarchical_identifier")
 
 
 def fix_SYSTEM_TF_IDENTIFIER(rules):
@@ -618,6 +618,17 @@ def fix_SYSTEM_TF_IDENTIFIER(rules):
         *[Antlr4Symbol(kw.replace("$", "KW_DOLAR_").upper(), False)
           for kw in kws if kw.startswith("$")]
         ])))
+
+
+def fix_dpi_import_export(rules):
+    C_IDENTIFIER = Antlr4Symbol("C_IDENTIFIER", False)
+
+    def match_replace_fn(o):
+        if o == C_IDENTIFIER:
+            return Antlr4Selection([C_IDENTIFIER, Antlr4Symbol("ESCAPED_IDENTIFIER", False)])
+
+    r = rule_by_name(rules, "dpi_import_export")
+    replace_item_by_sequence(r.body, match_replace_fn)
 
 
 UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
@@ -669,6 +680,7 @@ def proto_grammar_to_g4():
     fix_call(p.rules)
     # fix_cross_body_item(p.rules)
     fix_randomize_call(p.rules)
+    fix_dpi_import_export(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
