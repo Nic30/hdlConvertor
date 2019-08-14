@@ -14,7 +14,7 @@ source_textParser::source_textParser(antlr4::TokenStream* tokens, HdlContext * c
 }
 
 void source_textParser::visitSource_text(
-		sv2012Parser::Source_textContext *ctx) {
+		sv2017Parser::Source_textContext *ctx) {
 	NotImplementedLogger::print("visitLibrary_text", ctx);
 }
 
