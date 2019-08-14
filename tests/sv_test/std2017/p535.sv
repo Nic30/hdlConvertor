@@ -15,7 +15,7 @@ endfunction
 class CA;
   rand byte x, y;
   byte v, w;
-  constraint c1 { x < v && y > w; );
+  constraint c1 { x < v && y > w; };
 endclass
 
 
