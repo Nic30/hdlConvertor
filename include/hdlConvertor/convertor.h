@@ -19,8 +19,8 @@
 #define SV_PARSER
 
 #ifdef SV_PARSER
-#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Lexer.h>
-#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Parser.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Lexer.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 #include <hdlConvertor/svConvertor/source_textParser.h>
 #endif
 

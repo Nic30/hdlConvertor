@@ -12,18 +12,18 @@ using namespace hdlConvertor::hdlObjects;
 
 bool Convertor::debug = false;
 
-void parseFnVerilog(SyntaxErrorLogger * syntaxErrLogger,
-		Verilog2001_antlr::Verilog2001Parser * antlrParser,
-		verilog::Source_textParser * hdlParser) {
+void parseFnVerilog(SyntaxErrorLogger *syntaxErrLogger,
+		Verilog2001_antlr::Verilog2001Parser *antlrParser,
+		verilog::Source_textParser *hdlParser) {
 	Verilog2001_antlr::Verilog2001Parser::Source_textContext *tree =
 			antlrParser->source_text();
 	syntaxErrLogger->CheckErrors(); // Throw exception if errors
 	hdlParser->visitSource_text(tree);
 }
 
-void parseFnVHDL(SyntaxErrorLogger * syntaxErrLogger,
-		vhdl_antlr::vhdlParser * antlrParser,
-		vhdl::DesignFileParser * hdlParser) {
+void parseFnVHDL(SyntaxErrorLogger *syntaxErrLogger,
+		vhdl_antlr::vhdlParser *antlrParser,
+		vhdl::DesignFileParser *hdlParser) {
 	vhdl_antlr::vhdlParser::Design_fileContext *tree =
 			antlrParser->design_file();
 	syntaxErrLogger->CheckErrors(); // Throw exception if errors
@@ -31,17 +31,17 @@ void parseFnVHDL(SyntaxErrorLogger * syntaxErrLogger,
 }
 
 #ifdef SV_PARSER
-void parseFnSystemVerilog(SyntaxErrorLogger * syntaxErrLogger,
-		sv2012_antlr::sv2012Parser * antlrParser,
-		sv::source_textParser * hdlParser) {
-	sv2012_antlr::sv2012Parser::Source_textContext *tree =
+void parseFnSystemVerilog(SyntaxErrorLogger *syntaxErrLogger,
+		sv2017_antlr::sv2017Parser *antlrParser,
+		sv::source_textParser *hdlParser) {
+	sv2017_antlr::sv2017Parser::Source_textContext *tree =
 			antlrParser->source_text();
 	syntaxErrLogger->CheckErrors(); // Throw exception if errors
 	hdlParser->visitSource_text(tree);
 }
 #endif
 
-void Convertor::parse_vhdl(ANTLRInputStream & input) {
+void Convertor::parse_vhdl(ANTLRInputStream &input) {
 	auto pc = new ParserContainer<vhdl_antlr::vhdlLexer, vhdl_antlr::vhdlParser,
 			vhdl::DesignFileParser>(c);
 	pc->parseFile(input, hierarchyOnly, parseFnVHDL);
@@ -49,8 +49,8 @@ void Convertor::parse_vhdl(ANTLRInputStream & input) {
 	delete pc;
 }
 
-void Convertor::parse_verilog_file(const string & fileName,
-		vector<string> & _incdirs) {
+void Convertor::parse_verilog_file(const string &fileName,
+		vector<string> &_incdirs) {
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
@@ -72,8 +72,8 @@ void Convertor::parse_verilog_file(const string & fileName,
 	delete pc;
 }
 
-void Convertor::parse_verilog_str(const string & verilog_str,
-		vector<string> & _incdirs) {
+void Convertor::parse_verilog_str(const string &verilog_str,
+		vector<string> &_incdirs) {
 	auto pc = new ParserContainer<Verilog2001_antlr::Verilog2001Lexer,
 			Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser>(
 			c);
@@ -96,10 +96,10 @@ void Convertor::parse_verilog_str(const string & verilog_str,
 }
 
 #ifdef SV_PARSER
-void Convertor::parse_sv_file(const string & fileName,
-		vector<string> & _incdirs) {
-	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
-			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
+void Convertor::parse_sv_file(const string &fileName,
+		vector<string> &_incdirs) {
+	auto pc = new ParserContainer<sv2017_antlr::sv2017Lexer,
+			sv2017_antlr::sv2017Parser, sv::source_textParser>(c);
 
 	verilog_pp::MacroDB defineDB;
 	macroDB_add_default_defs(defineDB);
@@ -109,7 +109,7 @@ void Convertor::parse_sv_file(const string & fileName,
 	for (auto p : _incdirs)
 		incdirs.push_back(p);
 	string str = verilog_pp::run_verilog_preproc_file(fileName, incdirs,
-			defineDB, stack_incfile, Language::SV2012);
+			defineDB, stack_incfile, Language::SV2017);
 
 	ANTLRInputStream input(str);
 	input.name = fileName;
@@ -119,10 +119,10 @@ void Convertor::parse_sv_file(const string & fileName,
 	delete pc;
 }
 
-void Convertor::parse_sv_str(const string & verilog_str,
-		vector<string> & _incdirs) {
-	auto pc = new ParserContainer<sv2012_antlr::sv2012Lexer,
-			sv2012_antlr::sv2012Parser, sv::source_textParser>(c);
+void Convertor::parse_sv_str(const string &verilog_str,
+		vector<string> &_incdirs) {
+	auto pc = new ParserContainer<sv2017_antlr::sv2017Lexer,
+			sv2017_antlr::sv2017Parser, sv::source_textParser>(c);
 
 	verilog_pp::MacroDB defineDB;
 	macroDB_add_default_defs(defineDB);
@@ -132,7 +132,7 @@ void Convertor::parse_sv_str(const string & verilog_str,
 	for (auto p : _incdirs)
 		incdirs.push_back(p);
 	string str = verilog_pp::run_verilog_preproc_str(verilog_str, incdirs,
-			defineDB, stack_incfile, Language::SV2012);
+			defineDB, stack_incfile, Language::SV2017);
 
 	ANTLRInputStream input(str);
 	input.name = "<string>";
@@ -143,28 +143,29 @@ void Convertor::parse_sv_str(const string & verilog_str,
 }
 #endif
 
-HdlContext * Convertor::parse(const vector<string> & _fileNames, Language lang,
+HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
 	NotImplementedLogger::ENABLE = _debug;
 
-	for (const auto & fileName : _fileNames) {
+	for (const auto &fileName : _fileNames) {
 		struct stat buffer;
 
 		if (stat(fileName.c_str(), &buffer) != 0) {
 			throw ParseException(fileName + " does not exist.");
 		}
 
-		if (lang == VHDL) {
+		if (lang == Language::VHDL) {
 			ANTLRFileStream input(fileName);
 			parse_vhdl(input);
 
 		} else if (lang == VERILOG) {
 			parse_verilog_file(fileName, incdir);
 #ifdef SV_PARSER
-		} else if (lang == SYSTEM_VERILOG) {
+		} else if (lang == Language::SV2009 || lang == Language::SV2012
+				|| lang == Language::SV2017) {
 			parse_sv_file(fileName, incdir);
 #endif
 		} else {
@@ -173,7 +174,7 @@ HdlContext * Convertor::parse(const vector<string> & _fileNames, Language lang,
 	}
 	return c;
 }
-HdlContext * Convertor::parse_str(const string & hdl_str, Language lang,
+HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
@@ -186,7 +187,8 @@ HdlContext * Convertor::parse_str(const string & hdl_str, Language lang,
 	} else if (lang == VERILOG) {
 		parse_verilog_str(hdl_str, incdir);
 #ifdef SV_PARSER
-	} else if (lang == SYSTEM_VERILOG) {
+	} else if (lang == Language::SV2009 || lang == Language::SV2012
+			|| lang == Language::SV2017) {
 		parse_sv_str(hdl_str, incdir);
 #endif
 	} else {
@@ -195,7 +197,7 @@ HdlContext * Convertor::parse_str(const string & hdl_str, Language lang,
 	return c;
 }
 
-string Convertor::verilog_pp(const string & fileName,
+string Convertor::verilog_pp(const string &fileName,
 		const vector<string> _incdirs, Language mode) {
 	verilog_pp::MacroDB defineDB;
 	macroDB_add_default_defs(defineDB);
@@ -210,7 +212,7 @@ string Convertor::verilog_pp(const string & fileName,
 	return result;
 }
 
-string Convertor::verilog_pp_str(const string & verilog_str,
+string Convertor::verilog_pp_str(const string &verilog_str,
 		const vector<string> _incdirs, Language mode) {
 	verilog_pp::MacroDB defineDB;
 	macroDB_add_default_defs(defineDB);

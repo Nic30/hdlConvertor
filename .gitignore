@@ -40,13 +40,13 @@ dist/
 _skbuild/
 
 # parser soruce build dirs
-src/svConvertor/sv2012Parser
+src/svConvertor/sv2017Parser
 src/verilogConvertor/Verilog2001Parser
 src/verilogPreproc/verilogPreprocParser
 src/vhdlConvertor/vhdlParser
 
 
-include/hdlConvertor/svConvertor/sv2012Parser/*.h
+include/hdlConvertor/svConvertor/sv2017Parser/*.h
 include/hdlConvertor/verilogConvertor/Verilog2001Parser/*.h
 include/hdlConvertor/verilogPreproc/verilogPreprocParser/*.h
 include/hdlConvertor/vhdlConvertor/vhdlParser/*.h

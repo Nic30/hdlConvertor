@@ -560,9 +560,9 @@ function_body_declaration:
       KW_ENDFUNCTION ( COLON identifier )?;
 function_prototype: KW_FUNCTION data_type_or_void identifier ( LPAREN tf_port_list RPAREN )?;
 dpi_import_export:
-      KW_IMPORT STRING_LITERAL ( dpi_function_import_property )? ( C_IDENTIFIER ASSIGN )? function_prototype SEMI 
-      | KW_IMPORT STRING_LITERAL ( dpi_task_import_property )? ( C_IDENTIFIER ASSIGN )? task_prototype SEMI 
-      | KW_EXPORT STRING_LITERAL ( C_IDENTIFIER ASSIGN )? ( KW_FUNCTION | KW_TASK ) identifier SEMI 
+      KW_IMPORT STRING_LITERAL ( dpi_function_import_property )? ( ( C_IDENTIFIER | ESCAPED_IDENTIFIER ) ASSIGN )? function_prototype SEMI 
+      | KW_IMPORT STRING_LITERAL ( dpi_task_import_property )? ( ( C_IDENTIFIER | ESCAPED_IDENTIFIER ) ASSIGN )? task_prototype SEMI 
+      | KW_EXPORT STRING_LITERAL ( ( C_IDENTIFIER | ESCAPED_IDENTIFIER ) ASSIGN )? ( KW_FUNCTION | KW_TASK ) identifier SEMI 
      ;
 dpi_function_import_property: KW_CONTEXT | KW_PURE;
 dpi_task_import_property: KW_CONTEXT;
@@ -1065,7 +1065,7 @@ statement_item:
 function_statement_or_null:
       statement 
       | ( attribute_instance )* SEMI;
-variable_identifier_list: identifier ( COMMA identifier )*;
+randomize_arg_list: hierarchical_identifier ( COMMA hierarchical_identifier )*;
 procedural_timing_control_statement:
       procedural_timing_control statement_or_null;
 delay_or_event_control:
@@ -1476,7 +1476,7 @@ array_manipulation_call:
       ( KW_WITH LPAREN expression RPAREN )?;
 randomize_call:
       KW_RANDOMIZE ( attribute_instance )* 
-      ( LPAREN ( variable_identifier_list | KW_NULL )? RPAREN )? 
+      ( LPAREN ( randomize_arg_list | KW_NULL )? RPAREN )? 
       ( KW_WITH ( LPAREN ( identifier_list )? RPAREN )? constraint_block )?;
 array_method_name:
       identifier | KW_UNIQUE | KW_AND | KW_OR | KW_XOR;
@@ -1659,7 +1659,7 @@ dynamic_array_variable_identifier: identifier;
 hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
 identifier: C_IDENTIFIER | 
       SIMPLE_IDENTIFIER 
-      | ESCAPED_IDENTIFIER | KW_SAMPLE | KW_OPTION | KW_STD | KW_TYPE_OPTION | KW_RANDOMIZE;
+      | ESCAPED_IDENTIFIER | KW_SAMPLE | KW_OPTION | KW_STD | KW_RANDOMIZE | KW_TYPE_OPTION;
 package_scope:
       ( identifier | KW_DOLAR_UNIT ) DOUBLE_COLON 
      ;
@@ -1672,4 +1672,4 @@ ps_parameter_identifier:
 ps_type_identifier: ( KW_LOCAL DOUBLE_COLON | package_scope | class_scope )? identifier;
 primitive_delay: HASH UNSIGNED_NUMBER;
 ps_or_hierarchical_identifier: ( package_scope )? identifier | hierarchical_identifier;
-any_system_tf_identifier: SYSTEM_TF_IDENTIFIER | KW_DOLAR_NOCHANGE | KW_DOLAR_WARNING | KW_DOLAR_RECREM | KW_DOLAR_SETUP | KW_DOLAR_FATAL | KW_DOLAR_PERIOD | KW_DOLAR_ERROR | KW_DOLAR_INFO | KW_DOLAR_RECOVERY | KW_DOLAR_TIMESKEW | KW_DOLAR_WIDTH | KW_DOLAR_SETUPHOLD | KW_DOLAR_HOLD | KW_DOLAR_ROOT | KW_DOLAR_FULLSKEW | KW_DOLAR_SKEW | KW_DOLAR_UNIT | KW_DOLAR_REMOVAL;
+any_system_tf_identifier: SYSTEM_TF_IDENTIFIER | KW_DOLAR_REMOVAL | KW_DOLAR_NOCHANGE | KW_DOLAR_ROOT | KW_DOLAR_ERROR | KW_DOLAR_FATAL | KW_DOLAR_HOLD | KW_DOLAR_SETUP | KW_DOLAR_RECREM | KW_DOLAR_WARNING | KW_DOLAR_SKEW | KW_DOLAR_INFO | KW_DOLAR_UNIT | KW_DOLAR_TIMESKEW | KW_DOLAR_WIDTH | KW_DOLAR_PERIOD | KW_DOLAR_SETUPHOLD | KW_DOLAR_RECOVERY | KW_DOLAR_FULLSKEW;

@@ -4,7 +4,7 @@
 namespace hdlConvertor {
 namespace sv {
 
-using namespace sv2012_antlr;
+using namespace sv2017_antlr;
 using namespace hdlConvertor::hdlObjects;
 
 Library_textParser::Library_textParser(antlr4::TokenStream* tokens,
@@ -13,7 +13,7 @@ Library_textParser::Library_textParser(antlr4::TokenStream* tokens,
 }
 
 void Library_textParser::visitLibrary_text(
-		sv2012Parser::Library_textContext * ctx) {
+		sv2017Parser::Library_textContext * ctx) {
 	NotImplementedLogger::print("visitLibrary_text", ctx);
 }
 

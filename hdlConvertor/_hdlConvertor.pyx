@@ -75,19 +75,15 @@ cdef class HdlConvertor:
 
     @staticmethod
     def _translate_Language_enum(langue):
-        if langue == PyHdlLanguageEnum.VERILOG:
-            return VERILOG
-        elif langue == PyHdlLanguageEnum.VHDL:
+        if langue == PyHdlLanguageEnum.VHDL:
             return VHDL
-        elif langue == PyHdlLanguageEnum.SYSTEM_VERILOG:
-            return SYSTEM_VERILOG
         else:
-            raise ValueError(str(langue) + " is not recognized (expected verilog, vhdl or systemVerilog)")
+            return HdlConvertor._get_verilog_pp_mode(langue)
 
     @staticmethod
     def _get_verilog_pp_mode(mode):
         L = PyHdlLanguageEnum
-        if mode == L.VERILOG or mode == L.VERILOG_2001:
+        if mode == L.VERILOG_2001:
             return VERILOG2001
         elif mode == L.VERILOG_2005:
             return VERILOG2005
@@ -96,7 +92,8 @@ cdef class HdlConvertor:
         elif mode == L.SYSTEM_VERILOG_2017:
             return SV2017
         else:
-            raise ValueError(mode + " is not recognized (expected " + repr(PyHdlLanguageEnum) + ")")
+            raise ValueError(repr(mode) + " is not recognized"
+                             " (expected hdlConvertor.language.Language value)")
 
     def parse(self, filenames, langue, incdirs, hierarchyOnly=False, debug=True):
         """
