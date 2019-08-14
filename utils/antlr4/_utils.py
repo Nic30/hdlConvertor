@@ -2,7 +2,7 @@ from itertools import islice
 
 from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Option, Antlr4Symbol, \
     Antlr4Indent, Antlr4Newline, Antlr4Iteration, Antlr4Sequence, \
-    Antlr4Selection, Antlr4Rule, rule_by_name
+    Antlr4Selection, Antlr4Rule, rule_by_name, iter_non_visuals
 from typing import List
 from copy import deepcopy
 
@@ -137,19 +137,6 @@ def collect_simple_rules(rules: List[Antlr4Rule], symbol_name: str):
             b = r.body[0]
             if isinstance(b, Antlr4Symbol) and b.symbol == symbol_name:
                 yield r
-
-
-def iter_non_visuals(s: Antlr4Sequence):
-    if isinstance(s, (Antlr4Indent, Antlr4Newline)):
-        return
-    if isinstance(s, iAntlr4GramElem):
-        if not isinstance(s, Antlr4Sequence):
-            yield s
-            return
-
-    for e in s:
-        if not isinstance(e, (Antlr4Indent, Antlr4Newline)):
-            yield e
 
 
 def index_non_visual(s: Antlr4Selection, index: int):

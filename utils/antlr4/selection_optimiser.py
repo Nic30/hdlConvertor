@@ -2,7 +2,7 @@ from utils.antlr4.grammar import Antlr4Rule, iAntlr4GramElem, Antlr4Selection, \
     Antlr4Sequence, Antlr4Indent, Antlr4Newline, Antlr4Symbol, \
     Antlr4Option
 from typing import List
-from utils.antlr4.utils import iter_non_visuals, index_non_visual, len_without_visuals, \
+from utils.antlr4._utils import iter_non_visuals, index_non_visual, len_without_visuals, \
     replace_item_by_sequence
 
 

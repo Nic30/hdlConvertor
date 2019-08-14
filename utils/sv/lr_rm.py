@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from utils.antlr4.utils import inline_rule, replace_symbol_in_rule, iter_non_visuals, \
+from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, iter_non_visuals, \
     extract_option_as_rule
 from utils.antlr4.grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
     Antlr4Newline, Antlr4Indent, Antlr4Sequence, Antlr4Iteration, Antlr4Rule

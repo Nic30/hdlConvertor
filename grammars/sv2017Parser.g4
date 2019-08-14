@@ -176,9 +176,7 @@ parameter_override: KW_DEFPARAM list_of_defparam_assignments SEMI;
 bind_directive:
       KW_BIND bind_target_scope ( COLON bind_target_instance_list )? bind_instantiation SEMI 
       | KW_BIND bind_target_instance bind_instantiation SEMI;
-bind_target_scope:
-      identifier 
-     ;
+bind_target_scope: identifier;
 bind_target_instance:
       hierarchical_identifier constant_bit_select;
 bind_target_instance_list:
@@ -319,7 +317,7 @@ constraint_expression:
       | uniqueness_constraint SEMI 
       | expression ARROW constraint_set 
       | KW_IF LPAREN expression RPAREN constraint_set ( KW_ELSE constraint_set )? 
-      | KW_FOREACH LPAREN ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables RSQUARE_BR RPAREN constraint_set 
+      | KW_FOREACH LPAREN foreach_ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables RSQUARE_BR RPAREN constraint_set 
       | KW_DISABLE KW_SOFT constraint_primary SEMI;
 uniqueness_constraint:
       KW_UNIQUE LBRACE open_range_list RBRACE;
@@ -411,8 +409,8 @@ type_declaration:
       | KW_TYPEDEF ( KW_ENUM | KW_STRUCT | KW_UNION | KW_CLASS | KW_INTERFACE KW_CLASS )? identifier SEMI;
 net_type_declaration:
       KW_NETTYPE data_type identifier 
-      ( KW_WITH ( package_scope | class_scope )? identifier )? SEMI 
-      | KW_NETTYPE ( package_scope | class_scope )? identifier identifier SEMI;
+      ( KW_WITH package_or_class_scoped_id )? SEMI 
+      | KW_NETTYPE package_or_class_scoped_id identifier SEMI;
 lifetime: KW_STATIC | KW_AUTOMATIC;
 casting_type: simple_type | constant_primary_no_cast_no_call | signing | KW_STRING | KW_CONST;
 data_type:
@@ -426,15 +424,14 @@ data_type:
       | KW_STRING 
       | KW_CHANDLE 
       | KW_VIRTUAL ( KW_INTERFACE )? identifier ( parameter_value_assignment )? ( DOT identifier )? 
-      | ( class_scope | package_scope )? identifier ( packed_dimension )* 
-      | class_type 
+      |  | class_type 
       | KW_EVENT 
       | ps_identifier 
       | type_reference;
 data_type_or_implicit:
       data_type 
       | implicit_data_type;
-implicit_data_type: ( signing )? ( packed_dimension )*;
+implicit_data_type: signing ( packed_dimension )* | ( packed_dimension )+;
 enum_base_type:
       integer_atom_type ( signing )? 
       | integer_vector_type ( signing )? ( packed_dimension )? 
@@ -772,8 +769,7 @@ block_event_expression:
      ;
 block_event_expression_item: ( KW_BEGIN | KW_END ) hierarchical_btf_identifier 
      ;
-hierarchical_btf_identifier:
-      hierarchical_identifier 
+hierarchical_btf_identifier: hierarchical_identifier 
       | ( hierarchical_identifier DOT | class_scope )? identifier;
 cover_point:
       ( data_type_or_implicit identifier COLON )? KW_COVERPOINT expression ( KW_IFF LPAREN expression RPAREN )? 
@@ -806,9 +802,7 @@ repeat_range:
 cover_cross:
       ( identifier COLON )? KW_CROSS list_of_cross_items ( KW_IFF LPAREN expression RPAREN )? cross_body;
 list_of_cross_items: cross_item COMMA cross_item ( COMMA cross_item )*;
-cross_item:
-      identifier 
-     ;
+cross_item: identifier;
 cross_body:
       LBRACE ( cross_body_item )* RBRACE 
       | SEMI;
@@ -1171,7 +1165,7 @@ loop_statement:
       | KW_FOR LPAREN ( for_initialization )? SEMI ( expression )? SEMI ( for_step )? RPAREN 
       statement_or_null 
       | KW_DO statement_or_null KW_WHILE LPAREN expression RPAREN SEMI 
-      | KW_FOREACH LPAREN ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables RSQUARE_BR RPAREN statement;
+      | KW_FOREACH LPAREN foreach_ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables RSQUARE_BR RPAREN statement;
 for_initialization:
       list_of_variable_assignments 
       | for_variable_declaration ( COMMA for_variable_declaration )*;
@@ -1566,8 +1560,7 @@ constant_primary_no_cast_no_call:
       | ps_parameter_identifier constant_select 
       | identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR | constant_select 
       )? 
-      | ( package_scope | class_scope )? identifier 
-      | ( constant_concatenation | constant_multiple_concatenation ) ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
+      | package_or_class_scoped_id | ( constant_concatenation | constant_multiple_concatenation ) ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
       | let_expression 
       | LPAREN constant_mintypmax_expression RPAREN 
       | assignment_pattern_expression 
@@ -1659,12 +1652,12 @@ dynamic_array_variable_identifier: identifier;
 hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
 identifier: C_IDENTIFIER | 
       SIMPLE_IDENTIFIER 
-      | ESCAPED_IDENTIFIER | KW_SAMPLE | KW_OPTION | KW_STD | KW_RANDOMIZE | KW_TYPE_OPTION;
+      | ESCAPED_IDENTIFIER | KW_TYPE_OPTION | KW_STD | KW_SAMPLE | KW_RANDOMIZE | KW_OPTION;
 package_scope:
       ( identifier | KW_DOLAR_UNIT ) DOUBLE_COLON 
      ;
 ps_identifier: ( package_scope )? identifier;
-ps_or_hierarchical_array_identifier:
+foreach_ps_or_hierarchical_array_identifier:
       ( implicit_class_handle DOT | class_scope | package_scope )? hierarchical_identifier;
 ps_parameter_identifier:
       ( ( package_scope | class_scope )? | ( identifier ( LSQUARE_BR constant_expression RSQUARE_BR )? DOT )* ) identifier 
@@ -1672,4 +1665,5 @@ ps_parameter_identifier:
 ps_type_identifier: ( KW_LOCAL DOUBLE_COLON | package_scope | class_scope )? identifier;
 primitive_delay: HASH UNSIGNED_NUMBER;
 ps_or_hierarchical_identifier: ( package_scope )? identifier | hierarchical_identifier;
-any_system_tf_identifier: SYSTEM_TF_IDENTIFIER | KW_DOLAR_REMOVAL | KW_DOLAR_NOCHANGE | KW_DOLAR_ROOT | KW_DOLAR_ERROR | KW_DOLAR_FATAL | KW_DOLAR_HOLD | KW_DOLAR_SETUP | KW_DOLAR_RECREM | KW_DOLAR_WARNING | KW_DOLAR_SKEW | KW_DOLAR_INFO | KW_DOLAR_UNIT | KW_DOLAR_TIMESKEW | KW_DOLAR_WIDTH | KW_DOLAR_PERIOD | KW_DOLAR_SETUPHOLD | KW_DOLAR_RECOVERY | KW_DOLAR_FULLSKEW;
+any_system_tf_identifier: SYSTEM_TF_IDENTIFIER | KW_DOLAR_NOCHANGE | KW_DOLAR_PERIOD | KW_DOLAR_SETUP | KW_DOLAR_ERROR | KW_DOLAR_TIMESKEW | KW_DOLAR_WARNING | KW_DOLAR_WIDTH | KW_DOLAR_SETUPHOLD | KW_DOLAR_INFO | KW_DOLAR_SKEW | KW_DOLAR_ROOT | KW_DOLAR_RECOVERY | KW_DOLAR_UNIT | KW_DOLAR_REMOVAL | KW_DOLAR_FULLSKEW | KW_DOLAR_FATAL | KW_DOLAR_RECREM | KW_DOLAR_HOLD;
+package_or_class_scoped_id: ( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;

@@ -1,5 +1,5 @@
-from utils.antlr4.grammar import Antlr4Sequence, Antlr4Option
-from utils.antlr4.utils import iter_non_visuals, replace_item_by_sequence
+from utils.antlr4.grammar import Antlr4Sequence, Antlr4Option, iter_non_visuals
+from utils.antlr4._utils import replace_item_by_sequence
 
 
 def reduce_optionality(rules):
@@ -29,5 +29,4 @@ def reduce_optionality(rules):
 
     for r in rules:
         replace_item_by_sequence(r, match_replace_fn)
-
 

@@ -4,154 +4,28 @@
 "main" for scripts which extract, fixes and optimizes the grammar from pdf with 1800-2017 standard
 """
 
-from copy import deepcopy
 import os
 
-from utils.antlr4.utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
-    remove_simple_rule, rm_option_on_rule_usage, extract_option_as_rule, \
-    replace_item_by_sequence, inline_rule, _inline_rule, replace_symbol_in_rule,\
-    _replace_symbol_in_rule
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Selection, Antlr4Option, generate_renamer, \
-    iAntlr4GramElem, rule_by_name, Antlr4LexerAction, Antlr4Iteration
+    rule_by_name, Antlr4LexerAction
 from utils.antlr4.optionality_optimiser import reduce_optionality
+from utils.antlr4._utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
+    remove_simple_rule,  extract_option_as_rule
 from utils.sv.keywords import IEEE1800_2017_KEYWORDS
 from utils.sv.lr_rm import left_recurse_remove
 from utils.sv.pdf_parsing import parse_sv_pdf
+from utils.sv.perf_fix import rm_option_from_eps_rules, rm_ambiguity, \
+    optimize_class_scope
 from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
 from utils.sv.rules_defined_in_text import add_string_literal_rules, \
     add_file_path_literal_rules
-
-
-def replace_rule(rule_name, replace_rule_name, names_to_replace, parser):
-    parser.rules = [p for p in parser.rules if p.name != rule_name]
-    names_to_replace[rule_name] = replace_rule_name
-
-
-def mark_regex(obj: iAntlr4GramElem):
-    if isinstance(obj, Antlr4Symbol) and obj.symbol in [
-            '[a-zA-Z_]', '[a-zA-Z0-9_$]', '[a-zA-Z0-9_]']:
-        obj.is_regex = True
-
-
-def collect_keywords(rules):
-    keywords = set()
-
-    def _collect_keywords(obj):
-        if isinstance(obj, Antlr4Symbol) and obj.is_terminal:
-            s = obj.symbol
-            keywords.add(s)
-
-    for r in rules:
-        if not r.is_lexer_rule():
-            r.walk(_collect_keywords)
-    return keywords
-
-
-def extract_keywords_to_specific_rule(p: SvRule2Antlr4Rule):
-    keywords = collect_keywords(p.rules)
-
-    def get_kw_name(k):
-        return "KW_" + k.replace("$", "DOLAR_").upper()
-
-    def renamer(obj: iAntlr4GramElem):
-        if isinstance(obj, Antlr4Symbol) and obj.is_terminal\
-                and obj.symbol in keywords:
-            obj.is_terminal = False
-            obj.symbol = get_kw_name(obj.symbol)
-
-    for r in p.rules:
-        if not r.is_lexer_rule():
-            r.walk(renamer)
-
-    for k in sorted(keywords):
-        kw_name = get_kw_name(k)
-        kw_rule = Antlr4Rule(kw_name, Antlr4Symbol(k, True))
-        p.rules.append(kw_rule)
-        # if not re.match("^[A-Za-z0-9_]*$", k):
-        #    print(k)
-    return keywords
-
-
-def get_all_used_lexer_tokens(rules, rule_name):
-    tokens = set()
-    seen = set()
-    used_parser_rules = {rule_name, }
-
-    def walk(obj: iAntlr4GramElem):
-        if isinstance(obj, Antlr4Symbol) and not obj.symbol in seen:
-            if obj.is_lexer_nonterminal():
-                tokens.add(obj.symbol)
-            elif not obj.is_terminal:
-                used_parser_rules.add(obj.symbol)
-
-    while used_parser_rules:
-        r_name = used_parser_rules.pop()
-        r = rule_by_name(rules, r_name)
-        seen.add(r.name)
-        r.walk(walk)
-
-    return tokens
-
-
-def wrap_in_lexer_mode(rules, mode_name, enter_tokens, exit_tokens, tokens, shared_tokens):
-    for enter_token in enter_tokens:
-        enter_rule = rule_by_name(rules, enter_token)
-        enter_rule.lexer_actions.append(Antlr4LexerAction.pushMode(mode_name))
-
-    for t_name in sorted(tokens.union(shared_tokens)):
-        t_rule = rule_by_name(rules, t_name)
-        if t_name in shared_tokens:
-            # copy the rule
-            # translate mode specific token to a original token
-            actions = deepcopy(t_rule.lexer_actions)
-            if not Antlr4LexerAction.skip() in actions:
-                actions.append(Antlr4LexerAction.type(t_name))
-            mode_specific_t_rule = Antlr4Rule(
-                mode_name + "_" + t_name, deepcopy(t_rule.body),
-                lexer_mode=mode_name,
-                lexer_actions=actions
-            )
-            rules.append(mode_specific_t_rule)
-            t_rule = mode_specific_t_rule
-
-        t_rule.lexer_mode = mode_name
-        if t_name in sorted(exit_tokens):
-            t_rule.lexer_actions.append(Antlr4LexerAction.popMode())
-
-
-def pretify_regex(rules):
-
-    def _pretify_regex(o):
-        if isinstance(o, Antlr4Symbol) and o.is_regex:
-            for orig, repl in [
-                    ("0123456789", "0-9"),
-                    ("01234567", "0-7"),
-                    ("123456789", "1-9"),
-                    ("abcdef", "a-f"),
-                    ("ABCDEF", "A-F"),
-                    ]:
-                o.symbol = o.symbol.replace(orig, repl)
-
-    for r in rules:
-        if r.is_lexer_rule():
-            r.walk(_pretify_regex)
-
-
-def rm_option_from_eps_rules(p):
-    already_eps_rules = [
-        "tf_port_list",
-        "data_type_or_implicit",
-        "list_of_arguments",
-        "let_list_of_arguments",
-        "list_of_port_connections",
-        "list_of_checker_port_connections",
-        "sequence_list_of_arguments",
-        "property_list_of_arguments",
-    ]
-    # because it already can be eps
-    for r in already_eps_rules:
-        rm_option_on_rule_usage(p.rules, r)
+from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
+    fix_lexer_for_table_def, fix_lexer_for_library_def, \
+    rm_semi_from_cross_body_item, add_interface_class_declaration, fix_class_scope, \
+    fix_implicit_data_type, fix_call, fix_randomize_call, fix_dpi_import_export
+from utils.sv._utils import mark_regex, extract_keywords_to_specific_rule, \
+    replace_rule, collect_keywords, pretify_regex
 
 
 def remove_useless_and_normalize_names(p):
@@ -407,57 +281,6 @@ def remove_useless_and_normalize_names(p):
             identifier.body.append(Antlr4Symbol("KW_" + kw.upper(), False))
 
 
-COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
-
-
-def fix_lexer_for_table_def(p):
-    # because OUTPUT_SYMBOL is a special case of LEVEL_SYMBOL
-    OUTPUT_SYMBOL = Antlr4Symbol("OUTPUT_SYMBOL", False)
-
-    def OUTPUT_SYMBOL_to_LEVEL_SYMBOL(o):
-        if o == OUTPUT_SYMBOL:
-            o.symbol = "LEVEL_SYMBOL"
-
-    for r in p.rules:
-        r.body.walk(OUTPUT_SYMBOL_to_LEVEL_SYMBOL)
-    p.rules.remove(rule_by_name(p.rules, "OUTPUT_SYMBOL"))
-    table_tokens = get_all_used_lexer_tokens(p.rules, "combinational_body")
-    table_tokens2 = get_all_used_lexer_tokens(p.rules, "sequential_entry")
-    table_tokens = table_tokens.union(table_tokens2)
-
-    # [TODO] += comments, whitespaces
-    table_tokens.remove("KW_TABLE")
-    table_shared_tokens = {'SEMI', 'RPAREN', 'COLON', 'LPAREN', 'MINUS',
-                           *COMMENT_AND_WS_TOKENS}
-    wrap_in_lexer_mode(p.rules, "TABLE_MODE", {"KW_TABLE", }, {"KW_ENDTABLE", },
-                       table_tokens, table_shared_tokens)
-
-
-def fix_lexer_for_library_def(p):
-    library_identifier_tokens = get_all_used_lexer_tokens(p.rules, "identifier")
-    wrap_in_lexer_mode(p.rules, "LIBRARY_IDENTIFIER_MODE", {"KW_LIBRARY", },
-                       # all possible identifiers can appear and all of the ending this mode
-                       library_identifier_tokens,
-                       library_identifier_tokens,
-                       library_identifier_tokens.union(COMMENT_AND_WS_TOKENS))
-    library_path_tokens = (get_all_used_lexer_tokens(p.rules, "library_declaration") 
-                           -library_identifier_tokens 
-                           -{"KW_LIBRARY", })
-    wrap_in_lexer_mode(p.rules, "INCLUDE_MODE",
-                       # starts after library id
-                       {"KW_INCLUDE"},
-                       {"SEMI"},
-                       {"FILE_PATH_SPEC", "SEMI"},
-                       {"SEMI", *COMMENT_AND_WS_TOKENS})
-
-    wrap_in_lexer_mode(p.rules, "LIBRARY_PATH_MODE",
-                       # starts after library id
-                       {"LIBRARY_IDENTIFIER_MODE_" + t for t in library_identifier_tokens},
-                       {"SEMI"},
-                       library_path_tokens,
-                       {"MINUS", "SEMI", "COMMA", "FILE_PATH_SPEC", *COMMENT_AND_WS_TOKENS})
-
-
 def add_comments_and_ws(rules):
     # ONE_LINE_COMMENT: '//' .*? '\\r'? '\\n' -> channel(HIDDEN);
     olc = Antlr4Rule("ONE_LINE_COMMENT", Antlr4Sequence([
@@ -484,153 +307,13 @@ def add_comments_and_ws(rules):
     rules.append(ws)
 
 
-def rm_ambiguity(rules):
-    rule = rule_by_name(rules, "variable_decl_assignment")
-    to_repl = Antlr4Option(Antlr4Sequence([
-        Antlr4Symbol("ASSIGN", False),
-        Antlr4Symbol("class_new", False)
-    ]))
-
-    def match_replace_fn(o):
-        if o == to_repl:
-            return o.body
-
-    replace_item_by_sequence(rule, match_replace_fn)
-
-
-def rm_semi_from_cross_body_item(rules):
-    """
-    Because SEMI is already part of cross_body_item
-    """
-    rule = rule_by_name(rules, "cross_body")
-    semi = Antlr4Symbol("SEMI", False)
-
-    def match_replace_fn(o):
-        if o == semi:
-            return Antlr4Sequence([])
-
-    replace_item_by_sequence(rule.body[0], match_replace_fn)
-
-
-def add_interface_class_declaration(rules):
-    """
-    Because interface_class_definition is not used anywhere
-    (is missing in specified rules)
-    """
-    intf = Antlr4Symbol("interface_class_declaration", False)
-    cls = Antlr4Symbol("class_declaration", False)
-
-    def match_replace_fn(o):
-        if o == cls:
-            return Antlr4Selection([o, deepcopy(intf)])
-
-    for rule in rules:
-        replace_item_by_sequence(rule, match_replace_fn)
-
-
-def fix_priority_of__class_scope__package_scope(rules):
-    orig = Antlr4Selection([Antlr4Symbol("class_scope", False),
-                            Antlr4Symbol("package_scope", False)])
-    repl = Antlr4Selection([Antlr4Symbol("package_scope", False),
-                            Antlr4Symbol("class_scope", False)])
-
-    def match_replace_fn(o):
-        if o == orig:
-            return deepcopy(repl)
-
-    for rule in rules:
-        replace_item_by_sequence(rule, match_replace_fn)
-
-
-def fix_class_scope(rules):
-    """
-    Because otherwise class_type consume last id after ::
-    and it is not possible to recover
-    """
-    r = rule_by_name(rules, "class_scope")
-    _inline_rule([r, ], rule_by_name(rules, "class_type"))
-
-
-def fix_call(rules):
-    # inline_rule(rules, "ps_identifier")
-    r = rule_by_name(rules, "subroutine_call")
-    r.body.insert(0, Antlr4Sequence([
-        Antlr4Option(Antlr4Symbol("class_qualifier", False)),
-        Antlr4Symbol("method_call_body", False)
-        ]))
-
-
-def fix_implicit_data_type(rules):
-    r = rule_by_name(rules, "implicit_data_type")
-    # : (signing)? (packed_dimension)*
-    # ->
-    # : signing (packed_dimension)*
-    # | (packed_dimension)+
-    # ;
-    r.body = Antlr4Selection([
-        Antlr4Sequence([Antlr4Symbol("signing", False), Antlr4Iteration(Antlr4Symbol("packed_dimension", False))]),
-        Antlr4Iteration(Antlr4Symbol("packed_dimension", False), positive=True)
-    ])
-
-# def fix_cross_body_item(rules):
-#     """
-#     There is an extra ';' after bins_selection_or_option
-#     but the ';' is already in bins_selection_or_option rule
-#     """
-#     r = rule_by_name(rules, "cross_body_item")
-#     semi = Antlr4Symbol("SEMI", False)
-# 
-#     def match_replace_fn(o):
-#         if o == semi:
-#             return Antlr4Sequence([])
-# 
-#     replace_item_by_sequence(r.body, match_replace_fn)
-
-
-def fix_randomize_call(rules):
-    # randomize_call:
-    #   KW_RANDOMIZE ( attribute_instance )*
-    #   ( LPAREN ( variable_identifier_list | KW_NULL )? RPAREN )?
-    #   ( KW_WITH ( LPAREN ( identifier_list )? RPAREN )? constraint_block )?;
-    
-    rnm  = generate_renamer({"variable_identifier_list": "randomize_arg_list"}, False)
+def better_names_for_single_purpose_rules(rules):
+    renames = {"ps_or_hierarchical_array_identifier": "foreach_ps_or_hierarchical_array_identifier"}
+    rnm = generate_renamer(renames, False)
     for r in rules:
         r.walk(rnm)
-        if r.name == "randomize_arg_list":
-            randomize_arg_list = r
-    _replace_symbol_in_rule(randomize_arg_list, "identifier", "hierarchical_identifier")
 
-
-def fix_SYSTEM_TF_IDENTIFIER(rules):
-    kws = collect_keywords(rules)
-    SYSTEM_TF_IDENTIFIER = Antlr4Symbol("SYSTEM_TF_IDENTIFIER", False)
-    any_system_tf_identifier = Antlr4Symbol("any_system_tf_identifier", False)
-
-    def match_replace_fn(o):
-        if o == SYSTEM_TF_IDENTIFIER:
-            return deepcopy(any_system_tf_identifier)
-
-    for rule in rules:
-        replace_item_by_sequence(rule, match_replace_fn)
-
-    rules.append(Antlr4Rule("any_system_tf_identifier", Antlr4Selection([
-        SYSTEM_TF_IDENTIFIER,
-        *[Antlr4Symbol(kw.replace("$", "KW_DOLAR_").upper(), False)
-          for kw in kws if kw.startswith("$")]
-        ])))
-
-
-def fix_dpi_import_export(rules):
-    C_IDENTIFIER = Antlr4Symbol("C_IDENTIFIER", False)
-
-    def match_replace_fn(o):
-        if o == C_IDENTIFIER:
-            return Antlr4Selection([C_IDENTIFIER, Antlr4Symbol("ESCAPED_IDENTIFIER", False)])
-
-    r = rule_by_name(rules, "dpi_import_export")
-    replace_item_by_sequence(r.body, match_replace_fn)
-
-
+        
 UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
@@ -674,13 +357,14 @@ def proto_grammar_to_g4():
     rm_ambiguity(p.rules)
     rm_semi_from_cross_body_item(p.rules)
     add_interface_class_declaration(p.rules)
-    fix_priority_of__class_scope__package_scope(p.rules)
     fix_class_scope(p.rules)
-    # fix_implicit_data_type(p.rules)
+    fix_implicit_data_type(p.rules)
     fix_call(p.rules)
     # fix_cross_body_item(p.rules)
     fix_randomize_call(p.rules)
     fix_dpi_import_export(p.rules)
+    better_names_for_single_purpose_rules(p.rules)
+    optimize_class_scope(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),

@@ -121,7 +121,28 @@ class Antlr4Sequence(list, iAntlr4GramElem):
             i.walk(fn)
 
     def __eq__(self, other):
-        return isinstance(other, Antlr4Sequence) and list.__eq__(self, other)
+        if not isinstance(other, Antlr4Sequence):
+            return False
+        s_it = iter_non_visuals(self)
+        o_it = iter_non_visuals(other)
+        for s, o in zip(s_it, o_it):
+            if not (s == o):
+                return False
+
+        # check if sequences were of samelength
+        try:
+            next(s_it)
+            return False
+        except StopIteration:
+            pass
+        
+        try:
+            next(o_it)
+            return False
+        except StopIteration:
+            pass
+
+        return True
 
     def toAntlr4(self):
         buff = []
@@ -214,7 +235,7 @@ class Antlr4Symbol(iAntlr4GramElem):
                     "\\": "\\\\",
                     '\v': '\\u000b',
                     '\f': '\\f',
-                    '\a': '\\u0007', # bell
+                    '\a': '\\u0007',  # bell
                 })
         return self.symbol.translate(tr)
 
@@ -392,3 +413,16 @@ def rule_by_name(rules: List[Antlr4Rule], name: str) -> Optional[Antlr4Rule]:
     for r in rules:
         if r.name == name:
             return r
+
+
+def iter_non_visuals(s: Antlr4Sequence):
+    if isinstance(s, (Antlr4Indent, Antlr4Newline)):
+        return
+    if isinstance(s, iAntlr4GramElem):
+        if not isinstance(s, Antlr4Sequence):
+            yield s
+            return
+
+    for e in s:
+        if not isinstance(e, (Antlr4Indent, Antlr4Newline)):
+            yield e
