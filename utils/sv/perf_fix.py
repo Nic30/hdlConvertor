@@ -2,7 +2,7 @@ from utils.antlr4.grammar import rule_by_name, Antlr4Symbol, Antlr4Option, \
     Antlr4Sequence, iAntlr4GramElem, iter_non_visuals, Antlr4Selection, \
     Antlr4Iteration, Antlr4Rule
 from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage
-from utils.antlr4.simple_parser import Antrl4parser
+from utils.antlr4.simple_parser import Antlr4parser
 from copy import copy
 from typing import Dict, List
 from itertools import islice
@@ -11,7 +11,7 @@ from utils.antlr4.query import Antlr4Query
 
 def rm_ambiguity(rules):
     rule = rule_by_name(rules, "variable_decl_assignment")
-    to_repl = Antrl4parser().from_str("( ASSIGN class_new )?")
+    to_repl = Antlr4parser().from_str("( ASSIGN class_new )?")
 
     def match_replace_fn(o):
         if o == to_repl:
@@ -35,9 +35,26 @@ def rm_option_from_eps_rules(p):
     for r in already_eps_rules:
         rm_option_on_rule_usage(p.rules, r)
 
-                    
+
+def _optimize_ps_parameter_identifier(rules):
+    ps_parameter_identifier = rule_by_name(rules, "ps_parameter_identifier")
+    #  ( ( package_scope | class_scope )? | ( 
+    #      identifier ( LSQUARE_BR constant_expression RSQUARE_BR )? DOT )* 
+    #  ) identifier 
+    ps_parameter_identifier.body = Antlr4parser().from_str("""
+        package_or_class_scoped_id
+        ( DOT identifier ( LSQUARE_BR constant_expression RSQUARE_BR )? )*
+    """)
+
+def _optimize_ps_type_identifier(rules):
+    ps_type_identifier = rule_by_name(rules, "ps_parameter_identifier")
+    # ps_type_identifier: ( KW_LOCAL DOUBLE_COLON | package_scope | class_scope )? identifier;
+    ps_type_identifier .body = Antlr4parser().from_str("""
+        ( KW_LOCAL DOUBLE_COLON )? package_or_class_scoped_id
+    """)
+
 def optimize_class_scope(rules):
-    p = Antrl4parser()
+    p = Antlr4parser()
     to_replace0 = p.from_str("( package_scope | class_scope )? identifier")
     to_replace1 = p.from_str("( class_scope | package_scope )? identifier")
     package_or_class_scoped_id = Antlr4Rule("package_or_class_scoped_id", p.from_str(
@@ -72,9 +89,11 @@ def optimize_class_scope(rules):
                             return Antlr4Sequence([])
             replace_item_by_sequence(r, apply_to_replace0_and_1)
         
-            print(r.toAntlr4())
-            print(m)
-        else:
-            if "package_scope | class_scope" in r.toAntlr4() or "class_scope | package_scope" in r.toAntlr4():
-                print("not found " + r.toAntlr4())
-        
+        #    print(r.toAntlr4())
+        #    print(m)
+        # else:
+        #     if "package_scope | class_scope" in r.toAntlr4() or "class_scope | package_scope" in r.toAntlr4():
+        #         print("not found " + r.toAntlr4())
+
+    _optimize_ps_type_identifier(rules)
+    _optimize_ps_parameter_identifier(rules)

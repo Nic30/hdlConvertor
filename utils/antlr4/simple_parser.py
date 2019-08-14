@@ -2,7 +2,7 @@ from utils.antlr4.grammar import Antlr4Symbol, Antlr4Sequence, iAntlr4GramElem, 
     Antlr4Option, Antlr4Iteration, Antlr4Selection
 
 
-class Antrl4parser():
+class Antlr4parser():
 
     def __init__(self):
         self.set_tokens([])
@@ -104,6 +104,6 @@ if __name__ =="__main__":
         DOUBLE_COLON identifier ( parameter_value_assignment )? 
     )*"""
     
-    p = Antrl4parser()
+    p = Antlr4parser()
     o = p.from_str(s)
     print(o.toAntlr4())

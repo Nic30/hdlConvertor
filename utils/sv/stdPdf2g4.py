@@ -396,5 +396,5 @@ def proto_grammar_to_g4():
 
 
 if __name__ == "__main__":
-    # parse_sv_pdf()
+    #parse_sv_pdf()
     proto_grammar_to_g4()
