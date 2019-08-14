@@ -1,3 +1,5 @@
+module top;
+
 covergroup p_cg with function sample(bit a, int x);
   coverpoint x;
   cross x, a;
@@ -16,3 +18,5 @@ function automatic void F(int j);
   bit d;
   cg1.sample( d, j );
 endfunction
+
+endmodule
