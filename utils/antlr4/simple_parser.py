@@ -81,8 +81,10 @@ class Antlr4parser():
             raise ValueError(group_type)
 
     def _id(self, t):
-        assert t.isidentifier(), t
+        assert t[0] == "'" or t.isidentifier(), t
         is_terminal = t[0] == "'"
+        if is_terminal:
+            t = t[1:-1]
         return Antlr4Symbol(t, is_terminal)
         
     def _any(self):
