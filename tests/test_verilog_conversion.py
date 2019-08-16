@@ -110,9 +110,9 @@ class VerilogConversionTC(BasicTC):
 
     def test_multiple_files_at_once(self):
         language = VERILOG
-        f = [path.join(TEST_DIR, language.value, f)
+        f = [path.join(TEST_DIR, "verilog", f)
              for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
-        inc_dir = path.join(TEST_DIR, language.value)
+        inc_dir = path.join(TEST_DIR, "verilog")
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
         e = [ o for o in res.objs if isinstance(o, HdlModuleDef)]

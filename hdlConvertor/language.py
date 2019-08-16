@@ -12,8 +12,20 @@ class Language(Enum):
 
     VERILOG_2001 = "verilog2001"
     VERILOG_2005 = "verilog2005"
-    VERILOG = VERILOG_2005  # default verilog version
+    VERILOG = VERILOG_2001  # default verilog version
 
     SYSTEM_VERILOG_2012 = "sv2012"
     SYSTEM_VERILOG_2017 = "sv2017"
     SYSTEM_VERILOG = SYSTEM_VERILOG_2017  # default verilog version
+
+    def is_vhdl(self):
+        return self in [Language.VHDL_2002,
+                        Language.VHDL_2008]
+
+    def is_verilog(self):
+        return self in [Language.VERILOG_2001,
+                        Language.VERILOG_2005]
+
+    def is_system_verilog(self):
+        return self in [Language.SYSTEM_VERILOG_2012,
+                        Language.SYSTEM_VERILOG_2017]

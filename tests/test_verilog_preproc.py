@@ -150,14 +150,14 @@ class VerilogPreprocTC(unittest.TestCase):
             c = HdlConvertor()
             test_result = c.verilog_pp("", "", "badlang")
         e = str(context.exception)
-        self.assertIn("badlang is not recognized (expected <enum 'Language'>)", e)
+        self.assertIn("'badlang' is not recognized (expected hdlConvertor.language.Language value)", e)
 
     def test_parser_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.parse(None, Language.SYSTEM_VERILOG_2012, None)
+            test_result = c.parse(None, "bad", None)
         e = str(context.exception)
-        self.assertIn("Language.SYSTEM_VERILOG_2012 is not recognized (expected verilog, vhdl or systemVerilog", e)
+        self.assertIn("'bad' is not recognized (expected hdlConvertor.language.Language value)", e)
 
     # def test_debug_macro(self):
     #     c = HdlConvertor()

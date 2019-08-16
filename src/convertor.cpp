@@ -161,7 +161,7 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 			ANTLRFileStream input(fileName);
 			parse_vhdl(input);
 
-		} else if (lang == VERILOG) {
+		} else if (lang == VERILOG || lang == Language::VERILOG2001) {
 			parse_verilog_file(fileName, incdir);
 #ifdef SV_PARSER
 		} else if (lang == Language::SV2009 || lang == Language::SV2012
