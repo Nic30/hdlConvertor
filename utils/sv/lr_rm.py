@@ -1,21 +1,21 @@
 from copy import deepcopy
 
-from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, iter_non_visuals, \
-    extract_option_as_rule
+from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, extract_option_as_rule, \
+    _inline_rule
 from utils.antlr4.grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
-    Antlr4Newline, Antlr4Indent, Antlr4Sequence, Antlr4Iteration, Antlr4Rule
+    Antlr4Sequence, Antlr4Iteration, Antlr4Rule, iAntlr4GramElem
 from utils.antlr4.left_recurse_remove import direct_left_recurse_rm, split_rule, \
     iterate_everything_except_first
-from utils.antlr4.selection_optimiser import optimise_selections
 from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
 from utils.sv.precedence import get_bin_op_precedence
+from utils.antlr4.simple_parser import Antlr4parser
+from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
 
 
 def subroutine_call_rm_lr(rules):
     r = rule_by_name(rules, "subroutine_call")
     assert isinstance(r.body, Antlr4Selection)
-    c = r.body[2]
-    _body = list(iter_non_visuals(c))
+    _body = r.body[2]
     assert _body[-1].symbol == "method_call_body", _body[-1].symbol
     start: Antlr4Selection = _body[0]
     start.clear()
@@ -56,16 +56,23 @@ def solve_left_recurse_and_op_precedence_for_expression(rules):
     # expression only from rules for highest precedence ops etc.
 
     # expression:
-    #   primary 
-    #   | unary_operator ( attribute_instance )* primary 
-    #   | inc_or_dec_expression 
-    #   | LPAREN operator_assignment RPAREN 
-    #   | expression binary_operator ( attribute_instance )* expression 
-    #   | conditional_expression 
-    #   | expression KW_INSIDE LBRACE open_range_list RBRACE 
-    #   | tagged_union_expression;
+    # ( unary_operator ( attribute_instance )* )? primary 
+    #  | inc_or_dec_expression 
+    #  | LPAREN operator_assignment RPAREN 
+    #  | expression binary_operator ( attribute_instance )* expression 
+    #  | conditional_expression 
+    #  | expression KW_INSIDE LBRACE open_range_list RBRACE 
+    #  | tagged_union_expression 
+    # ;
+    p = Antlr4parser()
     expression_0 = extract_option_as_rule(
-            rules, "expression", [0, 1, 2, 3, 7], "expression_0")
+            rules, "expression", [
+                (0, p.from_str("( unary_operator ( attribute_instance )* )? primary")),
+                (1, p.from_str("inc_or_dec_expression")),
+                (2, p.from_str("LPAREN operator_assignment RPAREN")),
+                (6, p.from_str("tagged_union_expression")),
+            ], "expression_0",
+    )
     # expression:
     #   | expression binary_operator ( attribute_instance )* expression 
     #   | conditional_expression 
@@ -73,39 +80,18 @@ def solve_left_recurse_and_op_precedence_for_expression(rules):
 
     def handle_conditional_fn(bin_op_choices, current_expr_rule):
         # rm left recursion from cond_predicate/conditional_expression
-        replace_symbol_in_rule(
-           rules, "conditional_expression",
-           "cond_predicate",
-           "cond_expr_predicate", only_first=True)
-        iterate_everything_except_first(
-           rules, "conditional_expression")
-        # create new cond_predicate (cond_expr_predicate) whout left recursion
         cond_predicate = rule_by_name(rules, "cond_predicate")
-        cond_expr_predicate = deepcopy(cond_predicate)
-        cond_expr_predicate.name = "cond_expr_predicate"
-        rules.insert(rules.index(cond_predicate), cond_expr_predicate)
-        replace_symbol_in_rule(
-            rules, "cond_expr_predicate",
-            "expression",
-            current_expr_rule.name, only_first=True)
-
-        bin_op_choices.extend([
-            Antlr4Symbol(current_expr_rule.name, False),
-            Antlr4Symbol("conditional_expression", False)
-        ])
+        conditional_expression = rule_by_name(rules, "conditional_expression")
+        rules.remove(conditional_expression)
+        _inline_rule([conditional_expression, ], cond_predicate)
+ 
+        bin_op_choices.append(
+            Antlr4Sequence(conditional_expression.body[1:])
+        )
 
     def handle_inside_fn(bin_op_choices, current_expr_rule):
-        bin_op_choices[-1].extend([Antlr4Newline(), Antlr4Indent(1)])
         # expression (KW_INSIDE LBRACE open_range_list RBRACE)*;
-        bin_op_choice = Antlr4Sequence([
-            Antlr4Symbol(current_expr_rule.name, False),
-            Antlr4Iteration(Antlr4Sequence([
-                Antlr4Symbol("KW_INSIDE", False),
-                Antlr4Symbol("LBRACE", False),
-                Antlr4Symbol("open_range_list", False),
-                Antlr4Symbol("RBRACE", False),
-            ]))
-        ])
+        bin_op_choice = Antlr4parser().from_str("KW_INSIDE LBRACE open_range_list RBRACE")
         bin_op_choices.append(bin_op_choice)
 
     rules.remove(rule_by_name(rules, "expression"))
@@ -141,28 +127,22 @@ def solve_left_recurse_and_op_precedence_for_expression(rules):
 
 def solve_left_recurse_and_op_precedence_for_constant_expression(rules):
     # constant_expression:
-    #       constant_primary 
-    #       | unary_operator ( attribute_instance )* constant_primary 
+    #       (unary_operator ( attribute_instance )*)? constant_primary 
     #       | constant_expression binary_operator ( attribute_instance )* constant_expression 
     #       | constant_expression QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression;
 
     c_expression_0 = extract_option_as_rule(
-            rules, "constant_expression", [0, 1], "constant_expression_0")
+            rules, "constant_expression",
+            [(0, Antlr4parser().from_str("( unary_operator ( attribute_instance )* )? constant_primary"))],
+            "constant_expression_0")
     # constant_expression_0:
-    #       constant_primary 
-    #       | unary_operator ( attribute_instance )* constant_primary 
+    #       ( unary_operator ( attribute_instance )* )? constant_primary 
 
     def handle_conditional_fn(bin_op_choices, current_expr_rule):
-        bin_op_choices.extend([
-            Antlr4Symbol(current_expr_rule.name, False),
-            Antlr4Iteration(Antlr4Sequence([
-                Antlr4Symbol("QUESTIONMARK", False),
-                Antlr4Iteration(Antlr4Symbol("attribute_instance", False)),
-                Antlr4Symbol("constant_expression", False),
-                Antlr4Symbol("COLON", False),
-                Antlr4Symbol("constant_expression", False),
-            ]))
-        ])
+        bin_op_choices.append(
+            Antlr4parser().from_str(
+            "QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression")    
+        )
 
     def handle_inside_fn(bin_op_choices, current_expr_rule):
         pass
@@ -197,12 +177,9 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
 
         # expression (binary_operator ( attribute_instance )* expression)*
         bin_op_choice = Antlr4Sequence([
-            Antlr4Symbol(current_expr_rule.name, False),
-            Antlr4Iteration(Antlr4Sequence([
-                op,
-                Antlr4Iteration(Antlr4Symbol("attribute_instance", False)),
-                Antlr4Symbol(new_rule_name, False)
-                ]))
+            op,
+            Antlr4Iteration(Antlr4Symbol("attribute_instance", False)),
+            Antlr4Symbol(new_rule_name, False)
         ])
         bin_op_choices.append(bin_op_choice)
 
@@ -216,12 +193,17 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
     if "QUESTIONMARK" in ops_to_extrat:
         handle_conditional_fn(bin_op_choices, current_expr_rule)
 
+    for c in bin_op_choices:
+        assert isinstance(c, iAntlr4GramElem), c
     # create a new rule which contains rule for extracted binary operators
     if len(bin_op_choices) > 1:
         new_body = Antlr4Selection(bin_op_choices)
     else:
         new_body = bin_op_choices[0]
-
+    new_body = Antlr4Sequence([
+        Antlr4Symbol(current_expr_rule.name, False),
+        Antlr4Iteration(new_body)
+    ])
     new_r = Antlr4Rule(new_rule_name, new_body)
     rules.insert(rules.index(current_expr_rule), new_r)
 
@@ -239,7 +221,6 @@ def left_recurse_remove(rules):
     """
     # :note: higher priority = sooner in parse tree
 
-    rules = optimise_selections(rules)
     direct_left_recurse_rm(rules, 'block_event_expression')
     direct_left_recurse_rm(rules, 'event_expression')
     # direct_left_recurse_rm(rules, 'constant_expression')
@@ -281,10 +262,13 @@ def left_recurse_remove(rules):
     inline_rule(rules, "expression_or_cond_pattern")
     inline_rule(rules, "cond_pattern")
     # inline_rule(rules, "conditional_expression")
-    rules = optimise_selections(rules)
+    Antlr4GenericOptimizer().optimize([rule_by_name(rules, "cond_predicate")])
 
     solve_left_recurse_and_op_precedence_for_expression(rules)
     binary_operator = rule_by_name(rules, "binary_operator")
     rules.remove(binary_operator)
 
+    direct_left_recurse_rm(rules, "sequence_expr")
+    direct_left_recurse_rm(rules, "property_expr")
+    
     return rules

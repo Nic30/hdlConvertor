@@ -116,7 +116,6 @@ KW_ILLEGAL_BINS: 'illegal_bins';
 KW_IMPLEMENTS: 'implements';
 KW_IMPLIES: 'implies';
 KW_IMPORT: 'import';
-KW_INCLUDE: 'include' -> pushMode(INCLUDE_MODE);
 KW_INITIAL: 'initial';
 KW_INOUT: 'inout';
 KW_INPUT: 'input';
@@ -133,7 +132,6 @@ KW_JOIN_NONE: 'join_none';
 KW_LARGE: 'large';
 KW_LET: 'let';
 KW_LIBLIST: 'liblist';
-KW_LIBRARY: 'library' -> pushMode(LIBRARY_IDENTIFIER_MODE);
 KW_LOCAL: 'local';
 KW_LOCALPARAM: 'localparam';
 KW_LOGIC: 'logic';
@@ -271,26 +269,47 @@ KW_WITHIN: 'within';
 KW_WOR: 'wor';
 KW_XNOR: 'xnor';
 KW_XOR: 'xor';
-EDGE_CONTROL_SPECIFIER: 'edge' LSQUARE_BR EDGE_DESCRIPTOR ( COMMA EDGE_DESCRIPTOR )* RSQUARE_BR;
+EDGE_CONTROL_SPECIFIER:
+ 'edge' LSQUARE_BR EDGE_DESCRIPTOR ( COMMA EDGE_DESCRIPTOR )* RSQUARE_BR;
 TIME_LITERAL:
-      ( UNSIGNED_NUMBER | FIXED_POINT_NUMBER ) TIME_UNIT 
+ ( UNSIGNED_NUMBER 
+      | FIXED_POINT_NUMBER 
+      ) TIME_UNIT;
+DECIMAL_NUMBER_WITH_BASE:
+ ( SIZE )? DECIMAL_BASE UNSIGNED_NUMBER;
+DECIMAL_INVALID_NUMBER_WITH_BASE:
+ ( SIZE )? DECIMAL_BASE X_DIGIT ( UNDERSCORE )*;
+DECIMAL_TRISTATE_NUMBER_WITH_BASE:
+ ( SIZE )? DECIMAL_BASE Z_DIGIT ( UNDERSCORE )*;
+BINARY_NUMBER:
+ ( SIZE )? BINARY_BASE BINARY_VALUE;
+OCTAL_NUMBER:
+ ( SIZE )? OCTAL_BASE OCTAL_VALUE;
+HEX_NUMBER:
+ ( SIZE )? HEX_BASE HEX_VALUE;
+REAL_NUMBER_WITH_EXP:
+ UNSIGNED_NUMBER ( DOT UNSIGNED_NUMBER )? EXP ( SIGN )? UNSIGNED_NUMBER;
+FIXED_POINT_NUMBER:
+ UNSIGNED_NUMBER DOT UNSIGNED_NUMBER;
+UNSIGNED_NUMBER:
+ DECIMAL_DIGIT ( UNDERSCORE 
+                      | DECIMAL_DIGIT 
+                      )*;
+UNBASED_UNSIZED_LITERAL:
+ '\'0' 
+      | '\'1' 
+      | APOSTROPHE Z_OR_X 
      ;
-DECIMAL_NUMBER_WITH_BASE: ( SIZE )? DECIMAL_BASE UNSIGNED_NUMBER 
-     ;
-DECIMAL_TRISTATE_NUMBER_WITH_BASE: ( SIZE )? DECIMAL_BASE ( X_DIGIT | Z_DIGIT ) ( UNDERSCORE )* 
-     ;
-BINARY_NUMBER: ( SIZE )? BINARY_BASE BINARY_VALUE;
-OCTAL_NUMBER: ( SIZE )? OCTAL_BASE OCTAL_VALUE;
-HEX_NUMBER: ( SIZE )? HEX_BASE HEX_VALUE;
-REAL_NUMBER_WITH_EXP: UNSIGNED_NUMBER ( DOT UNSIGNED_NUMBER )? EXP ( SIGN )? UNSIGNED_NUMBER;
-FIXED_POINT_NUMBER: UNSIGNED_NUMBER DOT UNSIGNED_NUMBER;
-UNSIGNED_NUMBER: DECIMAL_DIGIT ( UNDERSCORE | DECIMAL_DIGIT )*;
-UNBASED_UNSIZED_LITERAL: '\'0' | '\'1' | APOSTROPHE Z_OR_X;
-STRING_LITERAL: DBLQUOTE ( ANY_ASCII_CHARACTERS )* DBLQUOTE;
-C_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_] )*;
-ESCAPED_IDENTIFIER: BACKSLASH ( ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE )* WHITE_SPACE;
-SIMPLE_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_$] )*;
-SYSTEM_TF_IDENTIFIER: DOLAR [a-zA-Z0-9_$] ( [a-zA-Z0-9_$] )*;
+STRING_LITERAL:
+ DBLQUOTE ( ANY_ASCII_CHARACTERS )* DBLQUOTE;
+C_IDENTIFIER:
+ [a-zA-Z_] ( [a-zA-Z0-9_] )*;
+ESCAPED_IDENTIFIER:
+ BACKSLASH ( ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE )* WHITE_SPACE;
+SIMPLE_IDENTIFIER:
+ [a-zA-Z_] ( [a-zA-Z0-9_$] )*;
+SYSTEM_TF_IDENTIFIER:
+ DOLAR [a-zA-Z0-9_$] ( [a-zA-Z0-9_$] )*;
 SEMI: ';';
 LPAREN: '(';
 RPAREN: ')';
@@ -369,75 +388,107 @@ DOUBLE_AT: '@@';
 HASH: '#';
 DOUBLE_HASH: '##';
 TRIPLE_AND: '&&&';
-ONE_LINE_COMMENT: '//' .*? ( '\r' )? '\n' -> channel(HIDDEN);
-BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+ONE_LINE_COMMENT:
+ '//' .*? ( '\r' )? '\n' -> channel(HIDDEN);
+BLOCK_COMMENT:
+ '/*' .*? '*/' -> channel(HIDDEN);
 WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN);
-fragment EDGE_DESCRIPTOR: '01' | '10' | Z_OR_X ZERO_OR_ONE | ZERO_OR_ONE Z_OR_X;
+fragment EDGE_DESCRIPTOR:
+ '01' 
+      | '10' 
+      | Z_OR_X ZERO_OR_ONE 
+      | ZERO_OR_ONE Z_OR_X 
+     ;
 fragment ZERO_OR_ONE: [01];
 fragment Z_OR_X: [xXzZ];
-fragment TIME_UNIT: 's' | 'ms' | 'us' | 'ns' | 'ps' | 'fs';
-fragment SIGN: PLUS | MINUS;
+fragment TIME_UNIT:
+ 's' 
+      | 'ms' 
+      | 'us' 
+      | 'ns' 
+      | 'ps' 
+      | 'fs' 
+     ;
+fragment SIGN:
+ PLUS 
+      | MINUS 
+     ;
 fragment SIZE: NON_ZERO_UNSIGNED_NUMBER;
-fragment NON_ZERO_UNSIGNED_NUMBER: NON_ZERO_DECIMAL_DIGIT ( UNDERSCORE | DECIMAL_DIGIT )*;
+fragment NON_ZERO_UNSIGNED_NUMBER:
+ NON_ZERO_DECIMAL_DIGIT ( UNDERSCORE 
+                              | DECIMAL_DIGIT 
+                              )*;
 fragment EXP: [eE];
-fragment BINARY_VALUE: BINARY_DIGIT ( UNDERSCORE | BINARY_DIGIT )*;
-fragment OCTAL_VALUE: OCTAL_DIGIT ( UNDERSCORE | OCTAL_DIGIT )*;
-fragment HEX_VALUE: HEX_DIGIT ( UNDERSCORE | HEX_DIGIT )*;
-fragment DECIMAL_BASE: APOSTROPHE ( [sS] )? [dD];
-fragment BINARY_BASE: APOSTROPHE ( [sS] )? [bB];
-fragment OCTAL_BASE: APOSTROPHE ( [sS] )? [oO];
-fragment HEX_BASE: APOSTROPHE ( [sS] )? [hH];
+fragment BINARY_VALUE:
+ BINARY_DIGIT ( UNDERSCORE 
+                      | BINARY_DIGIT 
+                      )*;
+fragment OCTAL_VALUE:
+ OCTAL_DIGIT ( UNDERSCORE 
+                  | OCTAL_DIGIT 
+                  )*;
+fragment HEX_VALUE:
+ HEX_DIGIT ( UNDERSCORE 
+                  | HEX_DIGIT 
+                  )*;
+fragment DECIMAL_BASE:
+ APOSTROPHE ( [sS] )? [dD];
+fragment BINARY_BASE:
+ APOSTROPHE ( [sS] )? [bB];
+fragment OCTAL_BASE:
+ APOSTROPHE ( [sS] )? [oO];
+fragment HEX_BASE:
+ APOSTROPHE ( [sS] )? [hH];
 fragment NON_ZERO_DECIMAL_DIGIT: [1-9];
 fragment DECIMAL_DIGIT: [0-9];
-fragment BINARY_DIGIT: X_DIGIT | Z_DIGIT | [01];
-fragment OCTAL_DIGIT: X_DIGIT | Z_DIGIT | [0-7];
-fragment HEX_DIGIT: X_DIGIT | Z_DIGIT | [0-9a-fA-F];
+fragment BINARY_DIGIT:
+ X_DIGIT 
+      | Z_DIGIT 
+      | [01] 
+     ;
+fragment OCTAL_DIGIT:
+ X_DIGIT 
+      | Z_DIGIT 
+      | [0-7] 
+     ;
+fragment HEX_DIGIT:
+ X_DIGIT 
+      | Z_DIGIT 
+      | [0-9a-fA-F] 
+     ;
 fragment X_DIGIT: [xX];
-fragment Z_DIGIT: QUESTIONMARK | [zZ];
+fragment Z_DIGIT:
+ QUESTIONMARK 
+      | [zZ] 
+     ;
 fragment DBLQUOTE: '"';
-fragment ANY_ASCII_CHARACTERS: ~["\\\r\n] | '\\\n' | '\\\r\n' | '\\' [nt\\"vfa] | '\\' [0-9] [0-9]? [0-9]? | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?;
+fragment ANY_ASCII_CHARACTERS:
+ ~["\\\r\n] 
+      | '\\\n' 
+      | '\\\r\n' 
+      | '\\' [nt\\"vfa] 
+      | '\\' [0-9] [0-9]? [0-9]? 
+      | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
+     ;
 fragment ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE: '\u0021'..'\u007E';
-fragment FILE_PATH_SPEC_CHAR: [^ !$`&()+] | ( '\\' [ !$`&*()+] );
-
-mode INCLUDE_MODE;
-    FILE_PATH_SPEC: ( FILE_PATH_SPEC_CHAR ( SEMI FILE_PATH_SPEC_CHAR )? )+;
-    INCLUDE_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
-    INCLUDE_MODE_ONE_LINE_COMMENT: '//' .*? ( '\r' )? '\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
-    INCLUDE_MODE_SEMI: ';' -> type(SEMI),popMode;
-    INCLUDE_MODE_WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN),type(WHITE_SPACE);
-
-mode LIBRARY_IDENTIFIER_MODE;
-    LIBRARY_IDENTIFIER_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
-    LIBRARY_IDENTIFIER_MODE_C_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_] )* -> type(C_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_ESCAPED_IDENTIFIER: BACKSLASH ( ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE )* WHITE_SPACE -> type(ESCAPED_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_KW_OPTION: 'option' -> type(KW_OPTION),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_KW_RANDOMIZE: 'randomize' -> type(KW_RANDOMIZE),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_KW_SAMPLE: 'sample' -> type(KW_SAMPLE),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_KW_STD: 'std' -> type(KW_STD),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_KW_TYPE_OPTION: 'type_option' -> type(KW_TYPE_OPTION),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_ONE_LINE_COMMENT: '//' .*? ( '\r' )? '\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
-    LIBRARY_IDENTIFIER_MODE_SIMPLE_IDENTIFIER: [a-zA-Z_] ( [a-zA-Z0-9_$] )* -> type(SIMPLE_IDENTIFIER),popMode,pushMode(LIBRARY_PATH_MODE);
-    LIBRARY_IDENTIFIER_MODE_WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN),type(WHITE_SPACE);
-
-mode LIBRARY_PATH_MODE;
-    KW_INCDIR: 'incdir';
-    LIBRARY_PATH_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
-    LIBRARY_PATH_MODE_COMMA: ',' -> type(COMMA);
-    LIBRARY_PATH_MODE_FILE_PATH_SPEC: ( FILE_PATH_SPEC_CHAR ( SEMI FILE_PATH_SPEC_CHAR )? )+ -> type(FILE_PATH_SPEC);
-    LIBRARY_PATH_MODE_MINUS: '-' -> type(MINUS);
-    LIBRARY_PATH_MODE_ONE_LINE_COMMENT: '//' .*? ( '\r' )? '\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
-    LIBRARY_PATH_MODE_SEMI: ';' -> type(SEMI),popMode;
-    LIBRARY_PATH_MODE_WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN),type(WHITE_SPACE);
 
 mode TABLE_MODE;
     KW_ENDTABLE: 'endtable' -> popMode;
-    LEVEL_SYMBOL: QUESTIONMARK | [01xXbB];
-    EDGE_SYMBOL: MUL | [rRfFpPnN];
-    TABLE_MODE_BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
+    LEVEL_SYMBOL:
+ QUESTIONMARK 
+      | [01xXbB] 
+     ;
+    EDGE_SYMBOL:
+ MUL 
+      | [rRfFpPnN] 
+     ;
+    TABLE_MODE_BLOCK_COMMENT:
+ '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
     TABLE_MODE_COLON: ':' -> type(COLON);
     TABLE_MODE_LPAREN: '(' -> type(LPAREN);
     TABLE_MODE_MINUS: '-' -> type(MINUS);
-    TABLE_MODE_ONE_LINE_COMMENT: '//' .*? ( '\r' )? '\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
+    TABLE_MODE_ONE_LINE_COMMENT:
+ '//' .*? ( '\r' )? '\n' -> channel(HIDDEN),type(ONE_LINE_COMMENT);
     TABLE_MODE_RPAREN: ')' -> type(RPAREN);
     TABLE_MODE_SEMI: ';' -> type(SEMI);
     TABLE_MODE_WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN),type(WHITE_SPACE);

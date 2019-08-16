@@ -3,7 +3,7 @@ from itertools import islice
 from typing import Dict, List
 
 from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Symbol, Antlr4Option, \
-    Antlr4Iteration, Antlr4Selection, Antlr4Sequence, iter_non_visuals
+    Antlr4Iteration, Antlr4Selection, Antlr4Sequence
 
 
 class Antlr4Query():
@@ -44,15 +44,13 @@ class Antlr4Query():
         elif isinstance(obj, Antlr4Sequence):
             if isinstance(pattern, Antlr4Sequence):
                 # try to find sub sequence
-                _obj = list(iter_non_visuals(obj))
-                _pattern = list(iter_non_visuals(pattern))
-                assert len(_pattern) > 0
-                if len(_obj) > len(_pattern):
+                assert len(pattern) > 0
+                if len(obj) > len(pattern):
                     offset = 0
-                    while offset < len(_obj) - len(_pattern) + 1:
+                    while offset < len(obj) - len(pattern) + 1:
                         m = copy(current_match)
                         all_matches = True
-                        for p, o in zip(_pattern, islice(_obj, offset, None)):
+                        for p, o in zip(pattern, islice(obj, offset, None)):
                             _, does_match = self._match(o, p, m, matches)
                             if not does_match:
                                 all_matches = False
@@ -60,7 +58,7 @@ class Antlr4Query():
 
                         if all_matches:
                             matches.append(m)
-                            offset += len(_pattern)
+                            offset += len(pattern)
                         else:
                             offset += 1
 

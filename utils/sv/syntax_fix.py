@@ -107,18 +107,6 @@ def fix_call(rules):
         ]))
 
 
-def fix_implicit_data_type(rules):
-    r = rule_by_name(rules, "implicit_data_type")
-    # : (signing)? (packed_dimension)*
-    # ->
-    # : signing (packed_dimension)*
-    # | (packed_dimension)+
-    # ;
-    r.body = Antlr4Selection([
-        Antlr4Sequence([Antlr4Symbol("signing", False), Antlr4Iteration(Antlr4Symbol("packed_dimension", False))]),
-        Antlr4Iteration(Antlr4Symbol("packed_dimension", False), positive=True)
-    ])
-
 # def fix_cross_body_item(rules):
 #     """
 #     There is an extra ';' after bins_selection_or_option

@@ -1,9 +1,8 @@
 from itertools import islice
 
 from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Option, Antlr4Symbol, \
-    Antlr4Indent, Antlr4Newline, Antlr4Iteration, Antlr4Sequence, \
-    Antlr4Selection, Antlr4Rule, rule_by_name, iter_non_visuals
-from typing import List
+    Antlr4Iteration, Antlr4Sequence, Antlr4Selection, Antlr4Rule, rule_by_name
+from typing import List, Tuple
 from copy import deepcopy
 
 
@@ -14,10 +13,13 @@ def rm_option_on_rule_usage(rules, rule_name):
 
     def match_replace_fn(o: iAntlr4GramElem):
         if isinstance(o, Antlr4Option):
-            items = list(iter_non_visuals(o.body))
-            if len(items) == 1:
+            items = o.body
+            if isinstance(items, Antlr4Sequence) and len(items) == 1:
                 s = items[0]
-                if isinstance(s, Antlr4Symbol) and s.symbol == rule_name:
+            else:
+                s = items
+
+            if isinstance(s, Antlr4Symbol) and s.symbol == rule_name:
                     return Antlr4Sequence([s, ])
 
     for r in rules:
@@ -36,6 +38,7 @@ def replace_item_by_sequence_in_sequence(arr, match_replace_fn, do_inline_fn):
     while True:
         m = None
         # look for something to replace
+        _i = 0
         for _i, e in enumerate(islice(arr, i, None)):
             m = match_replace_fn(e)
             if m is None:
@@ -69,7 +72,7 @@ def replace_item_by_sequence(elem, match_replace_fn):
     if the match_replace_fn returns something iterable the original item is replaced
     by content of this collection
     """
-    if isinstance(elem, (Antlr4Symbol, Antlr4Indent, Antlr4Newline)):
+    if isinstance(elem, Antlr4Symbol):
         # replacing in the parent
         pass
     elif isinstance(elem, (Antlr4Iteration, Antlr4Option)):
@@ -99,37 +102,23 @@ def replace_item_by_sequence(elem, match_replace_fn):
             assert isinstance(m, iAntlr4GramElem)
             elem.body = m
     else:
-        raise TypeError(elem)
+        raise TypeError(elem.__class__)
 
 
 def remove_simple_rule(name, p):
     r = rule_by_name(p.rules, name)
     assert r is not None, name
-    assert len(r.body) == 1, r
-    assert isinstance(r.body[0], Antlr4Symbol)
+    body = r.body 
+    assert len(body) == 1, r
+    assert isinstance(body[0], Antlr4Symbol)
     inline_rule(p.rules, name)
 
 
 def get_simple_rules(rules):
     for r in rules:
-        body = list(iter_non_visuals(r.body))
+        body = r.body
         if len(body) == 1 and isinstance(body[0], Antlr4Symbol):
             yield r
-
-
-def rm_redunt_whitespaces_on_end(rule: Antlr4Rule):
-    s = rule.body
-    while True:
-        if isinstance(s, (Antlr4Selection, Antlr4Sequence)):
-            _s = s[-1]
-            if isinstance(_s, (Antlr4Newline, Antlr4Indent)):
-                s.pop()
-                continue
-            elif isinstance(_s, (Antlr4Selection, Antlr4Sequence)):
-                s = _s
-                continue
-        break
-
 
 def collect_simple_rules(rules: List[Antlr4Rule], symbol_name: str):
     for r in rules:
@@ -138,39 +127,25 @@ def collect_simple_rules(rules: List[Antlr4Rule], symbol_name: str):
             if isinstance(b, Antlr4Symbol) and b.symbol == symbol_name:
                 yield r
 
-
-def index_non_visual(s: Antlr4Selection, index: int):
-    for e in iter_non_visuals(s):
-        if index == 0:
-            return e
-        else:
-            index -= 1
-
-    raise IndexError()
-
-
-def len_without_visuals(s: Antlr4Sequence):
-    i = 0
-    for e in s:
-        if not isinstance(e, (Antlr4Indent, Antlr4Newline)):
-            i += 1
-    return i
-
-
-def extract_option_as_rule(rules, rule_name, options_i, new_rule_name):
-    r = rule_by_name(rules, rule_name)
+def _extract_option_as_rule(r, rules, options_i: List[Tuple[int, iAntlr4GramElem]], new_rule_name):
     assert isinstance(r.body, Antlr4Selection)
-    new_body = Antlr4Selection([])
-    for i in options_i:
-        new_body.append(r.body[i])
 
-    r.body[options_i[0]] = Antlr4Sequence([
-        Antlr4Symbol(new_rule_name, False),
-        Antlr4Newline(),
-        Antlr4Indent(1)
-    ])
-    r.body = Antlr4Selection([x for i, x in enumerate(r.body)
-                              if i not in options_i[1:]])
+    new_body = Antlr4Selection([])
+    consumed = set()
+    for i, ev in options_i:
+        assert r.body[i].eq_relaxed(ev), (r.body[i], ev)
+        new_body.append(r.body[i])
+        consumed.add(i)
+
+    body = [Antlr4Symbol(new_rule_name, False), ]
+    for i, x in enumerate(r.body):
+        if i not in consumed:
+            body.append(x)
+
+    if len(body) == 1:
+        r.body = body[0]
+    else:
+        r.body = Antlr4Selection(body)
 
     if len(new_body) == 1:
         new_body = new_body[0]
@@ -179,6 +154,9 @@ def extract_option_as_rule(rules, rule_name, options_i, new_rule_name):
     rules.insert(rules.index(r), new_r)
     return new_r
 
+def extract_option_as_rule(rules, rule_name, options_i: List[Tuple[int, iAntlr4GramElem]], new_rule_name):
+    r = rule_by_name(rules, rule_name)
+    return _extract_option_as_rule(r, rules, options_i, new_rule_name)
 
 def _replace_symbol_in_rule(rule, symbol_name, symbol_name_replace,
                            only_first=False):

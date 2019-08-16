@@ -1,12 +1,11 @@
 from utils.antlr4.grammar import rule_by_name, Antlr4Symbol, Antlr4Option, \
-    Antlr4Sequence, iAntlr4GramElem, iter_non_visuals, Antlr4Selection, \
-    Antlr4Iteration, Antlr4Rule
-from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage
+    Antlr4Sequence, Antlr4Rule
+from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage, \
+    inline_rule, _replace_symbol_in_rule
 from utils.antlr4.simple_parser import Antlr4parser
-from copy import copy
-from typing import Dict, List
-from itertools import islice
+from typing import List
 from utils.antlr4.query import Antlr4Query
+from sortedcontainers.sorteddict import SortedDict
 
 
 def rm_ambiguity(rules):
@@ -35,6 +34,56 @@ def rm_option_from_eps_rules(p):
     for r in already_eps_rules:
         rm_option_on_rule_usage(p.rules, r)
 
+    # fix optinality on datatypes
+
+    r = rule_by_name(p.rules, "implicit_data_type")
+    # : (signing)? (packed_dimension)*
+    # ->
+    # : signing (packed_dimension)*
+    # | (packed_dimension)+
+    # ;
+    r.body = Antlr4parser().from_str("signing ( packed_dimension )* | ( packed_dimension )+")
+    
+    _inline_rules(p.rules, ["variable_port_header", "net_port_header", "interface_port_header"])
+    # make data_type_or_implicit optional 
+    for r in p.rules:
+        to_optional = [
+            "port",
+            "function_data_type_or_implicit",
+            "var_data_type",
+            "property_formal_type",
+            "let_formal_type",
+            "net_port_type"]
+        if r.name not in ["sequence_formal_type",
+                          "let_formal_type", ]:
+            to_optional.append("data_type_or_implicit")
+        if r.name not in ["data_type_or_implicit", "function_data_type_or_implicit"]:
+            to_optional.append("implicit_data_type")
+        if r.name != "property_formal_type":
+            to_optional.append("sequence_formal_type")
+
+        def match_replace_fn(o):
+            if isinstance(o, Antlr4Symbol) and o.symbol in to_optional:
+                return Antlr4Option(o)
+
+        replace_item_by_sequence(r, match_replace_fn)
+        
+        if r.name == "net_port_type":
+            # net_port_type:
+            #       ( net_type )? data_type_or_implicit 
+            #       | identifier 
+            #       | KW_INTERCONNECT implicit_data_type;
+            r.body[1] = Antlr4parser().from_str("data_type_or_implicit")
+            r.body[0] = Antlr4parser().from_str("net_type ( data_type_or_implicit )?")
+        
+    port = rule_by_name(p.rules, "port")
+    #      ( port_expression )? 
+    #  | DOT identifier LPAREN ( port_expression )? RPAREN;
+    port.body[0] = Antlr4Symbol("port_expression", False)
+    # var_data_type: data_type | KW_VAR data_type_or_implicit;
+    # var_data_type = rule_by_name(p.rules, "var_data_type")
+    # var_data_type.body = Antlr4parser().from_str("KW_VAR ( data_type_or_implicit )? | data_type_or_implicit")
+
 
 def _optimize_ps_parameter_identifier(rules):
     ps_parameter_identifier = rule_by_name(rules, "ps_parameter_identifier")
@@ -46,17 +95,20 @@ def _optimize_ps_parameter_identifier(rules):
         ( DOT identifier ( LSQUARE_BR constant_expression RSQUARE_BR )? )*
     """)
 
+
 def _optimize_ps_type_identifier(rules):
     ps_type_identifier = rule_by_name(rules, "ps_parameter_identifier")
     # ps_type_identifier: ( KW_LOCAL DOUBLE_COLON | package_scope | class_scope )? identifier;
-    ps_type_identifier .body = Antlr4parser().from_str("""
+    ps_type_identifier.body = Antlr4parser().from_str("""
         ( KW_LOCAL DOUBLE_COLON )? package_or_class_scoped_id
     """)
+
 
 def optimize_class_scope(rules):
     p = Antlr4parser()
     to_replace0 = p.from_str("( package_scope | class_scope )? identifier")
     to_replace1 = p.from_str("( class_scope | package_scope )? identifier")
+   
     package_or_class_scoped_id = Antlr4Rule("package_or_class_scoped_id", p.from_str(
         """( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT )
            ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*"""))
@@ -66,9 +118,9 @@ def optimize_class_scope(rules):
         if isinstance(o, Antlr4Sequence) and len(o) == 1:
             return o[0]
 
-
     q0 = Antlr4Query(to_replace0)
     q1 = Antlr4Query(to_replace1)
+
     for r in rules:
         replace_item_by_sequence(r, match_replace_fn_reduce_1_item_sequence)
         # if r.name == "net_type_declaration":
@@ -81,19 +133,170 @@ def optimize_class_scope(rules):
                 for match in m:
                     v = match.get(id(o), None)
                     if v is not None:
+                        del match[id(o)]
                         if (v is to_replace0
-                             or v is to_replace0
+                             or v is to_replace1
                              or (isinstance(v, Antlr4Symbol) and v.symbol == "identifier")):
                             return Antlr4Symbol(package_or_class_scoped_id.name, False)
                         else:
                             return Antlr4Sequence([])
+
             replace_item_by_sequence(r, apply_to_replace0_and_1)
-        
+            for _m in m:
+                # assert that all matching items were replaced
+                assert not _m
         #    print(r.toAntlr4())
         #    print(m)
         # else:
         #     if "package_scope | class_scope" in r.toAntlr4() or "class_scope | package_scope" in r.toAntlr4():
         #         print("not found " + r.toAntlr4())
+    
+    to_replace2 = p.from_str("( class_qualifier | package_scope )? hierarchical_identifier")
+    # hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
+    package_or_class_scoped_hier_id = Antlr4Rule("package_or_class_scoped_hier_id", p.from_str(
+        """( KW_DOLAR_ROOT DOT )? ( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT )
+           ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*
+           ( constant_bit_select DOT identifier )* """))
+    rules.append(package_or_class_scoped_hier_id)
+    primary_no_cast_no_call = rule_by_name(rules, "primary_no_cast_no_call")
+    m = Antlr4Query(to_replace2).match(primary_no_cast_no_call.body)
 
+    def apply_to_replace2(o):
+        for match in m:
+            v = match.get(id(o), None)
+            if v is not None:
+                if (v is to_replace2
+                     or (isinstance(v, Antlr4Symbol) and v.symbol == "hierarchical_identifier")):
+                    return Antlr4Symbol(package_or_class_scoped_hier_id.name, False)
+                else:
+                    return Antlr4Sequence([])
+
+    replace_item_by_sequence(primary_no_cast_no_call, apply_to_replace2)
+    
     _optimize_ps_type_identifier(rules)
     _optimize_ps_parameter_identifier(rules)
+    detect_duplicit_rules(rules)
+
+
+def optimize_select(rules):
+    """
+    bit_select: ( LSQUARE_BR expression RSQUARE_BR )*; // used only there
+    select:
+          ( ( DOT identifier bit_select )* DOT identifier )? bit_select ( LSQUARE_BR part_select_range RSQUARE_BR )?;
+    nonrange_select:
+          ( ( DOT identifier bit_select )* DOT identifier )? bit_select;
+    constant_bit_select: ( LSQUARE_BR constant_expression RSQUARE_BR )*;
+    constant_select:
+          ( ( DOT identifier constant_bit_select )* DOT identifier )? constant_bit_select 
+          ( LSQUARE_BR constant_part_select_range RSQUARE_BR )?;
+    """
+    bit_select = rule_by_name(rules, "bit_select")
+    
+    pass
+
+
+def replace_same_rules(rules, rules_to_replace: List[str], replacement:str):
+    r = None
+    for name in rules_to_replace:
+        _r = rule_by_name(rules, name)
+        if r is None:
+            r = _r
+        else:
+            assert r.body == _r.body or r.body.toAntlr4() == _r.body.toAntlr4(), (r, _r)
+        rules.remove(_r)
+    
+    for rule in rules:
+        for symbol_name in rules_to_replace:
+            _replace_symbol_in_rule(rule, symbol_name, replacement, False)
+
+
+def replace_and_rename_same(rules: List[Antlr4Rule],
+                       rules_to_replace: List[str],
+                       name_of_new_rule:str):
+    r = None
+    for name in rules_to_replace:
+        _r = rule_by_name(rules, name)
+        if r is None:
+            r = _r
+        else:
+            assert r.body == _r.body or r.body.toAntlr4() == _r.body.toAntlr4(), (r, _r)
+            rules.remove(_r)
+
+    for rule in rules:
+        assert r.name != name_of_new_rule, name_of_new_rule 
+    r.name = name_of_new_rule
+
+    for rule in rules:
+        for symbol_name in rules_to_replace:
+            _replace_symbol_in_rule(rule, symbol_name, name_of_new_rule, False)
+
+
+def inline_unique_variant_of_rules(rules):
+    replace_same_rules(rules, [
+        "list_of_genvar_identifiers",
+        "list_of_udp_port_identifiers"
+    ], "identifier_list")
+    
+    replace_same_rules(rules, ["delayed_data"], "delayed_reference")
+    _inline_rules(rules, [
+        "cross_item",
+        "dynamic_array_variable_identifier",
+    ])
+    _inline_rules(rules, [
+        "bind_target_scope",
+    ])
+    replace_same_rules(rules, ["function_statement_or_null"], "statement_or_null")
+    replace_and_rename_same(rules, ["list_of_cross_items", "udp_port_list"], "identifier_list_2plus")
+    replace_same_rules(rules, ["checker_generate_item"], "program_generate_item")
+    replace_same_rules(rules, ["for_step_assignment"], "sequence_match_item")
+
+    
+def _inline_rules(rules, rule_names_to_inline):
+    for rule_name in rule_names_to_inline:
+        inline_rule(rules, rule_name)
+
+
+def detect_duplicit_rules(_rules: List[Antlr4Rule]):
+    rules = [r for r in _rules if not r.is_lexer_rule()]
+    eq_classes = SortedDict()
+    for r in rules:
+        eq_classes[r.name] = set([r.name, ])
+
+    nonrange_select = rule_by_name(rules, "nonrange_select")
+    select = rule_by_name(rules, "select")
+    assert not(nonrange_select.body == select.body)
+    assert not(select.body == nonrange_select.body)
+
+    for r0 in rules:
+        for r1 in rules:
+            if r0 is r1:
+                continue
+            g = eq_classes[r0.name]
+            if r1.name not in g and r0.body == r1.body:
+                g.update(eq_classes[r1.name])
+                eq_classes[r1.name] = g
+    
+    seen = set()
+    for r_name, c in eq_classes.items():
+        if len(c) > 1 and r_name not in seen:
+            print("%s: {%s}" % (r_name, ", ".join(sorted(c))))
+            seen.update(c)
+
+
+def other_performance_fixes(rules):
+    # concurrent_assertion_statement items
+    concurrent_assertion_statement_options = [
+        "assert_property_statement",
+        "assume_property_statement",
+        "cover_property_statement",
+        "cover_sequence_statement",
+        "restrict_property_statement",
+     ]
+    for rn in concurrent_assertion_statement_options:
+        inline_rule(rules, rn)
+
+
+def add_eof(rules):
+    source_text = rule_by_name(rules, "source_text")
+    source_text.body.append(Antlr4Symbol("EOF", False))
+    

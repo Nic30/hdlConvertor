@@ -2,9 +2,8 @@ from sortedcontainers.sortedset import SortedSet
 from typing import Set, Dict, List
 
 from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Sequence, Antlr4Symbol, \
-    Antlr4Iteration, Antlr4Selection, Antlr4Option, Antlr4Indent, \
-    Antlr4Newline, rule_by_name, Antlr4Rule
-from utils.antlr4.selection_optimiser import iter_non_visuals
+    Antlr4Iteration, Antlr4Selection, Antlr4Option, rule_by_name, Antlr4Rule
+from copy import deepcopy
 
 
 def transitive_closure(graph: Dict[object, Set[object]], reflexive=False):
@@ -66,8 +65,6 @@ def _direct_left_corner(elem: iAntlr4GramElem, dlc: SortedSet,
     elif isinstance(elem, Antlr4Option):
         _direct_left_corner(
             elem.body, dlc, allow_eps_in_sel=allow_eps_in_sel)
-        return True
-    elif isinstance(elem, (Antlr4Indent, Antlr4Newline)):
         return True
     else:
         raise TypeError(elem)
@@ -144,13 +141,13 @@ def iterate_everything_except_first(rules, rule_name):
     r = rule_by_name(rules, rule_name)
     if isinstance(r.body, Antlr4Sequence):
         _iterate_everything_except_first_and_replace_first(
-            r.body, next(iter_non_visuals(r.body)))
+            r.body, r.body[0])
     else:
         raise NotImplementedError()
 
 
 def _iterate_everything_except_first_and_replace_first(seq, repl):
-    rest = list(iter_non_visuals(seq))[1:]
+    rest = seq[1:]
     if len(rest) == 1:
         rest = rest[0]
     else:
@@ -159,39 +156,47 @@ def _iterate_everything_except_first_and_replace_first(seq, repl):
     seq.clear()
     seq.append(repl)
     seq.append(rest_iterated)
-    seq.append(Antlr4Newline())
-    seq.append(Antlr4Indent(1))
+
+
+def _expand_options_starting_with(obj, item, suffix, out):
+    """
+    expand(a) in ( a | b | c ) d -> ( b | c ) d   and out = [ a d ]
+
+    :return: True if the item was entirely extracted and should be removed from parent
+    :attention: ()*/+/? not handled
+    """
+    if obj == item:
+        out.append(Antlr4Sequence([deepcopy(item)] + [deepcopy(i) for i in suffix]))
+        return True
+    if isinstance(obj, Antlr4Selection):
+        new_choices = []
+        for c in obj:
+            if not _expand_options_starting_with(c, item, suffix, out):
+                new_choices.append(c)
+        if len(new_choices) != len(obj):
+            obj.clear()
+            obj.extend(new_choices)
+        # if there is nothing left everything is be
+        return len(new_choices) == 0
+    elif isinstance(obj, Antlr4Sequence):
+        # if first item should be removed the whole sequence is beeing extracted
+        return _expand_options_starting_with(obj[0], item, obj[1:] + suffix, out)
+    elif isinstance(obj, iAntlr4GramElem):
+        pass
+    else:
+        raise TypeError(obj.__class__)
 
 
 def direct_left_recurse_rm(rules, rule_name):
     r = rule_by_name(rules, rule_name)
 
-    if isinstance(r.body, Antlr4Selection):
-        choices = r.body
-    elif isinstance(r.body, Antlr4Sequence):
-        choices = [r.body, ]
-    else:
-        raise NotImplementedError()
-
-    # find choices which starts with this rule non terminal
     lr_choices = []
-    for c in choices:
-        if isinstance(c, Antlr4Sequence):
-            first = next(iter_non_visuals(c))
-            if isinstance(first, Antlr4Symbol) and first.symbol == rule_name:
-                lr_choices.append(c)
-        else:
-            raise NotImplementedError()
+    _expand_options_starting_with(
+        r.body, Antlr4Symbol(rule_name, False),
+        [], lr_choices)
 
     # remove choices which are causing left recursion
     assert len(lr_choices) >= 1, rule_name
-    for lr_choice in lr_choices:
-        choices.remove(lr_choice)
-
-    if len(choices) == 0:
-        raise NotImplementedError()
-    elif len(choices) == 1:
-        r.body = choices[0]
 
     # renaame this rule to rule_item
     r_base_name = r.name + "_item"
@@ -202,14 +207,11 @@ def direct_left_recurse_rm(rules, rule_name):
     # create new rule which will implement removed choices and also expands to rule_item
     choices_new = Antlr4Selection([])
     for lr_choice in lr_choices:
-        first = next(iter_non_visuals(lr_choice))
+        first = lr_choice[0]
         assert isinstance(first, Antlr4Symbol) and first.symbol == rule_name
         repl = Antlr4Symbol(r_base_name, False)
         _iterate_everything_except_first_and_replace_first(lr_choice, repl)
 
-        if not choices_new:
-            lr_choice.insert(0, Antlr4Newline())
-            lr_choice.insert(1, Antlr4Indent(1))
         choices_new.append(lr_choice)
 
     body_new = choices_new[0] if len(choices_new) == 1 else choices_new

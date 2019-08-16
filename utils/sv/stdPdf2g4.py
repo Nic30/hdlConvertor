@@ -9,23 +9,26 @@ import os
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
     Antlr4Selection, Antlr4Option, generate_renamer, \
     rule_by_name, Antlr4LexerAction
-from utils.antlr4.optionality_optimiser import reduce_optionality
-from utils.antlr4._utils import rm_redunt_whitespaces_on_end, collect_simple_rules, \
-    remove_simple_rule,  extract_option_as_rule
+from utils.antlr4._utils import collect_simple_rules, \
+    remove_simple_rule, extract_option_as_rule
 from utils.sv.keywords import IEEE1800_2017_KEYWORDS
 from utils.sv.lr_rm import left_recurse_remove
 from utils.sv.pdf_parsing import parse_sv_pdf
 from utils.sv.perf_fix import rm_option_from_eps_rules, rm_ambiguity, \
-    optimize_class_scope
+    optimize_class_scope, add_eof, inline_unique_variant_of_rules, \
+    optimize_select, other_performance_fixes
 from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
 from utils.sv.rules_defined_in_text import add_string_literal_rules, \
-    add_file_path_literal_rules
+    add_comments_and_ws
 from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
     fix_lexer_for_table_def, fix_lexer_for_library_def, \
     rm_semi_from_cross_body_item, add_interface_class_declaration, fix_class_scope, \
-    fix_implicit_data_type, fix_call, fix_randomize_call, fix_dpi_import_export
+    fix_call, fix_randomize_call, fix_dpi_import_export
 from utils.sv._utils import mark_regex, extract_keywords_to_specific_rule, \
     replace_rule, collect_keywords, pretify_regex
+from utils.antlr4.auto_format import remove_any_visuals, auto_format
+from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
+from utils.antlr4.simple_parser import Antlr4parser
 
 
 def remove_useless_and_normalize_names(p):
@@ -154,9 +157,6 @@ def remove_useless_and_normalize_names(p):
                 r.is_fragment = True
                 renames[fr] = fr.upper()
 
-    for r in p.rules:
-        rm_redunt_whitespaces_on_end(r)
-
     identifier_rule_equivalents = {
         r.name for r in collect_simple_rules(p.rules, "identifier")
     }
@@ -165,11 +165,19 @@ def remove_useless_and_normalize_names(p):
     }
 
     to_remove = {
-       "comment",
-       "one_line_comment",
-       "block_comment",
-       "comment_text",
-       "white_space",
+        "comment",
+        "one_line_comment",
+        "block_comment",
+        "comment_text",
+        "white_space",
+       
+        # libary rules
+        "library_text",
+        "library_description",
+        "library_declaration",
+        "include_statement",
+        "file_path_spec",
+        "file_path_spec",
     }
     to_remove.update(identifier_rule_equivalents)
     to_remove.update(hierarchical_identifier_rule_equivalents)
@@ -248,6 +256,17 @@ def remove_useless_and_normalize_names(p):
         "topmodule_identifier",
         "udp_identifier",
         "variable_identifier",
+        "let_identifier",
+        "type_identifier",
+
+        # covergroup_expression
+        "with_covergroup_expression",
+        "set_covergroup_expression",
+        "integer_covergroup_expression",
+        "cross_set_expression",
+
+        "data_event",
+        "reference_event",
     ]
     for sr in simple_rules_to_remove:
         remove_simple_rule(sr, p)
@@ -281,39 +300,32 @@ def remove_useless_and_normalize_names(p):
             identifier.body.append(Antlr4Symbol("KW_" + kw.upper(), False))
 
 
-def add_comments_and_ws(rules):
-    # ONE_LINE_COMMENT: '//' .*? '\\r'? '\\n' -> channel(HIDDEN);
-    olc = Antlr4Rule("ONE_LINE_COMMENT", Antlr4Sequence([
-            Antlr4Symbol("//", True),
-            Antlr4Symbol(".*?", True, is_regex=True),
-            Antlr4Option(Antlr4Symbol("\r", True)),
-            Antlr4Symbol("\n", True),
-        ]),
-        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
-    rules.append(olc)
-    # BLOCK_COMMENT: '/*' .*? '*/' -> channel (HIDDEN);
-    bc = Antlr4Rule("BLOCK_COMMENT", Antlr4Sequence([
-            Antlr4Symbol("/*", True),
-            Antlr4Symbol(".*?", True, is_regex=True),
-            Antlr4Symbol("*/", True),
-        ]),
-        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
-    rules.append(bc)
-    # WHITE_SPACE: [ \\t\\n\\r] + -> skip;
-    ws = Antlr4Rule("WHITE_SPACE", Antlr4Sequence([
-            Antlr4Symbol("[ \\t\\n\\r] +", True, is_regex=True),
-        ]),
-        lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
-    rules.append(ws)
-
-
 def better_names_for_single_purpose_rules(rules):
     renames = {"ps_or_hierarchical_array_identifier": "foreach_ps_or_hierarchical_array_identifier"}
     rnm = generate_renamer(renames, False)
     for r in rules:
         r.walk(rnm)
 
-        
+
+def lexer_friendly_numbers(p):
+
+    def par(s):
+        return Antlr4parser().from_str(s)
+
+    extract_option_as_rule(p.rules, "real_number",
+                           [(1, par("UNSIGNED_NUMBER ( DOT UNSIGNED_NUMBER )? EXP ( SIGN )? UNSIGNED_NUMBER")), ],
+                           "REAL_NUMBER_WITH_EXP")
+    extract_option_as_rule(p.rules, "decimal_number",
+                           [(1, par("( SIZE )? DECIMAL_BASE UNSIGNED_NUMBER")), ],
+                           "DECIMAL_NUMBER_WITH_BASE")
+    extract_option_as_rule(p.rules, "decimal_number",
+                           [(2, par("( SIZE )? DECIMAL_BASE X_DIGIT ( UNDERSCORE )*")), ],
+                           "DECIMAL_INVALID_NUMBER_WITH_BASE")
+    extract_option_as_rule(p.rules, "decimal_number",
+                           [(3, par("( SIZE )? DECIMAL_BASE Z_DIGIT ( UNDERSCORE )*")), ],
+                           "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
+
+
 UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
@@ -324,21 +336,23 @@ def proto_grammar_to_g4():
 
     for r in p.rules:
         r.walk(mark_regex)
-
+    remove_any_visuals(p.rules)
     remove_useless_and_normalize_names(p)
+    lexer_friendly_numbers(p)
     fix_SYSTEM_TF_IDENTIFIER(p.rules)
     extract_keywords_to_specific_rule(p)
     add_string_literal_rules(p)
-    add_file_path_literal_rules(p)
+    # add_file_path_literal_rules(p)
     add_comments_and_ws(p.rules)
     rm_option_from_eps_rules(p)
+    Antlr4GenericOptimizer().optimize(p.rules)
+    inline_unique_variant_of_rules(p.rules)
+    Antlr4GenericOptimizer().optimize(p.rules)
+    pretify_regex(p.rules)
     p.rules = left_recurse_remove(p.rules)
-    extract_option_as_rule(p.rules, "real_number", [1, ], "REAL_NUMBER_WITH_EXP")
-    extract_option_as_rule(p.rules, "decimal_number", [1, ], "DECIMAL_NUMBER_WITH_BASE")
-    extract_option_as_rule(p.rules, "decimal_number", [2, ], "DECIMAL_TRISTATE_NUMBER_WITH_BASE")
 
     fix_lexer_for_table_def(p)
-    fix_lexer_for_library_def(p)
+    # fix_lexer_for_library_def(p)
     # inline_to_fragments = [
     #     "X_DIGIT",
     #     "Z_DIGIT",
@@ -352,19 +366,21 @@ def proto_grammar_to_g4():
     #
     # for r in p.rules:
     #    if r.is_fragment
-    reduce_optionality(p.rules)
-    pretify_regex(p.rules)
     rm_ambiguity(p.rules)
     rm_semi_from_cross_body_item(p.rules)
     add_interface_class_declaration(p.rules)
     fix_class_scope(p.rules)
-    fix_implicit_data_type(p.rules)
     fix_call(p.rules)
+    optimize_select(p.rules)
     # fix_cross_body_item(p.rules)
     fix_randomize_call(p.rules)
     fix_dpi_import_export(p.rules)
     better_names_for_single_purpose_rules(p.rules)
     optimize_class_scope(p.rules)
+    other_performance_fixes(p.rules)
+    add_eof(p.rules)
+    Antlr4GenericOptimizer().optimize(p.rules)
+    auto_format(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
                                 x.name == x.name.upper(),
@@ -396,5 +412,5 @@ def proto_grammar_to_g4():
 
 
 if __name__ == "__main__":
-    #parse_sv_pdf()
+    # parse_sv_pdf()
     proto_grammar_to_g4()
