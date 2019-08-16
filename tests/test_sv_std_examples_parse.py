@@ -95,7 +95,8 @@ SvStdExamplesParseTC = SvStdExamplesParseMeta('SvStdExamplesParseTC', (unittest.
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    # suite.addTest(SvStdExamplesParseTC('test_2012_p642'))
+
+    # suite.addTest(SvStdExamplesParseTC('test_p552'))
     suite.addTest(unittest.makeSuite(SvStdExamplesParseTC))
 
     runner = TimeLoggingTestRunner(verbosity=3)
