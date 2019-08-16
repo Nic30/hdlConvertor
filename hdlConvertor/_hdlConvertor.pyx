@@ -39,7 +39,7 @@ cdef int raise_my_py_error() except * :
     raise ParseException(msg)
 
 cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
-    cdef cppclass Convertor nogil:
+    cdef cppclass Convertor:
 
         HdlContext * parse(const vector[string] & hdl_file_names,
                         Language language,
