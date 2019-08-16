@@ -1,18 +1,15 @@
-from itertools import islice
-from typing import Tuple
 import unittest
 from unittest.runner import TextTestRunner
 from unittest.suite import TestSuite
 
-from utils.antlr4.grammar import Antlr4Selection, Antlr4Sequence, Antlr4Option,\
-    Antlr4Rule
+from utils.antlr4.grammar import Antlr4Rule
 from utils.antlr4.simple_parser import Antlr4parser
-from utils.antlr4.selection_optimiser import _selection_share_prefix,\
-    _selection_empty_option_to_optional,\
-    _selection_share_suffix, _selection_options_to_sequnces
+from utils.antlr4.selection_optimiser import _selection_share_prefix, \
+    _selection_empty_option_to_optional, \
+    _selection_share_suffix, _selection_options_to_sequnces, \
+    _selection_propagate_optionality
 from utils.antlr4.sequence_optimiser import _sequence_flatten
 from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
-
 
     
 class SelectionOptimizerTC(unittest.TestCase):
@@ -171,6 +168,38 @@ class SelectionOptimizerTC(unittest.TestCase):
         r = Antlr4parser().from_str(r_str)
         Antlr4GenericOptimizer().optimize([Antlr4Rule("tmp", r), ])
         self.assertTextEq(exp2, r.toAntlr4())
+
+    def test_selection_propagate_optionality0(self):
+        r_str = "( a )? | b "
+        expec = "( a | b )?"
+        r = Antlr4parser().from_str(r_str)
+        _selection_options_to_sequnces(r)
+        res, _ = _selection_propagate_optionality(r)
+        self.assertTextEq(expec, res.toAntlr4())
+
+    def test_selection_propagate_optionality1(self):
+        r_str = "( a )? | b | ( c )?"
+        expec = "( a | b | c)?"
+        r = Antlr4parser().from_str(r_str)
+        _selection_options_to_sequnces(r)
+        res, _ = _selection_propagate_optionality(r)
+        self.assertTextEq(expec, res.toAntlr4())
+
+    def test_selection_propagate_optionality2(self):
+        r_str = "( a )? ( a1 )* | b | ( c )?"
+        expec = "( a ( a1 )* | ( a1 )+ | b | c)?"
+        r = Antlr4parser().from_str(r_str)
+        _selection_options_to_sequnces(r)
+        res, _ = _selection_propagate_optionality(r)
+        self.assertTextEq(expec, res.toAntlr4())
+
+    def test_selection_propagate_optionality3(self):
+        r_str = "b | ( a )? ( a1 )* ( a2 )* | ( c )?"
+        expec = "( b | a ( a1 )* ( a2 )* | ( a1 )+ ( a2 )* | ( a2 )+ | c)?"
+        r = Antlr4parser().from_str(r_str)
+        _selection_options_to_sequnces(r)
+        res, _ = _selection_propagate_optionality(r)
+        self.assertTextEq(expec, res.toAntlr4())
 
 
 if __name__ == '__main__':

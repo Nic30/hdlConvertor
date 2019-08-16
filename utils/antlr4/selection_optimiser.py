@@ -4,6 +4,7 @@ from itertools import islice
 from utils.antlr4._utils import replace_item_by_sequence
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Selection, \
     Antlr4Sequence, Antlr4Symbol, Antlr4Option, Antlr4Iteration
+from copy import deepcopy
 
 
 def char_options_to_regex(r: Antlr4Rule):
@@ -170,30 +171,52 @@ def _selection_only_unique(sel: Antlr4Selection):
     return sel, False
 
 
+def _is_optional(o):
+    return isinstance(o, Antlr4Option) or (
+        isinstance(o, Antlr4Iteration) and not o.positive)
+
+
+def _to_non_optional(o):
+    """
+    Create non optional variant of element (a)? -> a  and (a)* -> (a)+
+    """
+    if isinstance(o, Antlr4Option):
+        return deepcopy(o.body)
+    elif isinstance(o, Antlr4Iteration):
+        o = deepcopy(o)
+        o.positive = True
+        return o
+    else:
+        raise TypeError(o.__class__)
+
+
 def _selection_propagate_optionality(sel: Antlr4Selection):
     assert isinstance(sel, Antlr4Selection)
-    entirely_optional_choices = []
+    non_optional_choices = []
+    entirely_optional = False
     for c in sel:
         is_optional = True
         for o in c:
-            if isinstance(o, Antlr4Option) or (
-                    isinstance(o, Antlr4Iteration) and not o.positive):
+            if _is_optional(o):
                 continue
             else:
                 is_optional = False
                 break
+
         if is_optional:
-            entirely_optional_choices.append(c)
-        
-    for c in entirely_optional_choices:
-        if len(c) == 0:
-            raise NotImplementedError()
-        o = c[0]
-        if isinstance(o, Antlr4Option):
-            c[0] = o.body
-        elif isinstance(o, Antlr4Iteration):
-            o.positive = True
-    if entirely_optional_choices:
-        return Antlr4Option(sel), True
+            entirely_optional = True
+            for i, o in enumerate(c):
+                o = _to_non_optional(o)
+                is_last = i == len(c) - 1
+                if is_last:
+                    noc = o
+                else:
+                    noc = Antlr4Sequence([o, ] + [deepcopy(x) for x in c[i + 1:]])
+                non_optional_choices.append(noc)
+        else:
+            non_optional_choices.append(c)
+
+    if entirely_optional:
+        return Antlr4Option(Antlr4Selection(non_optional_choices)), True
     else:
         return sel, False

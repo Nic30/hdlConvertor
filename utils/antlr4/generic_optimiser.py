@@ -25,7 +25,7 @@ class Antlr4GenericOptimizer():
                 _selection_empty_option_to_optional,
                 _selection_share_prefix,
                 _selection_share_suffix,
-                # _selection_propagate_optionality,
+                _selection_propagate_optionality,
                 ]
             for opt in optimizations:
                 o, changed = opt(o)

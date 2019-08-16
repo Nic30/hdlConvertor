@@ -91,9 +91,9 @@ package_declaration:
  ( attribute_instance )* KW_PACKAGE ( lifetime )? identifier SEMI ( timeunits_declaration )? ( 
       ( attribute_instance )* package_item )* KW_ENDPACKAGE ( COLON identifier )?;
 timeunits_declaration:
- KW_TIMEUNIT TIME_LITERAL ( ( DIV TIME_LITERAL )? 
-                                  | SEMI KW_TIMEPRECISION TIME_LITERAL 
-                                  ) SEMI 
+ KW_TIMEUNIT TIME_LITERAL ( ( DIV 
+                                  | SEMI KW_TIMEPRECISION 
+                                  ) TIME_LITERAL )? SEMI 
       | KW_TIMEPRECISION TIME_LITERAL SEMI ( KW_TIMEUNIT TIME_LITERAL SEMI )? 
      ;
 parameter_port_list:
@@ -135,7 +135,8 @@ port_direction:
       | KW_REF 
      ;
 ansi_port_declaration:
- ( ( ( port_direction )? ( net_port_type )? 
+ ( ( port_direction ( net_port_type )? 
+          | net_port_type 
           | ( identifier 
           | KW_INTERFACE 
           ) ( DOT identifier )? 
@@ -504,12 +505,11 @@ net_declaration:
 type_declaration:
  KW_TYPEDEF ( data_type identifier ( variable_dimension )* 
                   | ( identifier constant_bit_select DOT identifier 
-          | ( KW_ENUM 
+          | KW_ENUM 
           | KW_STRUCT 
           | KW_UNION 
           | ( KW_INTERFACE )? KW_CLASS 
-          )? 
-          ) identifier 
+          )? identifier 
                   ) SEMI;
 net_type_declaration:
  KW_NETTYPE ( data_type identifier ( KW_WITH package_or_class_scoped_id )? 
@@ -721,10 +721,12 @@ pulse_control_specparam:
 error_limit_value: constant_mintypmax_expression;
 reject_limit_value: constant_mintypmax_expression;
 variable_decl_assignment:
- identifier ( ( variable_dimension )* ( ASSIGN expression )? 
-                  | ASSIGN class_new 
+ identifier ( ( variable_dimension )+ ( ASSIGN expression )? 
+                  | ASSIGN ( expression 
+                  | class_new 
+                  ) 
                   | unsized_dimension ( variable_dimension )* ( ASSIGN dynamic_array_new )? 
-                  );
+                  )?;
 class_new:
  ( class_scope )? KW_NEW ( LPAREN list_of_arguments RPAREN )? 
       | KW_NEW expression 
@@ -866,9 +868,10 @@ expect_property_statement:
 property_instance:
  ps_or_hierarchical_identifier ( LPAREN property_list_of_arguments RPAREN )?;
 property_list_of_arguments:
- ( ( property_actual_arg )? ( COMMA ( property_actual_arg )? )* 
+ ( property_actual_arg ( COMMA ( property_actual_arg )? )* 
+      | ( COMMA ( property_actual_arg )? )+ 
       | DOT identifier LPAREN ( property_actual_arg )? RPAREN 
-      ) ( COMMA DOT identifier LPAREN ( property_actual_arg )? RPAREN )*;
+      )? ( COMMA DOT identifier LPAREN ( property_actual_arg )? RPAREN )*;
 property_actual_arg:
  property_expr 
       | sequence_actual_arg 
@@ -966,9 +969,9 @@ sequence_expr:
                           )*;
 sequence_expr_item:
  cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
-      | expression_or_dist ( ( boolean_abbrev )? 
+      | expression_or_dist ( boolean_abbrev 
                           | KW_THROUGHOUT sequence_expr 
-                          ) 
+                          )? 
       | ( sequence_instance 
           | LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
           ) ( sequence_abbrev )? 
@@ -992,9 +995,10 @@ sequence_match_item:
 sequence_instance:
  ps_or_hierarchical_identifier ( LPAREN sequence_list_of_arguments RPAREN )?;
 sequence_list_of_arguments:
- ( ( sequence_actual_arg )? ( COMMA ( sequence_actual_arg )? )* 
+ ( sequence_actual_arg ( COMMA ( sequence_actual_arg )? )* 
+      | ( COMMA ( sequence_actual_arg )? )+ 
       | DOT identifier LPAREN ( sequence_actual_arg )? RPAREN 
-      ) ( COMMA DOT identifier LPAREN ( sequence_actual_arg )? RPAREN )*;
+      )? ( COMMA DOT identifier LPAREN ( sequence_actual_arg )? RPAREN )*;
 sequence_actual_arg:
  event_expression 
       | sequence_expr 
@@ -1150,9 +1154,10 @@ let_formal_type:
 let_expression:
  ( package_scope )? identifier ( LPAREN let_list_of_arguments RPAREN )?;
 let_list_of_arguments:
- ( ( let_actual_arg )? ( COMMA ( let_actual_arg )? )* 
+ ( let_actual_arg ( COMMA ( let_actual_arg )? )* 
+      | ( COMMA ( let_actual_arg )? )+ 
       | DOT identifier LPAREN ( let_actual_arg )? RPAREN 
-      ) ( COMMA DOT identifier LPAREN ( let_actual_arg )? RPAREN )*;
+      )? ( COMMA DOT identifier LPAREN ( let_actual_arg )? RPAREN )*;
 let_actual_arg: expression;
 gate_instantiation:
  ( cmos_switchtype ( delay3 )? cmos_switch_instance ( COMMA cmos_switch_instance )* 
@@ -1999,26 +2004,26 @@ empty_unpacked_array_concatenation:
 tf_call:
  ps_or_hierarchical_identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?;
 system_tf_call:
- any_system_tf_identifier ( ( LPAREN list_of_arguments RPAREN )? 
-                                  | LPAREN ( data_type ( COMMA expression )? 
-                      | expression ( COMMA ( expression )? )* ( COMMA ( clocking_event )? )? 
-                      ) RPAREN 
-                                  );
+ any_system_tf_identifier ( LPAREN ( list_of_arguments 
+                                      | data_type ( COMMA expression )? 
+                                      | expression ( COMMA ( expression )? )* ( COMMA ( clocking_event )? )? 
+                                      ) RPAREN )?;
 subroutine_call:
- ( ( class_qualifier )? 
+ ( class_qualifier 
           | ( primary_no_cast_no_call 
           | cast 
           | implicit_class_handle 
           ) DOT 
-          ) method_call_body 
+          )? method_call_body 
       | tf_call 
       | system_tf_call 
       | ( KW_STD DOUBLE_COLON )? randomize_call 
      ;
 list_of_arguments:
- ( ( expression )? ( COMMA ( expression )? )* 
+ ( expression ( COMMA ( expression )? )* 
+      | ( COMMA ( expression )? )+ 
       | DOT identifier LPAREN ( expression )? RPAREN 
-      ) ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
+      )? ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
 method_call_body:
  identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
       | built_in_method_call 
@@ -2193,10 +2198,10 @@ value_range:
 mintypmax_expression:
  expression ( COLON expression COLON expression )?;
 module_path_expression:
- module_path_expression_item ( ( binary_module_path_operator ( attribute_instance )* module_path_expression )* 
+ module_path_expression_item ( ( binary_module_path_operator ( attribute_instance )* module_path_expression )+ 
                                   | 
-      ( QUESTIONMARK ( attribute_instance )* module_path_expression COLON module_path_expression )* 
-                                  );
+      ( QUESTIONMARK ( attribute_instance )* module_path_expression COLON module_path_expression )+ 
+                                  )?;
 module_path_expression_item:
  ( unary_module_path_operator ( attribute_instance )* )? module_path_primary;
 module_path_mintypmax_expression:
@@ -2213,7 +2218,7 @@ genvar_expression: constant_expression;
 constant_primary_no_cast_no_call:
  primary_literal 
       | ps_parameter_identifier constant_select 
-      | identifier ( ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
+      | identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR 
                   | constant_select 
                   )? 
       | package_or_class_scoped_id 
@@ -2381,8 +2386,8 @@ identifier:
       | SIMPLE_IDENTIFIER 
       | ESCAPED_IDENTIFIER 
       | KW_SAMPLE 
-      | KW_RANDOMIZE 
       | KW_TYPE_OPTION 
+      | KW_RANDOMIZE 
       | KW_STD 
       | KW_OPTION 
      ;
@@ -2412,24 +2417,24 @@ ps_or_hierarchical_identifier:
      ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-      | KW_DOLAR_REMOVAL 
-      | KW_DOLAR_WIDTH 
-      | KW_DOLAR_UNIT 
-      | KW_DOLAR_ROOT 
-      | KW_DOLAR_PERIOD 
-      | KW_DOLAR_TIMESKEW 
-      | KW_DOLAR_NOCHANGE 
-      | KW_DOLAR_HOLD 
-      | KW_DOLAR_FATAL 
-      | KW_DOLAR_WARNING 
-      | KW_DOLAR_RECOVERY 
-      | KW_DOLAR_SETUPHOLD 
-      | KW_DOLAR_INFO 
-      | KW_DOLAR_SKEW 
-      | KW_DOLAR_ERROR 
-      | KW_DOLAR_RECREM 
       | KW_DOLAR_SETUP 
+      | KW_DOLAR_SETUPHOLD 
+      | KW_DOLAR_FATAL 
+      | KW_DOLAR_RECOVERY 
+      | KW_DOLAR_WIDTH 
+      | KW_DOLAR_REMOVAL 
+      | KW_DOLAR_ERROR 
+      | KW_DOLAR_ROOT 
+      | KW_DOLAR_NOCHANGE 
+      | KW_DOLAR_WARNING 
+      | KW_DOLAR_INFO 
+      | KW_DOLAR_PERIOD 
+      | KW_DOLAR_UNIT 
+      | KW_DOLAR_TIMESKEW 
+      | KW_DOLAR_SKEW 
+      | KW_DOLAR_HOLD 
       | KW_DOLAR_FULLSKEW 
+      | KW_DOLAR_RECREM 
      ;
 package_or_class_scoped_id:
  ( identifier ( parameter_value_assignment )? 
