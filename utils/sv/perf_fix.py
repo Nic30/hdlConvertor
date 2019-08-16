@@ -212,13 +212,13 @@ def simplify_select_rule(rules, rule_name):
     first_part = Antlr4Iteration(Antlr4Selection([Antlr4Sequence(g0.body[-2:]), g1.body]), positive=False)
     if len(r.body) > 2:
         if len(r.body) > 3:
-            rest = Antlr4Sequence(r.body[2:])
+            rest = r.body[2:]
         else:
-            rest = r.body[2]
+            rest = [r.body[2], ]
 
         new_body = Antlr4Sequence([
             first_part,
-            rest
+            *rest
         ])
     else:
         new_body = first_part
