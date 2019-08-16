@@ -203,7 +203,7 @@ bind_directive:
               | bind_target_instance 
               ) bind_instantiation SEMI;
 bind_target_instance:
- hierarchical_identifier constant_bit_select;
+ hierarchical_identifier ( constant_bit_select )*;
 bind_target_instance_list:
  bind_target_instance ( COMMA bind_target_instance )*;
 bind_instantiation:
@@ -504,7 +504,7 @@ net_declaration:
       ) SEMI;
 type_declaration:
  KW_TYPEDEF ( data_type identifier ( variable_dimension )* 
-                  | ( identifier constant_bit_select DOT identifier 
+                  | ( identifier ( constant_bit_select )* DOT identifier 
           | KW_ENUM 
           | KW_STRUCT 
           | KW_UNION 
@@ -2284,17 +2284,21 @@ implicit_class_handle:
       | KW_SUPER 
      ;
 bit_select:
- ( LSQUARE_BR expression RSQUARE_BR )*;
+ LSQUARE_BR expression RSQUARE_BR;
 select:
- ( ( DOT identifier bit_select )* DOT identifier )? bit_select ( LSQUARE_BR part_select_range 
-      RSQUARE_BR )?;
+ ( DOT identifier 
+      | bit_select 
+      )* ( LSQUARE_BR part_select_range RSQUARE_BR )?;
 nonrange_select:
- ( ( DOT identifier bit_select )* DOT identifier )? bit_select;
+ ( DOT identifier 
+      | bit_select 
+      )*;
 constant_bit_select:
- ( LSQUARE_BR constant_expression RSQUARE_BR )*;
+ LSQUARE_BR constant_expression RSQUARE_BR;
 constant_select:
- ( ( DOT identifier constant_bit_select )* DOT identifier )? constant_bit_select ( LSQUARE_BR 
-      constant_part_select_range RSQUARE_BR )?;
+ ( DOT identifier 
+      | constant_bit_select 
+      )* ( LSQUARE_BR constant_part_select_range RSQUARE_BR )?;
 constant_cast:
  casting_type APOSTROPHE LPAREN constant_expression RPAREN;
 cast:
@@ -2380,15 +2384,15 @@ attribute_instance:
 attr_spec:
  identifier ( ASSIGN constant_expression )?;
 hierarchical_identifier:
- ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
+ ( KW_DOLAR_ROOT DOT )? ( identifier ( constant_bit_select )* DOT )* identifier;
 identifier:
  C_IDENTIFIER 
       | SIMPLE_IDENTIFIER 
       | ESCAPED_IDENTIFIER 
-      | KW_SAMPLE 
-      | KW_TYPE_OPTION 
       | KW_RANDOMIZE 
       | KW_STD 
+      | KW_TYPE_OPTION 
+      | KW_SAMPLE 
       | KW_OPTION 
      ;
 package_scope:
@@ -2417,24 +2421,24 @@ ps_or_hierarchical_identifier:
      ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-      | KW_DOLAR_SETUP 
-      | KW_DOLAR_SETUPHOLD 
-      | KW_DOLAR_FATAL 
-      | KW_DOLAR_RECOVERY 
       | KW_DOLAR_WIDTH 
-      | KW_DOLAR_REMOVAL 
-      | KW_DOLAR_ERROR 
-      | KW_DOLAR_ROOT 
-      | KW_DOLAR_NOCHANGE 
-      | KW_DOLAR_WARNING 
-      | KW_DOLAR_INFO 
-      | KW_DOLAR_PERIOD 
       | KW_DOLAR_UNIT 
+      | KW_DOLAR_PERIOD 
+      | KW_DOLAR_ROOT 
       | KW_DOLAR_TIMESKEW 
-      | KW_DOLAR_SKEW 
+      | KW_DOLAR_RECOVERY 
+      | KW_DOLAR_REMOVAL 
+      | KW_DOLAR_FATAL 
       | KW_DOLAR_HOLD 
-      | KW_DOLAR_FULLSKEW 
+      | KW_DOLAR_WARNING 
       | KW_DOLAR_RECREM 
+      | KW_DOLAR_SETUP 
+      | KW_DOLAR_NOCHANGE 
+      | KW_DOLAR_SETUPHOLD 
+      | KW_DOLAR_FULLSKEW 
+      | KW_DOLAR_ERROR 
+      | KW_DOLAR_INFO 
+      | KW_DOLAR_SKEW 
      ;
 package_or_class_scoped_id:
  ( identifier ( parameter_value_assignment )? 

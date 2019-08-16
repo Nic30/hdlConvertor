@@ -1,5 +1,5 @@
 from utils.antlr4.grammar import rule_by_name, Antlr4Symbol, Antlr4Option, \
-    Antlr4Sequence, Antlr4Rule
+    Antlr4Sequence, Antlr4Rule, Antlr4Iteration, Antlr4Selection
 from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage, \
     inline_rule, _replace_symbol_in_rule
 from utils.antlr4.simple_parser import Antlr4parser
@@ -129,6 +129,7 @@ def optimize_class_scope(rules):
         if not m:
             m = q1.match(r.body)
         if m:
+
             def apply_to_replace0_and_1(o):
                 for match in m:
                     v = match.get(id(o), None)
@@ -178,11 +179,59 @@ def optimize_class_scope(rules):
     detect_duplicit_rules(rules)
 
 
+def move_iteration_up_in_parse_tree(rules, rule_name):
+    r = rule_by_name(rules, rule_name)
+    
+    # remove ()* from the rule body
+    if isinstance(r.body, Antlr4Sequence):
+        assert len(r.body) == 1, r.body
+        r.body = r.body[0]
+    assert isinstance(r.body, Antlr4Iteration) and not r.body.positive
+    r.body = r.body.body
+    
+    # wrap rule appearence in ()*
+    r_symb = Antlr4Symbol(rule_name, False)
+
+    def match_replace_fn(o):
+        if o == r_symb:
+            return Antlr4Iteration(o, positive=False)
+
+    for r in rules:
+        replace_item_by_sequence(r.body, match_replace_fn)
+
+
+def simplify_select_rule(rules, rule_name):
+    """
+    ( ( KW0 a0 ( a1 )* )* KW0 a0 )? ( a1 )* ...
+    ->
+    ( KW0 a0 | a1 )* ...
+    """
+    r = rule_by_name(rules, rule_name)
+    g0 = r.body[0]
+    g1 = r.body[1]
+    first_part = Antlr4Iteration(Antlr4Selection([Antlr4Sequence(g0.body[-2:]), g1.body]), positive=False)
+    if len(r.body) > 2:
+        if len(r.body) > 3:
+            rest = Antlr4Sequence(r.body[2:])
+        else:
+            rest = r.body[2]
+
+        new_body = Antlr4Sequence([
+            first_part,
+            rest
+        ])
+    else:
+        new_body = first_part
+
+    r.body = new_body
+
+    
 def optimize_select(rules):
     """
     bit_select: ( LSQUARE_BR expression RSQUARE_BR )*; // used only there
     select:
-          ( ( DOT identifier bit_select )* DOT identifier )? bit_select ( LSQUARE_BR part_select_range RSQUARE_BR )?;
+          ( ( DOT identifier bit_select )* DOT identifier )? bit_select
+          ( LSQUARE_BR part_select_range RSQUARE_BR )?;
     nonrange_select:
           ( ( DOT identifier bit_select )* DOT identifier )? bit_select;
     constant_bit_select: ( LSQUARE_BR constant_expression RSQUARE_BR )*;
@@ -190,10 +239,12 @@ def optimize_select(rules):
           ( ( DOT identifier constant_bit_select )* DOT identifier )? constant_bit_select 
           ( LSQUARE_BR constant_part_select_range RSQUARE_BR )?;
     """
-    bit_select = rule_by_name(rules, "bit_select")
+    move_iteration_up_in_parse_tree(rules, "bit_select")
+    move_iteration_up_in_parse_tree(rules, "constant_bit_select")
+    simplify_select_rule(rules, "select")
+    simplify_select_rule(rules, "nonrange_select")
+    simplify_select_rule(rules, "constant_select")
     
-    pass
-
 
 def replace_same_rules(rules, rules_to_replace: List[str], replacement:str):
     r = None
