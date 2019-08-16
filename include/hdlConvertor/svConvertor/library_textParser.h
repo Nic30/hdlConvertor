@@ -6,12 +6,12 @@
 namespace hdlConvertor {
 namespace sv {
 
-class Library_textParser: public BaseHdlParser {
-public:
-	Library_textParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
-			bool _hierarchyOnly);
-	void visitLibrary_text(sv2017_antlr::sv2017Parser::Library_textContext * ctx);
-};
+//class Library_textParser: public BaseHdlParser {
+//public:
+//	Library_textParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
+//			bool _hierarchyOnly);
+//	void visitLibrary_text(sv2017_antlr::sv2017Parser::Library_textContext * ctx);
+//};
 
 }
 }
