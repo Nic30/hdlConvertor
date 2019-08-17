@@ -9,8 +9,6 @@ except ImportError:
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
 
-SV = Language.SYSTEM_VERILOG_2012
-
 SRC_DIR = [path.dirname(__file__), 'sv_pp', 'src']
 
 
@@ -18,8 +16,9 @@ def _test_run(test_file, golden_file):
     c = HdlConvertor()
 
     incdirs = [path.join('sv_pp', 'src'), ]
+    
     test_result = c.verilog_pp(
-        test_file, incdirs, SV)
+        test_file, incdirs, Language.SYSTEM_VERILOG)
 
     with open(golden_file) as myfile:
         test_golden = myfile.read()
@@ -71,7 +70,7 @@ class VerilogPreprocTC(unittest.TestCase):
             c.verilog_pp(
                 f,
                 [path.join('sv_pp', 'src'), ],
-                SV
+                Language.SYSTEM_VERILOG
             )
         e = str(context.exception)
         if contains:
@@ -136,7 +135,7 @@ class VerilogPreprocTC(unittest.TestCase):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
         incdirs = [path.join('sv_pp', 'src'), ]
-        test_result = c.verilog_pp(f, incdirs, SV)
+        test_result = c.verilog_pp(f, incdirs, Language.SYSTEM_VERILOG)
         expected_val = path.join(path.dirname(__file__),
                                  'sv_pp', 'src', 'test_FILE_LINE.sv'
                                  )

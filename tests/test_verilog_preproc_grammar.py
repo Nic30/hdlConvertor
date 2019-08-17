@@ -5,9 +5,6 @@ from hdlConvertor import HdlConvertor, ParseException
 from hdlConvertor.language import Language
 
 
-SV = Language.SYSTEM_VERILOG_2012
-
-
 class VerilogPreprocGrammarTC(unittest.TestCase):
     '''
     Non regression of grammar.
@@ -22,7 +19,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
         incdirs = [path.join('sv_pp', 'raw'), ]
-        res = c.verilog_pp(f, incdirs, SV)
+        res = c.verilog_pp(f, incdirs, Language.SYSTEM_VERILOG)
         return res
 
     def check_pp_error_by_methodname(self, err_msg):

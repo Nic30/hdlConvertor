@@ -124,6 +124,10 @@ class VerilogConversionTC(BasicTC):
         f, res = parseFile("mem_base_object.sv", SV)
         str(res)
 
+    def test_crc_functions(self):
+        f, res = parseFile("crc_functions.sv", SV)
+        str(res)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

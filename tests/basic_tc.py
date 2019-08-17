@@ -22,7 +22,9 @@ SV = Language.SYSTEM_VERILOG
 
 
 def parseFile(fname, language):
-    if language.is_verilog() or language.is_system_verilog():
+    if language.is_system_verilog():
+        lang_dir = os.path.join("sv_test", "others")
+    elif language.is_verilog():
         lang_dir = "verilog"
     elif language.is_vhdl():
         lang_dir = "vhdl"
