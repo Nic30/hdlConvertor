@@ -346,6 +346,29 @@ def other_performance_fixes(rules):
     for rn in concurrent_assertion_statement_options:
         inline_rule(rules, rn)
 
+    def starts_with_token(o):
+        if isinstance(o, Antlr4Symbol):
+            return o.is_lexer_nonterminal()
+        elif isinstance(o, Antlr4Sequence):
+            return starts_with_token(o[0])
+        elif isinstance(o, Antlr4Selection):
+            for c in o:
+                if not starts_with_token(c):
+                    return False
+            assert len(o)
+            return True
+        elif isinstance(o, (Antlr4Iteration, Antlr4Option)):
+            return False
+        else:
+            raise TypeError()
+
+    def sort_simple_first(o):
+        if isinstance(o, Antlr4Selection):
+            o.sort(key=lambda x: int(not starts_with_token(x)))
+
+    for r in rules:
+        r.body.walk(sort_simple_first)
+
 
 def add_eof(rules):
     source_text = rule_by_name(rules, "source_text")

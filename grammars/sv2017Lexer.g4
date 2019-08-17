@@ -296,9 +296,9 @@ UNSIGNED_NUMBER:
                       | DECIMAL_DIGIT 
                       )*;
 UNBASED_UNSIZED_LITERAL:
- '\'0' 
+ APOSTROPHE Z_OR_X 
+      | '\'0' 
       | '\'1' 
-      | APOSTROPHE Z_OR_X 
      ;
 STRING_LITERAL:
  DBLQUOTE ( ANY_ASCII_CHARACTERS )* DBLQUOTE;
@@ -394,10 +394,10 @@ BLOCK_COMMENT:
  '/*' .*? '*/' -> channel(HIDDEN);
 WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN);
 fragment EDGE_DESCRIPTOR:
- '01' 
-      | '10' 
-      | Z_OR_X ZERO_OR_ONE 
+ Z_OR_X ZERO_OR_ONE 
       | ZERO_OR_ONE Z_OR_X 
+      | '01' 
+      | '10' 
      ;
 fragment ZERO_OR_ONE: [01];
 fragment Z_OR_X: [xXzZ];

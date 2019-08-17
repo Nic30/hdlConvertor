@@ -21,28 +21,28 @@ module_ansi_header:
  ( attribute_instance )* module_keyword ( lifetime )? identifier ( package_import_declaration )* 
       ( parameter_port_list )? ( list_of_port_declarations )? SEMI;
 module_declaration:
- ( ( module_nonansi_header 
+ KW_EXTERN ( module_nonansi_header 
+                  | module_ansi_header 
+                  ) 
+      | ( ( module_nonansi_header 
           | ( attribute_instance )* module_keyword ( lifetime )? identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( timeunits_declaration )? ( module_item )* 
           | module_ansi_header ( timeunits_declaration )? ( non_port_module_item )* 
           ) KW_ENDMODULE ( COLON identifier )? 
-      | KW_EXTERN ( module_nonansi_header 
-                  | module_ansi_header 
-                  ) 
      ;
 module_keyword:
  KW_MODULE 
       | KW_MACROMODULE 
      ;
 interface_declaration:
- ( ( interface_nonansi_header 
+ KW_EXTERN ( interface_nonansi_header 
+                  | interface_ansi_header 
+                  ) 
+      | ( ( interface_nonansi_header 
           | ( attribute_instance )* KW_INTERFACE identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( timeunits_declaration )? ( interface_item )* 
           | interface_ansi_header ( timeunits_declaration )? ( non_port_interface_item )* 
           ) KW_ENDINTERFACE ( COLON identifier )? 
-      | KW_EXTERN ( interface_nonansi_header 
-                  | interface_ansi_header 
-                  ) 
      ;
 interface_nonansi_header:
  ( attribute_instance )* KW_INTERFACE ( lifetime )? identifier ( package_import_declaration )* 
@@ -51,14 +51,14 @@ interface_ansi_header:
  ( attribute_instance )* KW_INTERFACE ( lifetime )? identifier ( package_import_declaration )* 
       ( parameter_port_list )? ( list_of_port_declarations )? SEMI;
 program_declaration:
- ( ( program_nonansi_header 
+ KW_EXTERN ( program_nonansi_header 
+                  | program_ansi_header 
+                  ) 
+      | ( ( program_nonansi_header 
           | ( attribute_instance )* KW_PROGRAM identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( timeunits_declaration )? ( program_item )* 
           | program_ansi_header ( timeunits_declaration )? ( non_port_program_item )* 
           ) KW_ENDPROGRAM ( COLON identifier )? 
-      | KW_EXTERN ( program_nonansi_header 
-                  | program_ansi_header 
-                  ) 
      ;
 program_nonansi_header:
  ( attribute_instance )* KW_PROGRAM ( lifetime )? identifier ( package_import_declaration )* 
@@ -101,10 +101,10 @@ parameter_port_list:
                   | parameter_port_declaration 
                   ) ( COMMA parameter_port_declaration )* )? RPAREN;
 parameter_port_declaration:
- parameter_declaration 
+ KW_TYPE list_of_type_assignments 
+      | parameter_declaration 
       | local_parameter_declaration 
       | data_type list_of_param_assignments 
-      | KW_TYPE list_of_type_assignments 
      ;
 list_of_ports:
  LPAREN ( port )? ( COMMA ( port )? )* RPAREN;
@@ -119,12 +119,12 @@ port_declaration:
                               | interface_port_declaration 
                               );
 port:
- port_expression 
-      | DOT identifier LPAREN ( port_expression )? RPAREN 
+ DOT identifier LPAREN ( port_expression )? RPAREN 
+      | port_expression 
      ;
 port_expression:
- port_reference 
-      | LBRACE port_reference ( COMMA port_reference )* RBRACE 
+ LBRACE port_reference ( COMMA port_reference )* RBRACE 
+      | port_reference 
      ;
 port_reference:
  identifier constant_select;
@@ -137,8 +137,8 @@ port_direction:
 ansi_port_declaration:
  ( ( port_direction ( net_port_type )? 
           | net_port_type 
-          | ( identifier 
-          | KW_INTERFACE 
+          | ( KW_INTERFACE 
+          | identifier 
           ) ( DOT identifier )? 
           )? identifier ( unpacked_dimension )* 
           | ( port_direction )? ( var_data_type )? identifier ( variable_dimension )* 
@@ -179,12 +179,12 @@ module_or_generate_item:
                               | module_common_item 
                               );
 module_or_generate_item_declaration:
- package_or_generate_item_declaration 
-      | genvar_declaration 
-      | clocking_declaration 
-      | KW_DEFAULT ( KW_CLOCKING identifier 
+ KW_DEFAULT ( KW_CLOCKING identifier 
                   | KW_DISABLE KW_IFF expression_or_dist 
                   ) SEMI 
+      | package_or_generate_item_declaration 
+      | genvar_declaration 
+      | clocking_declaration 
      ;
 non_port_module_item:
  generate_region 
@@ -243,8 +243,8 @@ interface_or_generate_item:
                               | extern_tf_declaration 
                               );
 extern_tf_declaration:
- KW_EXTERN ( method_prototype 
-                  | KW_FORKJOIN task_prototype 
+ KW_EXTERN ( KW_FORKJOIN task_prototype 
+                  | method_prototype 
                   ) SEMI;
 interface_item:
  port_declaration SEMI 
@@ -321,18 +321,18 @@ class_item:
           )? SEMI 
      ;
 class_property:
- ( property_qualifier )* data_declaration 
-      | KW_CONST ( class_item_qualifier )* data_type identifier ( ASSIGN constant_expression )? SEMI 
+ KW_CONST ( class_item_qualifier )* data_type identifier ( ASSIGN constant_expression )? SEMI 
+      | ( property_qualifier )* data_declaration 
      ;
 class_method:
- ( method_qualifier )* ( task_declaration 
-                              | function_declaration 
-                              | class_constructor_declaration 
-                              ) 
-      | KW_PURE KW_VIRTUAL ( class_item_qualifier )* method_prototype SEMI 
+ KW_PURE KW_VIRTUAL ( class_item_qualifier )* method_prototype SEMI 
       | KW_EXTERN ( method_qualifier )* ( method_prototype SEMI 
                                           | class_constructor_prototype 
                                           ) 
+      | ( method_qualifier )* ( task_declaration 
+                              | function_declaration 
+                              | class_constructor_declaration 
+                              ) 
      ;
 class_constructor_prototype:
  KW_FUNCTION KW_NEW ( LPAREN tf_port_list RPAREN )? SEMI;
@@ -380,21 +380,21 @@ constraint_primary:
       | class_scope 
       )? hierarchical_identifier select;
 constraint_expression:
- ( ( KW_SOFT )? expression_or_dist 
+ KW_IF LPAREN expression RPAREN constraint_set ( KW_ELSE constraint_set )? 
+      | ( KW_DISABLE KW_SOFT constraint_primary 
+          | ( KW_SOFT )? expression_or_dist 
           | uniqueness_constraint 
-          | KW_DISABLE KW_SOFT constraint_primary 
           ) SEMI 
-      | ( expression ARROW 
-          | KW_FOREACH LPAREN foreach_ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables 
+      | ( KW_FOREACH LPAREN foreach_ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables 
       RSQUARE_BR RPAREN 
+          | expression ARROW 
           ) constraint_set 
-      | KW_IF LPAREN expression RPAREN constraint_set ( KW_ELSE constraint_set )? 
      ;
 uniqueness_constraint:
  KW_UNIQUE LBRACE open_range_list RBRACE;
 constraint_set:
- constraint_expression 
-      | LBRACE ( constraint_expression )* RBRACE 
+ LBRACE ( constraint_expression )* RBRACE 
+      | constraint_expression 
      ;
 dist_list:
  dist_item ( COMMA dist_item )*;
@@ -440,21 +440,21 @@ package_or_generate_item_declaration:
 anonymous_program:
  KW_PROGRAM SEMI ( anonymous_program_item )* KW_ENDPROGRAM;
 anonymous_program_item:
- task_declaration 
+ SEMI 
+      | task_declaration 
       | function_declaration 
       | class_declaration 
       | interface_class_declaration 
       | covergroup_declaration 
       | class_constructor_declaration 
-      | SEMI 
      ;
 local_parameter_declaration:
- KW_LOCALPARAM ( ( data_type_or_implicit )? list_of_param_assignments 
-                      | KW_TYPE list_of_type_assignments 
+ KW_LOCALPARAM ( KW_TYPE list_of_type_assignments 
+                      | ( data_type_or_implicit )? list_of_param_assignments 
                       );
 parameter_declaration:
- KW_PARAMETER ( ( data_type_or_implicit )? list_of_param_assignments 
-                      | KW_TYPE list_of_type_assignments 
+ KW_PARAMETER ( KW_TYPE list_of_type_assignments 
+                      | ( data_type_or_implicit )? list_of_param_assignments 
                       );
 specparam_declaration:
  KW_SPECPARAM ( packed_dimension )? list_of_specparam_assignments SEMI;
@@ -482,8 +482,8 @@ data_declaration:
 package_import_declaration:
  KW_IMPORT package_import_item ( COMMA package_import_item )* SEMI;
 package_import_item:
- identifier DOUBLE_COLON ( identifier 
-                              | MUL 
+ identifier DOUBLE_COLON ( MUL 
+                              | identifier 
                               );
 package_export_declaration:
  KW_EXPORT ( MUL DOUBLE_COLON MUL 
@@ -492,22 +492,22 @@ package_export_declaration:
 genvar_declaration:
  KW_GENVAR identifier_list SEMI;
 net_declaration:
- ( ( net_type ( drive_strength 
+ ( KW_INTERCONNECT ( implicit_data_type )? ( HASH delay_value )? identifier ( unpacked_dimension )* ( 
+      COMMA identifier ( unpacked_dimension )* )? 
+      | ( net_type ( drive_strength 
                   | charge_strength 
                   )? ( KW_VECTORED 
                               | KW_SCALARED 
                               )? ( data_type_or_implicit )? ( delay3 )? 
           | identifier ( delay_control )? 
           ) list_of_net_decl_assignments 
-      | KW_INTERCONNECT ( implicit_data_type )? ( HASH delay_value )? identifier ( unpacked_dimension )* ( 
-      COMMA identifier ( unpacked_dimension )* )? 
       ) SEMI;
 type_declaration:
  KW_TYPEDEF ( data_type identifier ( variable_dimension )* 
-                  | ( identifier ( constant_bit_select )* DOT identifier 
-          | KW_ENUM 
+                  | ( KW_ENUM 
           | KW_STRUCT 
           | KW_UNION 
+          | identifier ( constant_bit_select )* DOT identifier 
           | ( KW_INTERFACE )? KW_CLASS 
           )? identifier 
                   ) SEMI;
@@ -520,26 +520,26 @@ lifetime:
       | KW_AUTOMATIC 
      ;
 casting_type:
- simple_type 
+ KW_STRING 
+      | KW_CONST 
+      | simple_type 
       | constant_primary_no_cast_no_call 
       | signing 
-      | KW_STRING 
-      | KW_CONST 
      ;
 data_type:
- ( integer_vector_type ( signing )? 
-          | ( struct_union ( KW_PACKED ( signing )? )? LBRACE struct_union_member ( struct_union_member )* 
-          | KW_ENUM ( enum_base_type )? LBRACE enum_name_declaration ( COMMA enum_name_declaration )* 
+ KW_STRING 
+      | KW_CHANDLE 
+      | KW_VIRTUAL ( KW_INTERFACE )? identifier ( parameter_value_assignment )? ( DOT identifier )? 
+      | KW_EVENT 
+      | ( integer_vector_type ( signing )? 
+          | ( KW_ENUM ( enum_base_type )? LBRACE enum_name_declaration ( COMMA enum_name_declaration )* 
+          | struct_union ( KW_PACKED ( signing )? )? LBRACE struct_union_member ( struct_union_member )* 
           ) RBRACE 
           | package_or_class_scoped_id 
           ) ( packed_dimension )* 
       | integer_atom_type ( signing )? 
       | non_integer_type 
-      | KW_STRING 
-      | KW_CHANDLE 
-      | KW_VIRTUAL ( KW_INTERFACE )? identifier ( parameter_value_assignment )? ( DOT identifier )? 
       | class_type 
-      | KW_EVENT 
       | ps_identifier 
       | type_reference 
      ;
@@ -603,13 +603,13 @@ net_type:
       | KW_WOR 
      ;
 net_port_type:
- net_type ( data_type_or_implicit )? 
+ KW_INTERCONNECT ( implicit_data_type )? 
+      | net_type ( data_type_or_implicit )? 
       | data_type_or_implicit 
-      | KW_INTERCONNECT ( implicit_data_type )? 
      ;
 var_data_type:
- data_type 
-      | KW_VAR ( data_type_or_implicit )? 
+ KW_VAR ( data_type_or_implicit )? 
+      | data_type 
      ;
 signing:
  KW_SIGNED 
@@ -625,8 +625,8 @@ struct_union_member:
  ( attribute_instance )* ( random_qualifier )? data_type_or_void list_of_variable_decl_assignments 
       SEMI;
 data_type_or_void:
- data_type 
-      | KW_VOID 
+ KW_VOID 
+      | data_type 
      ;
 struct_union:
  KW_STRUCT 
@@ -637,14 +637,14 @@ type_reference:
                       | data_type 
                       ) RPAREN;
 drive_strength:
- LPAREN ( strength0 COMMA ( strength1 
-                          | KW_HIGHZ1 
-                          ) 
-              | strength1 COMMA ( strength0 
-                          | KW_HIGHZ0 
-                          ) 
-              | KW_HIGHZ0 COMMA strength1 
+ LPAREN ( KW_HIGHZ0 COMMA strength1 
               | KW_HIGHZ1 COMMA strength0 
+              | strength0 COMMA ( KW_HIGHZ1 
+                          | strength1 
+                          ) 
+              | strength1 COMMA ( KW_HIGHZ0 
+                          | strength0 
+                          ) 
               ) RPAREN;
 strength0:
  KW_SUPPLY0 
@@ -664,20 +664,20 @@ charge_strength:
               | KW_LARGE 
               ) RPAREN;
 delay3:
- HASH ( delay_value 
-              | LPAREN mintypmax_expression ( COMMA mintypmax_expression ( COMMA mintypmax_expression )? )? 
+ HASH ( LPAREN mintypmax_expression ( COMMA mintypmax_expression ( COMMA mintypmax_expression )? )? 
       RPAREN 
+              | delay_value 
               );
 delay2:
- HASH ( delay_value 
-              | LPAREN mintypmax_expression ( COMMA mintypmax_expression )? RPAREN 
+ HASH ( LPAREN mintypmax_expression ( COMMA mintypmax_expression )? RPAREN 
+              | delay_value 
               );
 delay_value:
  UNSIGNED_NUMBER 
-      | real_number 
-      | ps_identifier 
       | TIME_LITERAL 
       | KW_1STEP 
+      | real_number 
+      | ps_identifier 
      ;
 list_of_defparam_assignments:
  defparam_assignment ( COMMA defparam_assignment )*;
@@ -721,15 +721,15 @@ pulse_control_specparam:
 error_limit_value: constant_mintypmax_expression;
 reject_limit_value: constant_mintypmax_expression;
 variable_decl_assignment:
- identifier ( ( variable_dimension )+ ( ASSIGN expression )? 
-                  | ASSIGN ( expression 
+ identifier ( ASSIGN ( expression 
                   | class_new 
                   ) 
+                  | ( variable_dimension )+ ( ASSIGN expression )? 
                   | unsized_dimension ( variable_dimension )* ( ASSIGN dynamic_array_new )? 
                   )?;
 class_new:
- ( class_scope )? KW_NEW ( LPAREN list_of_arguments RPAREN )? 
-      | KW_NEW expression 
+ KW_NEW expression 
+      | ( class_scope )? KW_NEW ( LPAREN list_of_arguments RPAREN )? 
      ;
 dynamic_array_new:
  KW_NEW LSQUARE_BR expression RSQUARE_BR ( LPAREN expression RPAREN )?;
@@ -742,8 +742,8 @@ packed_dimension:
       | unsized_dimension 
      ;
 associative_dimension:
- LSQUARE_BR ( data_type 
-                  | MUL 
+ LSQUARE_BR ( MUL 
+                  | data_type 
                   ) RSQUARE_BR;
 variable_dimension:
  unsized_dimension 
@@ -807,8 +807,8 @@ tf_port_item:
  ( attribute_instance )* ( tf_port_direction )? ( KW_VAR )? ( data_type_or_implicit )? ( identifier 
       ( variable_dimension )* ( ASSIGN expression )? )?;
 tf_port_direction:
- port_direction 
-      | KW_CONST KW_REF 
+ KW_CONST KW_REF 
+      | port_direction 
      ;
 tf_port_declaration:
  ( attribute_instance )* tf_port_direction ( KW_VAR )? ( data_type_or_implicit )? 
@@ -836,8 +836,8 @@ modport_clocking_declaration:
 modport_simple_ports_declaration:
  port_direction modport_simple_port ( COMMA modport_simple_port )*;
 modport_simple_port:
- identifier 
-      | DOT identifier LPAREN ( expression )? RPAREN 
+ DOT identifier LPAREN ( expression )? RPAREN 
+      | identifier 
      ;
 modport_tf_ports_declaration:
  import_export modport_tf_port ( COMMA modport_tf_port )*;
@@ -868,9 +868,9 @@ expect_property_statement:
 property_instance:
  ps_or_hierarchical_identifier ( LPAREN property_list_of_arguments RPAREN )?;
 property_list_of_arguments:
- ( property_actual_arg ( COMMA ( property_actual_arg )? )* 
+ ( DOT identifier LPAREN ( property_actual_arg )? RPAREN 
+      | property_actual_arg ( COMMA ( property_actual_arg )? )* 
       | ( COMMA ( property_actual_arg )? )+ 
-      | DOT identifier LPAREN ( property_actual_arg )? RPAREN 
       )? ( COMMA DOT identifier LPAREN ( property_actual_arg )? RPAREN )*;
 property_actual_arg:
  property_expr 
@@ -890,8 +890,8 @@ property_port_item:
  ( attribute_instance )* ( KW_LOCAL ( KW_INPUT )? )? ( property_formal_type )? identifier 
       ( variable_dimension )* ( ASSIGN property_actual_arg )?;
 property_formal_type:
- sequence_formal_type 
-      | KW_PROPERTY 
+ KW_PROPERTY 
+      | sequence_formal_type 
      ;
 property_spec:
  ( clocking_event )? ( KW_DISABLE KW_IFF LPAREN expression_or_dist RPAREN )? property_expr;
@@ -906,16 +906,18 @@ property_expr:
                           | KW_IFF 
                           ) property_expr )*;
 property_expr_item:
- sequence_expr ( ( OVERLAPPING_IMPL 
-                      | NONOVERLAPPING_IMPL 
-                      | HASH_MINUS_HASH 
-                      | HASH_EQ_HASH 
-                      ) property_expr )? 
-      | ( ( KW_STRONG 
+ ( ( KW_STRONG 
           | KW_WEAK 
           ) LPAREN sequence_expr 
           | LPAREN property_expr 
           ) RPAREN 
+      | KW_IF LPAREN expression_or_dist RPAREN property_expr ( KW_ELSE property_expr )? 
+      | KW_CASE LPAREN expression_or_dist RPAREN property_case_item ( property_case_item )* KW_ENDCASE 
+      | sequence_expr ( ( OVERLAPPING_IMPL 
+                      | NONOVERLAPPING_IMPL 
+                      | HASH_MINUS_HASH 
+                      | HASH_EQ_HASH 
+                      ) property_expr )? 
       | ( KW_NOT 
           | ( KW_S_ALWAYS 
           | KW_EVENTUALLY 
@@ -925,21 +927,19 @@ property_expr_item:
           | KW_SYNC_ACCEPT_ON 
           | KW_SYNC_REJECT_ON 
           ) LPAREN expression_or_dist RPAREN 
-          | clocking_event 
           | ( KW_NEXTTIME 
           | KW_S_NEXTTIME 
           ) ( LSQUARE_BR constant_expression RSQUARE_BR )? 
           | ( KW_ALWAYS 
           | KW_S_EVENTUALLY 
           ) ( LSQUARE_BR cycle_delay_const_range_expression RSQUARE_BR )? 
+          | clocking_event 
           ) property_expr 
-      | KW_IF LPAREN expression_or_dist RPAREN property_expr ( KW_ELSE property_expr )? 
-      | KW_CASE LPAREN expression_or_dist RPAREN property_case_item ( property_case_item )* KW_ENDCASE 
       | property_instance 
      ;
 property_case_item:
- ( expression_or_dist ( COMMA expression_or_dist )* COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | expression_or_dist ( COMMA expression_or_dist )* COLON 
       ) property_expr SEMI;
 sequence_declaration:
  KW_SEQUENCE identifier ( LPAREN ( sequence_port_list )? RPAREN )? SEMI 
@@ -955,35 +955,35 @@ sequence_lvar_port_direction:
       | KW_OUTPUT 
      ;
 sequence_formal_type:
- data_type_or_implicit 
-      | KW_SEQUENCE 
+ KW_SEQUENCE 
       | KW_UNTYPED 
+      | data_type_or_implicit 
      ;
 sequence_expr:
- sequence_expr_item ( cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
-                          | ( KW_AND 
+ sequence_expr_item ( ( KW_AND 
               | KW_INTERSECT 
               | KW_OR 
               | KW_WITHIN 
               ) sequence_expr 
+                          | cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
                           )*;
 sequence_expr_item:
- cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
-      | expression_or_dist ( boolean_abbrev 
-                          | KW_THROUGHOUT sequence_expr 
+ KW_FIRST_MATCH LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
+      | cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
+      | expression_or_dist ( KW_THROUGHOUT sequence_expr 
+                          | boolean_abbrev 
                           )? 
-      | ( sequence_instance 
-          | LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
+      | ( LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
+          | sequence_instance 
           ) ( sequence_abbrev )? 
-      | KW_FIRST_MATCH LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
       | clocking_event sequence_expr 
      ;
 cycle_delay_range:
- DOUBLE_HASH ( constant_primary 
-                  | LSQUARE_BR ( cycle_delay_const_range_expression 
-                      | MUL 
+ DOUBLE_HASH ( LSQUARE_BR ( MUL 
                       | PLUS 
+                      | cycle_delay_const_range_expression 
                       ) RSQUARE_BR 
+                  | constant_primary 
                   );
 sequence_method_call:
  sequence_instance DOT identifier;
@@ -995,9 +995,9 @@ sequence_match_item:
 sequence_instance:
  ps_or_hierarchical_identifier ( LPAREN sequence_list_of_arguments RPAREN )?;
 sequence_list_of_arguments:
- ( sequence_actual_arg ( COMMA ( sequence_actual_arg )? )* 
+ ( DOT identifier LPAREN ( sequence_actual_arg )? RPAREN 
+      | sequence_actual_arg ( COMMA ( sequence_actual_arg )? )* 
       | ( COMMA ( sequence_actual_arg )? )+ 
-      | DOT identifier LPAREN ( sequence_actual_arg )? RPAREN 
       )? ( COMMA DOT identifier LPAREN ( sequence_actual_arg )? RPAREN )*;
 sequence_actual_arg:
  event_expression 
@@ -1022,8 +1022,8 @@ const_or_range_expression:
       | cycle_delay_const_range_expression 
      ;
 cycle_delay_const_range_expression:
- constant_expression COLON ( constant_expression 
-                                  | DOLAR 
+ constant_expression COLON ( DOLAR 
+                                  | constant_expression 
                                   );
 expression_or_dist:
  expression ( KW_DIST LBRACE dist_list RBRACE )?;
@@ -1045,10 +1045,10 @@ coverage_spec:
       | cover_cross 
      ;
 coverage_event:
- clocking_event 
-      | ( KW_WITH KW_FUNCTION KW_SAMPLE LPAREN tf_port_list 
+ ( KW_WITH KW_FUNCTION KW_SAMPLE LPAREN tf_port_list 
           | DOUBLE_AT LPAREN block_event_expression 
           ) RPAREN 
+      | clocking_event 
      ;
 block_event_expression:
  block_event_expression_item ( KW_OR block_event_expression )*;
@@ -1078,8 +1078,8 @@ bins_or_options:
                                                                                   ) 
                                                   | ( LSQUARE_BR RSQUARE_BR )? ASSIGN trans_list 
                                                   ) 
-          | bins_keyword identifier ( ( LSQUARE_BR ( covergroup_expression )? RSQUARE_BR )? ASSIGN KW_DEFAULT 
-                                  | ASSIGN KW_DEFAULT KW_SEQUENCE 
+          | bins_keyword identifier ( ASSIGN KW_DEFAULT KW_SEQUENCE 
+                                  | ( LSQUARE_BR ( covergroup_expression )? RSQUARE_BR )? ASSIGN KW_DEFAULT 
                                   ) 
           ) ( KW_IFF LPAREN expression RPAREN )? 
      ;
@@ -1119,13 +1119,13 @@ bins_selection_or_option:
 bins_selection:
  bins_keyword identifier ASSIGN select_expression ( KW_IFF LPAREN expression RPAREN )?;
 select_expression:
- ( NOT )? select_condition 
+ LPAREN select_expression RPAREN 
+      | ( NOT )? select_condition 
       | select_expression ( ( LOG_AND 
               | LOG_OR 
               ) select_expression 
                           | KW_WITH LPAREN covergroup_expression RPAREN ( KW_MATCHES covergroup_expression )? 
                           ) 
-      | LPAREN select_expression RPAREN 
       | identifier 
       | covergroup_expression ( KW_MATCHES covergroup_expression )? 
      ;
@@ -1136,8 +1136,8 @@ bins_expression:
 covergroup_range_list:
  covergroup_value_range ( COMMA covergroup_value_range )*;
 covergroup_value_range:
- covergroup_expression 
-      | LSQUARE_BR covergroup_expression COLON covergroup_expression RSQUARE_BR 
+ LSQUARE_BR covergroup_expression COLON covergroup_expression RSQUARE_BR 
+      | covergroup_expression 
      ;
 covergroup_expression: expression;
 let_declaration:
@@ -1148,19 +1148,22 @@ let_port_item:
  ( attribute_instance )* ( let_formal_type )? identifier ( variable_dimension )* 
       ( ASSIGN expression )?;
 let_formal_type:
- data_type_or_implicit 
-      | KW_UNTYPED 
+ KW_UNTYPED 
+      | data_type_or_implicit 
      ;
 let_expression:
  ( package_scope )? identifier ( LPAREN let_list_of_arguments RPAREN )?;
 let_list_of_arguments:
- ( let_actual_arg ( COMMA ( let_actual_arg )? )* 
+ ( DOT identifier LPAREN ( let_actual_arg )? RPAREN 
+      | let_actual_arg ( COMMA ( let_actual_arg )? )* 
       | ( COMMA ( let_actual_arg )? )+ 
-      | DOT identifier LPAREN ( let_actual_arg )? RPAREN 
       )? ( COMMA DOT identifier LPAREN ( let_actual_arg )? RPAREN )*;
 let_actual_arg: expression;
 gate_instantiation:
- ( cmos_switchtype ( delay3 )? cmos_switch_instance ( COMMA cmos_switch_instance )* 
+ ( ( KW_PULLDOWN ( pulldown_strength )? 
+          | KW_PULLUP ( pullup_strength )? 
+          ) pull_gate_instance ( COMMA pull_gate_instance )* 
+      | cmos_switchtype ( delay3 )? cmos_switch_instance ( COMMA cmos_switch_instance )* 
       | enable_gatetype ( drive_strength )? ( delay3 )? enable_gate_instance 
       ( COMMA enable_gate_instance )* 
       | mos_switchtype ( delay3 )? mos_switch_instance ( COMMA mos_switch_instance )* 
@@ -1171,9 +1174,6 @@ gate_instantiation:
       | pass_en_switchtype ( delay2 )? pass_enable_switch_instance 
       ( COMMA pass_enable_switch_instance )* 
       | pass_switchtype pass_switch_instance ( COMMA pass_switch_instance )* 
-      | ( KW_PULLDOWN ( pulldown_strength )? 
-          | KW_PULLUP ( pullup_strength )? 
-          ) pull_gate_instance ( COMMA pull_gate_instance )* 
       ) SEMI;
 cmos_switch_instance:
  ( name_of_instance )? LPAREN output_terminal COMMA input_terminal COMMA ncontrol_terminal COMMA 
@@ -1268,8 +1268,8 @@ list_of_port_connections:
 ordered_port_connection:
  ( attribute_instance )* ( expression )?;
 named_port_connection:
- ( attribute_instance )* DOT ( identifier ( LPAREN ( expression )? RPAREN )? 
-                                  | MUL 
+ ( attribute_instance )* DOT ( MUL 
+                                  | identifier ( LPAREN ( expression )? RPAREN )? 
                                   );
 interface_instantiation:
  identifier ( parameter_value_assignment )? hierarchical_instance ( COMMA hierarchical_instance )* 
@@ -1286,8 +1286,8 @@ list_of_checker_port_connections:
 ordered_checker_port_connection:
  ( attribute_instance )* ( property_actual_arg )?;
 named_checker_port_connection:
- ( attribute_instance )* DOT ( identifier ( LPAREN ( property_actual_arg )? RPAREN )? 
-                                  | MUL 
+ ( attribute_instance )* DOT ( MUL 
+                                  | identifier ( LPAREN ( property_actual_arg )? RPAREN )? 
                                   );
 generate_region:
  KW_GENERATE ( generate_item )* KW_ENDGENERATE;
@@ -1311,8 +1311,8 @@ if_generate_construct:
 case_generate_construct:
  KW_CASE LPAREN constant_expression RPAREN case_generate_item ( case_generate_item )* KW_ENDCASE;
 case_generate_item:
- ( constant_expression ( COMMA constant_expression )* COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | constant_expression ( COMMA constant_expression )* COLON 
       ) generate_block;
 generate_block:
  generate_item 
@@ -1329,14 +1329,14 @@ udp_nonansi_declaration:
 udp_ansi_declaration:
  ( attribute_instance )* KW_PRIMITIVE identifier LPAREN udp_declaration_port_list RPAREN SEMI;
 udp_declaration:
- ( ( udp_nonansi_declaration udp_port_declaration 
+ KW_EXTERN ( udp_nonansi_declaration 
+                  | udp_ansi_declaration 
+                  ) 
+      | ( ( udp_nonansi_declaration udp_port_declaration 
           | ( attribute_instance )* KW_PRIMITIVE identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( udp_port_declaration )* 
           | udp_ansi_declaration 
           ) udp_body KW_ENDPRIMITIVE ( COLON identifier )? 
-      | KW_EXTERN ( udp_nonansi_declaration 
-                  | udp_ansi_declaration 
-                  ) 
      ;
 udp_declaration_port_list:
  udp_output_declaration COMMA udp_input_declaration ( COMMA udp_input_declaration )*;
@@ -1346,8 +1346,8 @@ udp_port_declaration:
       | udp_reg_declaration 
       ) SEMI;
 udp_output_declaration:
- ( attribute_instance )* KW_OUTPUT ( identifier 
-                                          | KW_REG identifier ( ASSIGN constant_expression )? 
+ ( attribute_instance )* KW_OUTPUT ( KW_REG identifier ( ASSIGN constant_expression )? 
+                                          | identifier 
                                           );
 udp_input_declaration:
  ( attribute_instance )* KW_INPUT identifier_list;
@@ -1504,15 +1504,15 @@ delay_or_event_control:
       | ( KW_REPEAT LPAREN expression RPAREN )? event_control 
      ;
 delay_control:
- HASH ( delay_value 
-              | LPAREN mintypmax_expression RPAREN 
+ HASH ( LPAREN mintypmax_expression RPAREN 
+              | delay_value 
               );
 event_control:
- AT ( hierarchical_identifier 
-          | LPAREN ( event_expression 
-                  | MUL 
+ AT ( LPAREN ( MUL 
+                  | event_expression 
                   ) RPAREN 
           | MUL 
+          | hierarchical_identifier 
           | ps_or_hierarchical_identifier 
           );
 event_expression:
@@ -1520,10 +1520,10 @@ event_expression:
                               | COMMA 
                               ) event_expression )*;
 event_expression_item:
- ( ( edge_identifier )? expression 
+ LPAREN event_expression RPAREN 
+      | ( ( edge_identifier )? expression 
           | sequence_instance 
           ) ( KW_IFF expression )? 
-      | LPAREN event_expression RPAREN 
      ;
 procedural_timing_control:
  delay_control 
@@ -1547,8 +1547,8 @@ event_trigger:
       | DOUBLE_RIGHT_ARROW ( delay_or_event_control )? 
       ) hierarchical_identifier SEMI;
 disable_statement:
- KW_DISABLE ( hierarchical_identifier 
-                  | KW_FORK 
+ KW_DISABLE ( KW_FORK 
+                  | hierarchical_identifier 
                   ) SEMI;
 conditional_statement:
  ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null ( KW_ELSE KW_IF LPAREN 
@@ -1561,10 +1561,10 @@ unique_priority:
 cond_predicate:
  expression ( KW_MATCHES pattern )? ( TRIPLE_AND expression ( KW_MATCHES pattern )? )*;
 case_statement:
- ( unique_priority )? ( case_keyword LPAREN expression RPAREN ( case_item ( case_item )* 
-                                                      | KW_MATCHES case_pattern_item ( case_pattern_item )* 
+ ( unique_priority )? ( KW_CASE LPAREN expression RPAREN KW_INSIDE case_inside_item ( case_inside_item )* 
+                              | case_keyword LPAREN expression RPAREN ( KW_MATCHES case_pattern_item ( case_pattern_item )* 
+                                                      | case_item ( case_item )* 
                                                       ) 
-                              | KW_CASE LPAREN expression RPAREN KW_INSIDE case_inside_item ( case_inside_item )* 
                               ) KW_ENDCASE;
 case_keyword:
  KW_CASE 
@@ -1572,16 +1572,16 @@ case_keyword:
       | KW_CASEX 
      ;
 case_item:
- ( expression ( COMMA expression )* COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | expression ( COMMA expression )* COLON 
       ) statement_or_null;
 case_pattern_item:
- ( pattern ( TRIPLE_AND expression )? COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | pattern ( TRIPLE_AND expression )? COLON 
       ) statement_or_null;
 case_inside_item:
- ( open_range_list COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | open_range_list COLON 
       ) statement_or_null;
 randcase_statement:
  KW_RANDCASE randcase_item ( randcase_item )* KW_ENDCASE;
@@ -1590,14 +1590,14 @@ randcase_item:
 open_range_list:
  value_range ( COMMA value_range )*;
 pattern:
- DOT ( identifier 
-              | MUL 
+ DOT ( MUL 
+              | identifier 
               ) 
-      | constant_expression 
       | KW_TAGGED identifier ( pattern )? 
       | APOSTROPHE LBRACE ( pattern ( COMMA pattern )* 
                           | identifier COLON pattern ( COMMA identifier COLON pattern )* 
                           ) RBRACE 
+      | constant_expression 
      ;
 assignment_pattern:
  APOSTROPHE LBRACE ( expression ( COMMA expression )* 
@@ -1614,8 +1614,8 @@ array_pattern_key:
       | assignment_pattern_key 
      ;
 assignment_pattern_key:
- simple_type 
-      | KW_DEFAULT 
+ KW_DEFAULT 
+      | simple_type 
      ;
 assignment_pattern_expression:
  ( assignment_pattern_expression_type )? assignment_pattern;
@@ -1652,8 +1652,8 @@ for_step:
 loop_variables:
  ( identifier )? ( COMMA ( identifier )? )*;
 subroutine_call_statement:
- ( subroutine_call 
-      | KW_VOID APOSTROPHE LPAREN subroutine_call RPAREN 
+ ( KW_VOID APOSTROPHE LPAREN subroutine_call RPAREN 
+      | subroutine_call 
       ) SEMI;
 assertion_item:
  concurrent_assertion_item 
@@ -1687,24 +1687,24 @@ deferred_immediate_assertion_statement:
       | deferred_immediate_cover_statement 
      ;
 deferred_immediate_assert_statement:
- KW_ASSERT ( primitive_delay 
-                  | KW_FINAL 
+ KW_ASSERT ( KW_FINAL 
+                  | primitive_delay 
                   ) LPAREN expression RPAREN action_block;
 deferred_immediate_assume_statement:
- KW_ASSUME ( primitive_delay 
-                  | KW_FINAL 
+ KW_ASSUME ( KW_FINAL 
+                  | primitive_delay 
                   ) LPAREN expression RPAREN action_block;
 deferred_immediate_cover_statement:
- KW_COVER ( primitive_delay 
-                  | KW_FINAL 
+ KW_COVER ( KW_FINAL 
+                  | primitive_delay 
                   ) LPAREN expression RPAREN statement_or_null;
 clocking_declaration:
- ( ( KW_DEFAULT )? KW_CLOCKING ( identifier )? clocking_event SEMI ( clocking_item )* 
-      | KW_GLOBAL KW_CLOCKING ( identifier )? clocking_event SEMI 
+ ( KW_GLOBAL KW_CLOCKING ( identifier )? clocking_event SEMI 
+      | ( KW_DEFAULT )? KW_CLOCKING ( identifier )? clocking_event SEMI ( clocking_item )* 
       ) KW_ENDCLOCKING ( COLON identifier )?;
 clocking_event:
- AT ( identifier 
-          | LPAREN event_expression RPAREN 
+ AT ( LPAREN event_expression RPAREN 
+          | identifier 
           );
 clocking_item:
  ( KW_DEFAULT default_skew 
@@ -1732,9 +1732,9 @@ clocking_skew:
 clocking_drive:
  clockvar_expression LE ( cycle_delay )? expression;
 cycle_delay:
- DOUBLE_HASH ( integral_number 
+ DOUBLE_HASH ( LPAREN expression RPAREN 
+                  | integral_number 
                   | identifier 
-                  | LPAREN expression RPAREN 
                   );
 clockvar_expression:
  hierarchical_identifier select;
@@ -1746,14 +1746,14 @@ production:
 rs_rule:
  rs_production_list ( DIST_WEIGHT_ASSIGN weight_specification ( rs_code_block )? )?;
 rs_production_list:
- rs_prod ( rs_prod )* 
-      | KW_RAND KW_JOIN ( LPAREN expression RPAREN )? production_item production_item 
+ KW_RAND KW_JOIN ( LPAREN expression RPAREN )? production_item production_item 
       ( production_item )* 
+      | rs_prod ( rs_prod )* 
      ;
 weight_specification:
- integral_number 
+ LPAREN expression RPAREN 
+      | integral_number 
       | ps_identifier 
-      | LPAREN expression RPAREN 
      ;
 rs_code_block:
  LBRACE ( data_declaration )* ( statement_or_null )* RBRACE;
@@ -1773,8 +1773,8 @@ rs_repeat:
 rs_case:
  KW_CASE LPAREN expression RPAREN rs_case_item ( rs_case_item )* KW_ENDCASE;
 rs_case_item:
- ( expression ( COMMA expression )* COLON 
-      | KW_DEFAULT ( COLON )? 
+ ( KW_DEFAULT ( COLON )? 
+      | expression ( COMMA expression )* COLON 
       ) production_item SEMI;
 specify_block:
  KW_SPECIFY ( specify_item )* KW_ENDSPECIFY;
@@ -1820,8 +1820,8 @@ input_identifier:
 output_identifier:
  identifier ( DOT identifier )?;
 path_delay_value:
- list_of_path_delay_expressions 
-      | LPAREN list_of_path_delay_expressions RPAREN 
+ LPAREN list_of_path_delay_expressions RPAREN 
+      | list_of_path_delay_expressions 
      ;
 list_of_path_delay_expressions:
  t_path_delay_expression 
@@ -1958,16 +1958,16 @@ specify_terminal_descriptor:
       | specify_output_terminal_descriptor 
      ;
 timing_check_condition:
- scalar_timing_check_condition 
-      | LPAREN scalar_timing_check_condition RPAREN 
+ LPAREN scalar_timing_check_condition RPAREN 
+      | scalar_timing_check_condition 
      ;
 scalar_timing_check_condition:
- expression ( ( EQ 
+ NEG expression 
+      | expression ( ( EQ 
                   | CASE_EQ 
                   | NEQ 
                   | CASE_NEQ 
                   ) integral_number )? 
-      | NEG expression 
      ;
 concatenation:
  LBRACE expression ( COMMA expression )* RBRACE;
@@ -2020,9 +2020,9 @@ subroutine_call:
       | ( KW_STD DOUBLE_COLON )? randomize_call 
      ;
 list_of_arguments:
- ( expression ( COMMA ( expression )? )* 
+ ( DOT identifier LPAREN ( expression )? RPAREN 
+      | expression ( COMMA ( expression )? )* 
       | ( COMMA ( expression )? )+ 
-      | DOT identifier LPAREN ( expression )? RPAREN 
       )? ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
 method_call_body:
  identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
@@ -2036,16 +2036,16 @@ array_manipulation_call:
  array_method_name ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? ( KW_WITH LPAREN 
       expression RPAREN )?;
 randomize_call:
- KW_RANDOMIZE ( attribute_instance )* ( LPAREN ( randomize_arg_list 
-                                                  | KW_NULL 
+ KW_RANDOMIZE ( attribute_instance )* ( LPAREN ( KW_NULL 
+                                                  | randomize_arg_list 
                                                   )? RPAREN )? ( KW_WITH ( LPAREN 
       ( identifier_list )? RPAREN )? constraint_block )?;
 array_method_name:
- identifier 
-      | KW_UNIQUE 
+ KW_UNIQUE 
       | KW_AND 
       | KW_OR 
       | KW_XOR 
+      | identifier 
      ;
 inc_or_dec_expression:
  inc_or_dec_operator ( attribute_instance )* variable_lvalue 
@@ -2107,14 +2107,14 @@ constant_expression_0:
 constant_mintypmax_expression:
  constant_expression ( COLON constant_expression COLON constant_expression )?;
 constant_param_expression:
- constant_mintypmax_expression 
+ DOLAR 
+      | constant_mintypmax_expression 
       | data_type 
-      | DOLAR 
      ;
 param_expression:
- mintypmax_expression 
+ DOLAR 
+      | mintypmax_expression 
       | data_type 
-      | DOLAR 
      ;
 constant_range_expression:
  constant_expression 
@@ -2184,16 +2184,16 @@ expression_2:
 expression_1:
  expression_0 ( DOUBLESTAR ( attribute_instance )* expression_1 )*;
 expression_0:
- ( unary_operator ( attribute_instance )* )? primary 
+ LPAREN operator_assignment RPAREN 
+      | ( unary_operator ( attribute_instance )* )? primary 
       | inc_or_dec_expression 
-      | LPAREN operator_assignment RPAREN 
       | tagged_union_expression 
      ;
 tagged_union_expression:
  KW_TAGGED identifier ( expression )?;
 value_range:
- expression 
-      | LSQUARE_BR expression COLON expression RSQUARE_BR 
+ LSQUARE_BR expression COLON expression RSQUARE_BR 
+      | expression 
      ;
 mintypmax_expression:
  expression ( COLON expression COLON expression )?;
@@ -2216,7 +2216,9 @@ indexed_range:
                   ) COLON constant_expression;
 genvar_expression: constant_expression;
 constant_primary_no_cast_no_call:
- primary_literal 
+ LPAREN constant_mintypmax_expression RPAREN 
+      | KW_NULL 
+      | primary_literal 
       | ps_parameter_identifier constant_select 
       | identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR 
                   | constant_select 
@@ -2226,10 +2228,8 @@ constant_primary_no_cast_no_call:
           | constant_multiple_concatenation 
           ) ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
       | let_expression 
-      | LPAREN constant_mintypmax_expression RPAREN 
       | assignment_pattern_expression 
       | type_reference 
-      | KW_NULL 
      ;
 constant_primary:
  constant_primary_no_cast_no_call 
@@ -2237,28 +2237,28 @@ constant_primary:
       | constant_cast 
      ;
 module_path_primary:
- number 
+ LPAREN module_path_mintypmax_expression RPAREN 
+      | number 
       | identifier 
       | module_path_concatenation 
       | module_path_multiple_concatenation 
       | subroutine_call 
-      | LPAREN module_path_mintypmax_expression RPAREN 
      ;
 primary_no_cast_no_call:
- primary_literal 
+ LPAREN mintypmax_expression RPAREN 
+      | KW_THIS 
+      | DOLAR 
+      | KW_NULL 
+      | primary_literal 
       | package_or_class_scoped_hier_id select 
       | empty_unpacked_array_concatenation 
       | ( concatenation 
           | multiple_concatenation 
           ) ( LSQUARE_BR range_expression RSQUARE_BR )? 
       | let_expression 
-      | LPAREN mintypmax_expression RPAREN 
       | assignment_pattern_expression 
       | streaming_concatenation 
       | sequence_method_call 
-      | KW_THIS 
-      | DOLAR 
-      | KW_NULL 
      ;
 primary:
  primary_no_cast_no_call 
@@ -2274,10 +2274,10 @@ range_expression:
       | part_select_range 
      ;
 primary_literal:
- number 
-      | TIME_LITERAL 
+ TIME_LITERAL 
       | UNBASED_UNSIZED_LITERAL 
       | STRING_LITERAL 
+      | number 
      ;
 implicit_class_handle:
  KW_THIS ( DOT KW_SUPER )? 
@@ -2304,15 +2304,15 @@ constant_cast:
 cast:
  casting_type APOSTROPHE LPAREN expression RPAREN;
 net_lvalue:
- ps_or_hierarchical_identifier constant_select 
-      | LBRACE net_lvalue ( COMMA net_lvalue )* RBRACE 
+ LBRACE net_lvalue ( COMMA net_lvalue )* RBRACE 
+      | ps_or_hierarchical_identifier constant_select 
       | ( assignment_pattern_expression_type )? assignment_pattern_net_lvalue 
      ;
 variable_lvalue:
- ( implicit_class_handle DOT 
+ LBRACE variable_lvalue ( COMMA variable_lvalue )* RBRACE 
+      | ( implicit_class_handle DOT 
           | package_scope 
           )? hierarchical_identifier select 
-      | LBRACE variable_lvalue ( COMMA variable_lvalue )* RBRACE 
       | ( assignment_pattern_expression_type )? assignment_pattern_variable_lvalue 
       | streaming_concatenation 
      ;
@@ -2364,10 +2364,10 @@ number:
       | real_number 
      ;
 integral_number:
- decimal_number 
-      | OCTAL_NUMBER 
+ OCTAL_NUMBER 
       | BINARY_NUMBER 
       | HEX_NUMBER 
+      | decimal_number 
      ;
 decimal_number:
  DECIMAL_TRISTATE_NUMBER_WITH_BASE 
@@ -2389,15 +2389,15 @@ identifier:
  C_IDENTIFIER 
       | SIMPLE_IDENTIFIER 
       | ESCAPED_IDENTIFIER 
-      | KW_RANDOMIZE 
       | KW_STD 
-      | KW_TYPE_OPTION 
-      | KW_SAMPLE 
       | KW_OPTION 
+      | KW_TYPE_OPTION 
+      | KW_RANDOMIZE 
+      | KW_SAMPLE 
      ;
 package_scope:
- ( identifier 
-      | KW_DOLAR_UNIT 
+ ( KW_DOLAR_UNIT 
+      | identifier 
       ) DOUBLE_COLON;
 ps_identifier:
  ( package_scope )? identifier;
@@ -2421,31 +2421,31 @@ ps_or_hierarchical_identifier:
      ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-      | KW_DOLAR_WIDTH 
-      | KW_DOLAR_UNIT 
-      | KW_DOLAR_PERIOD 
-      | KW_DOLAR_ROOT 
-      | KW_DOLAR_TIMESKEW 
-      | KW_DOLAR_RECOVERY 
       | KW_DOLAR_REMOVAL 
-      | KW_DOLAR_FATAL 
-      | KW_DOLAR_HOLD 
+      | KW_DOLAR_TIMESKEW 
+      | KW_DOLAR_SKEW 
+      | KW_DOLAR_PERIOD 
+      | KW_DOLAR_SETUPHOLD 
       | KW_DOLAR_WARNING 
       | KW_DOLAR_RECREM 
-      | KW_DOLAR_SETUP 
-      | KW_DOLAR_NOCHANGE 
-      | KW_DOLAR_SETUPHOLD 
-      | KW_DOLAR_FULLSKEW 
-      | KW_DOLAR_ERROR 
       | KW_DOLAR_INFO 
-      | KW_DOLAR_SKEW 
+      | KW_DOLAR_HOLD 
+      | KW_DOLAR_WIDTH 
+      | KW_DOLAR_SETUP 
+      | KW_DOLAR_FATAL 
+      | KW_DOLAR_NOCHANGE 
+      | KW_DOLAR_ROOT 
+      | KW_DOLAR_FULLSKEW 
+      | KW_DOLAR_UNIT 
+      | KW_DOLAR_ERROR 
+      | KW_DOLAR_RECOVERY 
      ;
 package_or_class_scoped_id:
- ( identifier ( parameter_value_assignment )? 
-      | KW_DOLAR_UNIT 
+ ( KW_DOLAR_UNIT 
+      | identifier ( parameter_value_assignment )? 
       ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
 package_or_class_scoped_hier_id:
- ( KW_DOLAR_ROOT DOT )? ( identifier ( parameter_value_assignment )? 
-                              | KW_DOLAR_UNIT 
+ ( KW_DOLAR_ROOT DOT )? ( KW_DOLAR_UNIT 
+                              | identifier ( parameter_value_assignment )? 
                               ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )* ( 
       constant_bit_select DOT identifier )*;
