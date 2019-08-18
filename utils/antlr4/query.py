@@ -6,11 +6,63 @@ from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Symbol, Antlr4Option, \
     Antlr4Iteration, Antlr4Selection, Antlr4Sequence
 
 
+class Antlr4SyntCmp():
+    """
+    Compare expressions and allow symbols to be renamed in other sequence
+    """
+
+    def __init__(self):
+        self.eq_symbols = {}
+    
+    def _eq(self, a, b):
+        if type(a) != type(b):
+            return False
+        if isinstance(a, Antlr4Symbol):
+            a_replace = self.eq_symbols.get(a.symbol, None)
+            if a_replace is None:
+                self.eq_symbols[a.symbol] = b.symbol
+                return True
+            if a_replace == b.symbol:
+                return True
+            
+            return False 
+        if isinstance(a, Antlr4Iteration):
+            if a.positive != b.positive:
+                return False
+            else:
+                return self._eq(a.body, b.body)
+        elif isinstance(a, Antlr4Option):
+            return self._eq(a.body, b.body)
+        elif isinstance(a, (Antlr4Sequence, Antlr4Selection)):
+            if len(a) != len(b):
+                return False
+            else:
+                for _a, _b in zip(a, b):
+                    if not self._eq(_a, _b):
+                        return False
+                return True
+        else:
+            raise NotImplementedError()
+
+    def eq(self, a, b, eq_symbols=None):
+        if eq_symbols is not None:
+            self.eq_symbols = eq_symbols
+        else:
+            self.eq_symbols.clear()
+        return self._eq(a, b)
+
+
 class Antlr4Query():
+    """
+    Search all sub expressions whith are equviavalent with a pattern
+    
+    :attention: if pattern is sequence the items may be found separately in match and match of this pattern
+        sequence may not be in result match as the matched sequence is inlined in something
+    """
 
     def __init__(self, pattern):
         self.pattern = pattern
-    
+        
     def match(self, obj) -> List[Dict[int, iAntlr4GramElem]]:
         """
         :return: list of matches where match is dict {obj id: pattern obj}
