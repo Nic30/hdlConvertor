@@ -14,10 +14,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -38,6 +34,8 @@ build/
 target/
 dist/
 _skbuild/
+.eggs/
+hdlConvertor.egg-info
 
 # parser soruce build dirs
 src/svConvertor/sv2017Parser
@@ -51,8 +49,6 @@ include/hdlConvertor/verilogConvertor/Verilog2001Parser/*.h
 include/hdlConvertor/verilogPreproc/verilogPreprocParser/*.h
 include/hdlConvertor/vhdlConvertor/vhdlParser/*.h
 
-
-hdlConvertor.egg-info
 
 # devel archives
 *.zip
