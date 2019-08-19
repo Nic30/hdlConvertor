@@ -1,6 +1,11 @@
+import sys
+if sys.version_info[0] == 2:
+    from future.builtins import super
+ 
 import time
 import unittest
 from unittest.runner import TextTestResult
+
 
 
 class TimeLoggingTestResult(TextTestResult):
