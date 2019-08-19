@@ -23,5 +23,6 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
-    test_suite="tests",
+    test_suite="tests.all.main_test_suite",
+    test_runner="tests.time_logging_test_runner:TimeLoggingTestRunner"
 )

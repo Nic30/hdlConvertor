@@ -5,10 +5,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 from hdlConvertor.language import Language
 
-try:
-    from tests.basic_tc import TEST_DIR, BasicTC, parseFile
-except ImportError:
-    from basic_tc import TEST_DIR, BasicTC, parseFile
+from tests.basic_tc import TEST_DIR, BasicTC, parseFile
 
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG

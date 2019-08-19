@@ -1,13 +1,10 @@
-import unittest
 from os import path
-
-try:
-    from tests.basic_tc import TEST_DIR
-except ImportError:
-    from basic_tc import TEST_DIR
+import unittest
 
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
+from tests.basic_tc import TEST_DIR
+
 
 SRC_DIR = [path.dirname(__file__), 'sv_pp', 'src']
 
