@@ -473,6 +473,7 @@ def other_performance_fixes(rules):
 
     optimize_primary(rules)
     optimize_item_rules(rules)
+    optimize_action_block(rules)
     # detect_duplicit_rules(rules)
     detect_syntacticaly_same_rules(rules)
 
@@ -483,6 +484,14 @@ def optimize_item_rules(rules):
               "interface_or_generate_item", "checker_or_generate_item_declaration"]:
         inline_rule(rules, r)
 
+def optimize_action_block(rules):
+    action_block = rule_by_name(rules, "action_block")
+    assert action_block.body.eq_relaxed(Antlr4parser().from_str("( ( statement )? KW_ELSE )? statement_or_null"))
+    action_block.body = Antlr4parser().from_str("""
+          ( attribute_instance )* SEMI
+        | KW_ELSE statement_or_null
+        | statement ( KW_ELSE statement_or_null )?
+    """)
 
 def add_eof(rules):
     source_text = rule_by_name(rules, "source_text")

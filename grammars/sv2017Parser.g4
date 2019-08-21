@@ -1545,7 +1545,10 @@ procedural_continuous_assignment:
 variable_assignment:
  variable_lvalue ASSIGN expression;
 action_block:
- ( ( statement )? KW_ELSE )? statement_or_null;
+ ( attribute_instance )* SEMI 
+  | KW_ELSE statement_or_null 
+  | statement ( KW_ELSE statement_or_null )? 
+ ;
 seq_block:
  KW_BEGIN ( COLON identifier )? ( block_item_declaration )* ( statement_or_null )* KW_END ( COLON 
       identifier )?;
@@ -2312,8 +2315,8 @@ constant_primary_no_cast_no_call:
   | type_reference 
  ;
 constant_primary:
- constant_primary_no_cast_no_call
-  | subroutine_call
+ constant_primary_no_cast_no_call 
+  | subroutine_call 
   | constant_cast 
  ;
 module_path_primary:
@@ -2464,10 +2467,10 @@ identifier:
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
   | KW_TYPE_OPTION 
-  | KW_SAMPLE 
   | KW_OPTION 
-  | KW_RANDOMIZE 
   | KW_STD 
+  | KW_SAMPLE 
+  | KW_RANDOMIZE 
  ;
 package_scope:
  ( KW_DOLAR_UNIT 
@@ -2495,24 +2498,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_UNIT 
-  | KW_DOLAR_FATAL 
-  | KW_DOLAR_PERIOD 
-  | KW_DOLAR_HOLD 
-  | KW_DOLAR_SKEW 
   | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_WIDTH 
-  | KW_DOLAR_ROOT 
-  | KW_DOLAR_WARNING 
-  | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_SETUP 
   | KW_DOLAR_ERROR 
-  | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_FULLSKEW 
-  | KW_DOLAR_RECOVERY 
   | KW_DOLAR_INFO 
   | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_SKEW 
+  | KW_DOLAR_RECREM 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_UNIT 
+  | KW_DOLAR_NOCHANGE 
+  | KW_DOLAR_WARNING 
+  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_ROOT 
+  | KW_DOLAR_HOLD 
+  | KW_DOLAR_FATAL 
+  | KW_DOLAR_WIDTH 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 
