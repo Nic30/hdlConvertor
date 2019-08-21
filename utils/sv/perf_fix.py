@@ -36,7 +36,6 @@ def rm_option_from_eps_rules(p):
         rm_option_on_rule_usage(p.rules, r)
 
     # fix optinality on datatypes
-
     r = rule_by_name(p.rules, "implicit_data_type")
     # : (signing)? (packed_dimension)*
     # ->
@@ -85,6 +84,14 @@ def rm_option_from_eps_rules(p):
     # var_data_type = rule_by_name(p.rules, "var_data_type")
     # var_data_type.body = Antlr4parser().from_str("KW_VAR ( data_type_or_implicit )? | data_type_or_implicit")
 
+    pa = Antlr4parser()
+    data_declaration = rule_by_name(p.rules, "data_declaration")
+    assert data_declaration.body[0].eq_relaxed(
+       pa.from_str("""( KW_CONST )? ( KW_VAR )? ( lifetime )? ( data_type_or_implicit )? 
+                                    list_of_variable_decl_assignments SEMI"""))
+    data_declaration.body[0] = pa.from_str("""( KW_CONST )? ( KW_VAR ( lifetime )?  ( data_type_or_implicit )? | ( lifetime )? data_type_or_implicit )   
+                                    list_of_variable_decl_assignments SEMI""")
+
 
 def _optimize_ps_parameter_identifier(rules):
     ps_parameter_identifier = rule_by_name(rules, "ps_parameter_identifier")
@@ -114,7 +121,7 @@ def optimize_primary(rules):
             ), primary_no_cast_no_call.body[index]
 
     assert_eq(5, "package_or_class_scoped_hier_id_with_const_select select")
-    assert_eq(8, "let_expression") # is just call
+    assert_eq(8, "let_expression")  # is just call
     primary_no_cast_no_call.body[5] = Antlr4parser().from_str("""
         package_or_class_scoped_hier_id_with_const_select select
     """)
@@ -132,7 +139,7 @@ def optimize_primary(rules):
               | constant_select 
               )?""")
     assert_eq_c(5, "package_or_class_scoped_id")
-    assert_eq_c(7, "let_expression") # is just call
+    assert_eq_c(7, "let_expression")  # is just call
     constant_primary_no_cast_no_call.body[3] = Antlr4parser().from_str("""
         package_or_class_scoped_hier_id_with_const_select
     """)
@@ -484,6 +491,7 @@ def optimize_item_rules(rules):
               "interface_or_generate_item", "checker_or_generate_item_declaration"]:
         inline_rule(rules, r)
 
+
 def optimize_action_block(rules):
     action_block = rule_by_name(rules, "action_block")
     assert action_block.body.eq_relaxed(Antlr4parser().from_str("( ( statement )? KW_ELSE )? statement_or_null"))
@@ -492,6 +500,7 @@ def optimize_action_block(rules):
         | KW_ELSE statement_or_null
         | statement ( KW_ELSE statement_or_null )?
     """)
+
 
 def add_eof(rules):
     source_text = rule_by_name(rules, "source_text")

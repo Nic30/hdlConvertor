@@ -522,8 +522,9 @@ interface_port_declaration:
 ref_declaration:
  KW_REF ( var_data_type )? list_of_variable_identifiers;
 data_declaration:
- ( KW_CONST )? ( KW_VAR )? ( lifetime )? ( data_type_or_implicit )? 
-  list_of_variable_decl_assignments SEMI 
+ ( KW_CONST )? ( KW_VAR ( lifetime )? ( data_type_or_implicit )? 
+                  | ( lifetime )? data_type_or_implicit 
+                  ) list_of_variable_decl_assignments SEMI 
   | type_declaration 
   | package_import_declaration 
   | net_type_declaration 
@@ -2466,11 +2467,11 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
+  | KW_SAMPLE 
+  | KW_RANDOMIZE 
   | KW_TYPE_OPTION 
   | KW_OPTION 
   | KW_STD 
-  | KW_SAMPLE 
-  | KW_RANDOMIZE 
  ;
 package_scope:
  ( KW_DOLAR_UNIT 
@@ -2498,24 +2499,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_ERROR 
-  | KW_DOLAR_INFO 
-  | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_SKEW 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_RECOVERY 
-  | KW_DOLAR_PERIOD 
-  | KW_DOLAR_UNIT 
-  | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_WARNING 
-  | KW_DOLAR_SETUPHOLD 
   | KW_DOLAR_FULLSKEW 
-  | KW_DOLAR_SETUP 
   | KW_DOLAR_ROOT 
   | KW_DOLAR_HOLD 
-  | KW_DOLAR_FATAL 
+  | KW_DOLAR_WARNING 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_ERROR 
+  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_UNIT 
+  | KW_DOLAR_SKEW 
+  | KW_DOLAR_NOCHANGE 
   | KW_DOLAR_WIDTH 
+  | KW_DOLAR_INFO 
+  | KW_DOLAR_FATAL 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_RECREM 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 
