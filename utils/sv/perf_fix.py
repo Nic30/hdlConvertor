@@ -105,6 +105,43 @@ def _optimize_ps_type_identifier(rules):
     """)
 
 
+def optimize_primary(rules):
+    primary_no_cast_no_call = rule_by_name(rules, "primary_no_cast_no_call")
+
+    def assert_eq(index, s):
+        elm = Antlr4parser().from_str(s)
+        assert (primary_no_cast_no_call.body[index].eq_relaxed(elm)
+            ), primary_no_cast_no_call.body[index]
+
+    assert_eq(5, "package_or_class_scoped_hier_id_with_const_select select")
+    assert_eq(8, "let_expression")
+    primary_no_cast_no_call.body[5] = Antlr4parser().from_str("""
+        package_or_class_scoped_hier_id_with_const_select select ( LPAREN let_list_of_arguments RPAREN )?
+    """)
+    del primary_no_cast_no_call.body[8]
+
+    constant_primary_no_cast_no_call = rule_by_name(rules, "constant_primary_no_cast_no_call")
+
+    def assert_eq_c(index, s):
+        elm = Antlr4parser().from_str(s)
+        assert (constant_primary_no_cast_no_call.body[index].eq_relaxed(elm)
+            ), constant_primary_no_cast_no_call.body[index]
+
+    assert_eq_c(3, "ps_parameter_identifier constant_select")
+    assert_eq_c(4, """identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR 
+              | constant_select 
+              )?""")
+    assert_eq_c(5, "package_or_class_scoped_id")
+    assert_eq_c(7, "let_expression")
+    constant_primary_no_cast_no_call.body[3] = Antlr4parser().from_str("""
+        package_or_class_scoped_hier_id_with_const_select ( LPAREN let_list_of_arguments RPAREN )?
+    """)
+    offset = 0
+    for i in [4, 5, 7]:
+        del constant_primary_no_cast_no_call.body[offset + i]
+        offset -= 1
+
+
 def optimize_class_scope(rules):
     p = Antlr4parser()
     to_replace0 = p.from_str("( package_scope | class_scope )? identifier")
@@ -172,19 +209,22 @@ def optimize_class_scope(rules):
     #  ) DOUBLE_COLON;
     # hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
     to_replace2 = p.from_str("( class_qualifier | package_scope )? hierarchical_identifier")
-    package_or_class_scoped_hier_id = Antlr4Rule("package_or_class_scoped_hier_id", p.from_str("""
+    package_or_class_scoped_hier_id_with_const_select = Antlr4Rule("package_or_class_scoped_hier_id_with_const_select", p.from_str("""
         ( KW_LOCAL DOUBLE_COLON )?
         ( 
           KW_DOLAR_ROOT
           | implicit_class_handle
           | ( 
-              ( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT )
+              ( 
+                  KW_DOLAR_UNIT  
+                | identifier ( parameter_value_assignment )? 
+              )
               ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*
            )
         )
-        constant_bit_select ( DOT identifier constant_bit_select )*
+        ( constant_bit_select )* ( DOT identifier ( constant_bit_select )* )*
     """))
-    rules.append(package_or_class_scoped_hier_id)
+    rules.append(package_or_class_scoped_hier_id_with_const_select)
     primary_no_cast_no_call = rule_by_name(rules, "primary_no_cast_no_call")
     m = Antlr4Query(to_replace2).match(primary_no_cast_no_call.body)
 
@@ -194,7 +234,7 @@ def optimize_class_scope(rules):
             if v is not None:
                 if (v is to_replace2
                      or (isinstance(v, Antlr4Symbol) and v.symbol == "hierarchical_identifier")):
-                    return Antlr4Symbol(package_or_class_scoped_hier_id.name, False)
+                    return Antlr4Symbol(package_or_class_scoped_hier_id_with_const_select.name, False)
                 else:
                     return Antlr4Sequence([])
 
@@ -430,6 +470,7 @@ def other_performance_fixes(rules):
     for r in rules:
         r.body.walk(sort_simple_first)
 
+    optimize_primary(rules)
     # detect_duplicit_rules(rules)
     detect_syntacticaly_same_rules(rules)
 

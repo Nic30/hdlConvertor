@@ -2221,15 +2221,10 @@ constant_primary_no_cast_no_call:
  LPAREN constant_mintypmax_expression RPAREN 
   | KW_NULL 
   | primary_literal 
-  | ps_parameter_identifier constant_select 
-  | identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR 
-              | constant_select 
-              )? 
-  | package_or_class_scoped_id 
+  | package_or_class_scoped_hier_id_with_const_select ( LPAREN let_list_of_arguments RPAREN )? 
   | ( constant_concatenation 
       | constant_multiple_concatenation 
       ) ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
-  | let_expression 
   | assignment_pattern_expression 
   | type_reference 
  ;
@@ -2252,12 +2247,12 @@ primary_no_cast_no_call:
   | DOLAR 
   | KW_NULL 
   | primary_literal 
-  | package_or_class_scoped_hier_id select 
+  | package_or_class_scoped_hier_id_with_const_select select 
+  ( LPAREN let_list_of_arguments RPAREN )? 
   | empty_unpacked_array_concatenation 
   | ( concatenation 
       | multiple_concatenation 
       ) ( LSQUARE_BR range_expression RSQUARE_BR )? 
-  | let_expression 
   | assignment_pattern_expression 
   | streaming_concatenation 
   | sequence_method_call 
@@ -2386,10 +2381,10 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
-  | KW_TYPE_OPTION 
-  | KW_STD 
   | KW_OPTION 
   | KW_RANDOMIZE 
+  | KW_TYPE_OPTION 
+  | KW_STD 
   | KW_SAMPLE 
  ;
 package_scope:
@@ -2419,32 +2414,33 @@ ps_or_hierarchical_identifier:
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
   | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_WIDTH 
-  | KW_DOLAR_ROOT 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_SKEW 
+  | KW_DOLAR_FULLSKEW 
   | KW_DOLAR_HOLD 
-  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_WARNING 
+  | KW_DOLAR_RECREM 
   | KW_DOLAR_ERROR 
   | KW_DOLAR_FATAL 
-  | KW_DOLAR_PERIOD 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_WARNING 
   | KW_DOLAR_UNIT 
-  | KW_DOLAR_SKEW 
+  | KW_DOLAR_WIDTH 
   | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_SETUP 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_RECOVERY 
   | KW_DOLAR_INFO 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_ROOT 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 
   | identifier ( parameter_value_assignment )? 
   ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
-package_or_class_scoped_hier_id:
+package_or_class_scoped_hier_id_with_const_select:
  ( KW_LOCAL DOUBLE_COLON )? ( KW_DOLAR_ROOT 
                               | implicit_class_handle 
                               | ( KW_DOLAR_UNIT 
                                   | identifier ( parameter_value_assignment )? 
                                   ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )* 
-                              ) ( constant_bit_select DOT identifier )*;
+                              ) ( constant_bit_select )* 
+      ( DOT identifier ( constant_bit_select )* )*;
