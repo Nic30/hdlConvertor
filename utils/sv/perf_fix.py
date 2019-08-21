@@ -147,7 +147,7 @@ def optimize_primary(rules):
     for i in [4, 5, 7]:
         del constant_primary_no_cast_no_call.body[offset + i]
         offset -= 1
-
+    rules.remove(rule_by_name(rules, "let_expression"))
 
 def optimize_class_scope(rules):
     p = Antlr4parser()

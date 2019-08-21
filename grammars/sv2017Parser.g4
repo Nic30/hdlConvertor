@@ -1208,8 +1208,6 @@ let_formal_type:
  KW_UNTYPED 
   | data_type_or_implicit 
  ;
-let_expression:
- ( package_scope )? identifier ( LPAREN let_list_of_arguments RPAREN )?;
 let_list_of_arguments:
  ( DOT identifier LPAREN ( expression )? RPAREN 
   | expression ( COMMA ( expression )? )* 
@@ -2467,10 +2465,10 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
+  | KW_RANDOMIZE 
   | KW_SAMPLE 
   | KW_STD 
   | KW_TYPE_OPTION 
-  | KW_RANDOMIZE 
   | KW_OPTION 
  ;
 package_scope:
@@ -2499,24 +2497,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_HOLD 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_FULLSKEW 
-  | KW_DOLAR_WIDTH 
-  | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_UNIT 
   | KW_DOLAR_SETUP 
+  | KW_DOLAR_SKEW 
+  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_WARNING 
   | KW_DOLAR_ERROR 
   | KW_DOLAR_INFO 
   | KW_DOLAR_FATAL 
-  | KW_DOLAR_PERIOD 
-  | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_SKEW 
-  | KW_DOLAR_RECOVERY 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_WARNING 
   | KW_DOLAR_ROOT 
+  | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_UNIT 
+  | KW_DOLAR_HOLD 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_NOCHANGE 
+  | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_RECREM 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 
