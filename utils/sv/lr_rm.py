@@ -166,7 +166,7 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
         bin_op_choice = Antlr4Sequence([
             op,
             Antlr4Iteration(Antlr4Symbol("attribute_instance", False)),
-            Antlr4Symbol(new_rule_name, False)
+            Antlr4Symbol(current_expr_rule.name, False)
         ])
         bin_op_choices.append(bin_op_choice)
 
