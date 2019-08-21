@@ -1,10 +1,12 @@
 
+from copy import deepcopy
 from itertools import islice
 
 from utils.antlr4._utils import replace_item_by_sequence
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Selection, \
     Antlr4Sequence, Antlr4Symbol, Antlr4Option, Antlr4Iteration
-from copy import deepcopy
+from utils.antlr4.sequence_optimiser import _is_optional, \
+    _sequence_expand_optionality
 
 
 def char_options_to_regex(r: Antlr4Rule):
@@ -170,26 +172,7 @@ def _selection_only_unique(sel: Antlr4Selection):
             return Antlr4Selection(new_opts), True
     return sel, False
 
-
-def _is_optional(o):
-    return isinstance(o, Antlr4Option) or (
-        isinstance(o, Antlr4Iteration) and not o.positive)
-
-
-def _to_non_optional(o):
-    """
-    Create non optional variant of element (a)? -> a  and (a)* -> (a)+
-    """
-    if isinstance(o, Antlr4Option):
-        return deepcopy(o.body)
-    elif isinstance(o, Antlr4Iteration):
-        o = deepcopy(o)
-        o.positive = True
-        return o
-    else:
-        raise TypeError(o.__class__)
-
-
+        
 def _selection_propagate_optionality(sel: Antlr4Selection):
     assert isinstance(sel, Antlr4Selection)
     non_optional_choices = []
@@ -205,14 +188,11 @@ def _selection_propagate_optionality(sel: Antlr4Selection):
 
         if is_optional:
             entirely_optional = True
-            for i, o in enumerate(c):
-                o = _to_non_optional(o)
-                is_last = i == len(c) - 1
-                if is_last:
-                    noc = o
-                else:
-                    noc = Antlr4Sequence([o, ] + [deepcopy(x) for x in c[i + 1:]])
-                non_optional_choices.append(noc)
+            nocs = _sequence_expand_optionality(c)
+            # the eps is represented by ptionality on while selection later
+            non_optional_choices.extend([n for n in nocs
+                                         if not isinstance(o, (Antlr4Sequence, Antlr4Selection))
+                                            or len(n) > 0])
         else:
             non_optional_choices.append(c)
 

@@ -1,9 +1,47 @@
 from copy import copy
 from itertools import islice
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from utils.antlr4.grammar import iAntlr4GramElem, Antlr4Symbol, Antlr4Option, \
-    Antlr4Iteration, Antlr4Selection, Antlr4Sequence
+    Antlr4Iteration, Antlr4Selection, Antlr4Sequence, Antlr4Rule
+from utils.antlr4.left_recurse_remove import transitive_closure
+
+
+def collect_dependencies_in_parser(rules: List[Antlr4Rule]) -> Dict[str, Set[str]]:
+    """
+    :attention: ignore dependencies on lexer tokens
+    """
+    deps = {}
+    for r in rules:
+        if r.is_lexer_rule():
+            continue
+
+        _deps = set()
+
+        def find_deps(o):
+            if isinstance(o, Antlr4Symbol) and not o.is_lexer_nonterminal():
+                _deps.add(o.symbol)
+
+        r.walk(find_deps)
+        deps[r.name] = _deps
+
+    return deps
+
+
+def find_parser_claster(rules, start_rule_name):
+    """
+    Find all rules which can be used by this rule
+    """
+    deps = collect_dependencies_in_parser(rules)
+    deps = transitive_closure(deps)
+    
+    return deps[start_rule_name]
+
+
+def find_dependet_on(rules, rule_name):
+    deps = collect_dependencies_in_parser(rules)
+    deps = transitive_closure(deps)
+    return set([k for k, v in deps.items() if rule_name in v])
 
 
 class Antlr4SyntCmp():
@@ -13,6 +51,7 @@ class Antlr4SyntCmp():
 
     def __init__(self):
         self.eq_symbols = {}
+        self.can_rename = lambda x: True
     
     def _eq(self, a, b):
         if type(a) != type(b):
@@ -20,6 +59,8 @@ class Antlr4SyntCmp():
         if isinstance(a, Antlr4Symbol):
             a_replace = self.eq_symbols.get(a.symbol, None)
             if a_replace is None:
+                if (not self.can_rename(a) or not self.can_rename(b)) and a.symbol != b.symbol:
+                    return False
                 self.eq_symbols[a.symbol] = b.symbol
                 return True
             if a_replace == b.symbol:
@@ -42,9 +83,10 @@ class Antlr4SyntCmp():
                         return False
                 return True
         else:
-            raise NotImplementedError()
+            raise NotImplementedError(a.__class__)
 
-    def eq(self, a, b, eq_symbols=None):
+    def eq(self, a, b, eq_symbols=None, can_rename=lambda x: True):
+        self.can_rename = can_rename
         if eq_symbols is not None:
             self.eq_symbols = eq_symbols
         else:

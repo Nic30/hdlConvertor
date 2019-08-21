@@ -6,12 +6,12 @@ from utils.antlr4.simple_parser import Antlr4parser
 
 class Antlr4QueryTC(unittest.TestCase):
 
-    def run_cmp(self, a: str, b: str):
+    def run_cmp(self, a: str, b: str, can_rename=lambda x: True):
         a = Antlr4parser().from_str(a)
         b = Antlr4parser().from_str(b)
         
         cmp = Antlr4SyntCmp()
-        return cmp.eq(a, b), cmp.eq_symbols
+        return cmp.eq(a, b, can_rename=can_rename), cmp.eq_symbols
         
     def test_single_symbol(self):
         a = "a"
@@ -26,6 +26,25 @@ class Antlr4QueryTC(unittest.TestCase):
         eq, eq_symbols = self.run_cmp(a, b)
         self.assertTrue(eq)
         self.assertDictEqual(eq_symbols, {"a": "a"})
+
+    def test_single_symbol3(self):
+        a = "a"
+        b = "A"
+        eq, _ = self.run_cmp(a, b, can_rename=lambda x: not x.is_lexer_nonterminal())
+        self.assertFalse(eq)
+
+    def test_single_symbol4(self):
+        a = "A"
+        b = "a"
+        eq, _ = self.run_cmp(a, b, can_rename=lambda x: not x.is_lexer_nonterminal())
+        self.assertFalse(eq)
+
+    def test_single_symbol5(self):
+        a = "A"
+        b = "A"
+        eq, eq_symbols = self.run_cmp(a, b, can_rename=lambda x: not x.is_lexer_nonterminal())
+        self.assertTrue(eq)
+        self.assertDictEqual(eq_symbols, {"A": "A"})
 
     def test_single_sequence(self):
         a = "a a b"
