@@ -114,9 +114,9 @@ def optimize_primary(rules):
             ), primary_no_cast_no_call.body[index]
 
     assert_eq(5, "package_or_class_scoped_hier_id_with_const_select select")
-    assert_eq(8, "let_expression")
+    assert_eq(8, "let_expression") # is just call
     primary_no_cast_no_call.body[5] = Antlr4parser().from_str("""
-        package_or_class_scoped_hier_id_with_const_select select ( LPAREN let_list_of_arguments RPAREN )?
+        package_or_class_scoped_hier_id_with_const_select select
     """)
     del primary_no_cast_no_call.body[8]
 
@@ -132,9 +132,9 @@ def optimize_primary(rules):
               | constant_select 
               )?""")
     assert_eq_c(5, "package_or_class_scoped_id")
-    assert_eq_c(7, "let_expression")
+    assert_eq_c(7, "let_expression") # is just call
     constant_primary_no_cast_no_call.body[3] = Antlr4parser().from_str("""
-        package_or_class_scoped_hier_id_with_const_select ( LPAREN let_list_of_arguments RPAREN )?
+        package_or_class_scoped_hier_id_with_const_select
     """)
     offset = 0
     for i in [4, 5, 7]:
@@ -446,6 +446,7 @@ def other_performance_fixes(rules):
      ]
     for rn in concurrent_assertion_statement_options:
         inline_rule(rules, rn)
+    inline_rule(rules, "let_actual_arg")
 
     def starts_with_token(o):
         if isinstance(o, Antlr4Symbol):
@@ -475,11 +476,13 @@ def other_performance_fixes(rules):
     # detect_duplicit_rules(rules)
     detect_syntacticaly_same_rules(rules)
 
+
 def optimize_item_rules(rules):
     for r in ["package_or_generate_item_declaration", "module_or_generate_item",
               "module_or_generate_item_declaration", "module_common_item",
               "interface_or_generate_item", "checker_or_generate_item_declaration"]:
         inline_rule(rules, r)
+
 
 def add_eof(rules):
     source_text = rule_by_name(rules, "source_text")
