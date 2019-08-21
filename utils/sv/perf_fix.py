@@ -4,8 +4,9 @@ from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usag
     inline_rule, _replace_symbol_in_rule
 from utils.antlr4.simple_parser import Antlr4parser
 from typing import List
-from utils.antlr4.query import Antlr4Query
+from utils.antlr4.query import Antlr4Query, Antlr4SyntCmp, find_dependet_on
 from sortedcontainers.sorteddict import SortedDict
+from itertools import islice
 
 
 def rm_ambiguity(rules):
@@ -152,12 +153,37 @@ def optimize_class_scope(rules):
         #     if "package_scope | class_scope" in r.toAntlr4() or "class_scope | package_scope" in r.toAntlr4():
         #         print("not found " + r.toAntlr4())
     
-    to_replace2 = p.from_str("( class_qualifier | package_scope )? hierarchical_identifier")
+    # class_qualifier:
+    #   ( KW_LOCAL DOUBLE_COLON )? ( implicit_class_handle DOT 
+    #                            | class_scope 
+    #                            )?;
+    # class_scope:
+    #     ps_identifier ( parameter_value_assignment )? 
+    #     ( DOUBLE_COLON identifier 
+    #       ( parameter_value_assignment )?
+    #     )* DOUBLE_COLON;
+    # implicit_class_handle:
+    #     KW_THIS ( DOT KW_SUPER )? 
+    #      | KW_SUPER 
+    # ;
+    # package_scope:
+    #  ( KW_DOLAR_UNIT 
+    #    | identifier 
+    #  ) DOUBLE_COLON;
     # hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
-    package_or_class_scoped_hier_id = Antlr4Rule("package_or_class_scoped_hier_id", p.from_str(
-        """( KW_DOLAR_ROOT DOT )? ( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT )
-           ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*
-           ( constant_bit_select DOT identifier )* """))
+    to_replace2 = p.from_str("( class_qualifier | package_scope )? hierarchical_identifier")
+    package_or_class_scoped_hier_id = Antlr4Rule("package_or_class_scoped_hier_id", p.from_str("""
+        ( KW_LOCAL DOUBLE_COLON )?
+        ( 
+          KW_DOLAR_ROOT
+          | implicit_class_handle
+          | ( 
+              ( identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT )
+              ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*
+           )
+        )
+        constant_bit_select ( DOT identifier constant_bit_select )*
+    """))
     rules.append(package_or_class_scoped_hier_id)
     primary_no_cast_no_call = rule_by_name(rules, "primary_no_cast_no_call")
     m = Antlr4Query(to_replace2).match(primary_no_cast_no_call.body)
@@ -176,7 +202,7 @@ def optimize_class_scope(rules):
     
     _optimize_ps_type_identifier(rules)
     _optimize_ps_parameter_identifier(rules)
-    detect_duplicit_rules(rules)
+    rules.remove(rule_by_name(rules, "class_qualifier"))
 
 
 def move_iteration_up_in_parse_tree(rules, rule_name):
@@ -308,6 +334,9 @@ def _inline_rules(rules, rule_names_to_inline):
 
 
 def detect_duplicit_rules(_rules: List[Antlr4Rule]):
+    """
+    Detect the rules which are exactly same
+    """
     rules = [r for r in _rules if not r.is_lexer_rule()]
     eq_classes = SortedDict()
     for r in rules:
@@ -326,12 +355,44 @@ def detect_duplicit_rules(_rules: List[Antlr4Rule]):
             if r1.name not in g and r0.body == r1.body:
                 g.update(eq_classes[r1.name])
                 eq_classes[r1.name] = g
-    
+
+    print("duplicit rules")
     seen = set()
     for r_name, c in eq_classes.items():
         if len(c) > 1 and r_name not in seen:
             print("%s: {%s}" % (r_name, ", ".join(sorted(c))))
             seen.update(c)
+
+
+def detect_syntacticaly_same_rules(rules):
+    """
+    Detect the rules which have same structure but may have different symbol names used
+    """
+    r_list = [r for r in rules if not r.is_lexer_rule()]
+    groups = {r.name: set([r.name, ]) for r in r_list}
+    for i, r0 in enumerate(r_list):
+        for r1 in islice(r_list, i + 1, None):
+            if Antlr4SyntCmp().eq(r0.body, r1.body, can_rename=lambda x: not x.is_lexer_nonterminal()):
+                r0_cls = groups[r0.name]
+                r1_cls = groups[r1.name]
+                if r0_cls is not r1_cls:
+                    r0_cls.update(r1_cls)
+                    groups[r1.name] = r0_cls
+                    r0_cls.add(r1.name)
+    
+    print("---- structuraly same rules---")
+    seen = set([
+        # ignored
+        'rs_prod', 'specify_item'
+        ])
+    for k, same in sorted(groups.items(), key=lambda x: x[0]):
+        if k not in seen:
+            seen.update(same)
+            if len(same) > 1:
+                print(k, sorted(list(same)))
+
+    # d = find_dependet_on(rules, "stream_concatenation")
+    # print(sorted(list(d)))
 
 
 def other_performance_fixes(rules):
@@ -368,6 +429,9 @@ def other_performance_fixes(rules):
 
     for r in rules:
         r.body.walk(sort_simple_first)
+
+    # detect_duplicit_rules(rules)
+    detect_syntacticaly_same_rules(rules)
 
 
 def add_eof(rules):

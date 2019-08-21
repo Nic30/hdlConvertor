@@ -97,16 +97,6 @@ def fix_class_scope(rules):
     r = rule_by_name(rules, "class_scope")
     _inline_rule([r, ], rule_by_name(rules, "class_type"))
 
-
-def fix_call(rules):
-    # inline_rule(rules, "ps_identifier")
-    r = rule_by_name(rules, "subroutine_call")
-    r.body.insert(0, Antlr4Sequence([
-        Antlr4Option(Antlr4Symbol("class_qualifier", False)),
-        Antlr4Symbol("method_call_body", False)
-        ]))
-
-
 # def fix_cross_body_item(rules):
 #     """
 #     There is an extra ';' after bins_selection_or_option

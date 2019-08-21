@@ -3,7 +3,7 @@ from copy import deepcopy
 from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, extract_option_as_rule, \
     _inline_rule
 from utils.antlr4.grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
-    Antlr4Sequence, Antlr4Iteration, Antlr4Rule, iAntlr4GramElem
+    Antlr4Sequence, Antlr4Iteration, Antlr4Rule, iAntlr4GramElem, Antlr4Option
 from utils.antlr4.left_recurse_remove import direct_left_recurse_rm, split_rule, \
     iterate_everything_except_first
 from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
@@ -11,19 +11,6 @@ from utils.sv.precedence import get_bin_op_precedence
 from utils.antlr4.simple_parser import Antlr4parser
 from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
 
-
-def subroutine_call_rm_lr(rules):
-    r = rule_by_name(rules, "subroutine_call")
-    assert isinstance(r.body, Antlr4Selection)
-    _body = r.body[2]
-    assert _body[-1].symbol == "method_call_body", _body[-1].symbol
-    start: Antlr4Selection = _body[0]
-    start.clear()
-    start.extend([
-        Antlr4Symbol("primary_no_cast_no_call", False),
-        Antlr4Symbol("cast", False),
-        Antlr4Symbol("implicit_class_handle", False)
-    ])
 
 
 def get_operator_precedence_groups():
@@ -210,6 +197,57 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
     return new_r
 
 
+def fix_call(rules):
+    r = rule_by_name(rules, "subroutine_call")
+    r.body.insert(0, Antlr4Sequence([
+        Antlr4Option(Antlr4Symbol("class_qualifier", False)),
+        Antlr4Symbol("method_call_body", False)
+        ]))
+
+def optimise_subroutine_call(rules):
+    r = rule_by_name(rules, "subroutine_call")
+    Antlr4GenericOptimizer().optimize([r, ])
+    c0 = Antlr4parser().from_str("""
+    ( class_qualifier | ( primary | implicit_class_handle ) DOT )?
+    ( 
+        identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
+        | ( array_method_name ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
+            ( KW_WITH LPAREN expression RPAREN )? 
+            | randomize_call 
+          ) 
+    )
+
+    """)
+    assert r.body[0].eq_relaxed(c0), r.body[0]
+    subroutine_call_args = Antlr4Rule("subroutine_call_args", Antlr4parser().from_str("""
+        ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
+        ( KW_WITH LPAREN expression RPAREN )?
+    """))
+    rules.insert(rules.index(r), subroutine_call_args)
+    new_c0 = Antlr4parser().from_str("""
+    ( primary_no_cast_no_call
+      | cast 
+    )
+    subroutine_call_args
+    ( 
+       DOT ( array_method_name | randomize_call | primary_no_cast_no_call | cast )
+       subroutine_call_args
+    )*
+    """)
+    r.body[0] = new_c0
+    primary = rule_by_name(rules, "primary")
+    assert primary.body[0].eq_relaxed(Antlr4Symbol("primary_no_cast_no_call", False))
+    del primary.body[0]
+
+    c1 = Antlr4parser().from_str("""
+        ps_or_hierarchical_identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
+    """)
+    assert r.body[1].eq_relaxed(c1), r.body[1]
+    del r.body[1]
+
+    
+    
+
 def left_recurse_remove(rules):
     """
     Removing Left Recursion from Context-Free Grammars
@@ -227,11 +265,19 @@ def left_recurse_remove(rules):
     solve_left_recurse_and_op_precedence_for_constant_expression(rules)
     # method_call_root - only in method_call
     # method_call      - only in subroutine_call
-    inline_rule(rules, "method_call")
-    inline_rule(rules, "method_call_root")
     split_rule(rules, "primary",
                ["cast", "subroutine_call"],
                "primary_no_cast_no_call")
+
+    inline_rule(rules, "method_call")
+    fix_call(rules)
+    inline_rule(rules, "method_call_body")
+    inline_rule(rules, "method_call_root")
+    inline_rule(rules, "built_in_method_call")
+    inline_rule(rules, "array_manipulation_call")
+    inline_rule(rules, "tf_call")
+    inline_rule(rules, "system_tf_call")
+    optimise_subroutine_call(rules)
 
     split_rule(rules, "constant_primary",
                ["constant_cast", "subroutine_call"],
@@ -253,7 +299,6 @@ def left_recurse_remove(rules):
     # copy cond_predicate
 
     inline_rule(rules, "inside_expression")
-    subroutine_call_rm_lr(rules)
 
     inline_rule(rules, "module_path_conditional_expression")
     direct_left_recurse_rm(rules, 'module_path_expression')

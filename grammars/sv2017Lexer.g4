@@ -273,8 +273,8 @@ EDGE_CONTROL_SPECIFIER:
  'edge' LSQUARE_BR EDGE_DESCRIPTOR ( COMMA EDGE_DESCRIPTOR )* RSQUARE_BR;
 TIME_LITERAL:
  ( UNSIGNED_NUMBER 
-      | FIXED_POINT_NUMBER 
-      ) TIME_UNIT;
+  | FIXED_POINT_NUMBER 
+  ) TIME_UNIT;
 DECIMAL_NUMBER_WITH_BASE:
  ( SIZE )? DECIMAL_BASE UNSIGNED_NUMBER;
 DECIMAL_INVALID_NUMBER_WITH_BASE:
@@ -293,13 +293,13 @@ FIXED_POINT_NUMBER:
  UNSIGNED_NUMBER DOT UNSIGNED_NUMBER;
 UNSIGNED_NUMBER:
  DECIMAL_DIGIT ( UNDERSCORE 
-                      | DECIMAL_DIGIT 
-                      )*;
+                  | DECIMAL_DIGIT 
+                  )*;
 UNBASED_UNSIZED_LITERAL:
  APOSTROPHE Z_OR_X 
-      | '\'0' 
-      | '\'1' 
-     ;
+  | '\'0' 
+  | '\'1' 
+ ;
 STRING_LITERAL:
  DBLQUOTE ( ANY_ASCII_CHARACTERS )* DBLQUOTE;
 C_IDENTIFIER:
@@ -395,42 +395,42 @@ BLOCK_COMMENT:
 WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN);
 fragment EDGE_DESCRIPTOR:
  Z_OR_X ZERO_OR_ONE 
-      | ZERO_OR_ONE Z_OR_X 
-      | '01' 
-      | '10' 
-     ;
+  | ZERO_OR_ONE Z_OR_X 
+  | '01' 
+  | '10' 
+ ;
 fragment ZERO_OR_ONE: [01];
 fragment Z_OR_X: [xXzZ];
 fragment TIME_UNIT:
  's' 
-      | 'ms' 
-      | 'us' 
-      | 'ns' 
-      | 'ps' 
-      | 'fs' 
-     ;
+  | 'ms' 
+  | 'us' 
+  | 'ns' 
+  | 'ps' 
+  | 'fs' 
+ ;
 fragment SIGN:
  PLUS 
-      | MINUS 
-     ;
+  | MINUS 
+ ;
 fragment SIZE: NON_ZERO_UNSIGNED_NUMBER;
 fragment NON_ZERO_UNSIGNED_NUMBER:
  NON_ZERO_DECIMAL_DIGIT ( UNDERSCORE 
-                              | DECIMAL_DIGIT 
-                              )*;
+                          | DECIMAL_DIGIT 
+                          )*;
 fragment EXP: [eE];
 fragment BINARY_VALUE:
  BINARY_DIGIT ( UNDERSCORE 
-                      | BINARY_DIGIT 
-                      )*;
+                  | BINARY_DIGIT 
+                  )*;
 fragment OCTAL_VALUE:
  OCTAL_DIGIT ( UNDERSCORE 
-                  | OCTAL_DIGIT 
-                  )*;
+              | OCTAL_DIGIT 
+              )*;
 fragment HEX_VALUE:
  HEX_DIGIT ( UNDERSCORE 
-                  | HEX_DIGIT 
-                  )*;
+              | HEX_DIGIT 
+              )*;
 fragment DECIMAL_BASE:
  APOSTROPHE ( [sS] )? [dD];
 fragment BINARY_BASE:
@@ -443,45 +443,45 @@ fragment NON_ZERO_DECIMAL_DIGIT: [1-9];
 fragment DECIMAL_DIGIT: [0-9];
 fragment BINARY_DIGIT:
  X_DIGIT 
-      | Z_DIGIT 
-      | [01] 
-     ;
+  | Z_DIGIT 
+  | [01] 
+ ;
 fragment OCTAL_DIGIT:
  X_DIGIT 
-      | Z_DIGIT 
-      | [0-7] 
-     ;
+  | Z_DIGIT 
+  | [0-7] 
+ ;
 fragment HEX_DIGIT:
  X_DIGIT 
-      | Z_DIGIT 
-      | [0-9a-fA-F] 
-     ;
+  | Z_DIGIT 
+  | [0-9a-fA-F] 
+ ;
 fragment X_DIGIT: [xX];
 fragment Z_DIGIT:
  QUESTIONMARK 
-      | [zZ] 
-     ;
+  | [zZ] 
+ ;
 fragment DBLQUOTE: '"';
 fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
-      | '\\\n' 
-      | '\\\r\n' 
-      | '\\' [nt\\"vfa] 
-      | '\\' [0-9] [0-9]? [0-9]? 
-      | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
-     ;
+  | '\\\n' 
+  | '\\\r\n' 
+  | '\\' [nt\\"vfa] 
+  | '\\' [0-9] [0-9]? [0-9]? 
+  | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
+ ;
 fragment ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE: '\u0021'..'\u007E';
 
 mode TABLE_MODE;
     KW_ENDTABLE: 'endtable' -> popMode;
     LEVEL_SYMBOL:
  QUESTIONMARK 
-      | [01xXbB] 
-     ;
+  | [01xXbB] 
+ ;
     EDGE_SYMBOL:
  MUL 
-      | [rRfFpPnN] 
-     ;
+  | [rRfFpPnN] 
+ ;
     TABLE_MODE_BLOCK_COMMENT:
  '/*' .*? '*/' -> channel(HIDDEN),type(BLOCK_COMMENT);
     TABLE_MODE_COLON: ':' -> type(COLON);

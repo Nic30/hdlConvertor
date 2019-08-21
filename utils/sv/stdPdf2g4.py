@@ -23,7 +23,7 @@ from utils.sv.rules_defined_in_text import add_string_literal_rules, \
 from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
     fix_lexer_for_table_def, fix_lexer_for_library_def, \
     rm_semi_from_cross_body_item, add_interface_class_declaration, fix_class_scope, \
-    fix_call, fix_randomize_call, fix_dpi_import_export
+    fix_randomize_call, fix_dpi_import_export
 from utils.sv._utils import mark_regex, extract_keywords_to_specific_rule, \
     replace_rule, collect_keywords, pretify_regex
 from utils.antlr4.auto_format import remove_any_visuals, auto_format
@@ -82,9 +82,10 @@ def remove_useless_and_normalize_names(p):
         "ps_or_hierarchical_identifier",
         Antlr4Selection([
             Antlr4Sequence([
-                Antlr4Option(Antlr4Symbol("package_scope", False)),
+                Antlr4Symbol("package_scope", False),
                 Antlr4Symbol("identifier", False)
             ]),
+            # can be only identifier
             Antlr4Symbol("hierarchical_identifier", False),
             ])
     )
@@ -370,7 +371,6 @@ def proto_grammar_to_g4():
     rm_semi_from_cross_body_item(p.rules)
     add_interface_class_declaration(p.rules)
     fix_class_scope(p.rules)
-    fix_call(p.rules)
     optimize_select(p.rules)
     # fix_cross_body_item(p.rules)
     fix_randomize_call(p.rules)
