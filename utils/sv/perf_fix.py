@@ -471,9 +471,15 @@ def other_performance_fixes(rules):
         r.body.walk(sort_simple_first)
 
     optimize_primary(rules)
+    optimize_item_rules(rules)
     # detect_duplicit_rules(rules)
     detect_syntacticaly_same_rules(rules)
 
+def optimize_item_rules(rules):
+    for r in ["package_or_generate_item_declaration", "module_or_generate_item",
+              "module_or_generate_item_declaration", "module_common_item",
+              "interface_or_generate_item", "checker_or_generate_item_declaration"]:
+        inline_rule(rules, r)
 
 def add_eof(rules):
     source_text = rule_by_name(rules, "source_text")

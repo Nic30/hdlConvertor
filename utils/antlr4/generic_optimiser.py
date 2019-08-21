@@ -3,7 +3,7 @@ from utils.antlr4.selection_optimiser import char_options_to_regex, \
     _selection_reduce_optional, _selection_empty_option_to_optional, \
     _selection_options_to_sequnces, _selection_share_suffix,\
     _selection_share_prefix, _selection_only_unique,\
-    _selection_propagate_optionality
+    _selection_propagate_optionality, _selection_flatten
 from utils.antlr4._utils import replace_item_by_sequence
 from utils.antlr4.grammar import Antlr4Selection, Antlr4Option, Antlr4Sequence
 from utils.antlr4.sequence_optimiser import _sequence_flatten
@@ -26,6 +26,7 @@ class Antlr4GenericOptimizer():
                 _selection_share_prefix,
                 _selection_share_suffix,
                 _selection_propagate_optionality,
+                _selection_flatten,
                 ]
             for opt in optimizations:
                 o, changed = opt(o)

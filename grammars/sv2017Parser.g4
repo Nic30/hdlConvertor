@@ -153,45 +153,51 @@ elaboration_system_task:
       | KW_DOLAR_INFO 
       ) ( LPAREN list_of_arguments RPAREN )? 
   ) SEMI;
-module_common_item:
- module_or_generate_item_declaration 
-  | interface_instantiation 
-  | program_instantiation 
-  | assertion_item 
-  | bind_directive 
-  | continuous_assign 
-  | net_alias 
-  | initial_construct 
-  | final_construct 
-  | always_construct 
-  | loop_generate_construct 
-  | conditional_generate_construct 
-  | elaboration_system_task 
- ;
 module_item:
  port_declaration SEMI 
   | non_port_module_item 
  ;
-module_or_generate_item:
- ( attribute_instance )* ( parameter_override 
-                          | gate_instantiation 
-                          | udp_instantiation 
-                          | module_instantiation 
-                          | module_common_item 
-                          );
-module_or_generate_item_declaration:
- KW_DEFAULT ( KW_CLOCKING identifier 
-              | KW_DISABLE KW_IFF expression_or_dist 
-              ) SEMI 
-  | package_or_generate_item_declaration 
-  | genvar_declaration 
-  | clocking_declaration 
- ;
 non_port_module_item:
  generate_region 
-  | module_or_generate_item 
+  | ( attribute_instance )* ( parameter_override 
+                              | gate_instantiation 
+                              | udp_instantiation 
+                              | module_instantiation 
+                              | ( KW_DEFAULT ( KW_CLOCKING identifier 
+                                              | KW_DISABLE KW_IFF expression_or_dist 
+                                              ) 
+                                  | local_parameter_declaration 
+                                  | parameter_declaration 
+                                  )? SEMI 
+                              | net_declaration 
+                              | data_declaration 
+                              | task_declaration 
+                              | function_declaration 
+                              | checker_declaration 
+                              | dpi_import_export 
+                              | extern_constraint_declaration 
+                              | class_declaration 
+                              | interface_class_declaration 
+                              | class_constructor_declaration 
+                              | covergroup_declaration 
+                              | assertion_item_declaration 
+                              | genvar_declaration 
+                              | clocking_declaration 
+                              | interface_instantiation 
+                              | program_instantiation 
+                              | assertion_item 
+                              | bind_directive 
+                              | continuous_assign 
+                              | net_alias 
+                              | initial_construct 
+                              | final_construct 
+                              | always_construct 
+                              | loop_generate_construct 
+                              | conditional_generate_construct 
+                              | elaboration_system_task 
+                              | specparam_declaration 
+                              ) 
   | specify_block 
-  | ( attribute_instance )* specparam_declaration 
   | program_declaration 
   | module_declaration 
   | interface_declaration 
@@ -239,10 +245,6 @@ use_clause:
           named_parameter_assignment )* )? 
           | named_parameter_assignment ( COMMA named_parameter_assignment )* 
           ) ( COLON KW_CONFIG )?;
-interface_or_generate_item:
- ( attribute_instance )* ( module_common_item 
-                          | extern_tf_declaration 
-                          );
 extern_tf_declaration:
  KW_EXTERN ( KW_FORKJOIN task_prototype 
               | method_prototype 
@@ -253,7 +255,40 @@ interface_item:
  ;
 non_port_interface_item:
  generate_region 
-  | interface_or_generate_item 
+  | ( attribute_instance )* ( ( KW_DEFAULT ( KW_CLOCKING identifier 
+                                              | KW_DISABLE KW_IFF expression_or_dist 
+                                              ) 
+                                  | local_parameter_declaration 
+                                  | parameter_declaration 
+                                  )? SEMI 
+                              | net_declaration 
+                              | data_declaration 
+                              | task_declaration 
+                              | function_declaration 
+                              | checker_declaration 
+                              | dpi_import_export 
+                              | extern_constraint_declaration 
+                              | class_declaration 
+                              | interface_class_declaration 
+                              | class_constructor_declaration 
+                              | covergroup_declaration 
+                              | assertion_item_declaration 
+                              | genvar_declaration 
+                              | clocking_declaration 
+                              | interface_instantiation 
+                              | program_instantiation 
+                              | assertion_item 
+                              | bind_directive 
+                              | continuous_assign 
+                              | net_alias 
+                              | initial_construct 
+                              | final_construct 
+                              | always_construct 
+                              | loop_generate_construct 
+                              | conditional_generate_construct 
+                              | elaboration_system_task 
+                              | extern_tf_declaration 
+                              ) 
   | program_declaration 
   | modport_declaration 
   | interface_declaration 
@@ -265,7 +300,26 @@ program_item:
  ;
 non_port_program_item:
  ( attribute_instance )* ( continuous_assign 
-                              | module_or_generate_item_declaration 
+                              | ( KW_DEFAULT ( KW_CLOCKING identifier 
+                                              | KW_DISABLE KW_IFF expression_or_dist 
+                                              ) 
+                                  | local_parameter_declaration 
+                                  | parameter_declaration 
+                                  )? SEMI 
+                              | net_declaration 
+                              | data_declaration 
+                              | task_declaration 
+                              | function_declaration 
+                              | checker_declaration 
+                              | dpi_import_export 
+                              | extern_constraint_declaration 
+                              | class_declaration 
+                              | interface_class_declaration 
+                              | class_constructor_declaration 
+                              | covergroup_declaration 
+                              | assertion_item_declaration 
+                              | genvar_declaration 
+                              | clocking_declaration 
                               | initial_construct 
                               | final_construct 
                               | concurrent_assertion_item 
@@ -289,15 +343,6 @@ checker_port_direction:
   | KW_OUTPUT 
  ;
 checker_or_generate_item:
- checker_or_generate_item_declaration 
-  | initial_construct 
-  | always_construct 
-  | final_construct 
-  | assertion_item 
-  | continuous_assign 
-  | program_generate_item 
- ;
-checker_or_generate_item_declaration:
  ( KW_RAND )? data_declaration 
   | function_declaration 
   | checker_declaration 
@@ -308,6 +353,12 @@ checker_or_generate_item_declaration:
   | ( KW_DEFAULT ( KW_CLOCKING identifier 
               | KW_DISABLE KW_IFF expression_or_dist 
               ) )? SEMI 
+  | initial_construct 
+  | always_construct 
+  | final_construct 
+  | assertion_item 
+  | continuous_assign 
+  | program_generate_item 
  ;
 class_item:
  ( attribute_instance )* ( class_property 
@@ -416,12 +467,6 @@ extern_constraint_declaration:
 identifier_list:
  identifier ( COMMA identifier )*;
 package_item:
- package_or_generate_item_declaration 
-  | anonymous_program 
-  | package_export_declaration 
-  | timeunits_declaration 
- ;
-package_or_generate_item_declaration:
  net_declaration 
   | data_declaration 
   | task_declaration 
@@ -437,6 +482,9 @@ package_or_generate_item_declaration:
       )? SEMI 
   | covergroup_declaration 
   | assertion_item_declaration 
+  | anonymous_program 
+  | package_export_declaration 
+  | timeunits_declaration 
  ;
 anonymous_program:
  KW_PROGRAM SEMI ( anonymous_program_item )* KW_ENDPROGRAM;
@@ -1328,8 +1376,44 @@ generate_block:
   ( COLON identifier )? 
  ;
 generate_item:
- module_or_generate_item 
-  | interface_or_generate_item 
+ ( attribute_instance )* ( parameter_override 
+                              | gate_instantiation 
+                              | udp_instantiation 
+                              | module_instantiation 
+                              | ( KW_DEFAULT ( KW_CLOCKING identifier 
+                                              | KW_DISABLE KW_IFF expression_or_dist 
+                                              ) 
+                                  | local_parameter_declaration 
+                                  | parameter_declaration 
+                                  )? SEMI 
+                              | net_declaration 
+                              | data_declaration 
+                              | task_declaration 
+                              | function_declaration 
+                              | checker_declaration 
+                              | dpi_import_export 
+                              | extern_constraint_declaration 
+                              | class_declaration 
+                              | interface_class_declaration 
+                              | class_constructor_declaration 
+                              | covergroup_declaration 
+                              | assertion_item_declaration 
+                              | genvar_declaration 
+                              | clocking_declaration 
+                              | interface_instantiation 
+                              | program_instantiation 
+                              | assertion_item 
+                              | bind_directive 
+                              | continuous_assign 
+                              | net_alias 
+                              | initial_construct 
+                              | final_construct 
+                              | always_construct 
+                              | loop_generate_construct 
+                              | conditional_generate_construct 
+                              | elaboration_system_task 
+                              | extern_tf_declaration 
+                              ) 
   | checker_or_generate_item 
  ;
 udp_nonansi_declaration:
@@ -2381,11 +2465,11 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
-  | KW_OPTION 
   | KW_RANDOMIZE 
-  | KW_TYPE_OPTION 
   | KW_STD 
+  | KW_TYPE_OPTION 
   | KW_SAMPLE 
+  | KW_OPTION 
  ;
 package_scope:
  ( KW_DOLAR_UNIT 
@@ -2413,24 +2497,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_SETUP 
   | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_SKEW 
-  | KW_DOLAR_FULLSKEW 
-  | KW_DOLAR_HOLD 
   | KW_DOLAR_TIMESKEW 
   | KW_DOLAR_WARNING 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_ERROR 
-  | KW_DOLAR_FATAL 
-  | KW_DOLAR_UNIT 
-  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_SKEW 
   | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_RECOVERY 
-  | KW_DOLAR_INFO 
-  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_UNIT 
+  | KW_DOLAR_RECREM 
+  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_FATAL 
+  | KW_DOLAR_ERROR 
   | KW_DOLAR_ROOT 
+  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_INFO 
+  | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_HOLD 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 

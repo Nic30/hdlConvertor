@@ -211,10 +211,9 @@ def optimise_subroutine_call(rules):
     ( class_qualifier | ( primary | implicit_class_handle ) DOT )?
     ( 
         identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
-        | ( array_method_name ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
+        |  array_method_name ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
             ( KW_WITH LPAREN expression RPAREN )? 
-            | randomize_call 
-          ) 
+        | randomize_call 
     )
 
     """)

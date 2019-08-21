@@ -200,3 +200,22 @@ def _selection_propagate_optionality(sel: Antlr4Selection):
         return Antlr4Option(Antlr4Selection(non_optional_choices)), True
     else:
         return sel, False
+
+
+def _selection_flatten(sel: Antlr4Selection):
+    assert isinstance(sel, Antlr4Selection), sel
+    new_choices = []
+    use_new_choinces = False
+    for c in sel:
+        _c = c
+        while isinstance(_c, Antlr4Sequence) and len(_c) == 1:
+            _c = _c[0]
+        if isinstance(_c, Antlr4Selection):
+            use_new_choinces = True
+            new_choices.extend(_c)
+        else:
+            new_choices.append(c)
+    if use_new_choinces:
+        return Antlr4Selection(new_choices), True
+    else:
+        return sel, False
