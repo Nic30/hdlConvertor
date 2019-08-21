@@ -22,7 +22,7 @@ class Antlr4Formater():
 
     def _auto_format(self, e: iAntlr4GramElem, x, indent) -> int:
         if isinstance(e, Antlr4Selection):
-            item_indent = ceil(x / len(Antlr4Indent.INDENT)) + 1
+            item_indent = ceil(x / len(Antlr4Indent.INDENT))
             x = item_indent * len(Antlr4Indent.INDENT)
             # item_indent = indent + 1
             # assert item_indent >= indent
@@ -30,7 +30,7 @@ class Antlr4Formater():
                 if not isinstance(c, Antlr4Sequence):
                     c = Antlr4Sequence([c, ])
                     e[ci] = c
-                self._auto_format(c, item_indent, indent)
+                self._auto_format(c, x + 1, item_indent)
                 if ci != len(e):
                     c.extend([Antlr4Newline(), Antlr4Indent(item_indent)])
         elif isinstance(e, Antlr4Sequence):
