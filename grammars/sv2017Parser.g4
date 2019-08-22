@@ -2109,11 +2109,8 @@ subroutine_call:
                                   | primary_no_cast_no_call 
                                   | cast 
                                   ) subroutine_call_args )* 
-  | any_system_tf_identifier ( LPAREN ( list_of_arguments 
-                                      | data_type ( COMMA expression )? 
-                                      | expression ( COMMA ( expression )? )* ( COMMA 
-                                      ( clocking_event )? )? 
-                                      ) RPAREN )? 
+  | any_system_tf_identifier ( LPAREN ( data_type )? list_of_arguments ( COMMA clocking_event )? 
+  RPAREN )? 
   | ( KW_STD DOUBLE_COLON )? randomize_call 
  ;
 list_of_arguments:
@@ -2465,9 +2462,9 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
+  | KW_STD 
   | KW_RANDOMIZE 
   | KW_SAMPLE 
-  | KW_STD 
   | KW_TYPE_OPTION 
   | KW_OPTION 
  ;
@@ -2497,24 +2494,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_SETUP 
-  | KW_DOLAR_SKEW 
-  | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_WARNING 
-  | KW_DOLAR_ERROR 
-  | KW_DOLAR_INFO 
-  | KW_DOLAR_FATAL 
-  | KW_DOLAR_ROOT 
   | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_ROOT 
   | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_SKEW 
   | KW_DOLAR_UNIT 
-  | KW_DOLAR_HOLD 
-  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_ERROR 
   | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_FATAL 
   | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_INFO 
+  | KW_DOLAR_TIMESKEW 
   | KW_DOLAR_RECREM 
+  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_HOLD 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_PERIOD 
+  | KW_DOLAR_WARNING 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 

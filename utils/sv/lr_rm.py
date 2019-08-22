@@ -197,7 +197,7 @@ def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
     return new_r
 
 
-def fix_call(rules):
+def fix_subroutine_call(rules):
     r = rule_by_name(rules, "subroutine_call")
     r.body.insert(0, Antlr4Sequence([
         Antlr4Option(Antlr4Symbol("class_qualifier", False)),
@@ -238,6 +238,21 @@ def optimise_subroutine_call(rules):
     assert primary.body[0].eq_relaxed(Antlr4Symbol("primary_no_cast_no_call", False))
     del primary.body[0]
 
+    c2 =  Antlr4parser().from_str("""
+        any_system_tf_identifier ( LPAREN ( list_of_arguments 
+                                      | data_type ( COMMA expression )? 
+                                      | expression ( COMMA ( expression )? )* ( COMMA 
+                                      ( clocking_event )? )? 
+                                      ) RPAREN )? 
+    """)
+    assert r.body[2].eq_relaxed(c2)
+    r.body[2] = Antlr4parser().from_str("""
+        any_system_tf_identifier ( LPAREN (
+                                     ( data_type )? list_of_arguments 
+                                     ( COMMA clocking_event )? 
+                                 ) RPAREN )? 
+    """)
+    
     c1 = Antlr4parser().from_str("""
         ps_or_hierarchical_identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
     """)
@@ -269,7 +284,7 @@ def left_recurse_remove(rules):
                "primary_no_cast_no_call")
 
     inline_rule(rules, "method_call")
-    fix_call(rules)
+    fix_subroutine_call(rules)
     inline_rule(rules, "method_call_body")
     inline_rule(rules, "method_call_root")
     inline_rule(rules, "built_in_method_call")
