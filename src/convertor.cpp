@@ -143,6 +143,10 @@ void Convertor::parse_sv_str(const string &verilog_str,
 }
 #endif
 
+bool is_system_verilog(Language lang) {
+	return lang == Language::SV2005 || lang == Language::SV2009
+			|| lang == Language::SV2012 || lang == Language::SV2017;
+}
 HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 
@@ -164,8 +168,7 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		} else if (lang == VERILOG || lang == Language::VERILOG2001) {
 			parse_verilog_file(fileName, incdir);
 #ifdef SV_PARSER
-		} else if (lang == Language::SV2009 || lang == Language::SV2012
-				|| lang == Language::SV2017) {
+		} else if (is_system_verilog(lang)) {
 			parse_sv_file(fileName, incdir);
 #endif
 		} else {
@@ -187,8 +190,7 @@ HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 	} else if (lang == VERILOG) {
 		parse_verilog_str(hdl_str, incdir);
 #ifdef SV_PARSER
-	} else if (lang == Language::SV2009 || lang == Language::SV2012
-			|| lang == Language::SV2017) {
+	} else if (is_system_verilog(lang)) {
 		parse_sv_str(hdl_str, incdir);
 #endif
 	} else {

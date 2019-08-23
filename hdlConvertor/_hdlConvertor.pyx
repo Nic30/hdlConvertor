@@ -5,9 +5,11 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from cpython.ref cimport PyObject
 from cpython.version cimport PY_MAJOR_VERSION
-from hdlConvertor.language import Language as PyHdlLanguageEnum
-from hdlConvertor.hdlAst import HdlContext as PyHdlContext
 import sys
+
+from hdlConvertor.hdlAst import HdlContext as PyHdlContext
+from hdlConvertor.language import Language as PyHdlLanguageEnum
+
 
 cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass HdlContext:
@@ -25,7 +27,7 @@ cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
 
 cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
-        VHDL, VERILOG, SYSTEM_VERILOG, VERILOG2001, VERILOG2005, SV2012, SV2017
+        VHDL, VERILOG1995, VERILOG2001, VERILOG2001_NOCONFIG, VERILOG2005, SV2005, SV2009, SV2012, SV2017
 
 cdef class ParseException(Exception):
     pass
@@ -83,11 +85,19 @@ cdef class HdlConvertor:
     @staticmethod
     def _get_verilog_pp_mode(mode):
         L = PyHdlLanguageEnum
-        if mode == L.VERILOG_2001:
+        if mode == L.VERILOG_1995:
+            return VERILOG1995
+        elif mode == L.VERILOG_2001:
             return VERILOG2001
+        elif mode == L.VERILOG_2001_NOCONFIG:
+            return VERILOG2001_NOCONFIG
         elif mode == L.VERILOG_2005:
-            return VERILOG2005
-        elif mode == L.SYSTEM_VERILOG_2012 or mode == L.SYSTEM_VERILOG:
+            return VERILOG2001
+        elif mode == L.SYSTEM_VERILOG_2005:
+            return SV2005
+        elif mode == L.SYSTEM_VERILOG_2009:
+            return SV2009
+        elif mode == L.SYSTEM_VERILOG_2012:
             return SV2012
         elif mode == L.SYSTEM_VERILOG_2017:
             return SV2017
