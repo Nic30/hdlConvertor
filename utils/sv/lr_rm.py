@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, extract_option_as_rule, \
-    _inline_rule
+    _inline_rule, replace_item_by_sequence
 from utils.antlr4.grammar import Antlr4Symbol, Antlr4Selection, rule_by_name, \
     Antlr4Sequence, Antlr4Iteration, Antlr4Rule, iAntlr4GramElem, Antlr4Option
 from utils.antlr4.left_recurse_remove import direct_left_recurse_rm, split_rule, \
@@ -10,7 +10,6 @@ from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
 from utils.sv.precedence import get_bin_op_precedence
 from utils.antlr4.simple_parser import Antlr4parser
 from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
-
 
 
 def get_operator_precedence_groups():
@@ -204,6 +203,56 @@ def fix_subroutine_call(rules):
         Antlr4Symbol("method_call_body", False)
         ]))
 
+
+def generate_constant_subroutine_call(rules, subroutine_call, subroutine_call_args):
+    c_r = deepcopy(subroutine_call)
+    c_r.name = "constant_" + subroutine_call.name
+    rules.insert(rules.index(subroutine_call), c_r)
+    constant_primary = rule_by_name(rules, "constant_primary")
+    subroutine_call_symbol = Antlr4Symbol(subroutine_call.name, False)
+    
+    def match_replace_fn(o):
+        if o == subroutine_call_symbol:
+            return Antlr4Symbol(c_r.name, False)
+
+    replace_item_by_sequence(constant_primary.body, match_replace_fn)
+
+    # subroutine_call:
+    #  ( primary_no_cast_no_call 
+    #       | cast 
+    #       ) subroutine_call_args ( DOT ( array_method_name 
+    #                                   | randomize_call 
+    #                                   | primary_no_cast_no_call 
+    #                                   | cast 
+    #                                   ) subroutine_call_args )* 
+    #   | any_system_tf_identifier ( LPAREN ( data_type )? list_of_arguments ( COMMA clocking_event )? 
+    #   RPAREN )? 
+    #   | ( KW_STD DOUBLE_COLON )? randomize_call 
+    #  ;
+    def match_replace_fn2(o):
+        if isinstance(o, Antlr4Symbol) and o.is_terminal == False:
+            for a, b in [("primary_no_cast_no_call", "constant_primary_no_cast_no_call"),
+                         ("cast", "constant_cast"),
+                         ("list_of_arguments", "constant_list_of_arguments"),
+                         ("subroutine_call_args", "subroutine_call_args"),
+                         ("expression", "constant_expression")]:
+                if o.symbol == a:
+                    return Antlr4Symbol(b, False)
+
+    replace_item_by_sequence(c_r.body, match_replace_fn2)
+
+    constant_subroutine_call_args = deepcopy(subroutine_call_args)
+    constant_subroutine_call_args .name = "constant_" + subroutine_call_args.name
+    rules.insert(rules.index(c_r), constant_subroutine_call_args)
+    replace_item_by_sequence(constant_subroutine_call_args.body, match_replace_fn2)
+
+    list_of_arguments = rule_by_name(rules, "list_of_arguments")
+    constant_list_of_arguments = deepcopy(list_of_arguments)
+    constant_list_of_arguments.name = "constant_" + list_of_arguments.name
+    rules.insert(rules.index(list_of_arguments), constant_list_of_arguments)
+    replace_item_by_sequence(constant_list_of_arguments.body, match_replace_fn2)
+
+
 def optimise_subroutine_call(rules):
     r = rule_by_name(rules, "subroutine_call")
     Antlr4GenericOptimizer().optimize([r, ])
@@ -238,7 +287,7 @@ def optimise_subroutine_call(rules):
     assert primary.body[0].eq_relaxed(Antlr4Symbol("primary_no_cast_no_call", False))
     del primary.body[0]
 
-    c2 =  Antlr4parser().from_str("""
+    c2 = Antlr4parser().from_str("""
         any_system_tf_identifier ( LPAREN ( list_of_arguments 
                                       | data_type ( COMMA expression )? 
                                       | expression ( COMMA ( expression )? )* ( COMMA 
@@ -258,10 +307,9 @@ def optimise_subroutine_call(rules):
     """)
     assert r.body[1].eq_relaxed(c1), r.body[1]
     del r.body[1]
+    generate_constant_subroutine_call(rules, r, subroutine_call_args)
 
     
-    
-
 def left_recurse_remove(rules):
     """
     Removing Left Recursion from Context-Free Grammars
@@ -294,8 +342,12 @@ def left_recurse_remove(rules):
     optimise_subroutine_call(rules)
 
     split_rule(rules, "constant_primary",
-               ["constant_cast", "subroutine_call"],
+               ["constant_cast", "constant_subroutine_call"],
                "constant_primary_no_cast_no_call")
+    constant_primary = rule_by_name(rules, "constant_primary")
+    constant_primary_no_cast_no_call_symbol = Antlr4Symbol("constant_primary_no_cast_no_call", False)
+    assert constant_primary.body[0].eq_relaxed(constant_primary_no_cast_no_call_symbol), constant_primary.body[0]
+    del constant_primary.body[0]
 
     # inline_rule(rules, "cast")
     # inline_rule(rules, "constant_cast")

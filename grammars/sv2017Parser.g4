@@ -2101,6 +2101,21 @@ empty_unpacked_array_concatenation:
 subroutine_call_args:
  ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )? 
       ( KW_WITH LPAREN expression RPAREN )?;
+constant_subroutine_call_args:
+ ( attribute_instance )* ( LPAREN constant_list_of_arguments RPAREN )? ( KW_WITH LPAREN 
+      constant_expression RPAREN )?;
+constant_subroutine_call:
+ ( constant_primary_no_cast_no_call 
+      | constant_cast 
+      ) subroutine_call_args ( DOT ( array_method_name 
+                                  | randomize_call 
+                                  | constant_primary_no_cast_no_call 
+                                  | constant_cast 
+                                  ) subroutine_call_args )* 
+  | any_system_tf_identifier ( LPAREN ( data_type )? constant_list_of_arguments 
+  ( COMMA clocking_event )? RPAREN )? 
+  | ( KW_STD DOUBLE_COLON )? randomize_call 
+ ;
 subroutine_call:
  ( primary_no_cast_no_call 
       | cast 
@@ -2113,6 +2128,11 @@ subroutine_call:
   RPAREN )? 
   | ( KW_STD DOUBLE_COLON )? randomize_call 
  ;
+constant_list_of_arguments:
+ ( DOT identifier LPAREN ( constant_expression )? RPAREN 
+  | constant_expression ( COMMA ( constant_expression )? )* 
+  | ( COMMA ( constant_expression )? )+ 
+  )? ( COMMA DOT identifier LPAREN ( constant_expression )? RPAREN )*;
 list_of_arguments:
  ( DOT identifier LPAREN ( expression )? RPAREN 
   | expression ( COMMA ( expression )? )* 
@@ -2311,8 +2331,7 @@ constant_primary_no_cast_no_call:
   | type_reference 
  ;
 constant_primary:
- constant_primary_no_cast_no_call 
-  | subroutine_call 
+ constant_subroutine_call 
   | constant_cast 
  ;
 module_path_primary:
@@ -2329,7 +2348,7 @@ primary_no_cast_no_call:
   | DOLAR 
   | KW_NULL 
   | primary_literal 
-  | package_or_class_scoped_hier_id_with_const_select select 
+  | package_or_class_scoped_hier_id_with_select 
   | empty_unpacked_array_concatenation 
   | ( concatenation 
       | multiple_concatenation 
@@ -2463,10 +2482,10 @@ identifier:
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
   | KW_STD 
-  | KW_RANDOMIZE 
-  | KW_SAMPLE 
-  | KW_TYPE_OPTION 
   | KW_OPTION 
+  | KW_TYPE_OPTION 
+  | KW_SAMPLE 
+  | KW_RANDOMIZE 
  ;
 package_scope:
  ( KW_DOLAR_UNIT 
@@ -2494,34 +2513,41 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_FULLSKEW 
-  | KW_DOLAR_ROOT 
-  | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_WARNING 
   | KW_DOLAR_SKEW 
-  | KW_DOLAR_UNIT 
-  | KW_DOLAR_ERROR 
-  | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_FATAL 
-  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_ROOT 
   | KW_DOLAR_INFO 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_RECREM 
-  | KW_DOLAR_WIDTH 
-  | KW_DOLAR_HOLD 
+  | KW_DOLAR_REMOVAL 
   | KW_DOLAR_SETUP 
   | KW_DOLAR_PERIOD 
-  | KW_DOLAR_WARNING 
+  | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_ERROR 
+  | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_NOCHANGE 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_FATAL 
+  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_HOLD 
+  | KW_DOLAR_RECREM 
+  | KW_DOLAR_UNIT 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 
   | identifier ( parameter_value_assignment )? 
   ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
-package_or_class_scoped_hier_id_with_const_select:
+package_or_class_scoped_path:
  ( KW_LOCAL DOUBLE_COLON )? ( KW_DOLAR_ROOT 
                               | implicit_class_handle 
                               | ( KW_DOLAR_UNIT 
                                   | identifier ( parameter_value_assignment )? 
                                   ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )* 
-                              ) ( constant_bit_select )* 
+                              );
+package_or_class_scoped_hier_id_with_const_select:
+ package_or_class_scoped_path ( constant_bit_select )* 
       ( DOT identifier ( constant_bit_select )* )*;
+package_or_class_scoped_hier_id_with_select:
+ package_or_class_scoped_path ( bit_select )* ( DOT identifier ( bit_select )* )* ( LSQUARE_BR 
+      expression ( PLUS 
+      | MINUS 
+      )? COLON constant_expression RSQUARE_BR )?;

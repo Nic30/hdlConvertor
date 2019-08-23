@@ -123,7 +123,7 @@ def optimize_primary(rules):
     assert_eq(5, "package_or_class_scoped_hier_id_with_const_select select")
     assert_eq(8, "let_expression")  # is just call
     primary_no_cast_no_call.body[5] = Antlr4parser().from_str("""
-        package_or_class_scoped_hier_id_with_const_select select
+        package_or_class_scoped_hier_id_with_select
     """)
     del primary_no_cast_no_call.body[8]
 
@@ -216,7 +216,7 @@ def optimize_class_scope(rules):
     #  ) DOUBLE_COLON;
     # hierarchical_identifier: ( KW_DOLAR_ROOT DOT )? ( identifier constant_bit_select DOT )* identifier;
     to_replace2 = p.from_str("( class_qualifier | package_scope )? hierarchical_identifier")
-    package_or_class_scoped_hier_id_with_const_select = Antlr4Rule("package_or_class_scoped_hier_id_with_const_select", p.from_str("""
+    package_or_class_scoped_path = Antlr4Rule("package_or_class_scoped_path", p.from_str("""
         ( KW_LOCAL DOUBLE_COLON )?
         ( 
           KW_DOLAR_ROOT
@@ -229,9 +229,41 @@ def optimize_class_scope(rules):
               ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*
            )
         )
-        ( constant_bit_select )* ( DOT identifier ( constant_bit_select )* )*
     """))
+    package_or_class_scoped_hier_id_with_const_select = Antlr4Rule(
+        "package_or_class_scoped_hier_id_with_const_select",
+        p.from_str("""
+            package_or_class_scoped_path
+            ( constant_bit_select )* ( DOT identifier ( constant_bit_select )* )*
+    """))
+    
+    # bit_select:
+    #  LSQUARE_BR expression RSQUARE_BR;
+    # select:
+    #  ( DOT identifier 
+    #   | bit_select 
+    #   )* ( LSQUARE_BR part_select_range RSQUARE_BR )?;
+    # part_select_range:
+    #  constant_range 
+    #   | indexed_range 
+    #  ;
+    # indexed_range:
+    #  expression ( PLUS 
+    #               | MINUS 
+    #               ) COLON constant_expression;
+    # constant_range:
+    #  constant_expression COLON constant_expression;
+
+    package_or_class_scoped_hier_id_with_select = Antlr4Rule(
+        "package_or_class_scoped_hier_id_with_select",
+        p.from_str("""
+            package_or_class_scoped_path
+            ( bit_select )* ( DOT identifier ( bit_select )* )*
+            ( LSQUARE_BR expression ( PLUS | MINUS )? COLON constant_expression RSQUARE_BR )?
+    """))
+    rules.append(package_or_class_scoped_path)
     rules.append(package_or_class_scoped_hier_id_with_const_select)
+    rules.append(package_or_class_scoped_hier_id_with_select)
     primary_no_cast_no_call = rule_by_name(rules, "primary_no_cast_no_call")
     m = Antlr4Query(to_replace2).match(primary_no_cast_no_call.body)
 
