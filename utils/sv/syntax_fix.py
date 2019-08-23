@@ -1,11 +1,14 @@
+
+"""
+Utils for fixing of errors in SystemVerilog std grammar
+"""
 from copy import deepcopy
 
-from utils.antlr4.grammar import Antlr4Selection, Antlr4Rule, Antlr4Symbol, \
-    rule_by_name, Antlr4Sequence, Antlr4Option, Antlr4Iteration, \
-    generate_renamer
 from utils.antlr4._utils import replace_item_by_sequence, _inline_rule, \
     _replace_symbol_in_rule
-from utils.sv._utils import get_all_used_lexer_tokens, wrap_in_lexer_mode,\
+from utils.antlr4.grammar import Antlr4Selection, Antlr4Rule, Antlr4Symbol, \
+    rule_by_name, Antlr4Sequence, generate_renamer
+from utils.sv._utils import get_all_used_lexer_tokens, wrap_in_lexer_mode, \
     collect_keywords
 
 COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}

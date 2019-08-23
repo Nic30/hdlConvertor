@@ -1,3 +1,7 @@
+
+"""
+Rules which are defined only in text in SystemVerilog standard
+"""
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Selection, \
     Antlr4Sequence, Antlr4Iteration, Antlr4Option, Antlr4LexerAction
 

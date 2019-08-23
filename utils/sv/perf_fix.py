@@ -1,3 +1,7 @@
+
+"""
+Grammar transformations for improving of performance of the grammar
+"""
 from utils.antlr4.grammar import rule_by_name, Antlr4Symbol, Antlr4Option, \
     Antlr4Sequence, Antlr4Rule, Antlr4Iteration, Antlr4Selection
 from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage, \

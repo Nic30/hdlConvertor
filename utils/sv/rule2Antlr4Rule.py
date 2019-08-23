@@ -1,3 +1,7 @@
+
+"""
+Utils for parsing of the proto grammar extracted directly from pdf to antlr4 format
+"""
 from antlr4.tree.Tree import TerminalNode
 from typing import Union, List
 

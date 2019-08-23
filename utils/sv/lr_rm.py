@@ -1,3 +1,7 @@
+
+"""
+Utils for removing of left recurse from the grammar
+"""
 from copy import deepcopy
 
 from utils.antlr4._utils import inline_rule, replace_symbol_in_rule, extract_option_as_rule, \

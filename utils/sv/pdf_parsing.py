@@ -1,3 +1,7 @@
+
+"""
+Utils for parsing of pdf with standard
+"""
 from pdfminer.layout import LTChar, LAParams, LTTextBox, LTTextLine, LTFigure
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator

@@ -6,11 +6,16 @@
 
 import os
 
-from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
-    Antlr4Selection, Antlr4Option, generate_renamer, \
-    rule_by_name, Antlr4LexerAction
 from utils.antlr4._utils import collect_simple_rules, \
     remove_simple_rule, extract_option_as_rule
+from utils.antlr4.auto_format import remove_any_visuals, auto_format
+from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
+from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Sequence, \
+    Antlr4Selection, generate_renamer, \
+    rule_by_name
+from utils.antlr4.simple_parser import Antlr4parser
+from utils.sv._utils import mark_regex, extract_keywords_to_specific_rule, \
+    replace_rule, collect_keywords, pretify_regex
 from utils.sv.keywords import IEEE1800_2017_KEYWORDS
 from utils.sv.lr_rm import left_recurse_remove
 from utils.sv.pdf_parsing import parse_sv_pdf
@@ -21,14 +26,9 @@ from utils.sv.rule2Antlr4Rule import SvRule2Antlr4Rule
 from utils.sv.rules_defined_in_text import add_string_literal_rules, \
     add_comments_and_ws
 from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
-    fix_lexer_for_table_def, fix_lexer_for_library_def, \
+    fix_lexer_for_table_def, \
     rm_semi_from_cross_body_item, add_interface_class_declaration, fix_class_scope, \
     fix_randomize_call, fix_dpi_import_export
-from utils.sv._utils import mark_regex, extract_keywords_to_specific_rule, \
-    replace_rule, collect_keywords, pretify_regex
-from utils.antlr4.auto_format import remove_any_visuals, auto_format
-from utils.antlr4.generic_optimiser import Antlr4GenericOptimizer
-from utils.antlr4.simple_parser import Antlr4parser
 
 
 def remove_useless_and_normalize_names(p):
