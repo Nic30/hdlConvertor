@@ -29,6 +29,8 @@ from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
     fix_lexer_for_table_def, \
     rm_semi_from_cross_body_item, add_interface_class_declaration, fix_class_scope, \
     fix_randomize_call, fix_dpi_import_export
+from utils.sv.version_dependent_grammar import std_version_specific_keywords, \
+    print_lexer_extra_for_std_version_specific_keywords
 
 
 def remove_useless_and_normalize_names(p):
@@ -331,6 +333,9 @@ UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
 def proto_grammar_to_g4():
+    # [NOTE] dissable this if you need java compatible parser/lexer
+    CONFIGURABLE_STD_VERSION = True
+    
     p = SvRule2Antlr4Rule()
     with open(os.path.join(UTILS_ROOT, "sv2017.g4_proto")) as f:
         p.convert(f)
@@ -380,6 +385,9 @@ def proto_grammar_to_g4():
     other_performance_fixes(p.rules)
     add_eof(p.rules)
     Antlr4GenericOptimizer().optimize(p.rules)
+    if CONFIGURABLE_STD_VERSION:
+        std_version_specific_keywords(p.rules)
+    
     auto_format(p.rules)
     p.rules.sort(key=lambda x: ("" if x.lexer_mode is None else x.lexer_mode,
                                 not x.name.startswith("KW_"),
@@ -401,6 +409,8 @@ def proto_grammar_to_g4():
     with open(os.path.join(root, "sv2017Lexer.g4"), "w") as f:
         # f.write("// ---------- LEXER ----------\n\n")
         f.write("lexer grammar sv2017Lexer;\n\n")
+        if CONFIGURABLE_STD_VERSION:
+            print_lexer_extra_for_std_version_specific_keywords(f)
 
         lexer_mode = None
         for r in p.rules:

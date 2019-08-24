@@ -80,29 +80,29 @@ cdef class HdlConvertor:
         if langue == PyHdlLanguageEnum.VHDL:
             return VHDL
         else:
-            return HdlConvertor._get_verilog_pp_mode(langue)
+            return HdlConvertor._translate_verilog_enum(langue)
 
     @staticmethod
-    def _get_verilog_pp_mode(mode):
+    def _translate_verilog_enum(lang):
         L = PyHdlLanguageEnum
-        if mode == L.VERILOG_1995:
+        if lang == L.VERILOG_1995:
             return VERILOG1995
-        elif mode == L.VERILOG_2001:
+        elif lang == L.VERILOG_2001:
             return VERILOG2001
-        elif mode == L.VERILOG_2001_NOCONFIG:
+        elif lang == L.VERILOG_2001_NOCONFIG:
             return VERILOG2001_NOCONFIG
-        elif mode == L.VERILOG_2005:
+        elif lang == L.VERILOG_2005:
             return VERILOG2001
-        elif mode == L.SYSTEM_VERILOG_2005:
+        elif lang == L.SYSTEM_VERILOG_2005:
             return SV2005
-        elif mode == L.SYSTEM_VERILOG_2009:
+        elif lang == L.SYSTEM_VERILOG_2009:
             return SV2009
-        elif mode == L.SYSTEM_VERILOG_2012:
+        elif lang == L.SYSTEM_VERILOG_2012:
             return SV2012
-        elif mode == L.SYSTEM_VERILOG_2017:
+        elif lang == L.SYSTEM_VERILOG_2017:
             return SV2017
         else:
-            raise ValueError(repr(mode) + " is not recognized"
+            raise ValueError(repr(lang) + " is not recognized"
                              " (expected hdlConvertor.language.Language value)")
 
     def parse(self, filenames, langue, incdirs, hierarchyOnly=False, debug=True):
@@ -181,40 +181,40 @@ cdef class HdlConvertor:
         else:
             return PyHdlContext()
 
-    def verilog_pp(self, filename, incdirs=['.'], mode=PyHdlLanguageEnum.VERILOG):
+    def verilog_pp(self, filename, lang, incdirs=['.']):
         """
         Execute Verilog preprocessor
 
         :type filename: Union[str, List[str]]
         :return: string output from verilog preprocessor
         """
-        mode_value = self._get_verilog_pp_mode(mode)
+        langue_value = self._translate_verilog_enum(lang)
         PY3 = PY_MAJOR_VERSION == 3
 
         if PY3:
             filename = filename.encode('utf8')
             incdirs = [item.encode('utf8') for item in incdirs]
 
-        data = self.thisptr.verilog_pp(filename, incdirs, mode_value)
+        data = self.thisptr.verilog_pp(filename, incdirs, langue_value)
 
         if PY3:
             data = data.decode('utf8')
 
         return data
 
-    def verilog_pp_str(self, verilog_str, incdirs=['.'], mode=PyHdlLanguageEnum.VERILOG):
+    def verilog_pp_str(self, verilog_str, lang, incdirs=['.']):
         """
         Execute Verilog preprocessor
 
         :return: string output from verilog preprocessor
         """
-        mode_value = self._get_verilog_pp_mode(mode)
+        langue_value = self._translate_verilog_enum(lang)
         PY3 = PY_MAJOR_VERSION == 3
         if PY3:
             verilog_str = verilog_str.encode('utf8')
             incdirs = [item.encode('utf8') for item in incdirs]
 
-        data = self.thisptr.verilog_pp_str(verilog_str, incdirs, mode_value)
+        data = self.thisptr.verilog_pp_str(verilog_str, incdirs, langue_value)
 
         if PY3:
             data = data.decode('utf8')

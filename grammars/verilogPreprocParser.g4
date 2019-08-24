@@ -10,19 +10,7 @@ options { tokenVocab=verilogPreprocLexer;}
 
 @parser::members {
 
-unsigned int mode;
-
-inline bool isVerilog2005() {
-  return mode == hdlConvertor::Language::VERILOG2005;
-}
-
-inline bool isSV2012() {
-  return isVerilog2005() || mode == hdlConvertor::Language::SV2012;
-}
-
-inline bool isSV2017() {
-  return isSV2012() || mode == hdlConvertor::Language::SV2017;
-}
+hdlConvertor::Language language_version;
 
 }
 
@@ -54,8 +42,8 @@ preprocess_directive:
     | default_nettype
     | line_directive
     | timing_spec
-    | {isSV2012() || isSV2017()}? undefineall
-    | {isVerilog2005() || isSV2012() || isSV2017()}? (
+    | {language_version >= hdlConvertor::Language::SV2009}? undefineall
+    | {language_version >= hdlConvertor::Language::VERILOG2005}? (
 		keywords_directive
         | endkeywords_directive
         | pragma
@@ -66,8 +54,8 @@ define:
 ;
 
 define_args:
-     { isSV2012() || isSV2017() }? define_args_with_def_val
- 	| { !( isSV2012() || isSV2017()) }? define_args_basic
+     { language_version >= hdlConvertor::Language::SV2009 }? define_args_with_def_val
+ 	| { language_version < hdlConvertor::Language::SV2009 }? define_args_basic
 ;
 
 define_args_with_def_val:
@@ -139,7 +127,7 @@ default_nettype_value
     | TRIREG
     | UWIRE
     | NONE
-    | {isVerilog2005()}? UWIRE
+    | {language_version >= hdlConvertor::Language::VERILOG2005}? UWIRE
     ;
 
 line_directive:
@@ -158,13 +146,13 @@ keywords_directive:
 ;
 
 version_specifier:
-     {isSV2017()}? V18002017
-   | {isSV2012()}? V18002012
-   | {isSV2012()}? V18002009
-   | {isSV2012()}? V18002005
-   | {isVerilog2005()}? V13642005
-   | V13642001
-   | V13642001noconfig
+     {language_version >= hdlConvertor::Language::SV2017}? V18002017
+   | {language_version >= hdlConvertor::Language::SV2012}? V18002012
+   | {language_version >= hdlConvertor::Language::SV2009}? V18002009
+   | {language_version >= hdlConvertor::Language::SV2005}? V18002005
+   | {language_version >= hdlConvertor::Language::VERILOG2005}? V13642005
+   | {language_version >= hdlConvertor::Language::VERILOG2001}? V13642001
+   | {language_version >= hdlConvertor::Language::VERILOG2001_NOCONFIG }? V13642001noconfig
    | V13641995
 ;
 
@@ -174,7 +162,7 @@ include: INCLUDE stringLiteral;
 stringLiteral:
     STR
     | INCLUDE_MODE_StringLiteral_chevrons
-    | {isSV2012() || isSV2017()}? token_id
+    | {language_version >= hdlConvertor::Language::SV2005}? token_id
 ;
 
 pragma:
