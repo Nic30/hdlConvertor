@@ -34,18 +34,30 @@ iHdlExpr * VerLiteralParser::visitNumber(
 	if (n) {
 		return parseIntNumber(n, 16);
 	}
-	NotImplementedLogger::print("ExpressionParser.visitNumber - Real_number",
-			ctx);
+	n = ctx->Real_number();
+	assert(n);
+	return parseReal_number(n);
 	return NULL;
 
 }
+
 iHdlExpr * VerLiteralParser::parseSimple_identifier(TerminalNode* n) {
 	return iHdlExpr::ID(n->getText());
 }
+
 iHdlExpr * VerLiteralParser::parseEscaped_identifier(TerminalNode* n) {
 	auto s = n->getText();
 	s = s.substr(1);
 	return iHdlExpr::ID(s);
+}
+
+iHdlExpr * VerLiteralParser::parseReal_number(TerminalNode* n) {
+	// Real_number
+	//    : Unsigned_number '.' Unsigned_number | Unsigned_number ('.' Unsigned_number)? [eE] ([+-])? Unsigned_number
+	//    ;
+	std::string s = n->getText();
+	double val = stod(s);
+	return iHdlExpr::FLOAT(val);
 }
 
 iHdlExpr * VerLiteralParser::parseIntNumber(TerminalNode* n, int radix) {
