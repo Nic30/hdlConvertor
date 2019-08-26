@@ -14,7 +14,8 @@ def print_lexer_extra_for_std_version_specific_keywords(f):
 
 
 def add_predicate(r, std):
-    r.body = Antlr4Sequence([Antlr4Symbol("{language_version >= hdlConvertor::Language::%s}?" % std, True, is_regex=True), r.body])
+    # The Definitive ANTLR 4 Reference, p 194, in lexer predicate should be on right side
+    r.body = Antlr4Sequence([r.body, Antlr4Symbol("{language_version >= hdlConvertor::Language::%s}?" % std, True, is_regex=True)])
 
 
 def std_version_specific_keywords(rules):

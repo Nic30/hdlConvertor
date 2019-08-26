@@ -13,7 +13,7 @@ def add_string_literal_rules(p):
         Antlr4Symbol('\\\r\n', True),
         Antlr4Sequence([
             Antlr4Symbol("\\", True),
-            Antlr4Symbol('[nt\\\\"vfa]', True, is_regex=True),
+            Antlr4Symbol('[nt\\\\"vfa%]', True, is_regex=True),
         ]),
         Antlr4Symbol("'\\\\' [0-9] [0-9]? [0-9]?", True, True),
         Antlr4Symbol("'\\\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?", True, True),

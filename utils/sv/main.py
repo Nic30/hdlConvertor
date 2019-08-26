@@ -31,6 +31,8 @@ from utils.sv.syntax_fix import fix_SYSTEM_TF_IDENTIFIER, \
     fix_randomize_call, fix_dpi_import_export
 from utils.sv.version_dependent_grammar import std_version_specific_keywords, \
     print_lexer_extra_for_std_version_specific_keywords
+from utils.antlr4.target_language_translator import TargetLangueTranslatorJava, \
+    TargetLangueTranslatorCpp
 
 
 def remove_useless_and_normalize_names(p):
@@ -332,9 +334,9 @@ def lexer_friendly_numbers(p):
 UTILS_ROOT = os.path.join(os.path.dirname(__file__), "..")
 
 
-def proto_grammar_to_g4():
-    # [NOTE] dissable this if you need java compatible parser/lexer
-    CONFIGURABLE_STD_VERSION = True
+def proto_grammar_to_g4(target_lang):
+ 
+    CONFIGURABLE_STD_VERSION = isinstance(target_lang, TargetLangueTranslatorCpp)
     
     p = SvRule2Antlr4Rule()
     with open(os.path.join(UTILS_ROOT, "sv2017.g4_proto")) as f:
@@ -382,7 +384,7 @@ def proto_grammar_to_g4():
     fix_dpi_import_export(p.rules)
     better_names_for_single_purpose_rules(p.rules)
     optimize_class_scope(p.rules)
-    other_performance_fixes(p.rules)
+    other_performance_fixes(p.rules, target_lang)
     add_eof(p.rules)
     Antlr4GenericOptimizer().optimize(p.rules)
     if CONFIGURABLE_STD_VERSION:
@@ -422,5 +424,8 @@ def proto_grammar_to_g4():
 
 
 if __name__ == "__main__":
+    # target_lang = TargetLangueTranslatorJava()
+    target_lang = TargetLangueTranslatorCpp()
+   
     # parse_sv_pdf()
-    proto_grammar_to_g4()
+    proto_grammar_to_g4(target_lang)

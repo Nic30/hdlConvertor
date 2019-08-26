@@ -27,339 +27,339 @@ KW_DOLAR_WIDTH: '$width';
 KW_1STEP: '1step';
 KW_PATHPULSEDOLAR_: 'PATHPULSE$';
 KW_ACCEPT_ON:
- {language_version >= hdlConvertor::Language::SV2009}? 'accept_on';
+ 'accept_on' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_ALIAS:
- {language_version >= hdlConvertor::Language::SV2005}? 'alias';
+ 'alias' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ALWAYS: 'always';
 KW_ALWAYS_COMB:
- {language_version >= hdlConvertor::Language::SV2005}? 'always_comb';
+ 'always_comb' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ALWAYS_FF:
- {language_version >= hdlConvertor::Language::SV2005}? 'always_ff';
+ 'always_ff' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ALWAYS_LATCH:
- {language_version >= hdlConvertor::Language::SV2005}? 'always_latch';
+ 'always_latch' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_AND: 'and';
 KW_ASSERT:
- {language_version >= hdlConvertor::Language::SV2005}? 'assert';
+ 'assert' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ASSIGN: 'assign';
 KW_ASSUME:
- {language_version >= hdlConvertor::Language::SV2005}? 'assume';
+ 'assume' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_AUTOMATIC:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'automatic';
+ 'automatic' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_BEFORE:
- {language_version >= hdlConvertor::Language::SV2005}? 'before';
+ 'before' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BEGIN: 'begin';
 KW_BIND:
- {language_version >= hdlConvertor::Language::SV2005}? 'bind';
+ 'bind' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BINS:
- {language_version >= hdlConvertor::Language::SV2005}? 'bins';
+ 'bins' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BINSOF:
- {language_version >= hdlConvertor::Language::SV2005}? 'binsof';
+ 'binsof' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BIT:
- {language_version >= hdlConvertor::Language::SV2005}? 'bit';
+ 'bit' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BREAK:
- {language_version >= hdlConvertor::Language::SV2005}? 'break';
+ 'break' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_BUF: 'buf';
 KW_BUFIF0: 'bufif0';
 KW_BUFIF1: 'bufif1';
 KW_BYTE:
- {language_version >= hdlConvertor::Language::SV2005}? 'byte';
+ 'byte' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CASE: 'case';
 KW_CASEX: 'casex';
 KW_CASEZ: 'casez';
 KW_CELL:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'cell';
+ 'cell' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_CHANDLE:
- {language_version >= hdlConvertor::Language::SV2005}? 'chandle';
+ 'chandle' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CHECKER:
- {language_version >= hdlConvertor::Language::SV2009}? 'checker';
+ 'checker' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_CLASS:
- {language_version >= hdlConvertor::Language::SV2005}? 'class';
+ 'class' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CLOCKING:
- {language_version >= hdlConvertor::Language::SV2005}? 'clocking';
+ 'clocking' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CMOS: 'cmos';
 KW_CONFIG:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'config';
+ 'config' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_CONST:
- {language_version >= hdlConvertor::Language::SV2005}? 'const';
+ 'const' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CONSTRAINT:
- {language_version >= hdlConvertor::Language::SV2005}? 'constraint';
+ 'constraint' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CONTEXT:
- {language_version >= hdlConvertor::Language::SV2005}? 'context';
+ 'context' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CONTINUE:
- {language_version >= hdlConvertor::Language::SV2005}? 'continue';
+ 'continue' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_COVER:
- {language_version >= hdlConvertor::Language::SV2005}? 'cover';
+ 'cover' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_COVERGROUP:
- {language_version >= hdlConvertor::Language::SV2005}? 'covergroup';
+ 'covergroup' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_COVERPOINT:
- {language_version >= hdlConvertor::Language::SV2005}? 'coverpoint';
+ 'coverpoint' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_CROSS:
- {language_version >= hdlConvertor::Language::SV2005}? 'cross';
+ 'cross' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_DEASSIGN: 'deassign';
 KW_DEFAULT: 'default';
 KW_DEFPARAM: 'defparam';
 KW_DESIGN:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'design';
+ 'design' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_DISABLE: 'disable';
 KW_DIST:
- {language_version >= hdlConvertor::Language::SV2005}? 'dist';
+ 'dist' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_DO:
- {language_version >= hdlConvertor::Language::SV2005}? 'do';
+ 'do' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EDGE: 'edge';
 KW_ELSE: 'else';
 KW_END: 'end';
 KW_ENDCASE: 'endcase';
 KW_ENDCHECKER:
- {language_version >= hdlConvertor::Language::SV2009}? 'endchecker';
+ 'endchecker' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_ENDCLASS:
- {language_version >= hdlConvertor::Language::SV2005}? 'endclass';
+ 'endclass' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDCLOCKING:
- {language_version >= hdlConvertor::Language::SV2005}? 'endclocking';
+ 'endclocking' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDCONFIG:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'endconfig';
+ 'endconfig' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_ENDFUNCTION: 'endfunction';
 KW_ENDGENERATE:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'endgenerate';
+ 'endgenerate' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_ENDGROUP:
- {language_version >= hdlConvertor::Language::SV2005}? 'endgroup';
+ 'endgroup' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDINTERFACE:
- {language_version >= hdlConvertor::Language::SV2005}? 'endinterface';
+ 'endinterface' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDMODULE: 'endmodule';
 KW_ENDPACKAGE:
- {language_version >= hdlConvertor::Language::SV2005}? 'endpackage';
+ 'endpackage' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDPRIMITIVE: 'endprimitive';
 KW_ENDPROGRAM:
- {language_version >= hdlConvertor::Language::SV2005}? 'endprogram';
+ 'endprogram' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDPROPERTY:
- {language_version >= hdlConvertor::Language::SV2005}? 'endproperty';
+ 'endproperty' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDSEQUENCE:
- {language_version >= hdlConvertor::Language::SV2005}? 'endsequence';
+ 'endsequence' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDSPECIFY: 'endspecify';
 KW_ENDTASK: 'endtask';
 KW_ENUM:
- {language_version >= hdlConvertor::Language::SV2005}? 'enum';
+ 'enum' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EVENT: 'event';
 KW_EVENTUALLY:
- {language_version >= hdlConvertor::Language::SV2009}? 'eventually';
+ 'eventually' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_EXPECT:
- {language_version >= hdlConvertor::Language::SV2005}? 'expect';
+ 'expect' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EXPORT:
- {language_version >= hdlConvertor::Language::SV2005}? 'export';
+ 'export' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EXTENDS:
- {language_version >= hdlConvertor::Language::SV2005}? 'extends';
+ 'extends' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EXTERN:
- {language_version >= hdlConvertor::Language::SV2005}? 'extern';
+ 'extern' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_FINAL:
- {language_version >= hdlConvertor::Language::SV2005}? 'final';
+ 'final' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_FIRST_MATCH:
- {language_version >= hdlConvertor::Language::SV2005}? 'first_match';
+ 'first_match' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_FOR: 'for';
 KW_FORCE: 'force';
 KW_FOREACH:
- {language_version >= hdlConvertor::Language::SV2005}? 'foreach';
+ 'foreach' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_FOREVER: 'forever';
 KW_FORK: 'fork';
 KW_FORKJOIN:
- {language_version >= hdlConvertor::Language::SV2005}? 'forkjoin';
+ 'forkjoin' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_FUNCTION: 'function';
 KW_GENERATE:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'generate';
+ 'generate' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_GENVAR:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'genvar';
+ 'genvar' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_GLOBAL:
- {language_version >= hdlConvertor::Language::SV2009}? 'global';
+ 'global' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_HIGHZ0: 'highz0';
 KW_HIGHZ1: 'highz1';
 KW_IF: 'if';
 KW_IFF:
- {language_version >= hdlConvertor::Language::SV2005}? 'iff';
+ 'iff' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_IFNONE: 'ifnone';
 KW_IGNORE_BINS:
- {language_version >= hdlConvertor::Language::SV2005}? 'ignore_bins';
+ 'ignore_bins' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ILLEGAL_BINS:
- {language_version >= hdlConvertor::Language::SV2005}? 'illegal_bins';
+ 'illegal_bins' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_IMPLEMENTS:
- {language_version >= hdlConvertor::Language::SV2012}? 'implements';
+ 'implements' {language_version >= hdlConvertor::Language::SV2012}?;
 KW_IMPLIES:
- {language_version >= hdlConvertor::Language::SV2009}? 'implies';
+ 'implies' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_IMPORT:
- {language_version >= hdlConvertor::Language::SV2005}? 'import';
+ 'import' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_INITIAL: 'initial';
 KW_INOUT: 'inout';
 KW_INPUT: 'input';
 KW_INSIDE:
- {language_version >= hdlConvertor::Language::SV2005}? 'inside';
+ 'inside' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_INSTANCE:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'instance';
+ 'instance' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_INT:
- {language_version >= hdlConvertor::Language::SV2005}? 'int';
+ 'int' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_INTEGER: 'integer';
 KW_INTERCONNECT:
- {language_version >= hdlConvertor::Language::SV2012}? 'interconnect';
+ 'interconnect' {language_version >= hdlConvertor::Language::SV2012}?;
 KW_INTERFACE:
- {language_version >= hdlConvertor::Language::SV2005}? 'interface';
+ 'interface' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_INTERSECT:
- {language_version >= hdlConvertor::Language::SV2005}? 'intersect';
+ 'intersect' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_JOIN: 'join';
 KW_JOIN_ANY:
- {language_version >= hdlConvertor::Language::SV2005}? 'join_any';
+ 'join_any' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_JOIN_NONE:
- {language_version >= hdlConvertor::Language::SV2005}? 'join_none';
+ 'join_none' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_LARGE: 'large';
 KW_LET:
- {language_version >= hdlConvertor::Language::SV2009}? 'let';
+ 'let' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_LIBLIST:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'liblist';
+ 'liblist' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_LOCAL:
- {language_version >= hdlConvertor::Language::SV2005}? 'local';
+ 'local' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_LOCALPARAM:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'localparam';
+ 'localparam' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_LOGIC:
- {language_version >= hdlConvertor::Language::SV2005}? 'logic';
+ 'logic' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_LONGINT:
- {language_version >= hdlConvertor::Language::SV2005}? 'longint';
+ 'longint' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_MACROMODULE: 'macromodule';
 KW_MATCHES:
- {language_version >= hdlConvertor::Language::SV2005}? 'matches';
+ 'matches' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_MEDIUM: 'medium';
 KW_MODPORT:
- {language_version >= hdlConvertor::Language::SV2005}? 'modport';
+ 'modport' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_MODULE: 'module';
 KW_NAND: 'nand';
 KW_NEGEDGE: 'negedge';
 KW_NETTYPE:
- {language_version >= hdlConvertor::Language::SV2012}? 'nettype';
+ 'nettype' {language_version >= hdlConvertor::Language::SV2012}?;
 KW_NEW:
- {language_version >= hdlConvertor::Language::SV2005}? 'new';
+ 'new' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_NEXTTIME:
- {language_version >= hdlConvertor::Language::SV2009}? 'nexttime';
+ 'nexttime' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_NMOS: 'nmos';
 KW_NOR: 'nor';
 KW_NOSHOWCANCELLED:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'noshowcancelled';
+ 'noshowcancelled' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_NOT: 'not';
 KW_NOTIF0: 'notif0';
 KW_NOTIF1: 'notif1';
 KW_NULL:
- {language_version >= hdlConvertor::Language::SV2005}? 'null';
+ 'null' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_OPTION: 'option';
 KW_OR: 'or';
 KW_OUTPUT: 'output';
 KW_PACKAGE:
- {language_version >= hdlConvertor::Language::SV2005}? 'package';
+ 'package' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PACKED:
- {language_version >= hdlConvertor::Language::SV2005}? 'packed';
+ 'packed' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PARAMETER: 'parameter';
 KW_PMOS: 'pmos';
 KW_POSEDGE: 'posedge';
 KW_PRIMITIVE: 'primitive';
 KW_PRIORITY:
- {language_version >= hdlConvertor::Language::SV2005}? 'priority';
+ 'priority' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PROGRAM:
- {language_version >= hdlConvertor::Language::SV2005}? 'program';
+ 'program' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PROPERTY:
- {language_version >= hdlConvertor::Language::SV2005}? 'property';
+ 'property' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PROTECTED:
- {language_version >= hdlConvertor::Language::SV2005}? 'protected';
+ 'protected' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_PULL0: 'pull0';
 KW_PULL1: 'pull1';
 KW_PULLDOWN: 'pulldown';
 KW_PULLUP: 'pullup';
 KW_PULSESTYLE_ONDETECT:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'pulsestyle_ondetect';
+ 'pulsestyle_ondetect' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_PULSESTYLE_ONEVENT:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'pulsestyle_onevent';
+ 'pulsestyle_onevent' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_PURE:
- {language_version >= hdlConvertor::Language::SV2005}? 'pure';
+ 'pure' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RAND:
- {language_version >= hdlConvertor::Language::SV2005}? 'rand';
+ 'rand' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RANDC:
- {language_version >= hdlConvertor::Language::SV2005}? 'randc';
+ 'randc' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RANDCASE:
- {language_version >= hdlConvertor::Language::SV2005}? 'randcase';
+ 'randcase' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RANDOMIZE: 'randomize';
 KW_RANDSEQUENCE:
- {language_version >= hdlConvertor::Language::SV2005}? 'randsequence';
+ 'randsequence' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RCMOS: 'rcmos';
 KW_REAL: 'real';
 KW_REALTIME: 'realtime';
 KW_REF:
- {language_version >= hdlConvertor::Language::SV2005}? 'ref';
+ 'ref' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_REG: 'reg';
 KW_REJECT_ON:
- {language_version >= hdlConvertor::Language::SV2009}? 'reject_on';
+ 'reject_on' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_RELEASE: 'release';
 KW_REPEAT: 'repeat';
 KW_RESTRICT:
- {language_version >= hdlConvertor::Language::SV2009}? 'restrict';
+ 'restrict' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_RETURN:
- {language_version >= hdlConvertor::Language::SV2005}? 'return';
+ 'return' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_RNMOS: 'rnmos';
 KW_RPMOS: 'rpmos';
 KW_RTRAN: 'rtran';
 KW_RTRANIF0: 'rtranif0';
 KW_RTRANIF1: 'rtranif1';
 KW_S_ALWAYS:
- {language_version >= hdlConvertor::Language::SV2009}? 's_always';
+ 's_always' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_S_EVENTUALLY:
- {language_version >= hdlConvertor::Language::SV2009}? 's_eventually';
+ 's_eventually' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_S_NEXTTIME:
- {language_version >= hdlConvertor::Language::SV2009}? 's_nexttime';
+ 's_nexttime' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_S_UNTIL:
- {language_version >= hdlConvertor::Language::SV2009}? 's_until';
+ 's_until' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_S_UNTIL_WITH:
- {language_version >= hdlConvertor::Language::SV2009}? 's_until_with';
+ 's_until_with' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_SAMPLE: 'sample';
 KW_SCALARED: 'scalared';
 KW_SEQUENCE:
- {language_version >= hdlConvertor::Language::SV2005}? 'sequence';
+ 'sequence' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SHORTINT:
- {language_version >= hdlConvertor::Language::SV2005}? 'shortint';
+ 'shortint' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SHORTREAL:
- {language_version >= hdlConvertor::Language::SV2005}? 'shortreal';
+ 'shortreal' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SHOWCANCELLED:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'showcancelled';
+ 'showcancelled' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_SIGNED:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'signed';
+ 'signed' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_SMALL: 'small';
 KW_SOFT:
- {language_version >= hdlConvertor::Language::SV2012}? 'soft';
+ 'soft' {language_version >= hdlConvertor::Language::SV2012}?;
 KW_SOLVE:
- {language_version >= hdlConvertor::Language::SV2005}? 'solve';
+ 'solve' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SPECIFY: 'specify';
 KW_SPECPARAM: 'specparam';
 KW_STATIC:
- {language_version >= hdlConvertor::Language::SV2005}? 'static';
+ 'static' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_STD: 'std';
 KW_STRING:
- {language_version >= hdlConvertor::Language::SV2005}? 'string';
+ 'string' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_STRONG:
- {language_version >= hdlConvertor::Language::SV2009}? 'strong';
+ 'strong' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_STRONG0: 'strong0';
 KW_STRONG1: 'strong1';
 KW_STRUCT:
- {language_version >= hdlConvertor::Language::SV2005}? 'struct';
+ 'struct' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SUPER:
- {language_version >= hdlConvertor::Language::SV2005}? 'super';
+ 'super' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_SUPPLY0: 'supply0';
 KW_SUPPLY1: 'supply1';
 KW_SYNC_ACCEPT_ON:
- {language_version >= hdlConvertor::Language::SV2009}? 'sync_accept_on';
+ 'sync_accept_on' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_SYNC_REJECT_ON:
- {language_version >= hdlConvertor::Language::SV2009}? 'sync_reject_on';
+ 'sync_reject_on' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_TABLE: 'table' -> pushMode(TABLE_MODE);
 KW_TAGGED:
- {language_version >= hdlConvertor::Language::SV2005}? 'tagged';
+ 'tagged' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_TASK: 'task';
 KW_THIS:
- {language_version >= hdlConvertor::Language::SV2005}? 'this';
+ 'this' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_THROUGHOUT:
- {language_version >= hdlConvertor::Language::SV2005}? 'throughout';
+ 'throughout' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_TIME: 'time';
 KW_TIMEPRECISION:
- {language_version >= hdlConvertor::Language::SV2005}? 'timeprecision';
+ 'timeprecision' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_TIMEUNIT:
- {language_version >= hdlConvertor::Language::SV2005}? 'timeunit';
+ 'timeunit' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_TRAN: 'tran';
 KW_TRANIF0: 'tranif0';
 KW_TRANIF1: 'tranif1';
@@ -370,51 +370,51 @@ KW_TRIAND: 'triand';
 KW_TRIOR: 'trior';
 KW_TRIREG: 'trireg';
 KW_TYPE:
- {language_version >= hdlConvertor::Language::SV2005}? 'type';
+ 'type' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_TYPE_OPTION: 'type_option';
 KW_TYPEDEF:
- {language_version >= hdlConvertor::Language::SV2005}? 'typedef';
+ 'typedef' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_UNION:
- {language_version >= hdlConvertor::Language::SV2005}? 'union';
+ 'union' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_UNIQUE:
- {language_version >= hdlConvertor::Language::SV2005}? 'unique';
+ 'unique' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_UNIQUE0:
- {language_version >= hdlConvertor::Language::SV2009}? 'unique0';
+ 'unique0' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_UNSIGNED:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'unsigned';
+ 'unsigned' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_UNTIL:
- {language_version >= hdlConvertor::Language::SV2009}? 'until';
+ 'until' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_UNTIL_WITH:
- {language_version >= hdlConvertor::Language::SV2009}? 'until_with';
+ 'until_with' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_UNTYPED:
- {language_version >= hdlConvertor::Language::SV2009}? 'untyped';
+ 'untyped' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_USE:
- {language_version >= hdlConvertor::Language::VERILOG2001}? 'use';
+ 'use' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_UWIRE:
- {language_version >= hdlConvertor::Language::VERILOG2005}? 'uwire';
+ 'uwire' {language_version >= hdlConvertor::Language::VERILOG2005}?;
 KW_VAR:
- {language_version >= hdlConvertor::Language::SV2005}? 'var';
+ 'var' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_VECTORED: 'vectored';
 KW_VIRTUAL:
- {language_version >= hdlConvertor::Language::SV2005}? 'virtual';
+ 'virtual' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_VOID:
- {language_version >= hdlConvertor::Language::SV2005}? 'void';
+ 'void' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_WAIT: 'wait';
 KW_WAIT_ORDER:
- {language_version >= hdlConvertor::Language::SV2005}? 'wait_order';
+ 'wait_order' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_WAND: 'wand';
 KW_WEAK:
- {language_version >= hdlConvertor::Language::SV2009}? 'weak';
+ 'weak' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_WEAK0: 'weak0';
 KW_WEAK1: 'weak1';
 KW_WHILE: 'while';
 KW_WILDCARD:
- {language_version >= hdlConvertor::Language::SV2005}? 'wildcard';
+ 'wildcard' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_WIRE: 'wire';
 KW_WITH:
- {language_version >= hdlConvertor::Language::SV2005}? 'with';
+ 'with' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_WITHIN:
- {language_version >= hdlConvertor::Language::SV2005}? 'within';
+ 'within' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_WOR: 'wor';
 KW_XNOR: 'xnor';
 KW_XOR: 'xor';
@@ -615,7 +615,7 @@ fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
   | '\\\n' 
   | '\\\r\n' 
-  | '\\' [nt\\"vfa] 
+  | '\\' [nt\\"vfa%] 
   | '\\' [0-9] [0-9]? [0-9]? 
   | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
  ;

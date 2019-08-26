@@ -238,7 +238,7 @@ def generate_constant_subroutine_call(rules, subroutine_call, subroutine_call_ar
             for a, b in [("primary_no_cast_no_call", "constant_primary_no_cast_no_call"),
                          ("cast", "constant_cast"),
                          ("list_of_arguments", "constant_list_of_arguments"),
-                         ("subroutine_call_args", "subroutine_call_args"),
+                         ("subroutine_call_args", "constant_subroutine_call_args"),
                          ("expression", "constant_expression")]:
                 if o.symbol == a:
                     return Antlr4Symbol(b, False)

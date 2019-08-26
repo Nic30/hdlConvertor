@@ -14,12 +14,13 @@ description:
                               ) 
   | config_declaration 
  ;
+module_header_common:
+ ( attribute_instance )* module_keyword ( lifetime )? identifier ( package_import_declaration )* 
+      ( parameter_port_list )?;
 module_nonansi_header:
- ( attribute_instance )* module_keyword ( lifetime )? identifier ( package_import_declaration )* 
-      ( parameter_port_list )? list_of_ports SEMI;
+ module_header_common list_of_ports SEMI;
 module_ansi_header:
- ( attribute_instance )* module_keyword ( lifetime )? identifier ( package_import_declaration )* 
-      ( parameter_port_list )? ( list_of_port_declarations )? SEMI;
+ module_header_common ( list_of_port_declarations )? SEMI;
 module_declaration:
  KW_EXTERN ( module_nonansi_header 
               | module_ansi_header 
@@ -29,7 +30,9 @@ module_declaration:
           SEMI 
           ) ( timeunits_declaration )? ( module_item )* 
       | module_ansi_header ( timeunits_declaration )? ( non_port_module_item )* 
-      ) KW_ENDMODULE ( COLON identifier )? 
+      ) KW_ENDMODULE ( COLON identifier 
+                      | {_input->LA(1) != COLON}? 
+                      ) 
  ;
 module_keyword:
  KW_MODULE 
@@ -43,7 +46,9 @@ interface_declaration:
           | ( attribute_instance )* KW_INTERFACE identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( timeunits_declaration )? ( interface_item )* 
       | interface_ansi_header ( timeunits_declaration )? ( non_port_interface_item )* 
-      ) KW_ENDINTERFACE ( COLON identifier )? 
+      ) KW_ENDINTERFACE ( COLON identifier 
+                          | {_input->LA(1) != COLON}? 
+                          ) 
  ;
 interface_nonansi_header:
  ( attribute_instance )* KW_INTERFACE ( lifetime )? identifier ( package_import_declaration )* 
@@ -59,7 +64,9 @@ program_declaration:
           | ( attribute_instance )* KW_PROGRAM identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( timeunits_declaration )? ( program_item )* 
       | program_ansi_header ( timeunits_declaration )? ( non_port_program_item )* 
-      ) KW_ENDPROGRAM ( COLON identifier )? 
+      ) KW_ENDPROGRAM ( COLON identifier 
+                      | {_input->LA(1) != COLON}? 
+                      ) 
  ;
 program_nonansi_header:
  ( attribute_instance )* KW_PROGRAM ( lifetime )? identifier ( package_import_declaration )* 
@@ -69,16 +76,22 @@ program_ansi_header:
       ( parameter_port_list )? ( list_of_port_declarations )? SEMI;
 checker_declaration:
  KW_CHECKER identifier ( LPAREN ( checker_port_list )? RPAREN )? SEMI ( ( attribute_instance )* 
-      checker_or_generate_item )* KW_ENDCHECKER ( COLON identifier )?;
+      checker_or_generate_item )* KW_ENDCHECKER ( COLON identifier 
+                          | {_input->LA(1) != COLON}? 
+                          );
 class_declaration:
  ( KW_VIRTUAL )? KW_CLASS ( lifetime )? identifier ( parameter_port_list )? ( KW_EXTENDS class_type ( 
       LPAREN list_of_arguments RPAREN )? )? ( KW_IMPLEMENTS interface_class_type ( COMMA 
-      interface_class_type )* )? SEMI ( class_item )* KW_ENDCLASS ( COLON identifier )?;
+      interface_class_type )* )? SEMI ( class_item )* KW_ENDCLASS ( COLON identifier 
+                                                      | {_input->LA(1) != COLON}? 
+                                                      );
 interface_class_type:
  ps_identifier ( parameter_value_assignment )?;
 interface_class_declaration:
  KW_INTERFACE KW_CLASS identifier ( parameter_port_list )? ( KW_EXTENDS interface_class_type ( COMMA 
-      interface_class_type )* )? SEMI ( interface_class_item )* KW_ENDCLASS ( COLON identifier )?;
+      interface_class_type )* )? SEMI ( interface_class_item )* KW_ENDCLASS ( COLON identifier 
+                                                              | {_input->LA(1) != COLON}? 
+                                                              );
 interface_class_item:
  type_declaration 
   | ( attribute_instance )* interface_class_method 
@@ -90,7 +103,9 @@ interface_class_method:
  KW_PURE KW_VIRTUAL method_prototype SEMI;
 package_declaration:
  ( attribute_instance )* KW_PACKAGE ( lifetime )? identifier SEMI ( timeunits_declaration )? ( 
-      ( attribute_instance )* package_item )* KW_ENDPACKAGE ( COLON identifier )?;
+      ( attribute_instance )* package_item )* KW_ENDPACKAGE ( COLON identifier 
+                                          | {_input->LA(1) != COLON}? 
+                                          );
 timeunits_declaration:
  KW_TIMEUNIT TIME_LITERAL ( ( DIV 
                               | SEMI KW_TIMEPRECISION 
@@ -221,7 +236,9 @@ bind_instantiation:
  ;
 config_declaration:
  KW_CONFIG identifier SEMI ( local_parameter_declaration SEMI )* design_statement 
-      ( config_rule_statement )* KW_ENDCONFIG ( COLON identifier )?;
+      ( config_rule_statement )* KW_ENDCONFIG ( COLON identifier 
+                      | {_input->LA(1) != COLON}? 
+                      );
 design_statement:
  KW_DESIGN ( ( identifier DOT )? identifier )* SEMI;
 config_rule_statement:
@@ -432,7 +449,9 @@ constraint_primary:
   | class_scope 
   )? hierarchical_identifier select;
 constraint_expression:
- KW_IF LPAREN expression RPAREN constraint_set ( KW_ELSE constraint_set )? 
+ KW_IF LPAREN expression RPAREN constraint_set ( KW_ELSE constraint_set 
+                                                  | {_input->LA(1) != KW_ELSE}? 
+                                                  ) 
   | ( KW_DISABLE KW_SOFT constraint_primary 
       | ( KW_SOFT )? expression_or_dist 
       | uniqueness_constraint 
@@ -820,7 +839,11 @@ function_body_declaration:
                                                           | LPAREN tf_port_list RPAREN SEMI 
                                                           ( block_item_declaration )* 
                                                           ) ( statement_or_null )* KW_ENDFUNCTION ( 
-      COLON identifier )?;
+                                                                                                  COLON 
+                                                                                                  identifier 
+                                                                                                  | 
+                                                                                                  {_input->LA(1) != COLON}? 
+                                                                                                  );
 function_prototype:
  KW_FUNCTION data_type_or_void identifier ( LPAREN tf_port_list RPAREN )?;
 dpi_import_export:
@@ -849,7 +872,9 @@ task_body_declaration:
   | class_scope 
   )? identifier ( SEMI ( tf_item_declaration )* 
                       | LPAREN tf_port_list RPAREN SEMI ( block_item_declaration )* 
-                      ) ( statement_or_null )* KW_ENDTASK ( COLON identifier )?;
+                      ) ( statement_or_null )* KW_ENDTASK ( COLON identifier 
+                                                          | {_input->LA(1) != COLON}? 
+                                                          );
 tf_item_declaration:
  block_item_declaration 
   | tf_port_declaration 
@@ -936,7 +961,9 @@ assertion_item_declaration:
  ;
 property_declaration:
  KW_PROPERTY identifier ( LPAREN ( property_port_list )? RPAREN )? SEMI 
-      ( assertion_variable_declaration )* property_spec ( SEMI )? KW_ENDPROPERTY ( COLON identifier )?;
+      ( assertion_variable_declaration )* property_spec ( SEMI )? KW_ENDPROPERTY ( COLON identifier 
+                                              | {_input->LA(1) != COLON}? 
+                                              );
 property_port_list:
  property_port_item ( COMMA property_port_item )*;
 property_port_item:
@@ -964,7 +991,9 @@ property_expr_item:
           ) LPAREN sequence_expr 
       | LPAREN property_expr 
       ) RPAREN 
-  | KW_IF LPAREN expression_or_dist RPAREN property_expr ( KW_ELSE property_expr )? 
+  | KW_IF LPAREN expression_or_dist RPAREN property_expr ( KW_ELSE property_expr 
+                                                          | {_input->LA(1) != KW_ELSE}? 
+                                                          ) 
   | KW_CASE LPAREN expression_or_dist RPAREN property_case_item ( property_case_item )* KW_ENDCASE 
   | sequence_expr ( ( OVERLAPPING_IMPL 
                   | NONOVERLAPPING_IMPL 
@@ -996,7 +1025,9 @@ property_case_item:
   ) property_expr SEMI;
 sequence_declaration:
  KW_SEQUENCE identifier ( LPAREN ( sequence_port_list )? RPAREN )? SEMI 
-      ( assertion_variable_declaration )* sequence_expr ( SEMI )? KW_ENDSEQUENCE ( COLON identifier )?;
+      ( assertion_variable_declaration )* sequence_expr ( SEMI )? KW_ENDSEQUENCE ( COLON identifier 
+                                              | {_input->LA(1) != COLON}? 
+                                              );
 sequence_port_list:
  sequence_port_item ( COMMA sequence_port_item )*;
 sequence_port_item:
@@ -1084,7 +1115,9 @@ assertion_variable_declaration:
  ( var_data_type )? list_of_variable_decl_assignments SEMI;
 covergroup_declaration:
  KW_COVERGROUP identifier ( LPAREN tf_port_list RPAREN )? ( coverage_event )? SEMI 
-      ( coverage_spec_or_option )* KW_ENDGROUP ( COLON identifier )?;
+      ( coverage_spec_or_option )* KW_ENDGROUP ( COLON identifier 
+                  | {_input->LA(1) != COLON}? 
+                  );
 coverage_spec_or_option:
  ( attribute_instance )* ( coverage_spec 
                           | coverage_option SEMI 
@@ -1361,7 +1394,9 @@ conditional_generate_construct:
   | case_generate_construct 
  ;
 if_generate_construct:
- KW_IF LPAREN constant_expression RPAREN generate_block ( KW_ELSE generate_block )?;
+ KW_IF LPAREN constant_expression RPAREN generate_block ( KW_ELSE generate_block 
+                                                          | {_input->LA(1) != KW_ELSE}? 
+                                                          );
 case_generate_construct:
  KW_CASE LPAREN constant_expression RPAREN case_generate_item ( case_generate_item )* KW_ENDCASE;
 case_generate_item:
@@ -1370,8 +1405,11 @@ case_generate_item:
   ) generate_block;
 generate_block:
  generate_item 
-  | ( identifier COLON )? KW_BEGIN ( COLON identifier )? ( generate_item )* KW_END 
-  ( COLON identifier )? 
+  | ( identifier COLON )? KW_BEGIN ( COLON identifier 
+                                      | {_input->LA(1) != COLON}? 
+                                      ) ( generate_item )* KW_END ( COLON identifier 
+                                                                  | {_input->LA(1) != COLON}? 
+                                                                  ) 
  ;
 generate_item:
  ( attribute_instance )* ( parameter_override 
@@ -1412,7 +1450,8 @@ generate_item:
                               | elaboration_system_task 
                               | extern_tf_declaration 
                               ) 
-  | checker_or_generate_item 
+  | KW_RAND data_declaration 
+  | program_generate_item 
  ;
 udp_nonansi_declaration:
  ( attribute_instance )* KW_PRIMITIVE identifier LPAREN identifier_list_2plus RPAREN SEMI;
@@ -1426,7 +1465,9 @@ udp_declaration:
           | ( attribute_instance )* KW_PRIMITIVE identifier LPAREN DOT MUL RPAREN SEMI 
           ) ( udp_port_declaration )* 
       | udp_ansi_declaration 
-      ) udp_body KW_ENDPRIMITIVE ( COLON identifier )? 
+      ) udp_body KW_ENDPRIMITIVE ( COLON identifier 
+                                  | {_input->LA(1) != COLON}? 
+                                  ) 
  ;
 udp_declaration_port_list:
  udp_output_declaration COMMA udp_input_declaration ( COMMA udp_input_declaration )*;
@@ -1546,14 +1587,23 @@ variable_assignment:
 action_block:
  ( attribute_instance )* SEMI 
   | KW_ELSE statement_or_null 
-  | statement ( KW_ELSE statement_or_null )? 
+  | statement ( KW_ELSE statement_or_null 
+              | {_input->LA(1) != KW_ELSE}? 
+              ) 
  ;
 seq_block:
- KW_BEGIN ( COLON identifier )? ( block_item_declaration )* ( statement_or_null )* KW_END ( COLON 
-      identifier )?;
+ KW_BEGIN ( COLON identifier 
+              | {_input->LA(1) != COLON}? 
+              ) ( block_item_declaration )* ( statement_or_null )* KW_END ( COLON identifier 
+                                                                          | {_input->LA(1) != COLON}? 
+                                                                          );
 par_block:
- KW_FORK ( COLON identifier )? ( block_item_declaration )* ( statement_or_null )* join_keyword ( 
-      COLON identifier )?;
+ KW_FORK ( COLON identifier 
+          | {_input->LA(1) != COLON}? 
+          ) ( block_item_declaration )* ( statement_or_null )* join_keyword ( COLON identifier 
+                                                                              | 
+                                                                              {_input->LA(1) != COLON}? 
+                                                                              );
 join_keyword:
  KW_JOIN 
   | KW_JOIN_ANY 
@@ -1645,7 +1695,9 @@ disable_statement:
               ) SEMI;
 conditional_statement:
  ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null ( KW_ELSE KW_IF LPAREN 
-      cond_predicate RPAREN statement_or_null )* ( KW_ELSE statement_or_null )?;
+      cond_predicate RPAREN statement_or_null )* ( KW_ELSE statement_or_null 
+                                      | {_input->LA(1) != KW_ELSE}? 
+                                      );
 unique_priority:
  KW_UNIQUE 
   | KW_UNIQUE0 
@@ -1798,7 +1850,9 @@ deferred_immediate_cover_statement:
 clocking_declaration:
  ( KW_GLOBAL KW_CLOCKING ( identifier )? clocking_event SEMI 
   | ( KW_DEFAULT )? KW_CLOCKING ( identifier )? clocking_event SEMI ( clocking_item )* 
-  ) KW_ENDCLOCKING ( COLON identifier )?;
+  ) KW_ENDCLOCKING ( COLON identifier 
+                  | {_input->LA(1) != COLON}? 
+                  );
 clocking_event:
  AT ( LPAREN event_expression RPAREN 
       | identifier 
@@ -1864,7 +1918,9 @@ rs_prod:
 production_item:
  identifier ( LPAREN list_of_arguments RPAREN )?;
 rs_if_else:
- KW_IF LPAREN expression RPAREN production_item ( KW_ELSE production_item )?;
+ KW_IF LPAREN expression RPAREN production_item ( KW_ELSE production_item 
+                                                  | {_input->LA(1) != KW_ELSE}? 
+                                                  );
 rs_repeat:
  KW_REPEAT LPAREN expression RPAREN production_item;
 rs_case:
@@ -2107,11 +2163,11 @@ constant_subroutine_call_args:
 constant_subroutine_call:
  ( constant_primary_no_cast_no_call 
       | constant_cast 
-      ) subroutine_call_args ( DOT ( array_method_name 
-                                  | randomize_call 
-                                  | constant_primary_no_cast_no_call 
-                                  | constant_cast 
-                                  ) subroutine_call_args )* 
+      ) constant_subroutine_call_args ( DOT ( array_method_name 
+                                          | randomize_call 
+                                          | constant_primary_no_cast_no_call 
+                                          | constant_cast 
+                                          ) constant_subroutine_call_args )* 
   | any_system_tf_identifier ( LPAREN ( data_type )? constant_list_of_arguments 
   ( COMMA clocking_event )? RPAREN )? 
   | ( KW_STD DOUBLE_COLON )? randomize_call 
@@ -2481,10 +2537,10 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
+  | KW_SAMPLE 
+  | KW_STD 
   | KW_RANDOMIZE 
   | KW_TYPE_OPTION 
-  | KW_STD 
-  | KW_SAMPLE 
   | KW_OPTION 
  ;
 package_scope:
@@ -2513,24 +2569,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_HOLD 
-  | KW_DOLAR_REMOVAL 
-  | KW_DOLAR_INFO 
-  | KW_DOLAR_SETUPHOLD 
-  | KW_DOLAR_WARNING 
-  | KW_DOLAR_SKEW 
-  | KW_DOLAR_SETUP 
-  | KW_DOLAR_RECREM 
   | KW_DOLAR_RECOVERY 
-  | KW_DOLAR_NOCHANGE 
-  | KW_DOLAR_ERROR 
+  | KW_DOLAR_SETUP 
+  | KW_DOLAR_REMOVAL 
   | KW_DOLAR_PERIOD 
-  | KW_DOLAR_UNIT 
   | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_INFO 
+  | KW_DOLAR_SKEW 
   | KW_DOLAR_ROOT 
+  | KW_DOLAR_HOLD 
   | KW_DOLAR_FATAL 
-  | KW_DOLAR_WIDTH 
   | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_RECREM 
+  | KW_DOLAR_UNIT 
+  | KW_DOLAR_ERROR 
+  | KW_DOLAR_WARNING 
+  | KW_DOLAR_NOCHANGE 
+  | KW_DOLAR_WIDTH 
+  | KW_DOLAR_SETUPHOLD 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 

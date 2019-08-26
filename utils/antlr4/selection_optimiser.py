@@ -4,7 +4,7 @@ from itertools import islice
 
 from utils.antlr4._utils import replace_item_by_sequence
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Selection, \
-    Antlr4Sequence, Antlr4Symbol, Antlr4Option, Antlr4Iteration
+    Antlr4Sequence, Antlr4Symbol, Antlr4Option, Antlr4Iteration, rule_by_name
 from utils.antlr4.sequence_optimiser import _is_optional, \
     _sequence_expand_optionality
 
@@ -219,3 +219,30 @@ def _selection_flatten(sel: Antlr4Selection):
         return Antlr4Selection(new_choices), True
     else:
         return sel, False
+
+
+def selection_extract_common(rules, rule_name_a, rule_name_b, new_rule_name):
+    """
+    a0: a b c
+    b0: a b d
+    -> 
+    new_rule_name: a b
+    a0: new_rule_name c
+    b0: new_rule_name d
+    """
+
+    a = rule_by_name(rules, rule_name_a)
+    b = rule_by_name(rules, rule_name_b)
+    assert isinstance(a.body, Antlr4Sequence), a
+    assert isinstance(b.body, Antlr4Sequence), b
+    i = 0
+    for i, (_a, _b) in enumerate(zip(a.body, b.body)):
+        if _a != _b:
+            break
+    assert i > 1
+    body = Antlr4Sequence(a.body[:i])
+    c = Antlr4Rule(new_rule_name, body)
+    rules.insert(rules.index(a), c)
+    a.body[:i] = [Antlr4Symbol(new_rule_name, False)]
+    b.body[:i] = [Antlr4Symbol(new_rule_name, False)]
+    

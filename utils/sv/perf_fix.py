@@ -3,7 +3,8 @@
 Grammar transformations for improving of performance of the grammar
 """
 from utils.antlr4.grammar import rule_by_name, Antlr4Symbol, Antlr4Option, \
-    Antlr4Sequence, Antlr4Rule, Antlr4Iteration, Antlr4Selection
+    Antlr4Sequence, Antlr4Rule, Antlr4Iteration, Antlr4Selection, \
+    iAntlr4GramElem
 from utils.antlr4._utils import replace_item_by_sequence, rm_option_on_rule_usage, \
     inline_rule, _replace_symbol_in_rule
 from utils.antlr4.simple_parser import Antlr4parser
@@ -11,6 +12,7 @@ from typing import List
 from utils.antlr4.query import Antlr4Query, Antlr4SyntCmp, find_dependet_on
 from sortedcontainers.sorteddict import SortedDict
 from itertools import islice
+from utils.antlr4.selection_optimiser import selection_extract_common
 
 
 def rm_ambiguity(rules):
@@ -152,6 +154,7 @@ def optimize_primary(rules):
         del constant_primary_no_cast_no_call.body[offset + i]
         offset -= 1
     rules.remove(rule_by_name(rules, "let_expression"))
+
 
 def optimize_class_scope(rules):
     p = Antlr4parser()
@@ -478,7 +481,42 @@ def detect_syntacticaly_same_rules(rules):
     # print(sorted(list(d)))
 
 
-def other_performance_fixes(rules):
+def remove_ambiguous_else_from_if_else_constructs(rules, target_lang):
+    kw_else = Antlr4Symbol("KW_ELSE", False)
+    la1 = target_lang.LA(1)
+
+    def match_replace_fn(o: iAntlr4GramElem):
+        if isinstance(o, Antlr4Option) and isinstance(o.body, Antlr4Sequence):
+            if o.body[0] == kw_else:
+                return Antlr4Selection([
+                    o.body,
+                    Antlr4Sequence([
+                        Antlr4Symbol("{%s != KW_ELSE}?" % la1, True, True),
+                    ])
+                    ])
+
+    for r in rules:
+        replace_item_by_sequence(r.body, match_replace_fn)
+
+
+def add_predicated_for_CLONE_ID_after_obj(rules, target_lang):
+    c_id = Antlr4parser().from_str("( COLON identifier )?")
+    la1 = target_lang.LA(1)
+
+    def match_replace_fn(o: iAntlr4GramElem):
+        if o == c_id:
+            return Antlr4Selection([
+                    o.body,
+                    Antlr4Sequence([
+                        Antlr4Symbol("{%s != COLON}?" % la1, True, True),
+                    ])
+                    ])
+
+    for r in rules:
+        replace_item_by_sequence(r.body, match_replace_fn)
+    
+
+def other_performance_fixes(rules, target_lang):
     # concurrent_assertion_statement items
     concurrent_assertion_statement_options = [
         "assert_property_statement",
@@ -518,14 +556,22 @@ def other_performance_fixes(rules):
     optimize_item_rules(rules)
     optimize_action_block(rules)
     # detect_duplicit_rules(rules)
+    selection_extract_common(rules, "module_nonansi_header", "module_ansi_header", "module_header_common")
+    remove_ambiguous_else_from_if_else_constructs(rules, target_lang)
+    add_predicated_for_CLONE_ID_after_obj(rules, target_lang)
     detect_syntacticaly_same_rules(rules)
 
 
 def optimize_item_rules(rules):
     for r in ["package_or_generate_item_declaration", "module_or_generate_item",
               "module_or_generate_item_declaration", "module_common_item",
-              "interface_or_generate_item", "checker_or_generate_item_declaration"]:
+              "interface_or_generate_item", "checker_or_generate_item_declaration",
+              ]:
         inline_rule(rules, r)
+    generate_item = rule_by_name(rules, "generate_item")
+    assert generate_item.body[-1].eq_relaxed(Antlr4Symbol("checker_or_generate_item", False))   
+    generate_item.body[-1] = Antlr4parser().from_str("KW_RAND data_declaration")
+    generate_item.body.append(Antlr4parser().from_str("program_generate_item"))
 
 
 def optimize_action_block(rules):
