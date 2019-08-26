@@ -17,7 +17,7 @@ class VHDLParserContainer: public iParserContainer<vhdl_antlr::vhdlLexer,
 	virtual void parseFn() override {
 		vhdl_antlr::vhdlParser::Design_fileContext *tree =
 				antlrParser->design_file();
-		syntaxErrLogger->CheckErrors(); // Throw exception if errors
+		syntaxErrLogger.CheckErrors(); // Throw exception if errors
 		hdlParser->visitDesign_file(tree);
 	}
 };
@@ -35,7 +35,7 @@ public:
 	VerilogParserContainerCommon(hdlObjects::HdlContext *context,
 			Language _lang) :
 			iParserContainer<antlrLexerT, antlrParserT, hdlParserT>(context,
-					_lang), preproc(_lang, this->syntaxErrLogger) {
+					_lang), preproc(_lang, &this->syntaxErrLogger) {
 	}
 
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
@@ -66,7 +66,7 @@ private:
 	virtual void parseFn() override {
 		Verilog2001_antlr::Verilog2001Parser::Source_textContext *tree =
 				antlrParser->source_text();
-		syntaxErrLogger->CheckErrors(); // Throw exception if errors
+		syntaxErrLogger.CheckErrors(); // Throw exception if errors
 		hdlParser->visitSource_text(tree);
 	}
 };
@@ -81,7 +81,7 @@ private:
 		lexer->language_version = lang;
 		sv2017_antlr::sv2017Parser::Source_textContext *tree =
 				antlrParser->source_text();
-		syntaxErrLogger->CheckErrors(); // Throw exception if errors
+		syntaxErrLogger.CheckErrors(); // Throw exception if errors
 		hdlParser->visitSource_text(tree);
 	}
 };

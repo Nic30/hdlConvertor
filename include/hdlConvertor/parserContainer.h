@@ -16,7 +16,7 @@ namespace hdlConvertor {
 template<class antlrLexerT, class antlrParserT, class hdlParserT>
 class iParserContainer {
 public:
-	SyntaxErrorLogger *syntaxErrLogger;
+	SyntaxErrorLogger syntaxErrLogger;
 	antlrLexerT *lexer;
 	antlr4::CommonTokenStream *tokens;
 	antlrParserT *antlrParser;
@@ -37,7 +37,7 @@ public:
 		// lexer->removeErrorListeners();
 		// lexer->addErrorListener(syntaxErrLogger);
 		antlrParser->removeErrorListeners();
-		antlrParser->addErrorListener(syntaxErrLogger);
+		antlrParser->addErrorListener(&syntaxErrLogger);
 	}
 public:
 	hdlObjects::HdlContext *context;
@@ -47,7 +47,7 @@ public:
 	 *                 otherwise specified context is used
 	 * */
 	iParserContainer(hdlObjects::HdlContext *context, Language _lang) :
-			syntaxErrLogger(new SyntaxErrorLogger()), lexer(nullptr), tokens(nullptr), antlrParser(
+			syntaxErrLogger(), lexer(nullptr), tokens(nullptr), antlrParser(
 					nullptr), hdlParser(nullptr), lang(_lang), context(context) {
 	}
 
@@ -70,25 +70,28 @@ public:
 		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context,
 				hierarchyOnly);
 		// begin parsing at init rule
-		parseFn();
+		try {
+			parseFn();
+		} catch (const antlr4::NoViableAltException & e) {
+			// [todo] check if error really appeared in syntaxErrLogger
+			throw;
+		}
 		context = hdlParser->getContext();
-		syntaxErrLogger->CheckErrors(); // Throw exception if errors
 
 		delete hdlParser;
 		hdlParser = nullptr;
-		delete syntaxErrLogger;
-		syntaxErrLogger = nullptr;
 		delete antlrParser;
 		antlrParser = nullptr;
 		delete tokens;
 		tokens = nullptr;
 		delete lexer;
 		lexer = nullptr;
+
+		syntaxErrLogger.CheckErrors(); // Throw exception if errors
 	}
 
 	virtual ~iParserContainer() {
 		delete hdlParser;
-		delete syntaxErrLogger;
 		delete antlrParser;
 		delete tokens;
 		delete lexer;
