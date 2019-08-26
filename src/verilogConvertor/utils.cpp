@@ -32,8 +32,7 @@ iHdlExpr *Utils::mkWireT(Verilog2001Parser::Range_Context * range,
 	if (range)
 		return mkWireT(VerExprParser::visitRange_(range), signed_);
 	else {
-		assert(signed_ == false);
-		return mkWireT();
+		return mkWireT(iHdlExpr::INT(1), signed_);
 	}
 }
 
