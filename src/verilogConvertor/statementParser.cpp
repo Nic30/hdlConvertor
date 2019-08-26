@@ -61,6 +61,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 	}
 	auto et = ctx->event_trigger();
 	if (et) {
+		// auto _et = VerExprParser::visitEvent_trigger(et);
 		NotImplementedLogger::print("VerStatementParser.event_trigger", et);
 		return {nullptr, nullptr};
 	}
