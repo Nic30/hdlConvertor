@@ -107,6 +107,7 @@ for o in d.objs:
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
+* [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
 
 ### License
 
