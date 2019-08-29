@@ -87,7 +87,7 @@ for o in d.objs:
 * [VHDL 1076-2002](https://perso.telecom-paristech.fr/guilley/ENS/20171205/TP/tp_syn/doc/IEEE_VHDL_1076-2002.pdf) compatible
 * VHDL 2008, (currently only without `tool_directive` and `PSL`) ftp://ftp.lpp.polytechnique.fr/jeandet/keep/sync/vhdl/4772740_IEEE-1076_Standard-VHDL-Language-Ref-Manual.pdf
 * Verilog 2001 (based on grammar http://www.syncad.com/VeriLogger_bnf_Syntax_Verilog_2001.htm, https://github.com/antlr/grammars-v4/blob/master/verilog/Verilog2001.g4)
-* System Verilog 2012 (based on grammar http://insights.sigasi.com/tech/systemverilog.ebnf.html) (WIP, currently only on C++ level)
+* Currently new universal grammar for System Verilog 2017 and all previous standard is beeing build. The things is WIP as the performance of this implementation is not sufficient for large UVM based projects (you can check speed in travis builds in sv2017 branch).
 
 
 ### Similar projects:
