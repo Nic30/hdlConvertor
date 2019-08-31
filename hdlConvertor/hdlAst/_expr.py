@@ -179,7 +179,7 @@ class HdlIntValue(object):
             if type(self.val) == type(other):
                 return self.val == other
             else:
-                raise TypeError() 
+                return False
 
     def __repr__(self):
         return "<HdlIntValue: val=%r, bits=%r, base=%r>" % (self.val, self.bits, self.base)
