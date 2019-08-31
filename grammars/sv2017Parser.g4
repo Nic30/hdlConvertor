@@ -603,8 +603,7 @@ data_type:
   | ( integer_vector_type ( signing )? 
       | ( KW_ENUM ( enum_base_type )? LBRACE enum_name_declaration 
           ( COMMA enum_name_declaration )* 
-          | struct_union ( KW_PACKED ( signing )? )? LBRACE struct_union_member 
-          ( struct_union_member )* 
+          | struct_union ( KW_PACKED ( signing )? )? LBRACE ( struct_union_member )+ 
           ) RBRACE 
       | package_or_class_scoped_id 
       ) ( packed_dimension )* 
@@ -994,7 +993,7 @@ property_expr_item:
   | KW_IF LPAREN expression_or_dist RPAREN property_expr ( KW_ELSE property_expr 
                                                           | {_input->LA(1) != KW_ELSE}? 
                                                           ) 
-  | KW_CASE LPAREN expression_or_dist RPAREN property_case_item ( property_case_item )* KW_ENDCASE 
+  | KW_CASE LPAREN expression_or_dist RPAREN ( property_case_item )+ KW_ENDCASE 
   | sequence_expr ( ( OVERLAPPING_IMPL 
                   | NONOVERLAPPING_IMPL 
                   | HASH_MINUS_HASH 
@@ -1049,11 +1048,11 @@ sequence_expr:
                           | KW_OR 
                           | KW_WITHIN 
                           ) sequence_expr 
-                      | cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
+                      | ( cycle_delay_range sequence_expr )+ 
                       )*;
 sequence_expr_item:
  KW_FIRST_MATCH LPAREN sequence_expr ( COMMA sequence_match_item )* RPAREN 
-  | cycle_delay_range sequence_expr ( cycle_delay_range sequence_expr )* 
+  | ( cycle_delay_range sequence_expr )+ 
   | expression_or_dist ( KW_THROUGHOUT sequence_expr 
                       | boolean_abbrev 
                       )? 
@@ -1192,7 +1191,7 @@ cover_cross:
  ( identifier COLON )? KW_CROSS identifier_list_2plus ( KW_IFF LPAREN expression RPAREN )? 
       cross_body;
 identifier_list_2plus:
- identifier COMMA identifier ( COMMA identifier )*;
+ identifier ( COMMA identifier )+;
 cross_body:
  LBRACE ( cross_body_item )* RBRACE 
   | SEMI 
@@ -1270,8 +1269,7 @@ enable_gate_instance:
 mos_switch_instance:
  ( name_of_instance )? LPAREN output_terminal COMMA input_terminal COMMA enable_terminal RPAREN;
 n_input_gate_instance:
- ( name_of_instance )? LPAREN output_terminal COMMA input_terminal ( COMMA input_terminal )* 
-      RPAREN;
+ ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
 n_output_gate_instance:
  ( name_of_instance )? LPAREN output_terminal ( COMMA output_terminal )* COMMA input_terminal 
       RPAREN;
@@ -1398,7 +1396,7 @@ if_generate_construct:
                                                           | {_input->LA(1) != KW_ELSE}? 
                                                           );
 case_generate_construct:
- KW_CASE LPAREN constant_expression RPAREN case_generate_item ( case_generate_item )* KW_ENDCASE;
+ KW_CASE LPAREN constant_expression RPAREN ( case_generate_item )+ KW_ENDCASE;
 case_generate_item:
  ( KW_DEFAULT ( COLON )? 
   | constant_expression ( COMMA constant_expression )* COLON 
@@ -1470,7 +1468,7 @@ udp_declaration:
                                   ) 
  ;
 udp_declaration_port_list:
- udp_output_declaration COMMA udp_input_declaration ( COMMA udp_input_declaration )*;
+ udp_output_declaration ( COMMA udp_input_declaration )+;
 udp_port_declaration:
  ( udp_output_declaration 
   | udp_input_declaration 
@@ -1489,11 +1487,11 @@ udp_body:
   | sequential_body 
  ;
 combinational_body:
- KW_TABLE combinational_entry ( combinational_entry )* KW_ENDTABLE;
+ KW_TABLE ( combinational_entry )+ KW_ENDTABLE;
 combinational_entry:
  level_input_list COLON LEVEL_SYMBOL SEMI;
 sequential_body:
- ( udp_initial_statement )? KW_TABLE sequential_entry ( sequential_entry )* KW_ENDTABLE;
+ ( udp_initial_statement )? KW_TABLE ( sequential_entry )+ KW_ENDTABLE;
 udp_initial_statement:
  KW_INITIAL identifier ASSIGN integral_number SEMI;
 sequential_entry:
@@ -1503,7 +1501,7 @@ seq_input_list:
   | edge_input_list 
  ;
 level_input_list:
- LEVEL_SYMBOL ( LEVEL_SYMBOL )*;
+ ( LEVEL_SYMBOL )+;
 edge_input_list:
  ( LEVEL_SYMBOL )* edge_indicator ( LEVEL_SYMBOL )*;
 edge_indicator:
@@ -1518,8 +1516,7 @@ next_state:
 udp_instantiation:
  identifier ( drive_strength )? ( delay2 )? udp_instance ( COMMA udp_instance )* SEMI;
 udp_instance:
- ( name_of_instance )? LPAREN output_terminal COMMA input_terminal ( COMMA input_terminal )* 
-      RPAREN;
+ ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
 continuous_assign:
  KW_ASSIGN ( ( drive_strength )? ( delay3 )? list_of_net_assignments 
               | ( delay_control )? list_of_variable_assignments 
@@ -1529,7 +1526,7 @@ list_of_net_assignments:
 list_of_variable_assignments:
  variable_assignment ( COMMA variable_assignment )*;
 net_alias:
- KW_ALIAS net_lvalue ASSIGN net_lvalue ( ASSIGN net_lvalue )* SEMI;
+ KW_ALIAS net_lvalue ( ASSIGN net_lvalue )+ SEMI;
 net_assignment:
  net_lvalue ASSIGN expression;
 initial_construct:
@@ -1706,11 +1703,9 @@ unique_priority:
 cond_predicate:
  expression ( KW_MATCHES pattern )? ( TRIPLE_AND expression ( KW_MATCHES pattern )? )*;
 case_statement:
- ( unique_priority )? ( KW_CASE LPAREN expression RPAREN KW_INSIDE case_inside_item 
-                          ( case_inside_item )* 
-                          | case_keyword LPAREN expression RPAREN ( KW_MATCHES case_pattern_item 
-                                                                  ( case_pattern_item )* 
-                                                                  | case_item ( case_item )* 
+ ( unique_priority )? ( KW_CASE LPAREN expression RPAREN KW_INSIDE ( case_inside_item )+ 
+                          | case_keyword LPAREN expression RPAREN ( KW_MATCHES ( case_pattern_item )+ 
+                                                                  | ( case_item )+ 
                                                                   ) 
                           ) KW_ENDCASE;
 case_keyword:
@@ -1731,7 +1726,7 @@ case_inside_item:
   | open_range_list COLON 
   ) statement_or_null;
 randcase_statement:
- KW_RANDCASE randcase_item ( randcase_item )* KW_ENDCASE;
+ KW_RANDCASE ( randcase_item )+ KW_ENDCASE;
 randcase_item:
  expression COLON statement_or_null;
 open_range_list:
@@ -1890,16 +1885,15 @@ cycle_delay:
 clockvar_expression:
  hierarchical_identifier select;
 randsequence_statement:
- KW_RANDSEQUENCE LPAREN ( identifier )? RPAREN production ( production )* KW_ENDSEQUENCE;
+ KW_RANDSEQUENCE LPAREN ( identifier )? RPAREN ( production )+ KW_ENDSEQUENCE;
 production:
  ( data_type_or_void )? identifier ( LPAREN tf_port_list RPAREN )? COLON rs_rule ( BAR rs_rule )* 
       SEMI;
 rs_rule:
  rs_production_list ( DIST_WEIGHT_ASSIGN weight_specification ( rs_code_block )? )?;
 rs_production_list:
- KW_RAND KW_JOIN ( LPAREN expression RPAREN )? production_item production_item 
-  ( production_item )* 
-  | rs_prod ( rs_prod )* 
+ KW_RAND KW_JOIN ( LPAREN expression RPAREN )? production_item ( production_item )+ 
+  | ( rs_prod )+ 
  ;
 weight_specification:
  LPAREN expression RPAREN 
@@ -1924,7 +1918,7 @@ rs_if_else:
 rs_repeat:
  KW_REPEAT LPAREN expression RPAREN production_item;
 rs_case:
- KW_CASE LPAREN expression RPAREN rs_case_item ( rs_case_item )* KW_ENDCASE;
+ KW_CASE LPAREN expression RPAREN ( rs_case_item )+ KW_ENDCASE;
 rs_case_item:
  ( KW_DEFAULT ( COLON )? 
   | expression ( COMMA expression )* COLON 
@@ -2537,11 +2531,11 @@ identifier:
  C_IDENTIFIER 
   | SIMPLE_IDENTIFIER 
   | ESCAPED_IDENTIFIER 
-  | KW_SAMPLE 
-  | KW_STD 
-  | KW_RANDOMIZE 
-  | KW_TYPE_OPTION 
   | KW_OPTION 
+  | KW_SAMPLE 
+  | KW_RANDOMIZE 
+  | KW_STD 
+  | KW_TYPE_OPTION 
  ;
 package_scope:
  ( KW_DOLAR_UNIT 
@@ -2569,24 +2563,24 @@ ps_or_hierarchical_identifier:
  ;
 any_system_tf_identifier:
  SYSTEM_TF_IDENTIFIER 
-  | KW_DOLAR_RECOVERY 
-  | KW_DOLAR_SETUP 
-  | KW_DOLAR_REMOVAL 
   | KW_DOLAR_PERIOD 
-  | KW_DOLAR_TIMESKEW 
-  | KW_DOLAR_INFO 
   | KW_DOLAR_SKEW 
-  | KW_DOLAR_ROOT 
-  | KW_DOLAR_HOLD 
-  | KW_DOLAR_FATAL 
+  | KW_DOLAR_SETUP 
   | KW_DOLAR_FULLSKEW 
+  | KW_DOLAR_REMOVAL 
+  | KW_DOLAR_INFO 
+  | KW_DOLAR_TIMESKEW 
+  | KW_DOLAR_NOCHANGE 
   | KW_DOLAR_RECREM 
+  | KW_DOLAR_SETUPHOLD 
   | KW_DOLAR_UNIT 
   | KW_DOLAR_ERROR 
   | KW_DOLAR_WARNING 
-  | KW_DOLAR_NOCHANGE 
+  | KW_DOLAR_HOLD 
   | KW_DOLAR_WIDTH 
-  | KW_DOLAR_SETUPHOLD 
+  | KW_DOLAR_RECOVERY 
+  | KW_DOLAR_FATAL 
+  | KW_DOLAR_ROOT 
  ;
 package_or_class_scoped_id:
  ( KW_DOLAR_UNIT 

@@ -458,7 +458,7 @@ ESCAPED_IDENTIFIER:
 SIMPLE_IDENTIFIER:
  [a-zA-Z_] ( [a-zA-Z0-9_$] )*;
 SYSTEM_TF_IDENTIFIER:
- DOLAR [a-zA-Z0-9_$] ( [a-zA-Z0-9_$] )*;
+ DOLAR ( [a-zA-Z0-9_$] )+;
 SEMI: ';';
 LPAREN: '(';
 RPAREN: ')';
