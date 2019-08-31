@@ -4,7 +4,37 @@ from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue
     HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
     HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto
 
-WIRE = HdlName('wire')
+
+def collect_array_dims(t):
+    array_dim = []
+    while isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
+        array_dim.append(t.ops[1])
+        t = t.ops[0]
+    
+    array_dim.reverse()
+    return t, array_dim
+
+    
+def get_wire_t_params(t):
+    
+    t, array_dim = collect_array_dims(t)
+    
+    if t == 'wire':
+        return None, False, array_dim
+        
+    if not isinstance(t, HdlCall) or t.fn != HdlBuildinFn.CALL:
+        return None
+    
+    if t.ops[0] != 'wire':
+        return None
+    
+    _, width, is_signed = t.ops
+    is_signed = bool(is_signed)
+    
+    if width == 1:
+        width = None
+   
+    return width, is_signed, array_dim
 
 
 class ToVerilog():
@@ -270,40 +300,32 @@ class ToVerilog():
         :return: True if the type has also the array dimension part
         """
         w = self.out.write
-        if t != WIRE:
+        t, array_dims = collect_array_dims(t)
+        wire_params = get_wire_t_params(t)
+        if wire_params is None:
             op = t if isinstance(t, HdlCall) else None
             if op is None:
                 self.print_expr(t)
-                return False
-
-            if op and op.fn == HdlBuildinFn.CALL and op.ops[0] == WIRE:
+        else:
+            width, is_signed, _ = wire_params
+            if width is not None:
                 # 1D vector
                 w("[")
-                ops = op.ops[1:]
-                size_expr = ops[0]
-                is_signed = bool(ops[1])
                 if is_signed:
                     raise NotImplementedError(op)
-                self.print_expr(size_expr)
+                self.print_expr(width)
                 w("] ")
-            else:
-                o = op.fn
-                if o == HdlBuildinFn.INDEX:
-                    self.print_type_first_part(op.ops[0])
-                    return True
-                raise NotImplementedError(op)
-
-        return False
+        return len(array_dims) > 0
 
     def print_type_array_part(self, t):
         """
         :type t: iHdlExpr
         """
         w = self.out.write
-        if isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
-            self.print_type_array_part(t.ops[0])
+        _, array_dim = collect_array_dims(t)
+        for ad in array_dim: 
             w("[")
-            self.print_expr(t.ops[1])
+            self.print_expr(ad)
             w("]")
 
     def print_variable(self, var):
@@ -319,8 +341,10 @@ class ToVerilog():
             w("reg ")
         else:
             w("wire ")
+
         is_array = self.print_type_first_part(t)
-        if t != WIRE:
+        wp = get_wire_t_params(t)
+        if wp is None or wp[0] is not None:
             w(" ")
         w(name)
         if is_array:
@@ -678,16 +702,16 @@ if __name__ == "__main__":
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
     filenames = [os.path.join(TEST_DIR, "arbiter_tb.v")]
-    #AES = os.path.join(BASE_DIR, "..", "aes")
-    #files = [
+    # AES = os.path.join(BASE_DIR, "..", "aes")
+    # files = [
     #    # "aes_cipher_top.v",
     #    # "aes_key_expand_128.v",
     #    # "aes_inv_cipher_top.v",  "aes_rcon.v",
     #    "test_bench_top.v",
     #    # "aes_inv_sbox.v",        "aes_sbox.v",
-    #]
+    # ]
     #
-    #filenames = [os.path.join(AES, f) for f in files]
+    # filenames = [os.path.join(AES, f) for f in files]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)
