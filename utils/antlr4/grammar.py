@@ -294,10 +294,8 @@ class Antlr4Selection(list, iAntlr4GramElem):
                 return self.eq_relaxed(other[0])
             else:
                 return False
-
-        if len(self) != len(other):
+        if not isinstance(other, Antlr4Selection) or len(self) != len(other):
             return False
-
         for a, b in zip(self, other):
             if not a.eq_relaxed(b):
                 return False
