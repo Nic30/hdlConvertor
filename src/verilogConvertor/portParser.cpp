@@ -261,13 +261,15 @@ void PortParser::convert_non_ansi_ports_to_ansi(vector<HdlVariableDef*> &ports,
 	size_t i = 0;
 	for (auto &g : non_ansi_port_groups) {
 		iHdlExpr *lsb = iHdlExpr::INT(0), *msb = nullptr;
+		bool _signed = false;
 		for (auto p : g.second) {
 			// [todo] resolve width of type
 			if (p->type) {
 
 			}
 		}
-		iHdlExpr *nap_t = iHdlExpr::call(Utils::mkWireT(), { msb, lsb });
+		auto range = new iHdlExpr(msb, HdlOperatorType::DOWNTO, lsb);
+		iHdlExpr *nap_t = Utils::mkWireT(range, _signed);
 		auto nap = new HdlVariableDef(g.first, nap_t, nullptr);
 		replace_seq_with_value(ports, g.second[0], g.second.size(), nap);
 		non_ansi_converted_ports[i++] = nap;
