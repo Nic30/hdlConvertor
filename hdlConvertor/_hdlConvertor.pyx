@@ -92,7 +92,7 @@ cdef class HdlConvertor:
         elif lang == L.VERILOG_2001_NOCONFIG:
             return VERILOG2001_NOCONFIG
         elif lang == L.VERILOG_2005:
-            return VERILOG2001
+            return VERILOG2005
         elif lang == L.SYSTEM_VERILOG_2005:
             return SV2005
         elif lang == L.SYSTEM_VERILOG_2009:
