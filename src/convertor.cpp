@@ -109,12 +109,13 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 			VHDLParserContainer pc(c, lang);
 			pc.parse_file(fileName, hierarchyOnly);
 			c = pc.context;
-		} else if (lang == VERILOG || lang == Language::VERILOG2001) {
+		} else if (lang == Language::VERILOG1995 || lang == Language::VERILOG2001) {
 			VerilogParserContainer pc(c, lang);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
 			c = pc.context;
 
-		} else if (is_system_verilog(lang)) {
+		} else if (lang == Language::VERILOG2001_NOCONFIG
+				|| lang == Language::VERILOG2005 || is_system_verilog(lang)) {
 			SVParserContainer pc(c, lang);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
 			c = pc.context;
