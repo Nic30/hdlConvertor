@@ -57,7 +57,10 @@ def add_comments_and_ws(rules):
             Antlr4Symbol("//", True),
             Antlr4Symbol(".*?", True, is_regex=True),
             Antlr4Option(Antlr4Symbol("\r", True)),
-            Antlr4Symbol("\n", True),
+            Antlr4Selection([
+                Antlr4Symbol("\n", True),
+                Antlr4Symbol("EOF", False),
+            ])
         ]),
         lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
     rules.append(olc)

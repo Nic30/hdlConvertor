@@ -2035,15 +2035,15 @@ pattern  ::=
     | <b>.</b> <b>*</b> 
     | constant_expression 
     | <b>tagged</b> member_identifier [ pattern ] 
-    | <b>'</b> <b>{</b> pattern { <b>,</b> pattern } <b>}</b> 
-    | <b>'</b> <b>{</b> member_identifier <b>:</b> pattern { <b>,</b> member_identifier <b>:</b> pattern } <b>}</b> 
+    | <b>'{</b> pattern { <b>,</b> pattern } <b>}</b> 
+    | <b>'{</b> member_identifier <b>:</b> pattern { <b>,</b> member_identifier <b>:</b> pattern } <b>}</b> 
 
 </br>
 assignment_pattern  ::=  
-    <b>'</b> <b>{</b> expression { <b>,</b> expression } <b>}</b> 
-    | <b>'</b> <b>{</b> structure_pattern_key <b>:</b> expression { <b>,</b> structure_pattern_key <b>:</b> expression } <b>}</b> 
-    | <b>'</b> <b>{</b> array_pattern_key <b>:</b> expression { <b>,</b> array_pattern_key <b>:</b> expression } <b>}</b> 
-    | <b>'</b> <b>{</b> constant_expression <b>{</b> expression { <b>,</b> expression } <b>}</b> <b>}</b> 
+    <b>'{</b> expression { <b>,</b> expression } <b>}</b> 
+    | <b>'{</b> structure_pattern_key <b>:</b> expression { <b>,</b> structure_pattern_key <b>:</b> expression } <b>}</b> 
+    | <b>'{</b> array_pattern_key <b>:</b> expression { <b>,</b> array_pattern_key <b>:</b> expression } <b>}</b> 
+    | <b>'{</b> constant_expression <b>{</b> expression { <b>,</b> expression } <b>}</b> <b>}</b> 
 
 </br>
 structure_pattern_key  ::=  member_identifier | assignment_pattern_key 
@@ -2070,11 +2070,11 @@ constant_assignment_pattern_expression  ::=  assignment_pattern_expression
 
 </br>
 assignment_pattern_net_lvalue  ::=  
-    <b>'</b> <b>{</b> net_lvalue {<b>,</b> net_lvalue } <b>}</b> 
+    <b>'{</b> net_lvalue {<b>,</b> net_lvalue } <b>}</b> 
 
 </br>
 assignment_pattern_variable_lvalue  ::=  
-    <b>'</b> <b>{</b> variable_lvalue {<b>,</b> variable_lvalue } <b>}</b> 
+    <b>'{</b> variable_lvalue {<b>,</b> variable_lvalue } <b>}</b> 
     
 </br>
 loop_statement  ::=  

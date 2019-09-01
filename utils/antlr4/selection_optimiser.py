@@ -245,4 +245,5 @@ def selection_extract_common(rules, rule_name_a, rule_name_b, new_rule_name):
     rules.insert(rules.index(a), c)
     a.body[:i] = [Antlr4Symbol(new_rule_name, False)]
     b.body[:i] = [Antlr4Symbol(new_rule_name, False)]
+
     

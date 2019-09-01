@@ -10,6 +10,8 @@ from utils.antlr4.grammar import Antlr4Selection, Antlr4Rule, Antlr4Symbol, \
     rule_by_name, Antlr4Sequence, generate_renamer
 from utils.sv._utils import get_all_used_lexer_tokens, wrap_in_lexer_mode, \
     collect_keywords
+from utils.antlr4.simple_parser import Antlr4parser
+from utils.antlr4.query import Antlr4Query
 
 COMMENT_AND_WS_TOKENS = {"ONE_LINE_COMMENT", "BLOCK_COMMENT", "WHITE_SPACE"}
 
@@ -157,3 +159,28 @@ def fix_dpi_import_export(rules):
 
     r = rule_by_name(rules, "dpi_import_export")
     replace_item_by_sequence(r.body, match_replace_fn)
+
+
+def fix_implications(rules):
+    """
+    :note: variants of implications are as a independent tokens, otherwise lexer parses it as -= > instead of - =>
+    """
+    any_impl_rule = Antlr4Rule("any_implication",
+                               Antlr4parser().from_str("IMPLIES | IMPLIES_P | IMPLIES_N"))
+    orig = Antlr4parser().from_str("( polarity_operator )? IMPLIES")
+
+    def apply_rewrite(o):
+        if isinstance(o, Antlr4Sequence):
+            found_i = None
+            for i, o2 in enumerate(o):
+                if o2.eq_relaxed(orig[0]) and o[i + 1].eq_relaxed(orig[1]):
+                    found_i = i
+                    break
+            if found_i is not None:
+                del o[found_i + 1]
+                o[found_i] = Antlr4Symbol(any_impl_rule.name, False)
+
+    for r in rules:
+        replace_item_by_sequence(r, apply_rewrite)
+
+    rules.append(any_impl_rule)
