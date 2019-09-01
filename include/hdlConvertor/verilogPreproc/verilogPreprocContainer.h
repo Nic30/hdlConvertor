@@ -20,9 +20,9 @@ public:
 	std::vector<std::filesystem::path> incdirs;
 	Language lang;
 	SyntaxErrorLogger *syntaxErrLogger;
-
+	bool debug_dump_tokens;
 	VerilogPreprocContainer(Language _lang, SyntaxErrorLogger *_syntaxErrLogger) :
-			lang(_lang), syntaxErrLogger(_syntaxErrLogger) {
+			lang(_lang), syntaxErrLogger(_syntaxErrLogger), debug_dump_tokens(false) {
 	}
 
 	void init(const std::vector<std::string> &_incdirs);

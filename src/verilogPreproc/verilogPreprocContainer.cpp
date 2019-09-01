@@ -31,10 +31,12 @@ string VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
 	parser.language_version = lang;
 
 	tree::ParseTree *tree = parser.file();
-	// cout << "tokens.size()=" << tokens.size() << endl;
-	// for (size_t i = 0; i < tokens.size(); i++) {
-	// 	cout << tokens.get(i)->toString() << endl;
-	// }
+	if (debug_dump_tokens) {
+		cout << "#tokens.size()=" << tokens.size() << endl;
+		for (size_t i = 0; i < tokens.size(); i++) {
+			cout << tokens.get(i)->toString() << endl;
+		}
+	}
 
 	syntaxErrLogger->CheckErrors();
 
