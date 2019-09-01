@@ -13,7 +13,7 @@ int token_id_parentesis_count = 0;
 
 fragment CRLF : '\r'? '\n';
 fragment LETTER: [a-zA-Z] ;
-fragment ID_FIRST: LETTER | '_' ;
+fragment ID_FIRST: LETTER | '_';
 fragment F_DIGIT: [0-9] ;
 fragment F_ID : ID_FIRST (ID_FIRST | F_DIGIT)*;
 fragment ANY_WS: (WS | NEW_LINE)*;
@@ -21,7 +21,7 @@ fragment WS_ENDING_NEW_LINE: WS* CRLF;
 fragment F_WS: [ \t];
 fragment F_LINE_ESCAPE: '\\' CRLF;
 // string with escaped newlines and '"'
-STR: '"' ( (('\\' '"') | ('\\' '\r'? '\n')) | ~["\r\n])* '"';
+STR: '"' ( ('\\' ('"' | CRLF)) | ~["\r\n] )* '"';
 
 
 LINE_COMMENT : '//' ~[\r\n]* CRLF -> channel(CH_LINE_COMMENT);
@@ -53,7 +53,7 @@ NOUNCONNECTED_DRIVE: '`nounconnected_drive' WS_ENDING_NEW_LINE;
 OTHER_MACRO_WITH_ARGS:  '`' F_ID F_WS* '(' {
     	token_id_parentesis_count = 1;
     } -> mode(MACRO_PARAMS);
-OTHER_MACRO_NO_ARGS:    '`' F_ID;
+OTHER_MACRO_NO_ARGS: '`' F_ID;
 
 // used when parsing the id, param list and body of define macro
 mode DEFINE_MODE;
@@ -214,7 +214,7 @@ mode LINE_MODE;
 
 mode TIMING_SPEC_MODE;
     Time_Identifier:
-       F_DIGIT+ ' '* [mnpf]? 's'
+       F_DIGIT+ ' '* [munpf]? 's'
     ;
     TIMING_SPEC_MODE_SLASH : '/';
     TIMING_SPEC_MODE_WS : WS->skip;
@@ -253,6 +253,8 @@ mode PRAGMA_MODE;
 
 
 mode DEFAULT_MODE;
-	CODE: ~('`' | '\n' )+;
+	CODE: (~('`' | '\n' | '/')
+	        | ('/' ~('/' | '*'))
+	       )+;
 	NEW_LINE: CRLF;
 
