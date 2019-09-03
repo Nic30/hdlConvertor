@@ -1,3 +1,7 @@
+"""
+(System)Verilog language keyword lists
+"""
+
 IEEE1364_1995_KEYWORDS = [
     "always",
     "and",

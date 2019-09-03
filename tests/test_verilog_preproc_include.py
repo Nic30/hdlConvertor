@@ -18,7 +18,7 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
         if not isinstance(file, list):
             file = [file, ]
         f = path.join(SRC_DIR, *file)
-        res = c.verilog_pp(f, incdirs, Language.VERILOG)
+        res = c.verilog_pp(f, Language.VERILOG, incdirs)
         ref_file = path.join(EXPECTED_DIR, *file)
         with open(ref_file) as exp_f:
             expected = exp_f.read()

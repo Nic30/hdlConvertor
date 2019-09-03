@@ -28,6 +28,7 @@ class HdlAll(object):
     or "*" in Verilog sensitivity list
     """
     __slots__ = []
+
     def __init__(self):
         raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
 
@@ -37,6 +38,7 @@ class HdlOthers(object):
     Constant which corresponds to VHDL "others" keyword
     """
     __slots__ = []
+
     def __init__(self):
         raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
 
@@ -46,6 +48,7 @@ class HdlTypeType(object):
     Type which means that the object is type of type
     """
     __slots__ = []
+
     def __init__(self):
         raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
 
@@ -56,6 +59,7 @@ class HdlTypeAuto(object):
     from the type of the value
     """
     __slots__ = []
+
     def __init__(self):
         raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
 
@@ -133,6 +137,15 @@ class HdlCall(object):
     def __init__(self):
         self.fn = None  # type: Union[HdlBuildinFn, iHdlExpr]
         self.ops = []  # type: List[iHdlExpr]
+    
+    def __eq__(self, other):
+        if not isinstance(other, HdlCall):
+            return False
+        else:
+            return self.fn == other.fn and self.ops == other.ops
+
+    def __repr__(self):
+        return "%r(%s)" % (self.fn, ", ".join(repr(o) for o in self.ops))
 
 
 class HdlIntValue(object):
@@ -158,6 +171,18 @@ class HdlIntValue(object):
 
     def __nonzero__(self):
         return self.__bool__()
+
+    def __eq__(self, other):
+        if isinstance(other, HdlIntValue):
+            return self.val == other.val and self.bits == other.bits and  self.base == other.base
+        else:
+            if type(self.val) == type(other):
+                return self.val == other
+            else:
+                return False
+
+    def __repr__(self):
+        return "<HdlIntValue: val=%r, bits=%r, base=%r>" % (self.val, self.bits, self.base)
 
 
 # None is equivalent of HDL null

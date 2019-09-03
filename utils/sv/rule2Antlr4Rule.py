@@ -1,3 +1,7 @@
+
+"""
+Utils for parsing of the proto grammar extracted directly from pdf to antlr4 format
+"""
 from antlr4.tree.Tree import TerminalNode
 from typing import Union, List
 
@@ -29,6 +33,7 @@ class SvRule2Antlr4Rule(BaseGrammarConvertor):
         '}': "RBRACE",
 
         "'": "APOSTROPHE",
+        "'{": "APOSTROPHE_LBRACE",
         '"': "DBLQUOTE",
         "<<": "SHIFT_LEFT",
         ">>": "SHIFT_RIGHT",
@@ -99,6 +104,8 @@ class SvRule2Antlr4Rule(BaseGrammarConvertor):
         '|->': "OVERLAPPING_IMPL",
         '|=>': "NONOVERLAPPING_IMPL",
         '=>': "IMPLIES",  # or path parralel
+        '-=>': "IMPLIES_P",  # or path parralel
+        '+=>': "IMPLIES_N",  # or path parralel
         '*>': "PATH_FULL",
         '#-#': "HASH_MINUS_HASH",
         '#=#': "HASH_EQ_HASH",

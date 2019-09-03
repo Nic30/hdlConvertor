@@ -20,6 +20,7 @@ public:
 	static hdlObjects::iHdlExpr * parseSimple_identifier(TerminalNode * n);
 	static hdlObjects::iHdlExpr * parseEscaped_identifier(TerminalNode* n);
 	static hdlObjects::iHdlExpr * parseIntNumber(TerminalNode * n, int radix);
+	static hdlObjects::iHdlExpr * parseReal_number(TerminalNode * n);
 	static hdlObjects::iHdlExpr * visitString(TerminalNode * n);
 	static hdlObjects::HdlOperatorType visitUnary_operator(
 			Verilog2001Parser::Unary_operatorContext * ctx);

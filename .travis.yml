@@ -73,7 +73,7 @@ install:
 - sudo apt install libantlr4-runtime-dev antlr4
 - pip install -r requirements.txt
 - python setup.py build $BUILD_ARGS
-- python setup.py install
+- python setup.py install $BUILD_ARGS
 
 deploy:
   provider: pypi
@@ -85,6 +85,6 @@ deploy:
     branch: master
 
 script: 
-  - python setup.py test # the scikit-build automatically executes setup.py develop which requires access to installation dir
+  - python setup.py test $BUILD_ARGS # the scikit-build automatically executes setup.py develop which requires access to installation dir
 
 

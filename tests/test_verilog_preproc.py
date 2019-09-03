@@ -15,7 +15,7 @@ def _test_run(test_file, golden_file):
     incdirs = [path.join('sv_pp', 'src'), ]
     
     test_result = c.verilog_pp(
-        test_file, incdirs, Language.SYSTEM_VERILOG)
+        test_file, Language.SYSTEM_VERILOG, incdirs)
 
     with open(golden_file) as myfile:
         test_golden = myfile.read()
@@ -66,8 +66,8 @@ class VerilogPreprocTC(unittest.TestCase):
             c = HdlConvertor()
             c.verilog_pp(
                 f,
+                Language.SYSTEM_VERILOG,
                 [path.join('sv_pp', 'src'), ],
-                Language.SYSTEM_VERILOG
             )
         e = str(context.exception)
         if contains:
@@ -132,7 +132,7 @@ class VerilogPreprocTC(unittest.TestCase):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
         incdirs = [path.join('sv_pp', 'src'), ]
-        test_result = c.verilog_pp(f, incdirs, Language.SYSTEM_VERILOG)
+        test_result = c.verilog_pp(f, Language.SYSTEM_VERILOG, incdirs)
         expected_val = path.join(path.dirname(__file__),
                                  'sv_pp', 'src', 'test_FILE_LINE.sv'
                                  )
@@ -144,7 +144,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_verilog_pp_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.verilog_pp("", "", "badlang")
+            test_result = c.verilog_pp("", "badlang", [])
         e = str(context.exception)
         self.assertIn("'badlang' is not recognized (expected hdlConvertor.language.Language value)", e)
 

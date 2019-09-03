@@ -3,6 +3,7 @@ from typing import Tuple
 
 from utils.antlr4.grammar import Antlr4Sequence, Antlr4Option, Antlr4Iteration, \
     Antlr4Selection
+from itertools import islice
 
 
 def _is_optional(o):
@@ -94,3 +95,41 @@ def _sequence_expand_optionality(obj):
         variant_sequences.append(Antlr4Sequence([]))
         
     return variant_sequences
+
+
+def _sequence_extract_positive_iterations(obj):
+    """
+    a b c ( b c )* -> a ( b c )+
+    """
+    assert isinstance(obj, Antlr4Sequence)
+    found = []
+    for i, e in enumerate(obj):
+        if isinstance(e, Antlr4Iteration):
+            body = e.body
+            if isinstance(e.body, Antlr4Sequence):
+                body_len = len(e.body)
+            else:
+                body_len = 1
+                body = [body, ]
+            if e.positive or i < body_len:
+                continue
+            prev_items_same_as_body = True
+            prev_items = islice(obj, i - body_len, None)
+            for e2, e3 in zip(prev_items, body):
+                if not e2.eq_relaxed(e3):
+                    prev_items_same_as_body = False
+                    break
+            if prev_items_same_as_body:
+                found.append((i, body_len, e))
+    
+    offset = 0
+    for i, body_len, e in found:
+        del obj[i + offset - body_len:i + offset]
+        e.positive = True
+        offset -= body_len
+    
+    if len(obj) == 1:
+        obj = obj[0]
+    
+    return obj, bool(found)
+    

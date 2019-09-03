@@ -1,3 +1,7 @@
+
+"""
+Rules which are defined only in text in SystemVerilog standard
+"""
 from utils.antlr4.grammar import Antlr4Rule, Antlr4Symbol, Antlr4Selection, \
     Antlr4Sequence, Antlr4Iteration, Antlr4Option, Antlr4LexerAction
 
@@ -9,7 +13,7 @@ def add_string_literal_rules(p):
         Antlr4Symbol('\\\r\n', True),
         Antlr4Sequence([
             Antlr4Symbol("\\", True),
-            Antlr4Symbol('[nt\\\\"vfa]', True, is_regex=True),
+            Antlr4Symbol('[nt\\\\"vfa%]', True, is_regex=True),
         ]),
         Antlr4Symbol("'\\\\' [0-9] [0-9]? [0-9]?", True, True),
         Antlr4Symbol("'\\\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]?", True, True),
@@ -53,7 +57,10 @@ def add_comments_and_ws(rules):
             Antlr4Symbol("//", True),
             Antlr4Symbol(".*?", True, is_regex=True),
             Antlr4Option(Antlr4Symbol("\r", True)),
-            Antlr4Symbol("\n", True),
+            Antlr4Selection([
+                Antlr4Symbol("\n", True),
+                Antlr4Symbol("EOF", False),
+            ])
         ]),
         lexer_actions=[Antlr4LexerAction.channel("HIDDEN")])
     rules.append(olc)

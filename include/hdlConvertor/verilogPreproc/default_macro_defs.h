@@ -20,7 +20,7 @@ public:
 			antlr4::ParserRuleContext * ctx) override;
 };
 
-void macroDB_add_default_defs(MacroDB & db);
+void macroDB_add_default_defs(MacroDB & db, Language lang);
 
 }
 }

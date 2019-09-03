@@ -190,7 +190,7 @@ PyObject* ToPy::toPy(const iHdlStatement * o) {
 			}
 			if (o->exprs.size() > 3) {
 				event_delay = PyList_New(o->exprs.size() - 3);
-				for (size_t i = 2; i < o->exprs.size(); i++) {
+				for (size_t i = 3; i < o->exprs.size(); i++) {
 					auto py_obj = toPy(o->exprs[i]);
 					if (py_obj == nullptr) {
 						break;
