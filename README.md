@@ -97,6 +97,7 @@ for o in d.objs:
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
+* [Pyverilog](https://github.com/PyHDI/Pyverilog) - python verilog toolkit
 * [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
