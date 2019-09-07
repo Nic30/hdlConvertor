@@ -204,8 +204,6 @@ cdef class CppStdMapIterator:
     cdef object t
 
     def __cinit__(self, object t):
-        self.it = < MacroDB_iterator > (NULL)
-        self.end = < MacroDB_iterator > (NULL)
         self.t = t
     
     def __iter__(self):
