@@ -48,6 +48,7 @@ public:
 	std::string verilog_pp_str(const std::string &verilog_str,
 			const std::vector<std::string> incdirs, Language lang);
 
+	virtual ~Convertor();
 };
 
 }

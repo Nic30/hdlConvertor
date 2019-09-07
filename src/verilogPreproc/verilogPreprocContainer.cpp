@@ -97,9 +97,6 @@ void VerilogPreprocContainer::delete_non_persystent_macro_defs() {
 }
 
 VerilogPreprocContainer::~VerilogPreprocContainer() {
-	for (auto o : defineDB) {
-		delete o.second;
-	}
 }
 
 }

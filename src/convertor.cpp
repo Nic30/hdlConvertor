@@ -165,4 +165,9 @@ string Convertor::verilog_pp_str(const string &verilog_str,
 	return pc.preproc.run_preproc_str(verilog_str);
 }
 
+Convertor::~Convertor() {
+	for (auto o : defineDB) {
+		delete o.second;
+	}
+}
 }
