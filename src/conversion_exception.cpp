@@ -2,7 +2,7 @@
 
 namespace hdlConvertor {
 
-const char* get_my_py_error_message() {
+const char* get_cpp_py_error_message() {
 	try {
 		throw;
 	} catch (const ParseException& e) {

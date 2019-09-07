@@ -35,6 +35,7 @@ public:
 	bool hierarchyOnly;
 	static bool debug;
 	hdlObjects::HdlContext *c;
+	verilog_pp::MacroDB defineDB;
 
 	hdlObjects::HdlContext* parse(const std::vector<std::string> &fileNames,
 			Language lang, std::vector<std::string> incdirs, bool hierarchyOnly,

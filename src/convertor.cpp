@@ -27,15 +27,15 @@ class VerilogParserContainerCommon: public iParserContainer<antlrLexerT,
 		antlrParserT, hdlParserT> {
 public:
 	verilog_pp::VerilogPreprocContainer preproc;
+
 	void parse_str(std::string &input_str, bool hierarchyOnly) = delete;
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly) = delete;
 
-public:
-
 	VerilogParserContainerCommon(hdlObjects::HdlContext *context,
-			Language _lang) :
+			Language _lang, verilog_pp::MacroDB &_defineDB) :
 			iParserContainer<antlrLexerT, antlrParserT, hdlParserT>(context,
-					_lang), preproc(_lang, &this->syntaxErrLogger) {
+					_lang, _defineDB), preproc(_lang, this->syntaxErrLogger,
+					_defineDB) {
 	}
 
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
@@ -106,17 +106,18 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		}
 
 		if (lang == Language::VHDL) {
-			VHDLParserContainer pc(c, lang);
+			VHDLParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly);
 			c = pc.context;
-		} else if (lang == Language::VERILOG1995 || lang == Language::VERILOG2001) {
-			VerilogParserContainer pc(c, lang);
+		} else if (lang == Language::VERILOG1995
+				|| lang == Language::VERILOG2001) {
+			VerilogParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
 			c = pc.context;
 
 		} else if (lang == Language::VERILOG2001_NOCONFIG
 				|| lang == Language::VERILOG2005 || is_system_verilog(lang)) {
-			SVParserContainer pc(c, lang);
+			SVParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
 			c = pc.context;
 		} else {
@@ -133,15 +134,15 @@ HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 	NotImplementedLogger::ENABLE = _debug;
 
 	if (lang == VHDL) {
-		VHDLParserContainer pc(c, lang);
+		VHDLParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly);
 		c = pc.context;
 	} else if (lang == VERILOG) {
-		VerilogParserContainer pc(c, lang);
+		VerilogParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly, incdir);
 		c = pc.context;
 	} else if (is_system_verilog(lang)) {
-		SVParserContainer pc(c, lang);
+		SVParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly, incdir);
 		c = pc.context;
 	} else {
@@ -152,14 +153,14 @@ HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 
 string Convertor::verilog_pp(const string &fileName,
 		const vector<string> _incdirs, Language lang) {
-	SVParserContainer pc(nullptr, lang);
+	SVParserContainer pc(nullptr, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	return pc.preproc.run_preproc_file(fileName);
 }
 
 string Convertor::verilog_pp_str(const string &verilog_str,
 		const vector<string> _incdirs, Language lang) {
-	SVParserContainer pc(nullptr, lang);
+	SVParserContainer pc(nullptr, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	return pc.preproc.run_preproc_str(verilog_str);
 }

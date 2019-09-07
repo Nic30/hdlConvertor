@@ -22,6 +22,7 @@ public:
 	antlrParserT *antlrParser;
 	hdlParserT *hdlParser;
 	Language lang;
+	verilog_pp::MacroDB &defineDB;
 
 	void initParser(antlr4::ANTLRInputStream &input_stream) {
 		// create a lexer that feeds off of input CharStream
@@ -46,14 +47,17 @@ public:
 	 * :param context: if context is nullptr new context is generated
 	 *                 otherwise specified context is used
 	 * */
-	iParserContainer(hdlObjects::HdlContext *context, Language _lang) :
+	iParserContainer(hdlObjects::HdlContext *context, Language _lang,
+			verilog_pp::MacroDB &_defineDB) :
 			syntaxErrLogger(), lexer(nullptr), tokens(nullptr), antlrParser(
-					nullptr), hdlParser(nullptr), lang(_lang), context(context) {
+					nullptr), hdlParser(nullptr), lang(_lang), defineDB(
+					_defineDB), context(context) {
 	}
 
 	virtual void parseFn() = 0;
 
-	void parse_file(const std::filesystem::path &file_name, bool hierarchyOnly) {
+	void parse_file(const std::filesystem::path &file_name,
+			bool hierarchyOnly) {
 		antlr4::ANTLRFileStream input_stream(file_name.u8string());
 		_parse(input_stream, hierarchyOnly);
 	}
@@ -64,7 +68,7 @@ public:
 		_parse(input_stream, hierarchyOnly);
 	}
 
-	void _parse(antlr4::ANTLRInputStream & input_stream, bool hierarchyOnly) {
+	void _parse(antlr4::ANTLRInputStream &input_stream, bool hierarchyOnly) {
 		initParser(input_stream);
 
 		hdlParser = new hdlParserT(antlrParser->getTokenStream(), context,
@@ -72,7 +76,7 @@ public:
 		// begin parsing at init rule
 		try {
 			parseFn();
-		} catch (const antlr4::NoViableAltException & e) {
+		} catch (const antlr4::NoViableAltException &e) {
 			// [todo] check if error really appeared in syntaxErrLogger
 			throw;
 		}
@@ -97,6 +101,5 @@ public:
 		delete lexer;
 	}
 };
-
 
 }

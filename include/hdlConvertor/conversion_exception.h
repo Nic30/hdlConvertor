@@ -18,6 +18,7 @@ public:
 	}
 };
 
-extern const char* get_my_py_error_message();
+// [todo] move to python module
+extern const char* get_cpp_py_error_message();
 
 }
