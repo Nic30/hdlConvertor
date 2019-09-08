@@ -39,6 +39,7 @@
      ```
 
 # Debuging in Eclipse
+* apt install python3-dbg # because normal python crashes on some errors without reporting (like undefined symbol in c library)
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
 	* Arguments: $NAME_OF_YOUR_SCRIPT etc
