@@ -43,7 +43,6 @@ matrix:
           packages:
             - g++-8
             - gcc-8
-            - lcov
 
     - name: "Python 3.7 gcc-7"
       python: 3.7           
@@ -55,7 +54,6 @@ matrix:
           packages:
             - g++-7
             - gcc-7
-
 
 addons:
    apt:
@@ -69,7 +67,7 @@ addons:
 
 # command to install dependencies
 install:
-- if [ "$CODE_COVERAGE" == "1" ]; then gem install coveralls-lcov; fi
+- if [ "$CODE_COVERAGE" == "1" ]; then sudo apt install -y lcov; gem install coveralls-lcov; fi
 - sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
 - sudo apt update
 - sudo apt install libantlr4-runtime-dev antlr4
