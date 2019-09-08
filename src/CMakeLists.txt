@@ -35,7 +35,7 @@ set_target_properties(hdlConvertor_core_static
 	OUTPUT_NAME hdlConvertor_core
 	POSITION_INDEPENDENT_CODE ON
 )
-set_coverage_if_enabled(hdlConvertor_core_static)
+set_coverage_if_enabled(hdlConvertor_core_static ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set(CPP_STD_FILESYSTEM_LIB_NAME c++experimental)
@@ -57,7 +57,7 @@ if(HDLCONVERTOR_PYTHON)
 	# [note] hdlConvertor_core_static and hdlConvertor_cpp_static has to be separated
 	#        otherwise it is not possible to link this library
 	add_library(hdlConvertor_cpp_static STATIC ${hdlConvertor_cpp_SRC})
-	set_coverage_if_enabled(hdlConvertor_cpp_static)
+	set_coverage_if_enabled(hdlConvertor_cpp_static ON)
 
 	target_link_libraries(hdlConvertor_cpp_static PUBLIC
 		${HDL_CONVERTOR_INTERNAL_LIBS}
@@ -89,7 +89,7 @@ else()
 		${ANTLR4CPP_LIBRARIES}
 		${CPP_STD_FILESYSTEM_LIB_NAME}
 	)
-	set_coverage_if_enabled(hdlConvertor_cpp_shared)
+	set_coverage_if_enabled(hdlConvertor_cpp_shared ON)
 	if(CODE_COVERAGE)
 		target_link_libraries(hdlConvertor_cpp_shared PRIVATE gcov)
 	endif()

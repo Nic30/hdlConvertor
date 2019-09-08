@@ -168,7 +168,7 @@ macro(AddParserToBuild name folder_name
 		${SRC}
 	  	${GENERATED_SRC}
 	  	${GENERATED_INC})
-	set_coverage_if_enabled(${folder_name}_static)
+	set_coverage_if_enabled(${folder_name}_static ON)
 
 	if(NOT HDLCONVERTOR_PYTHON)
 		# we do not want to install headers if we are building python module

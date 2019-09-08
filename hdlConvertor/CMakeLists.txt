@@ -31,7 +31,7 @@ endif()
 target_link_libraries(_hdlConvertor
 	hdlConvertor_cpp_static
 )
-set_coverage_if_enabled(_hdlConvertor)
+set_coverage_if_enabled(_hdlConvertor OFF)
 
 
 #set_target_properties(_hdlConvertor
