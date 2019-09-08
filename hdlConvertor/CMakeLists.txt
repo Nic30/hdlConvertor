@@ -17,7 +17,7 @@ add_library(_hdlConvertor MODULE ${_hdlConvertor}
 								 ${hdlConvertor_py_SRC})
 python_extension_module(_hdlConvertor)
 
-target_link_libraries(_hdlConvertor
+target_link_libraries(_hdlConvertor PUBLIC
 	hdlConvertor_cpp_static
 )
 set_coverage_if_enabled(_hdlConvertor ON)
