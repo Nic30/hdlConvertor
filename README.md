@@ -13,6 +13,8 @@ It is also possible to convert this AST back to original HDL.
 This project was extracted from [HWT](https://github.com/Nic30/hwt).
 There is also Java version. But it seems that there is no use for it.
 
+![overview](doc/hdlConvertor_overview.png)
+
 
 ## Installation
 **Use version from this repo as the pip package is currently very old (The pip package will be updated after specified functionality is implemented [issues/48](https://github.com/Nic30/hdlConvertor/issues/48).).**
@@ -61,6 +63,9 @@ Also if it is something which is not unique to your system, tell us so we can fi
 The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`.
 In the meantime when there is no wiki yet you can take look at src/hdlAst.py.
 There are classes for objects in HDL langues and there is also type specified for every properrty.
+
+![overview](doc/hdlConvertor_typical_usage.png)
+
 
 Example of usage:
 ```python
