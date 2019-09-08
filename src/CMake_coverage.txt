@@ -1,7 +1,7 @@
 
-function(set_coverage_if_enabled lib_name is_top)
+function(set_coverage_if_enabled lib_name)
   if(CODE_COVERAGE)
-	message(STATUS "set_coverage_if_enabled: ${lib_name} ${is_top}")
+	message(STATUS "set_coverage_if_enabled: ${lib_name}")
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
       # Add required flags (GCC & LLVM/Clang)
       target_compile_options(${lib_name} PUBLIC
@@ -9,9 +9,6 @@ function(set_coverage_if_enabled lib_name is_top)
         -g         # generate debug info
         --coverage # sets all required flags
       )
-      if(is_top)
-        target_link_libraries(${lib_name} gcov)
-      endif()
       if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
         target_link_options(${lib_name} INTERFACE --coverage)
       else()
