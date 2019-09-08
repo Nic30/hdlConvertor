@@ -4,7 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
 [![Python version](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)](https://img.shields.io/pypi/pyversions/hdlConvertor.svg)
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing) [![Gitter](https://badges.gitter.im/hdlConvertor/community.svg)](https://gitter.im/hdlConvertor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
+[![Coverage Status](https://coveralls.io/repos/github/Nic30/hdlConvertor/badge.svg?branch=master)](https://coveralls.io/github/Nic30/hdlConvertor?branch=master)
 
 The System Verilog and VHDL parser (and preprocessor) for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST (Classes defined in [hdlConvertor::hdlObjects](https://github.com/Nic30/hdlConvertor/tree/master/include/hdlConvertor/hdlObjects) and it's [python equivalent](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/hdlAst).). So your project does not not have to care about Verilog/VHDL differences
 
