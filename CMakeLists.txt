@@ -34,6 +34,7 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 endif()
 
 set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "ON")
+option(CODE_COVERAGE "Enable coverage reporting" OFF)
 
 add_subdirectory(src)
 
@@ -46,3 +47,5 @@ else()
 	SET(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, default-jre, libantlr4-runtime-dev, antlr4")
 	INCLUDE(CPack)
 endif()
+
+

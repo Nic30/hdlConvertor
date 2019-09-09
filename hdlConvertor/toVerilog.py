@@ -19,13 +19,13 @@ def get_wire_t_params(t):
     
     t, array_dim = collect_array_dims(t)
     
-    if t == 'wire':
+    if t == HdlName('wire'):
         return None, False, array_dim
         
     if not isinstance(t, HdlCall) or t.fn != HdlBuildinFn.CALL:
         return None
     
-    if t.ops[0] != 'wire':
+    if t.ops[0] != HdlName('wire'):
         return None
     
     _, width, is_signed = t.ops

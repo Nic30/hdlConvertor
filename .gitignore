@@ -59,3 +59,9 @@ include/hdlConvertor/vhdlConvertor/vhdlParser/*.h
 .project
 .pydevproject
 .settings/
+
+# coverage files
+*.gcda
+coverage.info
+coverage.info.raw
+

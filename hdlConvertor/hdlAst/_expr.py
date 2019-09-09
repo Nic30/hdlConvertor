@@ -176,9 +176,11 @@ class HdlIntValue(object):
         if isinstance(other, HdlIntValue):
             return self.val == other.val and self.bits == other.bits and  self.base == other.base
         else:
-            if type(self.val) == type(other):
+            try:
                 return self.val == other
-            else:
+            except TypeError:
+                return False
+            except ValueError:
                 return False
 
     def __repr__(self):

@@ -7,11 +7,17 @@ namespace verilog_pp {
 using namespace std;
 using namespace antlr4;
 
+VerilogPreprocContainer::VerilogPreprocContainer(Language _lang,
+		SyntaxErrorLogger &_syntaxErrLogger,
+		verilog_pp::MacroDB & _defineDB) :
+		defineDB(_defineDB),lang(_lang), syntaxErrLogger(_syntaxErrLogger), debug_dump_tokens(false) {
+}
+
 void VerilogPreprocContainer::init(const vector<string> &_incdirs) {
-	defineDB.clear();
+	delete_non_persystent_macro_defs();
+	macroDB_add_default_defs(defineDB, lang);
 	stack_incfile.clear();
 	incdirs.clear();
-	macroDB_add_default_defs(defineDB, lang);
 	incdirs.reserve(_incdirs.size());
 	for (auto p : _incdirs)
 		incdirs.push_back(p);
@@ -21,13 +27,13 @@ string VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
 		bool added_incdir) {
 	verilogPreproc_antlr::verilogPreprocLexer pp_lexer(&input);
 	pp_lexer.removeErrorListeners();
-	pp_lexer.addErrorListener(syntaxErrLogger);
+	pp_lexer.addErrorListener(&syntaxErrLogger);
 
 	CommonTokenStream tokens(&pp_lexer);
 
 	verilogPreproc_antlr::verilogPreprocParser parser(&tokens);
 	parser.removeErrorListeners();
-	parser.addErrorListener(syntaxErrLogger);
+	parser.addErrorListener(&syntaxErrLogger);
 	parser.language_version = lang;
 
 	tree::ParseTree *tree = parser.file();
@@ -38,7 +44,7 @@ string VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
 		}
 	}
 
-	syntaxErrLogger->CheckErrors();
+	syntaxErrLogger.CheckErrors();
 
 	verilog_pp::VerilogPreproc extractor(*this, tokens, added_incdir);
 	extractor.visit(tree);
@@ -77,6 +83,20 @@ string VerilogPreprocContainer::run_preproc_str(const std::string &input_str) {
 	ANTLRInputStream input_for_preprocessor(input_str);
 	input_for_preprocessor.name = STRING_FILENAME;
 	return run_preproc(input_for_preprocessor, false);
+}
+
+void VerilogPreprocContainer::delete_non_persystent_macro_defs() {
+	auto it = defineDB.begin();
+	for (; it != defineDB.end();) {
+		if (!it->second->is_persistent) {
+			defineDB.erase(it++);
+		} else {
+			++it;
+		}
+	}
+}
+
+VerilogPreprocContainer::~VerilogPreprocContainer() {
 }
 
 }

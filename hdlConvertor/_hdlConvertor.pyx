@@ -1,10 +1,14 @@
+include "verilogPreproc.pyx"
+
 from libc.string cimport strerror
 from libc.errno cimport errno
 from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+from libcpp.pair cimport pair
 from cpython.ref cimport PyObject
-from cpython.version cimport PY_MAJOR_VERSION
+from cython.operator cimport dereference as deref
+from cython.operator cimport preincrement as preinc
 import sys
 
 from hdlConvertor.hdlAst import HdlContext as PyHdlContext
@@ -23,54 +27,62 @@ cdef extern from "toPy.h" namespace "hdlConvertor":
         PyObject * toPy(const HdlContext * c) except NULL
 
 cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
-    cdef const char * get_my_py_error_message()
+    cdef const char * get_cpp_py_error_message()
 
 cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
-        VHDL, VERILOG1995, VERILOG2001, VERILOG2001_NOCONFIG, VERILOG2005, SV2005, SV2009, SV2012, SV2017
+        VHDL, VERILOG1995, VERILOG2001, VERILOG2001_NOCONFIG, \
+        VERILOG2005, SV2005, SV2009, SV2012, SV2017
 
 cdef class ParseException(Exception):
     pass
 
-cdef int raise_my_py_error() except * :
-    PY3 = PY_MAJOR_VERSION == 3
-    msg = get_my_py_error_message()
-    if PY3:
-        msg = msg.decode('utf-8')
+cdef int raise_cpp_py_error() except * :
+    msg = get_cpp_py_error_message()
+    msg = str_decode(msg)
 
     raise ParseException(msg)
 
+
 cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
+        MacroDB defineDB
 
         HdlContext * parse(const vector[string] & hdl_file_names,
                         Language language,
                         vector[string] include_dirs,
                         bool hierarchy_only,
-                        bool debug) except +raise_my_py_error
+                        bool debug) except +raise_cpp_py_error
 
         HdlContext * parse_str(const string & hdl_str,
                         Language language,
                         vector[string] include_dirs,
                         bool hierarchy_only,
-                        bool debug) except +raise_my_py_error
+                        bool debug) except +raise_cpp_py_error
 
         string verilog_pp(const string & filename,
                           vector[string] incdirs,
-                          Language mode) except +raise_my_py_error
+                          Language mode) except +raise_cpp_py_error
 
         string verilog_pp_str(const string & verilog_str,
                           vector[string] incdirs,
-                          Language mode) except +raise_my_py_error
+                          Language mode) except +raise_cpp_py_error
 
 cdef class HdlConvertor:
     """
     The container of the Convertor which parses HDL code to universal AST
+    
+    :ivar thisptr: pointer on Convertor instance which is a wrapper around the parsers
+    :ivar proproc_macro_db: dictinary of symbols defined in preprocessor
     """
 
     cdef Convertor * thisptr
+    cdef public CppStdMapProxy preproc_macro_db
+
+    # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
         self.thisptr = new Convertor()
+        self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.defineDB)
 
     def __dealloc__(self):
         del self.thisptr
@@ -116,19 +128,12 @@ cdef class HdlConvertor:
         :return: HdlContext instance
         """
         langue_value = self._translate_Language_enum(langue)
-        PY3 = PY_MAJOR_VERSION == 3
-
-        if PY3:
-            string_type = str
-        else:
-            string_type = basestring
 
         if isinstance(filenames, string_type):
             filenames = [filenames, ]
 
-        if PY3:
-            filenames = [item.encode('utf8') for item in filenames]
-            incdirs = [item.encode('utf8') for item in incdirs]
+        filenames = [str_encode(item) for item in filenames]
+        incdirs = [str_encode(item) for item in incdirs]
 
         cdef HdlContext * c
         cdef object d_py
@@ -158,11 +163,9 @@ cdef class HdlConvertor:
         :return: HdlContext instance
         """
         langue_value = self._translate_Language_enum(langue)
-        PY3 = PY_MAJOR_VERSION == 3
 
-        if PY3:
-            hdl_str = hdl_str.encode('utf8')
-            incdirs = [item.encode('utf8') for item in incdirs]
+        hdl_str = str_encode(hdl_str)
+        incdirs = [str_encode(item) for item in incdirs]
 
         cdef HdlContext * c
         cdef object d_py
@@ -189,16 +192,12 @@ cdef class HdlConvertor:
         :return: string output from verilog preprocessor
         """
         langue_value = self._translate_verilog_enum(lang)
-        PY3 = PY_MAJOR_VERSION == 3
 
-        if PY3:
-            filename = filename.encode('utf8')
-            incdirs = [item.encode('utf8') for item in incdirs]
+        filename = str_encode(filename)
+        incdirs = [str_encode(item) for item in incdirs]
 
         data = self.thisptr.verilog_pp(filename, incdirs, langue_value)
-
-        if PY3:
-            data = data.decode('utf8')
+        data = str_decode(data)
 
         return data
 
@@ -209,14 +208,11 @@ cdef class HdlConvertor:
         :return: string output from verilog preprocessor
         """
         langue_value = self._translate_verilog_enum(lang)
-        PY3 = PY_MAJOR_VERSION == 3
-        if PY3:
-            verilog_str = verilog_str.encode('utf8')
-            incdirs = [item.encode('utf8') for item in incdirs]
+
+        verilog_str = str_encode(verilog_str)
+        incdirs = [str_encode(item) for item in incdirs]
 
         data = self.thisptr.verilog_pp_str(verilog_str, incdirs, langue_value)
-
-        if PY3:
-            data = data.decode('utf8')
+        data = str_decode(data)
 
         return data

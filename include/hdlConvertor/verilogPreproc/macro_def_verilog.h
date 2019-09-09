@@ -6,11 +6,6 @@
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/verilogPreproc/a_macro_def.h>
 
-#if defined(_MSC_VER)
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-#endif
-
 namespace hdlConvertor {
 namespace verilog_pp {
 

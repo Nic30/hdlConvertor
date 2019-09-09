@@ -15,21 +15,24 @@ namespace verilog_pp {
  * */
 class VerilogPreprocContainer {
 public:
-	verilog_pp::MacroDB defineDB;
+	verilog_pp::MacroDB & defineDB;
+	// [todo] store also line no so it is possible to recover it
 	std::vector<std::filesystem::path> stack_incfile;
 	std::vector<std::filesystem::path> incdirs;
 	Language lang;
-	SyntaxErrorLogger *syntaxErrLogger;
+	SyntaxErrorLogger &syntaxErrLogger;
 	bool debug_dump_tokens;
-	VerilogPreprocContainer(Language _lang, SyntaxErrorLogger *_syntaxErrLogger) :
-			lang(_lang), syntaxErrLogger(_syntaxErrLogger), debug_dump_tokens(false) {
-	}
+	VerilogPreprocContainer(Language _lang, SyntaxErrorLogger &_syntaxErrLogger,
+			verilog_pp::MacroDB & defineDB);
 
 	void init(const std::vector<std::string> &_incdirs);
 	std::string run_preproc(antlr4::ANTLRInputStream &input, bool added_incdir);
 	bool add_parent_dir_to_incldirs(const std::filesystem::path &file_name);
 	std::string run_preproc_file(const std::filesystem::path &file_name);
 	std::string run_preproc_str(const std::string &input_str);
+
+	void delete_non_persystent_macro_defs();
+	virtual ~VerilogPreprocContainer();
 };
 
 }
