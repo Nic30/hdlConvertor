@@ -110,9 +110,10 @@ for o in d.objs:
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
 * [veelox](https://github.com/martinda/veelox) - Java+ANTLR,  An experiment in SystemVerilog Preprocessing 
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
-* [verilog-parser](https://github.com/ben-marshall/verilog-parser) - verilog parser, c
+* [vbpp](https://github.com/balanx/vbpp) - C, Verilog PreProcessor  
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
+
 
 ### License
 
