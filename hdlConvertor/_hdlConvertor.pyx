@@ -1,19 +1,19 @@
-include "verilogPreproc.pyx"
+import sys
 
+from cpython.ref cimport PyObject
+from cython.operator cimport dereference as deref
+from cython.operator cimport preincrement as preinc
 from libc.string cimport strerror
 from libc.errno cimport errno
 from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.pair cimport pair
-from cpython.ref cimport PyObject
-from cython.operator cimport dereference as deref
-from cython.operator cimport preincrement as preinc
-import sys
 
 from hdlConvertor.hdlAst import HdlContext as PyHdlContext
 from hdlConvertor.language import Language as PyHdlLanguageEnum
 
+include "verilogPreproc.pyx"
 
 cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass HdlContext:
@@ -32,7 +32,7 @@ cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
 cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
         VHDL, VERILOG1995, VERILOG2001, VERILOG2001_NOCONFIG, \
-        VERILOG2005, SV2005, SV2009, SV2012, SV2017
+            VERILOG2005, SV2005, SV2009, SV2012, SV2017
 
 cdef class ParseException(Exception):
     pass
@@ -43,35 +43,38 @@ cdef int raise_cpp_py_error() except * :
 
     raise ParseException(msg)
 
-
 cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
         MacroDB defineDB
 
-        HdlContext * parse(const vector[string] & hdl_file_names,
-                        Language language,
-                        vector[string] include_dirs,
-                        bool hierarchy_only,
-                        bool debug) except +raise_cpp_py_error
+        HdlContext * parse(
+            const vector[string] & hdl_file_names,
+            Language language,
+            vector[string] include_dirs,
+            bool hierarchy_only,
+            bool debug) except +raise_cpp_py_error
 
-        HdlContext * parse_str(const string & hdl_str,
-                        Language language,
-                        vector[string] include_dirs,
-                        bool hierarchy_only,
-                        bool debug) except +raise_cpp_py_error
+        HdlContext * parse_str(
+            const string & hdl_str,
+            Language language,
+            vector[string] include_dirs,
+            bool hierarchy_only,
+            bool debug) except +raise_cpp_py_error
 
-        string verilog_pp(const string & filename,
-                          vector[string] incdirs,
-                          Language mode) except +raise_cpp_py_error
+        string verilog_pp(
+            const string & filename,
+            vector[string] incdirs,
+            Language mode) except +raise_cpp_py_error
 
-        string verilog_pp_str(const string & verilog_str,
-                          vector[string] incdirs,
-                          Language mode) except +raise_cpp_py_error
+        string verilog_pp_str(
+            const string & verilog_str,
+            vector[string] incdirs,
+            Language mode) except +raise_cpp_py_error
 
 cdef class HdlConvertor:
     """
     The container of the Convertor which parses HDL code to universal AST
-    
+
     :ivar thisptr: pointer on Convertor instance which is a wrapper around the parsers
     :ivar proproc_macro_db: dictinary of symbols defined in preprocessor
     """
@@ -82,7 +85,7 @@ cdef class HdlConvertor:
     # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
         self.thisptr = new Convertor()
-        self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.defineDB)
+        self.preproc_macro_db = CppStdMapProxy.from_ptr(& self.thisptr.defineDB)
 
     def __dealloc__(self):
         del self.thisptr

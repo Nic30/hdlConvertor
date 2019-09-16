@@ -1,6 +1,3 @@
-
-include "python_ver_independent_str.pyx"
-
 from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.vector cimport vector
@@ -9,6 +6,9 @@ from libcpp.map cimport map
 from cython.operator cimport dereference as deref
 from cython.operator cimport preincrement as preinc
 from enum import Enum
+
+include "python_ver_independent_str.pyx"
+
 
 cdef extern from "hdlConvertor/verilogPreproc/a_macro_def.h" namespace "hdlConvertor::verilog_pp":
     cdef cppclass aMacroDef:
@@ -31,9 +31,10 @@ cdef extern from "hdlConvertor/verilogPreproc/macro_def_verilog.h" namespace "hd
         bool has_params
         vector[param_info_t] params
         vector[Fragment] body
-        
+
         MacroDefVerilog(const string & name, bool has_params,
-                const vector[param_info_t] & params, const string & body)
+                        const vector[param_info_t] & params,
+                        const string & body)
 
 cdef extern from "hdlConvertor/verilogPreproc/macroDB.h" namespace "hdlConvertor::verilog_pp":
     ctypedef map[string, aMacroDef * ] MacroDB
@@ -42,11 +43,11 @@ cdef extern from "hdlConvertor/verilogPreproc/macroDB.h" namespace "hdlConvertor
 cdef class MacroDefVerilogProxy:
     """
     Proxy for MacroDefVerilog C++ object
-   
+
     :attention: this object uses C++ object, It's lifetime depends on state of preprocessor
         from this reason this object can not accessed after the original object in preprocessor
         symbol database has been deleted
-    
+
     :ivar thisptr: C++ pointer on MacroDefVerilog object
     :ivar is_reference_borrowed: flag which tells if the C++ object should be deallocated
         after this python proxy is deallocated
@@ -111,23 +112,23 @@ cdef class MacroDefVerilogProxy:
     @property
     def is_persistent(self):
         return self.thisptr.is_persistent
-    
+
     @is_persistent.setter
     def is_persistent(self, value):
         self.thisptr.is_persistent = value
-    
+
     @property
     def defined_in_file(self):
         return str_decode(self.thisptr.defined_in_file)
-    
+
     @defined_in_file.setter
     def defined_in_file(self, value):
         self.thisptr.defined_in_file = str_encode(value)
-    
+
     @property
     def defined_in_line_no(self):
         return self.thisptr.defined_in_line_no
-    
+
     @defined_in_line_no.setter
     def defined_in_line_no(self, value):
         self.thisptr.defined_in_line_no = value
@@ -146,7 +147,7 @@ cdef class MacroDefVerilogProxy:
         if body is None:
             body = ""
         body = str_encode(body)
-        
+
         cdef vector[param_info_t] _params
         if params is not None:
             for p in params:
@@ -157,7 +158,7 @@ cdef class MacroDefVerilogProxy:
                     _params.push_back(param_info_t(p_name, True, p_def_val))
                 else:
                     p = str_encode(p)
-        
+
         (< MacroDefVerilogProxy > self).is_reference_borrowed = False
         (< MacroDefVerilogProxy > self).thisptr = new MacroDefVerilog(name, params is not None, _params, body)
         return self
@@ -205,7 +206,7 @@ cdef class CppStdMapIterator:
 
     def __cinit__(self, object t):
         self.t = t
-    
+
     def __iter__(self):
         return self
 
@@ -228,20 +229,19 @@ cdef class CppStdMapIterator:
 _RaiseKeyError = object()  # singleton for no-default behavior of CppStdMapProxy
 cdef class CppStdMapProxy:
     cdef MacroDB * thisptr
-    
+
     @staticmethod
     cdef from_ptr(MacroDB * thisptr):
         self = CppStdMapProxy()
         self.thisptr = thisptr
         return self
-    
     def get(self, key, value=None):
         v = deref(self.thisptr).find(self.__keytransform__(key))
         if v == deref(self.thisptr).end():
             return value
         else:
             return MacroDB_iterator_value(v)
-    
+
     def setdefault(self, k, default=None):
         v = deref(self.thisptr).find(self.__keytransform__(k))
         if v == deref(self.thisptr).end():
@@ -300,16 +300,16 @@ cdef class CppStdMapProxy:
         else:
             del deref(v).second
             deref(self.thisptr).erase(v)
-    
+
     def __iter(self, t):
         cdef CppStdMapIterator self_it = CppStdMapIterator(t)
         self_it.it = deref(self.thisptr).begin()
         self_it.end = deref(self.thisptr).end()
-        return self_it 
+        return self_it
 
     def items(self):
         return self.__iter(CppStdMapIteratorType.ITEMS)
-        
+
     def values(self):
         return self.__iter(CppStdMapIteratorType.VALUES)
 
@@ -318,7 +318,7 @@ cdef class CppStdMapProxy:
 
     def __len__(self):
         return deref(self.thisptr).size()
-    
+
     def __keytransform__(self, key):
         return str_encode(key)
 
@@ -330,11 +330,13 @@ cdef class CppStdMapProxy:
         for v in self.values():
             del v
         deref(self.thisptr).clear()
-    
+
     def copy(self):
-        raise AssertionError("This object can not be copied because it may contain"
-                             " C++ objects which are tied to this object instance")
+        raise AssertionError(
+            "This object can not be copied because it may contain"
+            " C++ objects which are tied to this object instance")
 
     def __repr__(self):
-        return "<%s, {%s}>" % (self.__class__.__name__,
-                             ", ".join("%r: %r" % kv for kv in self.items()))
+        return "<%s, {%s}>" % (
+            self.__class__.__name__,
+            ", ".join("%r: %r" % kv for kv in self.items()))

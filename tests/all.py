@@ -23,6 +23,7 @@ def main_test_suite():
     ]
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))
+
     return suite
 
 
