@@ -108,7 +108,7 @@ class IcarusVerilogTestsuiteMeta(type):
                     with open(SUCESSFULL_TEST_FILTER_FILE, "a+") as f:
                         testName = self.id().split(".")[-1]
                         f.write(testName + "\n")
-                
+
             return test
 
         if SUCESSFULL_TEST_FILTER_FILE is not None and path.exists(SUCESSFULL_TEST_FILTER_FILE):
@@ -173,7 +173,7 @@ class IcarusVerilogTestsuiteMeta(type):
                 continue
 
             verilog_version, should_fail = conf.get(fn, (default_verilog_version, False))
-            
+
             if fn in [
                     # checked by emming of errors instead of return code
                     "br_gh72a", "br_gh72b",
@@ -189,7 +189,7 @@ class IcarusVerilogTestsuiteMeta(type):
                     "sv_timeunit_prec_fail2a",
                     "sv_timeunit_prec_fail2b",
                     "sv_timeunit_prec_fail2c",
-                    
+
                     # non-std binary ~&, ~| which does not exitst in std.
                     "binary_nand", "binary_nor",
                     "blif01b", "blif01b_tb",
@@ -228,7 +228,7 @@ class IcarusVerilogTestsuiteMeta(type):
                     # non-std from/exclude
                     "value_range1",
                     "value_range2",
-                    
+
                     # non-std req/wire with type icarus extension
                     "bool1",
                     "br974c",
@@ -245,7 +245,7 @@ class IcarusVerilogTestsuiteMeta(type):
                     "enum_ports",
                     # non-std combination of unsigned, wire and bit vector size spec
                     "vhdl_xor104_stdlogic",
-                    
+
                     # analog extension which is currently not supported
                     "analog1", "analog2"
                     ]:
@@ -257,7 +257,7 @@ class IcarusVerilogTestsuiteMeta(type):
             while test_name in _dict:
                 test_name = "test_%d_%s_%s" % (i, verilog_version.name, fn)
                 i += 1
-            
+
             if test_name not in test_filter:
                 _dict[test_name] = t 
 
