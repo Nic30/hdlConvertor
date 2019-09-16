@@ -6,12 +6,12 @@ class Antlr4parser():
 
     def __init__(self):
         self.set_tokens([])
-        
+
     def set_tokens(self, tokens):
         self.tokens = tokens
         self.token_it = iter(tokens)
         self.next_tmp = None
-        
+
     def next(self) -> str:
         if self.next_tmp is not None:
             tmp = self.next_tmp
@@ -25,10 +25,10 @@ class Antlr4parser():
         self.next_tmp = t
 
     def from_str(self, s) -> iAntlr4GramElem:
-        self.tokens = [ x.strip() for x in s.split() if x.strip()]
-        self.token_it = iter(self.tokens) 
+        self.tokens = [x.strip() for x in s.split() if x.strip()]
+        self.token_it = iter(self.tokens)
         return self._selection()
-    
+
     def _sequence(self):
         items = []
         while True:
@@ -58,14 +58,14 @@ class Antlr4parser():
             if n != "|":
                 self.back(n)
                 break
-        
+
         if not options:
             raise StopIteration()
         elif len(options) == 1:
             return options[0]
         else:
             return Antlr4Selection(options)
-        
+
     def _group(self):
         item = self._selection()
         group_type = self.next()
@@ -86,7 +86,7 @@ class Antlr4parser():
         if is_terminal:
             t = t[1:-1]
         return Antlr4Symbol(t, is_terminal)
-        
+
     def _any(self):
         t = self.next()
         if t == "(":
@@ -96,16 +96,16 @@ class Antlr4parser():
             raise StopIteration()
         else:
             return self._id(t)
-        
 
-if __name__ =="__main__":
+
+if __name__ == "__main__":
     s = """
     (
         identifier ( parameter_value_assignment )? | KW_DOLAR_UNIT
-    ) ( 
-        DOUBLE_COLON identifier ( parameter_value_assignment )? 
+    ) (
+        DOUBLE_COLON identifier ( parameter_value_assignment )?
     )*"""
-    
+
     p = Antlr4parser()
     o = p.from_str(s)
     print(o.toAntlr4())
