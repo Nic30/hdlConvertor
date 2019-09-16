@@ -30,7 +30,7 @@ def _test_run(test_file, golden_file):
         test_result = c.verilog_pp(
             test_file, Language.SYSTEM_VERILOG, incdirs)
         # windows compatiblity
-        test_result.replace("sv_pp\\src\\", "sv_pp/src/")
+        test_result = test_result.replace("sv_pp\\src\\", "sv_pp/src/")
 
     # with open(golden_file, "w") as f:
     #     f.write(test_result)
