@@ -19,6 +19,8 @@ class Antlr4GenericOptimizer():
         self.modified = False
 
     def match_replace_fn(self, o):
+        if o.optimalizer_keep_out:
+            return None
         if isinstance(o, Antlr4Selection):
             _selection_options_to_sequnces(o)
             optimizations = [
@@ -31,6 +33,8 @@ class Antlr4GenericOptimizer():
                 _selection_flatten,
                 ]
             for opt in optimizations:
+                if o.optimalizer_keep_out:
+                    return None
                 o, changed = opt(o)
                 self.modified |= changed
                 if changed or not isinstance(o, Antlr4Selection):
@@ -49,15 +53,18 @@ class Antlr4GenericOptimizer():
                 _sequence_extract_positive_iterations,
                 ]
             for opt in optimizations:
+                if o.optimalizer_keep_out:
+                    return None
                 o, changed = opt(o)
                 self.modified |= changed
                 if changed or not isinstance(o, Antlr4Sequence):
                     return o
             return None
-    
+
     def optimize(self, rules):
-            
         for r in rules:
+            if r.optimalizer_keep_out:
+                continue
             first = True
             while first or self.modified:
                 self.modified = False
