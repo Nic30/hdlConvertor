@@ -263,6 +263,14 @@ antlrcpp::Any VerilogPreproc::visitUndef(
 	return NULL;
 }
 
+void rm_substring(string &str, const string &s, int len_of_s) {
+	size_t start_pos = 0;
+	while ((start_pos = str.find(s, start_pos)) != string::npos) {
+		str.erase(start_pos, len_of_s);
+		start_pos += 1;
+	}
+}
+
 //method call when `macro is found in the source code
 antlrcpp::Any VerilogPreproc::visitToken_id(
 		verilogPreprocParser::Token_idContext *ctx) {
@@ -297,7 +305,7 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 		auto end = ctx->children.end();
 		for (auto _c = ctx->children.begin() + 1; _c != end; ++_c) {
 			auto &c = *_c;
-			auto ch_text = c->getText();
+			string ch_text = c->getText();
 			if (antlrcpp::is<tree::TerminalNode*>(c)) {
 				if (expected_value
 						&& (ch_text == "," || (last_was_comma && ch_text == ")"))) {
@@ -309,7 +317,12 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 				last_was_comma = ch_text == ",";
 			} else if (antlrcpp::is<verilogPreprocParser::ValueContext*>(c)) {
 				string data = _tokens.getText(c->getSourceInterval());
+				// the arguments has to be expanded first before expansion of this maro
 				data = trim(data);
+				// if (data.find("`") != string::npos) {
+				// 	data = container.run_preproc_str(data,
+				// 			ctx->start->getLine() - 1);
+				// }
 				args.push_back(data);
 				expected_value = false;
 				last_was_comma = false;
@@ -331,28 +344,25 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 	} catch (const ParseException &e) {
 		throw_input_caused_error(ctx, e.what());
 	}
-	if (container.lang >= Language::SV2012) {
-		auto rm_str = [&replacement](string s, int n) {
-			size_t start_pos = 0;
-			while ((start_pos = replacement.find(s, start_pos)) != string::npos){
-				replacement.erase(start_pos, n);
-				start_pos += 1;
-			}
-		};
-		rm_str("``", 2);
-		rm_str("`\\", 1);
-		rm_str("`\"", 1);
+
+	if (container.lang >= Language::SV2005) {
+		rm_substring(replacement, "``", 2);
+		rm_substring(replacement, "`\\", 1);
 	}
 
 	if (replacement.find("`", 0) != string::npos) {
-		replacement = container.run_preproc_str(replacement);
+		replacement = container.run_preproc_str(replacement,
+				ctx->start->getLine() - 1);
 	}
 
+	if (container.lang >= Language::SV2005) {
+		rm_substring(replacement, "`\"", 1);
+	}
 	// replace the original macro in the source code by the replacement string
 	// we just setup
 	misc::Interval token = ctx->getSourceInterval();
 	_rewriter.replace(token.a, token.b, replacement);
-	return nullptr;
+	return replacement;
 }
 
 // method call after `ifdef `elsif `else is found
@@ -374,8 +384,12 @@ antlrcpp::Any VerilogPreproc::visitIfndef_directive(
 
 antlrcpp::Any VerilogPreproc::visitStringLiteral(
 		verilogPreprocParser::StringLiteralContext *ctx) {
-	string filestring = container.run_preproc_str(ctx->getText());
-	return filestring;
+	auto tid = ctx->token_id();
+	if (tid) {
+		return visitToken_id(tid);
+	} else {
+		return ctx->getText();
+	}
 }
 
 //method call when `include is found
@@ -385,13 +399,13 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 	//iterator on the list of directoy
 	auto incdir_iter = container.incdirs.begin();
 	bool found = false;
-	string StringLiteral = visit(ctx->stringLiteral());
+	string inc_file_path = visit(ctx->stringLiteral());
 	filesystem::path filename;
 	// iterate on list of directory until we found the file.
 	while (incdir_iter != container.incdirs.end() && found == false) {
 		// build the filename
 		filename = (*incdir_iter)
-				/ StringLiteral.substr(1, StringLiteral.size() - 2);
+				/ inc_file_path.substr(1, inc_file_path.size() - 2);
 		//Test if the file exist
 		if (filesystem::exists(filename)) {
 			// the file exist. we rise the flag to leave the loop over the
@@ -404,16 +418,16 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 
 	if (found == false) {
 		// The file was not found. We throw a exception
-		string msg = StringLiteral.substr(1, StringLiteral.size() - 2)
+		string msg = inc_file_path.substr(1, inc_file_path.size() - 2)
 				+ " was not found in include directories\n";
 		throw_input_caused_error(ctx, msg);
-	} else if (container.stack_incfile.size() > include_depth_limit) {
+	} else if (container.incfile_stack.size() > include_depth_limit) {
 		// test the number of nested include.
 		// If so throw an exception
 		stringstream msg;
 		msg << "Nested include limit reach" << endl;
-		for (auto f : container.stack_incfile) {
-			msg << "    " << f << endl;
+		for (auto f : container.incfile_stack) {
+			msg << "    " << f.first << endl;
 		}
 		throw_input_caused_error(ctx, msg.str());
 	} else {

@@ -50,7 +50,7 @@ public:
 	void parse_str(const std::string &input_str, bool hierarchyOnly,
 			const std::vector<string> &_incdirs) {
 		preproc.init(_incdirs);
-		string preprocessed_code = preproc.run_preproc_str(input_str);
+		string preprocessed_code = preproc.run_preproc_str(input_str, 0);
 		ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = STRING_FILENAME;
 		this->_parse(input_for_parser, hierarchyOnly);
@@ -162,7 +162,7 @@ string Convertor::verilog_pp_str(const string &verilog_str,
 		const vector<string> _incdirs, Language lang) {
 	SVParserContainer pc(nullptr, lang, defineDB);
 	pc.preproc.init(_incdirs);
-	return pc.preproc.run_preproc_str(verilog_str);
+	return pc.preproc.run_preproc_str(verilog_str, 0);
 }
 
 Convertor::~Convertor() {

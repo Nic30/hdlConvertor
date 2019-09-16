@@ -14,4 +14,4 @@ namespace std {
 #endif
 
 // the filename which is used if the code comes from string and not from file
-const std::string STRING_FILENAME;
+extern const std::string STRING_FILENAME;

@@ -10,7 +10,7 @@ const char* get_cpp_py_error_message() {
 	} catch (const std::exception &e) {
 		return e.what();
 	}
-	return nullptr;
+	return "<unknown C++ exception>";
 }
 
 }
