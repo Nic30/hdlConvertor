@@ -176,7 +176,7 @@ def remove_useless_and_normalize_names(p):
         "block_comment",
         "comment_text",
         "white_space",
-       
+
         # libary rules
         "library_text",
         "library_description",
@@ -292,7 +292,7 @@ def remove_useless_and_normalize_names(p):
     for k, v in SvRule2Antlr4Rule.SPEC_SYMB.items():
         body = Antlr4Symbol(k, True)
         r = Antlr4Rule(v, body)
-        if k == '"':
+        if k in ['"', "_"]:
             r.is_fragment = True
         p.rules.append(r)
 
@@ -341,47 +341,49 @@ def numbers_add_whitespace_after_base(rules):
         "OCTAL_NUMBER",
         "HEX_NUMBER",
     ])
-    number_base_rules = set(["DECIMAL_BASE",
+    number_base_rules = set([
+        "DECIMAL_BASE",
         "BINARY_BASE",
         "OCTAL_BASE",
         "HEX_BASE",
     ])
     # used only in integral_number
-    inline_rule(rules, "decimal_number") 
+    inline_rule(rules, "decimal_number")
 
     def opt_ws():
         return Antlr4Option(Antlr4Symbol("WHITE_SPACE", False))
 
     Antlr4Option(Antlr4Symbol("UNSIGNED_NUMBER", False)),
 
-    # [TODO] move part with size to parser because otherwise it is not possible to solve ambibuities
     for r in rules:
         if r.name in number_rules:
             # ( SIZE )? *_BASE ....
             assert r.body[0].body.symbol == "SIZE", r
             assert r.body[1].symbol.endswith("_BASE"), r
             del r.body[0]
-            
+            r.is_fragment = True
+
         elif r.name in number_base_rules:
             # APOSTROPHE ( [sS] )? [dD];
             r.body.insert(2, opt_ws())
             r.body.insert(1, opt_ws())
             r.body.append(opt_ws())
-
-    def match_replace_fn(o):
-        if isinstance(o, Antlr4Symbol) and o.symbol in number_rules:
-            return Antlr4Sequence([
-                Antlr4Option(Antlr4Symbol("UNSIGNED_NUMBER", False)),
-                o])
+    any_based_number = Antlr4Rule("ANY_BASED_NUMBER",
+                                  Antlr4Selection([Antlr4Symbol(n, False)
+                                                   for n in number_rules]))
+    rules.insert(rules.index(rule_by_name(rules, "HEX_NUMBER")), any_based_number)
 
     integral_number = rule_by_name(rules, "integral_number")
-    replace_item_by_sequence(integral_number.body, match_replace_fn)
+    integral_number.body = Antlr4parser().from_str("""
+    ( UNSIGNED_NUMBER )? ANY_BASED_NUMBER
+    | UNSIGNED_NUMBER
+    """)
 
 
 def assignment_pattern__body_optional(rules):
     ap = rule_by_name(rules, "assignment_pattern")
     assert isinstance(ap.body[1], Antlr4Selection), ap
-    
+
     ap.body[1] = Antlr4Option(ap.body[1])
 
 
@@ -398,9 +400,8 @@ FILE_HEADER = """
 
 
 def proto_grammar_to_g4(target_lang):
- 
     CONFIGURABLE_STD_VERSION = isinstance(target_lang, TargetLangueTranslatorCpp)
-    
+
     p = SvRule2Antlr4Rule()
     with open(os.path.join(UTILS_ROOT, "sv2017.g4_proto")) as f:
         p.convert(f)
@@ -476,8 +477,8 @@ def proto_grammar_to_g4(target_lang):
 
 
 if __name__ == "__main__":
-    # target_lang = TargetLangueTranslatorJava()
-    target_lang = TargetLangueTranslatorCpp()
+    target_lang = TargetLangueTranslatorJava()
+    # target_lang = TargetLangueTranslatorCpp()
    
     # parse_sv_pdf()
     proto_grammar_to_g4(target_lang)

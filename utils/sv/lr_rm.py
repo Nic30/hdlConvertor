@@ -115,40 +115,112 @@ def solve_left_recurse_and_op_precedence_for_expression(rules):
     # left_recurse_print(rules)
 
 
-def solve_left_recurse_and_op_precedence_for_constant_expression(rules):
+def optimize_constant_expression(rules):
     # constant_expression:
-    #       (unary_operator ( attribute_instance )*)? constant_primary 
-    #       | constant_expression binary_operator ( attribute_instance )* constant_expression 
-    #       | constant_expression QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression;
-
-    c_expression_0 = extract_option_as_rule(
-            rules, "constant_expression",
-            [(0, Antlr4parser().from_str("( unary_operator ( attribute_instance )* )? constant_primary"))],
-            "constant_expression_0")
-    # constant_expression_0:
-    #       ( unary_operator ( attribute_instance )* )? constant_primary 
-
-    def handle_conditional_fn(bin_op_choices, current_expr_rule):
-        bin_op_choices.append(
-            Antlr4parser().from_str(
-            "QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression")    
-        )
-
-    def handle_inside_fn(bin_op_choices, current_expr_rule):
-        pass
-
-    rules.remove(rule_by_name(rules, "constant_expression"))
-    current_expr_rule = c_expression_0
+    #  ( unary_operator ( attribute_instance )* )? constant_primary 
+    #   | constant_expression ( QUESTIONMARK ( attribute_instance )* constant_expression COLON 
+    #                           | binary_operator ( attribute_instance )* 
+    #                           ) constant_expression 
+    #  ;
+    p = Antlr4parser()
+    constant_expression = rule_by_name(rules, "constant_expression")
+    assert constant_expression.body.eq_relaxed(p.from_str("""
+     ( unary_operator ( attribute_instance )* )? constant_primary
+     | constant_expression ( binary_operator ( attribute_instance )*
+                             | QUESTIONMARK ( attribute_instance )* constant_expression COLON 
+                           ) constant_expression
+    """)), constant_expression
+    constant_expression.body = p.from_str("""
+        constant_primary
+        | unary_operator constant_expression
+        | constant_expression QUESTIONMARK ( attribute_instance )* constant_expression COLON 
+    """)
     op_group = get_operator_precedence_groups()
-    for i, prec_group in enumerate(op_group):
-        is_last = i == len(op_group) - 1
-        if is_last:
-            new_rule_name = "constant_expression"
+    for g in op_group:
+        if g == ["QUESTIONMARK", ]:
+            alternative = p.from_str("constant_expression QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression")
         else:
-            new_rule_name = "constant_expression_%d" % (i + 1)
-        current_expr_rule = extract_bin_ops(
-            rules, current_expr_rule, prec_group, new_rule_name,
-            handle_conditional_fn, handle_inside_fn)
+            alternative = p.from_str("constant_expression PLACEHOLDER ( attribute_instance )* constant_expression")
+            g = [i for i in g if i not in ["KW_DIST", "KW_INSIDE"]]
+            o = p.from_str(" | ".join(g))
+            alternative[1] = o
+        constant_expression.body.append(alternative)
+    constant_expression.optimalizer_keep_out = True
+
+    inline_rule(rules, "simple_type")
+    inline_rule(rules, "casting_type")
+    inline_rule(rules, "constant_cast")
+    constant_primary = rule_by_name(rules, "constant_primary")
+    constant_primary.body = p.from_str("""
+    ( LPAREN constant_mintypmax_expression 
+        | ( KW_STRING 
+            | KW_CONST 
+            | integer_type 
+            | non_integer_type 
+            | ps_type_identifier 
+            | ps_parameter_identifier 
+            | signing 
+            ) APOSTROPHE LPAREN constant_expression 
+        ) RPAREN 
+    | KW_NULL 
+    | primary_literal 
+    | ps_parameter_identifier constant_select 
+    | identifier ( LSQUARE_BR constant_range_expression RSQUARE_BR 
+                | constant_select 
+                )
+    | package_or_class_scoped_id 
+    | ( constant_concatenation 
+        | constant_multiple_concatenation 
+        ) ( LSQUARE_BR constant_range_expression RSQUARE_BR )? 
+    | any_system_tf_identifier ( LPAREN ( data_type COMMA )? list_of_arguments ( COMMA clocking_event )? 
+    RPAREN )? 
+    | ( KW_STD DOUBLE_COLON )? randomize_call 
+    | let_expression 
+    | assignment_pattern_expression 
+    | type_reference 
+    | constant_primary APOSTROPHE LPAREN constant_expression 
+    | constant_primary  ( attribute_instance )* LPAREN list_of_arguments RPAREN
+        ( KW_WITH LPAREN expression RPAREN )?
+    | constant_primary  ( attribute_instance )* KW_WITH LPAREN expression RPAREN
+   """)
+    constant_primary.optimalizer_keep_out = True
+
+
+# def solve_left_recurse_and_op_precedence_for_constant_expression(rules):
+#    # constant_expression:
+#    #       (unary_operator ( attribute_instance )*)? constant_primary 
+#    #       | constant_expression binary_operator ( attribute_instance )* constant_expression 
+#    #       | constant_expression QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression;
+#
+#    c_expression_0 = extract_option_as_rule(
+#            rules, "constant_expression",
+#            [(0, Antlr4parser().from_str("( unary_operator ( attribute_instance )* )? constant_primary"))],
+#            "constant_expression_0")
+#    # constant_expression_0:
+#    #       ( unary_operator ( attribute_instance )* )? constant_primary 
+#
+#    def handle_conditional_fn(bin_op_choices, current_expr_rule):
+#        bin_op_choices.append(
+#            Antlr4parser().from_str(
+#            "QUESTIONMARK ( attribute_instance )* constant_expression COLON constant_expression")    
+#        )
+#
+#    def handle_inside_fn(bin_op_choices, current_expr_rule):
+#        pass
+#
+#    rules.remove(rule_by_name(rules, "constant_expression"))
+#    current_expr_rule = c_expression_0
+#    op_group = get_operator_precedence_groups()
+#    for i, prec_group in enumerate(op_group):
+#        is_last = i == len(op_group) - 1
+#        if is_last:
+#            new_rule_name = "constant_expression"
+#        else:
+#            new_rule_name = "constant_expression_%d" % (i + 1)
+#        current_expr_rule = extract_bin_ops(
+#            rules, current_expr_rule, prec_group, new_rule_name,
+#            handle_conditional_fn, handle_inside_fn)
+#
 
 
 def extract_bin_ops(rules, current_expr_rule, ops_to_extrat, new_rule_name,
@@ -205,56 +277,56 @@ def fix_subroutine_call(rules):
     r.body.insert(0, Antlr4Sequence([
         Antlr4Option(Antlr4Symbol("class_qualifier", False)),
         Antlr4Symbol("method_call_body", False)
-        ]))
+    ]))
 
-
-def generate_constant_subroutine_call(rules, subroutine_call, subroutine_call_args):
-    c_r = deepcopy(subroutine_call)
-    c_r.name = "constant_" + subroutine_call.name
-    rules.insert(rules.index(subroutine_call), c_r)
-    constant_primary = rule_by_name(rules, "constant_primary")
-    subroutine_call_symbol = Antlr4Symbol(subroutine_call.name, False)
-    
-    def match_replace_fn(o):
-        if o == subroutine_call_symbol:
-            return Antlr4Symbol(c_r.name, False)
-
-    replace_item_by_sequence(constant_primary.body, match_replace_fn)
-
-    # subroutine_call:
-    #  ( primary_no_cast_no_call 
-    #       | cast 
-    #       ) subroutine_call_args ( DOT ( array_method_name 
-    #                                   | randomize_call 
-    #                                   | primary_no_cast_no_call 
-    #                                   | cast 
-    #                                   ) subroutine_call_args )* 
-    #   | any_system_tf_identifier ( LPAREN ( data_type )? list_of_arguments ( COMMA clocking_event )? 
-    #   RPAREN )? 
-    #   | ( KW_STD DOUBLE_COLON )? randomize_call 
-    #  ;
-    def match_replace_fn2(o):
-        if isinstance(o, Antlr4Symbol) and o.is_terminal == False:
-            for a, b in [("primary_no_cast_no_call", "constant_primary_no_cast_no_call"),
-                         ("cast", "constant_cast"),
-                         ("list_of_arguments", "constant_list_of_arguments"),
-                         ("subroutine_call_args", "constant_subroutine_call_args"),
-                         ("expression", "constant_expression")]:
-                if o.symbol == a:
-                    return Antlr4Symbol(b, False)
-
-    replace_item_by_sequence(c_r.body, match_replace_fn2)
-
-    constant_subroutine_call_args = deepcopy(subroutine_call_args)
-    constant_subroutine_call_args .name = "constant_" + subroutine_call_args.name
-    rules.insert(rules.index(c_r), constant_subroutine_call_args)
-    replace_item_by_sequence(constant_subroutine_call_args.body, match_replace_fn2)
-
-    list_of_arguments = rule_by_name(rules, "list_of_arguments")
-    constant_list_of_arguments = deepcopy(list_of_arguments)
-    constant_list_of_arguments.name = "constant_" + list_of_arguments.name
-    rules.insert(rules.index(list_of_arguments), constant_list_of_arguments)
-    replace_item_by_sequence(constant_list_of_arguments.body, match_replace_fn2)
+# def generate_constant_subroutine_call(rules, subroutine_call, subroutine_call_args):
+#    c_r = deepcopy(subroutine_call)
+#    c_r.name = "constant_" + subroutine_call.name
+#    rules.insert(rules.index(subroutine_call), c_r)
+#    constant_primary = rule_by_name(rules, "constant_primary")
+#    subroutine_call_symbol = Antlr4Symbol(subroutine_call.name, False)
+#
+#    def match_replace_fn(o):
+#        if o == subroutine_call_symbol:
+#            return Antlr4Symbol(c_r.name, False)
+#
+#    replace_item_by_sequence(constant_primary.body, match_replace_fn)
+#
+#    # subroutine_call:
+#    #  ( primary_no_cast_no_call 
+#    #       | cast 
+#    #       ) subroutine_call_args ( DOT ( array_method_name 
+#    #                                   | randomize_call 
+#    #                                   | primary_no_cast_no_call 
+#    #                                   | cast 
+#    #                                   ) subroutine_call_args )* 
+#    #   | any_system_tf_identifier ( LPAREN ( data_type )? list_of_arguments ( COMMA clocking_event )? 
+#    #   RPAREN )? 
+#    #   | ( KW_STD DOUBLE_COLON )? randomize_call 
+#    #  ;
+#    def match_replace_fn2(o):
+#        if isinstance(o, Antlr4Symbol) and o.is_terminal == False:
+#            for a, b in [("primary_no_cast_no_call", "constant_primary_no_cast_no_call"),
+#                         ("cast", "constant_cast"),
+#                         ("list_of_arguments", "constant_list_of_arguments"),
+#                         ("subroutine_call_args", "constant_subroutine_call_args"),
+#                         ("expression", "constant_expression")]:
+#                if o.symbol == a:
+#                    return Antlr4Symbol(b, False)
+#
+#    replace_item_by_sequence(c_r.body, match_replace_fn2)
+#
+#    constant_subroutine_call_args = deepcopy(subroutine_call_args)
+#    constant_subroutine_call_args .name = "constant_" + subroutine_call_args.name
+#    rules.insert(rules.index(c_r), constant_subroutine_call_args)
+#    replace_item_by_sequence(constant_subroutine_call_args.body, match_replace_fn2)
+#
+#    list_of_arguments = rule_by_name(rules, "list_of_arguments")
+#    constant_list_of_arguments = deepcopy(list_of_arguments)
+#    constant_list_of_arguments.name = "constant_" + list_of_arguments.name
+#    rules.insert(rules.index(list_of_arguments), constant_list_of_arguments)
+#    replace_item_by_sequence(constant_list_of_arguments.body, match_replace_fn2)
+#
 
 
 def optimise_subroutine_call(rules):
@@ -301,19 +373,20 @@ def optimise_subroutine_call(rules):
     assert r.body[2].eq_relaxed(c2)
     r.body[2] = Antlr4parser().from_str("""
         any_system_tf_identifier ( LPAREN (
-                                     ( data_type )? list_of_arguments 
-                                     ( COMMA clocking_event )? 
-                                 ) RPAREN )? 
+                                     ( data_type )? list_of_arguments
+                                     ( COMMA clocking_event )?
+                                 ) RPAREN )?
     """)
-    
+
     c1 = Antlr4parser().from_str("""
-        ps_or_hierarchical_identifier ( attribute_instance )* ( LPAREN list_of_arguments RPAREN )?
+        ps_or_hierarchical_identifier ( attribute_instance )*
+        ( LPAREN list_of_arguments RPAREN )?
     """)
     assert r.body[1].eq_relaxed(c1), r.body[1]
     del r.body[1]
-    generate_constant_subroutine_call(rules, r, subroutine_call_args)
+    # generate_constant_subroutine_call(rules, r, subroutine_call_args)
 
-    
+
 def left_recurse_remove(rules):
     """
     Removing Left Recursion from Context-Free Grammars
@@ -325,10 +398,10 @@ def left_recurse_remove(rules):
     """
     # :note: higher priority = sooner in parse tree
 
-    direct_left_recurse_rm(rules, 'block_event_expression')
-    direct_left_recurse_rm(rules, 'event_expression')
+    #direct_left_recurse_rm(rules, 'block_event_expression')
+    #direct_left_recurse_rm(rules, 'event_expression')
     # direct_left_recurse_rm(rules, 'constant_expression')
-    solve_left_recurse_and_op_precedence_for_constant_expression(rules)
+    # solve_left_recurse_and_op_precedence_for_constant_expression(rules)
     # method_call_root - only in method_call
     # method_call      - only in subroutine_call
     split_rule(rules, "primary",
@@ -345,13 +418,13 @@ def left_recurse_remove(rules):
     inline_rule(rules, "system_tf_call")
     optimise_subroutine_call(rules)
 
-    split_rule(rules, "constant_primary",
-               ["constant_cast", "constant_subroutine_call"],
-               "constant_primary_no_cast_no_call")
-    constant_primary = rule_by_name(rules, "constant_primary")
-    constant_primary_no_cast_no_call_symbol = Antlr4Symbol("constant_primary_no_cast_no_call", False)
-    assert constant_primary.body[0].eq_relaxed(constant_primary_no_cast_no_call_symbol), constant_primary.body[0]
-    del constant_primary.body[0]
+    # split_rule(rules, "constant_primary",
+    #            ["constant_cast", "constant_subroutine_call"],
+    #            "constant_primary_no_cast_no_call")
+    # constant_primary = rule_by_name(rules, "constant_primary")
+    # constant_primary_no_cast_no_call_symbol = Antlr4Symbol("constant_primary_no_cast_no_call", False)
+    # assert constant_primary.body[0].eq_relaxed(constant_primary_no_cast_no_call_symbol), constant_primary.body[0]
+    # del constant_primary.body[0]
 
     # inline_rule(rules, "cast")
     # inline_rule(rules, "constant_cast")
@@ -360,10 +433,10 @@ def left_recurse_remove(rules):
     # iterate_everything_except_first(
     #   rules, "constant_cast")
     # [TODO] check if really all combinations of cast/call are possible
-    replace_symbol_in_rule(
-        rules, "casting_type",
-        "constant_primary",
-        "constant_primary_no_cast_no_call")
+    # replace_symbol_in_rule(
+    #     rules, "casting_type",
+    #     "constant_primary",
+    #     "constant_primary_no_cast_no_call")
 
     # solve expression - conditional_expression left recurse
     # copy cond_predicate
@@ -371,7 +444,7 @@ def left_recurse_remove(rules):
     inline_rule(rules, "inside_expression")
 
     inline_rule(rules, "module_path_conditional_expression")
-    direct_left_recurse_rm(rules, 'module_path_expression')
+    #direct_left_recurse_rm(rules, 'module_path_expression')
 
     # inline_rule(rules, "inside_expression")
     inline_rule(rules, "expression_or_cond_pattern")
@@ -383,7 +456,9 @@ def left_recurse_remove(rules):
     binary_operator = rule_by_name(rules, "binary_operator")
     rules.remove(binary_operator)
 
-    direct_left_recurse_rm(rules, "sequence_expr")
-    direct_left_recurse_rm(rules, "property_expr")
-    
+    #direct_left_recurse_rm(rules, "sequence_expr")
+    #direct_left_recurse_rm(rules, "property_expr")
+
+    optimize_constant_expression(rules)
+
     return rules
