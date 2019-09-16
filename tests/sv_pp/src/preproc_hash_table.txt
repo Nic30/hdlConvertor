@@ -1,0 +1,28 @@
+// https://www.veripool.org/papers/Preproc_Good_Evil_SNUGBos10_paper.pdf
+
+// Read hash: hash[key]
+`define BSV_HASH_GET(hash,key) `hash``key  
+// Store hash: hash[key] = v 
+`define BSV_HASH_PUT(hash,key,v) \
+     `BSV_DEFINEIT(`define hash``key v )
+// Hash exists: defined(hash[key]) 
+`define BSV_HASH_EXISTS(hash,key) `BSV_DEFINED(hash``key)
+
+// For wrapping defines
+// Note the backslash newline on the `define line 
+// and the newline following, required to form the end of a define 
+`define BSV_DEFINEIT(d) d \
+
+// If  defined(<d>) then 1 else 0 
+`define BSV_DEFINED(d)  `ifdef d 1 `else 0 `endif 
+
+
+`BSV_HASH_PUT(table_0, a, 0)
+`BSV_HASH_PUT(table_0, b, 1)
+`BSV_HASH_PUT(table_0, c, 2)
+`BSV_HASH_PUT(table_1, a1, 10)
+`BSV_HASH_PUT(table_1, b1, 11)
+`BSV_HASH_PUT(table_1, c1, 12)
+
+`BSV_HASH_GET(table_0, a) `BSV_HASH_GET(table_0, b) `BSV_HASH_GET(table_0, c) 
+`BSV_HASH_GET(table_1, a1) `BSV_HASH_GET(table_1, b1) `BSV_HASH_GET(table_1, c1)

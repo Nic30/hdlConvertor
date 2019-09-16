@@ -1,0 +1,6 @@
+// https://www.veripool.org/papers/Preproc_Good_Evil_SNUGBos10_paper.pdf
+`define MULTILINE line1 \
+                 line2
+`define MSG(m) `"m`"
+
+$display(`MSG(`MULTILINE))
