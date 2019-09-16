@@ -85,7 +85,7 @@ cdef class HdlConvertor:
     # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
         self.thisptr = new Convertor()
-        self.preproc_macro_db = CppStdMapProxy.from_ptr(& self.thisptr.defineDB)
+        self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.defineDB)
 
     def __dealloc__(self):
         del self.thisptr
@@ -151,6 +151,7 @@ cdef class HdlConvertor:
             if not d:
                 raise
             d_py = < object > d
+            del c
             return d_py
         else:
             return PyHdlContext()
@@ -183,6 +184,7 @@ cdef class HdlConvertor:
             if not d:
                 raise
             d_py = < object > d
+            del c
             return d_py
         else:
             return PyHdlContext()
