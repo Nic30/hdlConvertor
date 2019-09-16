@@ -131,7 +131,6 @@ mode DEFINE_MODE;
        	   // inside of define body
 	       define_in_body = true;
        } else {
-
            skip();
        }
     };
@@ -145,9 +144,9 @@ mode DEFINE_MODE;
     		setType(CODE);
     	}
     }; // string can appear only in bo
-    DM_LINE_ESCAPE :  F_LINE_ESCAPE -> channel(CH_LINE_ESCAPE);
+    DM_LINE_ESCAPE:  F_LINE_ESCAPE -> channel(CH_LINE_ESCAPE);
     DN_NEW_LINE: CRLF -> type(NEW_LINE),mode(DEFAULT_MODE);
-    DN_CODE:  ( ~('\\'| '\n') | ( '\\'+ ~[\n]) )+? -> type(CODE); // verything except newline or esacped newline
+    DN_CODE:  ( ~('\\'| '\n') | ( '\\'+ ~[\n]) )+? -> type(CODE); // .* except newline or esacped newline
 
 // used when parsing the macro argument list
 mode MACRO_PARAMS;
@@ -254,7 +253,9 @@ mode PRAGMA_MODE;
 
 mode DEFAULT_MODE;
 	CODE: (~('`' | '\n' | '/')
-	        | ('/' ~('/' | '*'))
+	        | ('/' ~('/' | '*') )
+	        | '`' '`'
+	        | '`' '"'
 	       )+;
 	NEW_LINE: CRLF;
 
