@@ -50,7 +50,7 @@ preprocess_directive:
         )
     ;
 define:
-    DEFINE macro_id ( LP define_args RP )? WS* replacement? (LINE_COMMENT | NEW_LINE)
+    DEFINE macro_id ( LP define_args RP )? WS* replacement? (LINE_COMMENT | NEW_LINE | EOF)
 ;
 
 define_args:
@@ -166,7 +166,7 @@ stringLiteral:
 ;
 
 pragma:
-    PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? NEW_LINE
+    PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? (NEW_LINE | EOF)
 ;
 
 pragma_name : ID;
