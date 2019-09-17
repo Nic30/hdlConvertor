@@ -37,7 +37,7 @@ cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
 cdef class ParseException(Exception):
     pass
 
-cdef int raise_cpp_py_error() except * :
+cdef int raise_cpp_py_error() except *:
     msg = get_cpp_py_error_message()
     msg = str_decode(msg)
 
