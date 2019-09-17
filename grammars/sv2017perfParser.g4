@@ -2124,7 +2124,6 @@ class_item:
                               | class_method
                               | class_constraint
                               | class_declaration
-                              | interface_class_declaration
                               | covergroup_declaration
                               )
   | ( local_parameter_declaration
