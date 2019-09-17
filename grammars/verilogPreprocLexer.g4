@@ -146,7 +146,7 @@ mode DEFINE_MODE;
     }; // string can appear only in bo
     DM_LINE_ESCAPE:  F_LINE_ESCAPE -> channel(CH_LINE_ESCAPE);
     DN_NEW_LINE: CRLF -> type(NEW_LINE),mode(DEFAULT_MODE);
-    DN_CODE:  ( ~('\\'| '\n') | ( '\\'+ ~[\n]) )+? -> type(CODE); // .* except newline or esacped newline
+    DN_CODE:  ( ~('\\'| '\n' | '"') | ( '\\'+ ~[\n]) )+? -> type(CODE); // .* except newline or esacped newline
 
 // used when parsing the macro argument list
 mode MACRO_PARAMS;
@@ -180,7 +180,7 @@ mode MACRO_PARAMS;
         }
         token_id_parentesis_count--;
     };
-    MP_CODE: (STR | ~[,()] )+? -> type(CODE); // string or non parenthesis
+    MP_CODE: (STR | ~[,()"] )+? -> type(CODE); // string or non parenthesis
 
 mode IFDEF_MODE;
     NUM: F_DIGIT+;
@@ -252,7 +252,7 @@ mode PRAGMA_MODE;
 
 
 mode DEFAULT_MODE;
-	CODE: (~('`' | '\n' | '/')
+	CODE: (~('`' | '\n' | '/' | '"')
 	        | ('/' ~('/' | '*') )
 	        | '`' '`'
 	        | '`' '"'
