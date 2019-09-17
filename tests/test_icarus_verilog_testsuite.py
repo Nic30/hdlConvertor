@@ -1,16 +1,19 @@
 # import sys
 import fnmatch
+from itertools import chain
+from os import path
 import os
 import unittest
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 from tests.time_logging_test_runner import TimeLoggingTestRunner
-from itertools import chain
-from os import path
 
 HDL_CONVERTOR_ROOT = os.path.join(os.path.dirname(__file__), "..")
 IVTEST_ROOT = os.path.join(HDL_CONVERTOR_ROOT, "tests", "ivtest")
+
+# use this file to run tests in incremental maner,
+# the test which passed in previous build will not be executed again
 # SUCESSFULL_TEST_FILTER_FILE = "tests_passed"
 SUCESSFULL_TEST_FILTER_FILE = None
 
@@ -47,13 +50,13 @@ def get_test_default_config(default_verilog_version):
 
         for iv_ver, ver in IV_VERILOG_VERSION_OPTS:
             if iv_ver in args:
-                if not not_implemented or not name in def_config:
+                if not not_implemented or name not in def_config:
                     def_config[name] = (ver, should_fail)
                 std_specified = True
                 break
 
         if not std_specified:
-            if not not_implemented or not name in def_config:
+            if not not_implemented or name not in def_config:
                 def_config[name] = (default_verilog_version, should_fail)
 
     for file_name in chain(find_files(IVTEST_ROOT, "regress-*.list"), find_files(IVTEST_ROOT, "*_regress.list")):
@@ -121,27 +124,29 @@ class IcarusVerilogTestsuiteMeta(type):
         conf = get_test_default_config(default_verilog_version)
         for sv_file in find_files(IVTEST_ROOT, '*.v'):
             fn = get_file_name(sv_file)
-            # if fn not in ["comp1000", "comp1001"]:
+            # if fn in ["comp1000", "comp1001"]:
             #     # this files currently taking too loong
             #     continue
             # if fn in ["pr377", "contrib8.2"]:
             #     # non-ANSI specialities
             #     continue
-            if fn in [# '``'
-                      "br979", "br_gh105a", "br_gh105b", "pr1741212", "pr1912112", "pr622", "pr639",
-                      "macro_str_esc", "macro_with_args", "mangle",
+            if fn in [  # '``'
+                      #"br979", "br_gh105a", "br_gh105b", "pr1741212", "pr1912112", "pr622", "pr639",
+                      #"macro_str_esc", "macro_with_args", "mangle",
+                      # ``celldefine
+                      "macro_str_esc",
+                      # comment between macro and its args
+                      "macro_with_args",
                       # '`' in string
-                      "localparam_type2", "parameter_type2", "sv_macro2", "clog2", "pr1925360", "pr1960548",
+                      # "localparam_type2", "parameter_type2", "sv_macro2", "clog2", "pr1925360", "pr1960548",
                       # `elseif withou args, `else multipletimes
                       "elsif_test",
-                      # missing `__FILE__ (wrong standard specified)
-                      "fileline", "fileline2",
                       # `unconnected_drive
                       "uncon_drive",
                       ]:
                 # unfinished preproc
                 continue
-            if fn in ["array_packed_write_read"]:
+            if fn in ["array_packed_write_read", "func_init_var3", "task_init_var3"]:
                 # ?? antlr parser works under java, but fails under c++
                 continue
             if fn in ["br988"]:
@@ -166,7 +171,7 @@ class IcarusVerilogTestsuiteMeta(type):
                 # problems with int unsigned
                 continue
             if fn in ["wiresl2"]:
-                # problems with wstring_convert::from_bytes
+                # problems with wstring_convert::from_bytes, non utf-8 byte dump in file
                 continue
             if fn in ["display_bug"]:
                 # int as bit vector size
@@ -177,7 +182,7 @@ class IcarusVerilogTestsuiteMeta(type):
             if fn in [
                     # checked by emming of errors instead of return code
                     "br_gh72a", "br_gh72b",
-                    # marked as to fail even in comments insed of file, but should pass in icarus tests?
+                    # marked as to fail even in comments instead of file, but should pass in icarus tests?
                     "sf1289",
                     # the files which are used indirectly from test and this does not have own test record
                     # and are not marked to fail
@@ -250,6 +255,8 @@ class IcarusVerilogTestsuiteMeta(type):
                     "analog1", "analog2"
                     ]:
                 should_fail = True
+            if fn in ["fileline", "fileline2", ]:  # missing `__FILE__ (wrong standard specified)
+                verilog_version = Language.SYSTEM_VERILOG_2009
             fn = fn.replace(".", "_")
             test_name = "test_%s_%s" % (verilog_version.name, fn)
             t = gen_test(sv_file, should_fail, verilog_version)
@@ -259,7 +266,7 @@ class IcarusVerilogTestsuiteMeta(type):
                 i += 1
 
             if test_name not in test_filter:
-                _dict[test_name] = t 
+                _dict[test_name] = t
 
         return type.__new__(cls, name, bases, _dict)
 
