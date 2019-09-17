@@ -128,20 +128,23 @@ std::pair<size_t, size_t>* MacroDefVerilog::check_is_in_string(size_t start) {
 void MacroDefVerilog::collect_string_intervals(const string &tmpl) {
 	size_t start_pos = 0;
 	auto npos = string::npos;
-	size_t pos1 = npos;
+	size_t prev_start_pos = npos;
 	while ((start_pos = tmpl.find('"', start_pos)) != npos) {
-		if (pos1 == npos
-				&& ((start_pos != 0 && tmpl[start_pos - 1] != '`')
-						|| start_pos == 0)) {
-			pos1 = start_pos;
-		} else if (pos1 != npos && tmpl[start_pos - 1] != '`') {
-			size_t length = start_pos - pos1;
-			_string_intervals.push_back(make_pair(pos1, length));
-			pos1 = npos;
+		// if " is not part of `" or \"
+		bool is_escaped = (start_pos != 0
+				&& (tmpl[start_pos - 1] == '`' || tmpl[start_pos - 1] == '\\'));
+		if (!is_escaped) {
+			if (prev_start_pos == npos) {
+				prev_start_pos = start_pos;
+			} else {
+				size_t length = start_pos - prev_start_pos;
+				_string_intervals.push_back(make_pair(prev_start_pos, length));
+				prev_start_pos = npos;
+			}
 		}
 		start_pos += 1;
 	}
-	if (pos1 != npos)
+	if (prev_start_pos != npos)
 		throw ParseException(
 				"Unfinished string in definition of macro " + name + ".");
 }
