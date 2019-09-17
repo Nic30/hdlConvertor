@@ -143,7 +143,8 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p642_il3(self):
         self.assertPPError(
             '2012_p642_il3.txt',
-            'Unfinished string in definition of macro first_half.'
+            'recognition error at: \'"start of string\\n\'',
+            contains=True
         )
 
     def test_FILE_LINE(self):

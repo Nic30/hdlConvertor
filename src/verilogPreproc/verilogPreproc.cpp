@@ -263,12 +263,42 @@ antlrcpp::Any VerilogPreproc::visitUndef(
 	return NULL;
 }
 
-void rm_substring(string &str, const string &s, int len_of_s) {
+void replace_substring(string &str, const string &s, const string & repl) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(s, start_pos)) != string::npos) {
-		str.erase(start_pos, len_of_s);
-		start_pos += 1;
+		str.replace(start_pos, s.size(), repl);
+		start_pos += repl.size();
 	}
+}
+
+void unescape_string_dblquotes(string &str) {
+	size_t start_pos = 0;
+	auto npos = string::npos;
+	size_t prev_start_pos = npos;
+	while ((start_pos = str.find("`\"", start_pos)) != npos) {
+		// if " is not part of `" or \"
+		bool is_escaped = (start_pos != 0 && str[start_pos - 1] == '\\');
+		if (!is_escaped) {
+			// delete '`' before '"'
+			str.erase(start_pos, 1);
+			if (prev_start_pos == npos) {
+				prev_start_pos = start_pos;
+			} else {
+				for (size_t in_str_i = prev_start_pos; in_str_i < start_pos;
+						in_str_i++) {
+					if (str[in_str_i] == '\n' && str[in_str_i - 1] != '\\') {
+						// escape every non escaped newline in new string
+						str.insert(in_str_i, 1, '\\');
+						start_pos++;
+					}
+				}
+				prev_start_pos = npos;
+			}
+		}
+		start_pos++;
+	}
+	if (prev_start_pos != npos)
+		throw ParseException("Unfinished `\" string");
 }
 
 //method call when `macro is found in the source code
@@ -317,12 +347,7 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 				last_was_comma = ch_text == ",";
 			} else if (antlrcpp::is<verilogPreprocParser::ValueContext*>(c)) {
 				string data = _tokens.getText(c->getSourceInterval());
-				// the arguments has to be expanded first before expansion of this maro
 				data = trim(data);
-				// if (data.find("`") != string::npos) {
-				// 	data = container.run_preproc_str(data,
-				// 			ctx->start->getLine() - 1);
-				// }
 				args.push_back(data);
 				expected_value = false;
 				last_was_comma = false;
@@ -346,8 +371,8 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 	}
 
 	if (container.lang >= Language::SV2005) {
-		rm_substring(replacement, "``", 2);
-		rm_substring(replacement, "`\\", 1);
+		replace_substring(replacement, "``", "");
+		replace_substring(replacement, "`\\`", "\\");
 	}
 
 	if (replacement.find("`", 0) != string::npos) {
@@ -356,7 +381,7 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 	}
 
 	if (container.lang >= Language::SV2005) {
-		rm_substring(replacement, "`\"", 1);
+		unescape_string_dblquotes(replacement);
 	}
 	// replace the original macro in the source code by the replacement string
 	// we just setup
