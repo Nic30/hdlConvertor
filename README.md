@@ -62,7 +62,7 @@ Also if it is something which is not unique to your system, tell us so we can fi
 ## Usage
 The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`.
 In the meantime when there is no wiki yet you can take look at src/hdlAst.py.
-There are classes for objects in HDL langues and there is also type specified for every properrty.
+There are classes for objects in HDL langues and there is also type specified for every property.
 
 ![overview](doc/hdlConvertor_typical_usage.png)
 
