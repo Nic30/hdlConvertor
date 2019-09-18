@@ -131,7 +131,12 @@ class IcarusVerilogTestsuiteMeta(type):
             #     # non-ANSI specialities
             #     continue
             if fn in [  # '``'
-                      #"br979", "br_gh105a", "br_gh105b", "pr1741212", "pr1912112", "pr622", "pr639",
+                      "pr622",
+                      "pr639",
+                      "pr1741212",
+                      "pr1912112",
+                      "pr1925360",
+                      #"br979", "br_gh105a", "br_gh105b",  "pr622", , 
                       #"macro_str_esc", "macro_with_args", "mangle",
                       # ``celldefine
                       "macro_str_esc",
