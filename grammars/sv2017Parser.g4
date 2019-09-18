@@ -485,7 +485,7 @@ statement_item:
        | procedural_continuous_assignment
        | inc_or_dec_expression
        | primary
-       // | clocking_drive // just a nonblocking_assignment assignment
+       | clocking_drive
        ) SEMI  #statement_itemSemiEnding
   | case_statement #statement_itemCase
   | conditional_statement #statement_itemCond
@@ -508,8 +508,9 @@ cycle_delay:
                 | integral_number
                 | identifier
                 );
-//clocking_drive:
-// clockvar_expression LE ( cycle_delay )? expression;
+clocking_drive:
+   clockvar_expression LE cycle_delay expression;
+clockvar_expression: hierarchical_identifier select;
 final_construct:
  KW_FINAL statement;
 blocking_assignment:
