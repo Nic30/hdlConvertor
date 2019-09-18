@@ -1270,7 +1270,7 @@ sequence_list_of_arguments:
 list_of_arguments:
  ( DOT identifier LPAREN ( expression )? RPAREN
   | expression
-  | COMMA
+  | COMMA ( expression )?
  )
  ( COMMA ( expression )? )*
  ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
