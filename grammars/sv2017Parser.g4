@@ -578,15 +578,13 @@ delay_control:
                )
   ;
  seq_block:
-  KW_BEGIN ( COLON identifier
-               | {_input->LA(1) != COLON}?
-               ) ( block_item_declaration )* ( statement_or_null )* KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
+  KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+  	 ( block_item_declaration )* ( statement_or_null )* 
+  KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
  par_block:
-  KW_FORK ( COLON identifier
-           | {_input->LA(1) != COLON}?
-           ) ( block_item_declaration )* ( statement_or_null )* join_keyword ( COLON identifier
-                                                                               |  {_input->LA(1) != COLON}?
-                                                                               );
+  KW_FORK ( COLON identifier | {_input->LA(1) != COLON}? )
+   ( block_item_declaration )* ( statement_or_null )* 
+  join_keyword ( COLON identifier |  {_input->LA(1) != COLON}? );
 
 /******************************************** case ********************************************************************/
 case_statement:
@@ -1919,9 +1917,9 @@ task_body_declaration:
   | class_scope
   )? identifier ( SEMI ( tf_item_declaration )*
                       | LPAREN tf_port_list RPAREN SEMI ( block_item_declaration )*
-                      ) ( statement_or_null )* KW_ENDTASK ( COLON identifier
-                                                          | {_input->LA(1) != COLON}?
-                                                          );
+                      )
+  ( statement_or_null )*
+  KW_ENDTASK ( COLON identifier | {_input->LA(1) != COLON}? );
 method_prototype:
  task_prototype
   | function_prototype
@@ -2248,7 +2246,7 @@ specify_block:
 
 /****************************************** generate ******************************************************************/
 generate_region:
- KW_GENERATE ( generate_item )* KW_ENDGENERATE;
+ KW_GENERATE ( generate_block )* KW_ENDGENERATE;
 genvar_expression: constant_expression;
 loop_generate_construct:
  KW_FOR LPAREN genvar_initialization SEMI genvar_expression SEMI genvar_iteration RPAREN
@@ -2277,11 +2275,9 @@ case_generate_item:
   ) generate_block;
 generate_block:
  generate_item
-  | ( identifier COLON )? KW_BEGIN ( COLON identifier
-                                      | {_input->LA(1) != COLON}?
-                                      ) ( generate_item )* KW_END ( COLON identifier
-                                                                  | {_input->LA(1) != COLON}?
-                                                                  )
+  | ( identifier COLON )? KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+    ( generate_item )*
+    KW_END ( COLON identifier | {_input->LA(1) != COLON}? )
  ;
 generate_item:
  ( attribute_instance )* ( parameter_override
@@ -2323,7 +2319,6 @@ generate_item:
                               | extern_tf_declaration
                               )
   | KW_RAND data_declaration
-  | loop_generate_construct
   | generate_region ;
 
 program_generate_item:
