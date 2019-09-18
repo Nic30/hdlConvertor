@@ -1563,11 +1563,9 @@ module_header_common:
 
 module_declaration:
   KW_EXTERN module_header_common ( list_of_port_declarations )? SEMI
-   | ( module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
+   | module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
        ( timeunits_declaration )? ( module_item )*
-     ) KW_ENDMODULE ( COLON identifier
-                       | {_input->LA(1) != COLON}?
-                       )
+     KW_ENDMODULE ( COLON identifier | {_input->LA(1) != COLON}? )
   ;
 module_keyword:
   KW_MODULE
@@ -1755,8 +1753,8 @@ parameter_port_declaration:
 list_of_port_declarations:
  LPAREN
  (
- ( nonansi_port ( COMMA nonansi_port )* )
- | ( COMMA nonansi_port )+
+ ( nonansi_port ( COMMA ( nonansi_port )? )* )
+ | ( COMMA ( nonansi_port )? )+
  | ( ( attribute_instance )* ansi_port_declaration ( COMMA ( attribute_instance )* ansi_port_declaration )* )
  )? RPAREN;
 
@@ -2382,8 +2380,7 @@ module_item_item:
  | specparam_declaration
 ;
  module_item:
-  nonansi_port_declaration SEMI
-  | generate_region
+  generate_region
   | ( attribute_instance )* module_item_item
   | specify_block
   | program_declaration
