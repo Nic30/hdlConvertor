@@ -5,7 +5,7 @@ options { tokenVocab=sv2017Lexer; }
  * IEEE1800-2017 grammar optimized for performance in the cost of allowing some ivalid syntax.
  * This is the case mainly for specific expression values which can appear only in some specifc scope. 
  *
- * This parser grammar is nearly target language independen. You have to replace "_input.LA".
+ * This parser grammar is nearly target language independen. You have to replace "_input->LA".
  */
 
 
@@ -968,10 +968,13 @@ select:
       )* ( LSQUARE_BR array_range_expression RSQUARE_BR )?;
 
 /************************************************ event_expression ****************************************************/
-event_expression:
- LPAREN event_expression (COMMA event_expression)* RPAREN
+event_expression_item:
+ LPAREN event_expression RPAREN
   | ( edge_identifier )? expression ( KW_IFF expression )?
-  | event_expression KW_OR event_expression
+  | event_expression_item KW_OR event_expression
+;
+event_expression:
+ event_expression_item ( COMMA event_expression_item )*
  ;
 
 /************************************************ sequence_expr *******************************************************/
