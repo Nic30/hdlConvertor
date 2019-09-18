@@ -160,6 +160,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
     def test_space_between_comments(self):
         self.run_pp_by_methodname()
 
+
 if __name__ == "__main__":
     suite = unittest.TestSuite()
     # suite.addTest(VerilogPreprocGrammarTC('test_comments'))
