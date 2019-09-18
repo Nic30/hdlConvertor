@@ -1418,7 +1418,7 @@ expression:
                    ) ( attribute_instance )* expression #expressionArrows
 ;
 concatenation:
- LBRACE expression ( concatenation | ( COMMA expression )+)? RBRACE;
+ LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
 
 dynamic_array_new:
  KW_NEW LSQUARE_BR expression RSQUARE_BR ( LPAREN expression RPAREN )?;
