@@ -24,7 +24,7 @@ fragment F_LINE_ESCAPE: '\\' CRLF;
 STR: '"' ( ('\\' ('"' | CRLF)) | ~["\r\n] )* '"';
 
 
-LINE_COMMENT : '//' ~[\r\n]* CRLF -> channel(CH_LINE_COMMENT);
+LINE_COMMENT : '//' ~[\r\n]* ( CRLF | EOF ) -> channel(CH_LINE_COMMENT);
 COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
 
 INCLUDE: '`include' F_WS+ -> mode(INCLUDE_MODE);
