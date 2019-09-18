@@ -484,7 +484,7 @@ statement_item:
        | nonblocking_assignment
        | procedural_continuous_assignment
        | expression
-       | clocking_drive
+       // | clocking_drive // just a nonblocking_assignment assignment
        ) SEMI  #statement_itemSemiEnding
   | case_statement #statement_itemCase
   | conditional_statement #statement_itemCond
@@ -507,8 +507,8 @@ cycle_delay:
                 | integral_number
                 | identifier
                 );
-clocking_drive:
- clockvar_expression LE ( cycle_delay )? expression;
+//clocking_drive:
+// clockvar_expression LE ( cycle_delay )? expression;
 final_construct:
  KW_FINAL statement;
 blocking_assignment:
@@ -619,10 +619,8 @@ randcase_item:
 cond_predicate:
  expression ( KW_MATCHES pattern )? ( TRIPLE_AND expression ( KW_MATCHES pattern )? )*;
 conditional_statement:
- ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null ( KW_ELSE KW_IF LPAREN
-      cond_predicate RPAREN statement_or_null )* ( KW_ELSE statement_or_null
-                                      | {_input->LA(1) != KW_ELSE}?
-                                      );
+ ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null
+ ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? );
 subroutine_call_statement:
  ( KW_VOID APOSTROPHE LPAREN expression RPAREN ) SEMI;
 
@@ -1763,7 +1761,7 @@ nonansi_port_declaration:
    KW_INOUT ( net_port_type )? list_of_variable_identifiers
   | KW_INPUT ( net_or_var_data_type )? list_of_variable_identifiers
 
-  | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_identifiers
+  | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_port_identifiers
 
   | identifier DOT identifier list_of_variable_identifiers
   | KW_REF ( var_data_type )? list_of_variable_identifiers
