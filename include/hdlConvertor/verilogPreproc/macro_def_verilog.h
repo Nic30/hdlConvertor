@@ -61,6 +61,7 @@ public:
 			std::vector<MacroDefVerilog::Fragment> & res);
 	std::pair<size_t, size_t> get_possible_arg_cnt() const;
 	std::string get_possible_arg_cnt_str() const;
+	virtual bool requires_args() override;
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
 			bool args_specified, VerilogPreproc * pp,

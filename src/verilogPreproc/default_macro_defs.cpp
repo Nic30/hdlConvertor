@@ -22,7 +22,9 @@ std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
 	string replacement = to_string(ctx->getStart()->getLine());
 	return replacement;
 }
-
+bool MacroDef__LINE__::requires_args() {
+	return false;
+}
 MacroDef__FILE__::MacroDef__FILE__() :
 		aMacroDef("__file__") {
 }
@@ -36,6 +38,9 @@ std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
 	// [TODO] escape
 	string replacement = "\"" + pp->_tokens.getSourceName() + "\"";
 	return replacement;
+}
+bool MacroDef__FILE__::requires_args() {
+	return false;
 }
 
 void macroDB_add_default_defs(MacroDB &db, Language lang) {

@@ -32,7 +32,7 @@ def _test_run(test_file, golden_file):
         # windows compatiblity
         test_result = test_result.replace("sv_pp\\src\\", "sv_pp/src/")
 
-    # with open(golden_file, "w") as f:
+    # with open(os.path.join(TEST_DIR, golden_file), "w") as f:
     #     f.write(test_result)
 
     with open(os.path.join(TEST_DIR, golden_file)) as f:
@@ -198,6 +198,9 @@ class VerilogPreprocTC(unittest.TestCase):
 
     def test_stringify(self):
         self.assertPPWorks("stringify.txt")
+
+    def test_macro_args(self):
+        self.assertPPWorks("macro_args.txt")
 
 
 if __name__ == "__main__":

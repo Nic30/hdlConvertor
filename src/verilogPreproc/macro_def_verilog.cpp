@@ -149,6 +149,10 @@ void MacroDefVerilog::collect_string_intervals(const string &tmpl) {
 				"Unfinished string in definition of macro " + name + ".");
 }
 
+bool  MacroDefVerilog::requires_args() {
+	return has_params;
+}
+
 string MacroDefVerilog::replace(std::vector<std::string> args,
 		bool args_specified, VerilogPreproc*, antlr4::ParserRuleContext*) {
 	if (has_params && !args_specified) {

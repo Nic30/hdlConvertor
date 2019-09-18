@@ -41,6 +41,7 @@ public:
 	aMacroDef(const std::string &name);
 	virtual ~aMacroDef() = default;
 
+	virtual bool requires_args() = 0;
 	virtual std::string replace(std::vector<std::string> args,
 			bool args_specified, VerilogPreproc *pp,
 			antlr4::ParserRuleContext *ctx) = 0;

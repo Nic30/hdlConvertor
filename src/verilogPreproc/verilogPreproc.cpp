@@ -263,7 +263,7 @@ antlrcpp::Any VerilogPreproc::visitUndef(
 	return NULL;
 }
 
-void replace_substring(string &str, const string &s, const string & repl) {
+void replace_substring(string &str, const string &s, const string &repl) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(s, start_pos)) != string::npos) {
 		str.replace(start_pos, s.size(), repl);
@@ -301,6 +301,34 @@ void unescape_string_dblquotes(string &str) {
 		throw ParseException("Unfinished `\" string");
 }
 
+void VerilogPreproc::parse_macro_args(
+		verilogPreprocParser::Token_idContext *ctx, vector<string> &args) {
+	//create a macroPrototype object
+	bool expected_value = true;
+	bool last_was_comma = false;
+	auto end = ctx->children.end();
+	for (auto _c = ctx->children.begin() + 1; _c != end; ++_c) {
+		auto &c = *_c;
+		string ch_text = c->getText();
+		if (antlrcpp::is<tree::TerminalNode*>(c)) {
+			if (expected_value
+					&& (ch_text == "," || (last_was_comma && ch_text == ")"))) {
+				// the case for macro(,)
+				// must prevent case of macro()
+				args.push_back("");
+			}
+			expected_value = true;
+			last_was_comma = ch_text == ",";
+		} else if (antlrcpp::is<verilogPreprocParser::ValueContext*>(c)) {
+			string data = _tokens.getText(c->getSourceInterval());
+			data = trim(data);
+			args.push_back(data);
+			expected_value = false;
+			last_was_comma = false;
+		}
+	}
+}
+
 //method call when `macro is found in the source code
 antlrcpp::Any VerilogPreproc::visitToken_id(
 		verilogPreprocParser::Token_idContext *ctx) {
@@ -327,32 +355,7 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 				break;
 		}
 		macro_name = _macro_name.substr(1, end_of_name - 1);
-
 		has_args = true;
-		//create a macroPrototype object
-		bool expected_value = true;
-		bool last_was_comma = false;
-		auto end = ctx->children.end();
-		for (auto _c = ctx->children.begin() + 1; _c != end; ++_c) {
-			auto &c = *_c;
-			string ch_text = c->getText();
-			if (antlrcpp::is<tree::TerminalNode*>(c)) {
-				if (expected_value
-						&& (ch_text == "," || (last_was_comma && ch_text == ")"))) {
-					// the case for macro(,)
-					// must prevent case of macro()
-					args.push_back("");
-				}
-				expected_value = true;
-				last_was_comma = ch_text == ",";
-			} else if (antlrcpp::is<verilogPreprocParser::ValueContext*>(c)) {
-				string data = _tokens.getText(c->getSourceInterval());
-				data = trim(data);
-				args.push_back(data);
-				expected_value = false;
-				last_was_comma = false;
-			}
-		}
 	}
 
 	//test if the macro has already been defined
@@ -363,11 +366,27 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 
 	//build the replacement string by calling the replacement method of the
 	//macro_replace object and the provided argument of the macro.
+	bool _has_args = has_args;
+	if (m->second->requires_args()) {
+		if (has_args) {
+			parse_macro_args(ctx, args);
+		}
+	} else {
+		_has_args = false;
+	}
 	string replacement;
 	try {
-		replacement = m->second->replace(args, has_args, this, ctx);
+		replacement = m->second->replace(args, _has_args, this, ctx);
 	} catch (const ParseException &e) {
 		throw_input_caused_error(ctx, e.what());
+	}
+	if (!m->second->requires_args() && has_args) {
+		// args belongs to the code and not to macro
+		auto a = ctx->start->getStartIndex() + 1 + macro_name.size();
+		auto b = ctx->stop->getStopIndex();
+		auto args_str = ctx->start->getInputStream()->getText(
+				misc::Interval(a, b));
+		replacement += args_str;
 	}
 
 	if (container.lang >= Language::SV2005) {
