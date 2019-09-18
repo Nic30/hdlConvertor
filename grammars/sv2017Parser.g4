@@ -483,7 +483,8 @@ statement_item:
   ( blocking_assignment
        | nonblocking_assignment
        | procedural_continuous_assignment
-       | expression
+       | inc_or_dec_expression
+       | primary
        // | clocking_drive // just a nonblocking_assignment assignment
        ) SEMI  #statement_itemSemiEnding
   | case_statement #statement_itemCase
@@ -938,8 +939,6 @@ property_case_item:
 /****************************************** ids and selects ***********************************************************/
 bit_select:
  LSQUARE_BR expression RSQUARE_BR;
-clockvar_expression:
- hierarchical_identifier select;
 
 package_or_class_scoped_hier_id_with_select:
  package_or_class_scoped_path ( bit_select )* ( DOT identifier ( bit_select )* )* ( LSQUARE_BR
@@ -1368,13 +1367,16 @@ primary:
 /************************************************** expression ********************************************************/
 constant_expression:
     expression;
+inc_or_dec_expression:
+     inc_or_dec_operator ( attribute_instance )* variable_lvalue #inc_or_dec_expressionPre
+    | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #inc_or_dec_expressionPost
+;
 expression:
   primary                                    #expressionPrimary
   | LPAREN operator_assignment RPAREN        #expressionPar
   | KW_TAGGED identifier ( expression )?     #expressionTaged
   | unary_operator ( attribute_instance )* primary              #expressionUnary
-  | inc_or_dec_operator ( attribute_instance )* variable_lvalue #expressionIncDecPre
-  | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #expressionIncDec
+  | inc_or_dec_expression                                       #expressionIncrDecr
   | expression DOUBLESTAR ( attribute_instance )* expression    #expressionPow
   | expression ( MUL
                   | DIV
