@@ -36,7 +36,7 @@ std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
 		throw_doest_not_support_args();
 	}
 	string replacement = "\"" + pp->_tokens.getSourceName() + "\"";
-	#if defined(_WIN32) || defined(WIN32)
+	#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 		replacement = replacement.replace("\\","\\\\");
 	#endif
 	return replacement;
