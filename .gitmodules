@@ -1,0 +1,4 @@
+[submodule "ivtest"]
+	path = tests/ivtest
+	url = https://github.com/steveicarus/ivtest
+	branch = master

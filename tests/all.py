@@ -1,5 +1,6 @@
 import unittest
 
+from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
 from tests.test_sv_std_examples_parse import SvStdExamplesParseTC
 from tests.test_verilog_conversion import VerilogConversionTC
 from tests.test_verilog_preproc import VerilogPreprocTC
@@ -20,6 +21,7 @@ def main_test_suite():
         VerilogConversionTC,
         VhdlConversionTC,
         SvStdExamplesParseTC,
+        IcarusVerilogTestsuiteTC,
     ]
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))

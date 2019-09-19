@@ -5,7 +5,7 @@ options { tokenVocab=sv2017Lexer; }
  * IEEE1800-2017 grammar optimized for performance in the cost of allowing some ivalid syntax.
  * This is the case mainly for specific expression values which can appear only in some specifc scope. 
  *
- * This parser grammar is nearly target language independen. You have to replace "_input.LA".
+ * This parser grammar is nearly target language independen. You have to replace "_input->LA".
  */
 
 
@@ -483,7 +483,8 @@ statement_item:
   ( blocking_assignment
        | nonblocking_assignment
        | procedural_continuous_assignment
-       | expression
+       | inc_or_dec_expression
+       | primary
        | clocking_drive
        ) SEMI  #statement_itemSemiEnding
   | case_statement #statement_itemCase
@@ -508,7 +509,8 @@ cycle_delay:
                 | identifier
                 );
 clocking_drive:
- clockvar_expression LE ( cycle_delay )? expression;
+   clockvar_expression LE cycle_delay expression;
+clockvar_expression: hierarchical_identifier select;
 final_construct:
  KW_FINAL statement;
 blocking_assignment:
@@ -576,15 +578,13 @@ delay_control:
                )
   ;
  seq_block:
-  KW_BEGIN ( COLON identifier
-               | {_input->LA(1) != COLON}?
-               ) ( block_item_declaration )* ( statement_or_null )* KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
+  KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+  	 ( block_item_declaration )* ( statement_or_null )* 
+  KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
  par_block:
-  KW_FORK ( COLON identifier
-           | {_input->LA(1) != COLON}?
-           ) ( block_item_declaration )* ( statement_or_null )* join_keyword ( COLON identifier
-                                                                               |  {_input->LA(1) != COLON}?
-                                                                               );
+  KW_FORK ( COLON identifier | {_input->LA(1) != COLON}? )
+   ( block_item_declaration )* ( statement_or_null )* 
+  join_keyword ( COLON identifier |  {_input->LA(1) != COLON}? );
 
 /******************************************** case ********************************************************************/
 case_statement:
@@ -619,10 +619,8 @@ randcase_item:
 cond_predicate:
  expression ( KW_MATCHES pattern )? ( TRIPLE_AND expression ( KW_MATCHES pattern )? )*;
 conditional_statement:
- ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null ( KW_ELSE KW_IF LPAREN
-      cond_predicate RPAREN statement_or_null )* ( KW_ELSE statement_or_null
-                                      | {_input->LA(1) != KW_ELSE}?
-                                      );
+ ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null
+ ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? );
 subroutine_call_statement:
  ( KW_VOID APOSTROPHE LPAREN expression RPAREN ) SEMI;
 
@@ -940,8 +938,6 @@ property_case_item:
 /****************************************** ids and selects ***********************************************************/
 bit_select:
  LSQUARE_BR expression RSQUARE_BR;
-clockvar_expression:
- hierarchical_identifier select;
 
 package_or_class_scoped_hier_id_with_select:
  package_or_class_scoped_path ( bit_select )* ( DOT identifier ( bit_select )* )* ( LSQUARE_BR
@@ -968,10 +964,13 @@ select:
       )* ( LSQUARE_BR array_range_expression RSQUARE_BR )?;
 
 /************************************************ event_expression ****************************************************/
-event_expression:
- LPAREN event_expression (COMMA event_expression)* RPAREN
+event_expression_item:
+ LPAREN event_expression RPAREN
   | ( edge_identifier )? expression ( KW_IFF expression )?
-  | event_expression KW_OR event_expression
+  | event_expression_item KW_OR event_expression
+;
+event_expression:
+ event_expression_item ( COMMA event_expression_item )*
  ;
 
 /************************************************ sequence_expr *******************************************************/
@@ -1367,13 +1366,16 @@ primary:
 /************************************************** expression ********************************************************/
 constant_expression:
     expression;
+inc_or_dec_expression:
+     inc_or_dec_operator ( attribute_instance )* variable_lvalue #inc_or_dec_expressionPre
+    | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #inc_or_dec_expressionPost
+;
 expression:
   primary                                    #expressionPrimary
   | LPAREN operator_assignment RPAREN        #expressionPar
   | KW_TAGGED identifier ( expression )?     #expressionTaged
   | unary_operator ( attribute_instance )* primary              #expressionUnary
-  | inc_or_dec_operator ( attribute_instance )* variable_lvalue #expressionIncDecPre
-  | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #expressionIncDec
+  | inc_or_dec_expression                                       #expressionIncrDecr
   | expression DOUBLESTAR ( attribute_instance )* expression    #expressionPow
   | expression ( MUL
                   | DIV
@@ -1415,7 +1417,7 @@ expression:
                    ) ( attribute_instance )* expression #expressionArrows
 ;
 concatenation:
- LBRACE expression ( concatenation | ( COMMA expression )+)? RBRACE;
+ LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
 
 dynamic_array_new:
  KW_NEW LSQUARE_BR expression RSQUARE_BR ( LPAREN expression RPAREN )?;
@@ -1560,11 +1562,9 @@ module_header_common:
 
 module_declaration:
   KW_EXTERN module_header_common ( list_of_port_declarations )? SEMI
-   | ( module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
+   | module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
        ( timeunits_declaration )? ( module_item )*
-     ) KW_ENDMODULE ( COLON identifier
-                       | {_input->LA(1) != COLON}?
-                       )
+     KW_ENDMODULE ( COLON identifier | {_input->LA(1) != COLON}? )
   ;
 module_keyword:
   KW_MODULE
@@ -1752,8 +1752,8 @@ parameter_port_declaration:
 list_of_port_declarations:
  LPAREN
  (
- ( nonansi_port ( COMMA nonansi_port )* )
- | ( COMMA nonansi_port )+
+ ( nonansi_port ( COMMA ( nonansi_port )? )* )
+ | ( COMMA ( nonansi_port )? )+
  | ( ( attribute_instance )* ansi_port_declaration ( COMMA ( attribute_instance )* ansi_port_declaration )* )
  )? RPAREN;
 
@@ -1762,7 +1762,7 @@ nonansi_port_declaration:
    KW_INOUT ( net_port_type )? list_of_variable_identifiers
   | KW_INPUT ( net_or_var_data_type )? list_of_variable_identifiers
 
-  | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_identifiers
+  | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_port_identifiers
 
   | identifier DOT identifier list_of_variable_identifiers
   | KW_REF ( var_data_type )? list_of_variable_identifiers
@@ -1917,9 +1917,9 @@ task_body_declaration:
   | class_scope
   )? identifier ( SEMI ( tf_item_declaration )*
                       | LPAREN tf_port_list RPAREN SEMI ( block_item_declaration )*
-                      ) ( statement_or_null )* KW_ENDTASK ( COLON identifier
-                                                          | {_input->LA(1) != COLON}?
-                                                          );
+                      )
+  ( statement_or_null )*
+  KW_ENDTASK ( COLON identifier | {_input->LA(1) != COLON}? );
 method_prototype:
  task_prototype
   | function_prototype
@@ -2246,7 +2246,7 @@ specify_block:
 
 /****************************************** generate ******************************************************************/
 generate_region:
- KW_GENERATE ( generate_item )* KW_ENDGENERATE;
+ KW_GENERATE ( generate_block )* KW_ENDGENERATE;
 genvar_expression: constant_expression;
 loop_generate_construct:
  KW_FOR LPAREN genvar_initialization SEMI genvar_expression SEMI genvar_iteration RPAREN
@@ -2275,11 +2275,9 @@ case_generate_item:
   ) generate_block;
 generate_block:
  generate_item
-  | ( identifier COLON )? KW_BEGIN ( COLON identifier
-                                      | {_input->LA(1) != COLON}?
-                                      ) ( generate_item )* KW_END ( COLON identifier
-                                                                  | {_input->LA(1) != COLON}?
-                                                                  )
+  | ( identifier COLON )? KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+    ( generate_item )*
+    KW_END ( COLON identifier | {_input->LA(1) != COLON}? )
  ;
 generate_item:
  ( attribute_instance )* ( parameter_override
@@ -2321,7 +2319,6 @@ generate_item:
                               | extern_tf_declaration
                               )
   | KW_RAND data_declaration
-  | loop_generate_construct
   | generate_region ;
 
 program_generate_item:
@@ -2379,8 +2376,7 @@ module_item_item:
  | specparam_declaration
 ;
  module_item:
-  nonansi_port_declaration SEMI
-  | generate_region
+  generate_region
   | ( attribute_instance )* module_item_item
   | specify_block
   | program_declaration

@@ -4,6 +4,7 @@ language: python
 
 git:
   depth: 1
+  submodules: true
 
 cache:
   - apt: true

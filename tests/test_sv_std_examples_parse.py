@@ -2,7 +2,6 @@
 from glob import glob
 import os
 import unittest
-from unittest.case import expectedFailure
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
@@ -36,8 +35,6 @@ class SvStdExamplesParseMeta(type):
             fn = get_file_name(sv_file)
             test_name = "test_%s" % fn
             t = gen_test(sv_file)
-            if fn == "p552":
-                t = expectedFailure(t)
             _dict[test_name] = t 
         return type.__new__(cls, name, bases, _dict)
 

@@ -35,8 +35,8 @@ public:
 		antlrParser = new antlrParserT(tokens);
 
 		antlrParser->removeErrorListeners();
-		// lexer->removeErrorListeners();
-		// lexer->addErrorListener(syntaxErrLogger);
+		lexer->removeErrorListeners();
+		lexer->addErrorListener(&syntaxErrLogger);
 		antlrParser->removeErrorListeners();
 		antlrParser->addErrorListener(&syntaxErrLogger);
 	}
