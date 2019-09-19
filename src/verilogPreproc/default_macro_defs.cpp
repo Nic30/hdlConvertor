@@ -35,8 +35,10 @@ std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	// [TODO] escape
 	string replacement = "\"" + pp->_tokens.getSourceName() + "\"";
+	#if defined(_WIN32) || defined(WIN32)
+		replacement = replacement.replace("\\","\\\\");
+	#endif
 	return replacement;
 }
 bool MacroDef__FILE__::requires_args() {
