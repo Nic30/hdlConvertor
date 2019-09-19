@@ -9,8 +9,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
-HDL_CONVERTOR_ROOT = os.path.join(os.path.dirname(__file__), "..")
-IVTEST_ROOT = os.path.join(HDL_CONVERTOR_ROOT, "tests", "ivtest")
+IVTEST_ROOT = os.path.join(os.path.dirname(__file__), "tests", "ivtest")
 
 # use this file to run tests in incremental maner,
 # the test which passed in previous build will not be executed again
@@ -59,7 +58,8 @@ def get_test_default_config(default_verilog_version):
             if not not_implemented or name not in def_config:
                 def_config[name] = (default_verilog_version, should_fail)
 
-    for file_name in chain(find_files(IVTEST_ROOT, "regress-*.list"), find_files(IVTEST_ROOT, "*_regress.list")):
+    for file_name in chain(find_files(IVTEST_ROOT, "regress-*.list"),
+                           find_files(IVTEST_ROOT, "*_regress.list")):
         with open(file_name) as f:
             buff = ""
             for line in f:
@@ -136,8 +136,8 @@ class IcarusVerilogTestsuiteMeta(type):
                       "pr1741212",
                       "pr1912112",
                       "pr1925360",
-                      #"br979", "br_gh105a", "br_gh105b",  "pr622", , 
-                      #"macro_str_esc", "macro_with_args", "mangle",
+                      # "br979", "br_gh105a", "br_gh105b",  "pr622", , 
+                      # "macro_str_esc", "macro_with_args", "mangle",
                       # ``celldefine
                       "macro_str_esc",
                       # comment between macro and its args
@@ -186,7 +186,7 @@ class IcarusVerilogTestsuiteMeta(type):
 
             if fn in [
                     # checked by emming of errors instead of return code
-                    "br_gh72a", "br_gh72b",
+                    "br_gh72a", "br_gh72b", "pr1758122",
                     # marked as to fail even in comments instead of file, but should pass in icarus tests?
                     "sf1289",
                     # the files which are used indirectly from test and this does not have own test record
