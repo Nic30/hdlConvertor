@@ -46,11 +46,11 @@ def _test_run(test_file, golden_file, golden_str):
 
 
 def _test_run_rel(test_file, golden_file=None, golden_str=None):
-    if test_file is not None:
-        test_file = path.join('sv_pp', 'expected', golden_file)
+    if golden_file is not None:
+        golden_file = path.join('sv_pp', 'expected', golden_file)
     return _test_run(
             path.join('sv_pp', 'src', test_file),
-            test_file,
+            golden_file,
             golden_str
     )
 
@@ -155,13 +155,12 @@ class VerilogPreprocTC(unittest.TestCase):
         )
 
     def test_FILE_LINE(self):
-        f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
         test_golden = (
             "module tb();\n\ninitial\n\t$display("
             "\"Internal error: null handle at %s, line %d.\",\n"
             "\"sv_pp/src/test_FILE_LINE.sv\", 5);\n\n\nendmodule\n"
         )
-        test_result, test_golden = _test_run_rel(f, golden_str=test_golden)
+        test_result, test_golden = _test_run_rel('test_FILE_LINE.sv', golden_str=test_golden)
         self.assertEqual(test_result, test_golden)
 
     def test_verilog_pp_Language_is_bad(self):
