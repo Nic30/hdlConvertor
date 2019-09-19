@@ -9,7 +9,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
-IVTEST_ROOT = os.path.join(os.path.dirname(__file__), "tests", "ivtest")
+IVTEST_ROOT = os.path.join(os.path.dirname(__file__), "ivtest")
 
 # use this file to run tests in incremental maner,
 # the test which passed in previous build will not be executed again
