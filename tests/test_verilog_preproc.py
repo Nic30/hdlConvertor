@@ -20,7 +20,7 @@ def cd(newdir, cleanup=lambda: True):
         cleanup()
 
 
-def _test_run(test_file, golden_file):
+def _test_run(test_file, golden_file, golden_str):
     c = HdlConvertor()
 
     incdirs = [path.join('sv_pp', 'src'), ]
@@ -30,21 +30,28 @@ def _test_run(test_file, golden_file):
         test_result = c.verilog_pp(
             test_file, Language.SYSTEM_VERILOG, incdirs)
         # windows compatiblity
-        test_result = test_result.replace("sv_pp\\src\\", "sv_pp/src/")
+        test_result = test_result.replace("sv_pp\\\\src\\\\", "sv_pp/src/")
 
     # with open(os.path.join(TEST_DIR, golden_file), "w") as f:
     #     f.write(test_result)
-
-    with open(os.path.join(TEST_DIR, golden_file)) as f:
-        test_golden = f.read()
+    if golden_file is not None:
+        assert golden_str is None
+        with open(os.path.join(TEST_DIR, golden_file)) as f:
+            test_golden = f.read()
+    else:
+        assert golden_str is not None
+        test_golden = golden_str
 
     return test_result, test_golden
 
 
-def _test_run_rel(test_file, golden_file):
+def _test_run_rel(test_file, golden_file=None, golden_str=None):
+    if test_file is not None:
+        test_file = path.join('sv_pp', 'expected', golden_file)
     return _test_run(
             path.join('sv_pp', 'src', test_file),
-            path.join('sv_pp', 'expected', golden_file)
+            test_file,
+            golden_str
     )
 
 
@@ -148,16 +155,13 @@ class VerilogPreprocTC(unittest.TestCase):
         )
 
     def test_FILE_LINE(self):
-        c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
-        incdirs = [path.join('sv_pp', 'src'), ]
-        test_result = c.verilog_pp(f, Language.SYSTEM_VERILOG, incdirs)
-        expected_val = path.join(path.dirname(__file__),
-                                 'sv_pp', 'src', 'test_FILE_LINE.sv'
-                                 )
-        test_golden = ("module tb();\n\ninitial\n\t$display("
-                       "\"Internal error: null handle at %s, line %d.\",\n")
-        test_golden += "\"" + expected_val + "\", 5);\n\n\nendmodule\n"
+        test_golden = (
+            "module tb();\n\ninitial\n\t$display("
+            "\"Internal error: null handle at %s, line %d.\",\n"
+            "\"sv_pp/src/test_FILE_LINE.sv\", 5);\n\n\nendmodule\n"
+        )
+        test_result, test_golden = _test_run_rel(f, golden_str=test_golden)
         self.assertEqual(test_result, test_golden)
 
     def test_verilog_pp_Language_is_bad(self):
