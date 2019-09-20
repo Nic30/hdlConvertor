@@ -34,6 +34,7 @@ def _test_run(test_file, golden_file, golden_str):
 
     # with open(os.path.join(TEST_DIR, golden_file), "w") as f:
     #     f.write(test_result)
+
     if golden_file is not None:
         assert golden_str is None
         with open(os.path.join(TEST_DIR, golden_file)) as f:
@@ -107,12 +108,7 @@ class VerilogPreprocTC(unittest.TestCase):
                 self.assertEqual(err_msg, _e)
 
     def test_2012_p644_2(self):
-        # [TODO] platform dependent path
-        self.assertPPError(
-            '2012_p644_2.txt',
-            "SyntaxError:mismatched input",
-            contains=True
-        )
+        self.assertPPWorks('2012_p644_2.txt')
 
     def test_2012_p641_il1(self):
         self.assertPPError(
@@ -124,8 +120,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p641_il2(self):
         self.assertPPError(
             '2012_p641_il2.txt',
-            'Macro D missing value for parameter x and for parameters'
-            ' after (2 arguments expected but 0 provided).'
+            'Macro D missing value for parameter y (2 arguments expected but 0 provided).'
         )
 
     def test_2012_p641_il3(self):
@@ -150,7 +145,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p642_il3(self):
         self.assertPPError(
             '2012_p642_il3.txt',
-            'recognition error at: \'"start of string\\n\'',
+            'recognition error at: \'"',
             contains=True
         )
 

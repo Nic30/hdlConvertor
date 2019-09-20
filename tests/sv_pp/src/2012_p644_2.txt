@@ -1,2 +1,2 @@
-`define home(filename) `"/home/mydir/filename`"
+`define home(filename) `"empty.txt`"
 `include `home(myfile)

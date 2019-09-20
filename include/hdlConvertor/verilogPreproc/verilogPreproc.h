@@ -76,10 +76,10 @@ public:
 
 	virtual antlrcpp::Any visitUndef(verilogPreprocParser::UndefContext *ctx)
 			override;
-	void parse_macro_args(verilogPreprocParser::Token_idContext *ctx,
+	void parse_macro_args(verilogPreprocParser::Macro_callContext *ctx,
 			std::vector<std::string> &args);
-	virtual antlrcpp::Any visitToken_id(
-			verilogPreprocParser::Token_idContext *ctx) override;
+	virtual antlrcpp::Any visitMacro_call(
+			verilogPreprocParser::Macro_callContext *ctx) override;
 
 	virtual antlrcpp::Any visitIfdef_directive(
 			verilogPreprocParser::Ifdef_directiveContext *ctx) override;

@@ -149,7 +149,7 @@ void MacroDefVerilog::collect_string_intervals(const string &tmpl) {
 				"Unfinished string in definition of macro " + name + ".");
 }
 
-bool  MacroDefVerilog::requires_args() {
+bool MacroDefVerilog::requires_args() {
 	return has_params;
 }
 
@@ -176,6 +176,11 @@ string MacroDefVerilog::replace(std::vector<std::string> args,
 				if (!p.has_def_val) {
 					if (!value_required)
 						continue;
+					if (args.size() == 0) {
+						// `macro() -> there is actualy arg ""
+						args.push_back("");
+						continue;
+					}
 					string msg = "Macro " + name
 							+ " missing value for parameter " + p.name + " ";
 					bool is_last = i == params.size() - 1;

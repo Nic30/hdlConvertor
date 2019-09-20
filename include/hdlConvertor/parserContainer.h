@@ -90,8 +90,8 @@ public:
 		tokens = nullptr;
 		delete lexer;
 		lexer = nullptr;
-
-		syntaxErrLogger.CheckErrors(); // Throw exception if errors
+		syntaxErrLogger.error_prefix = "";
+		syntaxErrLogger.check_errors(); // Throw exception if errors
 	}
 
 	virtual ~iParserContainer() {
