@@ -23,7 +23,7 @@ class VerilogConversionTC(BasicTC):
         self.parseWithRef("aFifo.v", VERILOG)
 
     # not implemented repeat construct
-    #def test_arbiter_tb(self):
+    # def test_arbiter_tb(self):
     #    self.parseWithRef("arbiter_tb.v", VERILOG)
 
     def test_arbiter(self):
@@ -33,8 +33,8 @@ class VerilogConversionTC(BasicTC):
         self.assertEqual(len(a.params), 0)
         self.assertEqual(len(a.ports), 10)
         ports = {
-            "clk" : HdlDirection.IN,
-            "rst" : HdlDirection.IN,
+            "clk": HdlDirection.IN,
+            "rst": HdlDirection.IN,
             "req3": HdlDirection.IN,
             "req2": HdlDirection.IN,
             "req1": HdlDirection.IN,
@@ -45,7 +45,7 @@ class VerilogConversionTC(BasicTC):
             "gnt0": HdlDirection.OUT,
         }
 
-        _ports = { p.name: p.direction for p in a.ports }
+        _ports = {p.name: p.direction for p in a.ports}
         self.assertDictEqual(_ports, ports)
 
     def test_cam(self):
@@ -112,7 +112,7 @@ class VerilogConversionTC(BasicTC):
         inc_dir = path.join(TEST_DIR, "verilog")
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
-        e = [ o for o in res.objs if isinstance(o, HdlModuleDef)]
+        e = [o for o in res.objs if isinstance(o, HdlModuleDef)]
         self.assertSetEqual(set(_e.module_name for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
