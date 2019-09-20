@@ -637,8 +637,8 @@ fragment UNDERSCORE: '_';
 fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
   | '\\\n' 
-  | '\\\r\n' 
-  | '\\' [nt\\"vfa%] 
+  | '\\\r\n'
+  | '\\' [nrt\\"vfa%] 
   | '\\' [0-9] [0-9]? [0-9]? 
   | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
  ;
