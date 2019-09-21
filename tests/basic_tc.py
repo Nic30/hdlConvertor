@@ -42,6 +42,8 @@ class BasicTC(unittest.TestCase):
     def parseWithRef(self, fname, language):
         _, res = parseFile(fname, language)
         buff = StringIO()
+        # import sys
+        # buff = sys.stdout
         if language == VERILOG:
             ser = ToVerilog(buff)
         elif language == VHDL:
