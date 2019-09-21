@@ -52,7 +52,7 @@ void ProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
 		std::vector<iHdlExpr*> & sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
-	if (ctx->ALL()) {
+	if (ctx->KW_ALL()) {
 		sensitivity.push_back(iHdlExpr::all());
 	} else {
 		visitSensitivity_list(ctx->sensitivity_list(), sensitivity);

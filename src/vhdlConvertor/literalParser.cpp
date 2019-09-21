@@ -33,7 +33,7 @@ iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	if (sl)
 		return visitString_literal(sl->getText());
 
-	if (ctx->NULL_SYM())
+	if (ctx->KW_NULL())
 		return iHdlExpr::null();
 
 	auto n = ctx->BIT_STRING_LITERAL();

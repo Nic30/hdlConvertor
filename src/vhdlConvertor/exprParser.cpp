@@ -82,7 +82,7 @@ iHdlExpr* ExprParser::visitExplicit_range(vhdlParser::Explicit_rangeContext* ctx
 	// : simple_expression direction simple_expression
 	// ;
 	HdlOperatorType op;
-	if (ctx->direction()->DOWNTO()) {
+	if (ctx->direction()->KW_DOWNTO()) {
 		op = DOWNTO;
 	} else {
 		op = TO;
@@ -119,11 +119,24 @@ iHdlExpr* ExprParser::visitPrefix(vhdlParser::PrefixContext * ctx) {
 
 	return visitFunction_call(ctx->function_call());
 }
+iHdlExpr* ExprParser::visitFunction_name(vhdlParser::Function_nameContext *ctx) {
+	// function_name:
+	// 	name
+	// 	| operator_symbol
+	// ;
+	auto n = ctx->name();
+	if (n)
+		return ReferenceParser::visitName(n);
+	auto os = ctx->operator_symbol();
+	assert(os);
+	// operator_symbol: STRING_LITERAL;
+	return LiteralParser::visitString_literal(os->STRING_LITERAL()->getText());
+}
 iHdlExpr* ExprParser::visitFunction_call(vhdlParser::Function_callContext *ctx) {
 	// function_call:
-	//       name ( LPAREN actual_parameter_part RPAREN )?
+	//       function_name ( LPAREN actual_parameter_part RPAREN )?
 	// ;
-	auto n = ReferenceParser::visitName(ctx->name());
+	auto n = visitFunction_name(ctx->function_name());
 	std::vector<iHdlExpr*> * args = nullptr;
 	auto app = ctx->actual_parameter_part();
 	if (app) {
@@ -158,7 +171,7 @@ iHdlExpr* ExprParser::visitActual_designator(
 	//      | subtype_indication
 	//      | OPEN
 	//;
-	if (ctx->OPEN())
+	if (ctx->KW_OPEN())
 		return iHdlExpr::OPEN();
 	auto sti = ctx->subtype_indication();
 	if (sti)
@@ -432,10 +445,10 @@ iHdlExpr * ExprParser::visitTerm(vhdlParser::TermContext* ctx) {
 			opType = HdlOperatorType::MUL;
 		else if (op->DIV())
 			opType = HdlOperatorType::DIV;
-		else if (op->MOD())
+		else if (op->KW_MOD())
 			opType = HdlOperatorType::MOD;
 		else {
-			assert(op->REM());
+			assert(op->KW_REM());
 			opType = HdlOperatorType::REM;
 		}
 		op0 = new iHdlExpr(op0, opType, op1);
@@ -453,9 +466,9 @@ iHdlExpr* ExprParser::visitFactor(vhdlParser::FactorContext* ctx) {
 	auto p1 = ctx->primary(1);
 	if (p1)
 		return new iHdlExpr(op0, POW, visitPrimary(p1));
-	if (ctx->ABS())
+	if (ctx->KW_ABS())
 		return new iHdlExpr(op0, ABS, NULL);
-	if (ctx->NOT())
+	if (ctx->KW_NOT())
 		return new iHdlExpr(op0, NOT, NULL);
 	return op0;
 }
@@ -592,7 +605,7 @@ iHdlExpr * ExprParser::visitWaveform(vhdlParser::WaveformContext* ctx) {
 	// waveform_element ( COMMA waveform_element )*
 	// | UNAFFECTED
 	// ;
-	if (ctx->UNAFFECTED()) {
+	if (ctx->KW_UNAFFECTED()) {
 		NotImplementedLogger::print("ExprParser.visitWaveform - UNAFFECTED", ctx);
 		return nullptr;
 	}
@@ -675,7 +688,7 @@ iHdlExpr * ExprParser::visitChoice(vhdlParser::ChoiceContext * ctx) {
 		return ExprParser::visitSimple_expression(se);
 	}
 #ifndef NDEBUG
-	auto o = ctx->OTHERS();
+	auto o = ctx->KW_OTHERS();
 	assert(o);
 #endif
 	return iHdlExpr::others();

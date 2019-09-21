@@ -567,7 +567,7 @@ iHdlStatement* StatementParser::visitLoop_statement(
 		// : WHILE condition
 		// | FOR parameter_specification
 		// ;
-		if (ctx->iteration_scheme()->WHILE()) {
+		if (ctx->iteration_scheme()->KW_WHILE()) {
 			auto c = ExprParser::visitCondition(is->condition());
 			auto body = visitSequence_of_statements(
 					ctx->sequence_of_statements());
@@ -646,7 +646,7 @@ iHdlStatement* StatementParser::visitConcurrent_selected_signal_assignment(
 				"StatementParser.visitConcurrent_selected_signal_assignment - QUESTIONMARK",
 				ctx);
 	}
-	if (ctx->GUARDED()) {
+	if (ctx->KW_GUARDED()) {
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_selected_signal_assignment - GUARDED",
 				ctx);
@@ -677,7 +677,7 @@ iHdlStatement* StatementParser::visitConcurrent_signal_assignment_statement(
 				"StatementParser.visitConcurrent_signal_assignment_statement - label",
 				ctx);
 	}
-	if (ctx->POSTPONED()) {
+	if (ctx->KW_POSTPONED()) {
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED",
 				ctx);
@@ -693,7 +693,7 @@ iHdlStatement* StatementParser::visitConcurrent_signal_assignment_statement(
 	// 	  target CONASGN ( GUARDED )? ( delay_mechanism )?
 	//  	  ( waveform | conditional_waveforms ) SEMI
 	// ;
-	if (csaa->GUARDED()) {
+	if (csaa->KW_GUARDED()) {
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED",
 				csaa);

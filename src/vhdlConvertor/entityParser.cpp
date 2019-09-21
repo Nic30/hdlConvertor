@@ -46,27 +46,26 @@ HdlModuleDec * EntityParser::visitEntity_declaration(
 
 void EntityParser::visitEntity_declarative_item(
 		vhdlParser::Entity_declarative_itemContext* ctx) {
-	// entity_declarative_item
-	// : subprogram_declaration
-	// | subprogram_body
-	// | type_declaration
-	// | subtype_declaration
-	// | constant_declaration
-	// | signal_declaration
-	// | variable_declaration
-	// | file_declaration
-	// | alias_declaration
-	// | attribute_declaration
-	// | attribute_specification
-	// | disconnection_specification
-	// | step_limit_specification
-	// | use_clause
-	// | group_template_declaration
-	// | group_declaration
-	// | nature_declaration
-	// | subnature_declaration
-	// | quantity_declaration
-	// | terminal_declaration
+	// entity_declarative_item:
+	//       subprogram_declaration
+	//       | subprogram_body
+	//       | subprogram_instantiation_declaration
+	//       | package_declaration
+	//       | package_body
+	//       | package_instantiation_declaration
+	//       | type_declaration
+	//       | subtype_declaration
+	//       | constant_declaration
+	//       | signal_declaration
+	//       | variable_declaration
+	//       | file_declaration
+	//       | alias_declaration
+	//       | attribute_declaration
+	//       | attribute_specification
+	//       | disconnection_specification
+	//       | use_clause
+	//       | group_template_declaration
+	//       | group_declaration
 	// ;
 
 	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item", ctx);

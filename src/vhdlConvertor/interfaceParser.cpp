@@ -60,7 +60,7 @@ vector<HdlVariableDef*> * InterfaceParser::visitInterface_signal_declaration(
 	// interface_signal_declaration:
 	//       ( SIGNAL )? identifier_list COLON ( signal_mode )? subtype_indication ( BUS )? ( VARASGN expression )?
 	// ;
-	if (ctx->BUS()) {
+	if (ctx->KW_BUS()) {
 		NotImplementedLogger::print(
 				"InterfaceParser.visitInterface_signal_declaration - BUS", ctx);
 	}

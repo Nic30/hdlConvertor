@@ -17,15 +17,15 @@ inline hdlObjects::HdlOperatorType OperatorType_from(
 	// | ROR
 	// ;
 	using hdlObjects::HdlOperatorType;
-	if (op->SLL())
+	if (op->KW_SLL())
 		return HdlOperatorType::SLL;
-	if (op->SRL())
+	if (op->KW_SRL())
 		return HdlOperatorType::SRL;
-	if (op->SLA())
+	if (op->KW_SLA())
 		return HdlOperatorType::SLA;
-	if (op->SRA())
+	if (op->KW_SRA())
 		return HdlOperatorType::SRA;
-	if (op->ROL())
+	if (op->KW_ROL())
 		return HdlOperatorType::ROL;
 	//assert(op->ROR());
 	return HdlOperatorType::ROR;
@@ -68,15 +68,15 @@ inline hdlObjects::HdlOperatorType OperatorType_from(
 	// logical_operator: AND | OR | NAND | NOR | XOR | XNOR;
 
 	using hdlObjects::HdlOperatorType;
-	if (op->AND())
+	if (op->KW_AND())
 		return HdlOperatorType::AND;
-	if (op->OR())
+	if (op->KW_OR())
 		return HdlOperatorType::OR;
-	if (op->NAND())
+	if (op->KW_NAND())
 		return HdlOperatorType::NAND;
-	if (op->NOR())
+	if (op->KW_NOR())
 		return HdlOperatorType::NOR;
-	if (op->XOR())
+	if (op->KW_XOR())
 		return HdlOperatorType::XOR;
 	//assert(op->XNOR());
 	return HdlOperatorType::XNOR;
