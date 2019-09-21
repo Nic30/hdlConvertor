@@ -102,6 +102,9 @@ def get_verilator_test_configs():
                 "t_interface_gen",
                 # non std. case without items
                 "t_case_wild",
+                
+                # /dev/null is not present under windows
+                "t_lint_incabspath",
                 }:
             should_fail = True
         if fn == "t_var_rsvd":
