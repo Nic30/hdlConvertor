@@ -18,7 +18,7 @@ def get_file_name(f):
 
 
 # https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
-class SvStdExamplesParseMeta(type):
+class Sv2017StdExamplesParseMeta(type):
 
     def __new__(cls, name, bases, _dict):
 
@@ -40,13 +40,13 @@ class SvStdExamplesParseMeta(type):
 
 
 # https://www.oipapio.com/question-219175 , python2/3 compatible specification of metatype for class
-SvStdExamplesParseTC = SvStdExamplesParseMeta('SvStdExamplesParseTC', (unittest.TestCase,), {})
+Sv2017StdExamplesParseTC = Sv2017StdExamplesParseMeta('Sv2017StdExamplesParseTC', (unittest.TestCase,), {})
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
 
-    # suite.addTest(SvStdExamplesParseTC('test_p552'))
-    suite.addTest(unittest.makeSuite(SvStdExamplesParseTC))
+    # suite.addTest(Sv2017StdExamplesParseTC('test_p552'))
+    suite.addTest(unittest.makeSuite(Sv2017StdExamplesParseTC))
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

@@ -1,7 +1,7 @@
 import unittest
 
 from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
-from tests.test_sv_std_examples_parse import SvStdExamplesParseTC
+from tests.test_sv2017_std_examples_parse import Sv2017StdExamplesParseTC
 from tests.test_verilog_conversion import VerilogConversionTC
 from tests.test_verilog_preproc import VerilogPreprocTC
 from tests.test_verilog_preproc_grammar import VerilogPreprocGrammarTC
@@ -20,7 +20,7 @@ def main_test_suite():
         VerilogPreprocMacroDbApiTC,
         VerilogConversionTC,
         VhdlConversionTC,
-        SvStdExamplesParseTC,
+        Sv2017StdExamplesParseTC,
         IcarusVerilogTestsuiteTC,
     ]
     for tc in tcs:
