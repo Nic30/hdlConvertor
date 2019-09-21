@@ -1,5 +1,6 @@
-import os
+import contextlib
 from fnmatch import fnmatch
+import os
 
 
 def find_files(directory, pattern):
@@ -51,4 +52,16 @@ def generate_test_method_name(file_name, language, existing_prop_dict):
         test_name = "test_%d_%s_%s" % (i, language.name, fn)
         i += 1
     return test_name
+
+
+@contextlib.contextmanager
+def cd(newdir, cleanup=lambda: True):
+    prevdir = os.getcwd()
+    os.chdir(os.path.expanduser(newdir))
+
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
+        cleanup()
 

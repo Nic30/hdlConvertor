@@ -1,23 +1,11 @@
 import os
 from os import path
 import unittest
-import contextlib
 from tests.basic_tc import TEST_DIR
 
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
-
-
-@contextlib.contextmanager
-def cd(newdir, cleanup=lambda: True):
-    prevdir = os.getcwd()
-    os.chdir(os.path.expanduser(newdir))
-
-    try:
-        yield
-    finally:
-        os.chdir(prevdir)
-        cleanup()
+from tests.file_utils import cd
 
 
 def _test_run(test_file, golden_file, golden_str):
