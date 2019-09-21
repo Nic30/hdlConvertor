@@ -3,21 +3,21 @@ from itertools import chain
 import os
 import unittest
 
-from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
-from tests.file_utils import find_files, TestFilter, generate_test_method_name, \
-    get_file_name
+from tests.file_utils import find_files, get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.extern_test_utils import generate_external_testcase_class, \
+    ExternTestSpec
 
 YOSYS_ROOT = os.path.join(os.path.dirname(__file__), "yosys")
 
 # use this file to run tests in incremental maner,
 # the test which passed in previous build will not be executed again
-#SUCESSFULL_TEST_FILTER_FILE = "tests_passed.yosys"
+# SUCESSFULL_TEST_FILTER_FILE = "tests_passed.yosys"
 SUCESSFULL_TEST_FILTER_FILE = None
 
 
-def get_yosys_test_config():
+def get_yosys_test_configs():
     assert os.path.exists(YOSYS_ROOT) and len(os.listdir(YOSYS_ROOT)) > 0, "Yosys repo not downloaded correctly"
     for verilog_file in chain(find_files(YOSYS_ROOT, "*.v"), find_files(YOSYS_ROOT, "*.sv")):
         fn = get_file_name(verilog_file)
@@ -105,54 +105,14 @@ def get_yosys_test_config():
                   "code_hdl_models_arbiter_tb", ]:
             defs["outfile"] = "tmp/outfile"
 
-        yield verilog_file, lang, should_fail, defs
+        inc_dirs = []
+        yield ExternTestSpec(verilog_file, lang, defs, inc_dirs, should_fail)
 
 
-# https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
-class YosysTestsuiteMeta(type):
-
-    def __new__(cls, name, bases, _dict):
-        test_filter = TestFilter(SUCESSFULL_TEST_FILTER_FILE)
-
-        def gen_test(sv_file, should_fail, verilog_version, defs):
-            """
-            :param defs: definitions for preprocessor
-            """
-
-            def test(self):
-                debug = False
-                c = HdlConvertor()
-                c.preproc_macro_db.update(defs)
-                incdirs = [] 
-                # print(c.verilog_pp(sv_file, verilog_version, incdirs))
-                try:
-                    c.parse([sv_file, ], verilog_version, incdirs, debug=debug)
-                except Exception:
-                    if should_fail:
-                        # [TODO] some expected erros in this test suite are not related to synatax
-                        #        need to check maually if the error really means syntax error and
-                        #        if this library is raising it correctly
-                        pass
-                    else:
-                        raise
-                test_filter.mark_test_as_passed(self)
-
-            return test
-
-        for file_name, lang, should_fail, defs in sorted(
-                get_yosys_test_config(),
-                key=lambda x: x[0]):
-            fn = get_file_name(file_name)
-            test_name = generate_test_method_name(fn, lang, _dict)
-
-            if not test_filter.is_dissabled_test(test_name):
-                _dict[test_name] = gen_test(file_name, should_fail, lang, defs)
-
-        return type.__new__(cls, name, bases, _dict)
-
-
-# https://www.oipapio.com/question-219175 , python2/3 compatible specification of metatype for class
-YosysTestsuiteTC = YosysTestsuiteMeta('YosysTestsuiteTC', (unittest.TestCase,), {})
+YosysTestsuiteTC = generate_external_testcase_class(
+    'YosysTestsuiteTC',
+    get_yosys_test_configs(),
+    SUCESSFULL_TEST_FILTER_FILE)
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)
