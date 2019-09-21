@@ -893,7 +893,7 @@ function_call:
 ;
 actual_parameter_part: association_list;
 qualified_expression:
-      type_mark APOSTROPHE aggregate // agregate can also be LPAREN expression RPAREN
+      type_mark APOSTROPHE aggregate // aggregate can also be LPAREN expression RPAREN
 ;
 type_conversion: type_mark LPAREN expression RPAREN;
 allocator:
