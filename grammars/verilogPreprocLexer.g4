@@ -5,47 +5,47 @@ channels { CH_LINE_ESCAPE, CH_LINE_COMMENT, CH_COMMENT}
 @lexer::members {
 
 struct expression_parsing_meta_info {
-	int parenthesis;
-	int braces;
-	int square_braces;
-	// parse new expression if there is ',' behind this expression
-	bool reenter_expr_on_tailing_comma;
+    int parenthesis;
+    int braces;
+    int square_braces;
+    // parse new expression if there is ',' behind this expression
+    bool reenter_expr_on_tailing_comma;
 
-	bool exit_from_parent_mode_on_lp;
-	bool next_mode_set;
-	// this mode is used if there is ')' which is not part of this expression
-	// instead of parrent mode 
-	size_t next_mode;
+    bool exit_from_parent_mode_on_lp;
+    bool next_mode_set;
+    // this mode is used if there is ')' which is not part of this expression
+    // instead of parrent mode 
+    size_t next_mode;
 
-	expression_parsing_meta_info() {
-		reset();
-		exit_from_parent_mode_on_lp = false;
-	}
-	inline bool no_brace_active() {
-		return parenthesis == 0 && braces == 0 && square_braces == 0;
-	}
-	inline void reset() {
-		parenthesis = 0;
-		braces = 0;
-		square_braces = 0;
-		reenter_expr_on_tailing_comma = false;
-		exit_from_parent_mode_on_lp = false;
-		next_mode_set = false;
-		next_mode = 0;
-	}
-	inline void reset(bool _exit_from_parent_mode_on_lp, bool _reenter_expr_on_tailing_comma) {
-		reset();
-		reenter_expr_on_tailing_comma = _reenter_expr_on_tailing_comma;
-		exit_from_parent_mode_on_lp = _exit_from_parent_mode_on_lp;
-		next_mode_set = false;
-	}	
-	inline void reset(bool _exit_from_parent_mode_on_lp, bool _reenter_expr_on_tailing_comma, size_t _next_mode) {
-		reset();
-		reenter_expr_on_tailing_comma = _reenter_expr_on_tailing_comma;
-		exit_from_parent_mode_on_lp = _exit_from_parent_mode_on_lp;
-		next_mode = _next_mode; 
-		next_mode_set = true;
-	}
+    expression_parsing_meta_info() {
+        reset();
+        exit_from_parent_mode_on_lp = false;
+    }
+    inline bool no_brace_active() {
+        return parenthesis == 0 && braces == 0 && square_braces == 0;
+    }
+    inline void reset() {
+        parenthesis = 0;
+        braces = 0;
+        square_braces = 0;
+        reenter_expr_on_tailing_comma = false;
+        exit_from_parent_mode_on_lp = false;
+        next_mode_set = false;
+        next_mode = 0;
+    }
+    inline void reset(bool _exit_from_parent_mode_on_lp, bool _reenter_expr_on_tailing_comma) {
+        reset();
+        reenter_expr_on_tailing_comma = _reenter_expr_on_tailing_comma;
+        exit_from_parent_mode_on_lp = _exit_from_parent_mode_on_lp;
+        next_mode_set = false;
+    }    
+    inline void reset(bool _exit_from_parent_mode_on_lp, bool _reenter_expr_on_tailing_comma, size_t _next_mode) {
+        reset();
+        reenter_expr_on_tailing_comma = _reenter_expr_on_tailing_comma;
+        exit_from_parent_mode_on_lp = _exit_from_parent_mode_on_lp;
+        next_mode = _next_mode; 
+        next_mode_set = true;
+    }
 };
 
 bool define_in_def_val = false;
@@ -54,11 +54,11 @@ bool macro_call_LP_seen = false;
 expression_parsing_meta_info expr_p_meta;
 
 inline std::string cut_off_line_comment(const std::string & str) {
-	auto lc = str.find("//");
-	if (lc != std::string::npos) {
-		return str.substr(0, lc);
-	}
-	return str;
+    auto lc = str.find("//");
+    if (lc != std::string::npos) {
+        return str.substr(0, lc);
+    }
+    return str;
 }
 
 }
@@ -68,53 +68,77 @@ fragment LETTER: [a-zA-Z] ;
 fragment ID_FIRST: LETTER | '_';
 fragment F_DIGIT: [0-9] ;
 fragment F_ID : ID_FIRST (ID_FIRST | F_DIGIT)*;
-fragment ANY_WS: (WS | NEW_LINE)*;
-fragment WS_ENDING_NEW_LINE: WS* CRLF;
+fragment ANY_WS: WS | CRLF;
+fragment WS_ENDING_NEW_LINE: (WS* CRLF) | EOF;
 fragment F_WS: [ \t];
 fragment F_LINE_ESCAPE: '\\' CRLF;
+
 // string with escaped newlines and '"'
 STR: '"' ( ('\\' ('"' | CRLF)) | ~["\r\n] )* '"';
-
-
 LINE_COMMENT : '//' ~[\r\n]* ( CRLF | EOF ) -> channel(CH_LINE_COMMENT);
-COMMENT : '/*' .*? '*/' -> channel(CH_COMMENT);
+COMMENT: '/*' .*? '*/' -> channel(CH_COMMENT);
+CODE: (~('`' | '/' | '"' | '\\')
+        | ( '/' ~( '/' | '*' | '`' ) )
+        | ('`' '\\' '`')+ '"' // the '\"' in macro escape
+        | '`' '"'
+        | '`' '`'
+        // [todo] `"x\"`y\"`"' is interpreted as a CODE but there is `y 
+        | '\\' (~[ \t\r\n])* ([ \t\r\n] | EOF) // escaped id or \"
+       )+ ( '/' '`'
+           { {
+              // [TODO] /" is still causing an error
+              assert(getText().back() == '`');
+              auto t = getText();
+              setText(t.substr(0, t.size()-1));
+              pushMode(DIRECTIVE_MODE);
+           } }
+       )? 
+;
+MACRO_ENTER: '`' -> pushMode(DIRECTIVE_MODE),skip;
 
-INCLUDE: '`include' F_WS+ -> pushMode(INCLUDE_MODE);
-DEFINE:  '`define'  F_WS+ F_LINE_ESCAPE* 
-        ( ( LINE_COMMENT | COMMENT ) F_WS* F_LINE_ESCAPE*)?
-        (F_WS | F_LINE_ESCAPE)* {
-        	define_in_def_val = false;
-        	define_param_LP_seen = false;
-        } -> pushMode(DEFINE_MODE);
-IFNDEF:  '`ifndef'  F_WS+ -> pushMode(IFDEF_MODE);
-UNDEF:   '`undef'   F_WS+ -> pushMode(UNDEF_MODE);
-IFDEF:   '`ifdef'   F_WS+ ->pushMode(IFDEF_MODE);
-ELSIF:   '`elsif'   F_WS+ ->pushMode(IFDEF_MODE);
-ELSE:    '`else'    ANY_WS;
-ENDIF:   '`endif'   ANY_WS;
 
-BEGIN_KEYWORDS:  '`begin_keywords' F_WS ->pushMode(KEYWOORDS_MODE);
-END_KEYWORDS:    '`end_keywords' CRLF;
-PRAGMA:          '`pragma'        F_WS -> pushMode(PRAGMA_MODE);
-UNDEFINEALL:     '`undefineall'   WS_ENDING_NEW_LINE;
-RESETALL:        '`resetall'      WS_ENDING_NEW_LINE;
-CELLDEFINE:      '`celldefine'    WS_ENDING_NEW_LINE;
-ENDCELLDEFINE:   '`endcelldefine' WS_ENDING_NEW_LINE ;
-TIMESCALE:       '`timescale'     F_WS+ ->pushMode(TIMING_SPEC_MODE);
-DEFAULT_NETTYPE: '`default_nettype' F_WS+ -> pushMode(DEFAULT_NETTYPE_MODE);
-LINE:            '`line'          F_WS+ -> pushMode(LINE_MODE) ;
-UNCONNECTED_DRIVE: '`unconnected_drive'     WS_ENDING_NEW_LINE;
-NOUNCONNECTED_DRIVE: '`nounconnected_drive' WS_ENDING_NEW_LINE;
-PROTECTED: '`protected' (WS | NEW_LINE) -> pushMode(PROTECTED_MODE);
-OTHER_MACRO_CALL_WITH_ARGS:  '`' F_ID F_WS* '(' {
-        macro_call_LP_seen = true;
-        pushMode(MACRO_ARG_LIST_MODE);
-        pushMode(EXPR_MODE);
-        expr_p_meta.reset(true, true); // on ')' return to DEFAULT_MODE 
-    };
-OTHER_MACRO_CALL_NO_ARGS: '`' F_ID;
+mode DIRECTIVE_MODE;
+    D_STR: STR -> type(STR);
+    D_LINE_COMMENT : LINE_COMMENT -> popMode,type(LINE_COMMENT),channel(CH_LINE_COMMENT);
+    D_COMMENT : '/*' .*? '*/' -> type(COMMENT),channel(CH_COMMENT);
+    INCLUDE: 'include' F_WS+ -> popMode,pushMode(INCLUDE_MODE);
+    DEFINE:  'define'  F_WS+ F_LINE_ESCAPE* 
+            ( ( LINE_COMMENT | COMMENT ) F_WS* F_LINE_ESCAPE*)?
+            (F_WS | F_LINE_ESCAPE)* {
+                define_in_def_val = false;
+                define_param_LP_seen = false;
+            } -> popMode,pushMode(DEFINE_MODE);
+    IFNDEF: 'ifndef' F_WS+ -> popMode,pushMode(IFDEF_MODE);
+    IFDEF:  'ifdef'  F_WS+ -> popMode,pushMode(IFDEF_MODE);
+    ELSIF:  'elsif'  F_WS+ -> popMode,pushMode(IFDEF_MODE);
+    ELSE:   'else'   ANY_WS -> popMode;
+    ENDIF:  'endif'  (ANY_WS | EOF ) -> popMode;
+    UNDEF:  'undef'  F_WS+ -> popMode,pushMode(UNDEF_MODE);
+    
+    BEGIN_KEYWORDS:  'begin_keywords'  F_WS -> popMode,pushMode(KEYWOORDS_MODE);
+    END_KEYWORDS:    'end_keywords'    CRLF -> popMode;
+    PRAGMA:          'pragma'          F_WS -> popMode,pushMode(PRAGMA_MODE);
+    UNDEFINEALL:     'undefineall'     WS_ENDING_NEW_LINE -> popMode;
+    RESETALL:        'resetall'        WS_ENDING_NEW_LINE -> popMode;
+    CELLDEFINE:      'celldefine'      WS_ENDING_NEW_LINE -> popMode;
+    ENDCELLDEFINE:   'endcelldefine'   WS_ENDING_NEW_LINE -> popMode;
+    TIMESCALE:       'timescale'       F_WS+ -> popMode,pushMode(TIMING_SPEC_MODE);
+    DEFAULT_NETTYPE: 'default_nettype' F_WS+ -> popMode,pushMode(DEFAULT_NETTYPE_MODE);
+    LINE:            'line'            F_WS+ -> popMode,pushMode(LINE_MODE) ;
+    UNCONNECTED_DRIVE: 'unconnected_drive'     WS_ENDING_NEW_LINE -> popMode;
+    NOUNCONNECTED_DRIVE: 'nounconnected_drive' WS_ENDING_NEW_LINE -> popMode;
+    PROTECTED: 'protected' ANY_WS -> popMode,pushMode(PROTECTED_MODE);
+    OTHER_MACRO_CALL_WITH_ARGS:  F_ID F_WS* '(' {
+            macro_call_LP_seen = true;
+            popMode();
+            pushMode(MACRO_ARG_LIST_MODE);
+            pushMode(EXPR_MODE);
+            expr_p_meta.reset(true, true); // on ')' return to DEFAULT_MODE 
+        };
+    OTHER_MACRO_CALL_NO_ARGS: F_ID -> popMode;
 
-// used when parsing the id, param list and body of define macro
+
+// used when parsing the id, param list of define macro
 mode DEFINE_MODE;
     DM_LINE_COMMENT: LINE_COMMENT {
         if (define_param_LP_seen) {
@@ -150,8 +174,8 @@ mode DEFINE_MODE;
     };
     COMMA: ',';  
     EQUAL: '=' {
-    	// if there is ')' jump directly to DEFINE_BODY_MODE
-    	expr_p_meta.reset(true, false, DEFINE_BODY_MODE);
+        // if there is ')' jump directly to DEFINE_BODY_MODE
+        expr_p_meta.reset(true, false, DEFINE_BODY_MODE);
     } -> pushMode(EXPR_MODE);
     DM_NEW_LINE: CRLF {
         if (define_param_LP_seen) {
@@ -171,12 +195,10 @@ mode DEFINE_MODE;
         }
     };
     ID: F_ID;
-    DM_LINE_ESCAPE:  F_LINE_ESCAPE -> channel(CH_LINE_ESCAPE);
-    DN_NEW_LINE: CRLF -> type(NEW_LINE),popMode;
-    DN_CODE:  ( ~('\\'| '\n' | '"') | ( '\\'+ ~[\n]) )+? {
-	    // inside of define body
-	    popMode();
-	    pushMode(DEFINE_BODY_MODE);
+    DN_CODE: ( ( '`' '"' ) |  ~('\\'| '\n' | '"') | ( '\\'+ ~[\n]) )+? {
+        // inside of define body
+        popMode();
+        pushMode(DEFINE_BODY_MODE);
     } -> type(CODE); // .* except newline or esacped newline
 
 
@@ -185,59 +207,64 @@ mode EXPR_MODE;
     EXPR_MODE_LINE_COMMENT: LINE_COMMENT -> type(LINE_COMMENT),channel(CH_LINE_COMMENT);
     EXPR_MODE_COMMENT: COMMENT -> type(CODE);
     // everything without strings, comments, all types of parenthesis and comma
-	EXPR_CODE: (~('[' | ']' | '(' | ')' | '"' | '{' | '}' | ','))+ ->type(CODE);
-	EXPR_MODE_LP: '(' { expr_p_meta.parenthesis++; } -> type(CODE);
-	EXPR_MODE_RP: ')' {
-		if (expr_p_meta.parenthesis > 0) {
-			expr_p_meta.parenthesis--;
-			// parenthesis in this expression
-			setType(CODE);
-		} else {
-			// parenthesis from outside
-			setType(RP);
-			// exit from this mode
-			popMode();
-			if (expr_p_meta.exit_from_parent_mode_on_lp) {
-				popMode();
-			}
-			if (expr_p_meta.next_mode_set) {
-				pushMode(expr_p_meta.next_mode);
-			}
-		}
-	};
-	EXPR_MODE_LBR: '{' { expr_p_meta.braces++; } -> type(CODE);
-	EXPR_MODE_RBR: '}' {
-		if (expr_p_meta.braces > 0)
-			expr_p_meta.braces--; 
-	} -> type(CODE); 
-	EXPR_MODE_LSQR: '[' { expr_p_meta.square_braces++; } -> type(CODE);
-	EXPR_MODE_RSQR: ']' {
-		if (expr_p_meta.square_braces > 0)
-			expr_p_meta.square_braces--; 
-	} -> type(CODE);
-	EXPR_MODE_COMMA: ',' {
-		if (expr_p_meta.no_brace_active()) {
-			// comma from the outside (separating arguments or parameters)
-			setType(COMMA);
-			if (!expr_p_meta.reenter_expr_on_tailing_comma) {
-				popMode();
-			}
-		} else {
-			// comma inside of expression
-			setType(CODE);
-		}
-	};
-	EXPR_MODE_STR: STR -> type(CODE);
+    EXPR_CODE: (~('[' | ']' | '(' | ')' | '"' | '{' | '}' | ','))+ ->type(CODE);
+    EXPR_MODE_LP: '(' { expr_p_meta.parenthesis++; } -> type(CODE);
+    EXPR_MODE_RP: ')' {
+        if (expr_p_meta.parenthesis > 0) {
+            expr_p_meta.parenthesis--;
+            // parenthesis in this expression
+            setType(CODE);
+        } else {
+            // parenthesis from outside
+            setType(RP);
+            // exit from this mode
+            popMode();
+            if (expr_p_meta.exit_from_parent_mode_on_lp) {
+                popMode();
+            }
+            if (expr_p_meta.next_mode_set) {
+                pushMode(expr_p_meta.next_mode);
+            }
+        }
+    };
+    EXPR_MODE_LBR: '{' { expr_p_meta.braces++; } -> type(CODE);
+    EXPR_MODE_RBR: '}' {
+        if (expr_p_meta.braces > 0)
+            expr_p_meta.braces--; 
+    } -> type(CODE); 
+    EXPR_MODE_LSQR: '[' { expr_p_meta.square_braces++; } -> type(CODE);
+    EXPR_MODE_RSQR: ']' {
+        if (expr_p_meta.square_braces > 0)
+            expr_p_meta.square_braces--; 
+    } -> type(CODE);
+    EXPR_MODE_COMMA: ',' {
+        if (expr_p_meta.no_brace_active()) {
+            // comma from the outside (separating arguments or parameters)
+            setType(COMMA);
+            if (!expr_p_meta.reenter_expr_on_tailing_comma) {
+                popMode();
+            }
+        } else {
+            // comma inside of expression
+            setType(CODE);
+        }
+    };
+    EXPR_MODE_STR: STR -> type(CODE);
 
 
 mode DEFINE_BODY_MODE;
     DB_LINE_ESCAPE:  F_LINE_ESCAPE -> channel(CH_LINE_ESCAPE);
-	DB_STR: STR ->type(CODE);
-    DB_NEW_LINE: CRLF -> type(NEW_LINE),popMode;
+    DB_STR: STR ->type(CODE);
     DB_LINE_COMMENT: LINE_COMMENT -> type(LINE_COMMENT),channel(CH_LINE_COMMENT);
-    DB_CODE: ( ~('\\'| '\n' | '"') | ('\\'+ ~[\n]) )+ {
-    	setText(cut_off_line_comment(getText()));
+    DB_CODE: ( 
+    		( '\\'+ ~[\n] )
+    		| ('`' '"')
+        	| ('`' '\\' '`')+ '"' // the '\"' in macro escape
+        	| ~('\\'| '\n' | '"')
+        )+ {
+        setText(cut_off_line_comment(getText()));
     } -> type(CODE); // .* except newline or esacped newline
+    NEW_LINE: CRLF -> popMode;
 
 
 // used when parsing the macro argument list
@@ -251,7 +278,7 @@ mode MACRO_ARG_LIST_MODE;
             expr_p_meta.reset(true, true); // on ')' return to DEFAULT_MODE on ')', reenter new EXPR_MODE on ','  
         } else {
            // [note] in normal case this should not happen as arguments should have be processed in EXPR_MODE and 
-           // 		')' in text should cause exit also from this mode 
+           //         ')' in text should cause exit also from this mode 
            // this macro has not a argument and this ',' is behind it
            setType(CODE);
            popMode();
@@ -264,13 +291,13 @@ mode MACRO_ARG_LIST_MODE;
            popMode(); // back to default mode
            macro_call_LP_seen = false;
         } else {
-        	assert(false && "This ')' is a part of code and not preprocessor code and should not be processed in  MACRO_ARG_LIST_MODE");
+            assert(false && "This ')' is a part of code and not preprocessor code and should not be processed in  MACRO_ARG_LIST_MODE");
         }
-		
+        
     };
     MA_CODE: (STR | ~[,()"] )+? { // string or non parenthesis
-    	// this code does not bellongs to a MACRO_ARG and it is part of code behind the macro call
-    	popMode();
+        // this code does not bellongs to a MACRO_ARG and it is part of code behind the macro call
+        popMode();
     } -> type(CODE); 
 
 mode IFDEF_MODE;
@@ -331,14 +358,7 @@ mode INCLUDE_MODE;
     INCLUDE_MODE_StringLiteral_chevrons
         :  '<' ( ~('\\'|'>') )* '>' ->popMode
         ;
-    INCLUDE_MODE_OTHER_MACRO_CALL_WITH_ARGS: OTHER_MACRO_CALL_WITH_ARGS {
-    		popMode();
-    		pushMode(MACRO_ARG_LIST_MODE);
-            pushMode(EXPR_MODE);
-            expr_p_meta.reset(true, true); // on ')' return to DEFAULT_MODE, enter new expr on ',' 
-	} -> type(OTHER_MACRO_CALL_WITH_ARGS);
-    INCLUDE_MODE_OTHER_MACRO_CALL_NO_ARGS: OTHER_MACRO_CALL_NO_ARGS
-        -> type(OTHER_MACRO_CALL_NO_ARGS),popMode;
+    INCLUDE_MODE_MACRO_ENTER: '`' -> skip,popMode,pushMode(DIRECTIVE_MODE);
     INCLUDE_MODE_WS : WS ->skip;
 
 // pragma arguments processing
@@ -351,20 +371,12 @@ mode PRAGMA_MODE;
     PRAGMA_EQUAL: '=' ->type(EQUAL);
     PRAGMA_LP: '(' -> type(LP);
     PRAGMA_RP: ')' -> type(RP);
-    PRAGMA_NEW_LINE : CRLF ->type(NEW_LINE),popMode;
+    PRAGMA_NEW_LINE : CRLF -> type(NEW_LINE),popMode;
 
 // protected edprotected block processing
 mode PROTECTED_MODE;
-    PROTECTED_WS : (WS | NEW_LINE)+ -> skip;
+    PROTECTED_WS : ANY_WS+ -> skip;
     ENDPROTECTED: '`endprotected' -> popMode;
     PROTECTED_LINE : (~[ \t\n\r])+;
 
-mode DEFAULT_MODE;
-    CODE: (~('`' | '\n' | '/' | '"' | '\\')
-            | '\\' (~[ \t\n])+
-            | ( '/' ~('/' | '*') )
-            | '`' '`'
-            | '`' '"'
-           )+;
-    NEW_LINE: CRLF;
 

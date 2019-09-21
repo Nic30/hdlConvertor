@@ -163,11 +163,27 @@ antlrcpp::Any VerilogPreproc::visitPragma(
 	return NULL;
 }
 
+//method call when `undef macroID if found
+antlrcpp::Any VerilogPreproc::visitUndef(
+		verilogPreprocParser::UndefContext *ctx) {
+	//printf("@%s\n",__PRETTY_FUNCTION__);
+	// we simply remove the macro from the macroDB object. So it is not anymore
+	// defined
+	auto m = container.defineDB.find(ctx->ID()->getText());
+	if (m != container.defineDB.end() && !m->second->is_persistent) {
+		container.defineDB.erase(m);
+		delete m->second;
+	}
+
+	replace_context_by_bank(ctx);
+	return NULL;
+}
+
 antlrcpp::Any VerilogPreproc::visitUndefineall(
 		verilogPreprocParser::UndefineallContext *ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
 	replace_context_by_bank(ctx);
-	container.defineDB.clear();
+	container.delete_non_persystent_macro_defs();
 	return NULL;
 }
 
@@ -248,18 +264,6 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 	// source code
 	replace_context_by_bank(ctx);
 
-	return NULL;
-}
-
-//method call when `undef macroID if found
-antlrcpp::Any VerilogPreproc::visitUndef(
-		verilogPreprocParser::UndefContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	// we simply remove the macro from the macroDB object. So it is not anymore
-	// defined
-	container.defineDB.erase(ctx->ID()->getText());
-
-	replace_context_by_bank(ctx);
 	return NULL;
 }
 
@@ -358,18 +362,18 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 	bool has_args = false;
 	auto no_args = ctx->OTHER_MACRO_CALL_NO_ARGS();
 	if (no_args) {
-		macro_name = no_args->getText().substr(1);
+		macro_name = no_args->getText();
 	} else {
 		auto with_args = ctx->OTHER_MACRO_CALL_WITH_ARGS();
 		assert(with_args);
 		auto _macro_name = with_args->getText();
-		size_t end_of_name = 1;
-		for (; end_of_name < _macro_name.size(); end_of_name++) {
-			auto c = _macro_name[end_of_name];
+		size_t name_len = 1;
+		for (; name_len < _macro_name.size(); name_len++) {
+			auto c = _macro_name[name_len];
 			if (!isalnum(c) && c != '_')
 				break;
 		}
-		macro_name = _macro_name.substr(1, end_of_name - 1);
+		macro_name = _macro_name.substr(0, name_len);
 		has_args = true;
 	}
 
@@ -397,7 +401,7 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 	}
 	if (!m->second->requires_args() && has_args) {
 		// args belongs to the code and not to macro
-		auto a = ctx->start->getStartIndex() + 1 + macro_name.size();
+		auto a = ctx->start->getStartIndex() + macro_name.size();
 		auto b = ctx->stop->getStopIndex();
 		auto args_str = ctx->start->getInputStream()->getText(
 				misc::Interval(a, b));
