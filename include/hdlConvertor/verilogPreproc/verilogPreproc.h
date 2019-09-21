@@ -89,8 +89,6 @@ public:
 	virtual antlrcpp::Any visitIfndef_directive(
 			verilogPreprocParser::Ifndef_directiveContext *ctx) override;
 
-	virtual antlrcpp::Any visitStringLiteral(
-			verilogPreprocParser::StringLiteralContext *ctx) override;
 	virtual antlrcpp::Any visitInclude(
 			verilogPreprocParser::IncludeContext *ctx) override;
 

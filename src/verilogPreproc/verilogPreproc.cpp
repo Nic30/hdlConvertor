@@ -454,24 +454,20 @@ antlrcpp::Any VerilogPreproc::visitIfndef_directive(
 	return nullptr;
 }
 
-antlrcpp::Any VerilogPreproc::visitStringLiteral(
-		verilogPreprocParser::StringLiteralContext *ctx) {
-	auto mc = ctx->macro_call();
-	if (mc) {
-		return visitMacro_call(mc);
-	} else {
-		return ctx->getText();
-	}
-}
-
 //method call when `include is found
 antlrcpp::Any VerilogPreproc::visitInclude(
 		verilogPreprocParser::IncludeContext *ctx) {
 	// printf("@%s\n",__PRETTY_FUNCTION__);
-	//iterator on the list of directoy
+	//iterator on the list of inc. directory
 	auto incdir_iter = container.incdirs.begin();
 	bool found = false;
-	string inc_file_path = visit(ctx->stringLiteral());
+	string inc_file_path;
+	auto mc = ctx->macro_call();
+	if (mc) {
+		inc_file_path = visitMacro_call(mc).as<string>();
+	} else {
+		inc_file_path = ctx->STR()->getText();
+	}
 	filesystem::path filename;
 	// iterate on list of directory until we found the file.
 	while (incdir_iter != container.incdirs.end() && found == false) {
@@ -490,7 +486,7 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 
 	if (found == false) {
 		// The file was not found. We throw a exception
-		string msg = inc_file_path.substr(1, inc_file_path.size() - 2)
+		string msg = inc_file_path //.substr(1, inc_file_path.size() - 2)
 				+ " was not found in include directories\n";
 		throw_input_caused_error(ctx, msg);
 	} else if (container.incfile_stack.size() > include_depth_limit) {
