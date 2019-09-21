@@ -57,7 +57,7 @@ class BasicTC(unittest.TestCase):
         else:
             raise ValueError(language)
         ref_file = path.join(TEST_DIR, lang_dir,
-                              "expected", fname)
+                             "expected", fname)
         res_str = buff.getvalue()
         # if fname == "aes.v":
         #     with open(ref_file, "w") as f:
@@ -69,7 +69,7 @@ class BasicTC(unittest.TestCase):
         self.assertEqual(ref, res_str)
 
     def check_obj_names(self, context, obj_cls, names):
-        filtered = [ o.name for o in context.objs if isinstance(o, obj_cls)]
+        filtered = [o.name for o in context.objs if isinstance(o, obj_cls)]
         self.assertSequenceEqual(names, filtered)
 
     def find_obj_by_name(self, context, obj_cls, name):

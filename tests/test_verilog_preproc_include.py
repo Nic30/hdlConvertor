@@ -56,15 +56,17 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
     def test_spec_incdir2(self):
         incdir = [
             path.join(SRC_DIR, "include_many_dir", "dir0-a"),
-            path.join(SRC_DIR, "include_many_dir", ),
+            path.join(SRC_DIR, "include_many_dir",),
         ]
         self.run_test(
             ["include_many_dir", "dir0-a", "dir1-a", "spec_incdir.txt"],
             incdir)
+
     def test_transitive(self):
         self.run_test(
             ["include_many_dir", "transitive.txt"],
             [])
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

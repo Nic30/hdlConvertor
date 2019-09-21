@@ -10,8 +10,8 @@ using namespace antlr4;
 
 VerilogPreprocContainer::VerilogPreprocContainer(Language _lang,
 		SyntaxErrorLogger &_syntaxErrLogger, verilog_pp::MacroDB &_defineDB) :
-		defineDB(_defineDB), lang(_lang), syntaxErrLogger(_syntaxErrLogger), debug_dump_tokens(
-				false) {
+		defineDB(_defineDB), lang(_lang), syntaxErrLogger(_syntaxErrLogger), max_macro_call_stack_size(
+				DEFAULT_MAX_MACRO_CALL_STACK_SIZE), debug_dump_tokens(false) {
 }
 
 void VerilogPreprocContainer::init(const vector<string> &_incdirs) {
@@ -47,8 +47,15 @@ string VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
 			cout << t->toString(rec) << endl;
 		}
 	}
-
-	syntaxErrLogger.CheckErrors();
+	auto orig_err_prefix = syntaxErrLogger.error_prefix;
+	syntaxErrLogger.error_prefix = "Preproc";
+	try {
+		syntaxErrLogger.check_errors();
+	} catch (const std::exception &e) {
+		syntaxErrLogger.error_prefix = orig_err_prefix;
+		throw;
+	}
+	syntaxErrLogger.error_prefix = orig_err_prefix;
 
 	verilog_pp::VerilogPreproc extractor(*this, tokens, added_incdir);
 	extractor.visit(tree);

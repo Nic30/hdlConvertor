@@ -2,3 +2,11 @@
 	path = tests/ivtest
 	url = https://github.com/steveicarus/ivtest
 	branch = master
+[submodule "yosys"]
+	path = tests/yosys
+	url = https://github.com/YosysHQ/yosys.git
+	branch = master
+[submodule "verilator"]
+	path = tests/verilator
+	url = http://git.veripool.org/git/verilator
+	branch = master

@@ -1,19 +1,19 @@
 # import sys
-import fnmatch
 from itertools import chain
-from os import path
 import os
 import unittest
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.file_utils import find_files, get_file_name, \
+    generate_test_method_name, TestFilter
 
 IVTEST_ROOT = os.path.join(os.path.dirname(__file__), "ivtest")
 
 # use this file to run tests in incremental maner,
 # the test which passed in previous build will not be executed again
-# SUCESSFULL_TEST_FILTER_FILE = "tests_passed"
+# SUCESSFULL_TEST_FILTER_FILE = "tests_passed.ivtest"
 SUCESSFULL_TEST_FILTER_FILE = None
 
 IV_VERILOG_VERSION_OPTS = [
@@ -28,38 +28,55 @@ IV_VERILOG_VERSION_OPTS = [
 ]
 
 
-def find_files(directory, pattern):
-    for root, _, files in os.walk(directory):
-        for basename in files:
-            if fnmatch.fnmatch(basename, pattern):
-                filename = os.path.join(root, basename)
-                yield filename
+def get_test_configs(default_verilog_version):
+    # (filename, version, should_fail)
+    tests = []
 
-
-def get_test_default_config(default_verilog_version):
-    def_config = {}
-
-    def parse_record(line):
+    def parse_record(line, dir_name):
         columns = line.split()
+
         name = columns[0]
+        name_fix = {
+            "br_ml201801012a": "br_ml20181012a",
+            "br_ml201801012b": "br_ml20181012b",
+            "br_ml201801012c": "br_ml20181012c",
+            "br_ml201801012d": "br_ml20181012d",
+            "struct_packe_write_read": "struct_packed_write_read",
+            "struct_packe_write_read2": "struct_packed_write_read2",
+            "sv_string_index": "string_index",
+            "sv_timeunit_prec": "sv_timeunit_prec1",
+            "sv_timeunit_prec_fail": "sv_timeunit_prec_fail1",
+        }
+        name = name_fix.get(name, name)
         args = columns[1]
-        std_specified = False
-        should_fail = "CE" in args
         not_implemented = "NI" in args
+        should_fail = "CE" in args or not_implemented
+        std = default_verilog_version
+        if ":" in name or name in {"sv_casting"}:
+            return
 
         for iv_ver, ver in IV_VERILOG_VERSION_OPTS:
             if iv_ver in args:
-                if not not_implemented or name not in def_config:
-                    def_config[name] = (ver, should_fail)
-                std_specified = True
+                std = ver
                 break
 
-        if not std_specified:
-            if not not_implemented or name not in def_config:
-                def_config[name] = (default_verilog_version, should_fail)
+        f = os.path.join(IVTEST_ROOT, dir_name, name + ".v")
+        if not os.path.exists(f):
+            f = os.path.join(IVTEST_ROOT, columns[2], name + ".v")
+        assert os.path.exists(f), f
+
+        tests.append((f, std, should_fail))
 
     for file_name in chain(find_files(IVTEST_ROOT, "regress-*.list"),
                            find_files(IVTEST_ROOT, "*_regress.list")):
+        if file_name.endswith("regress-vams.list"):
+            continue
+
+        if file_name.endswith("vpi_regress.list"):
+            dir_name = "vpi"
+        else:
+            dir_name = "ivltests"
+
         with open(file_name) as f:
             buff = ""
             for line in f:
@@ -73,22 +90,19 @@ def get_test_default_config(default_verilog_version):
                     buff = line
                     continue
                 else:
-                    parse_record(line)
+                    parse_record(line, dir_name)
                     buff = ""
             if buff:
-                parse_record(line)
+                parse_record(line, dir_name)
 
-    return def_config
-
-
-def get_file_name(f):
-    return os.path.splitext(os.path.basename(f))[0]
+    return tests
 
 
 # https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
 class IcarusVerilogTestsuiteMeta(type):
 
     def __new__(cls, name, bases, _dict):
+        test_filter = TestFilter(SUCESSFULL_TEST_FILTER_FILE)
 
         def gen_test(sv_file, should_fail, verilog_version):
 
@@ -98,7 +112,7 @@ class IcarusVerilogTestsuiteMeta(type):
                 incdirs = [IVTEST_ROOT, ]
                 try:
                     c.parse([sv_file, ], verilog_version, incdirs, debug=debug)
-                except:
+                except Exception:
                     if should_fail:
                         # [TODO] some expected erros in this test suite are not related to synatax
                         #        need to check maually if the error really means syntax error and
@@ -107,22 +121,11 @@ class IcarusVerilogTestsuiteMeta(type):
                     else:
                         raise
 
-                if SUCESSFULL_TEST_FILTER_FILE is not None:
-                    with open(SUCESSFULL_TEST_FILTER_FILE, "a+") as f:
-                        testName = self.id().split(".")[-1]
-                        f.write(testName + "\n")
+                test_filter.mark_test_as_passed(self)
 
             return test
 
-        if SUCESSFULL_TEST_FILTER_FILE is not None and path.exists(SUCESSFULL_TEST_FILTER_FILE):
-            with open(SUCESSFULL_TEST_FILTER_FILE) as f:
-                test_filter = set(x for x in f.read().split() if x)
-        else:
-            test_filter = set()
-
-        default_verilog_version = Language.VERILOG_2005
-        conf = get_test_default_config(default_verilog_version)
-        for sv_file in find_files(IVTEST_ROOT, '*.v'):
+        for sv_file, verilog_version, should_fail in get_test_configs(Language.VERILOG_2005):
             fn = get_file_name(sv_file)
             # if fn in ["comp1000", "comp1001"]:
             #     # this files currently taking too loong
@@ -181,8 +184,6 @@ class IcarusVerilogTestsuiteMeta(type):
             if fn in ["display_bug"]:
                 # int as bit vector size
                 continue
-
-            verilog_version, should_fail = conf.get(fn, (default_verilog_version, False))
 
             if fn in [
                     # checked by emming of errors instead of return code
@@ -260,18 +261,13 @@ class IcarusVerilogTestsuiteMeta(type):
                     "analog1", "analog2"
                     ]:
                 should_fail = True
+
             if fn in ["fileline", "fileline2", ]:  # missing `__FILE__ (wrong standard specified)
                 verilog_version = Language.SYSTEM_VERILOG_2009
-            fn = fn.replace(".", "_")
-            test_name = "test_%s_%s" % (verilog_version.name, fn)
-            t = gen_test(sv_file, should_fail, verilog_version)
-            i = 1
-            while test_name in _dict:
-                test_name = "test_%d_%s_%s" % (i, verilog_version.name, fn)
-                i += 1
 
-            if test_name not in test_filter:
-                _dict[test_name] = t
+            test_name = generate_test_method_name(fn, verilog_version, _dict)
+            if not test_filter.is_dissabled_test(test_name):
+                _dict[test_name] = gen_test(sv_file, should_fail, verilog_version)
 
         return type.__new__(cls, name, bases, _dict)
 
@@ -285,7 +281,7 @@ if __name__ == '__main__':
     suite = unittest.TestSuite()
 
     # suite.addTest(IcarusVerilogTestsuiteTC('test_br_gh26'))
-    # suite.addTest(IcarusVerilogTestsuiteTC('test_VERILOG_2005_const4'))
+    # suite.addTest(IcarusVerilogTestsuiteTC('test_VERILOG_2005_logp2'))
     suite.addTest(unittest.makeSuite(IcarusVerilogTestsuiteTC))
 
     runner = TimeLoggingTestRunner(verbosity=3)

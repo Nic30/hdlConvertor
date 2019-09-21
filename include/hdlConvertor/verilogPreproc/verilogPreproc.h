@@ -76,10 +76,13 @@ public:
 
 	virtual antlrcpp::Any visitUndef(verilogPreprocParser::UndefContext *ctx)
 			override;
-	void parse_macro_args(verilogPreprocParser::Token_idContext *ctx,
+	virtual antlrcpp::Any visitUndefineall(
+			verilogPreprocParser::UndefineallContext *ctx) override;
+
+	void parse_macro_args(verilogPreprocParser::Macro_callContext *ctx,
 			std::vector<std::string> &args);
-	virtual antlrcpp::Any visitToken_id(
-			verilogPreprocParser::Token_idContext *ctx) override;
+	virtual antlrcpp::Any visitMacro_call(
+			verilogPreprocParser::Macro_callContext *ctx) override;
 
 	virtual antlrcpp::Any visitIfdef_directive(
 			verilogPreprocParser::Ifdef_directiveContext *ctx) override;
@@ -99,8 +102,6 @@ public:
 	virtual antlrcpp::Any visitPragma(verilogPreprocParser::PragmaContext *ctx)
 			override;
 
-	virtual antlrcpp::Any visitUndefineall(
-			verilogPreprocParser::UndefineallContext *ctx) override;
 	// thorw an error with a file location prompt
 	void throw_input_caused_error(antlr4::ParserRuleContext *ctx,
 			const std::string &msg);

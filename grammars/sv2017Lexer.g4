@@ -531,7 +531,6 @@ DOUBLE_RIGHT_ARROW: '->>';
 INCR: '++';
 DECR: '--';
 DIST_WEIGHT_ASSIGN: ':=';
-DIST_WEIGHT_ASSIGN_DIV: ':/';
 OVERLAPPING_IMPL: '|->';
 NONOVERLAPPING_IMPL: '|=>';
 IMPLIES: '=>';
@@ -551,7 +550,7 @@ ONE_LINE_COMMENT:
                   ) -> channel(HIDDEN);
 BLOCK_COMMENT:
  '/*' .*? '*/' -> channel(HIDDEN);
-WHITE_SPACE: [ \t\n\r] + -> channel(HIDDEN);
+WHITE_SPACE: [ \t\n\r\f] + -> channel(HIDDEN);
 fragment EDGE_DESCRIPTOR:
  Z_OR_X ZERO_OR_ONE 
   | ZERO_OR_ONE Z_OR_X 
@@ -637,8 +636,8 @@ fragment UNDERSCORE: '_';
 fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
   | '\\\n' 
-  | '\\\r\n' 
-  | '\\' [nt\\"vfa%] 
+  | '\\\r\n'
+  | '\\' [nrt\\"vfa%] 
   | '\\' [0-9] [0-9]? [0-9]? 
   | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
  ;

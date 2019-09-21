@@ -163,11 +163,27 @@ antlrcpp::Any VerilogPreproc::visitPragma(
 	return NULL;
 }
 
+//method call when `undef macroID if found
+antlrcpp::Any VerilogPreproc::visitUndef(
+		verilogPreprocParser::UndefContext *ctx) {
+	//printf("@%s\n",__PRETTY_FUNCTION__);
+	// we simply remove the macro from the macroDB object. So it is not anymore
+	// defined
+	auto m = container.defineDB.find(ctx->ID()->getText());
+	if (m != container.defineDB.end() && !m->second->is_persistent) {
+		container.defineDB.erase(m);
+		delete m->second;
+	}
+
+	replace_context_by_bank(ctx);
+	return NULL;
+}
+
 antlrcpp::Any VerilogPreproc::visitUndefineall(
 		verilogPreprocParser::UndefineallContext *ctx) {
 	//printf("@%s\n",__PRETTY_FUNCTION__);
 	replace_context_by_bank(ctx);
-	container.defineDB.clear();
+	container.delete_non_persystent_macro_defs();
 	return NULL;
 }
 
@@ -251,18 +267,6 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 	return NULL;
 }
 
-//method call when `undef macroID if found
-antlrcpp::Any VerilogPreproc::visitUndef(
-		verilogPreprocParser::UndefContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	// we simply remove the macro from the macroDB object. So it is not anymore
-	// defined
-	container.defineDB.erase(ctx->ID()->getText());
-
-	replace_context_by_bank(ctx);
-	return NULL;
-}
-
 void replace_substring(string &str, const string &s, const string &repl) {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(s, start_pos)) != string::npos) {
@@ -302,7 +306,7 @@ void unescape_string_dblquotes(string &str) {
 }
 
 void VerilogPreproc::parse_macro_args(
-		verilogPreprocParser::Token_idContext *ctx, vector<string> &args) {
+		verilogPreprocParser::Macro_callContext *ctx, vector<string> &args) {
 	//create a macroPrototype object
 	bool expected_value = true;
 	bool last_was_comma = false;
@@ -328,33 +332,48 @@ void VerilogPreproc::parse_macro_args(
 		}
 	}
 }
+template<typename T>
+std::string vector_to_string(const std::vector<T> &vec) {
+	std::ostringstream oss;
+	oss << "[";
+	if (!vec.empty()) {
+		// Convert all but the last element to avoid a trailing ","
+		std::copy(vec.begin(), vec.end() - 1,
+				std::ostream_iterator<T>(oss, ","));
+
+		// Now add the last element with no delimiter
+		oss << vec.back();
+	}
+	oss << "]";
+	return oss.str();
+}
 
 //method call when `macro is found in the source code
-antlrcpp::Any VerilogPreproc::visitToken_id(
-		verilogPreprocParser::Token_idContext *ctx) {
+antlrcpp::Any VerilogPreproc::visitMacro_call(
+		verilogPreprocParser::Macro_callContext *ctx) {
 	// printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
-	// token_id:
-	// 	OTHER_MACRO_NO_ARGS
-	// 	| OTHER_MACRO_WITH_ARGS value? (COMMA value? )* RP )?
+	// macro_call:
+	// 	OTHER_MACRO_CALL_NO_ARGS
+	// 	| OTHER_MACRO_CALL_WITH_ARGS value? (COMMA value? )* RP
 	// ;
 
 	string macro_name;
 	vector<string> args;
 	bool has_args = false;
-	auto no_args = ctx->OTHER_MACRO_NO_ARGS();
+	auto no_args = ctx->OTHER_MACRO_CALL_NO_ARGS();
 	if (no_args) {
-		macro_name = no_args->getText().substr(1);
+		macro_name = no_args->getText();
 	} else {
-		auto with_args = ctx->OTHER_MACRO_WITH_ARGS();
+		auto with_args = ctx->OTHER_MACRO_CALL_WITH_ARGS();
 		assert(with_args);
 		auto _macro_name = with_args->getText();
-		size_t end_of_name = 1;
-		for (; end_of_name < _macro_name.size(); end_of_name++) {
-			auto c = _macro_name[end_of_name];
+		size_t name_len = 1;
+		for (; name_len < _macro_name.size(); name_len++) {
+			auto c = _macro_name[name_len];
 			if (!isalnum(c) && c != '_')
 				break;
 		}
-		macro_name = _macro_name.substr(1, end_of_name - 1);
+		macro_name = _macro_name.substr(0, name_len);
 		has_args = true;
 	}
 
@@ -382,7 +401,7 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 	}
 	if (!m->second->requires_args() && has_args) {
 		// args belongs to the code and not to macro
-		auto a = ctx->start->getStartIndex() + 1 + macro_name.size();
+		auto a = ctx->start->getStartIndex() + macro_name.size();
 		auto b = ctx->stop->getStopIndex();
 		auto args_str = ctx->start->getInputStream()->getText(
 				misc::Interval(a, b));
@@ -395,8 +414,17 @@ antlrcpp::Any VerilogPreproc::visitToken_id(
 	}
 
 	if (replacement.find("`", 0) != string::npos) {
+		if (container.macro_call_stack.size()
+				>= container.max_macro_call_stack_size) {
+			throw_input_caused_error(ctx,
+					std::string("Macro call stack overflow ")
+							+ vector_to_string(container.macro_call_stack)
+							+ ".");
+		}
+		container.macro_call_stack.push_back(macro_name);
 		replacement = container.run_preproc_str(replacement,
 				ctx->start->getLine() - 1);
+		container.macro_call_stack.pop_back();
 	}
 
 	if (container.lang >= Language::SV2005) {
@@ -428,9 +456,9 @@ antlrcpp::Any VerilogPreproc::visitIfndef_directive(
 
 antlrcpp::Any VerilogPreproc::visitStringLiteral(
 		verilogPreprocParser::StringLiteralContext *ctx) {
-	auto tid = ctx->token_id();
-	if (tid) {
-		return visitToken_id(tid);
+	auto mc = ctx->macro_call();
+	if (mc) {
+		return visitMacro_call(mc);
 	} else {
 		return ctx->getText();
 	}
