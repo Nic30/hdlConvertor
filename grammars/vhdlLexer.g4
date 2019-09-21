@@ -188,7 +188,8 @@ BASED_LITERAL:
 ;
 CHARACTER_LITERAL: APOSTROPHE
                    // only if it is not '('x' because then it is '( 'x' and not '(' 'x
-				   { _input->LA(-1) != '(' ||  _input->LA(4) != '\'' }?
+                   // [todo] this requires another lookahead  in some cases
+				   { _input->LA(1) != '(' ||  _input->LA(4) != '\'' }?
                     (GRAPHIC_CHARACTER | DBLQUOTE | BACKSLASH)
                    APOSTROPHE 
 ;	
