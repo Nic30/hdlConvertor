@@ -25,11 +25,6 @@ public:
 	static void visitProcess_declarative_item(
 			vhdlParser::Process_declarative_itemContext *ctx,
 			hdlObjects::HdlStmProcess * p);
-	static void visitProcess_declarative_part(
-			vhdlParser::Process_declarative_partContext *ctx,
-			hdlObjects::HdlStmProcess * p);
-	static std::vector<hdlObjects::iHdlStatement *> * visitProcess_statement_part(
-			vhdlParser::Process_statement_partContext *ctx);
 };
 
 }

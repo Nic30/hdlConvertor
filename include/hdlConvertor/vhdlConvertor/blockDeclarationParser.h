@@ -17,9 +17,6 @@ public:
 	bool hierarchyOnly;
 	BlockDeclarationParser(bool hierarchyOnly);
 
-	void visitBlock_declarative_part(
-			vhdlParser::Block_declarative_partContext * ctx,
-			std::vector<hdlObjects::iHdlObj*> & objs);
 	void visitBlock_declarative_item(
 			vhdlParser::Block_declarative_itemContext * ctx,
 			std::vector<hdlObjects::iHdlObj*> & objs);

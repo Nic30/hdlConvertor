@@ -13,7 +13,7 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
+iHdlExpr* LiteralParser::visitLiteral(vhdlParser::LiteralContext *ctx) {
 	// literal:
 	//       numeric_literal
 	//       | enumeration_literal
@@ -70,7 +70,7 @@ iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 
 	s[s.length() - 1] = 0; // cut of "
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
-	const char * strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
+	const char *strVal = (char*) s.c_str() + fdRadix + 2; // cut off radix"
 	if (bits == 0) {
 		bits = strlen(strVal) * bitRatio;
 	}
@@ -78,8 +78,8 @@ iHdlExpr * LiteralParser::visitLiteral(vhdlParser::LiteralContext* ctx) {
 	return iHdlExpr::INT(strVal, bits, radix);
 }
 
-iHdlExpr * LiteralParser::visitNumeric_literal(
-		vhdlParser::Numeric_literalContext* ctx) {
+iHdlExpr* LiteralParser::visitNumeric_literal(
+		vhdlParser::Numeric_literalContext *ctx) {
 	// numeric_literal
 	// : abstract_literal
 	// | physical_literal
@@ -90,8 +90,8 @@ iHdlExpr * LiteralParser::visitNumeric_literal(
 	else
 		return visitPhysical_literal(ctx->physical_literal());
 }
-iHdlExpr * LiteralParser::visitPhysical_literal(
-		vhdlParser::Physical_literalContext* ctx) {
+iHdlExpr* LiteralParser::visitPhysical_literal(
+		vhdlParser::Physical_literalContext *ctx) {
 	// physical_literal: ( abstract_literal )? name;
 	auto _n = ctx->name();
 	auto n = ReferenceParser::visitName(_n);
@@ -103,8 +103,8 @@ iHdlExpr * LiteralParser::visitPhysical_literal(
 	}
 	return n;
 }
-iHdlExpr * LiteralParser::visitAbstract_literal(
-		vhdlParser::Abstract_literalContext* ctx) {
+iHdlExpr* LiteralParser::visitAbstract_literal(
+		vhdlParser::Abstract_literalContext *ctx) {
 	// abstract_literal: DECIMAL_LITERAL | BASED_LITERAL;
 	auto dl = ctx->DECIMAL_LITERAL();
 	if (dl) {
@@ -149,8 +149,8 @@ iHdlExpr * LiteralParser::visitAbstract_literal(
 	}
 	return new iHdlExpr(val);
 }
-iHdlExpr * LiteralParser::visitEnumeration_literal(
-		vhdlParser::Enumeration_literalContext* ctx) {
+iHdlExpr* LiteralParser::visitEnumeration_literal(
+		vhdlParser::Enumeration_literalContext *ctx) {
 	// enumeration_literal: identifier | character_literal;
 	auto id = ctx->identifier();
 	if (id)
@@ -161,25 +161,34 @@ iHdlExpr * LiteralParser::visitEnumeration_literal(
 	dynamic_cast<HdlValue*>(cl->data)->bits = 8;
 	return cl;
 }
-iHdlExpr * LiteralParser::visitString_literal(const std::string & ctx) {
+iHdlExpr* LiteralParser::visitString_literal(const std::string &ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
+	auto replace_all = [](std::string &data, const std::string &to_search,
+			const std::string &replace_str) {
+		size_t pos = data.find(to_search);
+		while (pos != std::string::npos) {
+			data.replace(pos, to_search.size(), replace_str);
+			pos = data.find(to_search, pos + replace_str.size());
+		}
+	};
+	replace_all(str, "\"\"", "\"");
 	return iHdlExpr::STR(str);
 }
-iHdlExpr * LiteralParser::visitCharacter_literal(const std::string & ctx) {
+iHdlExpr* LiteralParser::visitCharacter_literal(const std::string &ctx) {
 	return iHdlExpr::INT(ctx.substr(1, 1), BigInteger::CHAR_BASE);
 }
-iHdlExpr * LiteralParser::visitIdentifier(vhdlParser::IdentifierContext * ctx) {
+iHdlExpr* LiteralParser::visitIdentifier(vhdlParser::IdentifierContext *ctx) {
 	std::string s = ctx->getText();
 	return iHdlExpr::ID(s);
 }
-bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext* ctx) {
+bool LiteralParser::isStrDesignator(vhdlParser::DesignatorContext *ctx) {
 	// designator: identifier | operator_symbol
 	return ctx->identifier() == nullptr;
 }
-std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
+std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext *ctx) {
 	// designator: identifier | operator_symbol
 	// operator_symbol: string_literal;;
-	iHdlExpr * e;
+	iHdlExpr *e;
 	if (isStrDesignator(ctx)) {
 		e = visitString_literal(
 				ctx->operator_symbol()->STRING_LITERAL()->getText());
@@ -192,11 +201,11 @@ std::string LiteralParser::visitDesignator(vhdlParser::DesignatorContext* ctx) {
 	return s->_str;
 }
 
-std::string LiteralParser::visitLabel(vhdlParser::LabelContext * ctx) {
+std::string LiteralParser::visitLabel(vhdlParser::LabelContext *ctx) {
 	// label_colon
 	// : identifier COLON
 	// ;
-	iHdlExpr * e = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr *e = LiteralParser::visitIdentifier(ctx->identifier());
 	std::string s = dynamic_cast<HdlValue*>(e->data)->_str;
 	delete e;
 	return s;

@@ -140,7 +140,7 @@ any_keyword:
 // slice_name, and attribute_name, respectively)
 // (2.2.2004, e.f.)
 name:
-      name_part ( DOT name_part)*
+      name_part ( DOT (name_part | any_keyword))*
       | external_name
 ;
 
@@ -208,8 +208,10 @@ entity_statement_part:
       ( entity_statement )*
 ;
 entity_statement:
+    ( label COLON )? (
       concurrent_assertion_statement
       | concurrent_procedure_call_statement
+     )
 ;
 architecture_body:
       KW_ARCHITECTURE identifier KW_OF name KW_IS
@@ -299,7 +301,7 @@ procedure_specification:
           ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )?
 ;
 function_specification:
-      ( KW_PURE KW_IMPURE )? KW_FUNCTION designator
+      ( KW_PURE | KW_IMPURE )? KW_FUNCTION designator
           subprogram_header
           ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )? KW_RETURN type_mark
 ;
@@ -348,7 +350,7 @@ subprogram_instantiation_declaration:
           ( generic_map_aspect )? SEMI
 ;
 
-signature: LSQUARE_BR ( type_mark ( COMMA type_mark )* )? KW_RETURN type_mark RSQUARE_BR
+signature: LSQUARE_BR ( type_mark ( COMMA type_mark )* )? ( KW_RETURN type_mark )? RSQUARE_BR
 ;
 package_declaration:
       KW_PACKAGE identifier KW_IS
@@ -626,7 +628,7 @@ interface_procedure_specification:
           ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )?
 ;
 interface_function_specification:
-      ( KW_PURE KW_IMPURE )? KW_FUNCTION designator
+      ( KW_PURE | KW_IMPURE )? KW_FUNCTION designator
           ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )? KW_RETURN type_mark
 ;
 interface_subprogram_default: name | BOX;
@@ -899,9 +901,7 @@ function_call:
 ;
 actual_parameter_part: association_list;
 qualified_expression:
-      type_mark APOSTROPHE
-          (LPAREN expression RPAREN)
-          | aggregate
+      type_mark APOSTROPHE aggregate // agregate can also be LPAREN expression RPAREN
 ;
 type_conversion: type_mark LPAREN expression RPAREN;
 allocator:
@@ -911,43 +911,44 @@ sequence_of_statements:
       ( sequential_statement )*
 ;
 sequential_statement:
-      wait_statement
-      | assertion_statement
-      | report_statement
-      | signal_assignment_statement
-      | variable_assignment_statement
-      | procedure_call_statement
-      | if_statement
-      | case_statement
-      | loop_statement
-      | next_statement
-      | exit_statement
-      | return_statement
-      | null_statement
+      ( label COLON )?
+      ( wait_statement
+        | assertion_statement
+        | report_statement
+        | signal_assignment_statement
+        | variable_assignment_statement
+        | procedure_call_statement
+        | if_statement
+        | case_statement
+        | loop_statement
+        | next_statement
+        | exit_statement
+        | return_statement
+        | null_statement
+      )
 ;
 wait_statement:
-      ( label COLON )? KW_WAIT ( sensitivity_clause )? ( condition_clause )? ( timeout_clause )? SEMI
+       KW_WAIT ( sensitivity_clause )? ( condition_clause )? ( timeout_clause )? SEMI
 ;
 sensitivity_clause: KW_ON sensitivity_list;
 sensitivity_list: name ( COMMA name )*;
 condition_clause: KW_UNTIL condition;
 condition: expression;
 timeout_clause: KW_FOR expression;
-assertion_statement: ( label COLON )? assertion SEMI;
+assertion_statement: assertion SEMI;
 assertion:
       KW_ASSERT condition
           ( KW_REPORT expression )?
           ( KW_SEVERITY expression )?
 ;
 report_statement:
-      ( label COLON )?
           KW_REPORT expression
               ( KW_SEVERITY expression )? SEMI
 ;
 signal_assignment_statement:
-      ( label COLON )? simple_signal_assignment
-      | ( label COLON )? conditional_signal_assignment
-      | ( label COLON )? selected_signal_assignment
+       simple_signal_assignment
+      | conditional_signal_assignment
+      | selected_signal_assignment
 ;
 simple_signal_assignment:
       simple_waveform_assignment
@@ -1021,11 +1022,9 @@ selected_expressions:
       expression KW_WHEN choices
 ;
 variable_assignment_statement:
-      ( label COLON )? (
-          simple_variable_assignment
-          | conditional_variable_assignment
-          | selected_variable_assignment
-      )
+     simple_variable_assignment
+     | conditional_variable_assignment
+     | selected_variable_assignment
 ;
 simple_variable_assignment:
       target VARASGN expression SEMI
@@ -1037,11 +1036,10 @@ selected_variable_assignment:
       KW_WITH expression KW_SELECT ( QUESTIONMARK )?
           target VARASGN selected_expressions SEMI
 ;
-procedure_call_statement: ( label COLON )? procedure_call SEMI;
+procedure_call_statement: procedure_call SEMI;
 //  ( LPAREN actual_parameter_part RPAREN )? can be part of the "name"
 procedure_call: name;
 if_statement:
-      ( label COLON )?
           KW_IF condition KW_THEN
               sequence_of_statements
           ( KW_ELSIF condition KW_THEN
@@ -1051,10 +1049,8 @@ if_statement:
           KW_END KW_IF ( label )? SEMI
 ;
 case_statement:
-      ( label COLON )?
           KW_CASE ( QUESTIONMARK )? expression KW_IS
-              case_statement_alternative
-              ( case_statement_alternative )*
+              case_statement_alternative+
           KW_END KW_CASE ( QUESTIONMARK )? ( label )? SEMI
 ;
 case_statement_alternative:
@@ -1062,7 +1058,6 @@ case_statement_alternative:
           sequence_of_statements
 ;
 loop_statement:
-      ( label COLON )?
           ( iteration_scheme )? KW_LOOP
               sequence_of_statements
           KW_END KW_LOOP ( label )? SEMI
@@ -1075,34 +1070,37 @@ parameter_specification:
       identifier KW_IN discrete_range
 ;
 next_statement:
-      ( label COLON )? KW_NEXT ( label )? ( KW_WHEN condition )? SEMI
+      KW_NEXT ( label )? ( KW_WHEN condition )? SEMI
 ;
 exit_statement:
-      ( label COLON )? KW_EXIT ( label )? ( KW_WHEN condition )? SEMI
+      KW_EXIT ( label )? ( KW_WHEN condition )? SEMI
 ;
 return_statement:
-      ( label COLON )? KW_RETURN ( expression )? SEMI
+      KW_RETURN ( expression )? SEMI
 ;
 null_statement:
-      ( label COLON )? KW_NULL SEMI
+      KW_NULL SEMI
 ;
-concurrent_statement:
-      block_statement
-      | process_statement
+concurrent_statement_with_optional_label:
+      process_statement
       | concurrent_procedure_call_statement
       | concurrent_assertion_statement
-      | concurrent_signal_assignment_statement
-      | component_instantiation_statement
-      | generate_statement
-     ;
+      | concurrent_signal_assignment_statement;
+
+concurrent_statement:
+      label COLON (block_statement
+                   | component_instantiation_statement
+                   | generate_statement
+                   | concurrent_statement_with_optional_label)
+      | concurrent_statement_with_optional_label
+      ;
 block_statement:
-      label COLON
-          KW_BLOCK ( LPAREN condition RPAREN )? ( KW_IS )?
-              block_header
-              block_declarative_part
-          KW_BEGIN
-              block_statement_part
-          KW_END KW_BLOCK ( label )? SEMI
+     KW_BLOCK ( LPAREN condition RPAREN )? ( KW_IS )?
+         block_header
+         ( block_declarative_item )*
+     KW_BEGIN
+         ( concurrent_statement )*
+     KW_END KW_BLOCK ( label )? SEMI
 ;
 block_header:
       ( generic_clause
@@ -1110,24 +1108,16 @@ block_header:
       ( port_clause
       ( port_map_aspect SEMI )? )?
 ;
-block_declarative_part:
-      ( block_declarative_item )*
-;
-block_statement_part:
-      ( concurrent_statement )*
-;
+
 process_statement:
-      ( label COLON )?
           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?
-              process_declarative_part
+              ( process_declarative_item )*
           KW_BEGIN
-              process_statement_part
+              ( sequential_statement )*
           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 ;
 process_sensitivity_list: KW_ALL | sensitivity_list;
-process_declarative_part:
-      ( process_declarative_item )*
-;
+
 process_declarative_item:
       subprogram_declaration
       | subprogram_body
@@ -1147,20 +1137,18 @@ process_declarative_item:
       | group_template_declaration
       | group_declaration
 ;
-process_statement_part:
-      ( sequential_statement )*
-;
+
 concurrent_procedure_call_statement:
-      ( label COLON )? ( KW_POSTPONED )? procedure_call SEMI
+      ( KW_POSTPONED )? procedure_call SEMI
 ;
 concurrent_assertion_statement:
-      ( label COLON )? ( KW_POSTPONED )? assertion SEMI
+      ( KW_POSTPONED )? assertion SEMI
 ;
 // simplified: concurrent_signal_assignment_statement,
 //             concurrent_simple_signal_assignment,
 //             concurrent_conditional_signal_assignment
 concurrent_signal_assignment_statement:
-      ( label COLON )? ( KW_POSTPONED )? (
+      ( KW_POSTPONED )? (
           concurrent_signal_assignment_any
           | concurrent_selected_signal_assignment
       )
@@ -1175,10 +1163,9 @@ concurrent_selected_signal_assignment:
           target CONASGN ( KW_GUARDED )? ( delay_mechanism )? selected_waveforms SEMI
 ;
 component_instantiation_statement:
-      label COLON
-          instantiated_unit
-              ( generic_map_aspect )?
-              ( port_map_aspect )? SEMI
+      instantiated_unit
+          ( generic_map_aspect )?
+          ( port_map_aspect )? SEMI
 ;
 instantiated_unit:
       ( KW_COMPONENT )? name
@@ -1191,13 +1178,11 @@ generate_statement:
       | case_generate_statement
 ;
 for_generate_statement:
-      label COLON
           KW_FOR parameter_specification KW_GENERATE
               generate_statement_body
           KW_END KW_GENERATE ( label )? SEMI
 ;
 if_generate_statement:
-      label COLON
           KW_IF ( label COLON )? condition KW_GENERATE
               generate_statement_body
           ( KW_ELSIF ( label COLON )? condition KW_GENERATE
@@ -1207,7 +1192,6 @@ if_generate_statement:
           KW_END KW_GENERATE ( label )? SEMI
 ;
 case_generate_statement:
-      label COLON
           KW_CASE expression KW_GENERATE
               case_generate_alternative
               ( case_generate_alternative )*
@@ -1218,14 +1202,18 @@ case_generate_alternative:
           generate_statement_body
 ;
 generate_statement_body:
-    ( block_declarative_part KW_BEGIN )?
-    ( concurrent_statement )*
-    ( KW_END ( label )? SEMI )?
+    ( block_declarative_item*
+      KW_BEGIN
+        ( concurrent_statement )*
+      KW_END ( label )? SEMI
+     )
+     | ( concurrent_statement )*
 ;
 label: identifier;
 use_clause:
       KW_USE selected_name (COMMA selected_name)* SEMI
 ;
+// the start rule
 design_file: design_unit* EOF;
 design_unit: context_clause library_unit;
 library_unit:

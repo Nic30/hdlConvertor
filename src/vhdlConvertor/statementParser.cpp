@@ -123,7 +123,7 @@ iHdlStatement* StatementParser::visitSequential_statement(
 
 iHdlStatement* StatementParser::visitAssertion_statement(
 		vhdlParser::Assertion_statementContext *ctx) {
-	// assertion_statement: ( label COLON )? assertion SEMI;
+	// assertion_statement: assertion SEMI;
 	// assertion:
 	//       ASSERT condition
 	//           ( REPORT expression )?
@@ -142,16 +142,12 @@ iHdlStatement* StatementParser::visitAssertion_statement(
 		args.push_back(e);
 	}
 	auto call = iHdlExpr::call(fn_name, args);
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitAssertion_statement - label", ctx);
 	return iHdlStatement::EXPR(call);
 }
 
 iHdlStatement* StatementParser::visitReport_statement(
 		vhdlParser::Report_statementContext *ctx) {
 	// report_statement:
-	//       ( label COLON )?
 	//           REPORT expression
 	//               ( SEVERITY expression )? SEMI
 	// ;
@@ -164,20 +160,14 @@ iHdlStatement* StatementParser::visitReport_statement(
 		args.push_back(e);
 	}
 	auto c = iHdlExpr::call(fn_name, args);
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitReport_statement - label", ctx);
 	return iHdlStatement::EXPR(c);
 }
 
 iHdlStatement* StatementParser::visitWait_statement(
 		vhdlParser::Wait_statementContext *ctx) {
 	// wait_statement:
-	//       ( label COLON )? WAIT ( sensitivity_clause )? ( condition_clause )? ( timeout_clause )? SEMI
+	//        WAIT ( sensitivity_clause )? ( condition_clause )? ( timeout_clause )? SEMI
 	// ;
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitWait_statement - label", ctx);
 
 	auto sc = ctx->sensitivity_clause();
 	auto cc = ctx->condition_clause();
@@ -205,20 +195,15 @@ iHdlStatement* StatementParser::visitWait_statement(
 }
 
 iHdlStatement* StatementParser::visitNull_statement(
-		vhdlParser::Null_statementContext *ctx) {
+		vhdlParser::Null_statementContext*) {
 	// null_statement:
-	//       ( label COLON )? NULL_SYM SEMI
+	//        NULL_SYM SEMI
 	// ;
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitNull_statement - label", ctx);
-
-	return nullptr;
+	return iHdlStatement::EXPR(iHdlExpr::null());
 }
 iHdlStatement* StatementParser::visitCase_statement(
 		vhdlParser::Case_statementContext *ctx) {
 	// case_statement:
-	//       ( label COLON )?
 	//           CASE ( QUESTIONMARK )? expression IS
 	//               case_statement_alternative
 	//               ( case_statement_alternative )*
@@ -251,9 +236,9 @@ iHdlStatement* StatementParser::visitCase_statement(
 		}
 	}
 	auto cstm = iHdlStatement::CASE(e, alternatives, _default);
-	auto labels = ctx->label();
-	if (labels.size()) {
-		cstm->labels.push_back(LiteralParser::visitLabel(labels[0]));
+	auto label = ctx->label();
+	if (label) {
+		cstm->labels.push_back(LiteralParser::visitLabel(label));
 	}
 	cstm->position.update_from_elem(ctx);
 	return cstm;
@@ -262,14 +247,10 @@ iHdlStatement* StatementParser::visitCase_statement(
 iHdlStatement* StatementParser::visitSignal_assignment_statement(
 		vhdlParser::Signal_assignment_statementContext *ctx) {
 	//signal_assignment_statement
-	//  : ( label_colon )? simple_signal_assignment
-	//  | ( label_colon )? conditional_signal_assignment
-	//  | ( label_colon )? selected_signal_assignment
+	//  : simple_signal_assignment
+	//  | conditional_signal_assignment
+	//  | selected_signal_assignment
 	//  ;
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitSignal_assignment_statement - label_colon",
-				ctx);
 
 	if (ctx->simple_signal_assignment()) {
 		return visitSimple_signal_assignment(ctx->simple_signal_assignment());
@@ -421,16 +402,10 @@ iHdlStatement* StatementParser::visitSelected_signal_assignment(
 iHdlStatement* StatementParser::visitVariable_assignment_statement(
 		vhdlParser::Variable_assignment_statementContext *ctx) {
 	// variable_assignment_statement:
-	//       ( label COLON )? (
 	//           simple_variable_assignment
 	// 	      | conditional_variable_assignment
 	// 	      | selected_variable_assignment
-	//       )
 	// ;
-	if (ctx->label())
-		NotImplementedLogger::print(
-				"StatementParser.visitVariable_assignment_statement - label_colon",
-				ctx);
 
 	if (ctx->simple_variable_assignment()) {
 		return visitSimple_variable_assignment(
@@ -488,7 +463,6 @@ HdlStmAssign* StatementParser::visitSelected_variable_assignment(
 iHdlStatement* StatementParser::visitIf_statement(
 		vhdlParser::If_statementContext *ctx) {
 	// if_statement:
-	//       ( label COLON )?
 	//           IF condition THEN
 	//               sequence_of_statements
 	//           ( ELSIF condition THEN
@@ -521,9 +495,9 @@ iHdlStatement* StatementParser::visitIf_statement(
 	}
 	ifStm = iHdlStatement::IF(cond, ifTrue, elseIfs, ifFalse);
 	ifStm->position.update_from_elem(ctx);
-	auto labels = ctx->label();
-	if (labels.size()) {
-		ifStm->labels.push_back(LiteralParser::visitLabel(labels[0]));
+	auto label = ctx->label();
+	if (label) {
+		ifStm->labels.push_back(LiteralParser::visitLabel(label));
 	}
 	return ifStm;
 }
@@ -531,34 +505,23 @@ iHdlStatement* StatementParser::visitIf_statement(
 iHdlStatement* StatementParser::visitReturn_statement(
 		vhdlParser::Return_statementContext *ctx) {
 	// return_statement
-	// : ( label_colon )? RETURN ( expression )? SEMI
+	// : RETURN ( expression )? SEMI
 	// ;
-	if (ctx->label()) {
-		NotImplementedLogger::print(
-				"StatementParser.visitReturn_statement - label_colon", ctx);
-	}
 	auto e = ctx->expression();
 	if (e) {
 		return iHdlStatement::RETURN(ExprParser::visitExpression(e));
 	} else {
 		return iHdlStatement::RETURN();
 	}
-
 }
 
 iHdlStatement* StatementParser::visitLoop_statement(
 		vhdlParser::Loop_statementContext *ctx) {
 	// loop_statement:
-	//       ( label COLON )?
 	//           ( iteration_scheme )? LOOP
 	//               sequence_of_statements
 	//           END LOOP ( label )? SEMI
 	// ;
-
-	if (ctx->label().size()) {
-		NotImplementedLogger::print(
-				"StatementParser.visitLoop_statement - label_colon", ctx);
-	}
 
 	iHdlStatement *loop;
 	auto is = ctx->iteration_scheme();
@@ -584,6 +547,12 @@ iHdlStatement* StatementParser::visitLoop_statement(
 				visitSequence_of_statements(ctx->sequence_of_statements()));
 	}
 	loop->position.update_from_elem(ctx);
+
+	auto label = ctx->label();
+	if (label) {
+		NotImplementedLogger::print(
+				"StatementParser.visitLoop_statement - label after", ctx);
+	}
 	return loop;
 }
 
@@ -666,17 +635,12 @@ iHdlStatement* StatementParser::visitConcurrent_selected_signal_assignment(
 iHdlStatement* StatementParser::visitConcurrent_signal_assignment_statement(
 		vhdlParser::Concurrent_signal_assignment_statementContext *ctx) {
 	//concurrent_signal_assignment_statement:
-	//      ( label COLON )? ( POSTPONED )? (
+	//      ( POSTPONED )? (
 	//          concurrent_signal_assignment_any
 	//	      | concurrent_selected_signal_assignment
 	//      )
 	//;
 
-	if (ctx->label()) {
-		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - label",
-				ctx);
-	}
 	if (ctx->KW_POSTPONED()) {
 		NotImplementedLogger::print(
 				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED",
@@ -718,62 +682,83 @@ iHdlStatement* StatementParser::visitConcurrent_signal_assignment_statement(
 	return new HdlStmAssign(dst, src, false);
 }
 
-void StatementParser::visitConcurrent_statement(
-		vhdlParser::Concurrent_statementContext *ctx,
-		std::vector<iHdlObj*> &stms) {
-	// concurrent_statement:
-	//       block_statement
-	//       | process_statement
+iHdlStatement * StatementParser::visitConcurrent_statement_with_optional_label(
+		vhdlParser::Concurrent_statement_with_optional_labelContext *ctx) {
+	// concurrent_statement_with_optional_label:
+	//       process_statement
 	//       | concurrent_procedure_call_statement
 	//       | concurrent_assertion_statement
-	//       | concurrent_signal_assignment_statement
-	//       | component_instantiation_statement
-	//       | generate_statement
-	//      ;
+	//       | concurrent_signal_assignment_statement;
 
-	auto b = ctx->block_statement();
-	if (b) {
-		NotImplementedLogger::print("ArchParser.visitBlock_statement", b);
-		return;
-	}
 	auto p = ctx->process_statement();
 	if (p) {
-		auto _p = ProcessParser::visitProcess_statement(p);
-		stms.push_back(_p);
-		return;
+		return ProcessParser::visitProcess_statement(p);
 	}
 	auto cpc = ctx->concurrent_procedure_call_statement();
 	if (cpc) {
 		NotImplementedLogger::print(
 				"ArchParser.visitConcurrent_procedure_call_statement", cpc);
-		return;
+		return nullptr;
 	}
 	auto ca = ctx->concurrent_assertion_statement();
 	if (ca) {
 		NotImplementedLogger::print(
 				"ArchParser.visitConcurrent_assertion_statement", ca);
-		return;
+		return nullptr;
 	}
 	auto csa = ctx->concurrent_signal_assignment_statement();
-	if (csa) {
-		auto a = visitConcurrent_signal_assignment_statement(csa);
-		stms.push_back(a);
-		return;
-	}
+	assert(csa);
+	return visitConcurrent_signal_assignment_statement(csa);
+}
 
-	auto ci = ctx->component_instantiation_statement();
-	if (ci) {
-		auto _ci = CompInstanceParser::visitComponent_instantiation_statement(
-				ci);
-		stms.push_back(_ci);
-		return;
-	}
+void StatementParser::visitConcurrent_statement(
+		vhdlParser::Concurrent_statementContext *ctx,
+		std::vector<iHdlObj*> &stms) {
+	// concurrent_statement:
+	//       label COLON (block_statement
+	//                    | component_instantiation_statement
+	//                    | generate_statement
+	//                    | concurrent_statement_with_optional_label)
+	//       | concurrent_statement_with_optional_label
+	//       ;
+	auto _label = ctx->label();
+	if (_label) {
+		auto label = LiteralParser::visitLabel(_label);
+		auto b = ctx->block_statement();
+		if (b) {
+			NotImplementedLogger::print("StatementParser.visitBlock_statement",
+					b);
+			return;
+		}
+		auto ci = ctx->component_instantiation_statement();
+		if (ci) {
+			auto _ci =
+					CompInstanceParser::visitComponent_instantiation_statement(
+							ci, label);
+			stms.push_back(_ci);
+			return;
+		}
 
-	auto gs = ctx->generate_statement();
-	assert(gs);
-	GenerateStatementParser gsp(hierarchyOnly);
-	auto _gs = gsp.visitGenerate_statement(gs);
-	stms.push_back(_gs);
+		auto gs = ctx->generate_statement();
+		if (gs) {
+			GenerateStatementParser gsp(hierarchyOnly);
+			auto _gs = gsp.visitGenerate_statement(gs);
+			_gs->labels.insert(_gs->labels.begin(), label);
+			stms.push_back(_gs);
+		}
+		auto cs = ctx->concurrent_statement_with_optional_label();
+		assert(cs);
+		iHdlStatement *_cs = visitConcurrent_statement_with_optional_label(cs);
+		if (_cs) {
+			_cs->labels.insert(_cs->labels.begin(), label);
+			stms.push_back(_cs);
+		}
+	} else {
+		auto cs = ctx->concurrent_statement_with_optional_label();
+		iHdlStatement *_cs = visitConcurrent_statement_with_optional_label(cs);
+		if (_cs)
+			stms.push_back(_cs);
+	}
 }
 
 }

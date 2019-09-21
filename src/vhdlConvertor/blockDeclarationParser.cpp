@@ -19,17 +19,6 @@ BlockDeclarationParser::BlockDeclarationParser(bool hierarchyOnly) :
 		hierarchyOnly(hierarchyOnly) {
 }
 
-void BlockDeclarationParser::visitBlock_declarative_part(
-		vhdlParser::Block_declarative_partContext *ctx,
-		std::vector<hdlObjects::iHdlObj*> &objs) {
-	// block_declarative_part:
-	//       ( block_declarative_item )*
-	// ;
-	for (auto bdi : ctx->block_declarative_item()) {
-		visitBlock_declarative_item(bdi, objs);
-	}
-}
-
 /*
  * @note Some declarations can spot multiple objects
  * 		 that is why this function just does not return hdlObjects::iHdlObj*
