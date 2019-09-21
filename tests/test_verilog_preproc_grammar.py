@@ -101,7 +101,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
     def test_include(self):
         self.check_pp_error_by_methodname(
-            'file1.txt was not found in include directories\n')
+            'Error: "file1.txt" was not found in include directories\n')
 
     def test_keywords1(self):
         self.run_pp_by_methodname()

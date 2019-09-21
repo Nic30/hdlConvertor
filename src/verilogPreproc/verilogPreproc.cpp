@@ -529,6 +529,7 @@ void VerilogPreproc::throw_input_caused_error(antlr4::ParserRuleContext *ctx,
 	if (s)
 		msg << ctx->start->getLine() << ":"
 				<< ctx->start->getCharPositionInLine() << ":";
+	msg << "Error: ";
 	msg << _msg;
 	throw ParseException(msg.str());
 }
