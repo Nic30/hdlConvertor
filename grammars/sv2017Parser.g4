@@ -588,11 +588,13 @@ delay_control:
 
 /******************************************** case ********************************************************************/
 case_statement:
- ( unique_priority )? ( KW_CASE LPAREN expression RPAREN KW_INSIDE ( case_inside_item )+
-                          | case_keyword LPAREN expression RPAREN ( KW_MATCHES ( case_pattern_item )+
-                                                                  | ( case_item )+
-                                                                  )
-                          ) KW_ENDCASE;
+ ( unique_priority )?
+ ( KW_CASE LPAREN expression RPAREN KW_INSIDE ( case_inside_item )+
+  | case_keyword LPAREN expression RPAREN
+        ( KW_MATCHES ( case_pattern_item )+
+          | ( case_item )+
+        )
+  ) KW_ENDCASE;
 case_keyword:
  KW_CASE
   | KW_CASEZ
@@ -1027,7 +1029,7 @@ sequence_actual_arg:
 
 dist_weight:
  ( DIST_WEIGHT_ASSIGN
-  | DIST_WEIGHT_ASSIGN_DIV
+  | COLON DIV
   ) expression;
 clocking_declaration:
  ( KW_GLOBAL KW_CLOCKING ( identifier )? clocking_event SEMI
@@ -1230,6 +1232,7 @@ enum_base_type:
    | ( integer_vector_type ( signing )?
        | identifier
        ) ( variable_dimension )?
+   | packed_dimension
   ;
 data_type_primitive:
   integer_vector_type ( signing )?
@@ -1360,6 +1363,7 @@ primary:
     | primary ( DOT array_method_name )? ( attribute_instance )*
                   LPAREN ( list_of_arguments )? RPAREN
                   ( KW_WITH LPAREN expression RPAREN )? #primaryCall
+    | primary DOT array_method_name # primaryCallArrayMethodNoArgs
     | primary ( DOT array_method_name )? ( attribute_instance )*
              KW_WITH LPAREN expression RPAREN #primaryCallWith
  ;
@@ -2202,7 +2206,7 @@ named_port_connection:
 bind_directive:
  KW_BIND ( identifier ( COLON bind_target_instance_list )?
           | bind_target_instance
-          ) bind_instantiation SEMI;
+          ) bind_instantiation;
 bind_target_instance:
  hierarchical_identifier ( bit_select )*;
 bind_target_instance_list:
@@ -2273,12 +2277,14 @@ case_generate_item:
  ( KW_DEFAULT ( COLON )?
   | constant_expression ( COMMA constant_expression )* COLON
   ) generate_block;
-generate_block:
- generate_item
-  | ( identifier COLON )? KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+generate_begin_end_block:
+ ( identifier COLON )? KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
     ( generate_item )*
     KW_END ( COLON identifier | {_input->LA(1) != COLON}? )
- ;
+;
+generate_block:
+ generate_item;
+
 generate_item:
  ( attribute_instance )* ( parameter_override
                               | gate_instantiation
@@ -2319,7 +2325,9 @@ generate_item:
                               | extern_tf_declaration
                               )
   | KW_RAND data_declaration
-  | generate_region ;
+  | generate_region
+  | generate_begin_end_block
+ ;
 
 program_generate_item:
  loop_generate_construct
