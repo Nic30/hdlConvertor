@@ -1,21 +1,21 @@
 # import sys
 import os
+import re
 import unittest
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
-from tests.time_logging_test_runner import TimeLoggingTestRunner
 from tests.file_utils import find_files, TestFilter, generate_test_method_name, \
     get_file_name
-import re
+from tests.time_logging_test_runner import TimeLoggingTestRunner
 
-VERILATOR_TEST_ROOT = os.path.join(os.path.dirname(__file__),
-                                   "verilator", "test_regress", "t")
+VERILATOR_ROOT = os.path.join(os.path.dirname(__file__), "verilator")
+VERILATOR_TEST_ROOT = os.path.join(VERILATOR_ROOT, "test_regress", "t")
 
 # use this file to run tests in incremental maner,
 # the test which passed in previous build will not be executed again
-SUCESSFULL_TEST_FILTER_FILE = "tests_passed.verilator"
-# SUCESSFULL_TEST_FILTER_FILE = None
+# SUCESSFULL_TEST_FILTER_FILE = "tests_passed.verilator"
+SUCESSFULL_TEST_FILTER_FILE = None
 
 
 def get_verilator_test_config():
@@ -67,8 +67,10 @@ class VerilatorTestsuiteMeta(type):
             def test(self):
                 debug = False
                 c = HdlConvertor()
-                incdirs = [VERILATOR_TEST_ROOT, ]
-
+                c.preproc_macro_db["TEST_OBJ_DIR"] = "obj/"
+                c.preproc_macro_db["PREDEF_COMMAND_LINE"] = '$display("PREDEF_COMMAND_LINE");'
+                incdirs = [VERILATOR_TEST_ROOT, os.path.join(VERILATOR_ROOT, "include")]
+                # print(c.verilog_pp(sv_file, verilog_version, incdirs))
                 try:
                     c.parse([sv_file, ], verilog_version, incdirs, debug=debug)
                 except Exception:
@@ -83,10 +85,61 @@ class VerilatorTestsuiteMeta(type):
 
             return test
 
-        lang = Language.SYSTEM_VERILOG_2009
         for file_name, should_fail in sorted(set(get_verilator_test_config()),
                                              key=lambda x: x[0]):
+            lang = Language.SYSTEM_VERILOG_2009
             fn = get_file_name(file_name)
+            if fn in {
+                    # non std {} initializer
+                    "t_struct_init",
+                    # should fail but fail value not parsed in script correctly
+                    "t_var_bad_sv",
+                    "t_mem_multi_ref_bad",
+                    "t_langext_order",
+                    "t_inst_missing",
+                    # requires additional preproc definitions
+                    "t_tri_gate",
+                    "t_extend_class",
+                    "t_dpi_var",
+                    "t_dpi_sys",
+                    "t_dpi_display",
+                    "t_dpi_threads",
+                    "t_interface_down_gen",
+                    "t_gen_missing",
+                    # "t_sys_fread",
+                    # "t_preproc_undefineall",
+                    # "t_lint_unused",
+                    # "t_interface_down_gen",
+                    # "t_case_write1",
+                    # not a verilog files
+                    "t_preproc_persist",
+                    "t_preproc_noline",
+                    "t_preproc_kwd",
+                    "t_preproc_def09",
+                    "t_preproc",
+                    "t_pp_display",
+                    "t_pp_pragmas",
+                    "t_pipe_filter",
+                    # non std. primitive with assign
+                    "t_trace_primitive",
+                    # non std. numbers starting with _
+                    "t_stream",
+                    # = #100'b0
+                    "t_parse_delay",
+                    # non std.? parameters without the parenthesis?
+                    "t_param_no_parentheses",
+                    # non std. ordered and named port list mixed syntax 
+                    "t_interface_modportlist",
+                    # non std. missing return type of function
+                    "t_interface_modport_export",
+                    # non std. mpodport can be only in interface
+                    "t_interface_gen",
+                    # non std. case without items
+                    "t_case_wild",
+                    }:
+                should_fail = True
+            if fn == "t_var_rsvd":
+                lang = Language.SYSTEM_VERILOG_2005
             test_name = generate_test_method_name(fn, lang, _dict)
 
             if not test_filter.is_dissabled_test(test_name):
@@ -102,7 +155,7 @@ if __name__ == '__main__':
     # unittest.main(failfast=True)
     suite = unittest.TestSuite()
 
-    # suite.addTest(VerilatorTestsuiteTC('test_SYSTEM_VERILOG_2009_t_preproc'))
+    # suite.addTest(VerilatorTestsuiteTC('test_SYSTEM_VERILOG_2009_t_preproc_undefineall'))
     suite.addTest(unittest.makeSuite(VerilatorTestsuiteTC))
 
     runner = TimeLoggingTestRunner(verbosity=3)
