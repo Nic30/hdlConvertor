@@ -14,7 +14,7 @@ library Test;
 use Test.Components.all;
 architecture Structure of TestBench is
 	component Full_Adder
-		port (X, Y, C in: Bit; Cout, Sum: out Bit);
+		port (X, Y, Cin: Bit; Cout, Sum: out Bit);
 	end component;
 	signal A,B,C,D,E,F,G: Bit;
 	signal OK: Boolean;
@@ -45,9 +45,9 @@ end Behavior;
 -- p. 13
 -- An architecture of a microprocessor:
 architecture Structure_View of Processor is
-	component ALU port ( C in: Bit; ); end component;
-	component MUX port ( C in: Bit; ); end component;
-	component Latch port ( C in: Bit; ); end component;
+	component ALU port ( Cin: Bit ); end component;
+	component MUX port ( Cin: Bit ); end component;
+	component Latch port ( Cin: Bit ); end component;
 begin
 	A1: ALU port map ( X );
 	M1: MUX port map ( X );
