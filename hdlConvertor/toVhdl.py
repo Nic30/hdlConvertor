@@ -44,7 +44,6 @@ class ToVhdl():
         HdlBuildinFn.DOWNTO: "DOWNTO",
         HdlBuildinFn.ARROW: "=>",
         HdlBuildinFn.MAP_ASSOCIATION: "=>",
-        HdlBuildinFn.APOSTROPHE: "'",
     }
 
     def __init__(self, out_stream):
@@ -268,6 +267,22 @@ class ToVhdl():
                 pe(o0)
                 w(" : ")
                 pe(o1)
+                return
+            elif op == HdlBuildinFn.APOSTROPHE:
+                pe(o.ops[0])
+                w("'")
+                args = o.ops[1]
+                if isinstance(args, list):
+                    # aggregate
+                    w("(")
+                    for isLast, a in iter_with_last_flag(args):
+                        pe(a)
+                        if not isLast:
+                            w(", ")
+                    w(")")
+                else:
+                    # normal attribute
+                    pe(args)
                 return
             else:
                 raise NotImplementedError(op)
