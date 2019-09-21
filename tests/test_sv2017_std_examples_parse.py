@@ -7,14 +7,11 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.file_utils import get_file_name
 
 HDL_CONVERTOR_ROOT = os.path.join(os.path.dirname(__file__), "..")
 SV2017_ROOT = os.path.join(HDL_CONVERTOR_ROOT, "tests", "sv_test", "std2017")
 sv_files = [f for f in glob(os.path.join(SV2017_ROOT, '*.sv'))]
-
-
-def get_file_name(f):
-    return os.path.splitext(os.path.basename(f))[0]
 
 
 # https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
