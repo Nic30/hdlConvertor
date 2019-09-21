@@ -10,3 +10,7 @@
 	path = tests/verilator
 	url = http://git.veripool.org/git/verilator
 	branch = master
+[submodule "vunit"]
+	path = tests/vunit
+	url = https://github.com/VUnit/vunit.git
+	branch = master
