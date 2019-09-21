@@ -10,42 +10,43 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlObjects;
 
-EntityParser::EntityParser(CommentParser & _commentParser, bool _hierarchyOnly) :
+EntityParser::EntityParser(CommentParser &_commentParser, bool _hierarchyOnly) :
 		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
-HdlModuleDec * EntityParser::visitEntity_declaration(
-		vhdlParser::Entity_declarationContext* ctx) {
+HdlModuleDec* EntityParser::visitEntity_declaration(
+		vhdlParser::Entity_declarationContext *ctx) {
 	// entity_declaration:
-	//       ENTITY identifier IS
-	//           entity_header
-	//           entity_declarative_part
-	//       ( BEGIN
-	//           entity_statement_part )?
-	//       END ( ENTITY )? ( simple_name )? SEMI
+	//       KW_ENTITY identifier KW_IS
+	//           ( generic_clause )?
+	//           ( port_clause )?
+	//           ( entity_declarative_item )*
+	//       ( KW_BEGIN ( entity_statement )* )?
+	//       KW_END ( KW_ENTITY )? ( simple_name )? SEMI
 	// ;
-
-	HdlModuleDec * e = new HdlModuleDec();
+	HdlModuleDec *e = new HdlModuleDec();
 	e->name = ctx->identifier()->getText();
 	e->__doc__ = commentParser.parse(ctx);
-	// entity_declarative_part
-	// : ( entity_declarative_item )*
-	// ;
+
 	if (!hierarchyOnly) {
-		auto h = ctx->entity_header();
-		if (h)
-			visitEntity_header(e, h);
-		auto edp = ctx->entity_declarative_part();
-		if (edp)
-			for (auto d : edp->entity_declarative_item()) {
-				visitEntity_declarative_item(d);
-			}
+		auto g = ctx->generic_clause();
+		if (g)
+			visitGeneric_clause(g, &e->generics);
+		auto pc = ctx->port_clause();
+		if (pc)
+			visitPort_clause(pc, &e->ports);
+		for (auto d : ctx->entity_declarative_item()) {
+			visitEntity_declarative_item(d);
+		}
+		if (ctx->entity_statement().size()) {
+			NotImplementedLogger::print("EntityParser.entity_statement", ctx);
+		}
 	}
 	e->position.update_from_elem(ctx);
 	return e;
 }
 
 void EntityParser::visitEntity_declarative_item(
-		vhdlParser::Entity_declarative_itemContext* ctx) {
+		vhdlParser::Entity_declarative_itemContext *ctx) {
 	// entity_declarative_item:
 	//       subprogram_declaration
 	//       | subprogram_body
@@ -68,10 +69,11 @@ void EntityParser::visitEntity_declarative_item(
 	//       | group_declaration
 	// ;
 
-	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item", ctx);
+	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item",
+			ctx);
 }
-void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
-		std::vector<HdlVariableDef*> * generics) {
+void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext *ctx,
+		std::vector<HdlVariableDef*> *generics) {
 	// generic_clause:
 	//       GENERIC LPAREN generic_list RPAREN SEMI
 	// ;
@@ -84,8 +86,8 @@ void EntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext* ctx,
 	}
 	delete gs;
 }
-void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
-		std::vector<HdlVariableDef*> * ports) {
+void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext *ctx,
+		std::vector<HdlVariableDef*> *ports) {
 	// port_clause:
 	//       PORT LPAREN port_list RPAREN SEMI
 	// ;
@@ -98,34 +100,12 @@ void EntityParser::visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 
 	for (auto ie : il->interface_element()) {
 		auto ps = InterfaceParser::visitInterface_element(ie);
-		for (HdlVariableDef * p : *ps) {
+		for (HdlVariableDef *p : *ps) {
 			p->position.update_from_elem(ie);
 			ports->push_back(p);
 		}
 		delete ps;
 	}
-}
-void EntityParser::visitEntity_header(HdlModuleDec * e,
-		vhdlParser::Entity_headerContext* ctx) {
-	// entity_header:
-	//       ( generic_clause )?
-	//       ( port_clause )?
-	// ;
-	auto g = ctx->generic_clause();
-	if (g)
-		visitGeneric_clause(g, &e->generics);
-	auto pc = ctx->port_clause();
-	if (pc)
-		visitPort_clause(pc, &e->ports);
-}
-void EntityParser::visitEntity_statement_part(
-		vhdlParser::Entity_statement_partContext* ctx) {
-	if (!ctx)
-		return;
-	// entity_statement_part
-	// : ( entity_statement )*
-	// ;
-	NotImplementedLogger::print("EntityParser.visitEntity_statement_part", ctx);
 }
 
 }

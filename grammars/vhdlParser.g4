@@ -140,7 +140,7 @@ any_keyword:
 // slice_name, and attribute_name, respectively)
 // (2.2.2004, e.f.)
 name:
-      name_part ( DOT (name_part | any_keyword))*
+      name_part ( DOT (name_part | any_keyword (name_part_specificator)? ))*
       | external_name
 ;
 
@@ -170,18 +170,11 @@ selected_name:
 ;
 entity_declaration:
       KW_ENTITY identifier KW_IS
-          entity_header
-          entity_declarative_part
-      ( KW_BEGIN
-          entity_statement_part )?
+          ( generic_clause )?
+          ( port_clause )?
+          ( entity_declarative_item )*
+      ( KW_BEGIN ( entity_statement )* )?
       KW_END ( KW_ENTITY )? ( simple_name )? SEMI
-;
-entity_header:
-      ( generic_clause )?
-      ( port_clause )?
-;
-entity_declarative_part:
-      ( entity_declarative_item )*
 ;
 entity_declarative_item:
       subprogram_declaration
@@ -204,13 +197,12 @@ entity_declarative_item:
       | group_template_declaration
       | group_declaration
 ;
-entity_statement_part:
-      ( entity_statement )*
-;
 entity_statement:
     ( label COLON )? (
       concurrent_assertion_statement
       | concurrent_procedure_call_statement
+      | process_statement
+      // | PSL_PSL_Directive
      )
 ;
 architecture_body:
@@ -879,7 +871,7 @@ aggregate:
 element_association:
       ( choices ARROW )? expression
 ;
-choices: ( choice )+;
+choices: choice ( BAR choice )*;
 // [rm non determinism]      | simple_name
 choice:
       discrete_range
@@ -897,7 +889,7 @@ function_name:
 	//| external_name
 ;
 function_call:
-      function_name ( LPAREN actual_parameter_part RPAREN )?
+      function_name LPAREN actual_parameter_part RPAREN
 ;
 actual_parameter_part: association_list;
 qualified_expression:
@@ -1250,7 +1242,5 @@ context_reference:
 ;
 
 identifier: BASIC_IDENTIFIER | EXTENDED_IDENTIFIER;
-abstract_literal: DECIMAL_LITERAL | based_literal;
-based_literal:
-      BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
-;
+abstract_literal: DECIMAL_LITERAL | BASED_LITERAL;
+

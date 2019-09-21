@@ -745,6 +745,7 @@ void StatementParser::visitConcurrent_statement(
 			auto _gs = gsp.visitGenerate_statement(gs);
 			_gs->labels.insert(_gs->labels.begin(), label);
 			stms.push_back(_gs);
+			return;
 		}
 		auto cs = ctx->concurrent_statement_with_optional_label();
 		assert(cs);

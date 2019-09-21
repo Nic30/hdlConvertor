@@ -26,10 +26,7 @@ public:
 			std::vector<hdlObjects::HdlVariableDef*> * generics);
 	static void visitPort_clause(vhdlParser::Port_clauseContext* ctx,
 			std::vector<hdlObjects::HdlVariableDef*> * ports);
-	static void visitEntity_header(hdlObjects::HdlModuleDec * e,
-			vhdlParser::Entity_headerContext* ctx);
-	void visitEntity_statement_part(
-			vhdlParser::Entity_statement_partContext* ctx);
+
 };
 
 }

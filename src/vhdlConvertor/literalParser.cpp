@@ -124,9 +124,9 @@ iHdlExpr* LiteralParser::visitAbstract_literal(
 			return iHdlExpr::INT(_n);
 		}
 	}
-	auto bl = ctx->based_literal();
-	assert(bl);
-	// based_literal:
+	auto _bl = ctx->BASED_LITERAL();
+	assert(_bl);
+	// BASED_LITERAL:
 	//       BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
 	// ;
 
@@ -138,12 +138,19 @@ iHdlExpr* LiteralParser::visitAbstract_literal(
 	// Visitor/Listener whereby an appropriate error message
 	// should be given
 
-	// [TODO] exponent
-	auto n = bl->BASE();
-	auto _n = n->getText();
-	int base = atoi(_n.c_str());
-	BigInteger val = BigInteger(bl->BASED_INTEGER(0)->getText(), base);
-	if (bl->EXPONENT()) {
+	auto bl = _bl->getText();
+	auto ht0_pos = bl.find('#');
+	auto ht1_pos = bl.find('#', ht0_pos + 1);
+	auto dot_pos = bl.find('.', ht0_pos + 1);
+	auto _base = bl.substr(0, ht0_pos);
+	int base = atoi(_base.c_str());
+	BigInteger val = BigInteger(bl.substr(ht0_pos, ht1_pos - ht0_pos), base);
+	if (dot_pos !=  std::string::npos) {
+		NotImplementedLogger::print(
+				"LiteralParser.visitBased_literal - decimal part", ctx);
+	}
+
+	if (ht1_pos != bl.size() - 1) {
 		NotImplementedLogger::print(
 				"LiteralParser.visitBased_literal - EXPONENT", ctx);
 	}

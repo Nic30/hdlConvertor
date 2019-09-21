@@ -10,12 +10,12 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-iHdlExpr * ReferenceParser::visitSelected_name(
-		vhdlParser::Selected_nameContext* ctx) {
+iHdlExpr* ReferenceParser::visitSelected_name(
+		vhdlParser::Selected_nameContext *ctx) {
 	// selected_name
 	// : identifier (DOT suffix)*
 	// ;
-	iHdlExpr * top = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr *top = LiteralParser::visitIdentifier(ctx->identifier());
 	for (auto s : ctx->suffix()) {
 		top = new iHdlExpr(top, DOT, visitSuffix(s));
 	}
@@ -23,7 +23,7 @@ iHdlExpr * ReferenceParser::visitSelected_name(
 	return top;
 }
 
-iHdlExpr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
+iHdlExpr* ReferenceParser::visitSuffix(vhdlParser::SuffixContext *ctx) {
 	//suffix:
 	//      simple_name
 	//      | character_literal
@@ -47,9 +47,9 @@ iHdlExpr * ReferenceParser::visitSuffix(vhdlParser::SuffixContext* ctx) {
 	return iHdlExpr::all();
 }
 
-iHdlExpr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
+iHdlExpr* ReferenceParser::visitName(vhdlParser::NameContext *ctx) {
 	// name:
-	//       name_part ( DOT name_part)*
+	//       name_part ( DOT (name_part | any_keyword (name_part_specificator)? ))*
 	//       | external_name
 	// ;
 	auto en = ctx->external_name();
@@ -57,23 +57,43 @@ iHdlExpr * ReferenceParser::visitName(vhdlParser::NameContext* ctx) {
 		NotImplementedLogger::print("ExprParser.visitName - external_name", en);
 		return nullptr;
 	}
-	auto np = ctx->name_part();
-	iHdlExpr * op0 = NULL;
-	for (auto it = np.begin(); it != np.end(); ++it) {
-		auto n = *it;
-		if (!op0) {
-			op0 = visitName_part(n);
+	auto children = ctx->children;
+	iHdlExpr *op0 = NULL;
+	for (auto it = children.begin(); it != children.end(); ++it) {
+		auto c = *it;
+		if (antlrcpp::is<antlr4::tree::TerminalNode *>(c)) {
+			continue;  // "."
+		}
+		auto np = dynamic_cast<vhdlParser::Name_partContext*>(c);
+		iHdlExpr *next_part = nullptr;
+		if (np) {
+			next_part = visitName_part(np);
 		} else {
-			iHdlExpr * op1 = visitName_part(n);
-			op0 = new iHdlExpr(op0, DOT, op1);
+			auto ak = dynamic_cast<vhdlParser::Any_keywordContext*>(c);
+			next_part = iHdlExpr::ID(ak->getText());
+		}
+		if (!op0) {
+			op0 = next_part;
+		} else {
+			op0 = new iHdlExpr(op0, DOT, next_part);
+		}
+		if (it + 1 != children.end()) {
+			++it;
+			auto nps =
+					dynamic_cast<vhdlParser::Name_part_specificatorContext*>(*it);
+			if (nps) {
+				op0 = visitName_part_specificator(op0, nps);
+			} else {
+				--it;
+			}
 		}
 	}
 	assert(op0);
 	return op0;
 }
 
-iHdlExpr * ReferenceParser::visitName_attribute_part(
-		vhdlParser::Name_attribute_partContext* ctx) {
+iHdlExpr* ReferenceParser::visitName_attribute_part(
+		vhdlParser::Name_attribute_partContext *ctx) {
 	// name_attribute_part
 	// : APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
 	// ;
@@ -88,13 +108,14 @@ iHdlExpr* ReferenceParser::visitAttribute_name(
 	// attribute_name:
 	//       prefix ( signature )? APOSTROPHE attribute_designator ( LPAREN expression RPAREN )?
 	// ;
-	iHdlExpr * p = ExprParser::visitPrefix(ctx->prefix());
+	iHdlExpr *p = ExprParser::visitPrefix(ctx->prefix());
 	auto s = ctx->signature();
 	if (s)
 		NotImplementedLogger::print(
 				"ExprParser.visitAttribute_name - signature", s);
 	auto ad = ctx->attribute_designator();
-	iHdlExpr * res = new iHdlExpr(p, HdlOperatorType::APOSTROPHE, visitAttribute_designator(ad));
+	iHdlExpr *res = new iHdlExpr(p, HdlOperatorType::APOSTROPHE,
+			visitAttribute_designator(ad));
 	auto e = ctx->expression();
 	if (e)
 		res = new iHdlExpr(res, HdlOperatorType::INDEX,
@@ -103,8 +124,8 @@ iHdlExpr* ReferenceParser::visitAttribute_name(
 	return res;
 }
 
-iHdlExpr * ReferenceParser::visitAttribute_designator(
-		vhdlParser::Attribute_designatorContext* ctx) {
+iHdlExpr* ReferenceParser::visitAttribute_designator(
+		vhdlParser::Attribute_designatorContext *ctx) {
 	// attribute_designator: simple_name | any_keyword;
 	auto sn = ctx->simple_name();
 	if (sn)
@@ -115,8 +136,8 @@ iHdlExpr * ReferenceParser::visitAttribute_designator(
 	}
 }
 
-iHdlExpr * ReferenceParser::visitName_part_specificator(iHdlExpr * selectedName,
-		vhdlParser::Name_part_specificatorContext* ctx) {
+iHdlExpr* ReferenceParser::visitName_part_specificator(iHdlExpr *selectedName,
+		vhdlParser::Name_part_specificatorContext *ctx) {
 	// name_part_specificator:
 	//      name_attribute_part
 	//    | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
@@ -145,30 +166,31 @@ iHdlExpr * ReferenceParser::visitName_part_specificator(iHdlExpr * selectedName,
 	return iHdlExpr::null();
 }
 
-iHdlExpr * ReferenceParser::visitName_part(vhdlParser::Name_partContext* ctx) {
+iHdlExpr* ReferenceParser::visitName_part(vhdlParser::Name_partContext *ctx) {
 	// name_part
 	// : selected_name (name_part_specificator)*
 	// ;
-	iHdlExpr * sn = visitSelected_name(ctx->selected_name());
+	iHdlExpr *sn = visitSelected_name(ctx->selected_name());
 	for (auto sp : ctx->name_part_specificator()) {
 		sn = visitName_part_specificator(sn, sp);
 	}
 	return sn;
 }
 
-std::vector<iHdlExpr*> * ReferenceParser::visitName_slice_part(
+std::vector<iHdlExpr*>* ReferenceParser::visitName_slice_part(
 		vhdlParser::Name_slice_partContext *ctx) {
 	// name_slice_part
 	//   : LPAREN explicit_range ( COMMA explicit_range )* RPAREN
 	//   ;
-	std::vector<iHdlExpr*> * sp = new std::vector<iHdlExpr*>();
+	std::vector<iHdlExpr*> *sp = new std::vector<iHdlExpr*>();
 	for (auto er : ctx->explicit_range()) {
 		sp->push_back(ExprParser::visitExplicit_range(er));
 	}
 	return sp;
 }
 
-iHdlExpr * ReferenceParser::visitSimple_name(vhdlParser::Simple_nameContext * ctx) {
+iHdlExpr* ReferenceParser::visitSimple_name(
+		vhdlParser::Simple_nameContext *ctx) {
 	// simple_name: identifier;
 	return LiteralParser::visitIdentifier(ctx->identifier());
 }
