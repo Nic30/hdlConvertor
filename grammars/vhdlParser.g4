@@ -635,6 +635,7 @@ association_element:
 formal_part:
       name (LPAREN name RPAREN)?
 ;
+// [todo] performance problem, actual_designator can become just name, but name(name) is part of name
 actual_part:
       name LPAREN actual_designator RPAREN
       | actual_designator
@@ -776,29 +777,17 @@ pathname_element:
       label ( LPAREN expression RPAREN )?
 ;
 expression:
-      condition_operator primary
-      | logical_expression
-;
-logical_expression:
-      relation ( logical_operator relation )*
-;
-relation:
-      shift_expression ( relational_operator shift_expression )?
-;
-shift_expression:
-      simple_expression ( shift_operator simple_expression )?
+      COND_OP primary
+      | simple_expression
+      | expression shift_operator expression
+      | expression relational_operator expression
+      | expression logical_operator expression
 ;
 simple_expression:
-      ( sign )? term ( adding_operator term )*
-;
-term:
-      factor ( multiplying_operator factor )*
-;
-factor:
       primary ( DOUBLESTAR primary )?
-      | KW_ABS primary
-      | KW_NOT primary
-      | logical_operator primary
+      | ( KW_ABS | KW_NOT | logical_operator | sign) simple_expression
+      | simple_expression multiplying_operator simple_expression
+      | simple_expression adding_operator simple_expression
 ;
 primary:
       numeric_literal        // 1      // [attention] numeric literal also contains name
@@ -809,7 +798,6 @@ primary:
       | aggregate            // 5
       | qualified_expression // 7
 ;
-condition_operator: COND_OP;
 logical_operator: KW_AND | KW_OR | KW_NAND | KW_NOR | KW_XOR | KW_XNOR;
 relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | MATCH_EQ | MATCH_NEQ | MATCH_LT | MATCH_LE | MATCH_GT | MATCH_GE;
 shift_operator: KW_SLL | KW_SRL | KW_SLA | KW_SRA | KW_ROL | KW_ROR;
@@ -817,11 +805,12 @@ adding_operator: PLUS | MINUS | AMPERSAND;
 sign: PLUS | MINUS;
 multiplying_operator: MUL | DIV | KW_MOD | KW_REM;
 miscellaneous_operator: DOUBLESTAR | KW_ABS | KW_NOT;
-numeric_literal:
-      abstract_literal
-      |  physical_literal
+numeric_literal: // name there means name of unit, but there is ambiguity with any other name
+      DECIMAL_LITERAL (name)?
+      | BASED_LITERAL (name)?
+      | name
 ;
-physical_literal: ( abstract_literal )? name;
+physical_literal: ( DECIMAL_LITERAL |  BASED_LITERAL )? name;
 aggregate:
       LPAREN element_association ( COMMA element_association )* RPAREN
 ;
@@ -1183,5 +1172,3 @@ context_reference:
 ;
 
 identifier: BASIC_IDENTIFIER | EXTENDED_IDENTIFIER;
-abstract_literal: DECIMAL_LITERAL | BASED_LITERAL;
-

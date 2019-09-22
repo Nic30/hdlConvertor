@@ -48,12 +48,12 @@ iHdlExpr* ReferenceParser::visitName_literal(
 
 	auto n = ctx->CHARACTER_LITERAL();
 	if (n)
-		return LiteralParser::visitCharacter_literal(n->getText());
+		return LiteralParser::visitCHARACTER_LITERAL(n->getText());
 	// operator_symbol: string_literal;
 	auto o = ctx->operator_symbol();
 	assert(o);
 	auto sl = o->STRING_LITERAL();
-	return LiteralParser::visitString_literal(sl->getText());
+	return LiteralParser::visitSTRING_LITERAL(sl->getText());
 }
 
 iHdlExpr* ReferenceParser::visitName_slice_part(

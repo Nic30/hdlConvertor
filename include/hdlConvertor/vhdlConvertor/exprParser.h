@@ -45,14 +45,6 @@ public:
 			vhdlParser::Simple_expressionContext *ctx);
 	static hdlObjects::iHdlExpr* visitExpression(
 			vhdlParser::ExpressionContext *ctx);
-	static hdlObjects::iHdlExpr* visitLogical_expression(
-			vhdlParser::Logical_expressionContext *ctx);
-	static hdlObjects::iHdlExpr* visitRelation(
-			vhdlParser::RelationContext *ctx);
-	static hdlObjects::iHdlExpr* visitShift_expression(
-			vhdlParser::Shift_expressionContext *ctx);
-	static hdlObjects::iHdlExpr* visitTerm(vhdlParser::TermContext *ctx);
-	static hdlObjects::iHdlExpr* visitFactor(vhdlParser::FactorContext *ctx);
 	static hdlObjects::iHdlExpr* visitPrimary(vhdlParser::PrimaryContext *ctx);
 	static hdlObjects::iHdlExpr* visitQualified_expression(
 			vhdlParser::Qualified_expressionContext *ctx);

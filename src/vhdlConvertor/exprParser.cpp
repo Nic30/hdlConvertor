@@ -254,170 +254,96 @@ hdlObjects::HdlOperatorType ExprParser::visitSign(
 iHdlExpr* ExprParser::visitSimple_expression(
 		vhdlParser::Simple_expressionContext *ctx) {
 	// simple_expression:
-	//       ( sign )? term ( adding_operator term )*
+	//       primary ( DOUBLESTAR primary )?
+	//       | ( KW_ABS | KW_NOT | logical_operator | sign ) simple_expression
+	//       | simple_expression multiplying_operator simple_expression
+	//       | simple_expression adding_operator simple_expression
 	// ;
-	// adding_operator: PLUS | MINUS | AMPERSAND;
-	if (!ctx)
-		throw std::runtime_error("visitSimple_expression got nullptr");
-
-	auto t = ctx->term();
-	auto tIt = t.begin();
-	auto opList = ctx->adding_operator();
-	auto opListIt = opList.begin();
-	iHdlExpr *op0 = visitTerm(*tIt);
-	if (t.size() > 1)
-		tIt++;
-
-	while (opListIt != opList.end()) {
-		auto op = *opListIt;
-		++opListIt;
-		iHdlExpr *op1 = visitTerm(*tIt);
-		++tIt;
-		HdlOperatorType opType;
-		if (op->PLUS())
-			opType = ADD;
-		else if (op->MINUS()) {
-			opType = SUB;
+	auto _primary = ctx->primary();
+	if (_primary.size() == 1) {
+		return visitPrimary(_primary[0]);
+	} else if (_primary.size() == 2) {
+		auto p0 = visitPrimary(_primary[0]);
+		auto p1 = visitPrimary(_primary[1]);
+		assert(ctx->DOUBLESTAR());
+		return new iHdlExpr(p0, HdlOperatorType::POW, p1);
+	}
+	auto se = ctx->simple_expression();
+	HdlOperatorType op;
+	if (se.size() == 1) {
+		if (ctx->KW_ABS()) {
+			op = HdlOperatorType::ABS;
+		} else if (ctx->KW_NOT()) {
+			op = HdlOperatorType::NOT;
 		} else {
-			assert(op->AMPERSAND());
-			opType = CONCAT;
+			auto lo = ctx->logical_operator();
+			if (lo) {
+				op = OperatorType_from(lo);
+			} else {
+				auto s = ctx->sign();
+				assert(s);
+				op = OperatorType_from(s);
+			}
 		}
-		op0 = new iHdlExpr(op0, opType, op1);
-	}
+		auto se0 = visitSimple_expression(se[0]);
+		return new iHdlExpr(op, se0);
+	} else {
+		assert(se.size() == 2);
+		auto mo = ctx->multiplying_operator();
+		if (mo) {
+			op = OperatorType_from(mo);
+		} else {
+			auto ao = ctx->adding_operator();
+			assert(ao);
+			op = OperatorType_from(ao);
+		}
 
-	auto s = ctx->sign();
-	if (s) {
-		op0 = new iHdlExpr(op0, visitSign(s), NULL);
+		auto se0 = visitSimple_expression(se[0]);
+		auto se1 = visitSimple_expression(se[1]);
+		return new iHdlExpr(se0, op, se1);
 	}
-	return op0;
 }
 iHdlExpr* ExprParser::visitExpression(vhdlParser::ExpressionContext *ctx) {
 	// expression:
-	//       condition_operator primary
-	//       | logical_expression
+	//       COND_OP primary
+	//       | simple_expression
+	//       | expression shift_operator expression
+	//       | expression relational_operator expression
+	//       | expression logical_operator expression
 	// ;
-	auto le = ctx->logical_expression();
-	if (le) {
-		auto vle = visitLogical_expression(le);
-		return vle;
+
+	if (ctx->COND_OP()) {
+		NotImplementedLogger::print(
+				"ExprParser.visitExpression - CONDITION_OPERATOR", ctx);
+		auto p = ctx->primary();
+		assert(p);
+		auto vp = visitPrimary(p);
+		return vp;
 	}
-
-	NotImplementedLogger::print(
-			"ExprParser.visitExpression - CONDITION_OPERATOR", ctx);
-	auto p = ctx->primary();
-	assert(p);
-	auto vp = visitPrimary(p);
-	return vp;
-}
-
-iHdlExpr* ExprParser::visitLogical_expression(
-		vhdlParser::Logical_expressionContext *ctx) {
-	// logical_expression:
-	//       relation ( logical_operator relation )*
-	// ;
-	auto rel = ctx->relation();
-	auto relIt = rel.begin();
-	auto ops = ctx->logical_operator();
-	auto opIt = ops.begin();
-	iHdlExpr *op0 = visitRelation(*relIt);
-	++relIt;
-	while (opIt != ops.end()) {
-		iHdlExpr *op1 = visitRelation(*relIt);
-		++relIt;
-		op0 = new iHdlExpr(op0, OperatorType_from(*opIt), op1);
-		++opIt;
+	auto _se = ctx->simple_expression();
+	if (_se) {
+		return visitSimple_expression(_se);
 	}
-	return op0;
-}
-
-iHdlExpr* ExprParser::visitRelation(vhdlParser::RelationContext *ctx) {
-	// relation
-	// : shift_expression
-	// ( : relational_operator shift_expression )?
-	// ;
-
-	auto ex = ctx->shift_expression(0);
-	iHdlExpr *op0 = visitShift_expression(ex);
-
-	auto op = ctx->relational_operator();
-	if (op) {
-		iHdlExpr *op1 = visitShift_expression(ctx->shift_expression(1));
-		op0 = new iHdlExpr(op0, OperatorType_from(op), op1);
-	}
-
-	return op0;
-}
-iHdlExpr* ExprParser::visitShift_expression(
-		vhdlParser::Shift_expressionContext *ctx) {
-	// shift_expression
-	// : simple_expression
-	// ( : shift_operator simple_expression )?
-	// ;
-	auto se = ctx->simple_expression(0);
-	iHdlExpr *op0 = visitSimple_expression(se);
-	auto op = ctx->shift_operator();
-	if (op) {
-		iHdlExpr *op1 = visitSimple_expression(ctx->simple_expression(1));
-		op0 = new iHdlExpr(op0, OperatorType_from(op), op1);
-	}
-	return op0;
-}
-iHdlExpr* ExprParser::visitTerm(vhdlParser::TermContext *ctx) {
-	// term
-	// : factor ( : multiplying_operator factor )*
-	// ;
-
-	// multiplying_operator
-	// : MUL
-	// | DIV
-	// | MOD
-	// | REM
-	// ;
-	auto fac = ctx->factor();
-	auto t = fac.begin();
-
-	auto opList = ctx->multiplying_operator();
-	auto opListIt = opList.begin();
-	iHdlExpr *op0 = visitFactor(*t);
-	if (fac.size() > 1)
-		t++;
-
-	while (opListIt != opList.end()) {
-		auto op = *opListIt;
-		++opListIt;
-		iHdlExpr *op1 = visitFactor(*t);
-		++t;
-		HdlOperatorType opType;
-		if (op->MUL())
-			opType = HdlOperatorType::MUL;
-		else if (op->DIV())
-			opType = HdlOperatorType::DIV;
-		else if (op->KW_MOD())
-			opType = HdlOperatorType::MOD;
-		else {
-			assert(op->KW_REM());
-			opType = HdlOperatorType::REM;
+	auto _ops = ctx->expression();
+	assert(_ops.size() == 2);
+	auto op0 = visitExpression(_ops[0]);
+	auto op1 = visitExpression(_ops[1]);
+	auto so = ctx->shift_operator();
+	HdlOperatorType op;
+	if (so) {
+		op = OperatorType_from(so);
+	} else {
+		auto ro = ctx->relational_operator();
+		if (ro) {
+			op = OperatorType_from(ro);
+		} else {
+			auto lo = ctx->logical_operator();
+			assert(lo);
+			op = OperatorType_from(lo);
 		}
-		op0 = new iHdlExpr(op0, opType, op1);
 	}
-	return op0;
-}
-iHdlExpr* ExprParser::visitFactor(vhdlParser::FactorContext *ctx) {
-	// factor
-	// : primary ( : DOUBLESTAR primary )?
-	// | ABS primary
-	// | NOT primary
-	// ;
-	auto p0 = ctx->primary(0);
-	iHdlExpr *op0 = visitPrimary(p0);
-	auto p1 = ctx->primary(1);
-	if (p1)
-		return new iHdlExpr(op0, POW, visitPrimary(p1));
-	if (ctx->KW_ABS())
-		return new iHdlExpr(op0, ABS, NULL);
-	if (ctx->KW_NOT())
-		return new iHdlExpr(op0, NOT, NULL);
-	return op0;
+	return new iHdlExpr(op0, op, op1);
+
 }
 
 iHdlExpr* ExprParser::visitPrimary(vhdlParser::PrimaryContext *ctx) {

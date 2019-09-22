@@ -7,7 +7,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 inline hdlObjects::HdlOperatorType OperatorType_from(
-		vhdl_antlr::vhdlParser::Shift_operatorContext * op) {
+		vhdl_antlr::vhdlParser::Shift_operatorContext *op) {
 	// shift_operator
 	// : SLL
 	// | SRL
@@ -32,10 +32,8 @@ inline hdlObjects::HdlOperatorType OperatorType_from(
 
 }
 inline hdlObjects::HdlOperatorType OperatorType_from(
-		vhdl_antlr::vhdlParser::Relational_operatorContext * op) {
+		vhdl_antlr::vhdlParser::Relational_operatorContext *op) {
 	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | MATCH_EQ | MATCH_NEQ | MATCH_LT | MATCH_LE | MATCH_GT | MATCH_GE;
-
-
 	using hdlObjects::HdlOperatorType;
 	if (op->EQ())
 		return HdlOperatorType::EQ;
@@ -60,11 +58,11 @@ inline hdlObjects::HdlOperatorType OperatorType_from(
 		return HdlOperatorType::MATCH_LE;
 	if (op->MATCH_GT())
 		return HdlOperatorType::MATCH_GT;
-	assert (op->MATCH_GE());
-		return HdlOperatorType::MATCH_GE;
+	assert(op->MATCH_GE());
+	return HdlOperatorType::MATCH_GE;
 }
 inline hdlObjects::HdlOperatorType OperatorType_from(
-		vhdl_antlr::vhdlParser::Logical_operatorContext * op) {
+		vhdl_antlr::vhdlParser::Logical_operatorContext *op) {
 	// logical_operator: AND | OR | NAND | NOR | XOR | XNOR;
 
 	using hdlObjects::HdlOperatorType;
@@ -78,8 +76,41 @@ inline hdlObjects::HdlOperatorType OperatorType_from(
 		return HdlOperatorType::NOR;
 	if (op->KW_XOR())
 		return HdlOperatorType::XOR;
-	//assert(op->XNOR());
+	assert(op->KW_XNOR());
 	return HdlOperatorType::XNOR;
+}
+inline hdlObjects::HdlOperatorType OperatorType_from(
+		vhdl_antlr::vhdlParser::SignContext *op) {
+	// sign: PLUS | MINUS;
+	using hdlObjects::HdlOperatorType;
+	if (op->PLUS())
+		return HdlOperatorType::ADD;
+	assert(op->MINUS());
+	return HdlOperatorType::SUB;
+}
+inline hdlObjects::HdlOperatorType OperatorType_from(
+		vhdl_antlr::vhdlParser::Adding_operatorContext *op) {
+	// adding_operator: PLUS | MINUS | AMPERSAND;
+	using hdlObjects::HdlOperatorType;
+	if (op->PLUS())
+		return HdlOperatorType::ADD;
+	if (op->MINUS())
+		return HdlOperatorType::SUB;
+	assert(op->AMPERSAND());
+	return HdlOperatorType::AND;
+}
+inline hdlObjects::HdlOperatorType OperatorType_from(
+		vhdl_antlr::vhdlParser::Multiplying_operatorContext *op) {
+	// multiplying_operator: MUL | DIV | KW_MOD | KW_REM;
+	using hdlObjects::HdlOperatorType;
+	if (op->MUL())
+		return HdlOperatorType::MUL;
+	if (op->DIV())
+		return HdlOperatorType::DIV;
+	if (op->KW_MOD())
+		return HdlOperatorType::MOD;
+	assert(op->KW_REM());
+	return HdlOperatorType::REM;
 }
 
 }
