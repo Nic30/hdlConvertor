@@ -21,10 +21,10 @@ HdlModuleDec* EntityParser::visitEntity_declaration(
 	//           ( port_clause )?
 	//           ( entity_declarative_item )*
 	//       ( KW_BEGIN ( entity_statement )* )?
-	//       KW_END ( KW_ENTITY )? ( simple_name )? SEMI
+	//       KW_END ( KW_ENTITY )? ( identifier )? SEMI
 	// ;
 	HdlModuleDec *e = new HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	e->__doc__ = commentParser.parse(ctx);
 
 	if (!hierarchyOnly) {

@@ -14,8 +14,6 @@ class ExprParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::vector<hdlObjects::iHdlExpr*>* visitActual_parameter_part(
-			vhdlParser::Actual_parameter_partContext *ctx);
 	static std::vector<hdlObjects::iHdlExpr*>* visitAssociation_list(
 			vhdlParser::Association_listContext *ctx);
 	static hdlObjects::iHdlExpr* visitAssociation_element(
@@ -25,11 +23,6 @@ public:
 	static hdlObjects::iHdlExpr* visitExplicit_range(
 			vhdlParser::Explicit_rangeContext *ctx);
 	static hdlObjects::iHdlExpr* visitRange(vhdlParser::RangeContext *ctx);
-	static hdlObjects::iHdlExpr* visitPrefix(vhdlParser::PrefixContext *ctx);
-	static hdlObjects::iHdlExpr* visitFunction_name(
-			vhdlParser::Function_nameContext *ctx);
-	static hdlObjects::iHdlExpr* visitFunction_call(
-			vhdlParser::Function_callContext *ctx);
 	static hdlObjects::iHdlExpr* visitActual_part(
 			vhdlParser::Actual_partContext *ctx);
 	static hdlObjects::iHdlExpr* visitActual_designator(
@@ -60,8 +53,6 @@ public:
 			vhdlParser::Shift_expressionContext *ctx);
 	static hdlObjects::iHdlExpr* visitTerm(vhdlParser::TermContext *ctx);
 	static hdlObjects::iHdlExpr* visitFactor(vhdlParser::FactorContext *ctx);
-	static hdlObjects::iHdlExpr* visitType_conversion(
-			vhdlParser::Type_conversionContext *ctx);
 	static hdlObjects::iHdlExpr* visitPrimary(vhdlParser::PrimaryContext *ctx);
 	static hdlObjects::iHdlExpr* visitQualified_expression(
 			vhdlParser::Qualified_expressionContext *ctx);

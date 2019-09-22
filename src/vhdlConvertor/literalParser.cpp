@@ -13,32 +13,9 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-iHdlExpr* LiteralParser::visitLiteral(vhdlParser::LiteralContext *ctx) {
-	// literal:
-	//       numeric_literal
-	//       | enumeration_literal
-	//       | string_literal
-	//       | bit_string_literal
-	//       | NULL_SYM
-	// ;
 
-	auto nl = ctx->numeric_literal();
-	if (nl)
-		return visitNumeric_literal(nl);
-	auto el = ctx->enumeration_literal();
-	if (el)
-		return visitEnumeration_literal(el);
-
-	auto sl = ctx->STRING_LITERAL();
-	if (sl)
-		return visitString_literal(sl->getText());
-
-	if (ctx->KW_NULL())
-		return iHdlExpr::null();
-
-	auto n = ctx->BIT_STRING_LITERAL();
-	assert(n);
-	std::string s = n->getText();
+iHdlExpr* LiteralParser::visitBIT_STRING_LITERAL(const std::string &_s) {
+	std::string s = _s;
 	std::size_t fdRadix = s.find('"') - 1;
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 	int radix = 0;

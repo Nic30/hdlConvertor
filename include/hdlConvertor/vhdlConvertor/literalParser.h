@@ -11,7 +11,6 @@ class LiteralParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static hdlObjects::iHdlExpr* visitLiteral(vhdlParser::LiteralContext *ctx);
 	static hdlObjects::iHdlExpr* visitNumeric_literal(
 			vhdlParser::Numeric_literalContext *ctx);
 	static hdlObjects::iHdlExpr* visitPhysical_literal(
@@ -22,6 +21,7 @@ public:
 			vhdlParser::Enumeration_literalContext *ctx);
 	static hdlObjects::iHdlExpr* visitString_literal(const std::string &ctx);
 	static hdlObjects::iHdlExpr* visitCharacter_literal(const std::string &ctx);
+	static hdlObjects::iHdlExpr* visitBIT_STRING_LITERAL(const std::string &s);
 	static hdlObjects::iHdlExpr* visitIdentifier(
 			vhdlParser::IdentifierContext *ctx);
 	static bool isStrDesignator(vhdlParser::DesignatorContext *ctx);

@@ -201,10 +201,10 @@ HdlModuleDec * GenerateStatementParser::visitComponent_declaration(
 	//       COMPONENT identifier ( IS )?
 	//           ( generic_clause )?
 	//           ( port_clause )?
-	//       END COMPONENT ( simple_name )? SEMI
+	//       END COMPONENT ( identifier )? SEMI
 	// ;
 	HdlModuleDec * e = new HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	auto gc = ctx->generic_clause();
 	if (gc)
 		EntityParser::visitGeneric_clause(gc, &e->generics);

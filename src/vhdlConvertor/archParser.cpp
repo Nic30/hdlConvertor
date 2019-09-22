@@ -21,10 +21,10 @@ HdlModuleDef * ArchParser::visitArchitecture_body(
 	//           architecture_declarative_part
 	//       BEGIN
 	//           architecture_statement_part
-	//       END ( ARCHITECTURE )? ( simple_name )? SEMI
+	//       END ( ARCHITECTURE )? ( identifier )? SEMI
 	// ;
 
-	a->name = ctx->identifier()->getText();
+	a->name = ctx->identifier(0)->getText();
 	a->entityName = ReferenceParser::visitName(ctx->name());
 	a->position.update_from_elem(ctx);
 

@@ -113,53 +113,36 @@ any_keyword:
     | KW_PORT
     | KW_NULL
 ;
+name_literal:
+        identifier     
+       | operator_symbol   
+       | CHARACTER_LITERAL 
 
-
-
-// name:
-//       simple_name
-//       | operator_symbol
-//       | character_literal
-//       | selected_name
-//       | indexed_name
-//       | slice_name
-//       | attribute_name
-//       | external_name
-// ;
-// prefix:
-//       name
-//       | function_call
-// ;
-// indexed_name: prefix LPAREN expression ( COMMA expression )* RPAREN;
-// slice_name: prefix LPAREN discrete_range RPAREN;
-// attribute_name:
-//       prefix ( signature )? APOSTROPHE attribute_designator ( LPAREN expression RPAREN )?
-// ;
-//
-// changed to avoid left-recursion to name (from selected_name, indexed_name,
-// slice_name, and attribute_name, respectively)
-// (2.2.2004, e.f.)
+;
 name:
-      name_part ( DOT (name_part | any_keyword (name_part_specificator)? ))*
+    name_literal
+      | name (
+            name_slice_part // name_index was removed as it is same as call
+            | name_attribute_part
+            | association_list // call args
+            | DOT suffix
+        )
       | external_name
 ;
-
-name_part:
-      selected_name (name_part_specificator)*
+name_slice_part:
+    LPAREN explicit_range RPAREN
 ;
-
-name_part_specificator:
-      name_attribute_part
-      | LPAREN (name_function_call_or_indexed_part | name_slice_part) RPAREN
-;
-
 name_attribute_part:
-      APOSTROPHE attribute_designator ( expression ( COMMA expression )* )?
+    ( signature )? APOSTROPHE attribute_designator
+;
+attribute_name:
+    name name_attribute_part
 ;
 
-name_function_call_or_indexed_part:  actual_parameter_part?;
-
-name_slice_part: explicit_range ( COMMA explicit_range )*;
+suffix:
+    name_literal
+    | KW_ALL
+;
 
 explicit_range:
       simple_expression direction simple_expression
@@ -174,7 +157,7 @@ entity_declaration:
           ( port_clause )?
           ( entity_declarative_item )*
       ( KW_BEGIN ( entity_statement )* )?
-      KW_END ( KW_ENTITY )? ( simple_name )? SEMI
+      KW_END ( KW_ENTITY )? ( identifier )? SEMI
 ;
 entity_declarative_item:
       subprogram_declaration
@@ -210,7 +193,7 @@ architecture_body:
           architecture_declarative_part
       KW_BEGIN
           architecture_statement_part
-      KW_END ( KW_ARCHITECTURE )? ( simple_name )? SEMI
+      KW_END ( KW_ARCHITECTURE )? ( identifier )? SEMI
 ;
 architecture_declarative_part:
       ( block_declarative_item )*
@@ -246,7 +229,7 @@ configuration_declaration:
           configuration_declarative_part
           ( verification_unit_binding_indication SEMI )*
           block_configuration
-      KW_END ( KW_CONFIGURATION )? ( simple_name )? SEMI
+      KW_END ( KW_CONFIGURATION )? ( identifier )? SEMI
 ;
 configuration_declarative_part:
       ( configuration_declarative_item )*
@@ -348,7 +331,7 @@ package_declaration:
       KW_PACKAGE identifier KW_IS
           package_header
           package_declarative_part
-      KW_END ( KW_PACKAGE )? ( simple_name )? SEMI
+      KW_END ( KW_PACKAGE )? ( identifier )? SEMI
 ;
 package_header:
       ( generic_clause
@@ -378,9 +361,9 @@ package_declarative_item:
       | group_declaration
      ;
 package_body:
-      KW_PACKAGE KW_BODY simple_name KW_IS
+      KW_PACKAGE KW_BODY identifier KW_IS
           package_body_declarative_part
-      KW_END ( KW_PACKAGE KW_BODY )? ( simple_name )? SEMI
+      KW_END ( KW_PACKAGE KW_BODY )? ( identifier )? SEMI
 ;
 package_body_declarative_part:
       ( package_body_declarative_item )*
@@ -430,11 +413,10 @@ physical_type_definition:
           KW_UNITS
               primary_unit_declaration
               ( secondary_unit_declaration )*
-          KW_END KW_UNITS ( simple_name )?
+          KW_END KW_UNITS ( identifier )?
 ;
 primary_unit_declaration: identifier SEMI;
 secondary_unit_declaration: identifier EQ physical_literal SEMI;
-physical_literal: ( abstract_literal )? name;
 floating_type_definition: range_constraint;
 composite_type_definition:
       array_type_definition
@@ -462,7 +444,7 @@ record_type_definition:
       KW_RECORD
           element_declaration
           ( element_declaration )*
-      KW_END KW_RECORD ( simple_name )?
+      KW_END KW_RECORD ( identifier )?
 ;
 element_declaration:
       identifier_list COLON element_subtype_definition SEMI
@@ -472,7 +454,7 @@ element_subtype_definition: subtype_indication;
 record_constraint:
       LPAREN record_element_constraint ( COMMA record_element_constraint )* RPAREN
 ;
-record_element_constraint: simple_name element_constraint;
+record_element_constraint: identifier element_constraint;
 access_type_definition: KW_ACCESS subtype_indication;
 incomplete_type_declaration: KW_TYPE identifier SEMI;
 file_type_definition: KW_FILE KW_OF type_mark;
@@ -483,7 +465,7 @@ protected_type_definition:
 protected_type_declaration:
       KW_PROTECTED
           protected_type_declarative_part
-      KW_END KW_PROTECTED ( simple_name )?
+      KW_END KW_PROTECTED ( identifier )?
 ;
 protected_type_declarative_part:
       ( protected_type_declarative_item )*
@@ -497,7 +479,7 @@ protected_type_declarative_item:
 protected_type_body:
       KW_PROTECTED KW_BODY
           protected_type_body_declarative_part
-      KW_END KW_PROTECTED KW_BODY ( simple_name )?
+      KW_END KW_PROTECTED KW_BODY ( identifier )?
 ;
 protected_type_body_declarative_part:
       ( protected_type_body_declarative_item )*
@@ -547,7 +529,7 @@ resolution_indication:
 element_resolution: array_element_resolution | record_resolution;
 array_element_resolution: resolution_indication;
 record_resolution: record_element_resolution ( COMMA record_element_resolution )*;
-record_element_resolution: simple_name resolution_indication;
+record_element_resolution: identifier resolution_indication;
 type_mark: name;
 constraint:
       range_constraint
@@ -645,18 +627,13 @@ port_clause:
 ;
 port_list: interface_list;
 association_list:
-      association_element ( COMMA association_element )*
+    LPAREN association_element ( COMMA association_element )* RPAREN
 ;
 association_element:
       ( formal_part ARROW )? actual_part
 ;
 formal_part:
-      formal_designator
-      | name LPAREN formal_designator RPAREN
-      | type_mark LPAREN formal_designator RPAREN
-;
-formal_designator:
-      name
+      name (LPAREN name RPAREN)?
 ;
 actual_part:
       name LPAREN actual_designator RPAREN
@@ -668,10 +645,10 @@ actual_designator:
       | KW_OPEN
 ;
 generic_map_aspect:
-      KW_GENERIC KW_MAP LPAREN association_list RPAREN
+      KW_GENERIC KW_MAP association_list
 ;
 port_map_aspect:
-      KW_PORT KW_MAP LPAREN association_list RPAREN
+      KW_PORT KW_MAP association_list
 ;
 alias_declaration:
       KW_ALIAS alias_designator ( COLON subtype_indication )? KW_IS name ( signature )? SEMI
@@ -684,7 +661,7 @@ component_declaration:
       KW_COMPONENT identifier ( KW_IS )?
           ( generic_clause )?
           ( port_clause )?
-      KW_END KW_COMPONENT ( simple_name )? SEMI
+      KW_END KW_COMPONENT ( identifier )? SEMI
 ;
 group_template_declaration:
       KW_GROUP identifier KW_IS LPAREN entity_class_entry_list RPAREN SEMI
@@ -697,7 +674,7 @@ group_declaration:
       KW_GROUP identifier COLON name LPAREN group_constituent_list RPAREN SEMI
 ;
 group_constituent_list: group_constituent ( COMMA group_constituent )*;
-group_constituent: name | CHARACTER_LITERAL;
+group_constituent: name;
 attribute_specification:
       KW_ATTRIBUTE attribute_designator KW_OF entity_specification KW_IS expression SEMI
 ;
@@ -731,7 +708,7 @@ entity_name_list:
       | KW_ALL
 ;
 entity_designator: entity_tag ( signature )?;
-entity_tag: simple_name | CHARACTER_LITERAL | operator_symbol;
+entity_tag: identifier | CHARACTER_LITERAL | operator_symbol;
 configuration_specification:
       simple_configuration_specification
       | compound_configuration_specification
@@ -779,21 +756,8 @@ signal_list:
       | KW_OTHERS
       | KW_ALL
 ;
-prefix:
-      name
-      | function_call
-;
-simple_name: identifier;
-suffix:
-      simple_name
-      | CHARACTER_LITERAL
-      | operator_symbol
-      | KW_ALL
-;
-attribute_name:
-      prefix ( signature )? APOSTROPHE attribute_designator ( LPAREN expression RPAREN )?
-;
-attribute_designator: simple_name | any_keyword;
+
+attribute_designator: identifier | any_keyword;
 external_name:
       SHIFT_LEFT (KW_VARIABLE | KW_CONSTANT | KW_SIGNAL) external_pathname COLON subtype_indication SHIFT_RIGHT
 ;
@@ -803,11 +767,11 @@ external_pathname:
       | relative_pathname
 ;
 package_pathname:
-      AT logical_name DOT simple_name DOT ( simple_name DOT )* simple_name
+      AT identifier DOT identifier DOT ( identifier DOT )* identifier
 ;
 absolute_pathname: DOT partial_pathname;
 relative_pathname: ( UP DOT )* partial_pathname;
-partial_pathname: ( pathname_element DOT )* simple_name;
+partial_pathname: ( pathname_element DOT )* identifier;
 pathname_element:
       label ( LPAREN expression RPAREN )?
 ;
@@ -837,14 +801,13 @@ factor:
       | logical_operator primary
 ;
 primary:
-        literal
-      | LPAREN expression RPAREN
-      | allocator
-      | aggregate
-      | function_call
-      | type_conversion
-      | qualified_expression
-      | name
+      numeric_literal        // 1      // [attention] numeric literal also contains name
+                             //             name can contain string and char
+      | BIT_STRING_LITERAL   // 2
+      | KW_NULL              // 3
+      | allocator            // 4
+      | aggregate            // 5
+      | qualified_expression // 7
 ;
 condition_operator: COND_OP;
 logical_operator: KW_AND | KW_OR | KW_NAND | KW_NOR | KW_XOR | KW_XNOR;
@@ -854,17 +817,11 @@ adding_operator: PLUS | MINUS | AMPERSAND;
 sign: PLUS | MINUS;
 multiplying_operator: MUL | DIV | KW_MOD | KW_REM;
 miscellaneous_operator: DOUBLESTAR | KW_ABS | KW_NOT;
-literal:
-      numeric_literal
-      | enumeration_literal
-      | STRING_LITERAL
-      | BIT_STRING_LITERAL
-      | KW_NULL
-;
 numeric_literal:
       abstract_literal
-      | physical_literal
+      |  physical_literal
 ;
+physical_literal: ( abstract_literal )? name;
 aggregate:
       LPAREN element_association ( COMMA element_association )* RPAREN
 ;
@@ -872,30 +829,16 @@ element_association:
       ( choices ARROW )? expression
 ;
 choices: choice ( BAR choice )*;
-// [rm non determinism]      | simple_name
+// [rm non determinism]      | identifier
 choice:
       discrete_range
       | simple_expression
       | KW_OTHERS
 ;
-function_name:
-	name
-	| operator_symbol
-	//| character_literal
-	//| selected_name
-	//| indexed_name
-	//| slice_name
-	//| attribute_name
-	//| external_name
-;
-function_call:
-      function_name LPAREN actual_parameter_part RPAREN
-;
-actual_parameter_part: association_list;
+
 qualified_expression:
       type_mark APOSTROPHE aggregate // aggregate can also be LPAREN expression RPAREN
 ;
-type_conversion: type_mark LPAREN expression RPAREN;
 allocator:
       KW_NEW ( subtype_indication | qualified_expression )
 ;
@@ -1028,9 +971,8 @@ selected_variable_assignment:
       KW_WITH expression KW_SELECT ( QUESTIONMARK )?
           target VARASGN selected_expressions SEMI
 ;
-procedure_call_statement: procedure_call SEMI;
-//  ( LPAREN actual_parameter_part RPAREN )? can be part of the "name"
-procedure_call: name;
+procedure_call_statement: procedure_call  SEMI;
+procedure_call: name ( association_list )?;
 if_statement:
           KW_IF condition KW_THEN
               sequence_of_statements
@@ -1224,12 +1166,11 @@ secondary_unit:
       | package_body
 ;
 library_clause: KW_LIBRARY logical_name_list SEMI;
-logical_name_list: logical_name ( COMMA logical_name )*;
-logical_name: identifier;
+logical_name_list: identifier_list;
 context_declaration:
       KW_CONTEXT identifier KW_IS
           context_clause
-      KW_END ( KW_CONTEXT )? ( simple_name )? SEMI
+      KW_END ( KW_CONTEXT )? ( identifier )? SEMI
 ;
 context_clause: ( context_item )*;
 context_item:

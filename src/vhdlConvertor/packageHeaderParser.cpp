@@ -33,13 +33,13 @@ HdlNamespace * PackageHeaderParser::visitPackage_declaration(
 	//       PACKAGE identifier IS
 	//           package_header
 	//           package_declarative_part
-	//       END ( PACKAGE )? ( simple_name )? SEMI
+	//       END ( PACKAGE )? ( identifier )? SEMI
 	// ;
 
 	NotImplementedLogger::print(
 			"PackageHeaderParser.visitPackage_declaration - package_header", ctx);
 
-	iHdlExpr * name = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr * name = LiteralParser::visitIdentifier(ctx->identifier(0));
 	ph->name = name->extractStr();
 	delete name;
 	visitPackage_declarative_part(ctx->package_declarative_part());
@@ -190,11 +190,11 @@ HdlModuleDec * PackageHeaderParser::visitComponent_declaration(
 	//       COMPONENT identifier ( IS )?
 	//           ( generic_clause )?
 	//           ( port_clause )?
-	//       END COMPONENT ( simple_name )? SEMI
+	//       END COMPONENT ( identifier )? SEMI
 	// ;
 
 	HdlModuleDec * e = new HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)

@@ -190,10 +190,10 @@ hdlObjects::HdlModuleDec* BlockDeclarationParser::visitComponent_declaration(
 	//       COMPONENT identifier ( IS )?
 	//           ( generic_clause )?
 	//           ( port_clause )?
-	//       END COMPONENT ( simple_name )? SEMI
+	//       END COMPONENT ( identifier )? SEMI
 	// ;
 	auto e = new hdlObjects::HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)
