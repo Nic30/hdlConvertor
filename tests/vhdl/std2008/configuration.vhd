@@ -13,35 +13,35 @@ configuration V4_27_87 of Processor is
 		for all: Latch
 			-- use defaults
 		end for;
-	end for;
-	-- p. 16
-	for Adders(31 downto 0)
-		--
-	end for;
-	for Adders(0 to 31)
-		--
-	end for;
 
-	-- p. 18
-	-- A component configuration with binding indication:
-	for all: IOPort
-	use entity StdCells.PadTriState4 (DataFlow)
-		port map (Pout=>A, Pin=>B, IO=>Dir, Vdd=>Pwr, Gnd=>Gnd);
-	end for;
-
-	-- A component configuration containing block configurations:
-	for D1: DSP
-		for DSP_STRUCTURE
-			-- Binding specified in design entity or else defaults.
-			for Filterer
-				-- Configuration items for filtering components.
-			end for;
-			for Processor
-				-- Configuration items for processing components.
+		-- p. 16
+		for Adders(31 downto 0)
+			--
+		end for;
+		for Adders(0 to 31)
+			--
+		end for;
+	
+		-- p. 18
+		-- A component configuration with binding indication:
+		for all: IOPort
+			use entity StdCells.PadTriState4 (DataFlow)
+				port map (Pout=>A, Pin=>B, IO=>Dir, Vdd=>Pwr, Gnd=>Gnd);
+		end for;
+	    
+		-- A component configuration containing block configurations:
+		for D1: DSP
+			for DSP_STRUCTURE
+				-- Binding specified in design entity or else defaults.
+				for Filterer
+					-- Configuration items for filtering components.
+				end for;
+				for Processor
+					-- Configuration items for processing components.
+				end for;
 			end for;
 		end for;
 	end for;
-
 end configuration V4_27_87;
 
 architecture A of E is

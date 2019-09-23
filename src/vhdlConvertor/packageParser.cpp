@@ -33,11 +33,11 @@ PackageParser::PackageParser(bool _hierarchyOnly) {
 HdlNamespace * PackageParser::visitPackage_body(
 		vhdlParser::Package_bodyContext* ctx) {
 	// package_body:
-	//       PACKAGE BODY simple_name IS
+	//       PACKAGE BODY identifier IS
 	//           package_body_declarative_part
-	//       END ( PACKAGE BODY )? ( simple_name )? SEMI
+	//       END ( PACKAGE BODY )? ( identifier )? SEMI
 	// ;
-	iHdlExpr * id = ReferenceParser::visitSimple_name(ctx->simple_name(0));
+	iHdlExpr * id = LiteralParser::visitIdentifier(ctx->identifier(0));
 	p->name = id->extractStr();
 	delete id;
 

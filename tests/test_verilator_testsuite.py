@@ -3,11 +3,11 @@ import os
 import re
 import unittest
 
-from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
-from tests.file_utils import find_files, TestFilter, generate_test_method_name, \
-    get_file_name
+from tests.file_utils import find_files, get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.extern_test_utils import generate_external_testcase_class, \
+    ExternTestSpec
 
 VERILATOR_ROOT = os.path.join(os.path.dirname(__file__), "verilator")
 VERILATOR_TEST_ROOT = os.path.join(VERILATOR_ROOT, "test_regress", "t")
@@ -18,7 +18,7 @@ VERILATOR_TEST_ROOT = os.path.join(VERILATOR_ROOT, "test_regress", "t")
 SUCESSFULL_TEST_FILTER_FILE = None
 
 
-def get_verilator_test_config():
+def get_verilator_test_configs():
     RE_TOPFILENAME = re.compile('top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
     for test_script_name in find_files(VERILATOR_TEST_ROOT, "*.pl"):
         do_ignore = False
@@ -53,103 +53,75 @@ def get_verilator_test_config():
                 else:
                     raise NotImplementedError(test_script_name)
 
-        yield os.path.join(VERILATOR_TEST_ROOT, main_file), should_fail
+        lang = Language.SYSTEM_VERILOG_2009
+        fn = get_file_name(main_file)
+        if fn in {
+                # non std {} initializer
+                "t_struct_init",
+                # should fail but fail value not parsed in script correctly
+                "t_var_bad_sv",
+                "t_mem_multi_ref_bad",
+                "t_langext_order",
+                "t_inst_missing",
+                # requires additional preproc definitions
+                "t_tri_gate",
+                "t_extend_class",
+                "t_dpi_var",
+                "t_dpi_sys",
+                "t_dpi_display",
+                "t_dpi_threads",
+                "t_interface_down_gen",
+                "t_gen_missing",
+                # "t_sys_fread",
+                # "t_preproc_undefineall",
+                # "t_lint_unused",
+                # "t_interface_down_gen",
+                # "t_case_write1",
+                # not a verilog files
+                "t_preproc_persist",
+                "t_preproc_noline",
+                "t_preproc_kwd",
+                "t_preproc_def09",
+                "t_preproc",
+                "t_pp_display",
+                "t_pp_pragmas",
+                "t_pipe_filter",
+                # non std. primitive with assign
+                "t_trace_primitive",
+                # non std. numbers starting with _
+                "t_stream",
+                # = #100'b0
+                "t_parse_delay",
+                # non std.? parameters without the parenthesis?
+                "t_param_no_parentheses",
+                # non std. ordered and named port list mixed syntax 
+                "t_interface_modportlist",
+                # non std. missing return type of function
+                "t_interface_modport_export",
+                # non std. mpodport can be only in interface
+                "t_interface_gen",
+                # non std. case without items
+                "t_case_wild",
+                
+                # /dev/null is not present under windows
+                "t_lint_incabspath",
+                }:
+            should_fail = True
+        if fn == "t_var_rsvd":
+            lang = Language.SYSTEM_VERILOG_2005
+        preproc_defs = {
+            "TEST_OBJ_DIR": "obj/",
+            "PREDEF_COMMAND_LINE": '$display("PREDEF_COMMAND_LINE");'
+        }
+        incdirs = [VERILATOR_TEST_ROOT, os.path.join(VERILATOR_ROOT, "include")]
+
+        yield ExternTestSpec(os.path.join(VERILATOR_TEST_ROOT, main_file), lang, preproc_defs, incdirs, should_fail)
 
 
-# https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
-class VerilatorTestsuiteMeta(type):
-
-    def __new__(cls, name, bases, _dict):
-        test_filter = TestFilter(SUCESSFULL_TEST_FILTER_FILE)
-
-        def gen_test(sv_file, should_fail, verilog_version):
-
-            def test(self):
-                debug = False
-                c = HdlConvertor()
-                c.preproc_macro_db["TEST_OBJ_DIR"] = "obj/"
-                c.preproc_macro_db["PREDEF_COMMAND_LINE"] = '$display("PREDEF_COMMAND_LINE");'
-                incdirs = [VERILATOR_TEST_ROOT, os.path.join(VERILATOR_ROOT, "include")]
-                # print(c.verilog_pp(sv_file, verilog_version, incdirs))
-                try:
-                    c.parse([sv_file, ], verilog_version, incdirs, debug=debug)
-                except Exception:
-                    if should_fail:
-                        # [TODO] some expected erros in this test suite are not related to synatax
-                        #        need to check maually if the error really means syntax error and
-                        #        if this library is raising it correctly
-                        pass
-                    else:
-                        raise
-                test_filter.mark_test_as_passed(self)
-
-            return test
-
-        for file_name, should_fail in sorted(set(get_verilator_test_config()),
-                                             key=lambda x: x[0]):
-            lang = Language.SYSTEM_VERILOG_2009
-            fn = get_file_name(file_name)
-            if fn in {
-                    # non std {} initializer
-                    "t_struct_init",
-                    # should fail but fail value not parsed in script correctly
-                    "t_var_bad_sv",
-                    "t_mem_multi_ref_bad",
-                    "t_langext_order",
-                    "t_inst_missing",
-                    # requires additional preproc definitions
-                    "t_tri_gate",
-                    "t_extend_class",
-                    "t_dpi_var",
-                    "t_dpi_sys",
-                    "t_dpi_display",
-                    "t_dpi_threads",
-                    "t_interface_down_gen",
-                    "t_gen_missing",
-                    # "t_sys_fread",
-                    # "t_preproc_undefineall",
-                    # "t_lint_unused",
-                    # "t_interface_down_gen",
-                    # "t_case_write1",
-                    # not a verilog files
-                    "t_preproc_persist",
-                    "t_preproc_noline",
-                    "t_preproc_kwd",
-                    "t_preproc_def09",
-                    "t_preproc",
-                    "t_pp_display",
-                    "t_pp_pragmas",
-                    "t_pipe_filter",
-                    # non std. primitive with assign
-                    "t_trace_primitive",
-                    # non std. numbers starting with _
-                    "t_stream",
-                    # = #100'b0
-                    "t_parse_delay",
-                    # non std.? parameters without the parenthesis?
-                    "t_param_no_parentheses",
-                    # non std. ordered and named port list mixed syntax 
-                    "t_interface_modportlist",
-                    # non std. missing return type of function
-                    "t_interface_modport_export",
-                    # non std. mpodport can be only in interface
-                    "t_interface_gen",
-                    # non std. case without items
-                    "t_case_wild",
-                    }:
-                should_fail = True
-            if fn == "t_var_rsvd":
-                lang = Language.SYSTEM_VERILOG_2005
-            test_name = generate_test_method_name(fn, lang, _dict)
-
-            if not test_filter.is_dissabled_test(test_name):
-                _dict[test_name] = gen_test(file_name, should_fail, lang)
-
-        return type.__new__(cls, name, bases, _dict)
-
-
-# https://www.oipapio.com/question-219175 , python2/3 compatible specification of metatype for class
-VerilatorTestsuiteTC = VerilatorTestsuiteMeta('VerilatorTestsuiteTC', (unittest.TestCase,), {})
+VerilatorTestsuiteTC = generate_external_testcase_class(
+    'VerilatorTestsuiteTC',
+    get_verilator_test_configs(),
+    SUCESSFULL_TEST_FILTER_FILE)
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)

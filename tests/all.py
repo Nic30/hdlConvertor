@@ -1,8 +1,8 @@
 import unittest
 
 from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
-from tests.test_sv_std_examples_parse import SvStdExamplesParseTC
-from tests.test_verilator_testsuite import VerilatorTestsuiteMeta
+from tests.test_sv2017_std_examples_parse import Sv2017StdExamplesParseTC
+from tests.test_verilator_testsuite import VerilatorTestsuiteTC
 from tests.test_verilog_conversion import VerilogConversionTC
 from tests.test_verilog_preproc import VerilogPreprocTC
 from tests.test_verilog_preproc_grammar import VerilogPreprocGrammarTC
@@ -10,6 +10,8 @@ from tests.test_verilog_preproc_include import VerilogPreprocIncludeTC
 from tests.test_verilog_preproc_macro_db_api import VerilogPreprocMacroDbApiTC
 from tests.test_vhdl_conversion import VhdlConversionTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.test_yosys_testsuite import YosysTestsuiteTC
+from tests.test_vunit_testsuite import VUnitTestsuiteTC
 
 
 def main_test_suite():
@@ -21,9 +23,11 @@ def main_test_suite():
         VerilogPreprocMacroDbApiTC,
         VerilogConversionTC,
         VhdlConversionTC,
-        SvStdExamplesParseTC,
+        Sv2017StdExamplesParseTC,
         IcarusVerilogTestsuiteTC,
-        VerilatorTestsuiteMeta,
+        VerilatorTestsuiteTC,
+        YosysTestsuiteTC,
+        VUnitTestsuiteTC,
     ]
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))

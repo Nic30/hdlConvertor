@@ -19,24 +19,13 @@ BlockDeclarationParser::BlockDeclarationParser(bool hierarchyOnly) :
 		hierarchyOnly(hierarchyOnly) {
 }
 
-void BlockDeclarationParser::visitBlock_declarative_part(
-		vhdlParser::Block_declarative_partContext * ctx,
-		std::vector<hdlObjects::iHdlObj*> & objs) {
-	// block_declarative_part:
-	//       ( block_declarative_item )*
-	// ;
-	for (auto bdi : ctx->block_declarative_item()) {
-		visitBlock_declarative_item(bdi, objs);
-	}
-}
-
 /*
  * @note Some declarations can spot multiple objects
  * 		 that is why this function just does not return hdlObjects::iHdlObj*
  * */
 void BlockDeclarationParser::visitBlock_declarative_item(
-		vhdlParser::Block_declarative_itemContext * ctx,
-		std::vector<hdlObjects::iHdlObj*> & objs) {
+		vhdlParser::Block_declarative_itemContext *ctx,
+		std::vector<hdlObjects::iHdlObj*> &objs) {
 	// block_declarative_item:
 	//       subprogram_declaration
 	//       | subprogram_body
@@ -95,7 +84,8 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	auto pid = ctx->package_instantiation_declaration();
 	if (pid) {
 		NotImplementedLogger::print(
-				"ArchParser.visitBlock_declarative_item - package_instantiation_declaration", pid);
+				"ArchParser.visitBlock_declarative_item - package_instantiation_declaration",
+				pid);
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -143,7 +133,8 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ArchParser.visitAlias_declaration", aliasd);
+		NotImplementedLogger::print("ArchParser.visitAlias_declaration",
+				aliasd);
 		return;
 	}
 	auto compd = ctx->component_declaration();
@@ -153,12 +144,20 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ArchParser.visitAttribute_declaration", atrd);
+		NotImplementedLogger::print("ArchParser.visitAttribute_declaration",
+				atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
-		NotImplementedLogger::print("ArchParser.visitAttribute_specification", as);
+		NotImplementedLogger::print("ArchParser.visitAttribute_specification",
+				as);
+		return;
+	}
+	auto cs = ctx->configuration_specification();
+	if (cs) {
+		NotImplementedLogger::print(
+				"ArchParser.visitconfiguration_specification", cs);
 		return;
 	}
 	auto discs = ctx->disconnection_specification();
@@ -185,16 +184,16 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
-hdlObjects::HdlModuleDec * BlockDeclarationParser::visitComponent_declaration(
-		vhdlParser::Component_declarationContext* ctx) {
+hdlObjects::HdlModuleDec* BlockDeclarationParser::visitComponent_declaration(
+		vhdlParser::Component_declarationContext *ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
 	//           ( generic_clause )?
 	//           ( port_clause )?
-	//       END COMPONENT ( simple_name )? SEMI
+	//       END COMPONENT ( identifier )? SEMI
 	// ;
 	auto e = new hdlObjects::HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)

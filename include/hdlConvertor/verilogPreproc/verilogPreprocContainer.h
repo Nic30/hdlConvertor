@@ -22,7 +22,7 @@ public:
 	Language lang;
 	SyntaxErrorLogger &syntaxErrLogger;
 	// [TODO] make this configurable
-	static constexpr size_t DEFAULT_MAX_MACRO_CALL_STACK_SIZE = 1024;
+	static constexpr size_t DEFAULT_MAX_MACRO_CALL_STACK_SIZE = 128;
 	size_t max_macro_call_stack_size;
 	std::vector<std::string> macro_call_stack;
 	bool debug_dump_tokens;

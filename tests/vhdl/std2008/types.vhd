@@ -1,3 +1,9 @@
+-- p. 49
+entity E is
+	generic (ROM: Memory);
+	port (Op1, Op2: in Word; Result: out Word);
+end entity E;
+	
 -- p. 38
 package p_38 is
 
@@ -43,15 +49,7 @@ package p_38 is
 			lg = 3 mi;            --league
 		end units DISTANCE;
 
-	variable x: distance;
-	variable y: duration;
-	variable z: integer;
-	x := 5 Å + 13 ft - 27 inch;
-	y := 3 ns + 5 min;
-	z := ns / ps;
-	x := z * mi;
-	y := y/10;
-	z := 39.34 inch / m;
+
 
 
 	-- p. 42
@@ -114,11 +112,7 @@ package p_38 is
 	constant A_Word: Word := "10011";
 	-- The index range of A_Word is 0 to 4
 
-	-- p. 49
-	entity E is
-		generic (ROM: Memory);
-		port (Op1, Op2: in Word; Result: out Word);
-	end entity E;
+
 	-- The index ranges of the generic and the ports are defined by
 	-- the actuals associated with an instance bound to E; these index
 	-- ranges are accessible via the predefined array attributes
@@ -326,3 +320,16 @@ package p_38 is
 
 end package;
 
+
+architecture test of test_ent is
+	variable x: distance;
+	variable y: duration;
+	variable z: integer;
+begin
+	x := 5 Å + 13 ft - 27 inch;
+	y := 3 ns + 5 min;
+	z := ns / ps;
+	x := z * mi;
+	y := y/10;
+	z := 39.34 inch / m;
+end architecture;

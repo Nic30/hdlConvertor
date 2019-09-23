@@ -353,12 +353,12 @@ mode KEYWOORDS_MODE;
 // include argument processing
 mode INCLUDE_MODE;
     INCLUDE_MODE_STR
-        :  STR ->type(STR),popMode
+        :  STR -> type(STR),popMode
         ;
-    INCLUDE_MODE_StringLiteral_chevrons
-        :  '<' ( ~('\\'|'>') )* '>' ->popMode
+    INCLUDE_MODE_STR_CHEVRONS
+        :  '<' ( ~('\\'|'>') )* '>' -> type(STR),popMode
         ;
-    INCLUDE_MODE_MACRO_ENTER: '`' -> skip,popMode,pushMode(DIRECTIVE_MODE);
+    INCLUDE_MODE_MACRO_ENTER: '`' -> popMode,pushMode(DIRECTIVE_MODE),skip;
     INCLUDE_MODE_WS : WS ->skip;
 
 // pragma arguments processing

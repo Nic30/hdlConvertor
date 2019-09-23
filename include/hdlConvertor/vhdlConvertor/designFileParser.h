@@ -18,17 +18,17 @@ class DesignFileParser: public BaseHdlParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	DesignFileParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
+	DesignFileParser(antlr4::TokenStream *tokens, hdlObjects::HdlContext *ctx,
 			bool _hierarchyOnly);
-	void visitDesign_file(vhdlParser::Design_fileContext* ctx);
-	void visitDesign_unit(vhdlParser::Design_unitContext* ctx);
-	void visitLibrary_unit(vhdlParser::Library_unitContext* ctx);
-	void visitSecondary_unit(vhdlParser::Secondary_unitContext* ctx);
-	void visitContext_clause(vhdlParser::Context_clauseContext* ctx);
-	void visitPrimary_unit(vhdlParser::Primary_unitContext* ctx);
-	void visitContext_item(vhdlParser::Context_itemContext* ctx);
-	hdlObjects::iHdlStatement * visitUse_clause(
-			vhdlParser::Use_clauseContext* ctx);
+	void visitDesign_file(vhdlParser::Design_fileContext *ctx);
+	void visitDesign_unit(vhdlParser::Design_unitContext *ctx);
+	void visitLibrary_unit(vhdlParser::Library_unitContext *ctx);
+	void visitSecondary_unit(vhdlParser::Secondary_unitContext *ctx);
+	void visitContext_clause(vhdlParser::Context_clauseContext *ctx);
+	void visitPrimary_unit(vhdlParser::Primary_unitContext *ctx);
+	void visitContext_item(vhdlParser::Context_itemContext *ctx);
+	void visitUse_clause(vhdlParser::Use_clauseContext *ctx,
+			std::vector<hdlObjects::iHdlObj*> &res);
 };
 
 }

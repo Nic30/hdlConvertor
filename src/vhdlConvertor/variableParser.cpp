@@ -14,7 +14,7 @@ std::vector<HdlVariableDef*> * VariableParser::visitVariable_declaration(
 	// subtype_indication ( VARASGN expression )? SEMI
 	// ;
 
-	if (ctx->SHARED())
+	if (ctx->KW_SHARED())
 		NotImplementedLogger::print(
 				"VariableParser.visitVariable_declaration - SHARED", ctx);
 

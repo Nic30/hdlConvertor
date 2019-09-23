@@ -1,4 +1,5 @@
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <stdexcept>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -62,8 +63,8 @@ static const char* const opTypeToStr[] = {
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
-	if (opt < RANGE || opt > MAP_ASSOCIATION)
-		throw "Invalid operator type";
+	if (opt < RANGE || opt > MATCH_GE)
+		throw std::runtime_error("Invalid operator type");
 
 	return opTypeToStr[opt];
 }

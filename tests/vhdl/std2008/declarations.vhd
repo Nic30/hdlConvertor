@@ -15,46 +15,7 @@ package p_63 is
 	signal CLK1, CLK2: TIME;
 	signal OUTPUT: WIRED_OR MULTI_VALUED_LOGIC;
 
-	-- p. 70
-	architecture UseSharedVariables of SomeEntity is
-		subtype ShortRange is INTEGER range -1 to 1;
-		type ShortRangeProtected is protected
-			procedure Set (V: ShortRange);
-			procedure Get (V: out ShortRange);
-		end protected;
-		type ShortRangeProtected is protected body
-			variable Local: ShortRange := 0;
-
-			procedure Set (V: ShortRange) is
-			begin
-				Local := V;
-			end procedure Set;
-			-- p. 71
-			procedure Get (V: out ShortRange) is
-			begin
-				V := Local;
-			end procedure Get;
-		end protected body;
-
-		shared variable ShortCounter: ShortRangeProtected;
-
-	begin
-		PROC1: process
-			variable V: ShortRange;
-		begin
-			ShortCounter.Get (V);
-			ShortCounter.Set (V+1);
-			wait;
-		end process PROC1;
-
-		PROC2: process
-			variable V: ShortRange;
-		begin
-			ShortCounter.Get (V);
-			ShortCounter.Set (V-1);
-			wait;
-		end process PROC2;
-	end architecture UseSharedVariables;
+	
 
 	variable INDEX: INTEGER range 0 to 99 := 0;
 	-- Initial value is determined by the initial value expression
@@ -86,6 +47,46 @@ package p_63 is
 
 end package;
 
+-- p. 70
+architecture UseSharedVariables of SomeEntity is
+	subtype ShortRange is INTEGER range -1 to 1;
+	type ShortRangeProtected is protected
+		procedure Set (V: ShortRange);
+		procedure Get (V: out ShortRange);
+	end protected;
+	type ShortRangeProtected is protected body
+		variable Local: ShortRange := 0;
+
+		procedure Set (V: ShortRange) is
+		begin
+			Local := V;
+		end procedure Set;
+		-- p. 71
+		procedure Get (V: out ShortRange) is
+		begin
+			V := Local;
+		end procedure Get;
+	end protected body;
+
+	shared variable ShortCounter: ShortRangeProtected;
+
+begin
+	PROC1: process
+		variable V: ShortRange;
+	begin
+		ShortCounter.Get (V);
+		ShortCounter.Set (V+1);
+		wait;
+	end process PROC1;
+
+	PROC2: process
+		variable V: ShortRange;
+	begin
+		ShortCounter.Get (V);
+		ShortCounter.Set (V-1);
+		wait;
+	end process PROC2;
+end architecture UseSharedVariables;
 
 -- entity E is
 -- 	port (P1: STRING; P2: STRING(P1'RANGE));                     	-- Illegal
@@ -165,7 +166,7 @@ package fixed_complex_math_generic_pkg is
 	use complex_math_fixed_formal_pkg.all,
 		fixed_math_formal_pkg.all,
 		fixed_complex_formal_pkg.all;
-	function "abs" (z: complex return sfixed;
+	function "abs" (z: complex) return sfixed;
 	function arg (z: complex) return sfixed;
 	function sqrt (z: complex) return complex;
 

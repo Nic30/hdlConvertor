@@ -24,5 +24,8 @@ void NotImplementedLogger::print(const std::string & msg,
 		antlr4::ParserRuleContext * ctx) {
 	NotImplementedLogger::print(msg.c_str(), ctx);
 }
-
+void NotImplementedLogger::print(const std::string & msg,
+		antlr4::tree::TerminalNode * ctx) {
+	NotImplementedLogger::print(msg.c_str(), ctx);
+}
 }

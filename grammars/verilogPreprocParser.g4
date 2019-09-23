@@ -162,13 +162,11 @@ version_specifier:
 ;
 
 endkeywords_directive: END_KEYWORDS;
-include: INCLUDE stringLiteral;
+include: INCLUDE (
+		 STR
+	    | {language_version >= hdlConvertor::Language::SV2005}? macro_call
+    );
 
-stringLiteral:
-    STR
-    | INCLUDE_MODE_StringLiteral_chevrons
-    | {language_version >= hdlConvertor::Language::SV2005}? macro_call
-;
 
 pragma:
     PRAGMA pragma_name ( pragma_expression ( COMMA pragma_expression )* )? (NEW_LINE | EOF)

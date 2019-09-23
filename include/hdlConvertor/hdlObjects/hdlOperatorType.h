@@ -25,10 +25,10 @@ enum HdlOperatorType {
 	ABS, // absolute value
 	NOT,
 	NEG, // negation
-	LOG_AND,
-	LOG_OR,
-	AND,
-	OR,
+	LOG_AND, // "and" in vhdl
+	LOG_OR,  // "or" in vhdl
+	AND, // & in vhdl
+	OR,  // | in vhdl
 	NAND,
 	NOR,
 	XOR,

@@ -56,7 +56,6 @@ iHdlStatement * GenerateStatementParser::visitGenerate_statement(
 iHdlStatement * GenerateStatementParser::visitFor_generate_statement(
 		vhdlParser::For_generate_statementContext *ctx) {
 	// for_generate_statement:
-	//       label COLON
 	//           FOR parameter_specification GENERATE
 	//               generate_statement_body
 	//           END GENERATE ( label )? SEMI
@@ -68,8 +67,8 @@ iHdlStatement * GenerateStatementParser::visitFor_generate_statement(
 	visitGenerate_statement_body(ctx->generate_statement_body(), *objs);
 	auto fstm = iHdlStatement::FOR_IN(args.first, args.second, objs);
 	auto label = ctx->label();
-	if (label.size()) {
-		auto l = LiteralParser::visitLabel(label[0]);
+	if (label) {
+		auto l = LiteralParser::visitLabel(label);
 		fstm->labels.push_back(l);
 	}
 	fstm->position.update_from_elem(ctx);
@@ -128,7 +127,6 @@ iHdlStatement * GenerateStatementParser::visitIf_generate_statement(
 iHdlStatement * GenerateStatementParser::visitCase_generate_statement(
 		vhdlParser::Case_generate_statementContext *ctx) {
 	// case_generate_statement:
-	//       label COLON
 	//           CASE expression GENERATE
 	//               case_generate_alternative
 	//               ( case_generate_alternative )*
@@ -140,8 +138,9 @@ iHdlStatement * GenerateStatementParser::visitCase_generate_statement(
 	vector<iHdlStatement::case_t> alternatives;
 	vector<iHdlObj*>* _default = nullptr;
 	vector<std::string> labels;
-	if (ctx->label().size()) {
-		auto l = LiteralParser::visitLabel(ctx->label(0));
+	auto label = ctx->label();
+	if (label) {
+		auto l = LiteralParser::visitLabel(label);
 		labels.push_back(l);
 	}
 	for (auto a : ctx->case_generate_alternative()) {
@@ -174,15 +173,21 @@ iHdlStatement * GenerateStatementParser::visitCase_generate_statement(
 void GenerateStatementParser::visitGenerate_statement_body(
 		vhdlParser::Generate_statement_bodyContext *ctx,
 		std::vector<iHdlObj*> & objs) {
-	// generate_statement_body: ( block_declarative_part
-	//       BEGIN )?
-	//       ( concurrent_statement )*
-	//       ( END ( label )? SEMI )?
+	// generate_statement_body:
+	//     ( block_declarative_item*
+	//       KW_BEGIN
+	//         ( concurrent_statement )*
+	//       KW_END ( label )? SEMI
+	//      )
+	//      | ( concurrent_statement )*
 	// ;
-	auto bdp = ctx->block_declarative_part();
-	if (bdp) {
+	auto bdis = ctx->block_declarative_item();
+	if (bdis.size()) {
+		// [TODO] wrap in block
 		BlockDeclarationParser _bdp(hierarchyOnly);
-		_bdp.visitBlock_declarative_part(bdp, objs);
+		for (auto bdi : ctx->block_declarative_item()) {
+			_bdp.visitBlock_declarative_item(bdi, objs);
+		}
 	}
 	StatementParser sp(hierarchyOnly);
 	for (auto cs : ctx->concurrent_statement()) {
@@ -196,10 +201,10 @@ HdlModuleDec * GenerateStatementParser::visitComponent_declaration(
 	//       COMPONENT identifier ( IS )?
 	//           ( generic_clause )?
 	//           ( port_clause )?
-	//       END COMPONENT ( simple_name )? SEMI
+	//       END COMPONENT ( identifier )? SEMI
 	// ;
 	HdlModuleDec * e = new HdlModuleDec();
-	e->name = ctx->identifier()->getText();
+	e->name = ctx->identifier(0)->getText();
 	auto gc = ctx->generic_clause();
 	if (gc)
 		EntityParser::visitGeneric_clause(gc, &e->generics);
