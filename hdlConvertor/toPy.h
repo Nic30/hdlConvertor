@@ -21,44 +21,44 @@
 namespace hdlConvertor {
 
 class ToPy {
-	PyObject* hdlAst_module;
-	PyObject* ContextCls;
-	PyObject* CodePositionCls;
-	PyObject* HdlModuleDefCls;
-	PyObject* HdlModuleDecCls;
-	PyObject* HdlVariableDefCls;
-	PyObject* HdlCallCls;
-	PyObject* HdlBuildinFnEnum;
-	PyObject* HdlIntValueCls;
-	PyObject* HdlNameCls;
-	PyObject* HdlDirectionEnum;
-	PyObject* HdlAllCls;
-	PyObject* HdlOthersCls;
-	PyObject* HdlTypeTypeCls;
-	PyObject* HdlTypeAutoCls;
-	PyObject* HdlStmIfCls;
-	PyObject* HdlStmAssignCls;
-	PyObject* HdlStmProcessCls;
-	PyObject* HdlStmCaseCls;
-	PyObject* HdlStmForCls;
-	PyObject* HdlStmForInCls;
-	PyObject* HdlStmWhileCls;
-	PyObject* HdlStmReturnCls;
-	PyObject* HdlStmBreakCls;
-	PyObject* HdlStmContinueCls;
-	PyObject* HdlStmWaitCls;
-	PyObject* HdlImportCls;
-	PyObject* HdlComponentInstCls;
-	PyObject* HdlFunctionDefCls;
-	PyObject* HdlNamespaceCls;
+	PyObject *hdlAst_module;
+	PyObject *ContextCls;
+	PyObject *CodePositionCls;
+	PyObject *HdlModuleDefCls;
+	PyObject *HdlModuleDecCls;
+	PyObject *HdlVariableDefCls;
+	PyObject *HdlCallCls;
+	PyObject *HdlBuildinFnEnum;
+	PyObject *HdlIntValueCls;
+	PyObject *HdlNameCls;
+	PyObject *HdlDirectionEnum;
+	PyObject *HdlAllCls;
+	PyObject *HdlOthersCls;
+	PyObject *HdlTypeTypeCls;
+	PyObject *HdlTypeAutoCls;
+	PyObject *HdlStmIfCls;
+	PyObject *HdlStmAssignCls;
+	PyObject *HdlStmProcessCls;
+	PyObject *HdlStmCaseCls;
+	PyObject *HdlStmForCls;
+	PyObject *HdlStmForInCls;
+	PyObject *HdlStmWhileCls;
+	PyObject *HdlStmReturnCls;
+	PyObject *HdlStmBreakCls;
+	PyObject *HdlStmContinueCls;
+	PyObject *HdlStmWaitCls;
+	PyObject *HdlImportCls;
+	PyObject *HdlComponentInstCls;
+	PyObject *HdlFunctionDefCls;
+	PyObject *HdlNamespaceCls;
 
-	std::string PyObject_repr(PyObject * o);
+	std::string PyObject_repr(PyObject *o);
 
 	template<typename OBJ_T>
-	int toPy_arr(PyObject * parent, const std::string & prop_name,
-			const std::vector<OBJ_T> & objs) {
+	int toPy_arr(PyObject *parent, const std::string &prop_name,
+			const std::vector<OBJ_T> &objs) {
 
-		PyObject * parent_list = PyObject_GetAttrString(parent,
+		PyObject *parent_list = PyObject_GetAttrString(parent,
 				prop_name.c_str());
 		if (parent_list == nullptr) {
 			std::string err_msg = (std::string(
@@ -71,7 +71,7 @@ class ToPy {
 	}
 
 	template<typename OBJ_T>
-	int toPy_arr(PyObject * py_list, const std::vector<OBJ_T> & objs) {
+	int toPy_arr(PyObject *py_list, const std::vector<OBJ_T> &objs) {
 		for (auto o : objs) {
 			auto py_obj = toPy(o);
 			if (py_obj == nullptr) {
@@ -86,7 +86,7 @@ class ToPy {
 		}
 		return 0;
 	}
-	std::pair<PyObject *, size_t> cases_toPy(
+	std::pair<PyObject*, size_t> cases_toPy(
 			std::vector<hdlObjects::iHdlExpr*>::const_iterator cond_begin,
 			std::vector<hdlObjects::iHdlExpr*>::const_iterator cond_end,
 			std::vector<std::vector<hdlObjects::iHdlObj*>*>::const_iterator stms_begin);
@@ -94,26 +94,28 @@ class ToPy {
 public:
 	ToPy();
 
-	int toPy(const hdlObjects::WithNameAndDoc * o, PyObject * py_inst);
-	int toPy(const hdlObjects::WithDoc * o, PyObject * py_inst);
+	int toPy(const hdlObjects::WithNameAndDoc *o, PyObject *py_inst);
+	int toPy(const hdlObjects::WithDoc *o, PyObject *py_inst);
 
-	PyObject* toPy(const hdlObjects::HdlModuleDef * o);
-	PyObject* toPy(const hdlObjects::HdlCompInstance * o);
-	PyObject* toPy(const hdlObjects::HdlContext * o);
+	PyObject* toPy(const hdlObjects::HdlModuleDef *o);
+	PyObject* toPy(const hdlObjects::HdlCompInstance *o);
+	PyObject* toPy(const hdlObjects::HdlContext *o);
 	PyObject* toPy(const hdlObjects::HdlDirection o);
-	PyObject* toPy(const hdlObjects::HdlModuleDec * o);
-	PyObject* toPy(const hdlObjects::iHdlExpr * o);
-	PyObject* toPy(const hdlObjects::HdlFunctionDef * o);
-	PyObject* toPy(const hdlObjects::iHdlObj * o);
-	PyObject* toPy(const hdlObjects::HdlCall * o);
+	PyObject* toPy(const hdlObjects::HdlModuleDec *o);
+	PyObject* toPy(const hdlObjects::iHdlExpr *o);
+	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
+	PyObject* toPy(const hdlObjects::iHdlObj *o);
+	PyObject* toPy(const hdlObjects::HdlCall *o);
 	PyObject* toPy(const hdlObjects::HdlOperatorType o);
-	PyObject* toPy(const hdlObjects::HdlNamespace* o);
-	PyObject* toPy(const hdlObjects::iHdlStatement * o);
-	PyObject* toPy(const hdlObjects::HdlValue * o);
-	PyObject* toPy(const hdlObjects::HdlVariableDef * o);
-	PyObject* toPy(const std::string & o);
+	PyObject* toPy(const hdlObjects::HdlNamespace *o);
+	PyObject* toPy(const hdlObjects::iHdlStatement *o);
+	PyObject* toPy(const hdlObjects::HdlValue *o);
+	PyObject* toPy(const hdlObjects::HdlVariableDef *o);
+	PyObject* toPy(const std::string &o);
 
 	~ToPy();
 };
+
+extern const char* get_cpp_py_error_message();
 
 }
