@@ -16,7 +16,7 @@
 #include <hdlConvertor/hdlObjects/hdlModuleDec.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDef.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
-#include "../include/hdlConvertor/hdlObjects/hdlFunctionDef.h"
+#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>
 
 namespace hdlConvertor {
 

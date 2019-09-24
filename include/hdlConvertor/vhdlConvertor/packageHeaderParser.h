@@ -11,7 +11,7 @@
 #include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDec.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
-#include "../hdlObjects/hdlFunctionDef.h"
+#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {

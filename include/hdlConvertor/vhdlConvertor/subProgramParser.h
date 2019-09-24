@@ -6,7 +6,7 @@
 
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
-#include "../hdlObjects/hdlFunctionDef.h"
+#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {

@@ -1,4 +1,4 @@
-#include "../../include/hdlConvertor/hdlObjects/hdlFunctionDef.h"
+#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
