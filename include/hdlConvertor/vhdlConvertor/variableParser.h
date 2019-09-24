@@ -9,7 +9,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class VariableParser {
+class VhdlVariableParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 

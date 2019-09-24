@@ -10,7 +10,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class SubProgramDeclarationParser {
+class VhdlSubProgramDeclarationParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 

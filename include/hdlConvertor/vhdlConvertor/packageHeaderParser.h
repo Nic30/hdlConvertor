@@ -16,13 +16,13 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class PackageHeaderParser {
+class VhdlPackageHeaderParser {
 	hdlObjects::HdlNamespace * ph;
 	bool hierarchyOnly;
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	PackageHeaderParser(bool _hierarchyOnly);
+	VhdlPackageHeaderParser(bool _hierarchyOnly);
 	hdlObjects::HdlNamespace * visitPackage_declaration(
 			vhdlParser::Package_declarationContext* ctx);
 	void visitPackage_declarative_part(

@@ -1,8 +1,8 @@
-#include <hdlConvertor/vhdlConvertor/referenceParser.h>
-#include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -10,12 +10,12 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-iHdlExpr* ReferenceParser::visitSelected_name(
+iHdlExpr* VhdlReferenceParser::visitSelected_name(
 		vhdlParser::Selected_nameContext *ctx) {
 	// selected_name
 	// : identifier (DOT suffix)*
 	// ;
-	iHdlExpr *top = LiteralParser::visitIdentifier(ctx->identifier());
+	iHdlExpr *top = VhdlLiteralParser::visitIdentifier(ctx->identifier());
 	for (auto s : ctx->suffix()) {
 		top = new iHdlExpr(top, DOT, visitSuffix(s));
 	}
@@ -23,7 +23,7 @@ iHdlExpr* ReferenceParser::visitSelected_name(
 	return top;
 }
 
-iHdlExpr* ReferenceParser::visitSuffix(vhdlParser::SuffixContext *ctx) {
+iHdlExpr* VhdlReferenceParser::visitSuffix(vhdlParser::SuffixContext *ctx) {
 	//suffix:
 	//      name_literal
 	//      | KW_ALL
@@ -35,7 +35,7 @@ iHdlExpr* ReferenceParser::visitSuffix(vhdlParser::SuffixContext *ctx) {
 	assert(ctx->KW_ALL());
 	return iHdlExpr::all();
 }
-iHdlExpr* ReferenceParser::visitName_literal(
+iHdlExpr* VhdlReferenceParser::visitName_literal(
 		vhdlParser::Name_literalContext *ctx) {
 	// name_literal:
 	//         identifier     #nameSel1
@@ -44,28 +44,28 @@ iHdlExpr* ReferenceParser::visitName_literal(
 	// ;
 	auto id = ctx->identifier();
 	if (id)
-		return LiteralParser::visitIdentifier(id);
+		return VhdlLiteralParser::visitIdentifier(id);
 
 	auto n = ctx->CHARACTER_LITERAL();
 	if (n)
-		return LiteralParser::visitCHARACTER_LITERAL(n->getText());
+		return VhdlLiteralParser::visitCHARACTER_LITERAL(n->getText());
 	// operator_symbol: string_literal;
 	auto o = ctx->operator_symbol();
 	assert(o);
 	auto sl = o->STRING_LITERAL();
-	return LiteralParser::visitSTRING_LITERAL(sl->getText());
+	return VhdlLiteralParser::visitSTRING_LITERAL(sl->getText());
 }
 
-iHdlExpr* ReferenceParser::visitName_slice_part(
+iHdlExpr* VhdlReferenceParser::visitName_slice_part(
 		vhdlParser::Name_slice_partContext *ctx, iHdlExpr *selected_name) {
 	// name_slice_part:
 	//     LPAREN explicit_range RPAREN
 	// ;
 	auto _er = ctx->explicit_range();
-	auto er = ExprParser::visitExplicit_range(_er);
+	auto er = VhdlExprParser::visitExplicit_range(_er);
 	return new iHdlExpr(selected_name, HdlOperatorType::INDEX, er);
 }
-iHdlExpr* ReferenceParser::visitName(vhdlParser::NameContext *ctx) {
+iHdlExpr* VhdlReferenceParser::visitName(vhdlParser::NameContext *ctx) {
 	// name:
 	//     name_literal
 	//       | name (
@@ -104,12 +104,12 @@ iHdlExpr* ReferenceParser::visitName(vhdlParser::NameContext *ctx) {
 	}
 	auto _al = ctx->association_list();
 	assert(_al);
-	auto al = ExprParser::visitAssociation_list(_al);
+	auto al = VhdlExprParser::visitAssociation_list(_al);
 	assert(al);
 	return iHdlExpr::call(n, *al);
 }
 
-iHdlExpr* ReferenceParser::visitName_attribute_part(
+iHdlExpr* VhdlReferenceParser::visitName_attribute_part(
 		vhdlParser::Name_attribute_partContext *ctx, iHdlExpr *selected_name) {
 	// name_attribute_part:
 	//     ( signature )? APOSTROPHE attribute_designator
@@ -124,7 +124,7 @@ iHdlExpr* ReferenceParser::visitName_attribute_part(
 	return res;
 }
 
-iHdlExpr* ReferenceParser::visitAttribute_name(
+iHdlExpr* VhdlReferenceParser::visitAttribute_name(
 		vhdlParser::Attribute_nameContext *ctx) {
 	// attribute_name:
 	//  name name_attribute_part
@@ -135,12 +135,12 @@ iHdlExpr* ReferenceParser::visitAttribute_name(
 	return visitName_attribute_part(np, prefix_expr);
 }
 
-iHdlExpr* ReferenceParser::visitAttribute_designator(
+iHdlExpr* VhdlReferenceParser::visitAttribute_designator(
 		vhdlParser::Attribute_designatorContext *ctx) {
 	// attribute_designator: identifier | any_keyword;
 	auto sn = ctx->identifier();
 	if (sn)
-		return LiteralParser::visitIdentifier(sn);
+		return VhdlLiteralParser::visitIdentifier(sn);
 	else {
 		std::string s = ctx->any_keyword()->getText();
 		return iHdlExpr::ID(s);

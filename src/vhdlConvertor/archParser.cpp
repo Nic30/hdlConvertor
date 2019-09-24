@@ -1,5 +1,4 @@
 #include <hdlConvertor/vhdlConvertor/archParser.h>
-
 #include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
@@ -10,10 +9,10 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-ArchParser::ArchParser(bool _hierarchyOnly) {
+VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
-HdlModuleDef * ArchParser::visitArchitecture_body(
+HdlModuleDef * VhdlArchParser::visitArchitecture_body(
 		vhdlParser::Architecture_bodyContext * ctx) {
 	auto a = new HdlModuleDef();
 	// architecture_body:
@@ -25,7 +24,7 @@ HdlModuleDef * ArchParser::visitArchitecture_body(
 	// ;
 
 	a->name = ctx->identifier(0)->getText();
-	a->entityName = ReferenceParser::visitName(ctx->name());
+	a->entityName = VhdlReferenceParser::visitName(ctx->name());
 	a->position.update_from_elem(ctx);
 
 	if (!hierarchyOnly) {
@@ -35,11 +34,11 @@ HdlModuleDef * ArchParser::visitArchitecture_body(
 			// architecture_declarative_part
 			// : ( block_declarative_item )*
 			// ;
-			BlockDeclarationParser bp(hierarchyOnly);
+			VhdlBlockDeclarationParser bp(hierarchyOnly);
 			bp.visitBlock_declarative_item(bi, a->objs);
 		}
 	}
-	StatementParser sp(hierarchyOnly);
+	VhdlStatementParser sp(hierarchyOnly);
 	for (auto s : ctx->architecture_statement_part()->concurrent_statement()) {
 		// architecture_statement_part
 		// : ( concurrent_statement )*

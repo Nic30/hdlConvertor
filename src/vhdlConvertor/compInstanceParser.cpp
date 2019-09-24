@@ -1,9 +1,8 @@
-#include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
-
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
+#include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
-#include <hdlConvertor/vhdlConvertor/exprParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -11,7 +10,7 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-HdlCompInstance* CompInstanceParser::visitComponent_instantiation_statement(
+HdlCompInstance* VhdlCompInstanceParser::visitComponent_instantiation_statement(
 		vhdlParser::Component_instantiation_statementContext *ctx,
 		const std::string &name) {
 	// component_instantiation_statement:
@@ -43,7 +42,7 @@ HdlCompInstance* CompInstanceParser::visitComponent_instantiation_statement(
 	return ci;
 }
 
-HdlCompInstance* CompInstanceParser::visitInstantiated_unit(
+HdlCompInstance* VhdlCompInstanceParser::visitInstantiated_unit(
 		vhdlParser::Instantiated_unitContext *ctx) {
 	// instantiated_unit
 	// : ( COMPONENT )? name
@@ -53,32 +52,32 @@ HdlCompInstance* CompInstanceParser::visitInstantiated_unit(
 
 	auto _id = ctx->identifier();
 	if (_id) {
-		iHdlExpr *id = LiteralParser::visitIdentifier(_id);
+		iHdlExpr *id = VhdlLiteralParser::visitIdentifier(_id);
 		NotImplementedLogger::print(
 				"CompInstanceParser.visitInstantiated_unit - Identifier", _id);
 		delete id;
 	}
 
-	auto ent = ReferenceParser::visitName(ctx->name());
+	auto ent = VhdlReferenceParser::visitName(ctx->name());
 
 	auto ci = new HdlCompInstance(NULL, ent);
 	return ci;
 }
-std::vector<iHdlExpr*>* CompInstanceParser::visitGeneric_map_aspect(
+std::vector<iHdlExpr*>* VhdlCompInstanceParser::visitGeneric_map_aspect(
 		vhdlParser::Generic_map_aspectContext *ctx) {
 	//generic_map_aspect
 	//  : GENERIC MAP LPAREN association_list RPAREN
 	//  ;
 
-	return ExprParser::visitAssociation_list(ctx->association_list());
+	return VhdlExprParser::visitAssociation_list(ctx->association_list());
 }
-std::vector<iHdlExpr*>* CompInstanceParser::visitPort_map_aspect(
+std::vector<iHdlExpr*>* VhdlCompInstanceParser::visitPort_map_aspect(
 		vhdlParser::Port_map_aspectContext *ctx) {
 	//port_map_aspect
 	//  : PORT MAP LPAREN association_list RPAREN
 	//  ;
 
-	return ExprParser::visitAssociation_list(ctx->association_list());
+	return VhdlExprParser::visitAssociation_list(ctx->association_list());
 }
 
 }

@@ -12,11 +12,11 @@ namespace hdlConvertor {
 namespace vhdl {
 
 // [TODO] make methods non static and parse code positions and comments
-class StatementParser {
+class VhdlStatementParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 	bool hierarchyOnly;
-	StatementParser(bool _hierarchyOnly);
+	VhdlStatementParser(bool _hierarchyOnly);
 
 	static hdlObjects::iHdlStatement* visitSequential_statement(
 			vhdlParser::Sequential_statementContext *ctx);

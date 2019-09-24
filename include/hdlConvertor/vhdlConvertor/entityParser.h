@@ -3,20 +3,20 @@
 #include <vector>
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/vhdlConvertor/commentParser.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDec.h>
+#include <hdlConvertor/vhdlConvertor/commentParser.h>
 
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class EntityParser {
-	CommentParser & commentParser;
+class VhdlEntityParser {
+	VhdlCommentParser & commentParser;
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 	bool hierarchyOnly;
 
-	EntityParser(CommentParser & commentParser, bool _hierarchyOnly);
+	VhdlEntityParser(VhdlCommentParser & commentParser, bool _hierarchyOnly);
 
 	hdlObjects::HdlModuleDec * visitEntity_declaration(
 			vhdlParser::Entity_declarationContext* ctx);

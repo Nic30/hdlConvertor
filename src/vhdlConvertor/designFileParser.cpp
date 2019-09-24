@@ -1,11 +1,11 @@
-#include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
-#include <hdlConvertor/vhdlConvertor/packageParser.h>
-#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
-#include <hdlConvertor/vhdlConvertor/referenceParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/archParser.h>
+#include <hdlConvertor/vhdlConvertor/designFileParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
+#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+#include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -13,42 +13,42 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-DesignFileParser::DesignFileParser(antlr4::TokenStream *tokens, HdlContext *ctx,
+VhdlDesignFileParser::VhdlDesignFileParser(antlr4::TokenStream *tokens, HdlContext *ctx,
 		bool _hierarchyOnly) :
 		BaseHdlParser(tokens, ctx, _hierarchyOnly), commentParser(tokens) {
 }
 
-void DesignFileParser::visitDesign_file(vhdlParser::Design_fileContext *ctx) {
+void VhdlDesignFileParser::visitDesign_file(vhdlParser::Design_fileContext *ctx) {
 	if (!ctx)
 		return;
 	// design_file
 	// : ( design_unit )* EOF
 	// ;
 	for (auto u : ctx->design_unit()) {
-		DesignFileParser::visitDesign_unit(u);
+		VhdlDesignFileParser::visitDesign_unit(u);
 	}
 }
 
-void DesignFileParser::visitDesign_unit(vhdlParser::Design_unitContext *ctx) {
+void VhdlDesignFileParser::visitDesign_unit(vhdlParser::Design_unitContext *ctx) {
 	if (!ctx)
 		return;
 	// design_unit
 	// : context_clause library_unit
 	// ;
-	DesignFileParser::visitContext_clause(ctx->context_clause());
-	DesignFileParser::visitLibrary_unit(ctx->library_unit());
+	VhdlDesignFileParser::visitContext_clause(ctx->context_clause());
+	VhdlDesignFileParser::visitLibrary_unit(ctx->library_unit());
 }
-void DesignFileParser::visitLibrary_unit(vhdlParser::Library_unitContext *ctx) {
+void VhdlDesignFileParser::visitLibrary_unit(vhdlParser::Library_unitContext *ctx) {
 	if (!ctx)
 		return;
 	// library_unit
 	// : secondary_unit | primary_unit
 	// ;
 
-	DesignFileParser::visitSecondary_unit(ctx->secondary_unit());
-	DesignFileParser::visitPrimary_unit(ctx->primary_unit());
+	VhdlDesignFileParser::visitSecondary_unit(ctx->secondary_unit());
+	VhdlDesignFileParser::visitPrimary_unit(ctx->primary_unit());
 }
-void DesignFileParser::visitSecondary_unit(
+void VhdlDesignFileParser::visitSecondary_unit(
 		vhdlParser::Secondary_unitContext *ctx) {
 	if (!ctx)
 		return;
@@ -58,19 +58,19 @@ void DesignFileParser::visitSecondary_unit(
 	// ;
 	auto arch = ctx->architecture_body();
 	if (arch) {
-		ArchParser aparser(hierarchyOnly);
+		VhdlArchParser aparser(hierarchyOnly);
 		HdlModuleDef *a = aparser.visitArchitecture_body(arch);
 		context->objs.push_back(a);
 	}
 	auto pack = ctx->package_body();
 	if (pack) {
-		PackageParser pparser(hierarchyOnly);
+		VhdlPackageParser pparser(hierarchyOnly);
 		auto p = pparser.visitPackage_body(pack);
 		context->objs.push_back(p);
 
 	}
 }
-void DesignFileParser::visitContext_clause(
+void VhdlDesignFileParser::visitContext_clause(
 		vhdlParser::Context_clauseContext *ctx) {
 	if (!ctx)
 		return;
@@ -81,7 +81,7 @@ void DesignFileParser::visitContext_clause(
 		visitContext_item(item);
 	}
 }
-void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext *ctx) {
+void VhdlDesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext *ctx) {
 	if (!ctx)
 		return;
 	// primary_unit
@@ -91,7 +91,7 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext *ctx) {
 	// ;
 	auto ed = ctx->entity_declaration();
 	if (ed) {
-		EntityParser eParser(commentParser, hierarchyOnly);
+		VhdlEntityParser eParser(commentParser, hierarchyOnly);
 		HdlModuleDec *e = eParser.visitEntity_declaration(ed);
 		context->objs.push_back(e);
 		return;
@@ -104,13 +104,13 @@ void DesignFileParser::visitPrimary_unit(vhdlParser::Primary_unitContext *ctx) {
 	}
 	auto pd = ctx->package_declaration();
 	if (pd) {
-		PackageHeaderParser php(hierarchyOnly);
+		VhdlPackageHeaderParser php(hierarchyOnly);
 		auto ph = php.visitPackage_declaration(pd);
 		context->objs.push_back(ph);
 	}
 
 }
-void DesignFileParser::visitContext_item(vhdlParser::Context_itemContext *ctx) {
+void VhdlDesignFileParser::visitContext_item(vhdlParser::Context_itemContext *ctx) {
 	// context_item
 	// : library_clause
 	// | use_clause
@@ -141,14 +141,14 @@ void flatten_doted_expr(iHdlExpr *e, std::vector<iHdlExpr*> &arr) {
 	arr.push_back(e);
 }
 
-void DesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
+void VhdlDesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 		std::vector<iHdlObj*> &res) {
 	// use_clause:
 	//       USE selected_name (COMMA selected_name)* SEMI
 	// ;
 	auto sns = ctx->selected_name();
 	for (auto sn : sns) {
-		auto r = ReferenceParser::visitSelected_name(sn);
+		auto r = VhdlReferenceParser::visitSelected_name(sn);
 		std::vector<iHdlExpr*> ref;
 		flatten_doted_expr(r, ref);
 		delete r;

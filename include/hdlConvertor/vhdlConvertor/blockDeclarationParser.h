@@ -10,12 +10,12 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class BlockDeclarationParser {
+class VhdlBlockDeclarationParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	bool hierarchyOnly;
-	BlockDeclarationParser(bool hierarchyOnly);
+	VhdlBlockDeclarationParser(bool hierarchyOnly);
 
 	void visitBlock_declarative_item(
 			vhdlParser::Block_declarative_itemContext * ctx,

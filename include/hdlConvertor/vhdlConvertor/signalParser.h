@@ -8,7 +8,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class SignalParser {
+class VhdlSignalParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 

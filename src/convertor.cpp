@@ -12,7 +12,7 @@ using namespace hdlConvertor::hdlObjects;
 bool Convertor::debug = false;
 
 class VHDLParserContainer: public iParserContainer<vhdl_antlr::vhdlLexer,
-		vhdl_antlr::vhdlParser, vhdl::DesignFileParser> {
+		vhdl_antlr::vhdlParser, vhdl::VhdlDesignFileParser> {
 	using iParserContainer::iParserContainer;
 	virtual void parseFn() override {
 		vhdl_antlr::vhdlParser::Design_fileContext *tree =

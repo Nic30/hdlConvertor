@@ -1,12 +1,12 @@
-#include <hdlConvertor/vhdlConvertor/processParser.h>
-#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
-#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
@@ -15,7 +15,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlStmProcess* ProcessParser::visitProcess_statement(
+HdlStmProcess* VhdlProcessParser::visitProcess_statement(
 		vhdlParser::Process_statementContext *ctx) {
 	// process_statement:
 	//           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?
@@ -35,12 +35,12 @@ HdlStmProcess* ProcessParser::visitProcess_statement(
 		visitProcess_declarative_item(pd, p);
 	}
 	for (auto s : ctx->sequential_statement()) {
-		p->objs().push_back(StatementParser::visitSequential_statement(s));
+		p->objs().push_back(VhdlStatementParser::visitSequential_statement(s));
 	}
 
 	return p;
 }
-void ProcessParser::visitProcess_sensitivity_list(
+void VhdlProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
 		std::vector<iHdlExpr*> &sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
@@ -51,16 +51,16 @@ void ProcessParser::visitProcess_sensitivity_list(
 	}
 }
 
-void ProcessParser::visitSensitivity_list(
+void VhdlProcessParser::visitSensitivity_list(
 		vhdlParser::Sensitivity_listContext *ctx,
 		std::vector<iHdlExpr*> &sensitivity) {
 	// sensitivity_list: name ( COMMA name )*;
 	for (auto n : ctx->name()) {
-		sensitivity.push_back(ReferenceParser::visitName(n));
+		sensitivity.push_back(VhdlReferenceParser::visitName(n));
 	}
 }
 
-void ProcessParser::visitProcess_declarative_item(
+void VhdlProcessParser::visitProcess_declarative_item(
 		vhdlParser::Process_declarative_itemContext *ctx, HdlStmProcess *p) {
 	//process_declarative_item
 	//  : subprogram_declaration
@@ -80,12 +80,12 @@ void ProcessParser::visitProcess_declarative_item(
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
 		p->objs().push_back(
-				SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
-		auto f = SubProgramParser::visitSubprogram_body(sb);
+		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
 		p->objs().push_back(f);
 		return;
 	}
@@ -96,13 +96,13 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
+		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
 		p->objs().push_back(_st);
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
-		auto constants = ConstantParser::visitConstant_declaration(constd);
+		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
 		for (auto c : *constants) {
 			p->objs().push_back(c);
 		}
@@ -111,7 +111,7 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
-		auto variables = VariableParser::visitVariable_declaration(vd);
+		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
 		for (auto v : *variables) {
 			p->objs().push_back(v);
 		}

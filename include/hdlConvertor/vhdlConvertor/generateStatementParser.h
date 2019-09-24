@@ -10,13 +10,13 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class GenerateStatementParser {
+class VhdlGenerateStatementParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	bool hierarchyOnly;
 
-	GenerateStatementParser(bool _hierarchyOnly);
+	VhdlGenerateStatementParser(bool _hierarchyOnly);
 
 	hdlObjects::iHdlStatement * visitGenerate_statement(
 			vhdlParser::Generate_statementContext *ctx);

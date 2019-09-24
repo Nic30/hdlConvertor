@@ -1,9 +1,9 @@
-#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
-#include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -11,7 +11,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlFunctionDef * SubProgramParser::visitSubprogram_body(
+HdlFunctionDef * VhdlSubProgramParser::visitSubprogram_body(
 		vhdlParser::Subprogram_bodyContext* ctx) {
 	// subprogram_body :
 	// subprogram_specification IS
@@ -23,7 +23,7 @@ HdlFunctionDef * SubProgramParser::visitSubprogram_body(
 	HdlFunctionDef * f = visitSubprogram_specification(
 			ctx->subprogram_specification());
 
-	auto vs = SubProgramDeclarationParser::visitSubprogram_declarative_part(
+	auto vs = VhdlSubProgramDeclarationParser::visitSubprogram_declarative_part(
 			ctx->subprogram_declarative_part());
 	for (auto v : *vs) {
 		f->locals.push_back(v);
@@ -40,7 +40,7 @@ HdlFunctionDef * SubProgramParser::visitSubprogram_body(
 	return f;
 }
 
-HdlFunctionDef * SubProgramParser::visitSubprogram_specification(
+HdlFunctionDef * VhdlSubProgramParser::visitSubprogram_specification(
 		vhdlParser::Subprogram_specificationContext* ctx) {
 	// subprogram_specification
 	// : procedure_specification
@@ -54,15 +54,15 @@ HdlFunctionDef * SubProgramParser::visitSubprogram_specification(
 		return visitFunction_specification(ctx->function_specification());
 }
 
-HdlFunctionDef * SubProgramParser::visitProcedure_specification(
+HdlFunctionDef * VhdlSubProgramParser::visitProcedure_specification(
 		vhdlParser::Procedure_specificationContext* ctx) {
 	// procedure_specification
 	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
 	// ;
 	auto designator = ctx->designator();
 	iHdlExpr * returnT = NULL;
-	bool isOperator = LiteralParser::isStrDesignator(designator);
-	auto name = LiteralParser::visitDesignator(designator);
+	bool isOperator = VhdlLiteralParser::isStrDesignator(designator);
+	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
 	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
@@ -72,7 +72,7 @@ HdlFunctionDef * SubProgramParser::visitProcedure_specification(
 	return new HdlFunctionDef(name, isOperator, returnT, paramList);
 }
 
-HdlFunctionDef * SubProgramParser::visitFunction_specification(
+HdlFunctionDef * VhdlSubProgramParser::visitFunction_specification(
 		vhdlParser::Function_specificationContext* ctx) {
 	// function_specification:
 	//       ( PURE IMPURE )? FUNCTION designator
@@ -80,11 +80,11 @@ HdlFunctionDef * SubProgramParser::visitFunction_specification(
 	//           ( ( PARAMETER )? LPAREN formal_parameter_list RPAREN )? RETURN type_mark
 	// ;
 	auto designator = ctx->designator();
-	iHdlExpr * returnT = ExprParser::visitType_mark(ctx->type_mark());
+	iHdlExpr * returnT = VhdlExprParser::visitType_mark(ctx->type_mark());
 	assert(returnT);
 
-	bool isOperator = LiteralParser::isStrDesignator(designator);
-	auto name = LiteralParser::visitDesignator(designator);
+	bool isOperator = VhdlLiteralParser::isStrDesignator(designator);
+	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
 	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
@@ -94,22 +94,22 @@ HdlFunctionDef * SubProgramParser::visitFunction_specification(
 	return new HdlFunctionDef(name, isOperator, returnT, paramList);
 }
 
-std::vector<HdlVariableDef*> * SubProgramParser::visitFormal_parameter_list(
+std::vector<HdlVariableDef*> * VhdlSubProgramParser::visitFormal_parameter_list(
 		vhdlParser::Formal_parameter_listContext* ctx) {
 	// formal_parameter_list
 	// : interface_list
 	// ;
-	return InterfaceParser::visitInterface_list(ctx->interface_list());
+	return VhdlInterfaceParser::visitInterface_list(ctx->interface_list());
 }
 
-std::vector<iHdlStatement *> * SubProgramParser::visitSubprogram_statement_part(
+std::vector<iHdlStatement *> * VhdlSubProgramParser::visitSubprogram_statement_part(
 		vhdlParser::Subprogram_statement_partContext* ctx) {
 	// subprogram_statement_part
 	// : ( sequential_statement )*
 	// ;
 	std::vector<iHdlStatement *> * statements = new std::vector<iHdlStatement*>();
 	for (auto s : ctx->sequential_statement()) {
-		statements->push_back(StatementParser::visitSequential_statement(s));
+		statements->push_back(VhdlStatementParser::visitSequential_statement(s));
 	}
 	return statements;
 }

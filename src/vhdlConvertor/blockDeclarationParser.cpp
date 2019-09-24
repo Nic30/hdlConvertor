@@ -1,21 +1,20 @@
 #include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
-
-#include <string.h>
-
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
+#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/signalParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
-#include <hdlConvertor/vhdlConvertor/constantParser.h>
-#include <hdlConvertor/vhdlConvertor/signalParser.h>
-#include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <string.h>
+
 
 namespace hdlConvertor {
 namespace vhdl {
 
-BlockDeclarationParser::BlockDeclarationParser(bool hierarchyOnly) :
+VhdlBlockDeclarationParser::VhdlBlockDeclarationParser(bool hierarchyOnly) :
 		hierarchyOnly(hierarchyOnly) {
 }
 
@@ -23,7 +22,7 @@ BlockDeclarationParser::BlockDeclarationParser(bool hierarchyOnly) :
  * @note Some declarations can spot multiple objects
  * 		 that is why this function just does not return hdlObjects::iHdlObj*
  * */
-void BlockDeclarationParser::visitBlock_declarative_item(
+void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 		vhdlParser::Block_declarative_itemContext *ctx,
 		std::vector<hdlObjects::iHdlObj*> &objs) {
 	// block_declarative_item:
@@ -52,12 +51,12 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
 		objs.push_back(
-				SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
-		auto f = SubProgramParser::visitSubprogram_body(sb);
+		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
 		objs.push_back(f);
 		return;
 	}
@@ -69,14 +68,14 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto pd = ctx->package_declaration();
 	if (pd) {
-		PackageHeaderParser ph(hierarchyOnly);
+		VhdlPackageHeaderParser ph(hierarchyOnly);
 		auto pac_header = ph.visitPackage_declaration(pd);
 		objs.push_back(pac_header);
 		return;
 	}
 	auto pb = ctx->package_body();
 	if (pb) {
-		PackageParser pp(hierarchyOnly);
+		VhdlPackageParser pp(hierarchyOnly);
 		auto p = pp.visitPackage_body(pb);
 		objs.push_back(p);
 		return;
@@ -95,13 +94,13 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
+		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
 		objs.push_back(_st);
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
-		auto constants = ConstantParser::visitConstant_declaration(constd);
+		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
 		for (auto c : *constants) {
 			objs.push_back(c);
 		}
@@ -110,7 +109,7 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto sd = ctx->signal_declaration();
 	if (sd) {
-		auto signals = SignalParser::visitSignal_declaration(sd);
+		auto signals = VhdlSignalParser::visitSignal_declaration(sd);
 		for (auto s : *signals) {
 			objs.push_back(s);
 		}
@@ -119,7 +118,7 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
-		auto variables = VariableParser::visitVariable_declaration(vd);
+		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
 		for (auto v : *variables) {
 			objs.push_back(v);
 		}
@@ -184,7 +183,7 @@ void BlockDeclarationParser::visitBlock_declarative_item(
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
-hdlObjects::HdlModuleDec* BlockDeclarationParser::visitComponent_declaration(
+hdlObjects::HdlModuleDec* VhdlBlockDeclarationParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext *ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -197,10 +196,10 @@ hdlObjects::HdlModuleDec* BlockDeclarationParser::visitComponent_declaration(
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)
-			EntityParser::visitGeneric_clause(gc, &e->generics);
+			VhdlEntityParser::visitGeneric_clause(gc, &e->generics);
 		auto pc = ctx->port_clause();
 		if (pc)
-			EntityParser::visitPort_clause(pc, &e->ports);
+			VhdlEntityParser::visitPort_clause(pc, &e->ports);
 	}
 	return e;
 }
