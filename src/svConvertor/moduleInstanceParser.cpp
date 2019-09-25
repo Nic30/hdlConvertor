@@ -1,18 +1,18 @@
-#include <hdlConvertor/verilogConvertor/moduleInstanceParser.h>
+#include <hdlConvertor/svConvertor/moduleInstanceParser.h>
 
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/verilogConvertor/exprParser.h>
-#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/moduleParamParser.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
 using namespace std;
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
 vector<HdlCompInstance *> ModuleInstanceParser::visitModule_instantiation(
-		Verilog2001Parser::Module_instantiationContext* ctx) {
+		sv2017Parser::Module_instantiationContext* ctx) {
 	// module_instantiation
 	//    : module_identifier (parameter_value_assignment)? module_instance (',' module_instance)* ';'
 	//    ;
@@ -47,7 +47,7 @@ vector<HdlCompInstance *> ModuleInstanceParser::visitModule_instantiation(
 }
 
 vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_assignments(
-		Verilog2001Parser::List_of_parameter_assignmentsContext * ctx) {
+		sv2017Parser::List_of_parameter_assignmentsContext * ctx) {
 
 	// list_of_parameter_assignments
 	//    : ordered_parameter_assignment (',' ordered_parameter_assignment)*
@@ -88,7 +88,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 }
 
 HdlCompInstance * ModuleInstanceParser::visitModule_instance(
-		Verilog2001Parser::Module_instanceContext * ctx, iHdlExpr * module_id,
+		sv2017Parser::Module_instanceContext * ctx, iHdlExpr * module_id,
 		vector<iHdlExpr*> genericMap) {
 	// @note genericMap became the owner of all Expr instances in the vector
 	//       that means that the instances can not be shared
@@ -119,7 +119,7 @@ HdlCompInstance * ModuleInstanceParser::visitModule_instance(
 }
 
 vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
-		Verilog2001Parser::List_of_port_connectionsContext * ctx) {
+		sv2017Parser::List_of_port_connectionsContext * ctx) {
 	// list_of_port_connections
 	//    : ordered_port_connection (',' ordered_port_connection)*
 	//    | named_port_connection (',' named_port_connection)*

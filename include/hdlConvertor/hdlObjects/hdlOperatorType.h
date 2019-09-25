@@ -46,9 +46,10 @@ enum HdlOperatorType {
 	ROL, // rotate left
 	ROR, // rotate right
 	TERNARY,
-	DOT,
+	DOT, // accessing of property, represents also "::"
 	APOSTROPHE, // vhdl attribute access
-	CALL,
+	CALL, // call of HDL function
+	PARAMETRIZATION, // specification of template arguments
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator
 	FALLING, // falling edge/negedge event operator

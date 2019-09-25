@@ -1,7 +1,19 @@
 #include <hdlConvertor/convertor.h>
 
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/verilogPreproc/verilogPreproc.h>
+
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlLexer.h>
+#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/vhdlConvertor/designFileParser.h>
+
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Lexer.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+#include <hdlConvertor/svConvertor/source_textParser.h>
+
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Lexer.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+#include <hdlConvertor/svConvertor/source_textParser.h>
+
 namespace hdlConvertor {
 
 using namespace std;
@@ -22,20 +34,18 @@ class VHDLParserContainer: public iParserContainer<vhdl_antlr::vhdlLexer,
 	}
 };
 
-template<class antlrLexerT, class antlrParserT, class hdlParserT>
-class VerilogParserContainerCommon: public iParserContainer<antlrLexerT,
-		antlrParserT, hdlParserT> {
+class SVParserContainer: public iParserContainer<sv2017_antlr::sv2017Lexer,
+		sv2017_antlr::sv2017Parser, sv::Source_textParser> {
 public:
 	verilog_pp::VerilogPreprocContainer preproc;
 
 	void parse_str(std::string &input_str, bool hierarchyOnly) = delete;
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly) = delete;
 
-	VerilogParserContainerCommon(hdlObjects::HdlContext *context,
-			Language _lang, verilog_pp::MacroDB &_defineDB) :
-			iParserContainer<antlrLexerT, antlrParserT, hdlParserT>(context,
-					_lang, _defineDB), preproc(_lang, this->syntaxErrLogger,
-					_defineDB) {
+	SVParserContainer(hdlObjects::HdlContext *context, Language _lang,
+			verilog_pp::MacroDB &_defineDB) :
+			iParserContainer(context, _lang, _defineDB), preproc(_lang,
+					this->syntaxErrLogger, _defineDB) {
 	}
 
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
@@ -55,28 +65,6 @@ public:
 		input_for_parser.name = STRING_FILENAME;
 		this->_parse(input_for_parser, hierarchyOnly);
 	}
-};
-
-class VerilogParserContainer: public VerilogParserContainerCommon<
-		Verilog2001_antlr::Verilog2001Lexer,
-		Verilog2001_antlr::Verilog2001Parser, verilog::Source_textParser> {
-public:
-	using VerilogParserContainerCommon::VerilogParserContainerCommon;
-private:
-	virtual void parseFn() override {
-		Verilog2001_antlr::Verilog2001Parser::Source_textContext *tree =
-				antlrParser->source_text();
-		syntaxErrLogger.check_errors(); // Throw exception if errors
-		hdlParser->visitSource_text(tree);
-	}
-};
-
-class SVParserContainer: public VerilogParserContainerCommon<
-		sv2017_antlr::sv2017Lexer, sv2017_antlr::sv2017Parser,
-		sv::source_textParser> {
-public:
-	using VerilogParserContainerCommon::VerilogParserContainerCommon;
-private:
 	virtual void parseFn() override {
 		lexer->language_version = lang;
 		sv2017_antlr::sv2017Parser::Source_textContext *tree =
@@ -85,11 +73,6 @@ private:
 		hdlParser->visitSource_text(tree);
 	}
 };
-
-bool is_system_verilog(Language lang) {
-	return lang == Language::SV2005 || lang == Language::SV2009
-			|| lang == Language::SV2012 || lang == Language::SV2017;
-}
 
 HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
@@ -109,14 +92,7 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 			VHDLParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly);
 			c = pc.context;
-		} else if (lang == Language::VERILOG1995
-				|| lang == Language::VERILOG2001) {
-			VerilogParserContainer pc(c, lang, defineDB);
-			pc.parse_file(fileName, hierarchyOnly, incdir);
-			c = pc.context;
-
-		} else if (lang == Language::VERILOG2001_NOCONFIG
-				|| lang == Language::VERILOG2005 || is_system_verilog(lang)) {
+		} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 			SVParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
 			c = pc.context;
@@ -137,11 +113,7 @@ HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 		VHDLParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly);
 		c = pc.context;
-	} else if (lang == VERILOG) {
-		VerilogParserContainer pc(c, lang, defineDB);
-		pc.parse_str(hdl_str, hierarchyOnly, incdir);
-		c = pc.context;
-	} else if (is_system_verilog(lang)) {
+	} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 		SVParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly, incdir);
 		c = pc.context;

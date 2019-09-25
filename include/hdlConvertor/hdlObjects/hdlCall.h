@@ -20,6 +20,7 @@ public:
 	HdlCall(iHdlExpr* op0, HdlOperatorType operatorType, iHdlExpr* op1);
 
 	static HdlCall * call(iHdlExpr* fn, const std::vector<iHdlExpr*> & operands);
+	static HdlCall * parametrization(iHdlExpr* fn, const std::vector<iHdlExpr*> & operands);
 	static HdlCall * slice(iHdlExpr* fn, const std::vector<iHdlExpr*> & operands);
 	static HdlCall * ternary(iHdlExpr* cond, iHdlExpr* ifTrue, iHdlExpr* ifFalse);
 	iHdlExprItem * clone() const;

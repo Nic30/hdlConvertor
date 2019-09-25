@@ -1,27 +1,27 @@
-#include <hdlConvertor/verilogConvertor/portParser.h>
+#include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/verilogConvertor/utils.h>
-#include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/utils.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/hdlObjects/hdlDirection.h>
 #include <hdlConvertor/hdlObjects/hdlStmAssign.h>
 #include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
 using namespace std;
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlObjects;
 
-PortParser::PortParser(CommentParser &commentParser,
+PortParser::PortParser(SVCommentParser &commentParser,
 		vector<Non_ANSI_port_info_t> &_non_ansi_port_groups) :
 		commentParser(commentParser), non_ansi_port_groups(
 				_non_ansi_port_groups) {
 }
 
 vector<HdlVariableDef*>* PortParser::addTypeSpecToPorts(HdlDirection direction,
-		Verilog2001Parser::Net_typeContext *net_type, bool signed_, bool reg_,
-		const string &doc, Verilog2001Parser::Range_Context *range_,
+		sv2017Parser::Net_typeContext *net_type, bool signed_, bool reg_,
+		const string &doc, sv2017Parser::Range_Context *range_,
 		vector<HdlVariableDef*> *ports) {
 	if ((net_type != nullptr) && (net_type->getText() != "wire")) {
 		NotImplementedLogger::print(
@@ -43,7 +43,7 @@ vector<HdlVariableDef*>* PortParser::addTypeSpecToPorts(HdlDirection direction,
 }
 
 vector<HdlVariableDef*>* PortParser::visitList_of_ports(
-		Verilog2001Parser::List_of_portsContext *ctx) {
+		sv2017Parser::List_of_portsContext *ctx) {
 	// list_of_ports : '(' port ( ',' port )* ')' ;
 	auto ports = new vector<HdlVariableDef*>();
 	for (auto p : ctx->port()) {
@@ -56,7 +56,7 @@ vector<HdlVariableDef*>* PortParser::visitList_of_ports(
 	return ports;
 }
 vector<HdlVariableDef*>* PortParser::visitPort(
-		Verilog2001Parser::PortContext *ctx) {
+		sv2017Parser::PortContext *ctx) {
 	// port: port_expression?
 	// | '.' port_identifier '(' ( port_expression )? ')'
 	// ;
@@ -77,7 +77,7 @@ vector<HdlVariableDef*>* PortParser::visitPort(
 	return pe;
 }
 vector<HdlVariableDef*>* PortParser::visitPort_expression(
-		Verilog2001Parser::Port_expressionContext *ctx) {
+		sv2017Parser::Port_expressionContext *ctx) {
 	// port_expression :
 	// port_reference
 	// | '{' port_reference ( ',' port_reference )* '}'
@@ -91,7 +91,7 @@ vector<HdlVariableDef*>* PortParser::visitPort_expression(
 	return ports;
 }
 HdlVariableDef* PortParser::visitPort_reference(
-		Verilog2001Parser::Port_referenceContext *ctx) {
+		sv2017Parser::Port_referenceContext *ctx) {
 	// port_reference :
 	// port_identifier
 	// | port_identifier '[' constant_expression ']'
@@ -115,7 +115,7 @@ HdlVariableDef* PortParser::visitPort_reference(
 
 }
 vector<HdlVariableDef*>* PortParser::visitList_of_port_declarations(
-		Verilog2001Parser::List_of_port_declarationsContext *ctx) {
+		sv2017Parser::List_of_port_declarationsContext *ctx) {
 	// list_of_port_declarations
 	// : '(' port_declaration ( ',' port_declaration )* ')'
 	// | '(' ')'
@@ -129,8 +129,8 @@ vector<HdlVariableDef*>* PortParser::visitList_of_port_declarations(
 	}
 	return ports;
 }
-vector<HdlVariableDef*>* PortParser::visitPort_declaration(
-		Verilog2001Parser::Port_declarationContext *ctx) {
+vector<HdlVariableDef*>* PortParser::visitNonansi_port_declaration(
+		sv2017Parser::Nonansi_port_declarationContext *ctx) {
 	// port_declaration :
 	// attribute_instance* inout_declaration
 	// | attribute_instance* input_declaration
@@ -192,7 +192,7 @@ vector<HdlVariableDef*>* PortParser::visitPort_declaration(
 	}
 }
 vector<HdlVariableDef*>* PortParser::visitList_of_port_identifiers(
-		Verilog2001Parser::List_of_port_identifiersContext *ctx) {
+		sv2017Parser::List_of_port_identifiersContext *ctx) {
 	// list_of_port_identifiers :
 	// port_identifier ( ',' port_identifier )*
 	// ;
@@ -203,14 +203,14 @@ vector<HdlVariableDef*>* PortParser::visitList_of_port_identifiers(
 	return ports;
 }
 HdlVariableDef* PortParser::visitPort_identifier(
-		Verilog2001Parser::Port_identifierContext *ctx) {
+		sv2017Parser::Port_identifierContext *ctx) {
 	// port_identifier : identifier ;
 	auto v = new HdlVariableDef(ctx->identifier()->getText(), NULL, NULL);
 	v->direction = HdlDirection::DIR_UNKNOWN;
 	return v;
 }
 vector<HdlVariableDef*>* PortParser::visitList_of_variable_port_identifiers(
-		Verilog2001Parser::List_of_variable_port_identifiersContext *ctx) {
+		sv2017Parser::List_of_variable_port_identifiersContext *ctx) {
 	// list_of_variable_port_identifiers :
 	// port_identifier ( '=' constant_expression )? ( ',' port_identifier (
 	// '=' constant_expression )? )* ;
@@ -218,12 +218,12 @@ vector<HdlVariableDef*>* PortParser::visitList_of_variable_port_identifiers(
 	HdlVariableDef *last = nullptr;
 	for (auto n : ctx->children) {
 		auto cec =
-				dynamic_cast<Verilog2001Parser::Constant_expressionContext*>(n);
+				dynamic_cast<sv2017Parser::Constant_expressionContext*>(n);
 		if (cec) {
 			last->value = VerExprParser::visitConstant_expression(cec);
 		} else {
 			auto pic =
-					dynamic_cast<Verilog2001Parser::Port_identifierContext*>(n);
+					dynamic_cast<sv2017Parser::Port_identifierContext*>(n);
 			if (pic) {
 				last = visitPort_identifier(pic);
 				ports->push_back(last);

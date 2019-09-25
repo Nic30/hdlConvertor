@@ -32,7 +32,7 @@ KW_DOLAR_UNIT: '$unit';
 KW_DOLAR_WARNING: '$warning';
 KW_DOLAR_WIDTH: '$width';
 KW_1STEP: '1step';
-KW_PATHPULSEDOLAR_: 'PATHPULSE$';
+KW_PATHPULSE_DOLAR: 'PATHPULSE$';
 KW_ACCEPT_ON:
  'accept_on' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_ALIAS:

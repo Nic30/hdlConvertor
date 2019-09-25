@@ -29,11 +29,10 @@
    	 (only if something is seriously broken)
      ```
      rm src/vhdlConvertor/vhdlParser/                             \
-        src/verilogConvertor/Verilog2001Parser/                   \
+        src/verilogConvertor/sv2017Parser/                   \
         src/verilogPreproc/verilogPreprocParser/                  \
         src/svConvertor/sv2012Parser/                             \
         include/hdlConvertor/svConvertor/sv2012Parser/            \
-        include/hdlConvertor/verilogConvertor/Verilog2001Parser/  \
         include/hdlConvertor/verilogPreproc/verilogPreprocParser/ \
         include/hdlConvertor/vhdlConvertor/vhdlParser/ -r
      ```

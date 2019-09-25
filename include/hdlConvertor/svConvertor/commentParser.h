@@ -3,10 +3,10 @@
 
 #include <string>
 #include <antlr4-runtime.h>
-#include <hdlConvertor/verilogConvertor/Verilog2001Parser/Verilog2001Lexer.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Lexer.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
 /**
  * The comment parser reads the text from the hidden tokens
@@ -28,10 +28,10 @@ namespace verilog {
  *  * For object which declaration is composed by several parts (like Verilog ports,
  *    where the type is specified inside of the module). The comments are concatenated.
  * */
-class CommentParser {
+class SVCommentParser {
 	antlr4::CommonTokenStream & tokens;
 public:
-	CommentParser(antlr4::TokenStream * _tokens);
+	SVCommentParser(antlr4::TokenStream * _tokens);
 
 	template<typename CONTEXT_T>
 	std::string parse(CONTEXT_T * ctx) {
@@ -53,7 +53,7 @@ public:
 		for (size_t i = first_comment_token; i < last_token; i++) {
 			auto t = tokens.get(i);
 			auto s = t->getText();
-			if (t->getType() == Verilog2001_antlr::Verilog2001Lexer::White_space) {
+			if (t->getType() == sv2017_antlr::sv2017Lexer::WHITE_SPACE) {
 				continue;
 			}
 			//printf("comment: %s, %s\n", s.c_str(), t->toString().c_str());

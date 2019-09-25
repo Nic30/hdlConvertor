@@ -1,15 +1,15 @@
-#include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
 
 #include <antlr4-runtime.h>
 
-#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/moduleParamParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
 using namespace std;
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
 iHdlExpr* VerExprParser::reduce(const std::vector<iHdlExpr*> &ops,
@@ -25,88 +25,35 @@ iHdlExpr* VerExprParser::reduce(const std::vector<iHdlExpr*> &ops,
 }
 
 iHdlExpr* VerExprParser::visitConstant_expression(
-		Verilog2001Parser::Constant_expressionContext *ctx) {
+		sv2017Parser::Constant_expressionContext *ctx) {
 	// constant_expression : expression ;
 	return visitExpression(ctx->expression());
 }
-iHdlExpr* VerExprParser::visitDimension(
-		Verilog2001Parser::DimensionContext *ctx) {
-	// dimension
-	//    : '[' dimension_constant_expression ':' dimension_constant_expression ']'
-	//    ;
-	auto l = visitDimension_constant_expression(
-			ctx->dimension_constant_expression(0));
-	auto h = visitDimension_constant_expression(
-			ctx->dimension_constant_expression(1));
-	return new iHdlExpr(l, HdlOperatorType::DOWNTO, h);
-}
-iHdlExpr* VerExprParser::visitDimension_constant_expression(
-		Verilog2001Parser::Dimension_constant_expressionContext *ctx) {
-	// dimension_constant_expression
-	//    : constant_expression
-	//    ;
-	return visitConstant_expression(ctx->constant_expression());
-}
 iHdlExpr* VerExprParser::visitRange_expression(
-		Verilog2001Parser::Range_expressionContext *ctx) {
-	// range_expression :
-	// expression
-	// | msb_constant_expression ':' lsb_constant_expression
-	// | base_expression '+:' width_constant_expression
-	// | base_expression '-:' width_constant_expression
+		sv2017Parser::Range_expressionContext *ctx) {
+	// range_expression:
+	//    expression ( COLON expression )?
 	// ;
-
-	auto msb = ctx->msb_constant_expression();
-	if (msb) {
-		auto h = visitConstant_expression(msb->constant_expression());
-		auto lsb = ctx->lsb_constant_expression();
-		auto l = visitConstant_expression(lsb->constant_expression());
+	auto exprs = ctx->expression();
+	assert(exprs.size() >= 1);
+	auto l = visitExpression(exprs[0]);
+	if (exprs.size() == 2) {
+		auto h = visitExpression(exprs[1]);
 		return new iHdlExpr(l, HdlOperatorType::DOWNTO, h);
-	}
-	// msb_constant_expression : constant_expression ;
-	// lsb_constant_expression : constant_expression ;
-	// width_constant_expression : constant_expression ;
-	// base_expression : expression ;
-	NotImplementedLogger::print("VerExprParser.visitRange_expression", ctx);
-	return nullptr;
-}
-iHdlExpr* VerExprParser::visitRange_(Verilog2001Parser::Range_Context *ctx) {
-	// range : '[' msb_constant_expression ':' lsb_constant_expression ']' ;
-	// msb_constant_expression : constant_expression ;
-	// lsb_constant_expression : constant_expression ;
-	return new iHdlExpr(
-			visitConstant_expression(
-					ctx->msb_constant_expression()->constant_expression()),
-			DOWNTO,
-			visitConstant_expression(
-					ctx->lsb_constant_expression()->constant_expression()));
-
-}
-
-iHdlExpr* VerExprParser::visitNet_lvalue(
-		Verilog2001Parser::Net_lvalueContext *ctx) {
-	// net_lvalue
-	//    : hierarchical_net_identifier
-	//    | hierarchical_net_identifier '[' constant_expression ']' ('[' constant_expression ']')*
-	//    | hierarchical_net_identifier '[' constant_expression ']' ('[' constant_expression ']')* '[' constant_range_expression ']'
-	//    | hierarchical_net_identifier '[' constant_range_expression ']'
-	//    | net_concatenation
-	//    ;
-	auto hni = ctx->hierarchical_net_identifier();
-	if (hni) {
-		auto id = visitHierarchical_net_identifier(hni);
-		for (auto ce : ctx->constant_expression()) {
-			auto c = visitConstant_expression(ce);
-			id = new iHdlExpr(id, HdlOperatorType::INDEX, c);
-		}
-		return id;
 	} else {
-		auto nc = ctx->net_concatenation();
-		return visitNet_concatenation(nc);
+		assert(exprs.size() == 1);
+		return l;
 	}
+}
+
+iHdlExpr* VerExprParser::visitNet_lvalue(sv2017Parser::Net_lvalueContext *ctx) {
+	//net_lvalue: variable_lvalue;
+	auto v = ctx->variable_lvalue();
+	assert(v);
+	return visitVariable_lvalue(v);
 }
 iHdlExpr* VerExprParser::visitNet_concatenation(
-		Verilog2001Parser::Net_concatenationContext *ctx) {
+		sv2017Parser::Net_concatenationContext *ctx) {
 	// net_concatenation
 	//    : '{' net_concatenation_value (',' net_concatenation_value)* '}'
 	//    ;
@@ -145,15 +92,9 @@ iHdlExpr* VerExprParser::visitNet_concatenation(
 
 	return reduce(parts, HdlOperatorType::CONCAT);
 }
-iHdlExpr* VerExprParser::visitHierarchical_net_identifier(
-		Verilog2001Parser::Hierarchical_net_identifierContext *ctx) {
-	// hierarchical_net_identifier
-	//    : hierarchical_identifier
-	//    ;
-	return visitHierarchical_identifier(ctx->hierarchical_identifier());
-}
+
 iHdlExpr* VerExprParser::visitDelay_control(
-		Verilog2001Parser::Delay_controlContext *ctx) {
+		sv2017Parser::Delay_controlContext *ctx) {
 	// delay_control
 	//    : '#' delay_value
 	//    | '#' '(' mintypmax_expression ')'
@@ -168,7 +109,7 @@ iHdlExpr* VerExprParser::visitDelay_control(
 
 }
 iHdlExpr* VerExprParser::visitDelay_value(
-		Verilog2001Parser::Delay_valueContext *ctx) {
+		sv2017Parser::Delay_valueContext *ctx) {
 	// delay_value
 	//    : Decimal_number
 	//    | parameter_identifier
@@ -191,16 +132,8 @@ iHdlExpr* VerExprParser::visitDelay_value(
 	return visitMintypmax_expression(me);
 
 }
-iHdlExpr* VerExprParser::visitSpecparam_identifier(
-		Verilog2001Parser::Specparam_identifierContext *ctx) {
-	// specparam_identifier
-	//    : identifier
-	//    ;
-	return visitIdentifier(ctx->identifier());
-}
 
-iHdlExpr* VerExprParser::visitExpression(
-		Verilog2001Parser::ExpressionContext *ctx) {
+iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 	// expression:
 	// term
 	// (
@@ -211,20 +144,19 @@ iHdlExpr* VerExprParser::visitExpression(
 	antlr4::tree::ParseTree *ch;
 	antlr4::tree::ParseTree *ch2 = nullptr;
 	auto childs = ctx->children.begin();
-	iHdlExpr *top = visitTerm((Verilog2001Parser::TermContext*) (*childs));
+	iHdlExpr *top = visitTerm((sv2017Parser::TermContext*) (*childs));
 	childs++;
 	// skip attribs
 	while (childs != ctx->children.end()) {
 		ch = *childs;
 		childs++;
-		auto binOp =
-				dynamic_cast<Verilog2001Parser::Binary_operatorContext*>(ch);
+		auto binOp = dynamic_cast<sv2017Parser::Binary_operatorContext*>(ch);
 		if (binOp) {
 			while (true) {
 				ch2 = *childs;
 				childs++;
 				auto aic =
-						dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
+						dynamic_cast<sv2017Parser::Attribute_instanceContext*>(ch2);
 				if (aic) {
 					AttributeParser::visitAttribute_instance(aic);
 				} else {
@@ -233,13 +165,13 @@ iHdlExpr* VerExprParser::visitExpression(
 			}
 			top = new iHdlExpr(top,
 					VerLiteralParser::visitBinary_operator(binOp),
-					visitTerm((Verilog2001Parser::TermContext*) ch2));
+					visitTerm((sv2017Parser::TermContext*) ch2));
 		} else {
 			while (true) {
 				ch2 = *childs;
 				childs++;
 				auto _aic =
-						dynamic_cast<Verilog2001Parser::Attribute_instanceContext*>(ch2);
+						dynamic_cast<sv2017Parser::Attribute_instanceContext*>(ch2);
 				if (_aic) {
 					AttributeParser::visitAttribute_instance(_aic);
 				} else {
@@ -248,10 +180,10 @@ iHdlExpr* VerExprParser::visitExpression(
 			}
 			childs++; // consume ":"
 			auto ifTrue = visitExpression(
-					dynamic_cast<Verilog2001Parser::ExpressionContext*>(ch2));
+					dynamic_cast<sv2017Parser::ExpressionContext*>(ch2));
 			assert(ifTrue);
 			auto ifFalse = visitTerm(
-					dynamic_cast<Verilog2001Parser::TermContext*>(*childs));
+					dynamic_cast<sv2017Parser::TermContext*>(*childs));
 			assert(ifFalse);
 			top = iHdlExpr::ternary(top, ifTrue, ifFalse);
 			childs++;
@@ -260,7 +192,7 @@ iHdlExpr* VerExprParser::visitExpression(
 
 	return top;
 }
-iHdlExpr* VerExprParser::visitTerm(Verilog2001Parser::TermContext *ctx) {
+iHdlExpr* VerExprParser::visitTerm(sv2017Parser::TermContext *ctx) {
 	// term :
 	// unary_operator attribute_instance* primary
 	// | primary
@@ -280,7 +212,7 @@ iHdlExpr* VerExprParser::visitTerm(Verilog2001Parser::TermContext *ctx) {
 	auto s = ctx->String();
 	return VerLiteralParser::visitString(s);
 }
-iHdlExpr* VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext *ctx) {
+iHdlExpr* VerExprParser::visitPrimary(sv2017Parser::PrimaryContext *ctx) {
 	// primary :
 	// number
 	// | hierarchical_identifier
@@ -335,7 +267,7 @@ iHdlExpr* VerExprParser::visitPrimary(Verilog2001Parser::PrimaryContext *ctx) {
 	return visitMintypmax_expression(ctx->mintypmax_expression());
 }
 iHdlExpr* VerExprParser::visitConstant_function_call(
-		Verilog2001Parser::Constant_function_callContext *ctx) {
+		sv2017Parser::Constant_function_callContext *ctx) {
 	// constant_function_call :
 	// function_identifier attribute_instance* '('
 	// (constant_expression ( ',' constant_expression )*)? ')'
@@ -357,21 +289,21 @@ iHdlExpr* VerExprParser::visitConstant_function_call(
 	return iHdlExpr::call(fn, args);
 }
 iHdlExpr* VerExprParser::visitFunction_identifier(
-		Verilog2001Parser::Function_identifierContext *ctx) {
+		sv2017Parser::Function_identifierContext *ctx) {
 	// function_identifier
 	//    : identifier
 	//    ;
 	return visitIdentifier(ctx->identifier());
 }
 iHdlExpr* VerExprParser::visitSystem_function_identifier(
-		Verilog2001Parser::System_function_identifierContext *ctx) {
+		sv2017Parser::System_function_identifierContext *ctx) {
 	// system_function_identifier
 	//    : Dollar_Identifier
 	//    ;
 	return VerLiteralParser::visitDolar_identifier(ctx->Dollar_Identifier());
 }
 iHdlExpr* VerExprParser::visitSystem_function_call(
-		Verilog2001Parser::System_function_callContext *ctx) {
+		sv2017Parser::System_function_callContext *ctx) {
 	// system_function_call :
 	// system_function_identifier (expression ( ',' expression )*)?
 	// ;
@@ -386,7 +318,7 @@ iHdlExpr* VerExprParser::visitSystem_function_call(
 	return iHdlExpr::call(fn, args);
 }
 iHdlExpr* VerExprParser::visitFunction_call(
-		Verilog2001Parser::Function_callContext *ctx) {
+		sv2017Parser::Function_callContext *ctx) {
 	// function_call
 	// : hierarchical_function_identifier attribute_instance*
 	// '(' (expression ( ',' expression )*)? ')'
@@ -406,21 +338,21 @@ iHdlExpr* VerExprParser::visitFunction_call(
 	return iHdlExpr::call(fn, args);
 }
 iHdlExpr* VerExprParser::visitHierarchical_function_identifier(
-		Verilog2001Parser::Hierarchical_function_identifierContext *ctx) {
+		sv2017Parser::Hierarchical_function_identifierContext *ctx) {
 	// hierarchical_function_identifier
 	//    : hierarchical_identifier
 	//    ;
 	return visitHierarchical_identifier(ctx->hierarchical_identifier());
 }
 iHdlExpr* VerExprParser::visitMultiple_concatenation(
-		Verilog2001Parser::Multiple_concatenationContext *ctx) {
+		sv2017Parser::Multiple_concatenationContext *ctx) {
 	// multiple_concatenation : '{' constant_expression concatenation '}' ;
 	auto ce = visitConstant_expression(ctx->constant_expression());
 	auto c = visitConcatenation(ctx->concatenation());
 	return new iHdlExpr(ce, HdlOperatorType::REPL_CONCAT, c);
 }
 iHdlExpr* VerExprParser::visitConcatenation(
-		Verilog2001Parser::ConcatenationContext *ctx) {
+		sv2017Parser::ConcatenationContext *ctx) {
 	// concatenation : '{' expression ( ',' expression )* '}' ;
 	iHdlExpr *res = nullptr;
 	for (auto e : ctx->expression()) {
@@ -433,7 +365,7 @@ iHdlExpr* VerExprParser::visitConcatenation(
 	return res;
 }
 iHdlExpr* VerExprParser::visitHierarchical_identifier(
-		Verilog2001Parser::Hierarchical_identifierContext *ctx) {
+		sv2017Parser::Hierarchical_identifierContext *ctx) {
 	// hierarchical_identifier :
 	// simple_hierarchical_identifier
 	// | escaped_hierarchical_identifier
@@ -446,7 +378,7 @@ iHdlExpr* VerExprParser::visitHierarchical_identifier(
 				ctx->escaped_hierarchical_identifier());
 }
 iHdlExpr* VerExprParser::visitEscaped_hierarchical_identifier(
-		Verilog2001Parser::Escaped_hierarchical_identifierContext *ctx) {
+		sv2017Parser::Escaped_hierarchical_identifierContext *ctx) {
 	// escaped_hierarchical_identifier :
 	// escaped_hierarchical_branch ( '.' simple_hierarchical_branch | '.'
 	// escaped_hierarchical_branch )*
@@ -459,12 +391,12 @@ iHdlExpr* VerExprParser::visitEscaped_hierarchical_identifier(
 		else {
 			iHdlExpr *second = nullptr;
 			auto ehbc =
-					dynamic_cast<Verilog2001Parser::Escaped_hierarchical_branchContext*>(ch);
+					dynamic_cast<sv2017Parser::Escaped_hierarchical_branchContext*>(ch);
 			if (ehbc) {
 				second = visitEscaped_hierarchical_branch(ehbc);
 			} else {
 				auto shbc =
-						dynamic_cast<Verilog2001Parser::Simple_hierarchical_branchContext*>(ch);
+						dynamic_cast<sv2017Parser::Simple_hierarchical_branchContext*>(ch);
 				if (shbc) {
 					second = visitSimple_hierarchical_branch(shbc);
 				}
@@ -477,7 +409,7 @@ iHdlExpr* VerExprParser::visitEscaped_hierarchical_identifier(
 	return top;
 }
 iHdlExpr* VerExprParser::visitSimple_hierarchical_identifier(
-		Verilog2001Parser::Simple_hierarchical_identifierContext *ctx) {
+		sv2017Parser::Simple_hierarchical_identifierContext *ctx) {
 	// simple_hierarchical_identifier : simple_hierarchical_branch ( '.'
 	// Escaped_identifier )? ;
 	iHdlExpr *shb = visitSimple_hierarchical_branch(
@@ -490,7 +422,7 @@ iHdlExpr* VerExprParser::visitSimple_hierarchical_identifier(
 	return shb;
 }
 iHdlExpr* VerExprParser::visitSimple_hierarchical_branch(
-		Verilog2001Parser::Simple_hierarchical_branchContext *ctx) {
+		sv2017Parser::Simple_hierarchical_branchContext *ctx) {
 	// simple_hierarchical_branch :
 	// Simple_identifier ( '[' Decimal_number ']' )?
 	// ( '.' Simple_identifier ( '[' Decimal_number ']' )? )*
@@ -526,15 +458,14 @@ iHdlExpr* VerExprParser::visitSimple_hierarchical_branch(
 	return top;
 }
 iHdlExpr* VerExprParser::visitSystem_task_identifier(
-		Verilog2001Parser::System_task_identifierContext *ctx) {
+		sv2017Parser::System_task_identifierContext *ctx) {
 	// system_task_identifier
 	//    : Dollar_Identifier
 	//    ;
 	auto di = ctx->Dollar_Identifier();
 	return iHdlExpr::ID(di->getText());
 }
-iHdlExpr* VerExprParser::visitIdentifier(
-		Verilog2001Parser::IdentifierContext *ctx) {
+iHdlExpr* VerExprParser::visitIdentifier(sv2017Parser::IdentifierContext *ctx) {
 	// identifier
 	//    : Simple_identifier
 	//    | Escaped_identifier
@@ -548,7 +479,7 @@ iHdlExpr* VerExprParser::visitIdentifier(
 	}
 }
 iHdlExpr* VerExprParser::visitEscaped_hierarchical_branch(
-		Verilog2001Parser::Escaped_hierarchical_branchContext *ctx) {
+		sv2017Parser::Escaped_hierarchical_branchContext *ctx) {
 	// escaped_hierarchical_branch :
 	// Escaped_identifier ( '[' Decimal_number ']' )?
 	// ( '.' Escaped_identifier ( '[' Decimal_number ']' )? )*
@@ -558,14 +489,14 @@ iHdlExpr* VerExprParser::visitEscaped_hierarchical_branch(
 		antlr4::tree::TerminalNode *tnode =
 				dynamic_cast<antlr4::tree::TerminalNode*>(c);
 		antlr4::Token *symbol = tnode->getSymbol();
-		if (symbol->getType() == Verilog2001Parser::Escaped_identifier) {
+		if (symbol->getType() == sv2017Parser::Escaped_identifier) {
 			auto tmp = VerLiteralParser::parseEscaped_identifier(tnode);
 			if (res == nullptr) {
 				res = tmp;
 			} else {
 				res = new iHdlExpr(res, HdlOperatorType::DOT, tmp);
 			}
-		} else if (symbol->getType() == Verilog2001Parser::Decimal_number) {
+		} else if (symbol->getType() == sv2017Parser::Decimal_number) {
 			auto d = VerLiteralParser::parseIntNumber(tnode, 10);
 			res = new iHdlExpr(res, HdlOperatorType::INDEX, d);
 		}
@@ -573,7 +504,7 @@ iHdlExpr* VerExprParser::visitEscaped_hierarchical_branch(
 	return res;
 }
 iHdlExpr* VerExprParser::visitMintypmax_expression(
-		Verilog2001Parser::Mintypmax_expressionContext *ctx) {
+		sv2017Parser::Mintypmax_expressionContext *ctx) {
 	// mintypmax_expression
 	// : expression (':' expression ':' expression)?
 	// ;
@@ -586,7 +517,7 @@ iHdlExpr* VerExprParser::visitMintypmax_expression(
 }
 
 std::vector<iHdlExpr*>* VerExprParser::visitEvent_expression(
-		Verilog2001Parser::Event_expressionContext *ctx) {
+		sv2017Parser::Event_expressionContext *ctx) {
 	// event_expression
 	//    : event_primary ('or' event_primary | ',' event_primary)*
 	//    ;
@@ -601,17 +532,17 @@ std::vector<iHdlExpr*>* VerExprParser::visitEvent_expression(
 }
 
 iHdlExpr* VerExprParser::visitEvent_primary(
-		Verilog2001Parser::Event_primaryContext *ctx) {
+		sv2017Parser::Event_primaryContext *ctx) {
 	// event_primary
 	//    : (expression | 'posedge' expression | 'negedge' expression)
 	//    ;
 	auto first_as_expr =
-			dynamic_cast<Verilog2001Parser::ExpressionContext*>(ctx->children[0]);
+			dynamic_cast<sv2017Parser::ExpressionContext*>(ctx->children[0]);
 	if (first_as_expr) {
 		return visitExpression(first_as_expr);
 	} else {
 		auto expr =
-				dynamic_cast<Verilog2001Parser::ExpressionContext*>(ctx->children[1]);
+				dynamic_cast<sv2017Parser::ExpressionContext*>(ctx->children[1]);
 		HdlOperatorType o;
 		if (ctx->children[0]->getText() == "posedge") {
 			o = HdlOperatorType::RISING;
@@ -623,7 +554,13 @@ iHdlExpr* VerExprParser::visitEvent_primary(
 }
 
 iHdlExpr* VerExprParser::visitVariable_lvalue(
-		Verilog2001Parser::Variable_lvalueContext *ctx) {
+		sv2017Parser::Variable_lvalueContext *ctx) {
+	//variable_lvalue:
+	// LBRACE variable_lvalue ( COMMA variable_lvalue )* RBRACE
+	//  | package_or_class_scoped_hier_id_with_select
+	//  | ( assignment_pattern_expression_type )? assignment_pattern_variable_lvalue
+	//  | streaming_concatenation
+	//;
 	// variable_lvalue
 	//    : hierarchical_variable_identifier
 	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')*
@@ -635,67 +572,24 @@ iHdlExpr* VerExprParser::visitVariable_lvalue(
 	// hierarchical_variable_identifier
 	//    : hierarchical_identifier
 	//    ;
-
-	auto vc = ctx->variable_concatenation();
-	if (vc)
-		return visitVariable_concatenation(vc);
-
-	auto hi =
-			ctx->hierarchical_variable_identifier()->hierarchical_identifier();
-	auto id = visitHierarchical_identifier(hi);
-	for (auto e : ctx->expression()) {
-		auto expr = visitExpression(e);
-		id = new iHdlExpr(id, HdlOperatorType::INDEX, expr);
-	}
-	auto re = ctx->range_expression();
-	if (re) {
-		auto expr = visitRange_expression(re);
-		id = new iHdlExpr(id, HdlOperatorType::INDEX, expr);
-	}
-	return id;
-}
-
-iHdlExpr* VerExprParser::visitVariable_concatenation(
-		Verilog2001Parser::Variable_concatenationContext *ctx) {
-	// variable_concatenation
-	//    : '{' variable_concatenation_value (',' variable_concatenation_value)* '}'
-	//    ;
-	//
-	// variable_concatenation_value
-	//    : hierarchical_variable_identifier
-	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')*
-	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
-	//    | hierarchical_variable_identifier '[' range_expression ']'
-	//    | variable_concatenation
-	//    ;
-	// collect operands of concatenation
-	vector<iHdlExpr*> parts;
-	for (auto ncv : ctx->variable_concatenation_value()) {
-		auto hi =
-				ncv->hierarchical_variable_identifier()->hierarchical_identifier();
-		if (hi) {
-			iHdlExpr *id = visitHierarchical_identifier(hi);
-			for (auto ce : ncv->expression()) {
-				auto c = visitExpression(ce);
-				id = new iHdlExpr(id, HdlOperatorType::INDEX, c);
-			}
-			auto re = ncv->range_expression();
-			if (re) {
-				auto r = visitRange_expression(re);
-				id = new iHdlExpr(id, HdlOperatorType::INDEX, r);
-			}
-			return id;
-		} else {
-			parts.push_back(
-					visitVariable_concatenation(ncv->variable_concatenation()));
+	auto vls = ctx->variable_lvalue();
+	if (vls.size()) {
+		vector<iHdlExpr*> parts;
+		for (auto vl : vls) {
+			parts.push_back(visitVariable_lvalue(vl));
 		}
+
+		return reduce(parts, HdlOperatorType::CONCAT);
+	}
+	auto pid = ctx->package_or_class_scoped_hier_id_with_select();
+	if (pid) {
+		return visitPackage_or_class_scoped_hier_id_with_select(pid);
 	}
 
-	return reduce(parts, HdlOperatorType::CONCAT);
 }
 
 iHdlExpr* VerExprParser::visitArrayed_identifier(
-		Verilog2001Parser::Arrayed_identifierContext *ctx) {
+		sv2017Parser::Arrayed_identifierContext *ctx) {
 	// arrayed_identifier
 	//    : simple_arrayed_identifier
 	//    | escaped_arrayed_identifier
@@ -732,7 +626,7 @@ iHdlExpr* VerExprParser::visitArrayed_identifier(
 }
 
 iHdlExpr* VerExprParser::visitEvent_trigger(
-		Verilog2001Parser::Event_triggerContext *ctx) {
+		sv2017Parser::Event_triggerContext *ctx) {
 	// event_trigger
 	//    : '->' hierarchical_event_identifier ';'
 	//    ;
@@ -745,5 +639,97 @@ iHdlExpr* VerExprParser::visitEvent_trigger(
 	return new iHdlExpr(HdlOperatorType::ARROW, e);
 }
 
+iHdlExpr* VerExprParser::visitPackage_or_class_scoped_hier_id_with_select(
+		sv2017Parser::Package_or_class_scoped_hier_id_with_selectContext *ctx) {
+	// package_or_class_scoped_hier_id_with_select:
+	//  package_or_class_scoped_path ( bit_select )* ( DOT identifier ( bit_select )* )* ( LSQUARE_BR
+	//       expression ( PLUS
+	//       | MINUS
+	//       )? COLON expression RSQUARE_BR )?;
+
+}
+
+std::vector<iHdlExpr*> VerExprParser::visitParameter_value_assignment(
+		sv2017Parser::Parameter_value_assignmentContext *ctx) {
+	// parameter_value_assignment:
+	//   HASH LPAREN ( list_of_parameter_assignments )? RPAREN;
+	auto lpa = ctx->list_of_parameter_assignments();
+	return ModuleInstanceParser::visitList_of_parameter_assignments(lpa);
+}
+
+iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path_item(
+		sv2017Parser::Package_or_class_scoped_path_itemContext *ctx,
+		iHdlExpr *selected_name) {
+	// package_or_class_scoped_path_item:
+	// 	identifier ( parameter_value_assignment )?
+	// ;
+	auto _id = ctx->identifier();
+	auto id = visitIdentifier(_id);
+	auto _pva = ctx->parameter_value_assignment();
+	if (_pva) {
+		auto pva = visitParameter_value_assignment(_pva);
+		id = iHdlExpr::parametrization(id, pva);
+	}
+	return id;
+}
+
+iHdlExpr* VerExprParser::visitimplicit_class_handle(
+		sv2017Parser::Implicit_class_handleContext *ctx,
+		iHdlExpr *selected_name) {
+	// implicit_class_handle:
+	//  KW_THIS ( DOT KW_SUPER )?
+	//   | KW_SUPER
+	//  ;
+	if (ctx->KW_THIS()) {
+		auto t = iHdlExpr::ID("this");
+		selected_name = append_dot_separated_expr(selected_name, t);
+	}
+	if (ctx->KW_SUPER()) {
+		auto s = iHdlExpr::ID("super");
+		selected_name = append_dot_separated_expr(selected_name, s);
+	}
+	return selected_name;
+}
+
+iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path(
+		sv2017Parser::Package_or_class_scoped_pathContext *ctx) {
+	// // '::' separated
+	// package_or_class_scoped_path:
+	//    ( KW_LOCAL DOUBLE_COLON )? (
+	//   		KW_DOLAR_ROOT
+	//         | implicit_class_handle
+	//         | KW_DOLAR_UNIT
+	//         | package_or_class_scoped_path_item
+	// 	) ( DOUBLE_COLON package_or_class_scoped_path_item)*;
+	iHdlExpr *res = nullptr;
+	if (ctx->KW_LOCAL()) {
+		res = iHdlExpr::ID("local");
+	}
+	if (ctx->KW_DOLAR_ROOT()) {
+		res = append_dot_separated_expr(res, iHdlExpr::ID("$root"));
+	} else {
+		auto _ich = ctx->implicit_class_handle();
+		if (_ich) {
+			res = visitImplicit_class_handle(_ich, res);
+		} else {
+			if (ctx->KW_DOLAR_UNIT()) {
+				auto part = iHdlExpr::ID("$unit");
+				res = append_dot_separated_expr(res, part);
+			} else {
+				auto pcspi = ctx->package_or_class_scoped_path_item();
+				assert(pcspi.size() > 0);
+				for (auto i : pcspi) {
+					res = visitPackage_or_class_scoped_path_item(i, res);
+				}
+				return res;
+			}
+		}
+	}
+	auto pcspi = ctx->package_or_class_scoped_path_item();
+	for (auto i : pcspi) {
+		res = visitPackage_or_class_scoped_path_item(i, res);
+	}
+	return res;
+}
 }
 }

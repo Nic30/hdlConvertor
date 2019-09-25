@@ -1,28 +1,28 @@
-#include <hdlConvertor/verilogConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/moduleParamParser.h>
 
-#include <hdlConvertor/verilogConvertor/utils.h>
-#include <hdlConvertor/verilogConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/utils.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
 using namespace std;
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
-ModuleParamParser::ModuleParamParser(CommentParser & commentParser) :
+ModuleParamParser::ModuleParamParser(SVCommentParser & commentParser) :
 		commentParser(commentParser) {
 }
 
 iHdlExpr * ModuleParamParser::visitParameter_identifier(
-		Verilog2001Parser::Parameter_identifierContext * ctx) {
+		sv2017Parser::Parameter_identifierContext * ctx) {
 	// parameter_identifier
 	//    : identifier
 	//    ;
 	return VerExprParser::visitIdentifier(ctx->identifier());
 }
 vector<HdlVariableDef*>* ModuleParamParser::visitModule_parameter_port_list(
-		Verilog2001Parser::Module_parameter_port_listContext* ctx) {
+		sv2017Parser::Module_parameter_port_listContext* ctx) {
 	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','
 	// parameter_declaration_ )* ')' ;
 	auto vars = new vector<HdlVariableDef*>();
@@ -37,7 +37,7 @@ vector<HdlVariableDef*>* ModuleParamParser::visitModule_parameter_port_list(
 }
 
 vector<HdlVariableDef*>* ModuleParamParser::visitParameter_declaration_(
-		Verilog2001Parser::Parameter_declaration_Context* ctx) {
+		sv2017Parser::Parameter_declaration_Context* ctx) {
 	//// split out semi on end. spec grammar is wrong. It won't allow
 	//// #(parameter B=8) since it wants a ';' in (...). Rule
 	//// module_parameter_port_list calls this one.
@@ -79,7 +79,7 @@ vector<HdlVariableDef*>* ModuleParamParser::visitParameter_declaration_(
 	return params;
 }
 vector<HdlVariableDef*> *ModuleParamParser::visitList_of_param_assignments(
-		Verilog2001Parser::List_of_param_assignmentsContext * ctx) {
+		sv2017Parser::List_of_param_assignmentsContext * ctx) {
 	// list_of_param_assignments :
 	// param_assignment ( ',' param_assignment )*
 	// ;
@@ -90,7 +90,7 @@ vector<HdlVariableDef*> *ModuleParamParser::visitList_of_param_assignments(
 
 }
 HdlVariableDef * ModuleParamParser::visitParam_assignment(
-		Verilog2001Parser::Param_assignmentContext* ctx) {
+		sv2017Parser::Param_assignmentContext* ctx) {
 	// param_assignment : parameter_identifier '=' constant_expression ;
 	auto value = VerExprParser::visitConstant_expression(
 			ctx->constant_expression());
@@ -100,7 +100,7 @@ HdlVariableDef * ModuleParamParser::visitParam_assignment(
 	return p;
 }
 vector<HdlVariableDef*>* ModuleParamParser::visitParameter_declaration(
-		Verilog2001Parser::Parameter_declarationContext * ctx) {
+		sv2017Parser::Parameter_declarationContext * ctx) {
 	auto vars = new vector<HdlVariableDef*>();
 	auto pds = visitParameter_declaration_(ctx->parameter_declaration_());
 	for (auto pd : *pds)

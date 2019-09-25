@@ -1,16 +1,16 @@
-#include <hdlConvertor/verilogConvertor/literalParser.h>
+#include <hdlConvertor/svConvertor/literalParser.h>
 #include <algorithm>
 #include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
-namespace verilog {
+namespace sv {
 
-using Verilog2001Parser = Verilog2001_antlr::Verilog2001Parser;
+using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 using TerminalNode = antlr4::tree::TerminalNode;
 
 iHdlExpr * VerLiteralParser::visitNumber(
-		Verilog2001Parser::NumberContext* ctx) {
+		sv2017Parser::NumberContext* ctx) {
 	// number :
 	// Decimal_number
 	// | Octal_number
@@ -112,7 +112,7 @@ iHdlExpr * VerLiteralParser::visitString(TerminalNode* n) {
 }
 
 HdlOperatorType VerLiteralParser::visitUnary_operator(
-		Verilog2001Parser::Unary_operatorContext * ctx) {
+		sv2017Parser::Unary_operatorContext * ctx) {
 	// unary_operator
 	//    : '+'
 	//    | '-'
@@ -155,7 +155,7 @@ HdlOperatorType VerLiteralParser::visitUnary_operator(
 	throw std::runtime_error("Unsupported unary operator " + op);
 }
 HdlOperatorType VerLiteralParser::visitBinary_operator(
-		Verilog2001Parser::Binary_operatorContext * ctx) {
+		sv2017Parser::Binary_operatorContext * ctx) {
 	// binary_operator : '+' | '-' | '*' | '/' | '%' | '==' | '!=' | '===' |
 	// '!==' | '&&' | '||' | '**' | '<' | '<=' | '>' | '>=' | '&' | '|' |
 	// '^' | '^~' | '~^' | '>>' | '<<' | '>>>' | '<<<' ;

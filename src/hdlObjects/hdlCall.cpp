@@ -4,11 +4,11 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlCall::HdlCall() {
-	op = ARROW;
+	op = HdlOperatorType::ARROW;
 	operands.reserve(2);
 }
 
-HdlCall::HdlCall(const HdlCall & o) {
+HdlCall::HdlCall(const HdlCall &o) {
 	operands.reserve(o.operands.size());
 	for (auto op : o.operands) {
 		operands.push_back(new iHdlExpr(*op));
@@ -16,12 +16,12 @@ HdlCall::HdlCall(const HdlCall & o) {
 	op = o.op;
 }
 
-HdlCall::HdlCall(HdlOperatorType operatorType, iHdlExpr* op0) {
+HdlCall::HdlCall(HdlOperatorType operatorType, iHdlExpr *op0) {
 	operands.push_back(op0);
 	this->op = operatorType;
 
 }
-HdlCall::HdlCall(iHdlExpr* op0, HdlOperatorType operatorType, iHdlExpr* op1) {
+HdlCall::HdlCall(iHdlExpr *op0, HdlOperatorType operatorType, iHdlExpr *op1) {
 	if (op0) {
 		operands.push_back(op0);
 		//assert(!op1);
@@ -31,33 +31,41 @@ HdlCall::HdlCall(iHdlExpr* op0, HdlOperatorType operatorType, iHdlExpr* op1) {
 	this->op = operatorType;
 }
 
-HdlCall * HdlCall::call(iHdlExpr* fn, const std::vector<iHdlExpr*> & operands) {
-	HdlCall * o = new HdlCall();
-	o->op = CALL;
+HdlCall* HdlCall::call(iHdlExpr *fn, const std::vector<iHdlExpr*> &operands) {
+	HdlCall *o = new HdlCall();
+	o->op = HdlOperatorType::CALL;
 	o->operands.reserve(operands.size() + 1);
 	o->operands.push_back(fn);
 	for (auto op : operands)
 		o->operands.push_back(op);
 	return o;
 }
-HdlCall * HdlCall::slice(iHdlExpr* fn,
-		const std::vector<iHdlExpr*> & operands) {
-	HdlCall * o = new HdlCall();
-	o->op = INDEX;
+HdlCall* HdlCall::parametrization(iHdlExpr *fn,
+		const std::vector<iHdlExpr*> &operands) {
+	HdlCall *o = new HdlCall();
+	o->op = HdlOperatorType::PARAMETRIZATION;
 	o->operands.reserve(operands.size() + 1);
 	o->operands.push_back(fn);
 	for (auto op : operands)
 		o->operands.push_back(op);
 	return o;
 }
-HdlCall * HdlCall::ternary(iHdlExpr* cond, iHdlExpr* ifTrue,
-		iHdlExpr* ifFalse) {
-	HdlCall * op = new HdlCall();
-	op->op = TERNARY;
+HdlCall* HdlCall::slice(iHdlExpr *fn, const std::vector<iHdlExpr*> &operands) {
+	HdlCall *o = new HdlCall();
+	o->op = HdlOperatorType::INDEX;
+	o->operands.reserve(operands.size() + 1);
+	o->operands.push_back(fn);
+	for (auto op : operands)
+		o->operands.push_back(op);
+	return o;
+}
+HdlCall* HdlCall::ternary(iHdlExpr *cond, iHdlExpr *ifTrue, iHdlExpr *ifFalse) {
+	HdlCall *op = new HdlCall();
+	op->op = HdlOperatorType::TERNARY;
 	if (ifFalse)
-		op->operands = {cond, ifTrue, ifFalse};
-		else
-		op->operands = {cond, ifTrue};
+		op->operands = { cond, ifTrue, ifFalse };
+	else
+		op->operands = { cond, ifTrue };
 
 	return op;
 }
@@ -66,7 +74,7 @@ HdlCall::~HdlCall() {
 		delete o;
 	}
 }
-iHdlExprItem * HdlCall::clone() const {
+iHdlExprItem* HdlCall::clone() const {
 	return new HdlCall(*this);
 }
 

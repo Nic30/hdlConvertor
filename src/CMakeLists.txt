@@ -8,7 +8,6 @@ include_directories(
 	"${CMAKE_CURRENT_SOURCE_DIR}/../include/")
 
 add_subdirectory(svConvertor)
-add_subdirectory(verilogConvertor)
 add_subdirectory(verilogPreproc)
 add_subdirectory(vhdlConvertor)
 
@@ -48,7 +47,6 @@ endif()
 
 set(HDL_CONVERTOR_INTERNAL_LIBS 
 	svConvertor_static
-	verilogConvertor_static
 	verilogPreproc_static
 	vhdlConvertor_static
 	hdlConvertor_core_static
