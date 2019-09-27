@@ -9,18 +9,18 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
-VerStatementParser::VerStatementParser(SVCommentParser & commentParser) :
+VerStatementParser::VerStatementParser(SVCommentParser &commentParser) :
 		commentParser(commentParser) {
 }
 VerStatementParser::stm_or_block_t VerStatementParser::visitAlways_construct(
-		sv2017Parser::Always_constructContext * ctx) {
+		sv2017Parser::Always_constructContext *ctx) {
 	// always_construct
 	//    : 'always' statement
 	//    ;
 	return visitStatement(ctx->statement());
 }
 VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
-		sv2017Parser::StatementContext * ctx) {
+		sv2017Parser::StatementContext *ctx) {
 	//statement
 	//   : attribute_instance* blocking_assignment ';'
 	//   | attribute_instance* case_statement
@@ -111,26 +111,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
 			"VerStatementParser.visitStatement - probably unimplemented transition");
 }
 
-iHdlStatement * VerStatementParser::visitSystem_task_enable(
-		sv2017Parser::System_task_enableContext * ctx) {
-	// system_task_enable
-	//    : system_task_identifier ('(' (expression (',' expression)*)? ')')? ';'
-	//    ;
-	auto _id = ctx->system_task_identifier();
-	auto id = VerExprParser::visitSystem_task_identifier(_id);
-	auto _args = ctx->expression();
-	vector<iHdlExpr*> args(_args.size());
-	size_t i = 0;
-	for (auto _a : _args) {
-		auto a = VerExprParser::visitExpression(_a);
-		args[i] = a;
-		i++;
-	}
-	auto c = iHdlExpr::call(id, args);
-	return iHdlStatement::EXPR(c);
-}
-
-iHdlStatement * VerStatementParser::visitBlocking_assignment(
+iHdlStatement* VerStatementParser::visitBlocking_assignment(
 		sv2017Parser::Blocking_assignmentContext *ctx) {
 	// blocking_assignment
 	//    : variable_lvalue '=' (delay_or_event_control)? expression
@@ -138,7 +119,7 @@ iHdlStatement * VerStatementParser::visitBlocking_assignment(
 	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
 	auto src = VerExprParser::visitExpression(ctx->expression());
 	auto dec = ctx->delay_or_event_control();
-	iHdlStatement * assig;
+	iHdlStatement *assig;
 	if (dec) {
 		auto d = visitDelay_or_event_control(dec);
 		assig = new HdlStmAssign(dst, src, d.first, d.second, true);
@@ -149,8 +130,8 @@ iHdlStatement * VerStatementParser::visitBlocking_assignment(
 	return assig;
 }
 
-iHdlStatement * VerStatementParser::visitCase_statement(
-		sv2017Parser::Case_statementContext * ctx) {
+iHdlStatement* VerStatementParser::visitCase_statement(
+		sv2017Parser::Case_statementContext *ctx) {
 	// case_statement
 	//    : 'case' '(' expression ')' case_item (case_item)* 'endcase'
 	//    | 'casez' '(' expression ')' case_item (case_item)* 'endcase'
@@ -164,7 +145,7 @@ iHdlStatement * VerStatementParser::visitCase_statement(
 	}
 	auto switchOn = VerExprParser::visitExpression(ctx->expression());
 	std::vector<iHdlStatement::case_t> cases;
-	vector<iHdlObj*> * default_ = nullptr;
+	vector<iHdlObj*> *default_ = nullptr;
 	auto _cases = ctx->case_item();
 	cases.reserve(_cases.size());
 	for (auto _c : _cases) {
@@ -184,7 +165,7 @@ iHdlStatement * VerStatementParser::visitCase_statement(
 
 }
 std::vector<iHdlStatement::case_t> VerStatementParser::visitCase_item(
-		sv2017Parser::Case_itemContext * ctx) {
+		sv2017Parser::Case_itemContext *ctx) {
 	// case_item
 	//    : expression (',' expression)* ':' statement_or_null
 	//    | 'default' (':')? statement_or_null
@@ -209,7 +190,7 @@ std::vector<iHdlStatement::case_t> VerStatementParser::visitCase_item(
 	}
 	return res;
 }
-HdlStmAssign * VerStatementParser::visitVariable_assignment(
+HdlStmAssign* VerStatementParser::visitVariable_assignment(
 		sv2017Parser::Variable_assignmentContext *ctx) {
 	// variable_assignment
 	//    : variable_lvalue '=' expression
@@ -220,8 +201,8 @@ HdlStmAssign * VerStatementParser::visitVariable_assignment(
 	auto e = VerExprParser::visitExpression(_e);
 	return new HdlStmAssign(vl, e, true);
 }
-iHdlStatement * VerStatementParser::visitLoop_statement(
-		sv2017Parser::Loop_statementContext * ctx) {
+iHdlStatement* VerStatementParser::visitLoop_statement(
+		sv2017Parser::Loop_statementContext *ctx) {
 	// loop_statement
 	//    : 'forever' statement
 	//    | 'repeat' '(' expression ')' statement
@@ -240,14 +221,15 @@ iHdlStatement * VerStatementParser::visitLoop_statement(
 	} else if (name == "while") {
 		auto _e = ctx->expression();
 		auto c = VerExprParser::visitExpression(_e);
+
 		return iHdlStatement::WHILE(c, stm);
 	} else if (name == "for") {
 		auto _va = ctx->variable_assignment();
 		assert(_va.size() == 2);
 		auto _e = ctx->expression();
-		auto va0 = visitVariable_assignment(_va.at(0));
+		auto va0 = visitVariable_assignment(_va[0]);
 		auto e = VerExprParser::visitExpression(_e);
-		auto va1 = visitVariable_assignment(_va.at(1));
+		auto va1 = visitVariable_assignment(_va[1]);
 
 		return iHdlStatement::FOR(va0, e, va1, stm);
 	}
@@ -255,8 +237,8 @@ iHdlStatement * VerStatementParser::visitLoop_statement(
 	return nullptr;
 }
 
-HdlStmAssign * VerStatementParser::visitNonblocking_assignment(
-		sv2017Parser::Nonblocking_assignmentContext * ctx) {
+HdlStmAssign* VerStatementParser::visitNonblocking_assignment(
+		sv2017Parser::Nonblocking_assignmentContext *ctx) {
 	// nonblocking_assignment
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
 	//    ;
@@ -264,7 +246,7 @@ HdlStmAssign * VerStatementParser::visitNonblocking_assignment(
 	auto dst = VerExprParser::visitVariable_lvalue(vl);
 	auto e = ctx->expression();
 	auto src = VerExprParser::visitExpression(e);
-	HdlStmAssign * a;
+	HdlStmAssign *a;
 	auto dec = ctx->delay_or_event_control();
 	if (dec) {
 		auto d = visitDelay_or_event_control(dec);
@@ -275,8 +257,8 @@ HdlStmAssign * VerStatementParser::visitNonblocking_assignment(
 	a->__doc__ = commentParser.parse(ctx);
 	return a;
 }
-std::vector<iHdlStatement*> * VerStatementParser::visitSeq_block(
-		sv2017Parser::Seq_blockContext * ctx) {
+std::vector<iHdlStatement*>* VerStatementParser::visitSeq_block(
+		sv2017Parser::Seq_blockContext *ctx) {
 	// seq_block
 	//    : 'begin' (':' block_identifier (block_item_declaration)*)? (statement)* 'end'
 	//    ;
@@ -307,8 +289,8 @@ std::vector<iHdlStatement*> * VerStatementParser::visitSeq_block(
 	}
 	return stms;
 }
-iHdlStatement * VerStatementParser::visitConditional_statement(
-		sv2017Parser::Conditional_statementContext * ctx) {
+iHdlStatement* VerStatementParser::visitConditional_statement(
+		sv2017Parser::Conditional_statementContext *ctx) {
 	// conditional_statement
 	// : 'if' '(' expression ')' statement_or_null
 	//   ('else' 'if' '(' expression ')' statement_or_null)*
@@ -332,8 +314,8 @@ iHdlStatement * VerStatementParser::visitConditional_statement(
 		++cIt;
 		++sIt;
 	}
-	iHdlStatement * ifStm = nullptr;
-	vector<iHdlStatement*> * ifFalse = nullptr;
+	iHdlStatement *ifStm = nullptr;
+	vector<iHdlStatement*> *ifFalse = nullptr;
 	if (sIt != s.end()) {
 		ifFalse = visitStatement_or_null__as_block(*sIt);
 	}
@@ -344,8 +326,8 @@ iHdlStatement * VerStatementParser::visitConditional_statement(
 	return ifStm;
 }
 
-HdlStmProcess * VerStatementParser::visitProcedural_timing_control_statement(
-		sv2017Parser::Procedural_timing_control_statementContext * ctx) {
+HdlStmProcess* VerStatementParser::visitProcedural_timing_control_statement(
+		sv2017Parser::Procedural_timing_control_statementContext *ctx) {
 	// procedural_timing_control_statement
 	//    : delay_or_event_control statement_or_null
 	//    ;
@@ -353,7 +335,7 @@ HdlStmProcess * VerStatementParser::visitProcedural_timing_control_statement(
 	auto stms =
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__as_block(
 					ctx->statement_or_null()));
-	HdlStmProcess * p;
+	HdlStmProcess *p;
 	if (sens_list.second) {
 		assert(sens_list.first == nullptr && "no event and delay at one");
 		p = new HdlStmProcess(sens_list.second, stms);
@@ -371,8 +353,8 @@ HdlStmProcess * VerStatementParser::visitProcedural_timing_control_statement(
 	return p;
 }
 
-vector<iHdlStatement *> * VerStatementParser::visitStatement_or_null__as_block(
-		sv2017Parser::Statement_or_nullContext * ctx) {
+vector<iHdlStatement*>* VerStatementParser::visitStatement_or_null__as_block(
+		sv2017Parser::Statement_or_nullContext *ctx) {
 	if (ctx == nullptr)
 		return nullptr;
 	auto stm = visitStatement_or_null(ctx);
@@ -388,7 +370,7 @@ vector<iHdlStatement *> * VerStatementParser::visitStatement_or_null__as_block(
 
 }
 VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
-		sv2017Parser::Statement_or_nullContext * ctx) {
+		sv2017Parser::Statement_or_nullContext *ctx) {
 	// statement_or_null
 	//    : statement
 	//    | attribute_instance* ';'
@@ -407,7 +389,7 @@ VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
 }
 
 pair<iHdlExpr*, vector<iHdlExpr*>*> VerStatementParser::visitDelay_or_event_control(
-		sv2017Parser::Delay_or_event_controlContext * ctx) {
+		sv2017Parser::Delay_or_event_controlContext *ctx) {
 	// delay_or_event_control
 	//    : delay_control
 	//    | event_control
@@ -427,8 +409,8 @@ pair<iHdlExpr*, vector<iHdlExpr*>*> VerStatementParser::visitDelay_or_event_cont
 	return {nullptr, vistEvent_control(ec)};
 }
 
-vector<iHdlExpr*> * VerStatementParser::vistEvent_control(
-		sv2017Parser::Event_controlContext * ctx) {
+vector<iHdlExpr*>* VerStatementParser::vistEvent_control(
+		sv2017Parser::Event_controlContext *ctx) {
 	//event_control
 	//   : '@' event_identifier
 	//   | '@' '(' event_expression ')'
@@ -453,8 +435,8 @@ vector<iHdlExpr*> * VerStatementParser::vistEvent_control(
 	return res;
 }
 
-vector<iHdlStatement *> VerStatementParser::vistContinuous_assign(
-		sv2017Parser::Continuous_assignContext * ctx) {
+vector<iHdlStatement*> VerStatementParser::vistContinuous_assign(
+		sv2017Parser::Continuous_assignContext *ctx) {
 	// continuous_assign
 	//    : 'assign' (drive_strength)? (delay3)? list_of_net_assignments ';'
 	//    ;
@@ -482,15 +464,15 @@ vector<iHdlStatement *> VerStatementParser::vistContinuous_assign(
 }
 
 iHdlStatement* VerStatementParser::visitNet_assignment(
-		sv2017Parser::Net_assignmentContext * ctx) {
+		sv2017Parser::Net_assignmentContext *ctx) {
 	// net_assignment : net_lvalue '=' expression
 	// ;
 	auto nv = VerExprParser::visitNet_lvalue(ctx->net_lvalue());
 	auto e = VerExprParser::visitExpression(ctx->expression());
 	return new HdlStmAssign(nv, e, true);
 }
-vector<iHdlStatement*> * VerStatementParser::visitStatement__as_block(
-		sv2017Parser::StatementContext * ctx) {
+vector<iHdlStatement*>* VerStatementParser::visitStatement__as_block(
+		sv2017Parser::StatementContext *ctx) {
 	auto stm = visitStatement(ctx);
 	if (stm.first) {
 		auto body = new vector<iHdlStatement*>();
@@ -502,15 +484,14 @@ vector<iHdlStatement*> * VerStatementParser::visitStatement__as_block(
 		return new vector<iHdlStatement*>();
 	}
 }
-HdlStmProcess * VerStatementParser::visitInitial_construct(
-		sv2017Parser::Initial_constructContext * ctx) {
+HdlStmProcess* VerStatementParser::visitInitial_construct(
+		sv2017Parser::Initial_constructContext *ctx) {
 	// initial_construct
 	//    : 'initial' statement
 	//    ;
 	auto _stm = ctx->statement();
-	vector<iHdlStatement*> * body = visitStatement__as_block(_stm);
-	return new HdlStmProcess(nullptr,
-			reinterpret_cast<vector<iHdlObj*>*>(body));
+	vector<iHdlStatement*> *body = visitStatement__as_block(_stm);
+	return new HdlStmProcess(nullptr, reinterpret_cast<vector<iHdlObj*>*>(body));
 }
 
 }

@@ -1,5 +1,7 @@
 #include <hdlConvertor/svConvertor/literalParser.h>
+
 #include <algorithm>
+
 #include <hdlConvertor/notImplementedLogger.h>
 
 namespace hdlConvertor {
@@ -9,8 +11,7 @@ using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 using TerminalNode = antlr4::tree::TerminalNode;
 
-iHdlExpr * VerLiteralParser::visitNumber(
-		sv2017Parser::NumberContext* ctx) {
+iHdlExpr* VerLiteralParser::visitNumber(sv2017Parser::NumberContext *ctx) {
 	// number :
 	// Decimal_number
 	// | Octal_number
@@ -41,17 +42,19 @@ iHdlExpr * VerLiteralParser::visitNumber(
 
 }
 
-iHdlExpr * VerLiteralParser::parseSimple_identifier(TerminalNode* n) {
+iHdlExpr* VerLiteralParser::parseSIMPLE_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
-
-iHdlExpr * VerLiteralParser::parseEscaped_identifier(TerminalNode* n) {
+iHdlExpr* VerLiteralParser::parseC_IDENTIFIER(TerminalNode *n) {
+	return iHdlExpr::ID(n->getText());
+}
+iHdlExpr* VerLiteralParser::parseEscaped_identifier(TerminalNode *n) {
 	auto s = n->getText();
 	s = s.substr(1);
 	return iHdlExpr::ID(s);
 }
 
-iHdlExpr * VerLiteralParser::parseReal_number(TerminalNode* n) {
+iHdlExpr* VerLiteralParser::parseReal_number(TerminalNode *n) {
 	// Real_number
 	//    : Unsigned_number '.' Unsigned_number | Unsigned_number ('.' Unsigned_number)? [eE] ([+-])? Unsigned_number
 	//    ;
@@ -60,7 +63,7 @@ iHdlExpr * VerLiteralParser::parseReal_number(TerminalNode* n) {
 	return iHdlExpr::FLOAT(val);
 }
 
-iHdlExpr * VerLiteralParser::parseIntNumber(TerminalNode* n, int radix) {
+iHdlExpr* VerLiteralParser::parseIntNumber(TerminalNode *n, int radix) {
 	// Decimal_number :
 	// Unsigned_number
 	// | ( Size )? Decimal_base Unsigned_number
@@ -106,13 +109,13 @@ iHdlExpr * VerLiteralParser::parseIntNumber(TerminalNode* n, int radix) {
 // Binary_number : ( Size )? Binary_base Binary_value ;
 // Octal_number : ( Size )? Octal_base Octal_value ;
 // Hex_number : ( Size )? Hex_base Hex_value ;
-iHdlExpr * VerLiteralParser::visitString(TerminalNode* n) {
+iHdlExpr* VerLiteralParser::visitString(TerminalNode *n) {
 	std::string s = n->getText();
 	return iHdlExpr::STR(s.substr(1, s.length() - 2)); // skipping " at the end
 }
 
 HdlOperatorType VerLiteralParser::visitUnary_operator(
-		sv2017Parser::Unary_operatorContext * ctx) {
+		sv2017Parser::Unary_operatorContext *ctx) {
 	// unary_operator
 	//    : '+'
 	//    | '-'
@@ -155,24 +158,24 @@ HdlOperatorType VerLiteralParser::visitUnary_operator(
 	throw std::runtime_error("Unsupported unary operator " + op);
 }
 HdlOperatorType VerLiteralParser::visitBinary_operator(
-		sv2017Parser::Binary_operatorContext * ctx) {
+		sv2017Parser::Binary_operatorContext *ctx) {
 	// binary_operator : '+' | '-' | '*' | '/' | '%' | '==' | '!=' | '===' |
 	// '!==' | '&&' | '||' | '**' | '<' | '<=' | '>' | '>=' | '&' | '|' |
 	// '^' | '^~' | '~^' | '>>' | '<<' | '>>>' | '<<<' ;
 	// [TODO] log eq, neq
 	std::string op = ctx->getText();
 
-	if (op.compare("+") == 0)
+	if (op  == "+")
 		return HdlOperatorType::ADD;
-	else if (op.compare("-") == 0)
+	else if (op == "-")
 		return HdlOperatorType::SUB;
-	else if (op.compare("*") == 0)
+	else if (op == "*")
 		return HdlOperatorType::MUL;
-	else if (op.compare("/") == 0)
+	else if (op == "/")
 		return HdlOperatorType::DIV;
-	else if (op.compare("%") == 0)
+	else if (op == "%")
 		return HdlOperatorType::MOD;
-	else if (op.compare("==") == 0 || op.compare("===") == 0)
+	else if (op == "==" || op == "===")
 		return HdlOperatorType::EQ;
 	else if (op.compare("!=") == 0 || op.compare("!==") == 0)
 		return HdlOperatorType::NEQ;
@@ -206,10 +209,9 @@ HdlOperatorType VerLiteralParser::visitBinary_operator(
 
 	assert(op.compare("<<<") == 0);
 	return HdlOperatorType::SLA;
-
 }
 
-iHdlExpr * VerLiteralParser::visitDolar_identifier(TerminalNode* n) {
+iHdlExpr* VerLiteralParser::visitDolar_identifier(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
 

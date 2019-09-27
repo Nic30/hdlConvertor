@@ -1,7 +1,6 @@
 #include <hdlConvertor/svConvertor/moduleParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-#include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/svConvertor/statementParser.h>
@@ -9,6 +8,7 @@
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/moduleParamParser.h>
 #include <hdlConvertor/conversion_exception.h>
+#include <hdlConvertor/svConvertor/verAttributeParser.h>
 
 namespace hdlConvertor {
 namespace sv {

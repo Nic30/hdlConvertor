@@ -482,7 +482,7 @@ statement_or_null:
     | ( attribute_instance )* SEMI
 ;
 initial_construct: KW_INITIAL statement_or_null;
-default_construct:
+default_clocking_or_dissable_construct:
 	KW_DEFAULT (
 	    KW_CLOCKING identifier
 	    | KW_DISABLE KW_IFF expression_or_dist
@@ -655,7 +655,7 @@ for_initialization:
     list_of_variable_assignments
     | for_variable_declaration ( COMMA for_variable_declaration )*
 ;
-for_variable_declaration_var_assign: identifier ASSIGN expression
+for_variable_declaration_var_assign: identifier ASSIGN expression;
 for_variable_declaration:
     ( KW_VAR )? data_type for_variable_declaration_var_assign
     ( COMMA for_variable_declaration_var_assign )*
@@ -965,9 +965,8 @@ select:
 event_expression_item:
     LPAREN event_expression RPAREN
     | ( edge_identifier )? expression ( KW_IFF expression )?
-    | event_expression_item KW_OR event_expression
 ;
-event_expression: event_expression_item ( COMMA event_expression_item )*;
+event_expression: event_expression_item ( ( KW_OR | COMMA ) event_expression_item )*;
 /************************************************ sequence_expr *******************************************************/
 boolean_abbrev:
     consecutive_repetition
@@ -1009,15 +1008,11 @@ sequence_match_item:
     operator_assignment
     | expression
 ;
-
-operator_assignment:
-    variable_lvalue assignment_operator expression;
-
+operator_assignment: variable_lvalue assignment_operator expression;
 sequence_actual_arg:
     event_expression
     | sequence_expr
 ;
-
 dist_weight:
     ( DIST_WEIGHT_ASSIGN
      | COLON DIV
@@ -1259,12 +1254,14 @@ list_of_arguments:
     ( COMMA ( expression )? )*
     ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
 /************************************************ primary *************************************************************/
-
 primary_literal:
     TIME_LITERAL
     | UNBASED_UNSIZED_LITERAL
     | STRING_LITERAL
     | number
+    | KW_NULL
+    | KW_THIS
+    | DOLAR
 ;
 type_reference:
     KW_TYPE LPAREN (
@@ -1293,70 +1290,66 @@ param_expression:
     | data_type
 ;
 named_parameter_assignment: DOT identifier LPAREN ( param_expression )? RPAREN;
-/* constant_primary */
+// original primary+constant_primary
+// let_expression was remobed because it was same as call
 primary:
-    KW_NULL    #primaryNull
-    | KW_THIS  #primaryNull
-    | DOLAR    #primaryDolar
-    | primary_literal #primaryLit
-    | LPAREN expression (COLON expression COLON expression)? RPAREN #primaryPar
+    primary_literal                               #PrimaryLit
+    | package_or_class_scoped_path                #PrimaryPath
+    | LPAREN mintypmax_expression RPAREN          #PrimaryPar
     | ( KW_STRING
         | KW_CONST
         | integer_type
         | non_integer_type
         | signing
-        ) APOSTROPHE LPAREN expression RPAREN  #primaryCast
-    | primary APOSTROPHE LPAREN expression RPAREN #primaryCast2
-    | package_or_class_scoped_path #primaryPath
-    | primary bit_select #primaryBitSelect
-    | primary DOT identifier #primaryDot
-    | primary LSQUARE_BR array_range_expression RSQUARE_BR #primaryIndex
-    | concatenation #primaryConcat
-    | streaming_concatenation                                           #primaryStreaming_concatenation
+        ) APOSTROPHE LPAREN expression RPAREN     #PrimaryCast
+    | primary APOSTROPHE LPAREN expression RPAREN #PrimaryCast2
+    | primary bit_select                          #PrimaryBitSelect
+    | primary DOT identifier                      #PrimaryDot
+    | primary LSQUARE_BR array_range_expression RSQUARE_BR #PrimaryIndex
+    | concatenation                                        #PrimaryConcat
+    | streaming_concatenation                              #PrimaryStreaming_concatenation
     | any_system_tf_identifier ( LPAREN data_type COMMA list_of_arguments
          ( COMMA clocking_event )? RPAREN
          | LPAREN list_of_arguments COMMA clocking_event  RPAREN
-         )?
-         #primaryTfCall
-    | ( KW_STD DOUBLE_COLON )?  randomize_call     #primaryRandomize
-    | primary DOT randomize_call                   #primaryRandomize2
-    /*| let_expression                              #primaryLet (same as call)*/
-    | assignment_pattern_expression               #primaryAssig
-    | type_reference                              #primaryTypeRef
+         )?                                       #PrimaryTfCall
+    | ( KW_STD DOUBLE_COLON )?  randomize_call    #PrimaryRandomize
+    | primary DOT randomize_call                  #PrimaryRandomize2
+    | assignment_pattern_expression               #PrimaryAssig
+    | type_reference                              #PrimaryTypeRef
     | primary ( DOT array_method_name )? ( attribute_instance )*
                   LPAREN ( list_of_arguments )? RPAREN
-                  ( KW_WITH LPAREN expression RPAREN )? #primaryCall
-    | primary DOT array_method_name # primaryCallArrayMethodNoArgs
+                  ( KW_WITH LPAREN expression RPAREN )? #PrimaryCall
+    | primary DOT array_method_name               #PrimaryCallArrayMethodNoArgs
     | primary ( DOT array_method_name )? ( attribute_instance )*
-             KW_WITH LPAREN expression RPAREN #primaryCallWith
+             KW_WITH LPAREN expression RPAREN     #PrimaryCallWith
 ;
 /************************************************** expression ********************************************************/
 constant_expression: expression;
 inc_or_dec_expression:
-     inc_or_dec_operator ( attribute_instance )* variable_lvalue #inc_or_dec_expressionPre
-    | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #inc_or_dec_expressionPost
+     inc_or_dec_operator ( attribute_instance )* variable_lvalue #Inc_or_dec_expressionPre
+    | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #Inc_or_dec_expressionPost
 ;
 expression:
-  primary                                    
-  | LPAREN operator_assignment RPAREN        
-  | KW_TAGGED identifier ( expression )?     
-  | unary_operator ( attribute_instance )* primary              
-  | inc_or_dec_expression                                       
-  | expression DOUBLESTAR ( attribute_instance )* expression    
-  | expression operator_mul_div_mod ( attribute_instance )* expression           
-  | expression operator_plus_minus ( attribute_instance )* expression
-  | expression operator_shift ( attribute_instance )* expression
-  | expression operator_cmp ( attribute_instance )* expression
-  | expression KW_INSIDE LBRACE open_range_list RBRACE
-  | expression operator_eq_neq ( attribute_instance )* expression
-  | expression AMPERSAND ( attribute_instance )* expression
-  | expression operator_xor ( attribute_instance )* expression
-  | expression BAR ( attribute_instance )* expression
-  | expression LOG_AND ( attribute_instance )* expression
-  | expression LOG_OR ( attribute_instance )* expression
-  | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
-  | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
-  | expression operator_impl ( attribute_instance )* expression
+    primary
+    | LPAREN operator_assignment RPAREN
+    | KW_TAGGED identifier ( expression )?
+    | unary_operator ( attribute_instance )* primary
+    | inc_or_dec_expression
+    | expression DOUBLESTAR           ( attribute_instance )* expression
+    | expression operator_mul_div_mod ( attribute_instance )* expression
+    | expression operator_plus_minus  ( attribute_instance )* expression
+    | expression operator_shift       ( attribute_instance )* expression
+    | expression operator_cmp         ( attribute_instance )* expression
+    | expression KW_INSIDE LBRACE open_range_list RBRACE
+    | expression operator_eq_neq      ( attribute_instance )* expression
+    | expression AMPERSAND            ( attribute_instance )* expression
+    | expression operator_xor         ( attribute_instance )* expression
+    | expression BAR                  ( attribute_instance )* expression
+    | expression LOG_AND              ( attribute_instance )* expression
+    | expression LOG_OR               ( attribute_instance )* expression
+    | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
+    | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
+    | expression operator_impl        ( attribute_instance )* expression
 ;
 concatenation:
  LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;

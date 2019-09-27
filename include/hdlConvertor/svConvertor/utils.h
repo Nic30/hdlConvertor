@@ -2,6 +2,7 @@
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
+#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -19,8 +20,10 @@ public:
 	static bool is_reg(antlr4::ParserRuleContext *ctx);
 };
 
-hdlObjects::iHdlExpr* append_dot_separated_expr(hdlObjects::iHdlExpr *selected_name,
-		hdlObjects::iHdlExpr *new_part);
+hdlObjects::iHdlExpr* append_dot_separated_expr(
+		hdlObjects::iHdlExpr *selected_name, hdlObjects::iHdlExpr *new_part);
+hdlObjects::iHdlExpr* reduce(const std::vector<hdlObjects::iHdlExpr*> &ops,
+		hdlObjects::HdlOperatorType op);
 
 }
 }

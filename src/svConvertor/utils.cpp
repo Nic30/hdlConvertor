@@ -54,6 +54,18 @@ iHdlExpr* append_dot_separated_expr(iHdlExpr *selected_name,
 	}
 }
 
+iHdlExpr* reduce(const std::vector<iHdlExpr*> &ops,
+		HdlOperatorType op) {
+	iHdlExpr *res = nullptr;
+	for (auto p : ops) {
+		if (res == nullptr)
+			res = p;
+		else
+			res = new iHdlExpr(res, op, p);
+	}
+	return res;
+}
+
 
 }
 }

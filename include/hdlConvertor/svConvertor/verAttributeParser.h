@@ -8,7 +8,7 @@
 namespace hdlConvertor {
 namespace sv {
 
-class AttributeParser {
+class VerAttributeParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
