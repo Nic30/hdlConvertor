@@ -150,7 +150,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 		auto npc = ctx->named_port_connection();
 		for (auto pc : npc) {
 			// named_port_connection
-			//    : attribute_instance* '.' port_identifier '(' (expression)? ')'
+			//    : attribute_instance* '.' identifier '(' (expression)? ')'
 			//    ;
 			// port_identifier : identifier;
 			if (pc->attribute_instance().size())
@@ -159,7 +159,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 						pc);
 
 			iHdlExpr * k = VerExprParser::visitIdentifier(
-					pc->port_identifier()->identifier());
+					pc->identifier());
 			iHdlExpr * v;
 			auto e = pc->expression();
 			if (e) {

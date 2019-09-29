@@ -1,9 +1,13 @@
 #include <hdlConvertor/svConvertor/exprParser.h>
 
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/moduleInstanceParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
-#include <hdlConvertor/svConvertor/verAttributeParser.h>
+#include <hdlConvertor/svConvertor/attributeParser.h>
+#include <hdlConvertor/svConvertor/exprPrimaryParser.h>
+
 
 namespace hdlConvertor {
 namespace sv {
@@ -162,7 +166,7 @@ iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 
 	auto _p = ctx->primary();
 	if (_p) {
-		auto p = visitPrimary(_p);
+		auto p = VerExprPrimaryParser::visitPrimary(_p);
 		auto _uo = ctx->unary_operator();
 		if (_uo) {
 			auto uo = VerLiteralParser::visitUnary_operator(_uo);
@@ -211,7 +215,7 @@ iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 			}
 			auto oc = ctx->operator_cmp();
 			if (oc) {
-				op = VerLiteralParser::visitOperator_cmp(opm);
+				op = VerLiteralParser::visitOperator_cmp(oc);
 				break;
 			}
 			auto oe = ctx->operator_eq_neq();
@@ -263,7 +267,7 @@ iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 				ctx);
 		return iHdlExpr::null();
 	}
-	if (ctx->KW_MATCHES()) {
+	if (ctx->KW_MATCHES().size()) {
 		NotImplementedLogger::print(
 				"VerExprParser.visitExpression - KW_MATCHES", ctx);
 		return iHdlExpr::null();
@@ -310,7 +314,7 @@ iHdlExpr* VerExprParser::visitIdentifier(sv2017Parser::IdentifierContext *ctx) {
 	// ;
 	auto eid = ctx->ESCAPED_IDENTIFIER();
 	if (eid) {
-		return VerLiteralParser::parseEscaped_identifier(eid);
+		return VerLiteralParser::visitESCAPED_IDENTIFIER(eid);
 	} else {
 		return iHdlExpr::ID(ctx->getText());
 	}
@@ -360,66 +364,69 @@ iHdlExpr* VerExprParser::visitVariable_lvalue(
 	}
 
 }
-
-iHdlExpr* VerExprParser::visitArrayed_identifier(
-		sv2017Parser::Arrayed_identifierContext *ctx) {
-	// arrayed_identifier
-	//    : simple_arrayed_identifier
-	//    | escaped_arrayed_identifier
-	//    ;
-	{
-		auto sai = ctx->simple_arrayed_identifier();
-		// simple_arrayed_identifier
-		//    : Simple_identifier (range_)?
-		//    ;
-		if (sai) {
-			auto e = VerLiteralParser::parseSIMPLE_IDENTIFIER(
-					sai->Simple_identifier());
-			auto _r = sai->range_();
-			if (_r) {
-				auto r = visitRange_(_r);
-				e = new iHdlExpr(e, HdlOperatorType::INDEX, r);
-			}
-			return e;
-		}
-	}
-	auto eai = ctx->escaped_arrayed_identifier();
-	// escaped_arrayed_identifier
-	//    : Escaped_identifier (range_)?
-	//    ;
-	auto e = VerLiteralParser::parseEscaped_identifier(
-			eai->Escaped_identifier());
-	auto _r = eai->range_();
-	if (_r) {
-		auto r = visitRange_(_r);
-		e = new iHdlExpr(e, HdlOperatorType::INDEX, r);
-	}
-	return e;
-
-}
-
 iHdlExpr* VerExprParser::visitEvent_trigger(
 		sv2017Parser::Event_triggerContext *ctx) {
-	// event_trigger
-	//    : '->' hierarchical_event_identifier ';'
-	//    ;
-	// hierarchical_event_identifier
-	//    : hierarchical_identifier
-	//    ;
+	// event_trigger:
+	//  ( ARROW
+	//    | DOUBLE_RIGHT_ARROW ( delay_or_event_control )?
+	//  ) hierarchical_identifier SEMI;
 
-	auto _e = ctx->hierarchical_event_identifier()->hierarchical_identifier();
+	if (ctx->delay_or_event_control()) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitEvent_trigger - delay_or_event_control",
+				ctx);
+	}
+	auto _e = ctx->hierarchical_identifier();
 	auto e = visitHierarchical_identifier(_e);
 	return new iHdlExpr(HdlOperatorType::ARROW, e);
 }
-
+iHdlExpr* VerExprParser::visitBit_select(sv2017Parser::Bit_selectContext *ctx,
+		iHdlExpr *selected_name) {
+	// bit_select: LSQUARE_BR expression RSQUARE_BR;
+	auto _e = ctx->expression();
+	auto e = visitExpression(_e);
+	return append_expr(selected_name, HdlOperatorType::INDEX, e);
+}
+iHdlExpr* VerExprParser::visitIdentifier_with_bit_select(
+		sv2017Parser::Identifier_with_bit_selectContext *ctx,
+		iHdlExpr *selected_name) {
+	// identifier_with_bit_select: identifier ( bit_select )*;
+	auto id = ctx->identifier();
+	auto res = VerExprParser::visitIdentifier(id);
+	res = append_expr(selected_name, HdlOperatorType::DOT, res);
+	for (auto bs : ctx->bit_select()) {
+		res = visitBit_select(bs, res);
+	}
+	return res;
+}
 iHdlExpr* VerExprParser::visitPackage_or_class_scoped_hier_id_with_select(
 		sv2017Parser::Package_or_class_scoped_hier_id_with_selectContext *ctx) {
-	// package_or_class_scoped_hier_id_with_select:
-	//  package_or_class_scoped_path ( bit_select )* ( DOT identifier ( bit_select )* )* ( LSQUARE_BR
-	//       expression ( PLUS
-	//       | MINUS
-	//       )? COLON expression RSQUARE_BR )?;
 
+	// // '::' separated then '.' separated
+	// package_or_class_scoped_hier_id_with_select:
+	//     package_or_class_scoped_path ( bit_select )*
+	//     ( DOT identifier_with_bit_select )*
+	//     ( LSQUARE_BR expression ( operator_plus_minus )? COLON expression RSQUARE_BR )?;
+	auto pcsp = ctx->package_or_class_scoped_path();
+	auto res = visitPackage_or_class_scoped_path(pcsp);
+	for (auto bs : ctx->bit_select()) {
+		res = visitBit_select(bs, res);
+	}
+	// "Vector bit-select and part-select addressing"
+	if (ctx->operator_plus_minus()) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitPackage_or_class_scoped_hier_id_with_select - operator_plus_minus",
+				ctx);
+	}
+	auto exprs = ctx->expression();
+	if (exprs.size()) {
+		assert(exprs.size() == 2);
+		auto e0 = visitExpression(exprs[0]);
+		auto e1 = visitExpression(exprs[1]);
+		auto sel = new iHdlExpr(e0, HdlOperatorType::DOWNTO, e1);
+		return append_expr(res, HdlOperatorType::INDEX, sel);
+	}
+	return res;
 }
 
 std::vector<iHdlExpr*> VerExprParser::visitParameter_value_assignment(
@@ -432,12 +439,16 @@ std::vector<iHdlExpr*> VerExprParser::visitParameter_value_assignment(
 
 iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path_item(
 		sv2017Parser::Package_or_class_scoped_path_itemContext *ctx,
-		iHdlExpr *selected_name) {
+		iHdlExpr *selected_name,
+		hdlObjects::HdlOperatorType subname_access_type) {
 	// package_or_class_scoped_path_item:
 	// 	identifier ( parameter_value_assignment )?
 	// ;
 	auto _id = ctx->identifier();
 	auto id = visitIdentifier(_id);
+	if (selected_name) {
+		id = new iHdlExpr(selected_name, subname_access_type, id);
+	}
 	auto _pva = ctx->parameter_value_assignment();
 	if (_pva) {
 		auto pva = visitParameter_value_assignment(_pva);
@@ -445,25 +456,25 @@ iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path_item(
 	}
 	return id;
 }
-
-iHdlExpr* VerExprParser::visitimplicit_class_handle(
+iHdlExpr* VerExprParser::visitImplicit_class_handle(
 		sv2017Parser::Implicit_class_handleContext *ctx,
-		iHdlExpr *selected_name) {
+		iHdlExpr *selected_name, HdlOperatorType subname_access_type) {
 	// implicit_class_handle:
 	//  KW_THIS ( DOT KW_SUPER )?
 	//   | KW_SUPER
 	//  ;
 	if (ctx->KW_THIS()) {
 		auto t = iHdlExpr::ID("this");
-		selected_name = append_dot_separated_expr(selected_name, t);
+		selected_name = append_expr(selected_name, subname_access_type, t);
+		subname_access_type = HdlOperatorType::DOT;
 	}
 	if (ctx->KW_SUPER()) {
 		auto s = iHdlExpr::ID("super");
-		selected_name = append_dot_separated_expr(selected_name, s);
+		selected_name = append_expr(selected_name, subname_access_type, s);
 	}
+	assert(selected_name);
 	return selected_name;
 }
-
 iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path(
 		sv2017Parser::Package_or_class_scoped_pathContext *ctx) {
 	// // '::' separated
@@ -479,20 +490,23 @@ iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path(
 		res = iHdlExpr::ID("local");
 	}
 	if (ctx->KW_DOLAR_ROOT()) {
-		res = append_dot_separated_expr(res, iHdlExpr::ID("$root"));
+		res = append_expr(res, HdlOperatorType::DOUBLE_COLON,
+				iHdlExpr::ID("$root"));
 	} else {
 		auto _ich = ctx->implicit_class_handle();
 		if (_ich) {
-			res = visitImplicit_class_handle(_ich, res);
+			res = visitImplicit_class_handle(_ich, res,
+					HdlOperatorType::DOUBLE_COLON);
 		} else {
 			if (ctx->KW_DOLAR_UNIT()) {
 				auto part = iHdlExpr::ID("$unit");
-				res = append_dot_separated_expr(res, part);
+				res = append_expr(res, HdlOperatorType::DOUBLE_COLON, part);
 			} else {
 				auto pcspi = ctx->package_or_class_scoped_path_item();
 				assert(pcspi.size() > 0);
 				for (auto i : pcspi) {
-					res = visitPackage_or_class_scoped_path_item(i, res);
+					res = visitPackage_or_class_scoped_path_item(i, res,
+							HdlOperatorType::DOUBLE_COLON);
 				}
 				return res;
 			}
@@ -500,7 +514,8 @@ iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path(
 	}
 	auto pcspi = ctx->package_or_class_scoped_path_item();
 	for (auto i : pcspi) {
-		res = visitPackage_or_class_scoped_path_item(i, res);
+		res = visitPackage_or_class_scoped_path_item(i, res,
+				HdlOperatorType::DOUBLE_COLON);
 	}
 	return res;
 }

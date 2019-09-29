@@ -1,5 +1,6 @@
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
 #include <stdexcept>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -48,6 +49,7 @@ static const char* const opTypeToStr[] = {
 		"ROR",
 		"TERNARY",
 		"DOT",
+		"DOUBLE_COLON",
 		"APOSTROPHE",
 		"CALL",
 		"ARROW",
@@ -65,7 +67,7 @@ static const char* const opTypeToStr[] = {
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
 	if (opt < RANGE || opt > MATCH_GE)
 		throw std::runtime_error("Invalid operator type");
-
+	assert(sizeof(opTypeToStr) / sizeof(opTypeToStr[0]) - 1 == MATCH_GE);
 	return opTypeToStr[opt];
 }
 

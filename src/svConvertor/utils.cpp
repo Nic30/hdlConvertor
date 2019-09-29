@@ -44,18 +44,15 @@ bool Utils::is_signed(antlr4::ParserRuleContext *ctx) {
 	}
 	return signed_;
 }
-
-iHdlExpr* append_dot_separated_expr(iHdlExpr *selected_name,
-		iHdlExpr *new_part) {
+iHdlExpr* append_expr(iHdlExpr *selected_name,
+		HdlOperatorType operator_to_join_with, iHdlExpr *new_part) {
 	if (selected_name) {
-		return new iHdlExpr(selected_name, HdlOperatorType::DOT, new_part);
+		return new iHdlExpr(selected_name, operator_to_join_with, new_part);
 	} else {
 		return new_part;
 	}
 }
-
-iHdlExpr* reduce(const std::vector<iHdlExpr*> &ops,
-		HdlOperatorType op) {
+iHdlExpr* reduce(const std::vector<iHdlExpr*> &ops, HdlOperatorType op) {
 	iHdlExpr *res = nullptr;
 	for (auto p : ops) {
 		if (res == nullptr)
@@ -65,7 +62,6 @@ iHdlExpr* reduce(const std::vector<iHdlExpr*> &ops,
 	}
 	return res;
 }
-
 
 }
 }

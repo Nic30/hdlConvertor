@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 
 #include <hdlConvertor/svConvertor/commentParser.h>
@@ -15,9 +13,6 @@ class ModuleParamParser {
 public:
 	ModuleParamParser(SVCommentParser & commentParser);
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-
-	static hdlObjects::iHdlExpr * visitParameter_identifier(
-			sv2017Parser::Parameter_identifierContext * ctx);
 
 	std::vector<hdlObjects::HdlVariableDef*>* visitModule_parameter_port_list(
 			sv2017Parser::Module_parameter_port_listContext * ctx);

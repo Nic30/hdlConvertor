@@ -8,7 +8,7 @@
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/moduleParamParser.h>
 #include <hdlConvertor/conversion_exception.h>
-#include <hdlConvertor/svConvertor/verAttributeParser.h>
+#include "../../include/hdlConvertor/svConvertor/attributeParser.h"
 
 namespace hdlConvertor {
 namespace sv {

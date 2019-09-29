@@ -20,8 +20,9 @@ public:
 	static bool is_reg(antlr4::ParserRuleContext *ctx);
 };
 
-hdlObjects::iHdlExpr* append_dot_separated_expr(
-		hdlObjects::iHdlExpr *selected_name, hdlObjects::iHdlExpr *new_part);
+hdlObjects::iHdlExpr* append_expr(hdlObjects::iHdlExpr *selected_name,
+		hdlObjects::HdlOperatorType operator_to_join_with,
+		hdlObjects::iHdlExpr *new_part);
 hdlObjects::iHdlExpr* reduce(const std::vector<hdlObjects::iHdlExpr*> &ops,
 		hdlObjects::HdlOperatorType op);
 

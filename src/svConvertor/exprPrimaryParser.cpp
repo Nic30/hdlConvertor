@@ -54,7 +54,7 @@ iHdlExpr* VerExprPrimaryParser::visitPrimary(
 	if (dynamic_cast<sv2017Parser::PrimaryPathContext*>(ctx)) {
 		auto p =
 				static_cast<sv2017Parser::PrimaryPathContext*>(ctx)->package_or_class_scoped_path();
-		return VerLiteralParser::visitPackage_or_class_scoped_path();
+		return VerExprParser::visitPackage_or_class_scoped_path(p);
 	}
 
 	if (dynamic_cast<sv2017Parser::PrimaryParContext*>(ctx)) {

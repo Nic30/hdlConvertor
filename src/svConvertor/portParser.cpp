@@ -280,7 +280,7 @@ void PortParser::convert_non_ansi_ports_to_ansi(vector<HdlVariableDef*> &ports,
 		for (auto p : g.second) {
 			ops.push_back(iHdlExpr::ID(p->name));
 		}
-		iHdlExpr * conc = VerExprParser::reduce(ops, HdlOperatorType::CONCAT);
+		iHdlExpr * conc = reduce(ops, HdlOperatorType::CONCAT);
 		iHdlExpr * this_port_id = iHdlExpr::ID(g.first);
 		HdlStmAssign * drv;
 		if ((*nap)->direction == HdlDirection::DIR_IN) {

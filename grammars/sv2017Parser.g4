@@ -97,7 +97,6 @@ unary_module_path_operator:
     | NXOR
     | XORN
 ;
-
 unary_operator:
     PLUS
     | MINUS
@@ -142,44 +141,44 @@ any_system_tf_identifier:
     | KW_DOLAR_NOCHANGE
 ;
 signing:
-  KW_SIGNED
-   | KW_UNSIGNED
+    KW_SIGNED
+    | KW_UNSIGNED
 ;
 number:
- integral_number
-  | real_number
+    integral_number
+    | real_number
 ;
 timeunits_declaration:
- KW_TIMEUNIT TIME_LITERAL ( ( DIV
-                              | SEMI KW_TIMEPRECISION
-                              ) TIME_LITERAL )? SEMI
-  | KW_TIMEPRECISION TIME_LITERAL SEMI ( KW_TIMEUNIT TIME_LITERAL SEMI )?
+    KW_TIMEUNIT TIME_LITERAL ( ( DIV
+                                 | SEMI KW_TIMEPRECISION
+                                 ) TIME_LITERAL )? SEMI
+    | KW_TIMEPRECISION TIME_LITERAL SEMI ( KW_TIMEUNIT TIME_LITERAL SEMI )?
 ;
 lifetime:
-  KW_STATIC
-   | KW_AUTOMATIC
+    KW_STATIC
+    | KW_AUTOMATIC
 ;
 port_direction:
- KW_INPUT
-  | KW_OUTPUT
-  | KW_INOUT
-  | KW_REF
+    KW_INPUT
+    | KW_OUTPUT
+    | KW_INOUT
+    | KW_REF
 ;
 always_keyword:
- KW_ALWAYS
-  | KW_ALWAYS_COMB
-  | KW_ALWAYS_LATCH
-  | KW_ALWAYS_FF
+    KW_ALWAYS
+    | KW_ALWAYS_COMB
+    | KW_ALWAYS_LATCH
+    | KW_ALWAYS_FF
 ;
 join_keyword:
- KW_JOIN
-  | KW_JOIN_ANY
-  | KW_JOIN_NONE
+    KW_JOIN
+    | KW_JOIN_ANY
+    | KW_JOIN_NONE
 ;
 unique_priority:
-  KW_UNIQUE
-   | KW_UNIQUE0
-   | KW_PRIORITY
+    KW_UNIQUE
+    | KW_UNIQUE0
+    | KW_PRIORITY
 ;
 drive_strength:
     LPAREN (
@@ -838,7 +837,7 @@ type_declaration:
         | ( KW_ENUM
             | KW_STRUCT
             | KW_UNION
-            | identifier ( bit_select )* DOT identifier
+            | identifier_with_bit_select DOT identifier
             | ( KW_INTERFACE )? KW_CLASS
           )? identifier
     ) SEMI;
@@ -932,15 +931,13 @@ property_case_item:
  ) property_expr SEMI;
 /****************************************** ids and selects ***********************************************************/
 bit_select: LSQUARE_BR expression RSQUARE_BR;
-package_or_class_scoped_hier_id_with_select_path: identifier ( bit_select )*;
+identifier_with_bit_select: identifier ( bit_select )*;
 // '::' separated then '.' separated
 package_or_class_scoped_hier_id_with_select:
- package_or_class_scoped_path ( bit_select )* 
- ( DOT package_or_class_scoped_hier_id_with_select_path )* 
- ( LSQUARE_BR expression
-      ( PLUS | MINUS )? COLON
-       expression RSQUARE_BR )?;
-
+    package_or_class_scoped_path ( bit_select )* 
+    ( DOT identifier_with_bit_select )* 
+    ( LSQUARE_BR expression ( operator_plus_minus )? COLON expression RSQUARE_BR )?;
+    
 package_or_class_scoped_path_item: identifier ( parameter_value_assignment )?;
 // '::' separated
 package_or_class_scoped_path:
@@ -951,7 +948,7 @@ package_or_class_scoped_path:
         | package_or_class_scoped_path_item
 	) ( DOUBLE_COLON package_or_class_scoped_path_item)*;
 hierarchical_identifier:
-   ( KW_DOLAR_ROOT DOT )? ( identifier ( bit_select )* DOT )* identifier;
+   ( KW_DOLAR_ROOT DOT )? ( identifier_with_bit_select DOT )* identifier;
 package_or_class_scoped_id:
   ( KW_DOLAR_UNIT
     | identifier ( parameter_value_assignment )?
@@ -1384,9 +1381,7 @@ stream_concatenation:
 stream_expression:
  expression ( KW_WITH LSQUARE_BR array_range_expression RSQUARE_BR )?;
 array_range_expression:
- expression ( ( PLUS
-              | MINUS
-              )? COLON expression )?;
+ expression ( ( operator_plus_minus )? COLON expression )?;
 open_range_list: value_range ( COMMA value_range )*;
 pattern:
  DOT ( MUL | identifier )

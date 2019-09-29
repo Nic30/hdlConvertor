@@ -1,5 +1,6 @@
+#include "../../include/hdlConvertor/svConvertor/attributeParser.h"
+
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/svConvertor/verAttributeParser.h>
 
 namespace hdlConvertor {
 namespace sv {

@@ -14,13 +14,6 @@ ModuleParamParser::ModuleParamParser(SVCommentParser & commentParser) :
 		commentParser(commentParser) {
 }
 
-iHdlExpr * ModuleParamParser::visitParameter_identifier(
-		sv2017Parser::Parameter_identifierContext * ctx) {
-	// parameter_identifier
-	//    : identifier
-	//    ;
-	return VerExprParser::visitIdentifier(ctx->identifier());
-}
 vector<HdlVariableDef*>* ModuleParamParser::visitModule_parameter_port_list(
 		sv2017Parser::Module_parameter_port_listContext* ctx) {
 	// module_parameter_port_list : '#' '(' parameter_declaration_ ( ','

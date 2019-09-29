@@ -10,6 +10,8 @@
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/universal_fs.h>
+#include <hdlConvertor/verilogPreproc/macroDB.h>
+
 
 namespace hdlConvertor {
 

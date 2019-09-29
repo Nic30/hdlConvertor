@@ -16,7 +16,7 @@ void VerEventExprParser::visitEvent_expression(
 	// @note 'or' and ',' is a Verilog-1995/2001 difference, they work exactly the same
 
 	for (auto ep : ctx->event_expression_item()) {
-		auto e = visitEvent_expression_item(ep, items);
+		visitEvent_expression_item(ep, items);
 	}
 }
 
