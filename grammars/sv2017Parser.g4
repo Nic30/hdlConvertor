@@ -553,7 +553,6 @@ delay2:
     HASH ( LPAREN mintypmax_expression ( COMMA mintypmax_expression )? RPAREN
            | delay_value
          );
-
 delay_value:
     UNSIGNED_NUMBER
     | TIME_LITERAL
@@ -828,9 +827,10 @@ local_parameter_declaration:
                   | ( data_type_or_implicit )? list_of_param_assignments
                   );
 parameter_declaration:
- KW_PARAMETER ( KW_TYPE list_of_type_assignments
-                  | ( data_type_or_implicit )? list_of_param_assignments
-                  );
+    KW_PARAMETER
+    ( KW_TYPE list_of_type_assignments
+      | ( data_type_or_implicit )? list_of_param_assignments
+    );
 type_declaration:
     KW_TYPEDEF (
         data_type identifier ( variable_dimension )*
@@ -1184,12 +1184,13 @@ class_new:
     KW_NEW expression
     | ( class_scope )? KW_NEW ( LPAREN ( list_of_arguments )? RPAREN )?
 ;
-constant_param_expression:
+param_expression:
     mintypmax_expression
     | data_type
 ;
-
-unpacked_dimension: LSQUARE_BR ( expression ( COLON expression)? ) RSQUARE_BR;
+constant_param_expression: param_expression ;
+                  
+unpacked_dimension: LSQUARE_BR range_expression RSQUARE_BR;
 packed_dimension: LSQUARE_BR  ( range_expression )? RSQUARE_BR;
 variable_dimension:
     LSQUARE_BR ( MUL
@@ -1268,11 +1269,11 @@ type_reference:
 ;
 package_scope: ( KW_DOLAR_UNIT | identifier ) DOUBLE_COLON;
 ps_identifier: ( package_scope )? identifier;
-list_of_parameter_assignments:
+list_of_parameter_value_assignments:
     param_expression ( COMMA param_expression )*
     | named_parameter_assignment ( COMMA named_parameter_assignment )*
 ;
-parameter_value_assignment: HASH LPAREN ( list_of_parameter_assignments )? RPAREN;
+parameter_value_assignment: HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
 class_type:
     ps_identifier ( parameter_value_assignment )? ( DOUBLE_COLON identifier
        ( parameter_value_assignment )? )*
@@ -1282,10 +1283,6 @@ range_expression: expression ( COLON expression )?;
 constant_range_expression: range_expression;
 constant_mintypmax_expression: mintypmax_expression;
 mintypmax_expression: expression ( COLON expression COLON expression )?;
-param_expression:
-    mintypmax_expression
-    | data_type
-;
 named_parameter_assignment: DOT identifier LPAREN ( param_expression )? RPAREN;
 // original primary+constant_primary
 // let_expression was remobed because it was same as call
@@ -1647,23 +1644,24 @@ net_declaration:
   ) SEMI;
 
 parameter_port_list:
- HASH LPAREN ( ( list_of_param_assignments
-              | parameter_port_declaration
-              ) ( COMMA parameter_port_declaration )* )? RPAREN;
+    HASH LPAREN (
+       ( list_of_param_assignments
+         | parameter_port_declaration
+       ) ( COMMA parameter_port_declaration )* )? RPAREN;
 parameter_port_declaration:
- KW_TYPE list_of_type_assignments
-  | parameter_declaration
-  | local_parameter_declaration
-  | data_type list_of_param_assignments
+    KW_TYPE list_of_type_assignments
+    | parameter_declaration
+    | local_parameter_declaration
+    | data_type list_of_param_assignments
 ;
 
 list_of_port_declarations:
- LPAREN
- (
-   ( nonansi_port ( COMMA ( nonansi_port )? )* )
-   | ( COMMA ( nonansi_port )? )+
-   | ( ( attribute_instance )* ansi_port_declaration ( COMMA ( attribute_instance )* ansi_port_declaration )* )
- )? RPAREN;
+    LPAREN
+    (
+      ( nonansi_port ( COMMA ( nonansi_port )? )* )
+      | ( COMMA ( nonansi_port )? )+
+      | ( ( attribute_instance )* ansi_port_declaration ( COMMA ( attribute_instance )* ansi_port_declaration )* )
+    )? RPAREN;
 
 nonansi_port_declaration:
    ( attribute_instance )* (
@@ -2122,17 +2120,17 @@ udp_instantiation:
 udp_instance:
  ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
 module_or_interface_or_program_instantiation:
- identifier ( parameter_value_assignment )? hierarchical_instance ( COMMA hierarchical_instance )*
-      SEMI;
+    identifier ( parameter_value_assignment )?
+    hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
 hierarchical_instance: name_of_instance LPAREN list_of_port_connections RPAREN;
 list_of_port_connections:
- ordered_port_connection ( COMMA ordered_port_connection )*
-  | named_port_connection ( COMMA named_port_connection )*
+    ordered_port_connection ( COMMA ordered_port_connection )*
+    | named_port_connection ( COMMA named_port_connection )*
 ;
 ordered_port_connection: ( attribute_instance )* ( expression )?;
 named_port_connection:
  ( attribute_instance )* DOT ( MUL
-                              | identifier ( LPAREN ( expression )? RPAREN )?
+                               | identifier ( LPAREN ( expression )? RPAREN )?
                               );
 bind_directive:
  KW_BIND ( identifier ( COLON bind_target_instance_list )?

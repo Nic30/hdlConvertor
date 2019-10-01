@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <hdlConvertor/hdlObjects/hdlContext.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDec.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDef.h>
@@ -10,13 +8,12 @@
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 
-#include <hdlConvertor/svConvertor/commentParser.h>
 #include <hdlConvertor/svConvertor/portParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class ModuleParser {
+class VerModuleParser {
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
 	SVCommentParser &commentParser;
@@ -24,13 +21,13 @@ class ModuleParser {
 	bool hierarchyOnly;
 
 	// @note: non-ANSI ports are converted to ANSI ports after module body is parsed
-	std::vector<PortParser::Non_ANSI_port_info_t> non_ANSI_port_groups;
+	std::vector<VerPortParser::Non_ANSI_port_info_t> non_ANSI_port_groups;
 	hdlObjects::HdlModuleDec *ent;
 	hdlObjects::HdlModuleDef *arch;
 
 public:
 
-	ModuleParser(SVCommentParser &commentParser, hdlObjects::HdlContext *_context,
+	VerModuleParser(SVCommentParser &commentParser, hdlObjects::HdlContext *_context,
 			bool _hierarchyOnly);
 	void visitModule_declaration(
 			sv2017Parser::Module_declarationContext *ctx);
@@ -44,7 +41,6 @@ public:
 			sv2017Parser::Module_or_generate_item_declarationContext *ctx);
 	void visitInteger_declaration(
 			sv2017Parser::Integer_declarationContext *ctx);
-	void visitReg_declaration(sv2017Parser::Reg_declarationContext *ctx);
 	void visitNet_declaration(sv2017Parser::Net_declarationContext *ctx);
 	std::vector<hdlObjects::HdlVariableDef*> visitList_of_net_identifiers(
 			sv2017Parser::List_of_net_identifiersContext *ctx,
@@ -64,8 +60,6 @@ public:
 	hdlObjects::HdlVariableDef* visitVariable_type(
 			sv2017Parser::Variable_typeContext *ctx,
 			hdlObjects::iHdlExpr *base_type);
-	hdlObjects::HdlVariableDef* visitVariable_identifier(
-			sv2017Parser::Variable_identifierContext *ctx,
 			hdlObjects::iHdlExpr *t, hdlObjects::iHdlExpr *def_val);
 	void visitNon_port_module_item(
 			sv2017Parser::Non_port_module_itemContext *ctx);

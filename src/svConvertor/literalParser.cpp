@@ -82,7 +82,7 @@ iHdlExpr* VerLiteralParser::visitANY_BASED_NUMBER(std::string s, size_t size) {
 	}
 
 	std::string strVal = s.substr(valuePartStart, s.length()); // cut off prefix
-	if (size != -1)
+	if (size != std::string::npos)
 		return iHdlExpr::INT(strVal, size, radix);
 	return iHdlExpr::INT(strVal, radix);
 
@@ -100,10 +100,10 @@ iHdlExpr* VerLiteralParser::visitNumber(sv2017Parser::NumberContext *ctx) {
 	assert(r);
 	return visitReal_number(r);
 }
-iHdlExpr* VerLiteralParser::parseSIMPLE_IDENTIFIER(TerminalNode *n) {
+iHdlExpr* VerLiteralParser::visitSIMPLE_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
-iHdlExpr* VerLiteralParser::parseC_IDENTIFIER(TerminalNode *n) {
+iHdlExpr* VerLiteralParser::visitC_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
 iHdlExpr* VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
@@ -111,15 +111,17 @@ iHdlExpr* VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
 	s = s.substr(1);
 	return iHdlExpr::ID(s);
 }
-iHdlExpr* VerLiteralParser::visitReal_number(TerminalNode *n) {
-	// Real_number
-	//    : Unsigned_number '.' Unsigned_number | Unsigned_number ('.' Unsigned_number)? [eE] ([+-])? Unsigned_number
-	//    ;
+iHdlExpr* VerLiteralParser::visitTIME_LITERAL(TerminalNode *n) {
+	NotImplementedLogger::print(
+			"VerLiteralParser.visitTIME_LITERAL", n);
+	return iHdlExpr::null();
+}
+iHdlExpr* VerLiteralParser::visitReal_number(sv2017Parser::Real_numberContext*ctx) {
 	// real_number:
 	//    REAL_NUMBER_WITH_EXP
 	//    | FIXED_POINT_NUMBER
 	// ;
-	std::string s = n->getText();
+	std::string s = ctx->getText();
 	double val = stod(s);
 	return iHdlExpr::FLOAT(val);
 }
@@ -289,7 +291,7 @@ HdlOperatorType VerLiteralParser::visitOperator_xor(
 		return HdlOperatorType::XOR;
 	else {
 		assert(ctx->NXOR() || ctx->XORN());
-		return HdlOperator::XNOR;
+		return HdlOperatorType::XNOR;
 	}
 }
 HdlOperatorType VerLiteralParser::visitOperator_impl(
@@ -299,12 +301,12 @@ HdlOperatorType VerLiteralParser::visitOperator_impl(
 	// 	| BI_DIR_ARROW
 	// ;
 	if (ctx->ARROW()) {
-		return HdlOperator::ARROW;
+		return HdlOperatorType::ARROW;
 	} else {
 		assert(ctx->BI_DIR_ARROW());
 		NotImplementedLogger::print(
 				"VerLiteralParser.visitOperator_impl - BI_DIR_ARROW", ctx);
-		return HdlOperator::ARROW;
+		return HdlOperatorType::ARROW;
 	}
 }
 iHdlExpr* VerLiteralParser::visitPrimary_literal(
@@ -318,10 +320,10 @@ iHdlExpr* VerLiteralParser::visitPrimary_literal(
 	//     | KW_THIS
 	//     | DOLAR
 	// ;
-	if (ctx->TIME_LITERAL()) {
-		NotImplementedLogger::print(
-				"VerLiteralParser.visitPrimary_literal - TIME_LITERAL", ctx);
-		return iHdlExpr::null();
+
+	auto tl = ctx->TIME_LITERAL();
+	if (tl) {
+		return visitTIME_LITERAL(tl);
 	}
 	auto uul = ctx->UNBASED_UNSIZED_LITERAL();
 	if (uul) {
@@ -336,7 +338,7 @@ iHdlExpr* VerLiteralParser::visitPrimary_literal(
 	}
 	auto sl = ctx->STRING_LITERAL();
 	if (sl) {
-		return visitString(sl);
+		return visitSTRING(sl);
 	}
 	auto n = ctx->number();
 	if (n) {

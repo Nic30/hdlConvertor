@@ -1,6 +1,8 @@
 #include <hdlConvertor/svConvertor/exprPrimaryParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
+#include <hdlConvertor/svConvertor/typeParser.h>
+#include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
 
@@ -154,38 +156,44 @@ hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCast(
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCast2(
 		sv2017Parser::PrimaryCast2Context *ctx) {
 	//     | primary APOSTROPHE LPAREN expression RPAREN #PrimaryCast2
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryCast2", ctx);
-	return iHdlExpr::null();
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _e = ctx->expression();
+	auto e = VerExprParser::visitExpression(_e);
+	return new iHdlExpr(p, HdlOperatorType::CALL, e);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryBitSelect(
 		sv2017Parser::PrimaryBitSelectContext *ctx) {
 	//     | primary bit_select                          #PrimaryBitSelect
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryBitSelect",
-			ctx);
-	return iHdlExpr::null();
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _bs = ctx->bit_select();
+	return VerExprParser::visitBit_select(_bs, p);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryDot(
 		sv2017Parser::PrimaryDotContext *ctx) {
 	//     | primary DOT identifier                      #PrimaryDot
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryDot", ctx);
-	return iHdlExpr::null();
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _id = ctx->identifier();
+	auto id = VerExprParser::visitIdentifier(_id);
+	return append_expr(p, HdlOperatorType::DOT, id);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryIndex(
 		sv2017Parser::PrimaryIndexContext *ctx) {
 	//     | primary LSQUARE_BR array_range_expression RSQUARE_BR #PrimaryIndex
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryIndex", ctx);
-	return iHdlExpr::null();
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _are = ctx->array_range_expression();
+	auto are = VerExprParser::visitArray_range_expression(_are);
+	p = append_expr(p, HdlOperatorType::INDEX, are);
+	return p;
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryConcat(
 		sv2017Parser::PrimaryConcatContext *ctx) {
 	//     | concatenation                                        #PrimaryConcat
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryConcat", ctx);
-	return iHdlExpr::null();
+	auto c = ctx->concatenation();
+	return VerExprParser::visitConcatenation(c);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryStreaming_concatenation(
 		sv2017Parser::PrimaryStreaming_concatenationContext *ctx) {
@@ -231,10 +239,8 @@ hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryAssig(
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryTypeRef(
 		sv2017Parser::PrimaryTypeRefContext *ctx) {
 	//     | type_reference                              #PrimaryTypeRef
-
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryTypeRef",
-			ctx);
-	return iHdlExpr::null();
+	auto t = ctx->type_reference();
+	return VerTypeParser::visitType_reference(t);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCall(
 		sv2017Parser::PrimaryCallContext *ctx) {

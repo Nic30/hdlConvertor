@@ -2,7 +2,8 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
-#include <hdlConvertor/svConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/paramDefParser.h>
+#include <hdlConvertor/svConvertor/typeParser.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -11,73 +12,68 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
-vector<HdlCompInstance *> ModuleInstanceParser::visitModule_instantiation(
-		sv2017Parser::Module_instantiationContext* ctx) {
-	// module_instantiation
-	//    : module_identifier (parameter_value_assignment)? module_instance (',' module_instance)* ';'
-	//    ;
-	auto module_name = ctx->module_identifier()->getText();
+vector<HdlCompInstance*> ModuleInstanceParser::visitModule_or_interface_or_program_instantiation(
+		sv2017Parser::Module_or_interface_or_program_instantiationContext *ctx) {
+	// module_or_interface_or_program_instantiation:
+	//     identifier ( parameter_value_assignment )?
+	//     hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
+
+	auto module_name = ctx->identifier()->getText();
 
 	auto pva = ctx->parameter_value_assignment();
 	vector<iHdlExpr*> genericMap;
 	if (pva) {
-		// parameter_value_assignment
-		//    : '#' '(' list_of_parameter_assignments ')'
-		//    ;
-		genericMap = visitList_of_parameter_assignments(
-				pva->list_of_parameter_assignments());
+		// parameter_value_assignment: HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
+		auto lpva = pva->list_of_parameter_value_assignments();
+		genericMap = visitList_of_parameter_value_assignments(lpva);
 	}
-	auto mis = ctx->module_instance();
+	auto his = ctx->hierarchical_instance();
 	bool first = true;
-	vector<HdlCompInstance *> res;
-	for (auto mi : mis) {
-		HdlCompInstance * c;
+	vector<HdlCompInstance*> res;
+	for (auto hi : his) {
+		HdlCompInstance *c;
 		if (first) {
-			c = visitModule_instance(mi, iHdlExpr::ID(module_name), genericMap);
+			c = visitHierarchical_instance(hi, iHdlExpr::ID(module_name),
+					genericMap);
 			first = false;
 		} else {
 			vector<iHdlExpr*> gm;
 			for (auto e : genericMap)
 				gm.push_back(new iHdlExpr(*e));
-			c = visitModule_instance(mi, iHdlExpr::ID(module_name), gm);
+			c = visitHierarchical_instance(mi, iHdlExpr::ID(module_name), gm);
 		}
 		res.push_back(c);
 	}
 	return res;
 }
 
-vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_assignments(
-		sv2017Parser::List_of_parameter_assignmentsContext * ctx) {
-
+vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_value_assignments(
+		sv2017Parser::List_of_parameter_value_assignmentsContext *ctx) {
+	// list_of_parameter_value_assignments:
+	//     param_expression ( COMMA param_expression )*
+	//     | named_parameter_assignment ( COMMA named_parameter_assignment )*
+	// ;
 	// list_of_parameter_assignments
 	//    : ordered_parameter_assignment (',' ordered_parameter_assignment)*
 	//    | named_parameter_assignment (',' named_parameter_assignment)*
 	//    ;
 
-	//   ctx->parameter_identifier()->identifier()->getText()
-
 	vector<iHdlExpr*> pcs;
-	auto opa = ctx->ordered_parameter_assignment();
-	if (opa.size()) {
-		for (auto pa : opa) {
-			// ordered_parameter_assignment
-			//    : expression
-			//    ;
-			auto e = VerExprParser::visitExpression(pa->expression());
+	auto pes = ctx->param_expression();
+	if (pes.size()) {
+		for (auto pe : pes) {
+			auto e = VerParamDefParser::visitParam_expression(pe);
 			pcs.push_back(e);
 		}
 	} else {
 		auto npa = ctx->named_parameter_assignment();
 		for (auto pa : npa) {
-			// named_parameter_assignment
-			//    : '.' parameter_identifier '(' (expression)? ')'
-			//    ;
-			auto k = ModuleParamParser::visitParameter_identifier(
-					pa->parameter_identifier());
-			iHdlExpr * v;
-			auto e = pa->expression();
+			// named_parameter_assignment: DOT identifier LPAREN ( param_expression )? RPAREN;
+			auto k = VerExprParser::visitIdentifier(pa->identifier());
+			iHdlExpr *v;
+			auto e = pa->param_expression();
 			if (e) {
-				v = VerExprParser::visitExpression(e);
+				v = VerParamDefParser::visitParam_expression(e);
 			} else {
 				v = iHdlExpr::null();
 			}
@@ -87,28 +83,19 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_assignments(
 	return pcs;
 }
 
-HdlCompInstance * ModuleInstanceParser::visitModule_instance(
-		sv2017Parser::Module_instanceContext * ctx, iHdlExpr * module_id,
+HdlCompInstance* ModuleInstanceParser::visitHierarchical_instance(
+		sv2017Parser::Hierarchical_instanceContext *ctx, iHdlExpr *module_id,
 		vector<iHdlExpr*> genericMap) {
 	// @note genericMap became the owner of all Expr instances in the vector
-	//       that means that the instances can not be shared
-
-	// module_instance
-	//    : name_of_instance '(' list_of_port_connections ')'
-	//    ;
+	//       that means that instances can not be shared
+	// hierarchical_instance: name_of_instance LPAREN list_of_port_connections RPAREN;
 	auto noi = ctx->name_of_instance();
-	// name_of_instance
-	//    : module_instance_identifier (range_)?
-	//    ;
-	// module_instance_identifier
-	//    : arrayed_identifier
-	//    ;
-	auto name = VerExprParser::visitArrayed_identifier(
-			noi->module_instance_identifier()->arrayed_identifier());
-	auto _r = noi->range_();
-	if (_r) {
-		auto r = VerExprParser::visitRange_(_r);
-		name = new iHdlExpr(name, HdlOperatorType::INDEX, r);
+	// name_of_instance: identifier ( unpacked_dimension )*;
+
+	auto name = VerExprParser::visitIdentifier(noi->identifier());
+	for (auto _ud : noi->unpacked_dimension()) {
+		auto ud = VerTypeParser::visitUnpacked_dimension(_ud);
+		name = new iHdlExpr(name, HdlOperatorType::INDEX, ud);
 	}
 	vector<iHdlExpr*> portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
@@ -119,7 +106,7 @@ HdlCompInstance * ModuleInstanceParser::visitModule_instance(
 }
 
 vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
-		sv2017Parser::List_of_port_connectionsContext * ctx) {
+		sv2017Parser::List_of_port_connectionsContext *ctx) {
 	// list_of_port_connections
 	//    : ordered_port_connection (',' ordered_port_connection)*
 	//    | named_port_connection (',' named_port_connection)*
@@ -138,7 +125,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 						"ModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance",
 						pc);
 			auto _e = pc->expression();
-			iHdlExpr * e;
+			iHdlExpr *e;
 			if (_e) {
 				e = VerExprParser::visitExpression(_e);
 			} else {
@@ -158,9 +145,8 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 						"ModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance",
 						pc);
 
-			iHdlExpr * k = VerExprParser::visitIdentifier(
-					pc->identifier());
-			iHdlExpr * v;
+			iHdlExpr *k = VerExprParser::visitIdentifier(pc->identifier());
+			iHdlExpr *v;
 			auto e = pc->expression();
 			if (e) {
 				v = VerExprParser::visitExpression(e);

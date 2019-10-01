@@ -32,6 +32,9 @@ public:
 			sv2017Parser::Mintypmax_expressionContext *ctx);
 	static hdlObjects::iHdlExpr* visitVariable_lvalue(
 			sv2017Parser::Variable_lvalueContext *ctx);
+	static hdlObjects::iHdlExpr* visitVariable_dimension(
+			sv2017Parser::Variable_dimensionContext *ctx,
+			hdlObjects::iHdlExpr *selected_name);
 	static hdlObjects::iHdlExpr* visitEvent_trigger(
 			sv2017Parser::Event_triggerContext *ctx);
 	static hdlObjects::iHdlExpr* visitBit_select(
@@ -54,6 +57,16 @@ public:
 			hdlObjects::HdlOperatorType subname_access_type);
 	static std::vector<hdlObjects::iHdlExpr*> visitParameter_value_assignment(
 			sv2017Parser::Parameter_value_assignmentContext *ctx);
+	static hdlObjects::iHdlExpr* visitInc_or_dec_expression(
+			sv2017Parser::Inc_or_dec_expressionContext *ctx);
+	static hdlObjects::iHdlExpr* visitPackage_scope(
+			sv2017Parser::Package_scopeContext *ctx);
+	static hdlObjects::iHdlExpr* visitPs_identifier(
+			sv2017Parser::Ps_identifierContext *ctx);
+	static hdlObjects::iHdlExpr* visitArray_range_expression(
+			sv2017Parser::Array_range_expressionContext *ctx);
+	static hdlObjects::iHdlExpr* visitIdentifier_doted_index_at_end(
+			sv2017Parser::Identifier_doted_index_at_endContext *ctx);
 };
 
 }

@@ -12,8 +12,10 @@ class VerAttributeParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
-	static std::vector<hdlObjects::iHdlExpr*>* visitAttribute_instance(
-			sv2017Parser::Attribute_instanceContext * ctx);
+	static void visitAttribute_instance(
+			sv2017Parser::Attribute_instanceContext *ctx);
+	static void visitAttribute_instance(
+			std::vector<sv2017Parser::Attribute_instanceContext*> ctx);
 };
 
 }

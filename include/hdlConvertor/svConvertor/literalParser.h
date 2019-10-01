@@ -20,7 +20,9 @@ public:
 	static hdlObjects::iHdlExpr* visitSIMPLE_IDENTIFIER(TerminalNode *n);
 	static hdlObjects::iHdlExpr* visitC_IDENTIFIER(TerminalNode *n);
 	static hdlObjects::iHdlExpr* visitESCAPED_IDENTIFIER(TerminalNode *n);
-	static hdlObjects::iHdlExpr* visitReal_number(TerminalNode *n);
+	static hdlObjects::iHdlExpr* visitReal_number(
+			sv2017Parser::Real_numberContext *ctx);
+	static hdlObjects::iHdlExpr* visitTIME_LITERAL(TerminalNode *n);
 	static hdlObjects::iHdlExpr* visitSTRING(TerminalNode *n);
 	static hdlObjects::HdlOperatorType visitUnary_module_path_operator(
 			sv2017Parser::Unary_module_path_operatorContext *ctx);

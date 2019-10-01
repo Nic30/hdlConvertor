@@ -4,6 +4,7 @@
 #include <hdlConvertor/svConvertor/moduleParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
+
 namespace hdlConvertor {
 namespace sv {
 
@@ -43,7 +44,7 @@ void Source_textParser::visitDescription(
 		sv2017Parser::DescriptionContext* ctx) {
 	// description : module_declaration ;
 	SVCommentParser cp(tokens);
-	ModuleParser p(cp, context, hierarchyOnly);
+	VerModuleParser p(cp, context, hierarchyOnly);
 	p.visitModule_declaration(ctx->module_declaration());
 }
 

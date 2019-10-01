@@ -62,6 +62,10 @@ static const char* const opTypeToStr[] = {
 		"MATCH_LE",
 		"MATCH_GT",
 		"MATCH_GE",
+		"INCR_PRE",
+		"DECR_PRE",
+		"INCR_POST",
+		"DECR_POST",
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {

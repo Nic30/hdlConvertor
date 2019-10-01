@@ -2,11 +2,12 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/svConvertor/utils.h>
-#include <hdlConvertor/svConvertor/moduleParamParser.h>
+#include <hdlConvertor/svConvertor/paramDefParser.h>
 #include <hdlConvertor/svConvertor/moduleInstanceParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
 #include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/svConvertor/exprPrimaryParser.h>
+#include <hdlConvertor/svConvertor/typeParser.h>
 
 
 namespace hdlConvertor {
@@ -44,47 +45,6 @@ iHdlExpr* VerExprParser::visitNet_lvalue(sv2017Parser::Net_lvalueContext *ctx) {
 	assert(v);
 	return visitVariable_lvalue(v);
 }
-iHdlExpr* VerExprParser::visitNet_concatenation(
-		sv2017Parser::Net_concatenationContext *ctx) {
-	// net_concatenation
-	//    : '{' net_concatenation_value (',' net_concatenation_value)* '}'
-	//    ;
-	//
-	// net_concatenation_value
-	//    : hierarchical_net_identifier
-	//    | hierarchical_net_identifier '[' expression ']' ('[' expression ']')*
-	//    | hierarchical_net_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
-	//    | hierarchical_net_identifier '[' range_expression ']'
-	//    | net_concatenation
-	//    ;
-	// collect operands of concatenation
-	vector<iHdlExpr*> parts;
-	auto ncvs = ctx->net_concatenation_value();
-	assert(ncvs.size());
-	for (auto ncv : ncvs) {
-		auto hi = ncv->hierarchical_net_identifier();
-		if (hi) {
-			iHdlExpr *id = visitHierarchical_net_identifier(hi);
-			for (auto ce : ncv->expression()) {
-				auto c = visitExpression(ce);
-				id = new iHdlExpr(id, HdlOperatorType::INDEX, c);
-			}
-			auto re = ncv->range_expression();
-			if (re) {
-				auto r = visitRange_expression(re);
-				id = new iHdlExpr(id, HdlOperatorType::INDEX, r);
-			}
-			parts.push_back(id);
-		} else {
-			auto _nc = ncv->net_concatenation();
-			auto nc = visitNet_concatenation(_nc);
-			parts.push_back(nc);
-		}
-	}
-
-	return reduce(parts, HdlOperatorType::CONCAT);
-}
-
 iHdlExpr* VerExprParser::visitDelay_control(
 		sv2017Parser::Delay_controlContext *ctx) {
 	// delay_control
@@ -100,29 +60,126 @@ iHdlExpr* VerExprParser::visitDelay_control(
 	}
 
 }
+iHdlExpr* VerExprParser::visitPackage_scope(
+		sv2017Parser::Package_scopeContext *ctx) {
+	// package_scope: ( KW_DOLAR_UNIT | identifier ) DOUBLE_COLON;
+	if (ctx->KW_DOLAR_UNIT()) {
+		return iHdlExpr::ID("$unit");
+	} else {
+		auto id = ctx->identifier();
+		assert(id);
+		return visitIdentifier(id);
+	}
+}
+iHdlExpr* VerExprParser::visitPs_identifier(
+		sv2017Parser::Ps_identifierContext *ctx) {
+	// ps_identifier: ( package_scope )? identifier;
+	auto id = ctx->identifier();
+	assert(id);
+	auto res = visitIdentifier(id);
+	auto ps = ctx->package_scope();
+	if (ps) {
+		auto _ps = visitPackage_scope(ps);
+		res = new iHdlExpr(_ps, HdlOperatorType::DOUBLE_COLON, res);
+	}
+	return res;
+}
+
+iHdlExpr* VerExprParser::visitArray_range_expression(
+		sv2017Parser::Array_range_expressionContext *ctx) {
+	// array_range_expression:
+	//  expression ( ( operator_plus_minus )? COLON expression )?;
+	auto es = ctx->expression();
+	auto e0 = visitExpression(es[0]);
+	if (es.size() == 1) {
+		return e0;
+	}
+	assert(es.size() == 2);
+	if (ctx->operator_plus_minus()) {
+		NotImplementedLogger::print(
+				"VerExprParser::visitArray_range_expression - operator_plus_minus",
+				ctx);
+	}
+	auto e1 = visitExpression(es[1]);
+	return new iHdlExpr(e0, HdlOperatorType::DOWNTO, e1);
+}
+
+iHdlExpr* VerExprParser::visitIdentifier_doted_index_at_end(
+		sv2017Parser::Identifier_doted_index_at_endContext *ctx) {
+	// identifier_doted_index_at_end:
+	//    identifier ( DOT identifier )?  ( LSQUARE_BR range_expression RSQUARE_BR )*;
+	auto id = ctx->identifier();
+	auto res = visitIdentifier(id[0]);
+	if (id.size() >= 2) {
+		res = append_expr(res, HdlOperatorType::DOT, visitIdentifier(id[1]));
+	}
+	for (auto _re : ctx->range_expression()) {
+		auto re = visitRange_expression(_re);
+		res = append_expr(res, HdlOperatorType::INDEX, re);
+	}
+	return res;
+}
 iHdlExpr* VerExprParser::visitDelay_value(
 		sv2017Parser::Delay_valueContext *ctx) {
-	// delay_value
-	//    : Decimal_number
-	//    | parameter_identifier
-	//    | specparam_identifier
-	//    | mintypmax_expression
-	//    ;
-	auto dn = ctx->Decimal_number();
-	if (dn) {
-		return VerLiteralParser::parseIntNumber(dn, 10);
+	// delay_value:
+	//     UNSIGNED_NUMBER
+	//     | TIME_LITERAL
+	//     | KW_1STEP
+	//     | real_number
+	//     | ps_identifier;
+	auto un = ctx->UNSIGNED_NUMBER();
+	if (un) {
+		return VerLiteralParser::visitUNSIGNED_NUMBER(un);
 	}
-	auto pi = ctx->parameter_identifier();
-	if (pi) {
-		return ModuleParamParser::visitParameter_identifier(pi);
+	auto tl = ctx->TIME_LITERAL();
+	if (tl) {
+		return VerLiteralParser::visitTIME_LITERAL(tl);
 	}
-	auto si = ctx->specparam_identifier();
-	if (si)
-		return visitSpecparam_identifier(si);
-	auto me = ctx->mintypmax_expression();
-	assert(me);
-	return visitMintypmax_expression(me);
-
+	if (ctx->KW_1STEP())
+		return iHdlExpr::ID("1step");
+	auto r = ctx->real_number();
+	if (r) {
+		return VerLiteralParser::visitReal_number(r);
+	}
+	auto pi = ctx->ps_identifier();
+	assert(pi);
+	return visitPs_identifier(pi);
+}
+iHdlExpr* VerExprParser::visitInc_or_dec_expression(
+		sv2017Parser::Inc_or_dec_expressionContext *ctx) {
+	// inc_or_dec_expression:
+	//      inc_or_dec_operator ( attribute_instance )* variable_lvalue #Inc_or_dec_expressionPre
+	//     | variable_lvalue ( attribute_instance )* inc_or_dec_operator  #Inc_or_dec_expressionPost
+	// ;
+	HdlOperatorType op;
+	iHdlExpr *e;
+	if (dynamic_cast<sv2017Parser::Inc_or_dec_expressionPreContext*>(ctx)) {
+		auto c =
+				static_cast<sv2017Parser::Inc_or_dec_expressionPreContext*>(ctx);
+		auto _op = c->inc_or_dec_operator();
+		if (_op->INCR()) {
+			op = HdlOperatorType::INCR_PRE;
+		} else {
+			assert(_op->DECR());
+			op = HdlOperatorType::DECR_PRE;
+		}
+		e = visitVariable_lvalue(c->variable_lvalue());
+		VerAttributeParser::visitAttribute_instance(c->attribute_instance());
+	} else {
+		auto c =
+				dynamic_cast<sv2017Parser::Inc_or_dec_expressionPreContext*>(ctx);
+		assert(c);
+		auto _op = c->inc_or_dec_operator();
+		if (_op->INCR()) {
+			op = HdlOperatorType::INCR_POST;
+		} else {
+			assert(_op->DECR());
+			op = HdlOperatorType::DECR_POST;
+		}
+		e = visitVariable_lvalue(c->variable_lvalue());
+		VerAttributeParser::visitAttribute_instance(c->attribute_instance());
+	}
+	return new iHdlExpr(op, e);
 }
 iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 	// expression:
@@ -254,7 +311,7 @@ iHdlExpr* VerExprParser::visitExpression(sv2017Parser::ExpressionContext *ctx) {
 				break;
 			}
 
-			assert(false && "unkown binary");
+			assert(false && "unknown binary");
 		} while (0);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
@@ -290,7 +347,11 @@ iHdlExpr* VerExprParser::visitConcatenation(
 		sv2017Parser::ConcatenationContext *ctx) {
 	// concatenation:
 	//    LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
-	// concatenation : '{' expression ( ',' expression )* '}' ;
+	if (ctx->concatenation()) {
+		NotImplementedLogger::print(
+				"VerExprParser::visitConcatenation - multiplicative concatenation",
+				ctx);
+	}
 	iHdlExpr *res = nullptr;
 	for (auto e : ctx->expression()) {
 		auto p = VerExprParser::visitExpression(e);
@@ -338,19 +399,11 @@ iHdlExpr* VerExprParser::visitVariable_lvalue(
 	//  | ( assignment_pattern_expression_type )? assignment_pattern_variable_lvalue
 	//  | streaming_concatenation
 	//;
-	// variable_lvalue
-	//    : hierarchical_variable_identifier
-	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')*
-	//    | hierarchical_variable_identifier '[' expression ']' ('[' expression ']')* '[' range_expression ']'
-	//    | hierarchical_variable_identifier '[' range_expression ']'
-	//    | variable_concatenation
-	//    ;
-
-	// hierarchical_variable_identifier
-	//    : hierarchical_identifier
-	//    ;
 	auto vls = ctx->variable_lvalue();
 	if (vls.size()) {
+		if (vls.size() == 1) {
+			return visitVariable_lvalue(vls[0]);
+		}
 		vector<iHdlExpr*> parts;
 		for (auto vl : vls) {
 			parts.push_back(visitVariable_lvalue(vl));
@@ -362,7 +415,42 @@ iHdlExpr* VerExprParser::visitVariable_lvalue(
 	if (pid) {
 		return visitPackage_or_class_scoped_hier_id_with_select(pid);
 	}
-
+	auto apvl = ctx->assignment_pattern_variable_lvalue();
+	if (apvl) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitVariable_lvalue - assignment_pattern_variable_lvalue",
+				ctx);
+	}
+	auto sc = ctx->streaming_concatenation();
+	assert(sc);
+	NotImplementedLogger::print(
+			"VerExprParser.visitVariable_lvalue - assignment_pattern_variable_lvalue",
+			ctx);
+	return iHdlExpr::null();
+}
+iHdlExpr* VerExprParser::visitVariable_dimension(
+		sv2017Parser::Variable_dimensionContext *ctx, iHdlExpr *selected_name) {
+	// variable_dimension:
+	//     LSQUARE_BR ( MUL
+	//              | data_type
+	//              | array_range_expression
+	//               )? RSQUARE_BR
+	// ;
+	iHdlExpr *index = nullptr;
+	if (ctx->MUL()) {
+		NotImplementedLogger::print(
+				"VerExprParser::visitVariable_dimension - MUL", ctx);
+		return selected_name;
+	}
+	auto dt = ctx->data_type();
+	if (dt) {
+		index = VerTypeParser::visitData_type(dt);
+	} else {
+		auto are = ctx->array_range_expression();
+		assert(are);
+		index = visitArray_range_expression(are);
+	}
+	return new iHdlExpr(selected_name, HdlOperatorType::INDEX, index);
 }
 iHdlExpr* VerExprParser::visitEvent_trigger(
 		sv2017Parser::Event_triggerContext *ctx) {
@@ -432,9 +520,9 @@ iHdlExpr* VerExprParser::visitPackage_or_class_scoped_hier_id_with_select(
 std::vector<iHdlExpr*> VerExprParser::visitParameter_value_assignment(
 		sv2017Parser::Parameter_value_assignmentContext *ctx) {
 	// parameter_value_assignment:
-	//   HASH LPAREN ( list_of_parameter_assignments )? RPAREN;
-	auto lpa = ctx->list_of_parameter_assignments();
-	return ModuleInstanceParser::visitList_of_parameter_assignments(lpa);
+	//   HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
+	auto lpa = ctx->list_of_parameter_value_assignments();
+	return ModuleInstanceParser::visitList_of_parameter_value_assignments(lpa);
 }
 
 iHdlExpr* VerExprParser::visitPackage_or_class_scoped_path_item(

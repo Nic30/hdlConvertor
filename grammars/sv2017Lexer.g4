@@ -111,7 +111,7 @@ KW_DISABLE: 'disable';
 KW_DIST:
  'dist' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_DO:
- 'do' {language_version >= hdlConvertor::Lang   uage::SV2005}?;
+ 'do' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_EDGE: 'edge';
 KW_ELSE: 'else';
 KW_END: 'end';
