@@ -28,7 +28,7 @@ class ToPy {
 	PyObject *HdlModuleDecCls;
 	PyObject *HdlVariableDefCls;
 	PyObject *HdlCallCls;
-	PyObject *HdlBuildinFnEnum;
+	PyObject *HdlBuiltinFnEnum;
 	PyObject *HdlIntValueCls;
 	PyObject *HdlNameCls;
 	PyObject *HdlDirectionEnum;

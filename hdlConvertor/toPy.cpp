@@ -36,7 +36,7 @@ ToPy::ToPy() {
 	import(HdlModuleDecCls, "HdlModuleDec");
 	import(HdlVariableDefCls, "HdlVariableDef");
 	import(HdlCallCls, "HdlCall");
-	import(HdlBuildinFnEnum, "HdlBuildinFn");
+	import(HdlBuiltinFnEnum, "HdlBuiltinFn");
 	import(HdlIntValueCls, "HdlIntValue");
 	import(HdlNameCls, "HdlName");
 	import(HdlDirectionEnum, "HdlDirection");
@@ -383,7 +383,7 @@ PyObject* ToPy::toPy(const HdlOperatorType o) {
 		PyErr_SetString(PyExc_ValueError, e.what());
 		return nullptr;
 	}
-	return PyObject_GetAttrString(HdlBuildinFnEnum, name);
+	return PyObject_GetAttrString(HdlBuiltinFnEnum, name);
 }
 
 PyObject* ToPy::toPy(const HdlDirection o) {
@@ -515,7 +515,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlDirectionEnum);
 	Py_XDECREF(HdlNameCls);
 	Py_XDECREF(HdlIntValueCls);
-	Py_XDECREF(HdlBuildinFnEnum);
+	Py_XDECREF(HdlBuiltinFnEnum);
 	Py_XDECREF(HdlCallCls);
 	Py_XDECREF(HdlVariableDefCls);
 	Py_XDECREF(HdlModuleDecCls);
