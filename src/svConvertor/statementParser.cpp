@@ -735,13 +735,9 @@ void VerStatementParser::visitContinuous_assign(
 	}
 	auto lva = ctx->list_of_variable_assignments();
 	// list_of_variable_assignments: variable_assignment ( COMMA variable_assignment )*;
-	bool first = true;
+	// doc assigned from top
 	for (auto _va : lva->variable_assignment()) {
 		auto va = visitVariable_assignment(_va);
-		if (first) {
-			va->__doc__ = commentParser.parse(ctx) + va->__doc__;
-			first = false;
-		}
 		va->is_blocking = false;
 		res.push_back(va);
 	}
