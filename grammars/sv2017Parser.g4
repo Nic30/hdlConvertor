@@ -2116,10 +2116,15 @@ enable_terminal: expression;
 inout_terminal: net_lvalue;
 input_terminal: expression;
 output_terminal: net_lvalue;
+// udp_instantiation is designed to match only udp_instantiation which can not match other instantiations
 udp_instantiation:
- identifier ( drive_strength delay2 | drive_strength | delay2) udp_instance ( COMMA udp_instance )* SEMI;
+ identifier ( drive_strength ( delay2 )? ( name_of_instance )? 
+ 			  | delay2 ( name_of_instance )? )?
+ udp_instance_body ( COMMA udp_instance )* SEMI;
 udp_instance:
- ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
+ ( name_of_instance )? udp_instance_body;
+udp_instance_body:
+ LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
 module_or_interface_or_program_or_udp_instantiation:
     identifier ( parameter_value_assignment )?
     hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
