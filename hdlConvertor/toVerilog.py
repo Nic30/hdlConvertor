@@ -2,7 +2,7 @@ from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_
 from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn, HdlIntValue, \
     HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
     HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
-    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto
+    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto, HdlStmBlock
 
 PRIMITIVE_TYPES = {HdlName("reg"), HdlName("wire")}
 
@@ -640,6 +640,8 @@ class ToVerilog():
             return self.print_for_int(stm)
         elif isinstance(stm, HdlStmWhile):
             return self.print_while(stm)
+        elif isinstance(stm, HdlStmBlock):
+            return self.print_block(stm.body, False)
         else:
             self.print_expr(stm)
             return True
