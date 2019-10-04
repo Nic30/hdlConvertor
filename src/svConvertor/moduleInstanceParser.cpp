@@ -31,7 +31,8 @@ void VerModuleInstanceParser::visitModule_or_interface_or_program_instantiation(
 	if (pva) {
 		// parameter_value_assignment: HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
 		auto lpva = pva->list_of_parameter_value_assignments();
-		genericMap = visitList_of_parameter_value_assignments(lpva);
+		if (lpva)
+			genericMap = visitList_of_parameter_value_assignments(lpva);
 	}
 	auto his = ctx->hierarchical_instance();
 	bool first = true;

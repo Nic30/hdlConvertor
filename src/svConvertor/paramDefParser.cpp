@@ -20,7 +20,7 @@ VerParamDefParser::VerParamDefParser(SVCommentParser &commentParser) :
 
 void VerParamDefParser::visitParameter_port_list(
 		sv2017Parser::Parameter_port_listContext *ctx,
-		vector<HdlVariableDef*> & res) {
+		vector<HdlVariableDef*> &res) {
 	// parameter_port_list:
 	//     HASH LPAREN (
 	//        ( list_of_param_assignments
@@ -39,7 +39,7 @@ void VerParamDefParser::visitParameter_port_list(
 
 void VerParamDefParser::visitParameter_port_declaration(
 		sv2017Parser::Parameter_port_declarationContext *ctx,
-		vector<HdlVariableDef*> & res) {
+		vector<HdlVariableDef*> &res) {
 	// parameter_port_declaration:
 	//     KW_TYPE list_of_type_assignments
 	//     | parameter_declaration
@@ -49,6 +49,7 @@ void VerParamDefParser::visitParameter_port_declaration(
 	auto lta = ctx->list_of_type_assignments();
 	if (lta) {
 		visitList_of_type_assignments(lta, res);
+		return;
 	}
 	auto pd = ctx->parameter_declaration();
 	if (pd) {
@@ -72,9 +73,8 @@ void VerParamDefParser::visitParameter_port_declaration(
 
 void VerParamDefParser::visitTyped_list_of_param_assignments(
 		iHdlExpr *data_type,
-		sv2017Parser::List_of_param_assignmentsContext *lpa,
-		const string &doc,
-		vector<HdlVariableDef*> & res) {
+		sv2017Parser::List_of_param_assignmentsContext *lpa, const string &doc,
+		vector<HdlVariableDef*> &res) {
 	vector<HdlVariableDef*> res_tmp;
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
@@ -91,7 +91,7 @@ void VerParamDefParser::visitTyped_list_of_param_assignments(
 
 void VerParamDefParser::visitList_of_param_assignments(
 		sv2017Parser::List_of_param_assignmentsContext *ctx,
-		vector<HdlVariableDef*> & res) {
+		vector<HdlVariableDef*> &res) {
 	// list_of_param_assignments: param_assignment ( COMMA param_assignment )*;
 	for (auto pa : ctx->param_assignment())
 		res.push_back(visitParam_assignment(pa));
@@ -145,8 +145,8 @@ HdlVariableDef* VerParamDefParser::visitParam_assignment(
 	if (cpa) {
 		value = visitConstant_param_expression(cpa);
 	}
-	HdlVariableDef *p = new HdlVariableDef(ctx->identifier()->getText(),
-			nullptr, value);
+	auto name = VerExprParser::getIdentifierStr(ctx->identifier());
+	HdlVariableDef *p = new HdlVariableDef(name, iHdlExpr::AUTO_T(), value);
 	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }

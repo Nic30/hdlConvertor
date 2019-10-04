@@ -52,6 +52,7 @@ static const char* const opTypeToStr[HdlOperatorType::DECR_POST + 1] = {
 		"DOUBLE_COLON",
 		"APOSTROPHE",
 		"CALL",
+		"PARAMETRIZATION",
 		"ARROW",
 		"RISING",
 		"FALLING",
@@ -69,7 +70,7 @@ static const char* const opTypeToStr[HdlOperatorType::DECR_POST + 1] = {
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
-	if (opt < RANGE || opt > DECR_POST)
+	if (opt > HdlOperatorType::DECR_POST)
 		throw std::runtime_error("Invalid operator type");
 	return opTypeToStr[opt];
 }

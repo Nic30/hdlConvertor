@@ -45,6 +45,7 @@ public:
 			sv2017Parser::Variable_dimensionContext *ctx,
 			hdlObjects::iHdlExpr *selected_name);
 	hdlObjects::iHdlExpr* visitNet_type(sv2017Parser::Net_typeContext *ctx);
+	// @note ctx can be nullptr
 	hdlObjects::iHdlExpr* visitNet_port_type(
 			sv2017Parser::Net_port_typeContext *ctx);
 	// @return type expr, is_latched flag

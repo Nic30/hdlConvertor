@@ -15,7 +15,6 @@
 #include <hdlConvertor/svConvertor/declrParser.h>
 #include <hdlConvertor/svConvertor/programParser.h>
 
-
 namespace hdlConvertor {
 namespace sv {
 
@@ -63,16 +62,6 @@ void VerModuleParser::visitModule_declaration(
 	//        ( timeunits_declaration )? ( module_item )*
 	//      KW_ENDMODULE ( COLON identifier | {_input->LA(1) != COLON}? )
 	// ;
-
-	// module_declaration
-	// : attribute_instance* module_keyword module_identifier
-	// ( module_parameter_port_list )? ( list_of_ports )? ';' module_item*
-	// 'endmodule'
-	// | attribute_instance* module_keyword module_identifier
-	// ( module_parameter_port_list )? ( list_of_port_declarations )? ';'
-	// non_port_module_item*
-	// 'endmodule'
-	// ;
 	auto mhc = ctx->module_header_common();
 	assert(ent == nullptr);
 	ent = new HdlModuleDec();
@@ -87,9 +76,24 @@ void VerModuleParser::visitModule_declaration(
 			ent->ports.push_back(p);
 		}
 		delete ps;
+	} else {
+		if (ctx->MUL()) {
+			auto p = new HdlVariableDef(".*", iHdlExpr::all(), nullptr);
+			ent->ports.push_back(p);
+		}
 	}
 	res.push_back(ent);
 	if (ctx->KW_EXTERN()) {
+		for (auto o : ent->generics) {
+			if (!o->type) {
+				o->type = iHdlExpr::AUTO_T();
+			}
+		}
+		for (auto o : ent->ports) {
+			if (!o->type) {
+				o->type = iHdlExpr::AUTO_T();
+			}
+		}
 		ent = nullptr;
 		return;
 	}
@@ -115,6 +119,16 @@ void VerModuleParser::visitModule_declaration(
 			throw ParseException(
 					string("Can not find type specification for port ")
 							+ ent->name + "::" + o->name);
+		}
+	}
+	for (auto o : ent->generics) {
+		if (!o->type) {
+			o->type = iHdlExpr::AUTO_T();
+		}
+	}
+	for (auto o : ent->ports) {
+		if (!o->type) {
+			o->type = iHdlExpr::AUTO_T();
 		}
 	}
 	ent = nullptr;
@@ -527,22 +541,40 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		pp.visitNonansi_port_declaration(npd, portsDeclr);
 		for (auto declr : portsDeclr) {
 			HdlVariableDef *p = ent->getPortByName(declr->name);
-			p->direction = declr->direction;
-			assert(p != nullptr);
-			p->type = declr->type;
-			if (declr->value) {
-				assert(p->value == nullptr);
-				p->value = declr->value;
-			}
-			p->is_latched |= declr->is_latched;
-			p->is_const |= declr->is_const;
-			if (p->direction == HdlDirection::DIR_UNKNOWN)
+			if (p) {
 				p->direction = declr->direction;
-			if (first) {
-				p->__doc__ += doc;
-				first = false;
+				if (p->type)
+					delete p->type;
+				p->type = declr->type;
+				declr->type = nullptr;
+				if (declr->value) {
+					assert(p->value == nullptr);
+					p->value = declr->value;
+					declr->value = nullptr;
+				}
+				p->is_latched |= declr->is_latched;
+				p->is_const |= declr->is_const;
+				if (p->direction == HdlDirection::DIR_UNKNOWN)
+					p->direction = declr->direction;
+				if (first) {
+					p->__doc__ += doc;
+					first = false;
+				}
+				delete declr;
+			} else {
+				if (ent->ports.size() && ent->ports.back()->name == ".*") {
+					// case with
+					p = declr;
+					if (first) {
+						p->__doc__ += doc;
+						first = false;
+					}
+					ent->ports.insert(ent->ports.end() - 1, p);
+				} else {
+					throw std::runtime_error(
+							"ModuleParser.module_item.nonansi_port_declaration without a name or .* in module header");
+				}
 			}
-			delete declr;
 		}
 		return;
 	}

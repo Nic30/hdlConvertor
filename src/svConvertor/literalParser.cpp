@@ -36,7 +36,7 @@ iHdlExpr* VerLiteralParser::visitIntegral_number(
 		if (un) {
 			size = parseSize_UNSIGNED_NUMBER(un->getText());
 		}
-		return visitANY_BASED_NUMBER(ctx->getText(), size);
+		return visitANY_BASED_NUMBER(abn->getText(), size);
 	}
 	auto un = ctx->UNSIGNED_NUMBER();
 	return visitUNSIGNED_NUMBER(un);
@@ -112,11 +112,11 @@ std::string VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
 	return s;
 }
 iHdlExpr* VerLiteralParser::visitTIME_LITERAL(TerminalNode *n) {
-	NotImplementedLogger::print(
-			"VerLiteralParser.visitTIME_LITERAL", n);
+	NotImplementedLogger::print("VerLiteralParser.visitTIME_LITERAL", n);
 	return iHdlExpr::null();
 }
-iHdlExpr* VerLiteralParser::visitReal_number(sv2017Parser::Real_numberContext*ctx) {
+iHdlExpr* VerLiteralParser::visitReal_number(
+		sv2017Parser::Real_numberContext *ctx) {
 	// real_number:
 	//    REAL_NUMBER_WITH_EXP
 	//    | FIXED_POINT_NUMBER
@@ -156,7 +156,7 @@ HdlOperatorType VerLiteralParser::visitUnary_module_path_operator(
 		return HdlOperatorType::NOR;
 	} else if (ctx->XOR()) {
 		return HdlOperatorType::XOR;
-	} else if (ctx->XORN()) {
+	} else if (ctx->NXOR()) {
 		return HdlOperatorType::XNOR;
 	} else {
 		assert(ctx->XORN());
@@ -273,11 +273,15 @@ HdlOperatorType VerLiteralParser::visitOperator_eq_neq(
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
 		return HdlOperatorType::EQ;
-	} else {
-		assert(ctx->WILDCARD_EQ());
+	} else if (ctx->WILDCARD_EQ()) {
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
 		return HdlOperatorType::EQ;
+	} else {
+		assert(ctx->WILDCARD_NEQ());
+		NotImplementedLogger::print(
+				"VerLiteralParser::visitOperator_eq_neq WILDCARD_NEQ", ctx);
+		return HdlOperatorType::NEQ;
 	}
 }
 HdlOperatorType VerLiteralParser::visitOperator_xor(

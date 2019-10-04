@@ -166,10 +166,10 @@ iHdlExpr* VerTypeParser::visitImplicit_data_type(
 	if (it != pds.end()) {
 		auto r0 = visitPacked_dimension(*it);
 		e = Utils::mkWireT(net_type, r0, is_signed);
+		++it;
 	} else {
 		e = Utils::mkWireT(iHdlExpr::null(), is_signed);
 	}
-	++it;
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
 		e = new iHdlExpr(e, HdlOperatorType::INDEX, pd);
@@ -230,6 +230,9 @@ iHdlExpr* VerTypeParser::visitNet_port_type(
 	//   | net_type ( data_type_or_implicit )?
 	//   | data_type_or_implicit
 	// ;
+	if (!ctx)
+		return Utils::mkWireT();
+
 	if (ctx->KW_INTERCONNECT()) {
 		NotImplementedLogger::print(
 				"VerExprParser.visitNet_or_var_data_type.interconnect", ctx);

@@ -273,32 +273,66 @@ iHdlStatement* VerStatementParser::visitBlocking_assignment(
 
 iHdlStatement* VerStatementParser::visitCase_statement(
 		sv2017Parser::Case_statementContext *ctx) {
-	// case_statement
-	//    : 'case' '(' expression ')' case_item (case_item)* 'endcase'
-	//    | 'casez' '(' expression ')' case_item (case_item)* 'endcase'
-	//    | 'casex' '(' expression ')' case_item (case_item)* 'endcase'
-	//    ;
-	if (ctx->children[0]->getText() != "case") {
+	// case_statement:
+	//     ( unique_priority )?
+	//     ( KW_CASE LPAREN expression RPAREN KW_INSIDE ( case_inside_item )+
+	//       | case_keyword LPAREN expression RPAREN
+	//         ( KW_MATCHES ( case_pattern_item )+
+	//           | ( case_item )+
+	//         )
+	//     ) KW_ENDCASE;
+	// case_keyword:
+	//     KW_CASE
+	//     | KW_CASEZ
+	//     | KW_CASEX
+	// ;
+	if (ctx->unique_priority()) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitCase_statement "
-						+ ctx->children[0]->getText(), ctx);
-		return nullptr;
+				"VerStatementParser.visitCase_statement.unique_priority", ctx);
 	}
 	auto switchOn = VerExprParser(commentParser).visitExpression(
 			ctx->expression());
 	std::vector<iHdlStatement::case_t> cases;
 	vector<iHdlObj*> *default_ = nullptr;
-	auto _cases = ctx->case_item();
-	cases.reserve(_cases.size());
-	for (auto _c : _cases) {
-		auto cs = visitCase_item(_c);
-		for (auto c : cs) {
-			if (c.first) {
-				cases.push_back(c);
-			} else {
-				assert(default_ == nullptr);
-				default_ = c.second;
+	if (ctx->KW_INSIDE()) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitCase_statement.inside", ctx);
+
+	} else {
+		auto ck = ctx->case_keyword();
+		assert(ck);
+		if (ck->KW_CASE()) {
+			auto _cases = ctx->case_item();
+			cases.reserve(_cases.size());
+			for (auto _c : _cases) {
+				auto cs = visitCase_item(_c);
+				for (auto c : cs) {
+					if (c.first) {
+						cases.push_back(c);
+					} else {
+						if (default_) {
+							delete switchOn;
+							delete c.second;
+							for (auto ca: cases) {
+								delete ca.first;
+								for (auto s: *ca.second)
+									delete s;
+								delete ca.second;
+							}
+							delete default_;
+							throw std::runtime_error("VerStatementParser.visitCase_statement case with multiple default");
+						}
+						default_ = c.second;
+					}
+				}
 			}
+		} else if (ck->KW_CASEX()) {
+			NotImplementedLogger::print(
+					"VerStatementParser.visitCase_statement.casex", ctx);
+		} else {
+			assert(ck->KW_CASEZ());
+			NotImplementedLogger::print(
+					"VerStatementParser.visitCase_statement.casez", ctx);
 		}
 	}
 	auto cs = iHdlStatement::CASE(switchOn, cases, default_);
@@ -359,7 +393,7 @@ iHdlStatement* VerStatementParser::visitLoop_statement(
 	//   | KW_FOREACH LPAREN package_or_class_scoped_hier_id_with_select LSQUARE_BR loop_variables
 	//   RSQUARE_BR RPAREN statement
 	// ;
-	vector<iHdlStatement*>* stm;
+	vector<iHdlStatement*> *stm;
 	auto _stm = ctx->statement();
 	if (_stm)
 		stm = visitStatement__as_block(_stm);
@@ -393,13 +427,17 @@ iHdlStatement* VerStatementParser::visitLoop_statement(
 		auto _step = ctx->for_step();
 
 		auto init = new vector<iHdlStatement*>();
-		visitFor_initialization(_init, *init);
+		if (_init)
+			visitFor_initialization(_init, *init);
 		iHdlExpr *cond = nullptr;
 		if (_cond)
 			cond = ep.visitExpression(_cond);
+		else
+			cond = iHdlExpr::INT(1);
 
 		auto step = new vector<iHdlStatement*>();
-		visitFor_step(_step, *step);
+		if (_step)
+			visitFor_step(_step, *step);
 		return iHdlStatement::FOR(init, cond, step, stm);
 
 	} else {

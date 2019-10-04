@@ -1,7 +1,7 @@
 #pragma once
+
 #include <Python.h>
 #include <vector>
-#include <typeinfo>
 
 #include <hdlConvertor/hdlObjects/hdlCompInstance.h>
 #include <hdlConvertor/hdlObjects/hdlContext.h>
@@ -73,7 +73,7 @@ class ToPy {
 
 	template<typename OBJ_T>
 	int toPy_arr(PyObject *py_list, const std::vector<OBJ_T> &objs) {
-		for (OBJ_T o : objs) {
+		for (auto o : objs) {
 			auto py_obj = toPy(o);
 			if (py_obj == nullptr) {
 				return -1;
