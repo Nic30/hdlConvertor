@@ -18,13 +18,17 @@ namespace hdlObjects {
  **/
 class HdlVariableDef: public WithNameAndDoc, public iHdlObj {
 public:
-	iHdlExpr * type;
-	iHdlExpr * value;
+	iHdlExpr *type;
+	iHdlExpr *value;
 	bool is_latched;
 	bool is_const;
+	bool is_static;
 	HdlDirection direction;
 
-	HdlVariableDef(const std::string & id, iHdlExpr * type, iHdlExpr * val);
+	HdlVariableDef(const std::string &id, iHdlExpr *type, iHdlExpr *val);
+	HdlVariableDef(const std::string &id, iHdlExpr *type, iHdlExpr *val,
+			HdlDirection direction, bool is_latched);
+
 	~HdlVariableDef();
 };
 

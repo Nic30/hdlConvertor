@@ -1,4 +1,6 @@
 #include <hdlConvertor/svConvertor/eventExprParser.h>
+#include <memory>
+
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
@@ -8,6 +10,10 @@ namespace sv {
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
+
+VerEventExprParser::VerEventExprParser(SVCommentParser &_commentParser) :
+		commentParser(_commentParser) {
+}
 
 void VerEventExprParser::visitEvent_expression(
 		sv2017Parser::Event_expressionContext *ctx,
@@ -32,7 +38,8 @@ void VerEventExprParser::visitEvent_expression_item(
 		visitEvent_expression(ee, items);
 	} else {
 		auto _e = ctx->expression();
-		auto e = VerExprParser::visitExpression(_e[0]);
+		VerExprParser ep(commentParser);
+		auto e = ep.visitExpression(_e[0]);
 		auto ei = ctx->edge_identifier();
 		if (ei) {
 			// [todo] must have

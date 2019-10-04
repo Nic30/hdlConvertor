@@ -54,6 +54,7 @@ ToPy::ToPy() {
 	import(HdlStmBreakCls, "HdlStmBreak");
 	import(HdlStmContinueCls, "HdlStmContinue");
 	import(HdlStmWaitCls, "HdlStmWait");
+	import(HdlStmBlockCls, "HdlStmBlock");
 	import(HdlImportCls, "HdlImport");
 	import(HdlComponentInstCls, "HdlComponentInst");
 	import(HdlFunctionDefCls, "HdlFunctionDef");
@@ -166,7 +167,7 @@ PyObject* ToPy::toPy(const HdlModuleDef *o) {
 			if (e)
 				break;
 		}
-		e = toPy_arr(py_inst, "objs", o->objs);
+		e = toPy_arr<iHdlObj*>(py_inst, "objs", o->objs);
 		if (e)
 			break;
 
@@ -268,10 +269,6 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 			if (e)
 				break;
 		}
-		e = toPy_arr(py_inst, "body", o->locals);
-		if (e)
-			break;
-
 		e = toPy_arr(py_inst, "body", o->body);
 		if (e)
 			break;
@@ -482,6 +479,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlFunctionDefCls);
 	Py_XDECREF(HdlComponentInstCls);
 	Py_XDECREF(HdlImportCls);
+	Py_XDECREF(HdlStmBlockCls);
 	Py_XDECREF(HdlStmWaitCls);
 	Py_XDECREF(HdlStmContinueCls);
 	Py_XDECREF(HdlStmBreakCls);

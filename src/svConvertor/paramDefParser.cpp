@@ -18,77 +18,83 @@ VerParamDefParser::VerParamDefParser(SVCommentParser &commentParser) :
 		commentParser(commentParser) {
 }
 
-vector<HdlVariableDef*>* VerParamDefParser::visitParameter_port_list(
-		sv2017Parser::Parameter_port_listContext *ctx) {
+void VerParamDefParser::visitParameter_port_list(
+		sv2017Parser::Parameter_port_listContext *ctx,
+		vector<HdlVariableDef*> & res) {
 	// parameter_port_list:
 	//     HASH LPAREN (
 	//        ( list_of_param_assignments
 	//          | parameter_port_declaration
 	//         ) ( COMMA parameter_port_declaration )* )? RPAREN;
 
-	auto vars = new vector<HdlVariableDef*>();
 	auto lpa = ctx->list_of_param_assignments();
 	if (lpa) {
-		NotImplementedLogger::print(
-				"VerVerParamDefParser.visitParameter_port_list - list_of_param_assignments",
-				lpa);
+		visitList_of_param_assignments(lpa, res);
+		return;
 	}
 	for (auto pd : ctx->parameter_port_declaration()) {
-		auto pds = visitParameter_port_declaration(pd);
-		for (auto pd : *pds)
-			vars->push_back(pd);
-		delete pds;
+		visitParameter_port_declaration(pd, res);
 	}
-
-	return vars;
 }
 
-vector<HdlVariableDef*>* VerParamDefParser::visitParameter_port_declaration(
-		sv2017Parser::Parameter_port_declarationContext *ctx) {
+void VerParamDefParser::visitParameter_port_declaration(
+		sv2017Parser::Parameter_port_declarationContext *ctx,
+		vector<HdlVariableDef*> & res) {
 	// parameter_port_declaration:
 	//     KW_TYPE list_of_type_assignments
 	//     | parameter_declaration
 	//     | local_parameter_declaration
 	//     | data_type list_of_param_assignments
 	// ;
+	auto lta = ctx->list_of_type_assignments();
+	if (lta) {
+		visitList_of_type_assignments(lta, res);
+	}
 	auto pd = ctx->parameter_declaration();
-	if (pd)
-		return visitParameter_declaration(pd);
+	if (pd) {
+		visitParameter_declaration(pd, res);
+		return;
+	}
+	auto lpd = ctx->local_parameter_declaration();
+	if (lpd) {
+		visitLocal_parameter_declaration(lpd, res);
+		return;
+	}
 
 	auto dt = ctx->data_type();
 	assert(dt);
 	auto lpa = ctx->list_of_param_assignments();
 	assert(lpa);
-	auto t = VerTypeParser::visitData_type(dt);
+	auto t = VerTypeParser(commentParser).visitData_type(dt);
 	auto doc = commentParser.parse(ctx);
-	return visitTyped_list_of_param_assignments(t, lpa, doc);
+	visitTyped_list_of_param_assignments(t, lpa, doc, res);
 }
 
-vector<HdlVariableDef*>* VerParamDefParser::visitTyped_list_of_param_assignments(
+void VerParamDefParser::visitTyped_list_of_param_assignments(
 		iHdlExpr *data_type,
 		sv2017Parser::List_of_param_assignmentsContext *lpa,
-		const string &doc) {
-	auto params = visitList_of_param_assignments(lpa);
+		const string &doc,
+		vector<HdlVariableDef*> & res) {
+	vector<HdlVariableDef*> res_tmp;
+	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
-	for (auto v : *params) {
+	for (auto v : res_tmp) {
 		if (first) {
 			v->type = data_type;
 			v->__doc__ = doc + v->__doc__;
 			first = false;
 		} else
 			v->type = new iHdlExpr(*data_type);
+		res.push_back(v);
 	}
-
-	return params;
-
 }
-vector<HdlVariableDef*>* VerParamDefParser::visitList_of_param_assignments(
-		sv2017Parser::List_of_param_assignmentsContext *ctx) {
+
+void VerParamDefParser::visitList_of_param_assignments(
+		sv2017Parser::List_of_param_assignmentsContext *ctx,
+		vector<HdlVariableDef*> & res) {
 	// list_of_param_assignments: param_assignment ( COMMA param_assignment )*;
-	vector<HdlVariableDef*> *params = new vector<HdlVariableDef*>();
 	for (auto pa : ctx->param_assignment())
-		params->push_back(visitParam_assignment(pa));
-	return params;
+		res.push_back(visitParam_assignment(pa));
 }
 iHdlExpr* VerParamDefParser::visitConstant_param_expression(
 		sv2017Parser::Constant_param_expressionContext *ctx) {
@@ -103,13 +109,33 @@ iHdlExpr* VerParamDefParser::visitParam_expression(
 	// ;
 	auto me = ctx->mintypmax_expression();
 	if (me) {
-		return VerExprParser::visitMintypmax_expression(me);
+		VerExprParser ep(commentParser);
+		return ep.visitMintypmax_expression(me);
 	} else {
 		auto dt = ctx->data_type();
 		assert(dt);
-		return VerTypeParser::visitData_type(dt);
+		VerTypeParser dp(commentParser);
+		return dp.visitData_type(dt);
 	}
 }
+
+void VerParamDefParser::visitList_of_type_assignments(
+		sv2017Parser::List_of_type_assignmentsContext *ctx,
+		std::vector<hdlObjects::HdlVariableDef*> &res) {
+	// list_of_type_assignments: type_assignment ( COMMA type_assignment )*;
+	// type_assignment: identifier ( ASSIGN data_type )?;
+	VerTypeParser tp(commentParser);
+	for (auto _ta : ctx->type_assignment()) {
+		auto name = VerExprParser::getIdentifierStr(_ta->identifier());
+		iHdlExpr *v = nullptr;
+		auto _v = _ta->data_type();
+		if (_v)
+			v = tp.visitData_type(_v);
+		auto ta = new HdlVariableDef(name, iHdlExpr::TYPE_T(), v);
+		res.push_back(ta);
+	}
+}
+
 HdlVariableDef* VerParamDefParser::visitParam_assignment(
 		sv2017Parser::Param_assignmentContext *ctx) {
 	// param_assignment:
@@ -124,8 +150,9 @@ HdlVariableDef* VerParamDefParser::visitParam_assignment(
 	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }
-vector<HdlVariableDef*>* VerParamDefParser::visitParameter_declaration(
-		sv2017Parser::Parameter_declarationContext *ctx) {
+void VerParamDefParser::visitParameter_declaration(
+		sv2017Parser::Parameter_declarationContext *ctx,
+		vector<HdlVariableDef*> &res) {
 	// parameter_declaration:
 	//     KW_PARAMETER
 	//     ( KW_TYPE list_of_type_assignments
@@ -134,19 +161,39 @@ vector<HdlVariableDef*>* VerParamDefParser::visitParameter_declaration(
 
 	auto lta = ctx->list_of_type_assignments();
 	if (lta) {
-		NotImplementedLogger::print(
-				"VerParamDefParser.visitParameter_declaration - list_of_type_assignments",
-				lta);
-		auto vars = new vector<HdlVariableDef*>();
-		return vars;
+		visitList_of_type_assignments(lta, res);
 	} else {
 		auto _t = ctx->data_type_or_implicit();
-		auto t = VerTypeParser::visitData_type_or_implicit(_t);
+		auto t = VerTypeParser(commentParser).visitData_type_or_implicit(_t,
+				nullptr);
 		auto pds = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
-		return visitTyped_list_of_param_assignments(t, pds, doc);
+		visitTyped_list_of_param_assignments(t, pds, doc, res);
 	}
-
+}
+void VerParamDefParser::visitLocal_parameter_declaration(
+		sv2017Parser::Local_parameter_declarationContext *ctx,
+		std::vector<hdlObjects::HdlVariableDef*> &_res) {
+	// local_parameter_declaration:
+	//  KW_LOCALPARAM ( KW_TYPE list_of_type_assignments
+	//                   | ( data_type_or_implicit )? list_of_param_assignments
+	//                   );
+	auto &res = *reinterpret_cast<std::vector<HdlVariableDef*>*>(&_res);
+	if (ctx->KW_TYPE()) {
+		auto lta = ctx->list_of_type_assignments();
+		visitList_of_type_assignments(lta, res);
+	} else {
+		iHdlExpr *t;
+		auto dti = ctx->data_type_or_implicit();
+		if (dti) {
+			VerTypeParser tp(commentParser);
+			t = tp.visitData_type_or_implicit(dti, nullptr);
+		} else
+			t = iHdlExpr::AUTO_T();
+		auto lpa = ctx->list_of_param_assignments();
+		auto doc = commentParser.parse(ctx);
+		visitTyped_list_of_param_assignments(t, lpa, doc, res);
+	}
 }
 
 }

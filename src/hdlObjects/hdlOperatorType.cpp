@@ -5,7 +5,7 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-static const char* const opTypeToStr[] = {
+static const char* const opTypeToStr[HdlOperatorType::DECR_POST + 1] = {
 		"RANGE",
 		"REVERSE_RANGE",
 		"ACROSS",
@@ -69,9 +69,8 @@ static const char* const opTypeToStr[] = {
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
-	if (opt < RANGE || opt > MATCH_GE)
+	if (opt < RANGE || opt > DECR_POST)
 		throw std::runtime_error("Invalid operator type");
-	assert(sizeof(opTypeToStr) / sizeof(opTypeToStr[0]) - 1 == MATCH_GE);
 	return opTypeToStr[opt];
 }
 

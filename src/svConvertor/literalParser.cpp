@@ -106,10 +106,10 @@ iHdlExpr* VerLiteralParser::visitSIMPLE_IDENTIFIER(TerminalNode *n) {
 iHdlExpr* VerLiteralParser::visitC_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
-iHdlExpr* VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
+std::string VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
 	auto s = n->getText();
 	s = s.substr(1);
-	return iHdlExpr::ID(s);
+	return s;
 }
 iHdlExpr* VerLiteralParser::visitTIME_LITERAL(TerminalNode *n) {
 	NotImplementedLogger::print(

@@ -16,6 +16,7 @@ enum StatementType {
 	s_IF,
 	s_CASE,
 	s_WHILE,
+	s_DO_WHILE,
 	s_BREAK,
 	s_RETURN,
 	s_CONTINUE,
@@ -25,9 +26,11 @@ enum StatementType {
 	s_PROCESS,
 	s_WAIT,
 	s_IMPORT,
+	s_NOP,
+	s_BLOCK,
 };
 
-const char * StatementType_toString(StatementType type);
+const char* StatementType_toString(StatementType type);
 /*
  * Interface for statements which can appear in HDL AST
  *
@@ -40,7 +43,7 @@ public:
 	// an optional extra label specified in HDL
 	std::vector<std::string> labels;
 	StatementType type;
-	std::vector<std::vector<iHdlObj*> *> sub_statements;
+	std::vector<std::vector<iHdlObj*>*> sub_statements;
 	/*
 	 * for EXPR exprs contains only one item which is this value
 	 * for IF exprs containst the main condition and conditions from the else ifs
@@ -50,46 +53,55 @@ public:
 	 * for WHILE exprs contains the condition
 	 * for PROCESS exprs contains the sensitivity list items, if sensitivity is not specified the re is only one time nullptr
 	 */
-	std::vector<iHdlExpr *> exprs;
+	std::vector<iHdlExpr*> exprs;
 	// if true the statement is part of VHDL generate or other compile time evaluated statement
 	bool in_preproc;
 
 	iHdlStatement(StatementType type);
-	static iHdlStatement* EXPR(iHdlExpr * e);
-	static iHdlStatement* IMPORT(const std::vector<iHdlExpr *> & path);
-	static iHdlStatement* IF(iHdlExpr* cond, std::vector<iHdlObj*>* ifTrue);
-	static iHdlStatement* IF(iHdlExpr* cond,
-			std::vector<iHdlStatement*>* ifTrue);
-	static iHdlStatement* IF(iHdlExpr* cond, std::vector<iHdlObj*>* ifTrue,
-			std::vector<iHdlObj*>* ifFalse);
-	static iHdlStatement* IF(iHdlExpr* cond,
-			std::vector<iHdlStatement*>* ifTrue,
-			std::vector<iHdlStatement*>* ifFalse);
-	static iHdlStatement* IF(iHdlExpr* cond, std::vector<iHdlObj*>* ifTrue,
-			const std::vector<case_t> & elseIfs,
-			std::vector<iHdlObj*>* ifFalse);
-	static iHdlStatement* IF(iHdlExpr* cond,
-			std::vector<iHdlStatement*>* ifTrue,
-			const std::vector<std::pair<iHdlExpr*, std::vector<iHdlStatement*>*>> & elseIfs,
-			std::vector<iHdlStatement*>* ifFalse);
-	static iHdlStatement* CASE(iHdlExpr* switchOn,
-			const std::vector<case_t> cases, std::vector<iHdlObj*>* default_);
-	static iHdlStatement* RETURN(iHdlExpr* val);
+	static iHdlStatement* EXPR(iHdlExpr *e);
+	static iHdlStatement* IMPORT(const std::vector<iHdlExpr*> &path);
+	static iHdlStatement* IF(iHdlExpr *cond, std::vector<iHdlObj*> *ifTrue);
+	static iHdlStatement* IF(iHdlExpr *cond,
+			std::vector<iHdlStatement*> *ifTrue);
+	static iHdlStatement* IF(iHdlExpr *cond, std::vector<iHdlObj*> *ifTrue,
+			std::vector<iHdlObj*> *ifFalse);
+	static iHdlStatement* IF(iHdlExpr *cond,
+			std::vector<iHdlStatement*> *ifTrue,
+			std::vector<iHdlStatement*> *ifFalse);
+	static iHdlStatement* IF(iHdlExpr *cond, std::vector<iHdlObj*> *ifTrue,
+			const std::vector<case_t> &elseIfs, std::vector<iHdlObj*> *ifFalse);
+	static iHdlStatement* IF(iHdlExpr *cond,
+			std::vector<iHdlStatement*> *ifTrue,
+			const std::vector<std::pair<iHdlExpr*, std::vector<iHdlStatement*>*>> &elseIfs,
+			std::vector<iHdlStatement*> *ifFalse);
+	static iHdlStatement* CASE(iHdlExpr *switchOn,
+			const std::vector<case_t> cases, std::vector<iHdlObj*> *default_);
+	static iHdlStatement* RETURN(iHdlExpr *val);
 	static iHdlStatement* RETURN();
-	static iHdlStatement* WAIT(const std::vector<iHdlExpr*> & val);
-	static iHdlStatement* WHILE(iHdlExpr* cond,
-			std::vector<iHdlStatement*>* body);
-	static iHdlStatement* WHILE(iHdlExpr* cond, std::vector<iHdlObj*>* body);
+	static iHdlStatement* WAIT(const std::vector<iHdlExpr*> &val);
+	static iHdlStatement* WHILE(iHdlExpr *cond,
+			std::vector<iHdlStatement*> *body);
+	static iHdlStatement* WHILE(iHdlExpr *cond, std::vector<iHdlObj*> *body);
+	static iHdlStatement* DO_WHILE(iHdlExpr *cond,
+			std::vector<iHdlStatement*> *body);
+	static iHdlStatement* DO_WHILE(iHdlExpr *cond, std::vector<iHdlObj*> *body);
 	static iHdlStatement* BREAK();
 	static iHdlStatement* CONTINUE();
-	static iHdlStatement* FOR(iHdlStatement* init, iHdlExpr* cond,
-			iHdlStatement* step, std::vector<iHdlObj*>* body);
-	static iHdlStatement* FOR(iHdlStatement* init, iHdlExpr* cond,
-			iHdlStatement* step, std::vector<iHdlStatement*>* body);
-	static iHdlStatement* FOR_IN(iHdlStatement* var, iHdlExpr *collection,
-			std::vector<iHdlObj*>* body);
-	static iHdlStatement* FOR_IN(iHdlExpr* _var, iHdlExpr *collection,
-			std::vector<iHdlObj*>* body);
+	static iHdlStatement* FOR(iHdlStatement *init, iHdlExpr *cond,
+			iHdlStatement *step, std::vector<iHdlObj*> *body);
+	static iHdlStatement* FOR(iHdlStatement *init, iHdlExpr *cond,
+			iHdlStatement *step, std::vector<iHdlStatement*> *body);
+	static iHdlStatement* FOR(std::vector<iHdlStatement*> *init, iHdlExpr *cond,
+			std::vector<iHdlStatement*> *step, std::vector<iHdlObj*> *body);
+	static iHdlStatement* FOR(std::vector<iHdlStatement*> *init, iHdlExpr *cond,
+			std::vector<iHdlStatement*> *step, std::vector<iHdlStatement*> *body);
+	static iHdlStatement* FOR_IN(iHdlStatement *var, iHdlExpr *collection,
+			std::vector<iHdlObj*> *body);
+	static iHdlStatement* FOR_IN(std::vector<iHdlExpr*> &vars,
+			iHdlExpr *collection, std::vector<iHdlObj*> *body);
+	static iHdlStatement* FOR_IN(iHdlExpr *_var, iHdlExpr *collection,
+			std::vector<iHdlObj*> *body);
+	static iHdlStatement* NOP();
 	virtual ~iHdlStatement() override;
 };
 

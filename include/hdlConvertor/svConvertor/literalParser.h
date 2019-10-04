@@ -19,7 +19,7 @@ public:
 	static hdlObjects::iHdlExpr* visitNumber(sv2017Parser::NumberContext *ctx);
 	static hdlObjects::iHdlExpr* visitSIMPLE_IDENTIFIER(TerminalNode *n);
 	static hdlObjects::iHdlExpr* visitC_IDENTIFIER(TerminalNode *n);
-	static hdlObjects::iHdlExpr* visitESCAPED_IDENTIFIER(TerminalNode *n);
+	static std::string visitESCAPED_IDENTIFIER(TerminalNode *n);
 	static hdlObjects::iHdlExpr* visitReal_number(
 			sv2017Parser::Real_numberContext *ctx);
 	static hdlObjects::iHdlExpr* visitTIME_LITERAL(TerminalNode *n);

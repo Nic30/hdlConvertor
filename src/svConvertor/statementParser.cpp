@@ -1,6 +1,15 @@
 #include <hdlConvertor/svConvertor/statementParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlObjects/hdlDirection.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/typeParser.h>
+#include <hdlConvertor/svConvertor/attributeParser.h>
+#include <hdlConvertor/svConvertor/exprPrimaryParser.h>
+#include <hdlConvertor/svConvertor/eventExprParser.h>
+#include <hdlConvertor/svConvertor/delayParser.h>
+#include <hdlConvertor/svConvertor/declrParser.h>
+#include <hdlConvertor/svConvertor/paramDefParser.h>
+#include <hdlConvertor/svConvertor/literalParser.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -12,119 +21,251 @@ using namespace hdlConvertor::hdlObjects;
 VerStatementParser::VerStatementParser(SVCommentParser &commentParser) :
 		commentParser(commentParser) {
 }
-VerStatementParser::stm_or_block_t VerStatementParser::visitAlways_construct(
+iHdlStatement* VerStatementParser::visitAlways_construct(
 		sv2017Parser::Always_constructContext *ctx) {
-	// always_construct
-	//    : 'always' statement
-	//    ;
-	return visitStatement(ctx->statement());
-}
-VerStatementParser::stm_or_block_t VerStatementParser::visitStatement(
-		sv2017Parser::StatementContext *ctx) {
-	//statement
-	//   : attribute_instance* blocking_assignment ';'
-	//   | attribute_instance* case_statement
-	//   | attribute_instance* conditional_statement
-	//   | attribute_instance* disable_statement
-	//   | attribute_instance* event_trigger
-	//   | attribute_instance* loop_statement
-	//   | attribute_instance* nonblocking_assignment ';'
-	//   | attribute_instance* par_block
-	//   | attribute_instance* procedural_continuous_assignments ';'
-	//   | attribute_instance* procedural_timing_control_statement
-	//   | attribute_instance* seq_block
-	//   | attribute_instance* system_task_enable
-	//   | attribute_instance* task_enable
-	//   | attribute_instance* wait_statement
-	//   ;
-	auto ai = ctx->attribute_instance();
-	if (ai.size()) {
+	// always_construct:
+	//     always_keyword statement;
+	//
+	if (!ctx->always_keyword()->KW_ALWAYS()) {
 		NotImplementedLogger::print(
-				"VerStatementParser.visitStatement.attribute_instance", ai[0]);
+				"VerStatementParser.visitAlways_construct.always_keyword - non pure always",
+				ctx->always_keyword());
 	}
+	auto stm = ctx->statement();
+	return visitStatement(stm);
+}
+
+iHdlStatement* VerStatementParser::visitSubroutine_call_statement(
+		sv2017Parser::Subroutine_call_statementContext *ctx) {
+	// subroutine_call_statement:
+	//     ( KW_VOID APOSTROPHE LPAREN expression RPAREN ) SEMI;
+	auto _e = ctx->expression();
+	auto e0 = VerExprParser(commentParser).visitExpression(_e);
+	auto e1 = new iHdlExpr(iHdlExpr::ID("void"), HdlOperatorType::CALL, e0);
+	return iHdlStatement::EXPR(e1);
+}
+
+iHdlStatement* VerStatementParser::visitJumpStatement(
+		sv2017Parser::Jump_statementContext *ctx) {
+	// jump_statement:
+	//     ( KW_RETURN ( expression )?
+	//       | KW_BREAK
+	//       | KW_CONTINUE
+	//     ) SEMI;
+	if (ctx->KW_RETURN()) {
+		auto _e = ctx->expression();
+		if (_e) {
+			auto e = VerExprParser(commentParser).visitExpression(_e);
+			return iHdlStatement::RETURN(e);
+		} else {
+			return iHdlStatement::RETURN();
+		}
+	} else if (ctx->KW_BREAK()) {
+		return iHdlStatement::BREAK();
+	} else {
+		assert(ctx->KW_CONTINUE());
+		return iHdlStatement::CONTINUE();
+	}
+}
+iHdlStatement* VerStatementParser::visitStatement_item(
+		sv2017Parser::Statement_itemContext *ctx) {
+	// statement_item:
+	//   ( blocking_assignment
+	//     | nonblocking_assignment
+	//     | procedural_continuous_assignment
+	//     | inc_or_dec_expression
+	//     | primary
+	//     | clocking_drive
+	//   ) SEMI
+	//   | case_statement
+	//   | conditional_statement
+	//   | subroutine_call_statement
+	//   | disable_statement
+	//   | event_trigger
+	//   | loop_statement
+	//   | jump_statement
+	//   | par_block
+	//   | procedural_timing_control_statement
+	//   | seq_block
+	//   | wait_statement
+	//   | procedural_assertion_statement
+	//   | randsequence_statement
+	//   | randcase_statement
+	//   | expect_property_statement
+	// ;
+
 	auto ba = ctx->blocking_assignment();
 	if (ba) {
-		return {visitBlocking_assignment(ba), nullptr};
+		return visitBlocking_assignment(ba);
+	}
+	auto nba = ctx->nonblocking_assignment();
+	if (nba) {
+		return visitNonblocking_assignment(nba);
+	}
+	auto pca = ctx->procedural_continuous_assignment();
+	if (pca) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.procedural_continuous_assignment",
+				pca);
+		return iHdlStatement::NOP();
+	}
+	auto ide = ctx->inc_or_dec_expression();
+	if (ide) {
+		auto e = VerExprParser(commentParser).visitInc_or_dec_expression(ide);
+		return iHdlStatement::EXPR(e);
+	}
+	auto p = ctx->primary();
+	if (p) {
+		auto e = VerExprPrimaryParser(commentParser).visitPrimary(p);
+		return iHdlStatement::EXPR(e);
+	}
+	auto cd = ctx->clocking_drive();
+	if (cd) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.clocking_drive", cd);
+		return iHdlStatement::NOP();
 	}
 	auto cs = ctx->case_statement();
 	if (cs) {
-		return {visitCase_statement(cs), nullptr};
+		return visitCase_statement(cs);
 	}
 	auto conds = ctx->conditional_statement();
 	if (conds) {
-		return {visitConditional_statement(conds), nullptr};
+		return visitConditional_statement(conds);
+	}
+	auto scs = ctx->subroutine_call_statement();
+	if (scs) {
+		return visitSubroutine_call_statement(scs);
 	}
 	auto d = ctx->disable_statement();
 	if (d) {
-		NotImplementedLogger::print("VerStatementParser.disable_statement", d);
-		return {nullptr, nullptr};
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.disable_statement", d);
+		return iHdlStatement::NOP();
 	}
 	auto et = ctx->event_trigger();
 	if (et) {
 		// auto _et = VerExprParser::visitEvent_trigger(et);
-		NotImplementedLogger::print("VerStatementParser.event_trigger", et);
-		return {nullptr, nullptr};
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.event_trigger", et);
+		return iHdlStatement::NOP();
 	}
 	auto ls = ctx->loop_statement();
 	if (ls) {
-		auto loop = visitLoop_statement(ls);
-		return {loop, nullptr};
+		return visitLoop_statement(ls);
 	}
-	auto nba = ctx->nonblocking_assignment();
-	if (nba) {
-		return {visitNonblocking_assignment(nba), nullptr};
+	auto js = ctx->jump_statement();
+	if (js) {
+		return visitJumpStatement(js);
 	}
 	auto pb = ctx->par_block();
 	if (pb) {
-		NotImplementedLogger::print("VerStatementParser.par_block", pb);
-		return {nullptr, nullptr};
-	}
-	auto pca = ctx->procedural_continuous_assignments();
-	if (pca) {
 		NotImplementedLogger::print(
-				"VerStatementParser.procedural_continuous_assignments", pca);
-		return {nullptr, nullptr};
+				"VerStatementParser.visitStatement_item.par_block", pb);
+		return iHdlStatement::NOP();
 	}
 	auto ptcs = ctx->procedural_timing_control_statement();
 	if (ptcs) {
-		return {visitProcedural_timing_control_statement(ptcs), nullptr};
+		return visitProcedural_timing_control_statement(ptcs);
 	}
 	auto sb = ctx->seq_block();
 	if (sb) {
-		return {nullptr, visitSeq_block(sb)};
-	}
-	auto ste = ctx->system_task_enable();
-	if (ste) {
-		return {visitSystem_task_enable(ste), nullptr};
-	}
-	auto ta = ctx->task_enable();
-	if (ta) {
-		NotImplementedLogger::print("VerStatementParser.task_enable", ta);
-		return {nullptr, nullptr};
+		return visitSeq_block(sb);
 	}
 	auto ws = ctx->wait_statement();
 	if (ws) {
-		NotImplementedLogger::print("VerStatementParser.wait_statement", ws);
-		return {nullptr, nullptr};
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.wait_statement", ws);
+		return iHdlStatement::NOP();
 	}
-	throw std::runtime_error(
-			"VerStatementParser.visitStatement - probably unimplemented transition");
+	auto pas = ctx->procedural_assertion_statement();
+	if (pas) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.procedural_assertion_statement",
+				pas);
+		return iHdlStatement::NOP();
+	}
+	auto rss = ctx->randsequence_statement();
+	if (rss) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.procedural_assertion_statement",
+				rss);
+		return iHdlStatement::NOP();
+	}
+	auto rcs = ctx->randcase_statement();
+	if (rcs) {
+		NotImplementedLogger::print(
+				"VerStatementParser.visitStatement_item.randcase_statement",
+				rcs);
+		return iHdlStatement::NOP();
+	}
+	auto eps = ctx->expect_property_statement();
+	assert(eps);
+	NotImplementedLogger::print(
+			"VerStatementParser.visitStatement_item.expect_property_statement",
+			pas);
+	return iHdlStatement::NOP();
+}
+
+hdlObjects::iHdlStatement* VerStatementParser::visitStatement(
+		sv2017Parser::StatementContext *ctx) {
+	// statement: ( identifier COLON )? ( attribute_instance )* statement_item;
+
+	auto ai = ctx->attribute_instance();
+	VerAttributeParser::visitAttribute_instance(ai);
+	auto _stm = ctx->statement_item();
+	auto stm = visitStatement_item(_stm);
+	auto _label = ctx->identifier();
+	if (_label) {
+		auto label = _label->getText();
+		stm->labels.insert(stm->labels.begin(), label);
+	}
+	return stm;
 }
 
 iHdlStatement* VerStatementParser::visitBlocking_assignment(
 		sv2017Parser::Blocking_assignmentContext *ctx) {
-	// blocking_assignment
-	//    : variable_lvalue '=' (delay_or_event_control)? expression
-	//    ;
-	auto dst = VerExprParser::visitVariable_lvalue(ctx->variable_lvalue());
-	auto src = VerExprParser::visitExpression(ctx->expression());
-	auto dec = ctx->delay_or_event_control();
-	iHdlStatement *assig;
-	if (dec) {
-		auto d = visitDelay_or_event_control(dec);
-		assig = new HdlStmAssign(dst, src, d.first, d.second, true);
+	// blocking_assignment:
+	//     variable_lvalue ASSIGN ( delay_or_event_control expression | dynamic_array_new )
+	//     | package_or_class_scoped_hier_id_with_select ASSIGN class_new
+	//     | operator_assignment
+	// ;
+	VerExprParser ep(commentParser);
+	auto vlv = ctx->variable_lvalue();
+	iHdlStatement *assig = nullptr;
+	if (vlv) {
+		auto dst = ep.visitVariable_lvalue(vlv);
+		auto e = ctx->expression();
+		if (e) {
+			auto src = ep.visitExpression(e);
+			auto dec = ctx->delay_or_event_control();
+			auto d = VerDelayParser(commentParser).visitDelay_or_event_control(
+					dec);
+			assig = new HdlStmAssign(dst, src, d.first, d.second, true);
+		} else {
+			auto dan = ctx->dynamic_array_new();
+			assert(dan);
+			NotImplementedLogger::print(
+					"VerStatementParser.visitBlocking_assignment.dynamic_array_new",
+					dan);
+			assig = iHdlStatement::NOP();
+			//assig = new HdlStmAssign(dst, src, true);
+		}
 	} else {
-		assig = new HdlStmAssign(dst, src, true);
+		auto cn = ctx->class_new();
+		if (cn) {
+			NotImplementedLogger::print(
+					"VerStatementParser.visitBlocking_assignment.class_new",
+					cn);
+			assig = iHdlStatement::NOP();
+		} else {
+			auto oa = ctx->operator_assignment();
+			assert(oa);
+			NotImplementedLogger::print(
+					"VerStatementParser.visitBlocking_assignment.operator_assignment",
+					oa);
+			assig = iHdlStatement::NOP();
+		}
 	}
 	assig->__doc__ = commentParser.parse(ctx);
 	return assig;
@@ -143,7 +284,8 @@ iHdlStatement* VerStatementParser::visitCase_statement(
 						+ ctx->children[0]->getText(), ctx);
 		return nullptr;
 	}
-	auto switchOn = VerExprParser::visitExpression(ctx->expression());
+	auto switchOn = VerExprParser(commentParser).visitExpression(
+			ctx->expression());
 	std::vector<iHdlStatement::case_t> cases;
 	vector<iHdlObj*> *default_ = nullptr;
 	auto _cases = ctx->case_item();
@@ -175,7 +317,7 @@ std::vector<iHdlStatement::case_t> VerStatementParser::visitCase_item(
 	auto stms = ctx->statement_or_null();
 	if (conds.size()) {
 		for (auto c : conds) {
-			auto ce = VerExprParser::visitExpression(c);
+			auto ce = VerExprParser(commentParser).visitExpression(c);
 			// [TODO] it would be better to copy the statements instead of parsing again
 			auto _stms =
 					reinterpret_cast<vector<iHdlObj*>*>(visitStatement_or_null__as_block(
@@ -190,66 +332,180 @@ std::vector<iHdlStatement::case_t> VerStatementParser::visitCase_item(
 	}
 	return res;
 }
+
 HdlStmAssign* VerStatementParser::visitVariable_assignment(
 		sv2017Parser::Variable_assignmentContext *ctx) {
-	// variable_assignment
-	//    : variable_lvalue '=' expression
-	//    ;
-	auto _vl = ctx->variable_lvalue();
-	auto _e = ctx->expression();
-	auto vl = VerExprParser::visitVariable_lvalue(_vl);
-	auto e = VerExprParser::visitExpression(_e);
-	return new HdlStmAssign(vl, e, true);
+	// variable_assignment:
+	//     variable_lvalue ASSIGN expression;
+	VerExprParser ep(commentParser);
+	auto _dst = ctx->variable_lvalue();
+	auto dst = ep.visitVariable_lvalue(_dst);
+	auto _src = ctx->expression();
+	auto src = ep.visitExpression(_src);
+	return new HdlStmAssign(dst, src, true);
 }
+
 iHdlStatement* VerStatementParser::visitLoop_statement(
 		sv2017Parser::Loop_statementContext *ctx) {
-	// loop_statement
-	//    : 'forever' statement
-	//    | 'repeat' '(' expression ')' statement
-	//    | 'while' '(' expression ')' statement
-	//    | 'for' '(' variable_assignment ';' expression ';' variable_assignment ')' statement
-	//    ;
+	// loop_statement:
+	//  ( KW_FOREVER
+	//       | ( ( KW_REPEAT
+	//               | KW_WHILE
+	//               ) LPAREN expression
+	//           | KW_FOR LPAREN ( for_initialization )? SEMI ( expression )? SEMI ( for_step )?
+	//           ) RPAREN
+	//       ) statement_or_null
+	//   | KW_DO statement_or_null KW_WHILE LPAREN expression RPAREN SEMI
+	//   | KW_FOREACH LPAREN package_or_class_scoped_hier_id_with_select LSQUARE_BR loop_variables
+	//   RSQUARE_BR RPAREN statement
+	// ;
+	vector<iHdlStatement*>* stm;
 	auto _stm = ctx->statement();
-	auto stm = visitStatement__as_block(_stm);
-	auto name = ctx->children[0]->getText();
-	if (name == "forever") {
+	if (_stm)
+		stm = visitStatement__as_block(_stm);
+	else {
+		auto sn = ctx->statement_or_null();
+		assert(sn);
+		stm = visitStatement_or_null__as_block(sn);
+	}
+	VerExprParser ep(commentParser);
+	if (ctx->KW_FOREVER()) {
 		return iHdlStatement::WHILE(iHdlExpr::INT(1), stm);
-	} else if (name == "repeat") {
+
+	} else if (ctx->KW_REPEAT()) {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitLoop_statement.repeat", ctx);
-		return nullptr;
-	} else if (name == "while") {
-		auto _e = ctx->expression();
-		auto c = VerExprParser::visitExpression(_e);
+		return iHdlStatement::NOP();
 
+	} else if (ctx->KW_WHILE()) {
+		auto _e = ctx->expression();
+		auto c = ep.visitExpression(_e);
 		return iHdlStatement::WHILE(c, stm);
-	} else if (name == "for") {
-		auto _va = ctx->variable_assignment();
-		assert(_va.size() == 2);
-		auto _e = ctx->expression();
-		auto va0 = visitVariable_assignment(_va[0]);
-		auto e = VerExprParser::visitExpression(_e);
-		auto va1 = visitVariable_assignment(_va[1]);
 
-		return iHdlStatement::FOR(va0, e, va1, stm);
+	} else if (ctx->KW_WHILE()) {
+		auto _e = ctx->expression();
+		auto c = ep.visitExpression(_e);
+		return iHdlStatement::DO_WHILE(c, stm);
+
+	} else if (ctx->KW_FOR()) {
+		auto _init = ctx->for_initialization();
+		auto _cond = ctx->expression();
+		auto _step = ctx->for_step();
+
+		auto init = new vector<iHdlStatement*>();
+		visitFor_initialization(_init, *init);
+		iHdlExpr *cond = nullptr;
+		if (_cond)
+			cond = ep.visitExpression(_cond);
+
+		auto step = new vector<iHdlStatement*>();
+		visitFor_step(_step, *step);
+		return iHdlStatement::FOR(init, cond, step, stm);
+
+	} else {
+		assert(ctx->KW_FOREACH());
+		// KW_FOREACH LPAREN package_or_class_scoped_hier_id_with_select
+		//                   LSQUARE_BR loop_variables RSQUARE_BR RPAREN statement
+		auto _collecton = ctx->package_or_class_scoped_hier_id_with_select();
+		auto collecton = ep.visitPackage_or_class_scoped_hier_id_with_select(
+				_collecton);
+		auto _vars = ctx->loop_variables();
+		auto vars = visitLoop_variables(_vars);
+		auto fi = iHdlStatement::FOR_IN(*vars, collecton,
+				reinterpret_cast<std::vector<iHdlObj*>*>(stm));
+		delete vars;
+		return fi;
 	}
-	assert(false && "unknown statement");
-	return nullptr;
 }
 
+void VerStatementParser::visitFor_variable_declaration(
+		sv2017Parser::For_variable_declarationContext *ctx,
+		vector<HdlVariableDef*> &res) {
+	// for_variable_declaration:
+	//     ( KW_VAR )? data_type for_variable_declaration_var_assign
+	//     ( COMMA for_variable_declaration_var_assign )*
+	// ;
+	auto _dt = ctx->data_type();
+	VerTypeParser tp(commentParser);
+	VerExprParser ep(commentParser);
+
+	auto dt = tp.visitData_type(_dt);
+	bool is_latched = ctx->KW_VAR() != nullptr;
+	bool first = true;
+	for (auto _fvdas : ctx->for_variable_declaration_var_assign()) {
+		// for_variable_declaration_var_assign: identifier ASSIGN expression;
+		auto name = ep.getIdentifierStr(_fvdas->identifier());
+		if (first)
+			first = false;
+		else
+			dt = new iHdlExpr(*dt);
+		auto _def_val = _fvdas->expression();
+		auto def_val = ep.visitExpression(_def_val);
+		auto vd = new HdlVariableDef(name, dt, def_val,
+				HdlDirection::DIR_INTERNAL, is_latched);
+		res.push_back(vd);
+	}
+}
+
+void VerStatementParser::visitFor_initialization(
+		sv2017Parser::For_initializationContext *ctx,
+		vector<iHdlStatement*> &res) {
+	// for_initialization:
+	//     list_of_variable_assignments
+	//     | for_variable_declaration ( COMMA for_variable_declaration )*
+	// ;
+	auto lva = ctx->list_of_variable_assignments();
+	if (lva) {
+		// list_of_variable_assignments: variable_assignment ( COMMA variable_assignment )*;
+		for (auto _va : lva->variable_assignment()) {
+			auto va = visitVariable_assignment(_va);
+			res.push_back(va);
+		}
+	} else {
+		auto fvds = ctx->for_variable_declaration();
+		assert(fvds.size());
+		for (auto _fvd : fvds) {
+			visitFor_variable_declaration(_fvd,
+					*reinterpret_cast<vector<HdlVariableDef*>*>(&res));
+		}
+	}
+
+}
+void VerStatementParser::visitFor_step(sv2017Parser::For_stepContext *ctx,
+		std::vector<hdlObjects::iHdlStatement*> &res) {
+	// for_step: sequence_match_item ( COMMA sequence_match_item )*;
+	VerExprParser ep(commentParser);
+	for (auto _smi : ctx->sequence_match_item()) {
+		auto smi = visitSequence_match_item(_smi);
+		res.push_back(smi);
+	}
+}
+
+vector<iHdlExpr*>* VerStatementParser::visitLoop_variables(
+		sv2017Parser::Loop_variablesContext *ctx) {
+	auto vars = new vector<iHdlExpr*>();
+	// loop_variables: ( identifier )? ( COMMA ( identifier )? )*;
+	VerExprParser ep(commentParser);
+	for (auto _id : ctx->identifier()) {
+		auto id = ep.visitIdentifier(_id);
+		vars->push_back(id);
+	}
+	return vars;
+}
 HdlStmAssign* VerStatementParser::visitNonblocking_assignment(
 		sv2017Parser::Nonblocking_assignmentContext *ctx) {
 	// nonblocking_assignment
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
 	//    ;
 	auto vl = ctx->variable_lvalue();
-	auto dst = VerExprParser::visitVariable_lvalue(vl);
+	VerExprParser ep(commentParser);
+	auto dst = ep.visitVariable_lvalue(vl);
 	auto e = ctx->expression();
-	auto src = VerExprParser::visitExpression(e);
+	auto src = ep.visitExpression(e);
 	HdlStmAssign *a;
 	auto dec = ctx->delay_or_event_control();
 	if (dec) {
-		auto d = visitDelay_or_event_control(dec);
+		auto d = VerDelayParser(commentParser).visitDelay_or_event_control(dec);
 		a = new HdlStmAssign(dst, src, d.first, d.second, false);
 	} else {
 		a = new HdlStmAssign(dst, src, false);
@@ -257,70 +513,86 @@ HdlStmAssign* VerStatementParser::visitNonblocking_assignment(
 	a->__doc__ = commentParser.parse(ctx);
 	return a;
 }
-std::vector<iHdlStatement*>* VerStatementParser::visitSeq_block(
+
+HdlStmBlock* VerStatementParser::visitSeq_block(
 		sv2017Parser::Seq_blockContext *ctx) {
-	// seq_block
-	//    : 'begin' (':' block_identifier (block_item_declaration)*)? (statement)* 'end'
-	//    ;
-	auto bi = ctx->block_identifier();
-	if (bi) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitSeq_block.block_identifier", bi);
+	// seq_block:
+	//     KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
+	//         ( block_item_declaration )* ( statement_or_null )*
+	//     KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
+	auto _label = ctx->identifier(0);
+	vector<iHdlObj*> items;
+	for (auto bid : ctx->block_item_declaration()) {
+		visitBlock_item_declaration(bid, items);
 	}
-	auto bd = ctx->block_item_declaration();
-	if (bd.size()) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitSeq_block.block_item_declaration",
-				bd[0]);
+	for (auto stm : ctx->statement_or_null()) {
+		auto i = visitStatement_or_null(stm);
+		items.push_back(reinterpret_cast<iHdlObj*>(i));
 	}
-	auto _stms = ctx->statement();
-	auto stms = new vector<iHdlStatement*>;
-	stms->reserve(_stms.size());
-	for (auto stm : _stms) {
-		auto r = visitStatement(stm);
-		if (r.first) {
-			stms->push_back(r.first);
-		} else if (r.second) {
-			// [fixme] block variables can get mixed together
-			for (auto s : *r.second)
-				stms->push_back(s);
-			delete r.second;
-		}
+	auto b = new HdlStmBlock(items);
+	if (_label) {
+		VerExprParser ep(commentParser);
+		b->labels.push_back(ep.getIdentifierStr(_label));
 	}
-	return stms;
+	return b;
 }
+
+void VerStatementParser::visitBlock_item_declaration(
+		sv2017Parser::Block_item_declarationContext *ctx,
+		std::vector<hdlObjects::iHdlObj*> &res) {
+	// block_item_declaration:
+	//     ( attribute_instance )* (
+	//         data_declaration
+	//         | ( local_parameter_declaration
+	//             | parameter_declaration
+	//             ) SEMI
+	//         | let_declaration
+	//     )
+	// ;
+	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	auto dd = ctx->data_declaration();
+	if (dd) {
+		VerDeclrParser dp(commentParser);
+		dp.visitData_declaration(dd, res);
+		return;
+	}
+	VerParamDefParser pdp(commentParser);
+	auto &res_var = *reinterpret_cast<vector<HdlVariableDef*>*>(&res);
+	auto lpd = ctx->local_parameter_declaration();
+	if (lpd) {
+		pdp.visitLocal_parameter_declaration(lpd, res_var);
+		return;
+	}
+	auto pd = ctx->parameter_declaration();
+	if (pd) {
+		pdp.visitParameter_declaration(pd, res_var);
+		return;
+	}
+	auto ld = ctx->let_declaration();
+	assert(ld);
+	NotImplementedLogger::print(
+			"VerStatementParser.visitBlock_item_declarartion.let_declaration",
+			ld);
+}
+
 iHdlStatement* VerStatementParser::visitConditional_statement(
 		sv2017Parser::Conditional_statementContext *ctx) {
-	// conditional_statement
-	// : 'if' '(' expression ')' statement_or_null
-	//   ('else' 'if' '(' expression ')' statement_or_null)*
-	//   ('else' statement_or_null)?
-	// ;
-	//
-	auto c = ctx->expression();
-	auto cIt = c.begin();
+	//conditional_statement:
+	//    ( unique_priority )? KW_IF LPAREN cond_predicate RPAREN statement_or_null
+	//    ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? );
+	auto c = ctx->cond_predicate();
 	auto s = ctx->statement_or_null();
-	auto sIt = s.begin();
+	VerExprParser ep(commentParser);
+	auto cond = ep.visitCond_predicate(c);
 
-	auto cond = VerExprParser::visitExpression(*cIt);
-	auto ifTrue = visitStatement_or_null__as_block(*sIt);
-	++cIt;
-	++sIt;
-	std::vector<iHdlStatement::case_t> elseIfs;
-	while (cIt != c.end()) {
-		auto c = VerExprParser::visitExpression(*cIt);
-		auto stms = visitStatement_or_null__as_block(*sIt);
-		elseIfs.push_back( { c, reinterpret_cast<vector<iHdlObj*>*>(stms) });
-		++cIt;
-		++sIt;
-	}
-	iHdlStatement *ifStm = nullptr;
+	auto ifTrue = visitStatement_or_null__as_block(s[0]);
 	vector<iHdlStatement*> *ifFalse = nullptr;
-	if (sIt != s.end()) {
-		ifFalse = visitStatement_or_null__as_block(*sIt);
+	if (s.size() == 2) {
+		ifFalse = visitStatement_or_null__as_block(s[1]);
 	}
-	ifStm = iHdlStatement::IF(cond, reinterpret_cast<vector<iHdlObj*>*>(ifTrue),
-			elseIfs, reinterpret_cast<vector<iHdlObj*>*>(ifFalse));
+	auto ifStm = iHdlStatement::IF(cond,
+			reinterpret_cast<vector<iHdlObj*>*>(ifTrue),
+			reinterpret_cast<vector<iHdlObj*>*>(ifFalse));
 	ifStm->position.update_from_elem(ctx);
 	ifStm->__doc__ = commentParser.parse(ctx);
 	return ifStm;
@@ -328,16 +600,17 @@ iHdlStatement* VerStatementParser::visitConditional_statement(
 
 HdlStmProcess* VerStatementParser::visitProcedural_timing_control_statement(
 		sv2017Parser::Procedural_timing_control_statementContext *ctx) {
-	// procedural_timing_control_statement
-	//    : delay_or_event_control statement_or_null
-	//    ;
-	auto sens_list = visitDelay_or_event_control(ctx->delay_or_event_control());
+	// procedural_timing_control_statement: procedural_timing_control statement_or_null;
+
+	auto ptc = ctx->procedural_timing_control();
+	auto sens_list =
+			VerDelayParser(commentParser).visitProcedural_timing_control(ptc);
 	auto stms =
 			reinterpret_cast<std::vector<iHdlObj*>*>(visitStatement_or_null__as_block(
 					ctx->statement_or_null()));
 	HdlStmProcess *p;
 	if (sens_list.second) {
-		assert(sens_list.first == nullptr && "no event and delay at one");
+		assert(sens_list.first == nullptr && "no event and delay at once");
 		p = new HdlStmProcess(sens_list.second, stms);
 	} else if (sens_list.first) {
 		auto wait = iHdlStatement::WAIT( { sens_list.first, });
@@ -352,94 +625,63 @@ HdlStmProcess* VerStatementParser::visitProcedural_timing_control_statement(
 	p->__doc__ = commentParser.parse(ctx);
 	return p;
 }
+vector<iHdlStatement*>* VerStatementParser::visitStatement__as_block(
+		sv2017Parser::StatementContext *ctx) {
+	auto stm = visitStatement(ctx);
+	auto res = new vector<iHdlStatement*>();
+	auto block = dynamic_cast<HdlStmBlock*>(stm);
+	if (block && block->labels.size() == 0) {
+		if (block->statements.size())
+			res->reserve(block->statements.size());
+		for (auto i : block->statements) {
+			res->push_back(reinterpret_cast<iHdlStatement*>(i));
+		}
+		block->statements.clear();
+		delete block;
+	} else {
+		res->push_back(stm);
+	}
+
+	return res;
+}
 
 vector<iHdlStatement*>* VerStatementParser::visitStatement_or_null__as_block(
 		sv2017Parser::Statement_or_nullContext *ctx) {
+	// statement_or_null:
+	//     statement
+	//     | ( attribute_instance )* SEMI
+	// ;
 	if (ctx == nullptr)
 		return nullptr;
-	auto stm = visitStatement_or_null(ctx);
-	if (stm.first) {
-		auto body = new vector<iHdlStatement*>();
-		body->push_back(stm.first);
-		return body;
-	} else if (stm.second) {
-		return stm.second;
-	} else {
-		return new vector<iHdlStatement*>();
+	auto stm = ctx->statement();
+	if (stm) {
+		return visitStatement__as_block(stm);
 	}
+	return new vector<iHdlStatement*>();
 
 }
-VerStatementParser::stm_or_block_t VerStatementParser::visitStatement_or_null(
+iHdlStatement* VerStatementParser::visitStatement_or_null(
 		sv2017Parser::Statement_or_nullContext *ctx) {
-	// statement_or_null
-	//    : statement
-	//    | attribute_instance* ';'
-	//    ;
+	// statement_or_null:
+	//     statement
+	//     | ( attribute_instance )* SEMI
+	// ;
 	auto s = ctx->statement();
 	if (s) {
 		return visitStatement(s);
 	} else {
-		auto ai = ctx->attribute_instance();
-		if (ai.size())
-			NotImplementedLogger::print(
-					"VerStatementParser.visitStatement_or_null.attribute_instance for nop",
-					ctx);
-		return {nullptr, nullptr};
+		VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+		return iHdlStatement::NOP();
 	}
 }
 
-pair<iHdlExpr*, vector<iHdlExpr*>*> VerStatementParser::visitDelay_or_event_control(
-		sv2017Parser::Delay_or_event_controlContext *ctx) {
-	// delay_or_event_control
-	//    : delay_control
-	//    | event_control
-	//    | 'repeat' '(' expression ')' event_control
-	//    ;
-	auto _d = ctx->delay_control();
-	if (_d) {
-		auto d = VerExprParser::visitDelay_control(_d);
-		return {d, nullptr};
-	}
-	auto ec = ctx->event_control();
-	auto e = ctx->expression();
-	if (e) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitDelay_or_event_control - repeat", e);
-	}
-	return {nullptr, vistEvent_control(ec)};
-}
-
-vector<iHdlExpr*>* VerStatementParser::vistEvent_control(
-		sv2017Parser::Event_controlContext *ctx) {
-	//event_control
-	//   : '@' event_identifier
-	//   | '@' '(' event_expression ')'
-	//   | '@' '*'
-	//   | '@' '(' '*' ')'
-	//   ;
-	auto ei = ctx->event_identifier();
-	if (ei) {
-		// event_identifier
-		//    : identifier
-		//    ;
-		auto res = new vector<iHdlExpr*>;
-		res->push_back(VerExprParser::visitIdentifier(ei->identifier()));
-		return res;
-	}
-	auto ee = ctx->event_expression();
-	if (ee) {
-		return VerExprParser::visitEvent_expression(ee);
-	}
-	auto res = new vector<iHdlExpr*>;
-	res->push_back(iHdlExpr::all());
-	return res;
-}
-
-vector<iHdlStatement*> VerStatementParser::vistContinuous_assign(
-		sv2017Parser::Continuous_assignContext *ctx) {
-	// continuous_assign
-	//    : 'assign' (drive_strength)? (delay3)? list_of_net_assignments ';'
-	//    ;
+void VerStatementParser::visitContinuous_assign(
+		sv2017Parser::Continuous_assignContext *ctx,
+		vector<iHdlStatement*> &res) {
+	// continuous_assign:
+	//  KW_ASSIGN ( ( drive_strength )? ( delay3 )? list_of_variable_assignments
+	//               | delay_control list_of_variable_assignments
+	//               ) SEMI;
 	auto ds = ctx->drive_strength();
 	if (ds) {
 		NotImplementedLogger::print(
@@ -450,48 +692,84 @@ vector<iHdlStatement*> VerStatementParser::vistContinuous_assign(
 		NotImplementedLogger::print(
 				"VerStatementParser.vistContinuous_assign.delay3", del);
 	}
-	auto lna = ctx->list_of_net_assignments();
-	// list_of_net_assignments
-	//    : net_assignment (',' net_assignment)*
-	//    ;
-	vector<iHdlStatement*> res;
-	for (auto na : lna->net_assignment()) {
-		auto stm = visitNet_assignment(na);
-		res.push_back(stm);
+	auto dc = ctx->delay_control();
+	if (dc) {
+		NotImplementedLogger::print(
+				"VerStatementParser.vistContinuous_assign.delay_control", dc);
 	}
-	res[0]->__doc__ = commentParser.parse(ctx);
-	return res;
+	auto lva = ctx->list_of_variable_assignments();
+	// list_of_variable_assignments: variable_assignment ( COMMA variable_assignment )*;
+	bool first = true;
+	for (auto _va : lva->variable_assignment()) {
+		auto va = visitVariable_assignment(_va);
+		if (first) {
+			va->__doc__ = commentParser.parse(ctx) + va->__doc__;
+			first = false;
+		}
+		va->is_blocking = false;
+		res.push_back(va);
+	}
 }
 
-iHdlStatement* VerStatementParser::visitNet_assignment(
-		sv2017Parser::Net_assignmentContext *ctx) {
-	// net_assignment : net_lvalue '=' expression
-	// ;
-	auto nv = VerExprParser::visitNet_lvalue(ctx->net_lvalue());
-	auto e = VerExprParser::visitExpression(ctx->expression());
-	return new HdlStmAssign(nv, e, true);
-}
-vector<iHdlStatement*>* VerStatementParser::visitStatement__as_block(
-		sv2017Parser::StatementContext *ctx) {
-	auto stm = visitStatement(ctx);
-	if (stm.first) {
-		auto body = new vector<iHdlStatement*>();
-		body->push_back(stm.first);
-		return body;
-	} else if (stm.second) {
-		return stm.second;
-	} else {
-		return new vector<iHdlStatement*>();
-	}
-}
 HdlStmProcess* VerStatementParser::visitInitial_construct(
 		sv2017Parser::Initial_constructContext *ctx) {
-	// initial_construct
-	//    : 'initial' statement
-	//    ;
-	auto _stm = ctx->statement();
-	vector<iHdlStatement*> *body = visitStatement__as_block(_stm);
+	// initial_construct: KW_INITIAL statement_or_null;
+	auto _stm = ctx->statement_or_null();
+	vector<iHdlStatement*> *body = visitStatement_or_null__as_block(_stm);
 	return new HdlStmProcess(nullptr, reinterpret_cast<vector<iHdlObj*>*>(body));
+}
+
+iHdlStatement* VerStatementParser::visitSequence_match_item(
+		sv2017Parser::Sequence_match_itemContext *ctx) {
+	// sequence_match_item:
+	//     operator_assignment
+	//     | expression
+	// ;
+	auto oa = ctx->operator_assignment();
+	if (oa) {
+		NotImplementedLogger::print(
+				"VerExprParser.visitSequence_match_item.operator_assignment",
+				ctx);
+		return iHdlStatement::NOP();
+	}
+	auto _e = ctx->expression();
+	assert(_e);
+	auto e = VerExprParser(commentParser).visitExpression(_e);
+	return iHdlStatement::EXPR(e);
+}
+
+hdlObjects::iHdlStatement* VerStatementParser::visitElaboration_system_task(
+		sv2017Parser::Elaboration_system_taskContext *ctx) {
+	// elaboration_system_task:
+	//     ( KW_DOLAR_FATAL ( LPAREN UNSIGNED_NUMBER ( COMMA ( list_of_arguments )? )? RPAREN )?
+	//      | ( KW_DOLAR_ERROR
+	//          | KW_DOLAR_WARNING
+	//          | KW_DOLAR_INFO
+	//          ) ( LPAREN ( list_of_arguments )? RPAREN )?
+	//     ) SEMI
+	// ;
+	string name;
+	if (ctx->KW_DOLAR_FATAL()) {
+		name = "$fatal";
+	} else if (ctx->KW_DOLAR_ERROR()) {
+		name = "$error";
+	} else if (ctx->KW_DOLAR_WARNING()) {
+		name = "$warning";
+	} else {
+		assert(ctx->KW_DOLAR_INFO());
+		name = "$info";
+	}
+	std::vector<iHdlExpr*> args;
+	auto un = ctx->UNSIGNED_NUMBER();
+	if (un) {
+		args.push_back(VerLiteralParser::visitUNSIGNED_NUMBER(un));
+	}
+	auto la = ctx->list_of_arguments();
+	if (la)
+		VerExprParser(commentParser).visitList_of_arguments(la, args);
+
+	auto e = iHdlExpr::call(iHdlExpr::ID(name), args);
+	return iHdlStatement::EXPR(e);
 }
 
 }

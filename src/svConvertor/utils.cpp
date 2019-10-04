@@ -21,29 +21,16 @@ iHdlExpr* Utils::mkIntT() {
 iHdlExpr* Utils::mkWireT() {
 	return iHdlExpr::ID("wire");
 }
-
-iHdlExpr* Utils::mkWireT(iHdlExpr *range, bool signed_) {
+iHdlExpr* Utils::mkWireT(iHdlExpr *net_type, iHdlExpr *range, bool signed_) {
 	std::vector<iHdlExpr*> operands = { range, iHdlExpr::INT(signed_ ? 1 : 0) };
-	return iHdlExpr::call(mkWireT(), operands);
+	if (net_type == nullptr)
+		net_type = mkWireT();
+	return iHdlExpr::call(net_type, operands);
+}
+iHdlExpr* Utils::mkWireT(iHdlExpr *range, bool signed_) {
+	return mkWireT(nullptr, range, signed_);
 }
 
-bool Utils::is_reg(antlr4::ParserRuleContext *ctx) {
-	auto rt = ctx->getToken(sv2017Lexer::KW_REG, 0);
-	bool reg_ = rt != nullptr;
-	if (reg_ == true) {
-		assert(rt->getText() == "reg");
-	}
-	return reg_;
-}
-
-bool Utils::is_signed(antlr4::ParserRuleContext *ctx) {
-	auto st = ctx->getToken(sv2017Lexer::KW_SIGNED, 0);
-	bool signed_ = st != nullptr;
-	if (signed_ == true) {
-		assert(st->getText() == "signed");
-	}
-	return signed_;
-}
 iHdlExpr* append_expr(iHdlExpr *selected_name,
 		HdlOperatorType operator_to_join_with, iHdlExpr *new_part) {
 	if (selected_name) {

@@ -26,7 +26,7 @@ HdlFunctionDef * VhdlSubProgramParser::visitSubprogram_body(
 	auto vs = VhdlSubProgramDeclarationParser::visitSubprogram_declarative_part(
 			ctx->subprogram_declarative_part());
 	for (auto v : *vs) {
-		f->locals.push_back(v);
+		f->body.push_back(v);
 	}
 	delete vs;
 

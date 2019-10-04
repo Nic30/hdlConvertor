@@ -47,6 +47,7 @@ class ToPy {
 	PyObject *HdlStmBreakCls;
 	PyObject *HdlStmContinueCls;
 	PyObject *HdlStmWaitCls;
+	PyObject *HdlStmBlockCls;
 	PyObject *HdlImportCls;
 	PyObject *HdlComponentInstCls;
 	PyObject *HdlFunctionDefCls;
@@ -72,7 +73,7 @@ class ToPy {
 
 	template<typename OBJ_T>
 	int toPy_arr(PyObject *py_list, const std::vector<OBJ_T> &objs) {
-		for (auto o : objs) {
+		for (OBJ_T o : objs) {
 			auto py_obj = toPy(o);
 			if (py_obj == nullptr) {
 				return -1;

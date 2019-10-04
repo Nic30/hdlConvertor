@@ -14,27 +14,36 @@ public:
 	VerParamDefParser(SVCommentParser &commentParser);
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
-	std::vector<hdlObjects::HdlVariableDef*>* visitParameter_port_list(
-			sv2017Parser::Parameter_port_listContext *ctx);
-	std::vector<hdlObjects::HdlVariableDef*>* visitParameter_port_declaration(
-			sv2017Parser::Parameter_port_declarationContext *ctx);
+	void visitParameter_port_list(sv2017Parser::Parameter_port_listContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
+	void visitParameter_port_declaration(
+			sv2017Parser::Parameter_port_declarationContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
 	/*
 	 * Automatically add type to a parameters defined in parameter list
 	 * */
-	std::vector<hdlObjects::HdlVariableDef*>* visitTyped_list_of_param_assignments(
-			hdlObjects::iHdlExpr *data_type,
+	void visitTyped_list_of_param_assignments(hdlObjects::iHdlExpr *data_type,
 			sv2017Parser::List_of_param_assignmentsContext *lpa,
-			const std::string &doc);
-	std::vector<hdlObjects::HdlVariableDef*>* visitList_of_param_assignments(
-			sv2017Parser::List_of_param_assignmentsContext *ctx);
+			const std::string &doc,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
+	void visitList_of_param_assignments(
+			sv2017Parser::List_of_param_assignmentsContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
+	void visitList_of_type_assignments(
+			sv2017Parser::List_of_type_assignmentsContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
 	hdlObjects::HdlVariableDef* visitParam_assignment(
 			sv2017Parser::Param_assignmentContext *ctx);
-	std::vector<hdlObjects::HdlVariableDef*>* visitParameter_declaration(
-			sv2017Parser::Parameter_declarationContext *ctx);
+	void visitParameter_declaration(
+			sv2017Parser::Parameter_declarationContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
 	hdlObjects::iHdlExpr* visitParam_expression(
 			sv2017Parser::Param_expressionContext *ctx);
 	hdlObjects::iHdlExpr* visitConstant_param_expression(
 			sv2017Parser::Constant_param_expressionContext *ctx);
+	void visitLocal_parameter_declaration(
+			sv2017Parser::Local_parameter_declarationContext *ctx,
+			std::vector<hdlObjects::HdlVariableDef*> &res);
 };
 
 }

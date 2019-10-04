@@ -12,8 +12,14 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
-vector<HdlCompInstance*> ModuleInstanceParser::visitModule_or_interface_or_program_instantiation(
-		sv2017Parser::Module_or_interface_or_program_instantiationContext *ctx) {
+VerModuleInstanceParser::VerModuleInstanceParser(
+		SVCommentParser &_commentParser) :
+		commentParser(_commentParser) {
+}
+
+void VerModuleInstanceParser::visitModule_or_interface_or_program_instantiation(
+		sv2017Parser::Module_or_interface_or_program_instantiationContext *ctx,
+		vector<HdlCompInstance*> & res) {
 	// module_or_interface_or_program_instantiation:
 	//     identifier ( parameter_value_assignment )?
 	//     hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
@@ -29,7 +35,6 @@ vector<HdlCompInstance*> ModuleInstanceParser::visitModule_or_interface_or_progr
 	}
 	auto his = ctx->hierarchical_instance();
 	bool first = true;
-	vector<HdlCompInstance*> res;
 	for (auto hi : his) {
 		HdlCompInstance *c;
 		if (first) {
@@ -40,14 +45,13 @@ vector<HdlCompInstance*> ModuleInstanceParser::visitModule_or_interface_or_progr
 			vector<iHdlExpr*> gm;
 			for (auto e : genericMap)
 				gm.push_back(new iHdlExpr(*e));
-			c = visitHierarchical_instance(mi, iHdlExpr::ID(module_name), gm);
+			c = visitHierarchical_instance(hi, iHdlExpr::ID(module_name), gm);
 		}
 		res.push_back(c);
 	}
-	return res;
 }
 
-vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_value_assignments(
+vector<iHdlExpr*> VerModuleInstanceParser::visitList_of_parameter_value_assignments(
 		sv2017Parser::List_of_parameter_value_assignmentsContext *ctx) {
 	// list_of_parameter_value_assignments:
 	//     param_expression ( COMMA param_expression )*
@@ -60,9 +64,10 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_value_assignments
 
 	vector<iHdlExpr*> pcs;
 	auto pes = ctx->param_expression();
+	VerParamDefParser pp(commentParser);
 	if (pes.size()) {
 		for (auto pe : pes) {
-			auto e = VerParamDefParser::visitParam_expression(pe);
+			auto e = pp.visitParam_expression(pe);
 			pcs.push_back(e);
 		}
 	} else {
@@ -73,7 +78,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_value_assignments
 			iHdlExpr *v;
 			auto e = pa->param_expression();
 			if (e) {
-				v = VerParamDefParser::visitParam_expression(e);
+				v = pp.visitParam_expression(e);
 			} else {
 				v = iHdlExpr::null();
 			}
@@ -83,7 +88,7 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_parameter_value_assignments
 	return pcs;
 }
 
-HdlCompInstance* ModuleInstanceParser::visitHierarchical_instance(
+HdlCompInstance* VerModuleInstanceParser::visitHierarchical_instance(
 		sv2017Parser::Hierarchical_instanceContext *ctx, iHdlExpr *module_id,
 		vector<iHdlExpr*> genericMap) {
 	// @note genericMap became the owner of all Expr instances in the vector
@@ -93,10 +98,8 @@ HdlCompInstance* ModuleInstanceParser::visitHierarchical_instance(
 	// name_of_instance: identifier ( unpacked_dimension )*;
 
 	auto name = VerExprParser::visitIdentifier(noi->identifier());
-	for (auto _ud : noi->unpacked_dimension()) {
-		auto ud = VerTypeParser::visitUnpacked_dimension(_ud);
-		name = new iHdlExpr(name, HdlOperatorType::INDEX, ud);
-	}
+	auto uds = noi->unpacked_dimension();
+	name = VerTypeParser(commentParser).applyUnpacked_dimension(name, uds);
 	vector<iHdlExpr*> portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
 	auto c = new HdlCompInstance(name, module_id);
@@ -105,7 +108,7 @@ HdlCompInstance* ModuleInstanceParser::visitHierarchical_instance(
 	return c;
 }
 
-vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
+vector<iHdlExpr*> VerModuleInstanceParser::visitList_of_port_connections(
 		sv2017Parser::List_of_port_connectionsContext *ctx) {
 	// list_of_port_connections
 	//    : ordered_port_connection (',' ordered_port_connection)*
@@ -114,20 +117,18 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 	//
 	vector<iHdlExpr*> pcs;
 	auto opc = ctx->ordered_port_connection();
+	VerExprParser ep(commentParser);
 	if (opc.size()) {
 		for (auto pc : opc) {
-			// ordered_port_connection
-			//    : attribute_instance* (expression)?
-			//    ;
-			//
+			// ordered_port_connection: ( attribute_instance )* ( expression )?;
 			if (pc->attribute_instance().size())
 				NotImplementedLogger::print(
-						"ModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance",
+						"VerModuleInstanceParser.visitList_of_port_connections.ordered_port_connection attribute_instance",
 						pc);
 			auto _e = pc->expression();
 			iHdlExpr *e;
 			if (_e) {
-				e = VerExprParser::visitExpression(_e);
+				e = ep.visitExpression(_e);
 			} else {
 				e = iHdlExpr::null();
 			}
@@ -136,20 +137,29 @@ vector<iHdlExpr*> ModuleInstanceParser::visitList_of_port_connections(
 	} else {
 		auto npc = ctx->named_port_connection();
 		for (auto pc : npc) {
+			//
+			// named_port_connection:
+			//  ( attribute_instance )* DOT ( MUL
+			//                                | identifier ( LPAREN ( expression )? RPAREN )?
+			//                               );
 			// named_port_connection
 			//    : attribute_instance* '.' identifier '(' (expression)? ')'
 			//    ;
 			// port_identifier : identifier;
 			if (pc->attribute_instance().size())
 				NotImplementedLogger::print(
-						"ModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance",
+						"VerModuleInstanceParser.visitList_of_port_connections.named_port_connection attribute_instance",
 						pc);
-
-			iHdlExpr *k = VerExprParser::visitIdentifier(pc->identifier());
+			auto _id = pc->identifier();
+			iHdlExpr *k;
+			if (_id)
+				k = VerExprParser::visitIdentifier(_id);
+			else
+				k = iHdlExpr::all();
 			iHdlExpr *v;
 			auto e = pc->expression();
 			if (e) {
-				v = VerExprParser::visitExpression(e);
+				v = ep.visitExpression(e);
 			} else {
 				v = iHdlExpr::null();
 			}
