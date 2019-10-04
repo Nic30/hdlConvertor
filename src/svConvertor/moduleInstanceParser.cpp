@@ -17,10 +17,10 @@ VerModuleInstanceParser::VerModuleInstanceParser(
 		commentParser(_commentParser) {
 }
 
-void VerModuleInstanceParser::visitModule_or_interface_or_program_instantiation(
-		sv2017Parser::Module_or_interface_or_program_instantiationContext *ctx,
+void VerModuleInstanceParser::visitModule_or_interface_or_program_or_udp_instantiation(
+		sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,
 		vector<HdlCompInstance*> & res) {
-	// module_or_interface_or_program_instantiation:
+	// module_or_interface_or_program_or_udp_instantiation:
 	//     identifier ( parameter_value_assignment )?
 	//     hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
 

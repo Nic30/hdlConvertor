@@ -437,7 +437,7 @@ interface_item:
       | let_declaration
       | genvar_declaration
       | clocking_declaration
-      | module_or_interface_or_program_instantiation
+      | module_or_interface_or_program_or_udp_instantiation
       | assertion_item
       | bind_directive
       | continuous_assign
@@ -1304,7 +1304,7 @@ primary:
     | streaming_concatenation                              #PrimaryStreaming_concatenation
     | any_system_tf_identifier ( LPAREN data_type COMMA list_of_arguments
          ( COMMA clocking_event )? RPAREN
-         | LPAREN list_of_arguments COMMA clocking_event  RPAREN
+         | LPAREN list_of_arguments ( COMMA clocking_event )?  RPAREN
          )?                                       #PrimaryTfCall
     | ( KW_STD DOUBLE_COLON )?  randomize_call    #PrimaryRandomize
     | primary DOT randomize_call                  #PrimaryRandomize2
@@ -2117,10 +2117,10 @@ inout_terminal: net_lvalue;
 input_terminal: expression;
 output_terminal: net_lvalue;
 udp_instantiation:
- identifier ( drive_strength )? ( delay2 )? udp_instance ( COMMA udp_instance )* SEMI;
+ identifier ( drive_strength delay2 | drive_strength | delay2) udp_instance ( COMMA udp_instance )* SEMI;
 udp_instance:
  ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
-module_or_interface_or_program_instantiation:
+module_or_interface_or_program_or_udp_instantiation:
     identifier ( parameter_value_assignment )?
     hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
 hierarchical_instance: name_of_instance LPAREN list_of_port_connections RPAREN;
@@ -2140,7 +2140,7 @@ bind_directive:
 bind_target_instance: hierarchical_identifier ( bit_select )*;
 bind_target_instance_list: bind_target_instance ( COMMA bind_target_instance )*;
 bind_instantiation:
- module_or_interface_or_program_instantiation
+ module_or_interface_or_program_or_udp_instantiation
   | checker_instantiation
 ;
 config_declaration:
@@ -2205,7 +2205,7 @@ generate_item:
         ( parameter_override
           | gate_instantiation
           | udp_instantiation
-          | module_or_interface_or_program_instantiation
+          | module_or_interface_or_program_or_udp_instantiation
           | ( default_clocking_or_dissable_construct 
               | local_parameter_declaration 
               | parameter_declaration )? SEMI
@@ -2261,7 +2261,7 @@ module_item_item:
     parameter_override
     | gate_instantiation
     | udp_instantiation
-    | module_or_interface_or_program_instantiation
+    | module_or_interface_or_program_or_udp_instantiation
     | ( default_clocking_or_dissable_construct
         | local_parameter_declaration
         | parameter_declaration )? SEMI

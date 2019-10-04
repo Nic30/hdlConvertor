@@ -163,7 +163,7 @@ void VerModuleParser::visitModule_item_item(
 	//     parameter_override
 	//     | gate_instantiation
 	//     | udp_instantiation
-	//     | module_or_interface_or_program_instantiation
+	//     | module_or_interface_or_program_or_udp_instantiation
 	//     | ( default_clocking_or_dissable_construct
 	//         | local_parameter_declaration
 	//         | parameter_declaration )? SEMI
@@ -225,12 +225,12 @@ void VerModuleParser::visitModule_item_item(
 		}
 	}
 	{
-		auto o = ctx->module_or_interface_or_program_instantiation();
+		auto o = ctx->module_or_interface_or_program_or_udp_instantiation();
 		if (o) {
 
 			auto &res_comp = *reinterpret_cast<vector<HdlCompInstance*>*>(&res);
 			VerModuleInstanceParser mp(commentParser);
-			mp.visitModule_or_interface_or_program_instantiation(o, res_comp);
+			mp.visitModule_or_interface_or_program_or_udp_instantiation(o, res_comp);
 			return;
 		}
 	}

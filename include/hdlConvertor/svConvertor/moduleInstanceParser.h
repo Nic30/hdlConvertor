@@ -15,8 +15,8 @@ public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	VerModuleInstanceParser(SVCommentParser &commentParser);
 
-	void visitModule_or_interface_or_program_instantiation(
-			sv2017Parser::Module_or_interface_or_program_instantiationContext *ctx,
+	void visitModule_or_interface_or_program_or_udp_instantiation(
+			sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,
 			std::vector<hdlObjects::HdlCompInstance*> &res);
 	std::vector<hdlObjects::iHdlExpr*> visitList_of_parameter_value_assignments(
 			sv2017Parser::List_of_parameter_value_assignmentsContext *ctx);
