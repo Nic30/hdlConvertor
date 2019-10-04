@@ -1,6 +1,6 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, \
     UnIndent, is_str
-from hdlConvertor.hdlAst import HdlDirection, HdlBuildinFn, HdlName, HdlIntValue, \
+from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn, HdlName, HdlIntValue, \
     HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf, \
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, HdlModuleDef, \
@@ -19,31 +19,31 @@ class ToVhdl():
     }
 
     GENERIC_BIN_OPS = {
-        HdlBuildinFn.AND: "AND",
-        HdlBuildinFn.LOG_AND: "AND",
-        HdlBuildinFn.OR: "OR",
-        HdlBuildinFn.LOG_OR: "OR",
-        HdlBuildinFn.SUB: "-",
-        HdlBuildinFn.ADD: "+",
-        HdlBuildinFn.MUL: "*",
-        HdlBuildinFn.DIV: "/",
-        HdlBuildinFn.MOD: "MOD",
-        HdlBuildinFn.NAND: "NAND",
-        HdlBuildinFn.NOR: "NOR",
-        HdlBuildinFn.XOR: "XOR",
-        HdlBuildinFn.XNOR: "XNOR",
-        HdlBuildinFn.EQ: '=',
-        HdlBuildinFn.NEQ: "/=",
-        HdlBuildinFn.LT: "<",
-        HdlBuildinFn.LE: "<=",
-        HdlBuildinFn.GT: ">",
-        HdlBuildinFn.GE: ">=",
-        HdlBuildinFn.SLL: "SLL",
-        HdlBuildinFn.SRL: "SRL",
-        HdlBuildinFn.TO: "TO",
-        HdlBuildinFn.DOWNTO: "DOWNTO",
-        HdlBuildinFn.ARROW: "=>",
-        HdlBuildinFn.MAP_ASSOCIATION: "=>",
+        HdlBuiltinFn.AND: "AND",
+        HdlBuiltinFn.LOG_AND: "AND",
+        HdlBuiltinFn.OR: "OR",
+        HdlBuiltinFn.LOG_OR: "OR",
+        HdlBuiltinFn.SUB: "-",
+        HdlBuiltinFn.ADD: "+",
+        HdlBuiltinFn.MUL: "*",
+        HdlBuiltinFn.DIV: "/",
+        HdlBuiltinFn.MOD: "MOD",
+        HdlBuiltinFn.NAND: "NAND",
+        HdlBuiltinFn.NOR: "NOR",
+        HdlBuiltinFn.XOR: "XOR",
+        HdlBuiltinFn.XNOR: "XNOR",
+        HdlBuiltinFn.EQ: '=',
+        HdlBuiltinFn.NEQ: "/=",
+        HdlBuiltinFn.LT: "<",
+        HdlBuiltinFn.LE: "<=",
+        HdlBuiltinFn.GT: ">",
+        HdlBuiltinFn.GE: ">=",
+        HdlBuiltinFn.SLL: "SLL",
+        HdlBuiltinFn.SRL: "SRL",
+        HdlBuiltinFn.TO: "TO",
+        HdlBuiltinFn.DOWNTO: "DOWNTO",
+        HdlBuiltinFn.ARROW: "=>",
+        HdlBuiltinFn.MAP_ASSOCIATION: "=>",
     }
 
     def __init__(self, out_stream):
@@ -217,36 +217,36 @@ class ToVhdl():
                 pe(o.ops[1])
                 w(")")
                 return
-            elif op == HdlBuildinFn.NOT:
+            elif op == HdlBuiltinFn.NOT:
                 w("!")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.RISING:
+            elif op == HdlBuiltinFn.RISING:
                 w("RISIG_EDGE(")
                 pe(o.ops[0])
                 w(")")
                 return
-            elif op == HdlBuildinFn.FALLING:
+            elif op == HdlBuiltinFn.FALLING:
                 w("FALLING_EDGE(")
                 pe(o.ops[0])
                 w(")")
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.CONCAT:
+            elif op == HdlBuiltinFn.CONCAT:
                 w("{")
                 pe(o.ops[0])
                 w(", ")
                 pe(o.ops[1])
                 w("}")
                 return
-            elif op == HdlBuildinFn.INDEX or op == HdlBuildinFn.CALL:
+            elif op == HdlBuiltinFn.INDEX or op == HdlBuiltinFn.CALL:
                 pe(o.ops[0])
                 w("(")
                 for isLast, a in iter_with_last_flag(o.ops[1:]):
@@ -255,12 +255,12 @@ class ToVhdl():
                         w(", ")
                 w(")")
                 return
-            elif op == HdlBuildinFn.DOT:
+            elif op == HdlBuiltinFn.DOT:
                 pe(o.ops[0])
                 w(".")
                 pe(o.ops[1])
                 return
-            elif op == HdlBuildinFn.TERNARY:
+            elif op == HdlBuiltinFn.TERNARY:
                 pe(o.ops[0])
                 w(" ? ")
                 o0, o1 = o.ops[1:]
@@ -268,7 +268,7 @@ class ToVhdl():
                 w(" : ")
                 pe(o1)
                 return
-            elif op == HdlBuildinFn.APOSTROPHE:
+            elif op == HdlBuiltinFn.APOSTROPHE:
                 pe(o.ops[0])
                 w("'")
                 args = o.ops[1]
@@ -516,7 +516,7 @@ class ToVhdl():
         w = self.out.write
         w("WAIT")
         for e in o.val:
-            if isinstance(e, HdlCall) and e.fn == HdlBuildinFn.MUL:
+            if isinstance(e, HdlCall) and e.fn == HdlBuiltinFn.MUL:
                 w(" FOR ")
                 self.print_expr(e.ops[0])
                 w(" ")

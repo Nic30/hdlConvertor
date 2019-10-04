@@ -64,7 +64,7 @@ class HdlTypeAuto(object):
         raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
 
 
-class HdlBuildinFn(Enum):
+class HdlBuiltinFn(Enum):
     """
     The build in functions and operators in HDL languages
     """
@@ -141,7 +141,7 @@ class HdlCall(object):
     __slots__ = ["fn", "ops"]
 
     def __init__(self):
-        self.fn = None  # type: Union[HdlBuildinFn, iHdlExpr]
+        self.fn = None  # type: Union[HdlBuiltinFn, iHdlExpr]
         self.ops = []  # type: List[iHdlExpr]
     
     def __eq__(self, other):

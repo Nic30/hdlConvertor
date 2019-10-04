@@ -9,7 +9,7 @@ HdlTypeFloat = float
 HdlTypeEnum = Enum
 
 
-# arrays are described as HdlCall(HdlBuildinFn.INDEX, (type, array size))
+# arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))
 class HdlTypeBitsDef(iHdlObjWithName):
     """
     The type which represents bit or bit vector in HDL (std_logic/_vector
