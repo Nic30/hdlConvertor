@@ -10,25 +10,24 @@ module cam #(
     parameter  DEPTH = (1 << ADDR_WIDTH)
 ) (
     //------------Input Ports--------------
-    input clk,
-    input cam_enable,
-    input [(DEPTH - 1):0] cam_data_in,
+    input wire clk,
+    input wire cam_enable,
+    input wire[(DEPTH - 1):0] cam_data_in,
     //----------Output Ports--------------
-    output cam_hit_out,
-    output [(ADDR_WIDTH - 1):0] cam_addr_out
-);
+    output reg cam_hit_out,
     //------------Internal Variables--------
-    reg [(ADDR_WIDTH - 1):0]  cam_addr_out;
-    reg cam_hit_out;
-    reg [(ADDR_WIDTH - 1):0]  cam_addr_combo;
+    output reg[(ADDR_WIDTH - 1):0] cam_addr_out
+);
+    reg[(ADDR_WIDTH - 1):0] cam_addr_combo;
     reg cam_hit_combo;
     reg found_match;
-    reg integer i;
+    integer i;
+    //-------------Code Starts Here-------
     always @(cam_data_in) begin
         cam_addr_combo = {(ADDR_WIDTH){1'b0}};
         found_match = 1'b0;
         cam_hit_combo = 1'b0;
-        for (i = 0; (i < DEPTH); i = (i + 1))
+        for (i = 0; (i < DEPTH); i = i + 1)
             if ((cam_data_in[i] && !found_match)) begin
                 found_match = 1'b1;
                 cam_hit_combo = 1'b1;
@@ -40,6 +39,7 @@ module cam #(
             end
     end
 
+    // Register the outputs
     always @(posedge clk)
         if (cam_enable) begin
             cam_hit_out <= cam_hit_combo;

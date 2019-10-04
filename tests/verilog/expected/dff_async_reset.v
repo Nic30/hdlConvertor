@@ -7,14 +7,14 @@
 //-----------------------------------------------------
 module dff_async_reset (
     //-----------Input Ports---------------
-    input data,
-    input clk,
-    input reset,
+    input wire data,
+    input wire clk,
+    input wire reset,
     //-----------Output Ports---------------
-    output q
-);
     //------------Internal Variables--------
-    reg q;
+    output reg q
+);
+    //-------------Code Starts Here---------
     always @(posedge clk, negedge reset)
         if (~reset)
             q <= 1'b0;

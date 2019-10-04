@@ -6,11 +6,10 @@
 // Coder       : Deepak Kumar Tala
 //-----------------------------------------------------
 module decoder_using_case (
-    input [3:0] binary_in,
-    output [15:0] decoder_out,
-    input enable
+    input wire[3:0] binary_in,
+    output reg[15:0] decoder_out,
+    input wire enable
 );
-    reg [15:0]  decoder_out;
     always @(enable, binary_in) begin
         decoder_out = 0;
         if (enable)

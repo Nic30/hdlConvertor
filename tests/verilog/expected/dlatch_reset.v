@@ -7,14 +7,14 @@
 //-----------------------------------------------------
 module dlatch_reset (
     //-----------Input Ports---------------
-    input data,
-    input en,
-    input reset,
+    input wire data,
+    input wire en,
+    input wire reset,
     //-----------Output Ports---------------
-    output q
-);
     //------------Internal Variables--------
-    reg q;
+    output reg q
+);
+    //-------------Code Starts Here---------
     always @(en, reset, data)
         if (~reset)
             q <= 1'b0;

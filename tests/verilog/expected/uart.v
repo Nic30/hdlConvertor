@@ -21,6 +21,7 @@ module uart (
     input wire rx_in,
     output reg rx_empty
 );
+    // Internal Variables (@note: interference with ports)
     reg[7:0] tx_reg;
     reg tx_over_run;
     reg[3:0] tx_cnt;
@@ -32,6 +33,7 @@ module uart (
     reg rx_d1;
     reg rx_d2;
     reg rx_busy;
+    // UART RX Logic
     always @(posedge rxclk, posedge reset)
         if (reset) begin
             rx_reg <= 0;
@@ -92,6 +94,7 @@ module uart (
                 rx_busy <= 0;
         end
 
+    // UART TX Logic
     always @(posedge txclk, posedge reset)
         if (reset) begin
             tx_reg <= 0;
