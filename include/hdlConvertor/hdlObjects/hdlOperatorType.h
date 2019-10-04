@@ -65,6 +65,19 @@ enum HdlOperatorType {
 	DECR_PRE,
 	INCR_POST,
 	DECR_POST,
+    ASSIGN,
+    PLUS_ASSIGN,
+    MINUS_ASSIGN,
+    MUL_ASSIGN,
+    DIV_ASSIGN,
+    MOD_ASSIGN,
+    AND_ASSIGN,
+    OR_ASSIGN,
+    XOR_ASSIGN,
+    SHIFT_LEFT_ASSIGN,
+    SHIFT_RIGHT_ASSIGN,
+    ARITH_SHIFT_LEFT_ASSIGN,
+    ARITH_SHIFT_RIGHT_ASSIGN,
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt);

@@ -26,18 +26,18 @@ description:
 /******************************************** token groups ************************************************************/
 assignment_operator:
    ASSIGN
-   | PLUS_EQ
-   | MINUS_EQ
-   | MUL_EQ
-   | DIV_EQ
-   | MOD_EQ
-   | AND_EQ
-   | OR_EQ
-   | XOR_EQ
-   | SHIFT_LEFT_EQ
-   | SHIFT_RIGHT_EQ
-   | ARITH_SHIFT_LEFT_EQ
-   | ARITH_SHIFT_RIGHT_EQ
+   | PLUS_ASSIGN
+   | MINUS_ASSIGN
+   | MUL_ASSIGN
+   | DIV_ASSIGN
+   | MOD_ASSIGN
+   | AND_ASSIGN
+   | OR_ASSIGN
+   | XOR_ASSIGN
+   | SHIFT_LEFT_ASSIGN
+   | SHIFT_RIGHT_ASSIGN
+   | ARITH_SHIFT_LEFT_ASSIGN
+   | ARITH_SHIFT_RIGHT_ASSIGN
 ;
 edge_identifier:
    KW_POSEDGE

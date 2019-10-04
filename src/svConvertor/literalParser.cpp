@@ -313,6 +313,57 @@ HdlOperatorType VerLiteralParser::visitOperator_impl(
 		return HdlOperatorType::ARROW;
 	}
 }
+
+HdlOperatorType VerLiteralParser::visitAssignment_operator(
+		sv2017Parser::Assignment_operatorContext *ctx) {
+	// assignment_operator:
+	//    ASSIGN
+	//    | PLUS_ASSIGN
+	//    | MINUS_ASSIGN
+	//    | MUL_ASSIGN
+	//    | DIV_ASSIGN
+	//    | MOD_ASSIGN
+	//    | AND_ASSIGN
+	//    | OR_ASSIGN
+	//    | XOR_ASSIGN
+	//    | SHIFT_LEFT_ASSIGN
+	//    | SHIFT_RIGHT_ASSIGN
+	//    | ARITH_SHIFT_LEFT_ASSIGN
+	//    | ARITH_SHIFT_RIGHT_ASSIGN
+	// ;
+	switch (ctx->start->getType()) {
+	case sv2017Parser::ASSIGN:
+		return HdlOperatorType::ASSIGN;
+	case sv2017Parser::PLUS_ASSIGN:
+		return HdlOperatorType::PLUS_ASSIGN;
+	case sv2017Parser::MINUS_ASSIGN:
+		return HdlOperatorType::MINUS_ASSIGN;
+	case sv2017Parser::MUL_ASSIGN:
+		return HdlOperatorType::MUL_ASSIGN;
+	case sv2017Parser::DIV_ASSIGN:
+		return HdlOperatorType::DIV_ASSIGN;
+	case sv2017Parser::MOD_ASSIGN:
+		return HdlOperatorType::MOD_ASSIGN;
+	case sv2017Parser::AND_ASSIGN:
+		return HdlOperatorType::AND_ASSIGN;
+	case sv2017Parser::OR_ASSIGN:
+		return HdlOperatorType::OR_ASSIGN;
+	case sv2017Parser::XOR_ASSIGN:
+		return HdlOperatorType::XOR_ASSIGN;
+	case sv2017Parser::SHIFT_LEFT_ASSIGN:
+		return HdlOperatorType::SHIFT_LEFT_ASSIGN;
+	case sv2017Parser::SHIFT_RIGHT_ASSIGN:
+		return HdlOperatorType::SHIFT_RIGHT_ASSIGN;
+	case sv2017Parser::ARITH_SHIFT_LEFT_ASSIGN:
+		return HdlOperatorType::ARITH_SHIFT_LEFT_ASSIGN;
+	case sv2017Parser::ARITH_SHIFT_RIGHT_ASSIGN:
+		return HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN;
+	default:
+		assert(false);
+		return HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN;
+	};
+}
+
 iHdlExpr* VerLiteralParser::visitPrimary_literal(
 		sv2017Parser::Primary_literalContext *ctx) {
 	// primary_literal:

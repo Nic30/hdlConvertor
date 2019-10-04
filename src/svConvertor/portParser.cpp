@@ -88,19 +88,24 @@ vector<HdlVariableDef*>* VerPortParser::visitList_of_port_declarations(
 			ports->push_back((*pds)[i]);
 		delete pds;
 	}
+	pair<HdlVariableDef*, iHdlExpr*> prev = { nullptr, nullptr };
 	for (auto pdi : ctx->list_of_port_declarations_ansi_item()) {
 		// list_of_port_declarations_ansi_item:
 		// 	( attribute_instance )* ansi_port_declaration
 		// ;
 		VerAttributeParser::visitAttribute_instance(pdi->attribute_instance());
 		auto apd = pdi->ansi_port_declaration();
-		auto pd = visitAnsi_port_declaration(apd);
-		ports->push_back(pd);
+		auto pd = visitAnsi_port_declaration(apd, prev.first, prev.second);
+		ports->push_back(pd.first);
+		prev = pd;
 	}
 	return ports;
 }
-HdlVariableDef* VerPortParser::visitAnsi_port_declaration(
-		sv2017Parser::Ansi_port_declarationContext *ctx) {
+
+pair<HdlVariableDef*, iHdlExpr*> VerPortParser::visitAnsi_port_declaration(
+		sv2017Parser::Ansi_port_declarationContext *ctx,
+		hdlObjects::HdlVariableDef *prev_var,
+		hdlObjects::iHdlExpr *prev_var_base_t) {
 	// ansi_port_declaration:
 	//   ( port_direction ( net_or_var_data_type )? // net_port_header
 	//     | net_or_var_data_type                   // net_port_header or variable_port_header
@@ -110,12 +115,14 @@ HdlVariableDef* VerPortParser::visitAnsi_port_declaration(
 	//   | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
 	// ;
 	HdlDirection d = HdlDirection::DIR_UNKNOWN;
+	if (prev_var)
+		d = prev_var->direction;
 	auto pd = ctx->port_direction();
 	if (pd) {
 		d = visitPort_direction(pd);
 	}
 	iHdlExpr *t = nullptr;
-	bool is_latched = true;
+	bool is_latched = false;
 	auto nvdt = ctx->net_or_var_data_type();
 	auto _pid = ctx->port_identifier()->identifier();
 	auto name = VerExprParser::getIdentifierStr(_pid);
@@ -138,19 +145,26 @@ HdlVariableDef* VerPortParser::visitAnsi_port_declaration(
 		iHdlExpr *def_val = nullptr;
 		if (_e)
 			def_val = ep.visitExpression(_e);
-		return new HdlVariableDef(name, iHdlExpr::AUTO_T(), def_val, d,
+		auto p = new HdlVariableDef(name, iHdlExpr::AUTO_T(), def_val, d,
 				is_latched);
+		return {p, nullptr};
 	}
 
-	if (!t)
-		t = Utils::mkWireT();
+	if (!t) {
+		if (prev_var_base_t)
+			t = new iHdlExpr(*prev_var_base_t);
+		else
+			t = Utils::mkWireT();
+	}
 	auto vds = ctx->variable_dimension();
+	auto base_t = t;
 	t = tp.applyVariable_dimension(t, vds);
 	iHdlExpr *def_val = nullptr;
 	auto ce = ctx->constant_expression();
 	if (ce)
 		def_val = ep.visitConstant_expression(ce);
-	return new HdlVariableDef(name, t, def_val, d, is_latched);
+	auto p = new HdlVariableDef(name, t, def_val, d, is_latched);
+	return {p, base_t};
 }
 void VerPortParser::visitNonansi_port_declaration(
 		sv2017Parser::Nonansi_port_declarationContext *ctx,

@@ -66,6 +66,8 @@ public:
 			sv2017Parser::Cond_predicateContext *ctx);
 	void visitList_of_arguments(sv2017Parser::List_of_argumentsContext *ctx,
 			std::vector<hdlObjects::iHdlExpr*> &args);
+	hdlObjects::iHdlExpr* visitOperator_assignment(
+			sv2017Parser::Operator_assignmentContext *ctx);
 };
 
 }

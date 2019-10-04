@@ -5,7 +5,7 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-static const char* const opTypeToStr[HdlOperatorType::DECR_POST + 1] = {
+static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN + 1] = {
 		"RANGE",
 		"REVERSE_RANGE",
 		"ACROSS",
@@ -67,10 +67,23 @@ static const char* const opTypeToStr[HdlOperatorType::DECR_POST + 1] = {
 		"DECR_PRE",
 		"INCR_POST",
 		"DECR_POST",
+	    "ASSIGN",
+	    "PLUS_ASSIGN",
+	    "MINUS_ASSIGN",
+	    "MUL_ASSIGN",
+	    "DIV_ASSIGN",
+	    "MOD_ASSIGN",
+	    "AND_ASSIGN",
+	    "OR_ASSIGN",
+	    "XOR_ASSIGN",
+	    "SHIFT_LEFT_ASSIGN",
+	    "SHIFT_RIGHT_ASSIGN",
+	    "ARITH_SHIFT_LEFT_ASSIGN",
+	    "ARITH_SHIFT_RIGHT_ASSIGN",
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
-	if (opt > HdlOperatorType::DECR_POST)
+	if (opt > HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN)
 		throw std::runtime_error("Invalid operator type");
 	return opTypeToStr[opt];
 }

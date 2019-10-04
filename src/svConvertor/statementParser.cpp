@@ -261,10 +261,8 @@ iHdlStatement* VerStatementParser::visitBlocking_assignment(
 		} else {
 			auto oa = ctx->operator_assignment();
 			assert(oa);
-			NotImplementedLogger::print(
-					"VerStatementParser.visitBlocking_assignment.operator_assignment",
-					oa);
-			assig = iHdlStatement::NOP();
+			auto ae = ep.visitOperator_assignment(oa);
+			assig = iHdlStatement::EXPR(ae);
 		}
 	}
 	assig->__doc__ = commentParser.parse(ctx);

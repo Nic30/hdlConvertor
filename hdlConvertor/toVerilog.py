@@ -90,6 +90,21 @@ class ToVerilog():
         HdlBuiltinFn.SLL: "<<",
         HdlBuiltinFn.SRL: ">>",
     }
+    ASSIGN_OPS = {
+         HdlBuiltinFn.ASSIGN: '=',
+         HdlBuiltinFn.PLUS_ASSIGN: '+=',
+         HdlBuiltinFn.MINUS_ASSIGN: '-=',
+         HdlBuiltinFn.MUL_ASSIGN: '*=',
+         HdlBuiltinFn.DIV_ASSIGN: '/=',
+         HdlBuiltinFn.MOD_ASSIGN: '%=',
+         HdlBuiltinFn.AND_ASSIGN: '&=',
+         HdlBuiltinFn.OR_ASSIGN: '|=',
+         HdlBuiltinFn.XOR_ASSIGN: '^=',
+         HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
+         HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
+         HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
+         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
+    }
 
     def __init__(self, out_stream):
         self.out = AutoIndentingStream(out_stream, self.INDENT_STEP)
@@ -232,6 +247,14 @@ class ToVerilog():
                     w(" ")
                     pe(o.ops[1])
                     w(")")
+                return
+            symbol = self.ASSIGN_OPS.get(op, None)
+            if symbol is not None:
+                pe(o.ops[0])
+                w(" ")
+                w(symbol)
+                w(" ")
+                pe(o.ops[1])
                 return
             if op == HdlBuiltinFn.DOWNTO:
                 pe(o.ops[0])

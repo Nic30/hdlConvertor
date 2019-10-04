@@ -42,6 +42,8 @@ public:
 			sv2017Parser::Operator_xorContext *ctx);
 	static hdlObjects::HdlOperatorType visitOperator_impl(
 			sv2017Parser::Operator_implContext *ctx);
+	static hdlObjects::HdlOperatorType visitAssignment_operator(
+			sv2017Parser::Assignment_operatorContext *ctx);
 	static hdlObjects::iHdlExpr* visitPrimary_literal(
 			sv2017Parser::Primary_literalContext *ctx);
 };

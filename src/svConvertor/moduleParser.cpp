@@ -511,6 +511,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	//     | timeunits_declaration
 	//     | nonansi_port_declaration SEMI
 	// ;
+	auto doc = commentParser.parse(ctx);
 	auto gr = ctx->generate_region();
 	if (gr) {
 		NotImplementedLogger::print("ModuleParser.module_item.generate_region",
@@ -521,7 +522,17 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	if (mii) {
 		auto ai = ctx->attribute_instance();
 		VerAttributeParser::visitAttribute_instance(ai);
+		auto prev_size = objs.size();
 		visitModule_item_item(mii, objs);
+		if (objs.size() != prev_size) {
+			iHdlObj * _last = objs[prev_size];
+			auto wd = dynamic_cast<WithDoc*>(_last);
+			wd->__doc__ = doc + wd->__doc__;
+			auto wp = dynamic_cast<WithPos*>(_last);
+			if (wp) {
+				wp->position.update_from_elem(ctx);
+			}
+		}
 		return;
 	}
 	auto sb = ctx->specify_block();
@@ -557,11 +568,12 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	auto npd = ctx->nonansi_port_declaration();
 	assert(npd);
 	// update port in module header to an ansi port
-	string doc = commentParser.parse(ctx);
 	bool first = true;
 	VerPortParser pp(commentParser, non_ANSI_port_groups);
 	std::vector<HdlVariableDef*> portsDeclr;
 	pp.visitNonansi_port_declaration(npd, portsDeclr);
+
+	// convert non-ansi ports to ansi ports
 	for (auto declr : portsDeclr) {
 		HdlVariableDef *p = ent->getPortByName(declr->name);
 		if (p) {

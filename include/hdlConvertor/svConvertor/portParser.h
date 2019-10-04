@@ -26,8 +26,15 @@ public:
 			sv2017Parser::Nonansi_port__exprContext *ctx);
 	std::vector<hdlObjects::HdlVariableDef*>* visitList_of_port_declarations(
 			sv2017Parser::List_of_port_declarationsContext *ctx);
-	hdlObjects::HdlVariableDef* visitAnsi_port_declaration(
-			sv2017Parser::Ansi_port_declarationContext *ctx);
+	/*
+	 * @return <variable def, base type of variable>
+	 * @note the ansi port can have chain of ports without direction and base type specified
+	 * 		in this case type/dir of previous port should be used
+	 * */
+	std::pair<hdlObjects::HdlVariableDef*, hdlObjects::iHdlExpr*> visitAnsi_port_declaration(
+			sv2017Parser::Ansi_port_declarationContext *ctx,
+			hdlObjects::HdlVariableDef* prev_var,
+			hdlObjects::iHdlExpr* prev_var_base_t);
 	void visitNonansi_port_declaration(
 			sv2017Parser::Nonansi_port_declarationContext *ctx,
 			std::vector<hdlObjects::HdlVariableDef*> &res);

@@ -34,33 +34,34 @@ module fifo_rx #(
     parameter integer DWIDTH = 9,
     parameter integer AWIDTH = 6
 ) (
-    input clock,
-    input reset,
-    input wr_en,
-    input rd_en,
-    input [(DWIDTH - 1):0] data_in,
+    input wire clock,
+    input wire reset,
+    input wire wr_en,
+    input wire rd_en,
+    input wire[(DWIDTH - 1):0] data_in,
     output reg f_full,
     output reg f_empty,
     output reg open_slot_fct,
     output reg overflow_credit_error,
-    output [(DWIDTH - 1):0] data_out,
-    output reg [(AWIDTH - 1):0] counter
+    output wire[(DWIDTH - 1):0] data_out,
+    output reg[(AWIDTH - 1):0] counter
 );
-    reg [(AWIDTH - 1):0]  wr_ptr;
-    reg [(AWIDTH - 1):0]  rd_ptr;
-    reg [(AWIDTH - 1):0]  credit_counter;
-    reg [1:0]  state_data_write;
-    reg [1:0]  next_state_data_write;
-    reg [1:0]  state_data_read;
-    reg [1:0]  next_state_data_read;
-    reg [1:0]  state_open_slot;
-    reg [1:0]  next_state_open_slot;
-    reg [10:0]  counter_wait;
+    reg[(AWIDTH - 1):0] wr_ptr;
+    reg[(AWIDTH - 1):0] rd_ptr;
+    reg[(AWIDTH - 1):0] credit_counter;
+    reg[1:0] state_data_write;
+    reg[1:0] next_state_data_write;
+    reg[1:0] state_data_read;
+    reg[1:0] next_state_data_read;
+    reg[1:0] state_open_slot;
+    reg[1:0] next_state_open_slot;
+    reg[10:0] counter_wait;
+    ///****************************************/
     always @(*) begin
         next_state_open_slot = state_open_slot;
         case(state_open_slot)
             2'd0:
-                if ((((((((((((((((rd_ptr == 6'd7) || rd_ptr) == 6'd15) || rd_ptr) == 6'd23) || rd_ptr) == 6'd31) || rd_ptr) == 6'd39) || rd_ptr) == 6'd47) || rd_ptr) == 6'd55) || rd_ptr) == 6'd63))
+                if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63)))
                     next_state_open_slot = 2'd1;
                 else
                     next_state_open_slot = 2'd0;
@@ -70,7 +71,7 @@ module fifo_rx #(
                 else
                     next_state_open_slot = 2'd2;
             2'd2:
-                if ((((((((((((((((rd_ptr == 6'd7) || rd_ptr) == 6'd15) || rd_ptr) == 6'd23) || rd_ptr) == 6'd31) || rd_ptr) == 6'd39) || rd_ptr) == 6'd47) || rd_ptr) == 6'd55) || rd_ptr) == 6'd63))
+                if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63)))
                     next_state_open_slot = 2'd2;
                 else
                     next_state_open_slot = 2'd0;
@@ -79,6 +80,7 @@ module fifo_rx #(
         endcase
     end
 
+    ///****************************************/
     always @(*) begin
         next_state_data_write = state_data_write;
         case(state_data_write)
@@ -99,6 +101,7 @@ module fifo_rx #(
         endcase
     end
 
+    ///****************************************/
     always @(*) begin
         next_state_data_read = state_data_read;
         case(state_data_read)
@@ -128,7 +131,7 @@ module fifo_rx #(
             state_open_slot <= next_state_open_slot;
             case(state_open_slot)
                 2'd0:
-                    if ((((((((((((((((rd_ptr == 6'd7) || rd_ptr) == 6'd15) || rd_ptr) == 6'd23) || rd_ptr) == 6'd31) || rd_ptr) == 6'd39) || rd_ptr) == 6'd47) || rd_ptr) == 6'd55) || rd_ptr) == 6'd63)) begin
+                    if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63))) begin
                         open_slot_fct <= 1'b1;
                         counter_wait <= (counter_wait + 11'd1);
                     end else
@@ -149,6 +152,7 @@ module fifo_rx #(
             endcase
         end
 
+    //Write pointer
     always @(posedge clock, negedge reset)
         if (!reset) begin
             state_data_write <= 2'd0;
@@ -167,6 +171,7 @@ module fifo_rx #(
             endcase
         end
 
+    //FULL - EMPTY COUNTER
     always @(posedge clock, negedge reset)
         if (!reset) begin
             f_full <= 1'b0;
@@ -177,7 +182,7 @@ module fifo_rx #(
             if ((state_data_write == 2'd2))
                 counter <= (counter + 6'd1);
             else
-                if ((((counter > 6'd0) && state_data_read) == 2'd2))
+                if (((counter > 6'd0) && (state_data_read == 2'd2)))
                     counter <= (counter - 6'd1);
                 else
                     counter <= counter;
@@ -195,6 +200,7 @@ module fifo_rx #(
                 f_empty <= 1'b0;
         end
 
+    //Read pointer
     always @(posedge clock, negedge reset)
         if (!reset) begin
             rd_ptr <= {(AWIDTH){1'b0}};

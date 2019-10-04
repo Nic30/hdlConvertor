@@ -315,10 +315,12 @@ iHdlExpr* VerExprParser::visitConcatenation(
 		sv2017Parser::ConcatenationContext *ctx) {
 	// concatenation:
 	//    LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
-	if (ctx->concatenation()) {
-		NotImplementedLogger::print(
-				"VerExprParser::visitConcatenation - multiplicative concatenation",
-				ctx);
+	auto c = ctx->concatenation();
+	if (c) {
+		auto _e = ctx->expression(0);
+		auto e = visitExpression(_e);
+		auto c2 = visitConcatenation(c);
+		return new iHdlExpr(e, HdlOperatorType::REPL_CONCAT, c2);
 	}
 	iHdlExpr *res = nullptr;
 	for (auto e : ctx->expression()) {
@@ -608,37 +610,49 @@ void VerExprParser::visitList_of_arguments(
 	//     ( COMMA list_of_arguments_named_item )*;
 	VerExprParser ep(commentParser);
 	bool expecting_value = true;
-	for (auto c: ctx->children) {
-		auto t = dynamic_cast<antlr4::tree::TerminalNode *>(c);
+	for (auto c : ctx->children) {
+		auto t = dynamic_cast<antlr4::tree::TerminalNode*>(c);
 		bool is_comma = t && t->getSymbol()->getType() == sv2017Parser::COMMA;
 		if (expecting_value && is_comma) {
 			args.push_back(iHdlExpr::ID("void"));
 		}
 		if (is_comma) {
 			expecting_value = true;
-		} else  {
+		} else {
 			auto _e = dynamic_cast<sv2017Parser::ExpressionContext*>(c);
 			if (_e) {
 				auto e = ep.visitExpression(_e);
 				args.push_back(e);
 			} else {
-				auto _ni = dynamic_cast<sv2017Parser::List_of_arguments_named_itemContext*>(c);
+				auto _ni =
+						dynamic_cast<sv2017Parser::List_of_arguments_named_itemContext*>(c);
 				assert(_ni);
 				auto name = ep.visitIdentifier(_ni->identifier());
-				iHdlExpr * v = nullptr;
+				iHdlExpr *v = nullptr;
 				auto _v = _ni->expression();
 				if (_v)
 					v = ep.visitExpression(_v);
 				else
 					v = iHdlExpr::ID("void");
-				auto e = new iHdlExpr(name, HdlOperatorType::MAP_ASSOCIATION, v);
+				auto e = new iHdlExpr(name, HdlOperatorType::MAP_ASSOCIATION,
+						v);
 				args.push_back(e);
 			}
 			expecting_value = false;
 		}
-
-
 	}
+}
+
+iHdlExpr* VerExprParser::visitOperator_assignment(
+		sv2017Parser::Operator_assignmentContext *ctx) {
+	// operator_assignment: variable_lvalue assignment_operator expression;
+	auto vlv = ctx->variable_lvalue();
+	auto dst = visitVariable_lvalue(vlv);
+	auto e = ctx->expression();
+	auto src = visitExpression(e);
+	auto op = VerLiteralParser::visitAssignment_operator(
+			ctx->assignment_operator());
+	return new iHdlExpr(dst, op, src);
 }
 
 }

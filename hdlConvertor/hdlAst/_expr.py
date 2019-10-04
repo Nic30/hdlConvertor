@@ -130,7 +130,20 @@ class HdlBuiltinFn(Enum):
     DECR_PRE,
     INCR_POST,
     DECR_POST,
-    ) = range(61)
+    ASSIGN,
+    PLUS_ASSIGN,
+    MINUS_ASSIGN,
+    MUL_ASSIGN,
+    DIV_ASSIGN,
+    MOD_ASSIGN,
+    AND_ASSIGN,
+    OR_ASSIGN,
+    XOR_ASSIGN,
+    SHIFT_LEFT_ASSIGN,
+    SHIFT_RIGHT_ASSIGN,
+    ARITH_SHIFT_LEFT_ASSIGN,
+    ARITH_SHIFT_RIGHT_ASSIGN,
+    ) = range(74)
     # note that in verilog bitewise operators can have only one argument
 
 
