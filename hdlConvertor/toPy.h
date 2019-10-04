@@ -1,7 +1,7 @@
 #pragma once
+
 #include <Python.h>
 #include <vector>
-#include <typeinfo>
 
 #include <hdlConvertor/hdlObjects/hdlCompInstance.h>
 #include <hdlConvertor/hdlObjects/hdlContext.h>
@@ -47,6 +47,7 @@ class ToPy {
 	PyObject *HdlStmBreakCls;
 	PyObject *HdlStmContinueCls;
 	PyObject *HdlStmWaitCls;
+	PyObject *HdlStmBlockCls;
 	PyObject *HdlImportCls;
 	PyObject *HdlComponentInstCls;
 	PyObject *HdlFunctionDefCls;

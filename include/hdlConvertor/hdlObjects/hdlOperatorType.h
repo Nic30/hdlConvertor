@@ -46,7 +46,8 @@ enum HdlOperatorType {
 	ROL, // rotate left
 	ROR, // rotate right
 	TERNARY,
-	DOT, // accessing of property, represents also "::"
+	DOT, // accessing of property
+	DOUBLE_COLON, // SV accessing class/package static property/type
 	APOSTROPHE, // vhdl attribute access
 	CALL, // call of HDL function
 	PARAMETRIZATION, // specification of template arguments
@@ -60,6 +61,10 @@ enum HdlOperatorType {
 	MATCH_LE,
 	MATCH_GT,
 	MATCH_GE,
+	INCR_PRE,
+	DECR_PRE,
+	INCR_POST,
+	DECR_POST,
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt);

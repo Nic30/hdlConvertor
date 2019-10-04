@@ -1,6 +1,7 @@
 #include "toPy.h"
 #include <tuple>
 #include <hdlConvertor/hdlObjects/hdlStmAssign.h>
+#include <hdlConvertor/hdlObjects/hdlStmBlock.h>
 
 namespace hdlConvertor {
 
@@ -13,8 +14,10 @@ PyObject* ToPy::toPy(const iHdlStatement * o) {
 	PyObject* py_inst = nullptr;
 	int e = 0;
 
-	if (type == s_EXPR) {
-		return toPy(exprs[0]);
+	if (type == StatementType::s_EXPR) {
+			return toPy(exprs[0]);
+	} else if (type == StatementType::s_NOP) {
+			Py_RETURN_NONE;
 	} else if (type == s_IF) {
 		py_inst = PyObject_CallObject(HdlStmIfCls, NULL);
 		if (!py_inst) {
@@ -276,6 +279,18 @@ PyObject* ToPy::toPy(const iHdlStatement * o) {
 		}
 
 		e = toPy_arr(py_inst, "path", o->exprs);
+		if (e) {
+			Py_DECREF(py_inst);
+			return nullptr;
+		}
+	} else if (type == s_BLOCK) {
+		auto b = dynamic_cast<const HdlStmBlock *>(o);
+		assert(b);
+		py_inst = PyObject_CallObject(HdlStmBlockCls, NULL);
+		if (!py_inst) {
+			return nullptr;
+		}
+		e = toPy_arr(py_inst, "body", b->statements);
 		if (e) {
 			Py_DECREF(py_inst);
 			return nullptr;

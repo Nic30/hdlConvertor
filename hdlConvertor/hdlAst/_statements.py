@@ -27,7 +27,7 @@ class HdlStmBlock(iHdlStatement):
 
     def __init__(self):
         super(HdlStmBlock, self).__init__()
-        self.is_paralel = False
+        self.is_parallel = False
         self.join_any = False
         self.join_none = False
         self.body = []  # type: List[iHdlObj]

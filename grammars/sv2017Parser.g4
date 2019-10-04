@@ -3,10 +3,14 @@ options { tokenVocab=sv2017Lexer; }
 
 /*
  * IEEE1800-2017 grammar optimized for performance in the cost of allowing some ivalid syntax.
- * This is the case mainly for specific expression values which can appear only in some specifc scope. 
+ * (= const/non-const is not checked, instance variants are same rule and ansi/non-ansi syntax can be mixed)
+ * @note Thanks to lexer configuration abilities this grammar can be runtime configured to parse any previous
+ *       SystemVerilog standard.  
  *
  * This parser grammar is nearly target language independent. You have to replace "_input->LA".
+ * (e.g. to "_input.LA" for Java/Python)
  */
+ 
 /**********************************************************************************************************************/
 /* The start rule */
 source_text: ( timeunits_declaration )? ( description )* EOF;
@@ -97,7 +101,6 @@ unary_module_path_operator:
     | NXOR
     | XORN
 ;
-
 unary_operator:
     PLUS
     | MINUS
@@ -142,44 +145,44 @@ any_system_tf_identifier:
     | KW_DOLAR_NOCHANGE
 ;
 signing:
-  KW_SIGNED
-   | KW_UNSIGNED
+    KW_SIGNED
+    | KW_UNSIGNED
 ;
 number:
- integral_number
-  | real_number
+    integral_number
+    | real_number
 ;
 timeunits_declaration:
- KW_TIMEUNIT TIME_LITERAL ( ( DIV
-                              | SEMI KW_TIMEPRECISION
-                              ) TIME_LITERAL )? SEMI
-  | KW_TIMEPRECISION TIME_LITERAL SEMI ( KW_TIMEUNIT TIME_LITERAL SEMI )?
+    KW_TIMEUNIT TIME_LITERAL ( ( DIV
+                                 | SEMI KW_TIMEPRECISION
+                                 ) TIME_LITERAL )? SEMI
+    | KW_TIMEPRECISION TIME_LITERAL SEMI ( KW_TIMEUNIT TIME_LITERAL SEMI )?
 ;
 lifetime:
-  KW_STATIC
-   | KW_AUTOMATIC
+    KW_STATIC
+    | KW_AUTOMATIC
 ;
 port_direction:
- KW_INPUT
-  | KW_OUTPUT
-  | KW_INOUT
-  | KW_REF
+    KW_INPUT
+    | KW_OUTPUT
+    | KW_INOUT
+    | KW_REF
 ;
 always_keyword:
- KW_ALWAYS
-  | KW_ALWAYS_COMB
-  | KW_ALWAYS_LATCH
-  | KW_ALWAYS_FF
+    KW_ALWAYS
+    | KW_ALWAYS_COMB
+    | KW_ALWAYS_LATCH
+    | KW_ALWAYS_FF
 ;
 join_keyword:
- KW_JOIN
-  | KW_JOIN_ANY
-  | KW_JOIN_NONE
+    KW_JOIN
+    | KW_JOIN_ANY
+    | KW_JOIN_NONE
 ;
 unique_priority:
-  KW_UNIQUE
-   | KW_UNIQUE0
-   | KW_PRIORITY
+    KW_UNIQUE
+    | KW_UNIQUE0
+    | KW_PRIORITY
 ;
 drive_strength:
     LPAREN (
@@ -467,7 +470,7 @@ modport_clocking_declaration: KW_CLOCKING identifier;
 modport_simple_ports_declaration:
     port_direction modport_simple_port ( COMMA modport_simple_port )*;
 modport_simple_port:
-    DOT identifier LPAREN ( expression )? RPAREN
+   list_of_arguments_named_item
     | identifier
 ;
 modport_tf_ports_declaration:
@@ -554,7 +557,6 @@ delay2:
     HASH ( LPAREN mintypmax_expression ( COMMA mintypmax_expression )? RPAREN
            | delay_value
          );
-
 delay_value:
     UNSIGNED_NUMBER
     | TIME_LITERAL
@@ -576,9 +578,8 @@ procedural_continuous_assignment:
 variable_assignment:
     variable_lvalue ASSIGN expression;
 action_block:
-   ( attribute_instance )* SEMI
-   | KW_ELSE statement_or_null
-   | statement ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? )
+   KW_ELSE statement_or_null
+   | statement_or_null ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? )
 ;
 seq_block:
     KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
@@ -633,11 +634,6 @@ event_trigger:
    | DOUBLE_RIGHT_ARROW ( delay_or_event_control )?
  ) hierarchical_identifier SEMI;
 /*********************************************** loop statements ******************************************************/
-foreach_ps_or_hierarchical_array_identifier:
-    ( implicit_class_handle DOT
-      | class_scope
-      | package_scope
-    )? hierarchical_identifier;
 loop_statement:
  ( KW_FOREVER
       | ( ( KW_REPEAT
@@ -647,7 +643,7 @@ loop_statement:
           ) RPAREN
       ) statement_or_null
   | KW_DO statement_or_null KW_WHILE LPAREN expression RPAREN SEMI
-  | KW_FOREACH LPAREN foreach_ps_or_hierarchical_array_identifier LSQUARE_BR loop_variables
+  | KW_FOREACH LPAREN package_or_class_scoped_hier_id_with_select LSQUARE_BR loop_variables
   RSQUARE_BR RPAREN statement
 ;
 list_of_variable_assignments: variable_assignment ( COMMA variable_assignment )*;
@@ -805,9 +801,10 @@ tf_port_declaration:
     list_of_tf_variable_identifiers SEMI
 ;
 list_of_tf_variable_identifiers_item: identifier ( variable_dimension )* ( ASSIGN expression )?;
+// list_of_variable_identifiers with a "= expr"
 list_of_tf_variable_identifiers:
     list_of_tf_variable_identifiers_item
-    ( COMMA identifier list_of_tf_variable_identifiers_item )*
+    ( COMMA list_of_tf_variable_identifiers_item )*
 ;
 expect_property_statement: KW_EXPECT LPAREN property_spec RPAREN action_block;
 block_item_declaration:
@@ -822,23 +819,24 @@ block_item_declaration:
 param_assignment:
     identifier ( unpacked_dimension )* ( ASSIGN constant_param_expression )?;
 type_assignment: identifier ( ASSIGN data_type )?;
-list_of_param_assignments: param_assignment ( COMMA param_assignment )*;
 list_of_type_assignments: type_assignment ( COMMA type_assignment )*;
+list_of_param_assignments: param_assignment ( COMMA param_assignment )*;
 local_parameter_declaration:
  KW_LOCALPARAM ( KW_TYPE list_of_type_assignments
                   | ( data_type_or_implicit )? list_of_param_assignments
                   );
 parameter_declaration:
- KW_PARAMETER ( KW_TYPE list_of_type_assignments
-                  | ( data_type_or_implicit )? list_of_param_assignments
-                  );
+    KW_PARAMETER
+    ( KW_TYPE list_of_type_assignments
+      | ( data_type_or_implicit )? list_of_param_assignments
+    );
 type_declaration:
     KW_TYPEDEF (
         data_type identifier ( variable_dimension )*
         | ( KW_ENUM
             | KW_STRUCT
             | KW_UNION
-            | identifier ( bit_select )* DOT identifier
+            | identifier_with_bit_select DOT identifier
             | ( KW_INTERFACE )? KW_CLASS
           )? identifier
     ) SEMI;
@@ -932,15 +930,13 @@ property_case_item:
  ) property_expr SEMI;
 /****************************************** ids and selects ***********************************************************/
 bit_select: LSQUARE_BR expression RSQUARE_BR;
-package_or_class_scoped_hier_id_with_select_path: identifier ( bit_select )*;
+identifier_with_bit_select: identifier ( bit_select )*;
 // '::' separated then '.' separated
 package_or_class_scoped_hier_id_with_select:
- package_or_class_scoped_path ( bit_select )* 
- ( DOT package_or_class_scoped_hier_id_with_select_path )* 
- ( LSQUARE_BR expression
-      ( PLUS | MINUS )? COLON
-       expression RSQUARE_BR )?;
-
+    package_or_class_scoped_path ( bit_select )* 
+    ( DOT identifier_with_bit_select )* 
+    ( LSQUARE_BR expression ( operator_plus_minus )? COLON expression RSQUARE_BR )?;
+    
 package_or_class_scoped_path_item: identifier ( parameter_value_assignment )?;
 // '::' separated
 package_or_class_scoped_path:
@@ -951,7 +947,7 @@ package_or_class_scoped_path:
         | package_or_class_scoped_path_item
 	) ( DOUBLE_COLON package_or_class_scoped_path_item)*;
 hierarchical_identifier:
-   ( KW_DOLAR_ROOT DOT )? ( identifier ( bit_select )* DOT )* identifier;
+   ( KW_DOLAR_ROOT DOT )? ( identifier_with_bit_select DOT )* identifier;
 package_or_class_scoped_id:
   ( KW_DOLAR_UNIT
     | identifier ( parameter_value_assignment )?
@@ -1094,7 +1090,6 @@ select_expression:
                         ) select_expression
     | select_expression KW_WITH LPAREN covergroup_expression RPAREN
                         ( KW_MATCHES covergroup_expression )?
-    | identifier
     | covergroup_expression ( KW_MATCHES covergroup_expression )?
 ;
 select_condition:
@@ -1187,12 +1182,13 @@ class_new:
     KW_NEW expression
     | ( class_scope )? KW_NEW ( LPAREN ( list_of_arguments )? RPAREN )?
 ;
-constant_param_expression:
+param_expression:
     mintypmax_expression
     | data_type
 ;
-
-unpacked_dimension: LSQUARE_BR ( expression ( COLON expression)? ) RSQUARE_BR;
+constant_param_expression: param_expression ;
+                  
+unpacked_dimension: LSQUARE_BR range_expression RSQUARE_BR;
 packed_dimension: LSQUARE_BR  ( range_expression )? RSQUARE_BR;
 variable_dimension:
     LSQUARE_BR ( MUL
@@ -1239,20 +1235,23 @@ implicit_data_type:
     | ( packed_dimension )+
 ;
 /************************************************ list_of_arguments ***************************************************/
+// first normal arguments and then named arguments, while keeping the list not eps
+sequence_list_of_arguments_named_item: DOT identifier LPAREN ( sequence_actual_arg )? RPAREN;
 sequence_list_of_arguments:
-    ( DOT identifier LPAREN ( expression )? RPAREN
-     | sequence_actual_arg
-     | COMMA
+    ( sequence_list_of_arguments_named_item
+     | COMMA sequence_list_of_arguments_named_item
+     | sequence_actual_arg ( COMMA ( sequence_actual_arg )? )*
+     | ( COMMA ( sequence_actual_arg )? )+
     )
-    ( COMMA ( sequence_actual_arg )? )*
-    ( COMMA DOT identifier LPAREN ( sequence_actual_arg )? RPAREN )*;
+    ( COMMA sequence_list_of_arguments_named_item )*;
+list_of_arguments_named_item: DOT identifier LPAREN ( expression )? RPAREN;
 list_of_arguments:
-    ( DOT identifier LPAREN ( expression )? RPAREN
-     | expression
-     | COMMA ( expression )?
+    ( list_of_arguments_named_item
+     | COMMA list_of_arguments_named_item
+     | expression ( COMMA ( expression )? )*
+     | ( COMMA ( expression )? )+
     )
-    ( COMMA ( expression )? )*
-    ( COMMA DOT identifier LPAREN ( expression )? RPAREN )*;
+    ( COMMA list_of_arguments_named_item )*;
 /************************************************ primary *************************************************************/
 primary_literal:
     TIME_LITERAL
@@ -1271,11 +1270,11 @@ type_reference:
 ;
 package_scope: ( KW_DOLAR_UNIT | identifier ) DOUBLE_COLON;
 ps_identifier: ( package_scope )? identifier;
-list_of_parameter_assignments:
+list_of_parameter_value_assignments:
     param_expression ( COMMA param_expression )*
     | named_parameter_assignment ( COMMA named_parameter_assignment )*
 ;
-parameter_value_assignment: HASH LPAREN ( list_of_parameter_assignments )? RPAREN;
+parameter_value_assignment: HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
 class_type:
     ps_identifier ( parameter_value_assignment )? ( DOUBLE_COLON identifier
        ( parameter_value_assignment )? )*
@@ -1285,10 +1284,6 @@ range_expression: expression ( COLON expression )?;
 constant_range_expression: range_expression;
 constant_mintypmax_expression: mintypmax_expression;
 mintypmax_expression: expression ( COLON expression COLON expression )?;
-param_expression:
-    mintypmax_expression
-    | data_type
-;
 named_parameter_assignment: DOT identifier LPAREN ( param_expression )? RPAREN;
 // original primary+constant_primary
 // let_expression was remobed because it was same as call
@@ -1352,16 +1347,16 @@ expression:
     | expression operator_impl        ( attribute_instance )* expression
 ;
 concatenation:
- LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
+    LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
 dynamic_array_new:
- KW_NEW LSQUARE_BR expression RSQUARE_BR ( LPAREN expression RPAREN )?;
+    KW_NEW LSQUARE_BR expression RSQUARE_BR ( LPAREN expression RPAREN )?;
 const_or_range_expression:
- expression ( COLON ( DOLAR | expression ) )?
+    expression ( COLON ( DOLAR | expression ) )?
 ;
 variable_decl_assignment:
     identifier (
         ASSIGN ( expression | class_new )
-        | ( variable_dimension )+ ( ASSIGN (expression | dynamic_array_new) )?
+        | ( variable_dimension )+ ( ASSIGN ( expression | dynamic_array_new ) )?
     )?
 ;
 /* assignment_pattern_net_lvalue */
@@ -1384,9 +1379,7 @@ stream_concatenation:
 stream_expression:
  expression ( KW_WITH LSQUARE_BR array_range_expression RSQUARE_BR )?;
 array_range_expression:
- expression ( ( PLUS
-              | MINUS
-              )? COLON expression )?;
+ expression ( ( operator_plus_minus )? COLON expression )?;
 open_range_list: value_range ( COMMA value_range )*;
 pattern:
  DOT ( MUL | identifier )
@@ -1477,8 +1470,8 @@ randomize_call:
     )?;
 /**************************************** module *********************************************************************/
 module_header_common:
-  ( attribute_instance )* module_keyword ( lifetime )? identifier ( package_import_declaration )*
-       ( parameter_port_list )?;
+  ( attribute_instance )* module_keyword ( lifetime )? identifier
+  ( package_import_declaration )* ( parameter_port_list )?;
 module_declaration:
   KW_EXTERN module_header_common ( list_of_port_declarations )? SEMI
    | module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
@@ -1509,10 +1502,11 @@ list_of_defparam_assignments: defparam_assignment ( COMMA defparam_assignment )*
 list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 list_of_specparam_assignments: specparam_assignment ( COMMA specparam_assignment )*;
 list_of_variable_decl_assignments:
- variable_decl_assignment ( COMMA variable_decl_assignment )*;
+    variable_decl_assignment ( COMMA variable_decl_assignment )*;
+list_of_variable_identifiers_item: identifier ( variable_dimension )*;
 /* list_of_port_identifiers */
 list_of_variable_identifiers:
- identifier ( variable_dimension )* ( COMMA identifier ( variable_dimension )* )*;
+    list_of_variable_identifiers_item ( COMMA list_of_variable_identifiers_item )*;
 list_of_variable_port_identifiers: list_of_tf_variable_identifiers;
 defparam_assignment:
  hierarchical_identifier ASSIGN mintypmax_expression;
@@ -1652,30 +1646,34 @@ net_declaration:
   ) SEMI;
 
 parameter_port_list:
- HASH LPAREN ( ( list_of_param_assignments
-              | parameter_port_declaration
-              ) ( COMMA parameter_port_declaration )* )? RPAREN;
+    HASH LPAREN (
+       ( list_of_param_assignments
+         | parameter_port_declaration
+       ) ( COMMA parameter_port_declaration )* )? RPAREN;
 parameter_port_declaration:
- KW_TYPE list_of_type_assignments
-  | parameter_declaration
-  | local_parameter_declaration
-  | data_type list_of_param_assignments
+    KW_TYPE list_of_type_assignments
+    | parameter_declaration
+    | local_parameter_declaration
+    | data_type list_of_param_assignments
 ;
 
+list_of_port_declarations_ansi_item:
+	( attribute_instance )* ansi_port_declaration
+;
 list_of_port_declarations:
- LPAREN
- (
-   ( nonansi_port ( COMMA ( nonansi_port )? )* )
-   | ( COMMA ( nonansi_port )? )+
-   | ( ( attribute_instance )* ansi_port_declaration ( COMMA ( attribute_instance )* ansi_port_declaration )* )
- )? RPAREN;
+    LPAREN
+    (
+      ( nonansi_port ( COMMA ( nonansi_port )? )* )
+      | ( COMMA ( nonansi_port )? )+
+      | ( list_of_port_declarations_ansi_item ( COMMA list_of_port_declarations_ansi_item )* )
+    )? RPAREN;
 
 nonansi_port_declaration:
    ( attribute_instance )* (
    KW_INOUT ( net_port_type )? list_of_variable_identifiers
   | KW_INPUT ( net_or_var_data_type )? list_of_variable_identifiers
   | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_port_identifiers
-  | identifier DOT identifier list_of_variable_identifiers
+  | identifier ( DOT identifier )? list_of_variable_identifiers // identifier=interface_identifier
   | KW_REF ( var_data_type )? list_of_variable_identifiers
   )
 ;
@@ -1687,14 +1685,14 @@ nonansi_port__expr:
     identifier_doted_index_at_end
     | LBRACE identifier_doted_index_at_end ( COMMA identifier_doted_index_at_end )* RBRACE
 ;
-
+port_identifier: identifier;
 ansi_port_declaration:
-  ( port_direction ( net_or_var_data_type )?
-    | net_or_var_data_type
-    | (identifier | KW_INTERFACE) (DOT identifier )?
-  )? identifier_doted_index_at_end
+  ( port_direction ( net_or_var_data_type )? // net_port_header
+    | net_or_var_data_type                   // net_port_header or variable_port_header
+    | (identifier | KW_INTERFACE) (DOT identifier )? // interface_port_header
+  )? port_identifier ( variable_dimension )*
    (ASSIGN constant_expression)?
-  | (port_direction)? DOT identifier_doted_index_at_end LPAREN (expression)? RPAREN
+  | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
 ;
 
 /**********************************************************************************************************************/
@@ -1834,16 +1832,11 @@ extern_tf_declaration:
  KW_EXTERN ( KW_FORKJOIN task_prototype
               | method_prototype
               ) SEMI;
-function_declaration: KW_FUNCTION ( lifetime )? function_body_declaration;
-function_body_declaration:
- ( function_data_type_or_implicit )? ( identifier DOT
-                                      | class_scope
-                                      )? identifier ( SEMI ( tf_item_declaration )*
-                                                          | LPAREN tf_port_list RPAREN SEMI
-                                                          ( block_item_declaration )*
-                                                          ) ( statement_or_null )*
-
- KW_ENDFUNCTION ( COLON identifier | {_input->LA(1) != COLON}? )
+function_declaration:
+    KW_FUNCTION ( lifetime )?
+    ( function_data_type_or_implicit )? 
+    task_and_function_declaration_common
+    KW_ENDFUNCTION ( COLON identifier | {_input->LA(1) != COLON}? )
 ;
 task_prototype: KW_TASK identifier ( LPAREN tf_port_list RPAREN )?;
 function_prototype: KW_FUNCTION data_type_or_void identifier ( LPAREN tf_port_list RPAREN )?;
@@ -1866,25 +1859,27 @@ dpi_function_import_property:
    | KW_PURE
 ;
 dpi_task_import_property: KW_CONTEXT;
-task_declaration: KW_TASK ( lifetime )? task_body_declaration;
-task_body_declaration:
- ( identifier DOT
-  | class_scope
-  )? identifier ( SEMI ( tf_item_declaration )*
-                      | LPAREN tf_port_list RPAREN SEMI ( block_item_declaration )*
-                      )
-  ( statement_or_null )*
-  KW_ENDTASK ( COLON identifier | {_input->LA(1) != COLON}? );
+task_and_function_declaration_common:
+    ( identifier DOT | class_scope )? identifier
+    ( SEMI ( tf_item_declaration )*
+      | LPAREN tf_port_list RPAREN SEMI ( block_item_declaration )*
+    )
+    ( statement_or_null )*
+;
+task_declaration:
+    KW_TASK ( lifetime )?
+	task_and_function_declaration_common
+    KW_ENDTASK ( COLON identifier | {_input->LA(1) != COLON}? )
+;
 method_prototype:
- task_prototype
-  | function_prototype
+    task_prototype
+    | function_prototype
 ;
 extern_constraint_declaration:
-  ( KW_STATIC )? KW_CONSTRAINT class_scope identifier constraint_block;
-
+    ( KW_STATIC )? KW_CONSTRAINT class_scope identifier constraint_block;
 constraint_block: LBRACE ( constraint_block_item )* RBRACE;
 checker_port_list:
- checker_port_item ( COMMA checker_port_item )*;
+    checker_port_item ( COMMA checker_port_item )*;
 checker_port_item:
  ( attribute_instance )* ( checker_port_direction )? ( property_formal_type )? identifier
       ( variable_dimension )* ( ASSIGN property_actual_arg )?;
@@ -1903,7 +1898,7 @@ class_declaration:
     ( class_item )*
     KW_ENDCLASS ( COLON identifier | {_input->LA(1) != COLON}? );
 always_construct:
- always_keyword statement;
+    always_keyword statement;
 interface_class_type:
     ps_identifier ( parameter_value_assignment )?;
 interface_class_declaration:
@@ -2127,17 +2122,17 @@ udp_instantiation:
 udp_instance:
  ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
 module_or_interface_or_program_instantiation:
- identifier ( parameter_value_assignment )? hierarchical_instance ( COMMA hierarchical_instance )*
-      SEMI;
+    identifier ( parameter_value_assignment )?
+    hierarchical_instance ( COMMA hierarchical_instance )* SEMI;
 hierarchical_instance: name_of_instance LPAREN list_of_port_connections RPAREN;
 list_of_port_connections:
- ordered_port_connection ( COMMA ordered_port_connection )*
-  | named_port_connection ( COMMA named_port_connection )*
+    ordered_port_connection ( COMMA ordered_port_connection )*
+    | named_port_connection ( COMMA named_port_connection )*
 ;
 ordered_port_connection: ( attribute_instance )* ( expression )?;
 named_port_connection:
  ( attribute_instance )* DOT ( MUL
-                              | identifier ( LPAREN ( expression )? RPAREN )?
+                               | identifier ( LPAREN ( expression )? RPAREN )?
                               );
 bind_directive:
  KW_BIND ( identifier ( COLON bind_target_instance_list )?

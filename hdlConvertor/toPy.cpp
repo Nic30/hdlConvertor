@@ -2,6 +2,7 @@
 
 #include <Python.h>
 
+#include <typeinfo>
 #include <iterator>
 #include <stdexcept>
 #include <string>
@@ -54,6 +55,7 @@ ToPy::ToPy() {
 	import(HdlStmBreakCls, "HdlStmBreak");
 	import(HdlStmContinueCls, "HdlStmContinue");
 	import(HdlStmWaitCls, "HdlStmWait");
+	import(HdlStmBlockCls, "HdlStmBlock");
 	import(HdlImportCls, "HdlImport");
 	import(HdlComponentInstCls, "HdlComponentInst");
 	import(HdlFunctionDefCls, "HdlFunctionDef");
@@ -116,8 +118,12 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	if (fn)
 		return toPy(fn);
 
-	std::string err_msg = std::string("ToPy::toPy unknown type of iHdlObj:")
-			+ std::string(typeid(*o).name());
+	std::string err_msg;
+	if (o)
+		err_msg = std::string("ToPy::toPy unknown type of iHdlObj:")
+				+ std::string(typeid(*o).name());
+	else
+		err_msg = "ToPy::toPy called for nullptr";
 	PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 	return nullptr;
 }
@@ -268,10 +274,6 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 			if (e)
 				break;
 		}
-		e = toPy_arr(py_inst, "body", o->locals);
-		if (e)
-			break;
-
 		e = toPy_arr(py_inst, "body", o->body);
 		if (e)
 			break;
@@ -374,7 +376,13 @@ PyObject* ToPy::toPy(const HdlValue *o) {
 }
 
 PyObject* ToPy::toPy(const HdlOperatorType o) {
-	auto name = HdlOperatorType_toString(o);
+	const char * name;
+	try {
+		name = HdlOperatorType_toString(o);
+	} catch (const std::runtime_error & e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+		return nullptr;
+	}
 	return PyObject_GetAttrString(HdlBuildinFnEnum, name);
 }
 
@@ -393,8 +401,14 @@ PyObject* ToPy::toPy(const HdlCall *o) {
 	if (!py_inst)
 		return nullptr;
 
-	int e = PyObject_SetAttrString(py_inst, "fn", toPy(o->op));
+	auto op = toPy(o->op);
+	if (!op) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	int e = PyObject_SetAttrString(py_inst, "fn", op);
 	if (e) {
+		Py_DECREF(op);
 		Py_DECREF(py_inst);
 		return nullptr;
 	}
@@ -482,6 +496,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlFunctionDefCls);
 	Py_XDECREF(HdlComponentInstCls);
 	Py_XDECREF(HdlImportCls);
+	Py_XDECREF(HdlStmBlockCls);
 	Py_XDECREF(HdlStmWaitCls);
 	Py_XDECREF(HdlStmContinueCls);
 	Py_XDECREF(HdlStmBreakCls);

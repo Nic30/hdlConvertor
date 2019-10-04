@@ -6,38 +6,31 @@ using namespace std;
 namespace hdlConvertor {
 namespace hdlObjects {
 
+const char *StatementType_toString_names[StatementType::s_BLOCK + 1] = {
+	"EXPR",
+	"IF",
+	"CASE",
+	"WHILE",
+	"DO_WHILE",
+	"BREAK",
+	"RETURN",
+	"CONTINUE",
+	"FOR",
+	"FOR_IN",
+	"ASSIGNMENT",
+	"PROCESS",
+	"WAIT",
+	"IMPORT",
+	"NOP",
+	"BLOCK",
+};
+// [todo] there should be a virtual method returning the name in each implementation of iHdlStatement instead of this
 const char* StatementType_toString(StatementType type) {
-	// [TODO] to array of names
-	switch (type) {
-	case s_EXPR:
-		return "EXPR";
-	case s_IF:
-		return "IF";
-	case s_CASE:
-		return "CASE";
-	case s_WHILE:
-		return "WHILE";
-	case s_BREAK:
-		return "BREAK";
-	case s_CONTINUE:
-		return "CONTINUE";
-	case s_FOR:
-		return "FOR";
-	case s_FOR_IN:
-		return "FOR_IN";
-	case s_RETURN:
-		return "RETURN";
-	case s_ASSIGNMENT:
-		return "ASSIGNMENT";
-	case s_PROCESS:
-		return "PROCESS";
-	case s_WAIT:
-		return "WAIT";
-	case s_IMPORT:
-		return "IMPORT";
-	default:
+	if (type
+			> (sizeof(StatementType_toString_names)
+					/ sizeof(StatementType_toString_names[0])))
 		throw runtime_error("Invalid StatementType");
-	}
+	return StatementType_toString_names[type];
 }
 
 iHdlStatement::iHdlStatement(StatementType type) {
@@ -46,18 +39,18 @@ iHdlStatement::iHdlStatement(StatementType type) {
 	in_preproc = false;
 }
 iHdlStatement* iHdlStatement::EXPR(iHdlExpr *e) {
-	iHdlStatement *s = new iHdlStatement(s_EXPR);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_EXPR);
 	s->exprs.push_back(e);
 	return s;
 }
 iHdlStatement* iHdlStatement::IMPORT(const std::vector<iHdlExpr*> &path) {
-	iHdlStatement *s = new iHdlStatement(s_IMPORT);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_IMPORT);
 	for (auto n : path)
 		s->exprs.push_back(n);
 	return s;
 }
 iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlObj*> *ifTrue) {
-	iHdlStatement *s = new iHdlStatement(s_IF);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(ifTrue);
 
@@ -65,7 +58,7 @@ iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlObj*> *ifTrue) {
 }
 iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlObj*> *ifTrue,
 		vector<iHdlObj*> *ifFalse) {
-	iHdlStatement *s = new iHdlStatement(s_IF);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_IF);
 	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2);
 	s->sub_statements.push_back(ifTrue);
@@ -75,7 +68,7 @@ iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlObj*> *ifTrue,
 }
 iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlObj*> *ifTrue,
 		const vector<case_t> &elseIfs, vector<iHdlObj*> *ifFalse) {
-	iHdlStatement *s = new iHdlStatement(s_IF);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_IF);
 	s->exprs.reserve(1 + elseIfs.size());
 	s->exprs.push_back(cond);
 	s->sub_statements.reserve(2 + elseIfs.size());
@@ -108,7 +101,7 @@ iHdlStatement* iHdlStatement::IF(iHdlExpr *cond, vector<iHdlStatement*> *ifTrue,
 
 iHdlStatement* iHdlStatement::CASE(iHdlExpr *switchOn,
 		const vector<case_t> cases, vector<iHdlObj*> *default_) {
-	auto s = new iHdlStatement(s_CASE);
+	auto s = new iHdlStatement(StatementType::s_CASE);
 	s->exprs.reserve(1 + cases.size());
 	s->exprs.push_back(switchOn);
 	s->sub_statements.reserve(cases.size() + 1);
@@ -127,10 +120,10 @@ iHdlStatement* iHdlStatement::RETURN(iHdlExpr *val) {
 	return s;
 }
 iHdlStatement* iHdlStatement::RETURN() {
-	return new iHdlStatement(s_RETURN);
+	return new iHdlStatement(StatementType::s_RETURN);
 }
 iHdlStatement* iHdlStatement::WAIT(const std::vector<iHdlExpr*> &val) {
-	iHdlStatement *s = new iHdlStatement(s_WAIT);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_WAIT);
 	for (auto v : val) {
 		s->exprs.push_back(v);
 	}
@@ -142,29 +135,46 @@ iHdlStatement* iHdlStatement::WHILE(iHdlExpr *cond,
 	return WHILE(cond, reinterpret_cast<std::vector<iHdlObj*>*>(body));
 }
 iHdlStatement* iHdlStatement::WHILE(iHdlExpr *cond, vector<iHdlObj*> *body) {
-	iHdlStatement *s = new iHdlStatement(s_WHILE);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_WHILE);
+	s->exprs.push_back(cond);
+	s->sub_statements.push_back(body);
+	return s;
+}
+iHdlStatement* iHdlStatement::DO_WHILE(iHdlExpr *cond,
+		std::vector<iHdlStatement*> *body) {
+	return WHILE(cond, reinterpret_cast<std::vector<iHdlObj*>*>(body));
+}
+iHdlStatement* iHdlStatement::DO_WHILE(iHdlExpr *cond, vector<iHdlObj*> *body) {
+	iHdlStatement *s = new iHdlStatement(StatementType::s_DO_WHILE);
 	s->exprs.push_back(cond);
 	s->sub_statements.push_back(body);
 	return s;
 }
 iHdlStatement* iHdlStatement::BREAK() {
-	return new iHdlStatement(s_BREAK);
+	return new iHdlStatement(StatementType::s_BREAK);
 }
 iHdlStatement* iHdlStatement::CONTINUE() {
-	return new iHdlStatement(s_CONTINUE);
+	return new iHdlStatement(StatementType::s_CONTINUE);
 }
 
-iHdlStatement* iHdlStatement::FOR(iHdlStatement *_init, iHdlExpr *cond,
-		iHdlStatement *_step, std::vector<iHdlObj*> *body) {
-	iHdlStatement *s = new iHdlStatement(s_FOR);
-	auto init = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_init) });
-	auto step = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_step) });
-
-	s->sub_statements.push_back(init);
+iHdlStatement* iHdlStatement::FOR(vector<iHdlStatement*> *init, iHdlExpr *cond,
+		vector<iHdlStatement*> *step, std::vector<iHdlObj*> *body) {
+	iHdlStatement *s = new iHdlStatement(StatementType::s_FOR);
+	s->sub_statements.push_back(reinterpret_cast<std::vector<iHdlObj*>*>(init));
 	s->exprs.push_back(cond);
-	s->sub_statements.push_back(step);
+	s->sub_statements.push_back(reinterpret_cast<std::vector<iHdlObj*>*>(step));
 	s->sub_statements.push_back(body);
 	return s;
+}
+iHdlStatement* iHdlStatement::FOR(vector<iHdlStatement*> *init, iHdlExpr *cond,
+		vector<iHdlStatement*> *step, std::vector<iHdlStatement*> *body) {
+	return FOR(init, cond, step, reinterpret_cast<std::vector<iHdlObj*>*>(body));
+}
+iHdlStatement* iHdlStatement::FOR(iHdlStatement *_init, iHdlExpr *cond,
+		iHdlStatement *_step, std::vector<iHdlObj*> *body) {
+	auto init = new vector<iHdlStatement*>( { _init });
+	auto step = new vector<iHdlStatement*>( { _step });
+	return FOR(init, cond, step, body);
 }
 iHdlStatement* iHdlStatement::FOR(iHdlStatement *init, iHdlExpr *cond,
 		iHdlStatement *step, std::vector<iHdlStatement*> *_body) {
@@ -175,16 +185,32 @@ iHdlStatement* iHdlStatement::FOR_IN(iHdlExpr *_var, iHdlExpr *collection,
 		std::vector<iHdlObj*> *body) {
 	return FOR_IN(iHdlStatement::EXPR(_var), collection, body);
 }
+iHdlStatement* iHdlStatement::FOR_IN(vector<iHdlExpr*> &vars,
+		iHdlExpr *collection, std::vector<iHdlObj*> *body) {
+	iHdlStatement *s = new iHdlStatement(StatementType::s_FOR_IN);
+	auto var = new vector<iHdlObj*>();
+	var->reserve(vars.size());
+	for (auto v : vars) {
+		var->push_back(iHdlStatement::EXPR(v));
+	}
+	s->sub_statements.push_back(var);
+	s->exprs.push_back(collection);
+	s->sub_statements.push_back(body);
+	return s;
+}
 iHdlStatement* iHdlStatement::FOR_IN(iHdlStatement *_var, iHdlExpr *collection,
 		std::vector<iHdlObj*> *body) {
-	iHdlStatement *s = new iHdlStatement(s_FOR_IN);
+	iHdlStatement *s = new iHdlStatement(StatementType::s_FOR_IN);
 	auto var = new vector<iHdlObj*>( { static_cast<iHdlObj*>(_var) });
 	s->sub_statements.push_back(var);
 	s->exprs.push_back(collection);
 	s->sub_statements.push_back(body);
 	return s;
 }
-
+iHdlStatement* iHdlStatement::NOP() {
+	iHdlStatement *s = new iHdlStatement(StatementType::s_NOP);
+	return s;
+}
 iHdlStatement::~iHdlStatement() {
 	for (auto sl : sub_statements) {
 		for (auto stm : *sl) {

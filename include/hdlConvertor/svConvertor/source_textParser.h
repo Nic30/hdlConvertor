@@ -1,6 +1,5 @@
 #pragma once
 
-#include <antlr4-common.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 
 #include <hdlConvertor/baseHdlParser/baseHdlParser.h>

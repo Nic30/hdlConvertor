@@ -1,10 +1,15 @@
 #include <hdlConvertor/svConvertor/portParser.h>
+
+#include <tuple>
+#include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/svConvertor/utils.h>
-#include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/hdlObjects/hdlDirection.h>
 #include <hdlConvertor/hdlObjects/hdlStmAssign.h>
-#include <hdlConvertor/conversion_exception.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
+#include <hdlConvertor/svConvertor/typeParser.h>
+#include <hdlConvertor/svConvertor/attributeParser.h>
+#include <hdlConvertor/svConvertor/utils.h>
+#include <hdlConvertor/svConvertor/moduleParser.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -13,225 +18,189 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlObjects;
 
-PortParser::PortParser(SVCommentParser &commentParser,
+VerPortParser::VerPortParser(SVCommentParser &commentParser,
 		vector<Non_ANSI_port_info_t> &_non_ansi_port_groups) :
 		commentParser(commentParser), non_ansi_port_groups(
 				_non_ansi_port_groups) {
 }
 
-vector<HdlVariableDef*>* PortParser::addTypeSpecToPorts(HdlDirection direction,
-		sv2017Parser::Net_typeContext *net_type, bool signed_, bool reg_,
-		const string &doc, sv2017Parser::Range_Context *range_,
-		vector<HdlVariableDef*> *ports) {
-	if ((net_type != nullptr) && (net_type->getText() != "wire")) {
-		NotImplementedLogger::print(
-				"PortParser.addTypeSpecToPorts.net_type different than wire",
-				net_type);
-	}
-	bool first = true;
-	for (auto p : *ports) {
-		assert(!p->type);
-		if (first) {
-			p->__doc__ = doc + p->__doc__;
-			first = false;
-		}
-		p->type = Utils::mkWireT(range_, signed_);
-		p->direction = direction;
-		p->is_latched = reg_;
-	}
-	return ports;
-}
-
-vector<HdlVariableDef*>* PortParser::visitList_of_ports(
-		sv2017Parser::List_of_portsContext *ctx) {
-	// list_of_ports : '(' port ( ',' port )* ')' ;
-	auto ports = new vector<HdlVariableDef*>();
-	for (auto p : ctx->port()) {
-		auto ps = visitPort(p);
-		for (unsigned i = 0; i < ps->size(); i++) {
-			ports->push_back((*ps)[i]);
-		}
-		delete ps;
-	}
-	return ports;
-}
-vector<HdlVariableDef*>* PortParser::visitPort(
-		sv2017Parser::PortContext *ctx) {
-	// port: port_expression?
-	// | '.' port_identifier '(' ( port_expression )? ')'
-	// ;
-	auto pi = ctx->port_identifier();
-	auto _pe = ctx->port_expression();
+vector<HdlVariableDef*>* VerPortParser::visitNonansi_port(
+		sv2017Parser::Nonansi_portContext *ctx) {
+	// nonansi_port:
+	//     nonansi_port__expr
+	//     | DOT identifier LPAREN ( nonansi_port__expr )? RPAREN;
+	auto pi = ctx->identifier();
+	auto _pe = ctx->nonansi_port__expr();
 	vector<HdlVariableDef*> *pe = nullptr;
 	if (_pe) {
-		pe = visitPort_expression(_pe);
+		pe = visitNonansi_port__expr(_pe);
 	} else {
 		pe = new vector<HdlVariableDef*>();
 		NotImplementedLogger::print(
 				"Source_textParser.visitPort - empty port record", ctx);
 	}
 	if (pi) {
-		non_ansi_port_groups.push_back(
-				{ ctx->port_identifier()->identifier()->getText(), *pe });
+		non_ansi_port_groups.push_back( { ctx->identifier()->getText(), *pe });
 	}
 	return pe;
 }
-vector<HdlVariableDef*>* PortParser::visitPort_expression(
-		sv2017Parser::Port_expressionContext *ctx) {
-	// port_expression :
-	// port_reference
-	// | '{' port_reference ( ',' port_reference )* '}'
+vector<HdlVariableDef*>* VerPortParser::visitNonansi_port__expr(
+		sv2017Parser::Nonansi_port__exprContext *ctx) {
+	// nonansi_port__expr:
+	//     identifier_doted_index_at_end
+	//     | LBRACE identifier_doted_index_at_end ( COMMA identifier_doted_index_at_end )* RBRACE
 	// ;
 	vector<HdlVariableDef*> *ports = new vector<HdlVariableDef*>();
+	if (ctx->LBRACE()) {
+		NotImplementedLogger::print(
+				"VerPortParser.visitNonansi_port__expr - {}", ctx);
+	}
 	if (ctx) {
-		for (auto pr : ctx->port_reference()) {
-			ports->push_back(visitPort_reference(pr));
+		VerExprParser ep(commentParser);
+		for (auto pr : ctx->identifier_doted_index_at_end()) {
+			auto id = ep.visitIdentifier_doted_index_at_end(pr);
+			try {
+				string id_name = id->extractStr();
+				ports->push_back(new HdlVariableDef(id_name, nullptr, nullptr));
+			} catch (const std::runtime_error &err) {
+				NotImplementedLogger::print(
+						"VerPortParser.visitNonansi_port__expr variable which is not just identifier",
+						pr);
+			}
+			delete id;
 		}
 	}
 	return ports;
 }
-HdlVariableDef* PortParser::visitPort_reference(
-		sv2017Parser::Port_referenceContext *ctx) {
-	// port_reference :
-	// port_identifier
-	// | port_identifier '[' constant_expression ']'
-	// | port_identifier '[' range_expression ']'
-	// ;
-	// port_identifier : identifier ;
-
-	iHdlExpr *t = nullptr;
-	auto c = ctx->constant_expression();
-	if (c) {
-		t = VerExprParser::visitConstant_expression(c);
-	}
-	auto r = ctx->range_expression();
-	if (r)
-		t = VerExprParser::visitRange_expression(r);
-
-	auto p = new HdlVariableDef(ctx->port_identifier()->identifier()->getText(),
-			t, nullptr);
-	p->direction = HdlDirection::DIR_UNKNOWN;
-	return p;
-
-}
-vector<HdlVariableDef*>* PortParser::visitList_of_port_declarations(
+vector<HdlVariableDef*>* VerPortParser::visitList_of_port_declarations(
 		sv2017Parser::List_of_port_declarationsContext *ctx) {
-	// list_of_port_declarations
-	// : '(' port_declaration ( ',' port_declaration )* ')'
-	// | '(' ')'
-	// ;
+	// list_of_port_declarations:
+	//     LPAREN
+	//     (
+	//       ( nonansi_port ( COMMA ( nonansi_port )? )* )
+	//       | ( COMMA ( nonansi_port )? )+
+	//       | ( list_of_port_declarations_ansi_item ( COMMA list_of_port_declarations_ansi_item )* )
+	//     )? RPAREN;
 	auto ports = new vector<HdlVariableDef*>();
-	for (auto pd : ctx->port_declaration()) {
-		auto pds = visitPort_declaration(pd);
+	for (auto pd : ctx->nonansi_port()) {
+		auto pds = visitNonansi_port(pd);
 		for (unsigned i = 0; i < pds->size(); i++)
 			ports->push_back((*pds)[i]);
 		delete pds;
 	}
+	for (auto pdi : ctx->list_of_port_declarations_ansi_item()) {
+		// list_of_port_declarations_ansi_item:
+		// 	( attribute_instance )* ansi_port_declaration
+		// ;
+		VerAttributeParser::visitAttribute_instance(pdi->attribute_instance());
+		auto apd = pdi->ansi_port_declaration();
+		auto pd = visitAnsi_port_declaration(apd);
+		ports->push_back(pd);
+	}
 	return ports;
 }
-vector<HdlVariableDef*>* PortParser::visitNonansi_port_declaration(
-		sv2017Parser::Nonansi_port_declarationContext *ctx) {
-	// port_declaration :
-	// attribute_instance* inout_declaration
-	// | attribute_instance* input_declaration
-	// | attribute_instance* output_declaration
+HdlVariableDef* VerPortParser::visitAnsi_port_declaration(
+		sv2017Parser::Ansi_port_declarationContext *ctx) {
+	// ansi_port_declaration:
+	//   ( port_direction ( net_or_var_data_type )? // net_port_header
+	//     | net_or_var_data_type                   // net_port_header or variable_port_header
+	//     | (identifier | KW_INTERFACE) (DOT identifier )? // interface_port_header
+	//   )? port_identifier ( variable_dimension )*
+	//    (ASSIGN constant_expression)?
+	//   | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
+	// ;
+	HdlDirection d = HdlDirection::DIR_UNKNOWN;
+	auto pd = ctx->port_direction();
+	if (pd) {
+		d = visitPort_direction(pd);
+	}
+	iHdlExpr *t = nullptr;
+	bool is_latched = true;
+	auto nvdt = ctx->net_or_var_data_type();
+	auto _pid = ctx->port_identifier()->identifier();
+	auto name = VerExprParser::getIdentifierStr(_pid);
+	VerExprParser ep(commentParser);
+	VerTypeParser tp(commentParser);
+	if (nvdt) {
+		tie(t, is_latched) = tp.visitNet_or_var_data_type(nvdt);
+	} else {
+		if (ctx->KW_INTERFACE()) {
+			t = iHdlExpr::ID("interface");
+		}
+		for (auto _id : ctx->identifier()) {
+			auto id = VerExprParser::visitIdentifier(_id);
+			t = append_expr(t, HdlOperatorType::DOT, id);
+		}
+	}
+	if (!t and ctx->LPAREN()) {
+		// | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
+		auto _e = ctx->expression();
+		iHdlExpr *def_val = nullptr;
+		if (_e)
+			def_val = ep.visitExpression(_e);
+		return new HdlVariableDef(name, iHdlExpr::AUTO_T(), def_val, d,
+				is_latched);
+	}
+
+	if (!t)
+		t = Utils::mkWireT();
+	auto vds = ctx->variable_dimension();
+	t = tp.applyVariable_dimension(t, vds);
+	iHdlExpr *def_val = nullptr;
+	auto ce = ctx->constant_expression();
+	if (ce)
+		def_val = ep.visitConstant_expression(ce);
+	return new HdlVariableDef(name, t, def_val, d, is_latched);
+}
+void VerPortParser::visitNonansi_port_declaration(
+		sv2017Parser::Nonansi_port_declarationContext *ctx,
+		std::vector<HdlVariableDef*> &res) {
+	// nonansi_port_declaration:
+	//    ( attribute_instance )* (
+	//    KW_INOUT ( net_port_type )? list_of_variable_identifiers
+	//   | KW_INPUT ( net_or_var_data_type )? list_of_variable_identifiers
+	//   | KW_OUTPUT ( net_or_var_data_type )? list_of_variable_port_identifiers
+	//   | identifier ( DOT identifier )? list_of_variable_identifiers // identifier=interface_identifier
+	//   | KW_REF ( var_data_type )? list_of_variable_identifiers
+	//   )
 	// ;
 	string doc = commentParser.parse(ctx);
 	auto attribs = ctx->attribute_instance();
-	if (attribs.size() > 0) {
-		NotImplementedLogger::print(
-				"ModuleParser.visitPort_declaration - attribs not implemented",
-				ctx);
-	}
+	VerAttributeParser::visitAttribute_instance(attribs);
+	VerTypeParser tp(commentParser);
 
-	bool signed_ = Utils::is_signed(ctx);
-	bool reg_ = false;
-	{
-		// inout_declaration : 'inout' ( net_type )? ( 'signed' )? ( range_ )?
-		// list_of_port_identifiers ;
-		auto inout = ctx->inout_declaration();
-		if (inout) {
-			auto ports = visitList_of_port_identifiers(
-					inout->list_of_port_identifiers());
-			return addTypeSpecToPorts(DIR_INOUT, inout->net_type(), signed_,
-					reg_, doc, inout->range_(), ports);
-		}
+	auto lvi = ctx->list_of_variable_identifiers();
+	if (ctx->KW_INOUT()) {
+		bool reg_ = false;
+		auto npt = ctx->net_port_type();
+		auto t = tp.visitNet_port_type(npt);
+		return visitList_of_variable_identifiers(lvi, t, reg_,
+				HdlDirection::DIR_INOUT, doc, res);
 	}
-	{
-		// input_declaration : 'input' ( net_type )? ( 'signed' )? ( range_ )?
-		//                      list_of_port_identifiers ;
-		auto input = ctx->input_declaration();
-		if (input) {
-			auto ports = visitList_of_port_identifiers(
-					input->list_of_port_identifiers());
-			return addTypeSpecToPorts(DIR_IN, input->net_type(), signed_, reg_,
-					doc, input->range_(), ports);
-		}
+	if (ctx->KW_INPUT()) {
+		auto nvdt = ctx->net_or_var_data_type();
+		auto t = tp.visitNet_or_var_data_type(nvdt);
+		return visitList_of_variable_identifiers(lvi, t.first, t.second,
+				HdlDirection::DIR_IN, doc, res);
 	}
-	{
-		// output_declaration
-		//    : 'output' (net_type)? ('signed')? (range_)? list_of_port_identifiers
-		//    | 'output' ('reg')? ('signed')? (range_)? list_of_port_identifiers
-		//    | 'output' 'reg' ('signed')? (range_)? list_of_variable_port_identifiers
-		//    | 'output' (output_variable_type)? list_of_port_identifiers
-		//    | 'output' output_variable_type list_of_variable_port_identifiers
-		//    ;
-		auto od = ctx->output_declaration();
-		reg_ = Utils::is_reg(od);
-		signed_ = Utils::is_signed(od);
-		vector<HdlVariableDef*> *ports;
-		auto lovpi = od->list_of_variable_port_identifiers();
-		if (lovpi) {
-			ports = visitList_of_variable_port_identifiers(lovpi);
-		} else {
-			ports = visitList_of_port_identifiers(
-					od->list_of_port_identifiers());
-		}
-		return addTypeSpecToPorts(DIR_OUT, od->net_type(), signed_, reg_, doc,
-				od->range_(), ports);
+	if (ctx->KW_OUTPUT()) {
+		auto nvdt = ctx->net_or_var_data_type();
+		auto t = tp.visitNet_or_var_data_type(nvdt);
+		auto lvpi = ctx->list_of_variable_port_identifiers();
+		visitList_of_variable_port_identifiers(lvpi, t.first, t.second,
+				HdlDirection::DIR_IN, doc, res);
 	}
 }
-vector<HdlVariableDef*>* PortParser::visitList_of_port_identifiers(
-		sv2017Parser::List_of_port_identifiersContext *ctx) {
-	// list_of_port_identifiers :
-	// port_identifier ( ',' port_identifier )*
-	// ;
-	auto ports = new vector<HdlVariableDef*>();
-	for (auto pi : ctx->port_identifier()) {
-		ports->push_back(visitPort_identifier(pi));
-	}
-	return ports;
+void VerPortParser::visitList_of_variable_port_identifiers(
+		sv2017Parser::List_of_variable_port_identifiersContext *ctx,
+		iHdlExpr *base_type, bool is_latched, HdlDirection direction,
+		const std::string &doc, std::vector<HdlVariableDef*> &res) {
+	// list_of_variable_port_identifiers: list_of_tf_variable_identifiers;
+	auto ltvi = ctx->list_of_tf_variable_identifiers();
+	return visitList_of_tf_variable_identifiers(ltvi, base_type, is_latched,
+			direction, doc, res);
 }
-HdlVariableDef* PortParser::visitPort_identifier(
-		sv2017Parser::Port_identifierContext *ctx) {
-	// port_identifier : identifier ;
-	auto v = new HdlVariableDef(ctx->identifier()->getText(), NULL, NULL);
-	v->direction = HdlDirection::DIR_UNKNOWN;
-	return v;
-}
-vector<HdlVariableDef*>* PortParser::visitList_of_variable_port_identifiers(
-		sv2017Parser::List_of_variable_port_identifiersContext *ctx) {
-	// list_of_variable_port_identifiers :
-	// port_identifier ( '=' constant_expression )? ( ',' port_identifier (
-	// '=' constant_expression )? )* ;
-	auto ports = new vector<HdlVariableDef*>();
-	HdlVariableDef *last = nullptr;
-	for (auto n : ctx->children) {
-		auto cec =
-				dynamic_cast<sv2017Parser::Constant_expressionContext*>(n);
-		if (cec) {
-			last->value = VerExprParser::visitConstant_expression(cec);
-		} else {
-			auto pic =
-					dynamic_cast<sv2017Parser::Port_identifierContext*>(n);
-			if (pic) {
-				last = visitPort_identifier(pic);
-				ports->push_back(last);
-			}
-		}
-	}
-	return ports;
-}
+
 template<typename T>
 typename std::vector<T>::iterator replace_seq_with_value(std::vector<T> &vec,
 		T first_val, size_t seq_len, T replacement) {
@@ -252,8 +221,8 @@ typename std::vector<T>::iterator replace_seq_with_value(std::vector<T> &vec,
 	return vec.end();
 }
 
-void PortParser::convert_non_ansi_ports_to_ansi(vector<HdlVariableDef*> &ports,
-		vector<iHdlObj*> &body) {
+void VerPortParser::convert_non_ansi_ports_to_ansi(
+		vector<HdlVariableDef*> &ports, vector<iHdlObj*> &body) {
 	std::vector<HdlVariableDef*> non_ansi_converted_ports(
 			non_ansi_port_groups.size());
 	// module x (.a(b, c)); input b, c; endmodule -> module x (input [2:0] a); wire b, c; assign {b, c} = a; endmodule
@@ -280,9 +249,9 @@ void PortParser::convert_non_ansi_ports_to_ansi(vector<HdlVariableDef*> &ports,
 		for (auto p : g.second) {
 			ops.push_back(iHdlExpr::ID(p->name));
 		}
-		iHdlExpr * conc = VerExprParser::reduce(ops, HdlOperatorType::CONCAT);
-		iHdlExpr * this_port_id = iHdlExpr::ID(g.first);
-		HdlStmAssign * drv;
+		iHdlExpr *conc = reduce(ops, HdlOperatorType::CONCAT);
+		iHdlExpr *this_port_id = iHdlExpr::ID(g.first);
+		HdlStmAssign *drv;
 		if ((*nap)->direction == HdlDirection::DIR_IN) {
 			drv = new HdlStmAssign(conc, this_port_id, false);
 		} else {
@@ -290,6 +259,139 @@ void PortParser::convert_non_ansi_ports_to_ansi(vector<HdlVariableDef*> &ports,
 		}
 		body.push_back(static_cast<iHdlObj*>(drv));
 		nap++;
+	}
+}
+void VerPortParser::visitList_of_tf_variable_identifiers(
+		sv2017Parser::List_of_tf_variable_identifiersContext *ctx,
+		iHdlExpr *base_type, bool is_latched, HdlDirection direction,
+		const std::string &doc, std::vector<HdlVariableDef*> &res) {
+	// list_of_tf_variable_identifiers:
+	//     list_of_tf_variable_identifiers_item
+	//     ( COMMA list_of_tf_variable_identifiers_item )*
+	// ;
+	VerTypeParser tp(commentParser);
+	VerExprParser ep(commentParser);
+	bool first = true;
+	for (auto i : ctx->list_of_tf_variable_identifiers_item()) {
+		// list_of_tf_variable_identifiers_item: identifier ( variable_dimension )* ( ASSIGN expression )?;
+		auto t = base_type;
+		if (!first)
+			t = new iHdlExpr(*base_type);
+
+		auto vds = i->variable_dimension();
+		t = tp.applyVariable_dimension(t, vds);
+		auto _id = i->identifier();
+		auto id = VerExprParser::getIdentifierStr(_id);
+		auto _e = i->expression();
+		iHdlExpr *def_val = nullptr;
+		if (_e)
+			def_val = ep.visitExpression(_e);
+
+		auto v = new HdlVariableDef(id, t, def_val);
+		if (first) {
+			first = false;
+			v->__doc__ = doc;
+		}
+		v->is_latched = is_latched;
+		v->direction = direction;
+		res.push_back(v);
+	}
+}
+void VerPortParser::visitList_of_variable_identifiers(
+		sv2017Parser::List_of_variable_identifiersContext *ctx,
+		iHdlExpr *base_type, bool is_latched, HdlDirection direction,
+		const std::string &doc, std::vector<HdlVariableDef*> &res) {
+	// list_of_variable_identifiers:
+	//     list_of_variable_identifiers_item ( COMMA list_of_variable_identifiers_item )*;
+	VerTypeParser tp(commentParser);
+	bool first = true;
+	for (auto i : ctx->list_of_variable_identifiers_item()) {
+		// list_of_variable_identifiers_item: identifier ( variable_dimension )*;
+		auto t = base_type;
+		if (!first)
+			t = new iHdlExpr(*base_type);
+
+		auto vds = i->variable_dimension();
+		t = tp.applyVariable_dimension(t, vds);
+		auto _id = i->identifier();
+		auto id = VerExprParser::getIdentifierStr(_id);
+		auto v = new HdlVariableDef(id, t, nullptr);
+		if (first) {
+			first = false;
+			v->__doc__ = doc;
+		}
+		v->is_latched = is_latched;
+		v->direction = direction;
+		res.push_back(v);
+	}
+}
+
+void VerPortParser::visitTf_port_list(sv2017Parser::Tf_port_listContext *ctx,
+		std::vector<HdlVariableDef*> &res) {
+	// tf_port_list: tf_port_item ( COMMA tf_port_item )*;
+	for (auto pl : ctx->tf_port_item()) {
+		auto v = visitTf_port_item(pl);
+		res.push_back(v);
+	}
+}
+HdlVariableDef* VerPortParser::visitTf_port_item(
+		sv2017Parser::Tf_port_itemContext *ctx) {
+	// tf_port_item:
+	//     ( attribute_instance )* ( tf_port_direction )? ( KW_VAR )? ( data_type_or_implicit )?
+	//     ( identifier ( variable_dimension )* ( ASSIGN expression )? )?;
+	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	HdlDirection d = HdlDirection::DIR_IN;
+	auto dti = ctx->data_type_or_implicit();
+	VerTypeParser tp(commentParser);
+	auto t = tp.visitData_type_or_implicit(dti, nullptr);
+	auto vds = ctx->variable_dimension();
+	t = tp.applyVariable_dimension(t, vds);
+	VerExprParser ep(commentParser);
+	string name = "";
+	auto id = ctx->identifier();
+	if (id) {
+		name = ep.getIdentifierStr(id);
+	}
+	iHdlExpr *v = nullptr;
+	auto e = ctx->expression();
+	if (e) {
+		v = ep.visitExpression(e);
+	}
+
+	bool is_latched = ctx->KW_VAR() != nullptr;
+	return new HdlVariableDef(name, t, v, d, is_latched);
+}
+
+HdlDirection VerPortParser::visitPort_direction(
+		sv2017Parser::Port_directionContext *ctx) {
+	// port_direction:
+	//     KW_INPUT
+	//     | KW_OUTPUT
+	//     | KW_INOUT
+	//     | KW_REF
+	// ;
+	if (ctx->KW_INPUT())
+		return HdlDirection::DIR_IN;
+	if (ctx->KW_OUTPUT())
+		return HdlDirection::DIR_OUT;
+	if (ctx->KW_INOUT())
+		return HdlDirection::DIR_INOUT;
+	assert(ctx->KW_REF());
+	return HdlDirection::DIR_LINKAGE;
+}
+
+HdlDirection VerPortParser::visitTf_port_direction(
+		sv2017Parser::Tf_port_directionContext *ctx) {
+	// tf_port_direction:
+	//     KW_CONST KW_REF
+	//     | port_direction
+	// ;
+	if (ctx->KW_REF()) {
+		return HdlDirection::DIR_LINKAGE;
+	} else {
+		auto pd = ctx->port_direction();
+		assert(pd);
+		return visitPort_direction(pd);
 	}
 }
 
