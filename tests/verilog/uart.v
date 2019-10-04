@@ -35,7 +35,7 @@ input        rx_enable      ;
 input        rx_in          ;
 output       rx_empty       ;
 
-// Internal Variables 
+// Internal Variables (@note: interference with ports)
 reg [7:0]    tx_reg         ;
 reg          tx_empty       ;
 reg          tx_over_run    ;
