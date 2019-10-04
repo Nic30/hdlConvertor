@@ -46,6 +46,8 @@ public:
 			sv2017Parser::Assignment_operatorContext *ctx);
 	static hdlObjects::iHdlExpr* visitPrimary_literal(
 			sv2017Parser::Primary_literalContext *ctx);
+	static hdlObjects::iHdlExpr* visitAny_system_tf_identifier(
+			sv2017Parser::Any_system_tf_identifierContext *ctx);
 };
 
 }

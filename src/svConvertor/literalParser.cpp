@@ -218,9 +218,9 @@ HdlOperatorType VerLiteralParser::visitOperator_shift(
 	//    | ARITH_SHIFT_RIGHT
 	// ;
 	if (ctx->SHIFT_LEFT())
-		return HdlOperatorType::SRL;
-	else if (ctx->SHIFT_RIGHT())
 		return HdlOperatorType::SLL;
+	else if (ctx->SHIFT_RIGHT())
+		return HdlOperatorType::SRL;
 	else if (ctx->ARITH_SHIFT_LEFT())
 		return HdlOperatorType::SLA;
 	else {
@@ -405,6 +405,32 @@ iHdlExpr* VerLiteralParser::visitPrimary_literal(
 		return iHdlExpr::ID("this");
 	assert(ctx->DOLAR());
 	return iHdlExpr::ID("$");
+}
+
+iHdlExpr* VerLiteralParser::visitAny_system_tf_identifier(
+		sv2017Parser::Any_system_tf_identifierContext *ctx) {
+	// any_system_tf_identifier:
+	//     SYSTEM_TF_IDENTIFIER
+	//     | KW_DOLAR_SETUPHOLD
+	//     | KW_DOLAR_SETUP
+	//     | KW_DOLAR_FULLSKEW
+	//     | KW_DOLAR_WARNING
+	//     | KW_DOLAR_WIDTH
+	//     | KW_DOLAR_ROOT
+	//     | KW_DOLAR_RECOVERY
+	//     | KW_DOLAR_SKEW
+	//     | KW_DOLAR_FATAL
+	//     | KW_DOLAR_REMOVAL
+	//     | KW_DOLAR_RECREM
+	//     | KW_DOLAR_ERROR
+	//     | KW_DOLAR_PERIOD
+	//     | KW_DOLAR_HOLD
+	//     | KW_DOLAR_INFO
+	//     | KW_DOLAR_UNIT
+	//     | KW_DOLAR_TIMESKEW
+	//     | KW_DOLAR_NOCHANGE
+	// ;
+	return iHdlExpr::ID(ctx->getText());
 }
 
 }

@@ -1,4 +1,5 @@
 #include <hdlConvertor/svConvertor/exprPrimaryParser.h>
+#include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
 #include <hdlConvertor/svConvertor/typeParser.h>
@@ -215,11 +216,28 @@ hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryTfCall(
 		sv2017Parser::PrimaryTfCallContext *ctx) {
 	//     | any_system_tf_identifier ( LPAREN data_type COMMA list_of_arguments
 	//          ( COMMA clocking_event )? RPAREN
-	//          | LPAREN list_of_arguments COMMA clocking_event  RPAREN
+	//          | LPAREN list_of_arguments ( COMMA clocking_event )?  RPAREN
 	//          )?                                       #PrimaryTfCall
+	auto astfi = ctx->any_system_tf_identifier();
+	auto id = VerLiteralParser::visitAny_system_tf_identifier(astfi);
 
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryTfCall", ctx);
-	return iHdlExpr::null();
+	VerExprParser ep(commentParser);
+	VerTypeParser tp(commentParser);
+	std::vector<iHdlExpr*> args;
+	auto _dt = ctx->data_type();
+	if (_dt)
+		args.push_back(tp.visitData_type(_dt));
+	auto loa = ctx->list_of_arguments();
+	if (loa)
+		ep.visitList_of_arguments(loa, args);
+
+	auto ce = ctx->clocking_event();
+	if (ce) {
+		NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryTfCall.clocking_event",
+				ctx);
+		// args.push_back(ep.visitClocking_event(ce));
+	}
+	return iHdlExpr::call(id, args);
 }
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryRandomize(
 		sv2017Parser::PrimaryRandomizeContext *ctx) {
@@ -256,26 +274,70 @@ hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCall(
 	//     | primary ( DOT array_method_name )? ( attribute_instance )*
 	//                   LPAREN ( list_of_arguments )? RPAREN
 	//                   ( KW_WITH LPAREN expression RPAREN )? #PrimaryCall
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _amn = ctx->array_method_name();
+	if (_amn) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitPrimaryCall.array_method_name",
+				_amn);
+		// auto amn = visitArray_method_name(_amn);
+		// p = new iHdlExpr(p, HdlOperatorType::DOT, amn);
+	}
+	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	if (ctx->KW_WITH())
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitPrimaryCall.with", ctx);
 
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryCall", ctx);
-	return iHdlExpr::null();
+	VerExprParser ep(commentParser);
+	std::vector<iHdlExpr*> args;
+	auto loa = ctx->list_of_arguments();
+	if (loa)
+		ep.visitList_of_arguments(loa, args);
+	return iHdlExpr::call(p, args);
 }
+
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
 		sv2017Parser::PrimaryCallArrayMethodNoArgsContext *ctx) {
 	//     | primary DOT array_method_name               #PrimaryCallArrayMethodNoArgs
 
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _amn = ctx->array_method_name();
 	NotImplementedLogger::print(
-			"VerExprPrimaryParser.visitPrimaryCallArrayMethodNoArgs", ctx);
-	return iHdlExpr::null();
+			"VerExprPrimaryParser.visitPrimaryCallArrayMethodNoArgs.array_method_name",
+			_amn);
+	// auto amn = visitArray_method_name(_amn);
+	// p = new iHdlExpr(p, HdlOperatorType::DOT, amn);
+
+	VerExprParser ep(commentParser);
+	std::vector<iHdlExpr*> args;
+	return iHdlExpr::call(p, args);
 }
+
 hdlObjects::iHdlExpr* VerExprPrimaryParser::visitPrimaryCallWith(
 		sv2017Parser::PrimaryCallWithContext *ctx) {
 	//     | primary ( DOT array_method_name )? ( attribute_instance )*
 	//              KW_WITH LPAREN expression RPAREN     #PrimaryCallWith
 
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryCallWith",
-			ctx);
-	return iHdlExpr::null();
+	auto _p = ctx->primary();
+	auto p = visitPrimary(_p);
+	auto _amn = ctx->array_method_name();
+	if (_amn) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitPrimaryCallWith.array_method_name",
+				_amn);
+		// auto amn = visitArray_method_name(_amn);
+		// p = new iHdlExpr(p, HdlOperatorType::DOT, amn);
+	}
+	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	if (ctx->KW_WITH())
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitPrimaryCallWith.with", ctx);
+
+	VerExprParser ep(commentParser);
+	std::vector<iHdlExpr*> args;
+	return iHdlExpr::call(p, args);
 }
 
 }
