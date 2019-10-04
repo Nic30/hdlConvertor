@@ -1,40 +1,59 @@
 from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
-from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue, \
+from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn, HdlIntValue, \
     HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
     HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
     HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto
 
+PRIMITIVE_TYPES = {HdlName("reg"), HdlName("wire")}
+
 
 def collect_array_dims(t):
     array_dim = []
-    while isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
+    prev_t = t
+    while isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.INDEX:
         array_dim.append(t.ops[1])
+        prev_t = t
         t = t.ops[0]
-    
-    array_dim.reverse()
+    if array_dim:
+        if (isinstance(t, HdlName) and t in PRIMITIVE_TYPES) \
+            or (isinstance(t, HdlCall)
+                and t.fn == HdlBuiltinFn.PARAMETRIZATION
+                and t.ops[0] in PRIMITIVE_TYPES):
+            # this dimensions is actually size of the vector
+            array_dim.pop()
+            t = prev_t
+        array_dim.reverse()
     return t, array_dim
 
-    
+
 def get_wire_t_params(t):
-    
+
     t, array_dim = collect_array_dims(t)
-    
-    if t == HdlName('wire'):
-        return None, False, array_dim
-        
-    if not isinstance(t, HdlCall) or t.fn != HdlBuildinFn.CALL:
-        return None
-    
-    if t.ops[0] != HdlName('wire'):
-        return None
-    
-    _, width, is_signed = t.ops
+
+    if t == HdlName('wire') or t == HdlName('reg'):
+        return t, None, False, array_dim
+
+    if isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.INDEX:
+        width = t.ops[1]
+        t = t.ops[0]
+
+    is_signed = False
+    if not isinstance(t, HdlName) or t not in PRIMITIVE_TYPES:
+        if not isinstance(t, HdlCall) or t.fn != HdlBuiltinFn.PARAMETRIZATION:
+            return None
+
+        if t.ops[0] != HdlName('wire') and t.ops != HdlName('reg'):
+            return None
+
+        _, is_signed = t.ops
+        t = t.ops[0]
+
     is_signed = bool(is_signed)
-    
+
     if width == 1:
         width = None
-   
-    return width, is_signed, array_dim
+
+    return t, width, is_signed, array_dim
 
 
 class ToVerilog():
@@ -49,27 +68,27 @@ class ToVerilog():
     }
 
     GENERIC_BIN_OPS = {
-        HdlBuildinFn.AND: "&",
-        HdlBuildinFn.LOG_AND: "&&",
-        HdlBuildinFn.OR: "|",
-        HdlBuildinFn.LOG_OR: "||",
-        HdlBuildinFn.SUB: "-",
-        HdlBuildinFn.ADD: "+",
-        HdlBuildinFn.MUL: "*",
-        HdlBuildinFn.DIV: "/",
-        HdlBuildinFn.MOD: "%",
-        HdlBuildinFn.NAND: "~&",
-        HdlBuildinFn.NOR: "~|",
-        HdlBuildinFn.XOR: "^",
-        HdlBuildinFn.XNOR: "~^",
-        HdlBuildinFn.EQ: '==',
-        HdlBuildinFn.NEQ: "!=",
-        HdlBuildinFn.LT: "<",
-        HdlBuildinFn.LE: "<=",
-        HdlBuildinFn.GT: ">",
-        HdlBuildinFn.GE: ">=",
-        HdlBuildinFn.SLL: "<<",
-        HdlBuildinFn.SRL: ">>",
+        HdlBuiltinFn.AND: "&",
+        HdlBuiltinFn.LOG_AND: "&&",
+        HdlBuiltinFn.OR: "|",
+        HdlBuiltinFn.LOG_OR: "||",
+        HdlBuiltinFn.SUB: "-",
+        HdlBuiltinFn.ADD: "+",
+        HdlBuiltinFn.MUL: "*",
+        HdlBuiltinFn.DIV: "/",
+        HdlBuiltinFn.MOD: "%",
+        HdlBuiltinFn.NAND: "~&",
+        HdlBuiltinFn.NOR: "~|",
+        HdlBuiltinFn.XOR: "^",
+        HdlBuiltinFn.XNOR: "~^",
+        HdlBuiltinFn.EQ: '==',
+        HdlBuiltinFn.NEQ: "!=",
+        HdlBuiltinFn.LT: "<",
+        HdlBuiltinFn.LE: "<=",
+        HdlBuiltinFn.GT: ">",
+        HdlBuiltinFn.GE: ">=",
+        HdlBuiltinFn.SLL: "<<",
+        HdlBuiltinFn.SRL: ">>",
     }
 
     def __init__(self, out_stream):
@@ -111,16 +130,15 @@ class ToVerilog():
         self.print_doc(p)
         self.print_direction(p.direction)
         w(" ")
-        l = p.is_latched
-        if l:
-            w("reg ")
 
         t = p.type
         is_array = self.print_type_first_part(t)
-        if is_array:
-            raise NotImplementedError(t)
+        w(" ")
 
         w(p.name)
+
+        if is_array:
+            raise NotImplementedError(t)
 
     def print_module_header(self, e):
         """
@@ -215,57 +233,57 @@ class ToVerilog():
                     pe(o.ops[1])
                     w(")")
                 return
-            if op == HdlBuildinFn.DOWNTO:
+            if op == HdlBuiltinFn.DOWNTO:
                 pe(o.ops[0])
                 w(":")
                 pe(o.ops[1])
                 return
-            elif op == HdlBuildinFn.TO:
+            elif op == HdlBuiltinFn.TO:
                 pe(o.ops[1])
                 w(":")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NOT:
+            elif op == HdlBuiltinFn.NOT:
                 w("!")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.RISING:
+            elif op == HdlBuiltinFn.RISING:
                 w("posedge ")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.FALLING:
+            elif op == HdlBuiltinFn.FALLING:
                 w("negedge ")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.CONCAT:
+            elif op == HdlBuiltinFn.CONCAT:
                 w("{")
                 pe(o.ops[0])
                 w(", ")
                 pe(o.ops[1])
                 w("}")
                 return
-            elif op == HdlBuildinFn.INDEX:
+            elif op == HdlBuiltinFn.INDEX:
                 pe(o.ops[0])
                 w("[")
                 pe(o.ops[1])
                 w("]")
                 return
-            elif op == HdlBuildinFn.REPL_CONCAT:
+            elif op == HdlBuiltinFn.REPL_CONCAT:
                 w("{(")
                 pe(o.ops[0])
                 w("){")
                 pe(o.ops[1])
                 w("}}")
                 return
-            elif op == HdlBuildinFn.TERNARY:
+            elif op == HdlBuiltinFn.TERNARY:
                 w("(")
                 pe(o.ops[0])
                 w(") ? (")
@@ -275,7 +293,7 @@ class ToVerilog():
                 pe(o1)
                 w(")")
                 return
-            elif op == HdlBuildinFn.CALL:
+            elif op == HdlBuiltinFn.CALL:
                 pe(o.ops[0])
                 w("(")
                 for is_last, o_n in iter_with_last_flag(o.ops[1:]):
@@ -290,6 +308,9 @@ class ToVerilog():
             w("*")
             return
         elif expr is HdlTypeAuto:
+            return
+        elif expr is None:
+            w("null")
             return
 
         raise NotImplementedError(expr)
@@ -307,14 +328,15 @@ class ToVerilog():
             if op is None:
                 self.print_expr(t)
         else:
-            width, is_signed, _ = wire_params
+            base_t, width, is_signed, _ = wire_params
+            w(base_t)
             if width is not None:
                 # 1D vector
                 w("[")
                 if is_signed:
                     raise NotImplementedError(op)
                 self.print_expr(width)
-                w("] ")
+                w("]")
         return len(array_dims) > 0
 
     def print_type_array_part(self, t):
@@ -323,7 +345,7 @@ class ToVerilog():
         """
         w = self.out.write
         _, array_dim = collect_array_dims(t)
-        for ad in array_dim: 
+        for ad in array_dim:
             w("[")
             self.print_expr(ad)
             w("]")
@@ -335,17 +357,10 @@ class ToVerilog():
         self.print_doc(var)
         name = var.name
         t = var.type
-        l = var.is_latched
         w = self.out.write
-        if l:
-            w("reg ")
-        else:
-            w("wire ")
 
         is_array = self.print_type_first_part(t)
-        wp = get_wire_t_params(t)
-        if wp is None or wp[0] is not None:
-            w(" ")
+        w(" ")
         w(name)
         if is_array:
             w(" ")
@@ -534,7 +549,7 @@ class ToVerilog():
         w = self.out.write
         w("#")
         assert len(o.val) == 1
-        self.print_expr(o.val[0]);
+        self.print_expr(o.val[0])
         return True
 
     def print_for(self, o):
@@ -607,7 +622,7 @@ class ToVerilog():
             return True
 
     def print_map_item(self, item):
-        if isinstance(item, HdlCall) and item.fn == HdlBuildinFn.MAP_ASSOCIATION:
+        if isinstance(item, HdlCall) and item.fn == HdlBuiltinFn.MAP_ASSOCIATION:
             w = self.out.write
             # k, v pair
             k, v = item.ops

@@ -32,6 +32,75 @@ iHdlExpr* VerTypeParser::visitType_reference(
 	return visitData_type(dt);
 }
 
+iHdlExpr* VerTypeParser::visitInteger_type(
+		sv2017Parser::Integer_typeContext *ctx) {
+	// integer_type:
+	//     integer_vector_type
+	//     | integer_atom_type
+	// ;
+	auto ivt = ctx->integer_vector_type();
+	if (ivt)
+		return visitInteger_vector_type(ivt);
+	auto iat = ctx->integer_atom_type();
+	assert(iat);
+	return visitInteger_atom_type(iat);
+}
+
+iHdlExpr* VerTypeParser::visitNon_integer_type(
+		sv2017Parser::Non_integer_typeContext *ctx) {
+	// non_integer_type:
+	//     KW_SHORTREAL
+	//     | KW_REAL
+	//     | KW_REALTIME
+	// ;
+	return iHdlExpr::ID(ctx->getText());
+}
+iHdlExpr* VerTypeParser::visitInteger_atom_type(
+		sv2017Parser::Integer_atom_typeContext *ctx) {
+	// integer_atom_type:
+	//     KW_BYTE
+	//     | KW_SHORTINT
+	//     | KW_INT
+	//     | KW_LONGINT
+	//     | KW_INTEGER
+	//     | KW_TIME
+	// ;
+	return iHdlExpr::ID(ctx->getText());
+}
+
+iHdlExpr* VerTypeParser::visitInteger_vector_type(
+		sv2017Parser::Integer_vector_typeContext *ctx) {
+	// integer_vector_type:
+	//     KW_BIT
+	//     | KW_LOGIC
+	//     | KW_REG
+	// ;
+	return iHdlExpr::ID(ctx->getText());
+}
+
+iHdlExpr* VerTypeParser::visitData_type_primitive(
+		sv2017Parser::Data_type_primitiveContext *ctx) {
+	// data_type_primitive:
+	//     integer_type ( signing )?
+	//     | non_integer_type
+	// ;
+	auto it = ctx->integer_type();
+	if (it) {
+		auto t = visitInteger_type(it);
+		auto sig = ctx->signing();
+		if (sig && visitSigning(sig)) {
+			std::vector<iHdlExpr*> args = { new iHdlExpr(iHdlExpr::ID("signed"),
+					HdlOperatorType::MAP_ASSOCIATION, iHdlExpr::INT(1)) };
+			t = iHdlExpr::parametrization(t, args);
+		}
+		return t;
+	} else {
+		auto nit = ctx->non_integer_type();
+		assert(nit);
+		return visitNon_integer_type(nit);
+	}
+}
+
 iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
 	// data_type:
 	//     KW_STRING
@@ -49,38 +118,53 @@ iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
 	// ;
 	if (ctx->KW_STRING())
 		return iHdlExpr::ID("string");
+
 	if (ctx->KW_CHANDLE())
 		return iHdlExpr::ID("chandle");
+
 	if (ctx->KW_VIRTUAL()) {
-		NotImplementedLogger::print("VerTypeParser::visitData_type - virtual",
+		NotImplementedLogger::print("VerTypeParser.visitData_type - virtual",
 				ctx);
-		return iHdlExpr::null();
+		auto ids = ctx->identifier();
+		VerExprParser ep(commentParser);
+		iHdlExpr *t = ep.visitIdentifier(ids[0]);
+		auto pva = ctx->parameter_value_assignment();
+		if (pva) {
+			auto p = ep.visitParameter_value_assignment(pva);
+			t = iHdlExpr::parametrization(t, p);
+		}
+		if (ids.size() == 2) {
+			auto id = ep.visitIdentifier(ids[1]);
+			t = new iHdlExpr(t, HdlOperatorType::DOT, id);
+		} else {
+			assert(ids.size() == 1);
+		}
+		return t;
 	}
+
 	if (ctx->KW_EVENT())
 		return iHdlExpr::ID("event");
 
-	if (ctx->data_type_primitive()) {
+	auto dtp = ctx->data_type_primitive();
+	iHdlExpr *t = nullptr;
+	if (dtp) {
+		t = visitData_type_primitive(dtp);
+	} else if (ctx->KW_ENUM()) {
+		NotImplementedLogger::print("VerTypeParser.visitData_type - enum", ctx);
+		t = iHdlExpr::null();
+	} else if (ctx->struct_union()) {
 		NotImplementedLogger::print(
-				"VerTypeParser::visitData_type - data_type_primitive", ctx);
-		return iHdlExpr::null();
+				"VerTypeParser.visitData_type - struct or union", ctx);
+		t = iHdlExpr::null();
+	} else {
+		VerExprParser ep(commentParser);
+		auto _p = ctx->package_or_class_scoped_path();
+		t = ep.visitPackage_or_class_scoped_path(_p);
 	}
-	if (ctx->KW_ENUM()) {
-		NotImplementedLogger::print("VerTypeParser::visitData_type - enum",
-				ctx);
-		return iHdlExpr::null();
-	}
-	if (ctx->struct_union()) {
-		NotImplementedLogger::print(
-				"VerTypeParser::visitData_type - struct or union", ctx);
-		return iHdlExpr::null();
-	}
-	auto _p = ctx->package_or_class_scoped_path();
-	VerExprParser ep(commentParser);
 	VerTypeParser tp(commentParser);
-	auto p = ep.visitPackage_or_class_scoped_path(_p);
 	auto vds = ctx->variable_dimension();
-	p = tp.applyVariable_dimension(p, vds);
-	return p;
+	t = tp.applyVariable_dimension(t, vds);
+	return t;
 }
 
 iHdlExpr* VerTypeParser::visitData_type_or_implicit(
@@ -300,6 +384,24 @@ iHdlExpr* VerTypeParser::visitData_type_or_void(
 		auto dt = ctx->data_type();
 		return visitData_type(dt);
 	}
+}
+iHdlExpr* VerTypeParser::visitVar_data_type(
+		sv2017Parser::Var_data_typeContext *ctx) {
+	// var_data_type:
+	//   KW_VAR ( data_type_or_implicit )?
+	//    | data_type
+	// ;
+	if (!ctx)
+		return Utils::mkWireT();
+	auto dti = ctx->data_type_or_implicit();
+	if (dti)
+		return visitData_type_or_implicit(dti, nullptr);
+	auto dt = ctx->data_type();
+	if (dt)
+		return visitData_type(dt);
+	else
+		assert(ctx->KW_VAR());
+	return Utils::mkWireT();
 }
 
 hdlObjects::iHdlExpr* VerTypeParser::visitFunction_data_type_or_implicit(

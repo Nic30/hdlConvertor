@@ -16,6 +16,16 @@ public:
 
 	hdlObjects::iHdlExpr* visitType_reference(
 			sv2017Parser::Type_referenceContext *ctx);
+	hdlObjects::iHdlExpr* visitInteger_type(
+			sv2017Parser::Integer_typeContext *ctx);
+	hdlObjects::iHdlExpr* visitNon_integer_type(
+			sv2017Parser::Non_integer_typeContext *ctx);
+	hdlObjects::iHdlExpr* visitData_type_primitive(
+			sv2017Parser::Data_type_primitiveContext *ctx);
+	hdlObjects::iHdlExpr* visitInteger_atom_type(
+			sv2017Parser::Integer_atom_typeContext *ctx);
+	hdlObjects::iHdlExpr* visitInteger_vector_type(
+			sv2017Parser::Integer_vector_typeContext *ctx);
 	hdlObjects::iHdlExpr* visitData_type(sv2017Parser::Data_typeContext *ctx);
 	/*
 	 * @note ctx can be nullptr
@@ -60,6 +70,8 @@ public:
 			sv2017Parser::Function_data_type_or_implicitContext *ctx);
 	hdlObjects::iHdlExpr* visitData_type_or_void(
 			sv2017Parser::Data_type_or_voidContext *ctx);
+	hdlObjects::iHdlExpr* visitVar_data_type(
+			sv2017Parser::Var_data_typeContext *ctx);
 };
 
 }

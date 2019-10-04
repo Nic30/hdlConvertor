@@ -174,21 +174,36 @@ void VerPortParser::visitNonansi_port_declaration(
 		bool reg_ = false;
 		auto npt = ctx->net_port_type();
 		auto t = tp.visitNet_port_type(npt);
-		return visitList_of_variable_identifiers(lvi, t, reg_,
-				HdlDirection::DIR_INOUT, doc, res);
-	}
-	if (ctx->KW_INPUT()) {
+		visitList_of_variable_identifiers(lvi, t, reg_, HdlDirection::DIR_INOUT,
+				doc, res);
+	} else if (ctx->KW_INPUT()) {
 		auto nvdt = ctx->net_or_var_data_type();
 		auto t = tp.visitNet_or_var_data_type(nvdt);
-		return visitList_of_variable_identifiers(lvi, t.first, t.second,
+		visitList_of_variable_identifiers(lvi, t.first, t.second,
 				HdlDirection::DIR_IN, doc, res);
-	}
-	if (ctx->KW_OUTPUT()) {
+	} else if (ctx->KW_OUTPUT()) {
 		auto nvdt = ctx->net_or_var_data_type();
 		auto t = tp.visitNet_or_var_data_type(nvdt);
 		auto lvpi = ctx->list_of_variable_port_identifiers();
 		visitList_of_variable_port_identifiers(lvpi, t.first, t.second,
-				HdlDirection::DIR_IN, doc, res);
+				HdlDirection::DIR_OUT, doc, res);
+	} else {
+		auto ids = ctx->identifier();
+		if (ids.size()) {
+			auto t = VerExprParser::visitIdentifier(ids[0]);
+			if (ids.size() > 1) {
+				assert(ids.size() == 2);
+				t = new iHdlExpr(t, HdlOperatorType::DOT,
+						VerExprParser::visitIdentifier(ids[1]));
+			}
+			return visitList_of_variable_identifiers(lvi, t, false,
+					HdlDirection::DIR_LINKAGE, doc, res);
+		} else {
+			auto vdt = ctx->var_data_type();
+			auto t = tp.visitVar_data_type(vdt);
+			return visitList_of_variable_identifiers(lvi, t, false,
+					HdlDirection::DIR_LINKAGE, doc, res);
+		}
 	}
 }
 void VerPortParser::visitList_of_variable_port_identifiers(

@@ -18,17 +18,21 @@ iHdlExpr* Utils::mkStringT() {
 iHdlExpr* Utils::mkIntT() {
 	return iHdlExpr::ID("integer");
 }
+
 iHdlExpr* Utils::mkWireT() {
 	return iHdlExpr::ID("wire");
 }
-iHdlExpr* Utils::mkWireT(iHdlExpr *net_type, iHdlExpr *range, bool signed_) {
-	std::vector<iHdlExpr*> operands = { range, iHdlExpr::INT(signed_ ? 1 : 0) };
-	if (net_type == nullptr)
-		net_type = mkWireT();
-	return iHdlExpr::call(net_type, operands);
-}
+
 iHdlExpr* Utils::mkWireT(iHdlExpr *range, bool signed_) {
 	return mkWireT(nullptr, range, signed_);
+}
+
+iHdlExpr* Utils::mkWireT(iHdlExpr *net_type, iHdlExpr *range, bool signed_) {
+	std::vector<iHdlExpr*> operands = { iHdlExpr::INT(signed_ ? 1 : 0) };
+	if (net_type == nullptr)
+		net_type = mkWireT();
+	net_type = iHdlExpr::parametrization(net_type, operands);
+	return new iHdlExpr(net_type, HdlOperatorType::INDEX, range);
 }
 
 iHdlExpr* append_expr(iHdlExpr *selected_name,
@@ -39,6 +43,7 @@ iHdlExpr* append_expr(iHdlExpr *selected_name,
 		return new_part;
 	}
 }
+
 iHdlExpr* reduce(const std::vector<iHdlExpr*> &ops, HdlOperatorType op) {
 	iHdlExpr *res = nullptr;
 	for (auto p : ops) {

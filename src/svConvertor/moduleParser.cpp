@@ -1,5 +1,7 @@
 #include <hdlConvertor/svConvertor/moduleParser.h>
 
+#include <algorithm>
+
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/conversion_exception.h>
 
@@ -114,13 +116,34 @@ void VerModuleParser::visitModule_declaration(
 		VerPortParser pp(commentParser, non_ANSI_port_groups);
 		pp.convert_non_ansi_ports_to_ansi(ent->ports, arch->objs);
 	}
-	for (auto o : ent->ports) {
-		if (o->type == nullptr) {
-			throw ParseException(
-					string("Can not find type specification for port ")
-							+ ent->name + "::" + o->name);
+	auto consume_nonansi_ports_vars = [this](iHdlObj *o) {
+		auto v = dynamic_cast<HdlVariableDef*>(o);
+		if (!v)
+			return false;
+
+		auto p = ent->getPortByName(v->name);
+		if (!p)
+			return false;
+
+		// this is a variable which specifies the real type of the non-ansi port
+		delete p->type;
+		p->type = v->type;
+		v->type = nullptr;
+		if (v->value) {
+			delete p->value;
+			p->value = v->value;
+			v->value = nullptr;
 		}
-	}
+		p->__doc__ += v->__doc__;
+		p->is_const |= v->is_const;
+		p->is_latched |= v->is_latched;
+		p->is_static |= v->is_static;
+		delete v;
+		return true;
+	};
+	arch->objs.erase(
+			std::remove_if(arch->objs.begin(), arch->objs.end(),
+					consume_nonansi_ports_vars), arch->objs.end());
 	for (auto o : ent->generics) {
 		if (!o->type) {
 			o->type = iHdlExpr::AUTO_T();
@@ -532,55 +555,48 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		return;
 	}
 	auto npd = ctx->nonansi_port_declaration();
-	if (npd) {
-		// update port in module header to an ansi port
-		string doc = commentParser.parse(ctx);
-		bool first = true;
-		VerPortParser pp(commentParser, non_ANSI_port_groups);
-		std::vector<HdlVariableDef*> portsDeclr;
-		pp.visitNonansi_port_declaration(npd, portsDeclr);
-		for (auto declr : portsDeclr) {
-			HdlVariableDef *p = ent->getPortByName(declr->name);
-			if (p) {
+	assert(npd);
+	// update port in module header to an ansi port
+	string doc = commentParser.parse(ctx);
+	bool first = true;
+	VerPortParser pp(commentParser, non_ANSI_port_groups);
+	std::vector<HdlVariableDef*> portsDeclr;
+	pp.visitNonansi_port_declaration(npd, portsDeclr);
+	for (auto declr : portsDeclr) {
+		HdlVariableDef *p = ent->getPortByName(declr->name);
+		if (p) {
+			p->direction = declr->direction;
+			if (p->type)
+				delete p->type;
+			p->type = declr->type;
+			declr->type = nullptr;
+			if (declr->value) {
+				assert(p->value == nullptr);
+				p->value = declr->value;
+				declr->value = nullptr;
+			}
+			p->is_latched |= declr->is_latched;
+			p->is_const |= declr->is_const;
+			if (p->direction == HdlDirection::DIR_UNKNOWN)
 				p->direction = declr->direction;
-				if (p->type)
-					delete p->type;
-				p->type = declr->type;
-				declr->type = nullptr;
-				if (declr->value) {
-					assert(p->value == nullptr);
-					p->value = declr->value;
-					declr->value = nullptr;
-				}
-				p->is_latched |= declr->is_latched;
-				p->is_const |= declr->is_const;
-				if (p->direction == HdlDirection::DIR_UNKNOWN)
-					p->direction = declr->direction;
-				if (first) {
-					p->__doc__ += doc;
-					first = false;
-				}
-				delete declr;
+			if (first) {
+				p->__doc__ += doc;
+				first = false;
+			}
+			delete declr;
+		} else {
+			p = declr;
+			if (first) {
+				p->__doc__ += doc;
+				first = false;
+			}
+			if (ent->ports.size() && ent->ports.back()->name == ".*") {
+				ent->ports.insert(ent->ports.end() - 1, p);
 			} else {
-				if (ent->ports.size() && ent->ports.back()->name == ".*") {
-					// case with
-					p = declr;
-					if (first) {
-						p->__doc__ += doc;
-						first = false;
-					}
-					ent->ports.insert(ent->ports.end() - 1, p);
-				} else {
-					throw std::runtime_error(
-							"ModuleParser.module_item.nonansi_port_declaration without a name or .* in module header");
-				}
+				ent->ports.push_back(p);
 			}
 		}
-		return;
 	}
-
-	throw std::runtime_error(
-			"ModuleParser.visitModule_item - probably missing part of implementation");
 }
 
 void VerModuleParser::visitNet_declaration(

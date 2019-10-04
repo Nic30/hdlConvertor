@@ -1208,8 +1208,7 @@ enum_base_type:
     | packed_dimension
 ;
 data_type_primitive:
-    integer_vector_type ( signing )?
-    | integer_atom_type ( signing )?
+    integer_type ( signing )?
     | non_integer_type
 ;
 data_type:
