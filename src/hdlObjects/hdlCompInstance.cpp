@@ -5,17 +5,13 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-HdlCompInstance::HdlCompInstance(iHdlExpr * _name, iHdlExpr * _entityName) {
-	entityName = _entityName;
-	name = _name;
+HdlCompInstance::HdlCompInstance(std::unique_ptr<iHdlExpr> _name,
+		std::unique_ptr<iHdlExpr> _entityName) {
+	entityName = move(_entityName);
+	name = move(_name);
 }
 
 HdlCompInstance::~HdlCompInstance() {
-	for (auto gm : genericMap)
-		delete gm;
-
-	for (auto pm : portMap)
-		delete pm;
 }
 
 }

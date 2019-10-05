@@ -5,11 +5,12 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 
-namespace hdlConvertor {
-namespace sv {
-
+using namespace std;
 using namespace sv2017_antlr;
 using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace sv {
 
 VerDeclrParser::VerDeclrParser(SVCommentParser &_commentParser) :
 		commentParser(_commentParser) {
@@ -17,7 +18,7 @@ VerDeclrParser::VerDeclrParser(SVCommentParser &_commentParser) :
 
 void VerDeclrParser::visitData_declaration(
 		sv2017Parser::Data_declarationContext *ctx,
-		std::vector<hdlObjects::iHdlObj*> &res) {
+		vector<unique_ptr<iHdlObj>> &res) {
 	// data_declaration:
 	//  ( KW_CONST )? ( KW_VAR ( lifetime )? ( data_type_or_implicit )?
 	//                   | ( lifetime )? data_type_or_implicit
@@ -31,14 +32,14 @@ void VerDeclrParser::visitData_declaration(
 		VerTypeParser tp(commentParser);
 		auto is_const = ctx->KW_CONST() != nullptr;
 		auto is_static = tp.visitLifetime(ctx->lifetime());
-		std::vector<hdlObjects::HdlVariableDef*> res_tmp;
+		vector<unique_ptr<HdlVariableDef>> res_tmp;
 		auto dti = ctx->data_type_or_implicit();
 		auto t = tp.visitData_type_or_implicit(dti, nullptr);
-		visitList_of_variable_decl_assignments(lvda, t, res_tmp);
-		for (auto vd : res_tmp) {
+		visitList_of_variable_decl_assignments(lvda, move(t), res_tmp);
+		for (auto & vd : res_tmp) {
 			vd->is_const = is_const;
 			vd->is_static = is_static;
-			res.push_back(vd);
+			res.push_back(move(vd));
 		}
 		return;
 	}
@@ -46,7 +47,7 @@ void VerDeclrParser::visitData_declaration(
 	auto _td = ctx->type_declaration();
 	if (_td) {
 		auto td = visitType_declaration(_td);
-		res.push_back(td);
+		res.push_back(move(td));
 		return;
 	}
 	auto _pid = ctx->package_import_declaration();
@@ -66,11 +67,13 @@ void VerDeclrParser::visitData_declaration(
 
 void VerDeclrParser::visitList_of_variable_decl_assignments(
 		sv2017Parser::List_of_variable_decl_assignmentsContext *ctx,
-		iHdlExpr *base_type, std::vector<HdlVariableDef*> &res) {
+		unique_ptr<iHdlExpr> base_type,
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_variable_decl_assignments:
 	//     variable_decl_assignment ( COMMA variable_decl_assignment )*;
 	VerExprParser ep(commentParser);
 	VerTypeParser tp(commentParser);
+	auto base_type_tmp = base_type.get();
 	bool first = false;
 	for (auto vda : ctx->variable_decl_assignment()) {
 		// variable_decl_assignment:
@@ -81,12 +84,14 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 		// ;
 		auto _id = vda->identifier();
 		auto name = ep.getIdentifierStr(_id);
-		auto t = base_type;
-		if (!first)
-			t = new iHdlExpr(*base_type);
+		unique_ptr<iHdlExpr> t;
+		if (first)
+			t = move(base_type);
+		else
+			t = make_unique<iHdlExpr>(*base_type_tmp);
 		auto vds = vda->variable_dimension();
-		t = tp.applyVariable_dimension(t, vds);
-		iHdlExpr *v = nullptr;
+		t = tp.applyVariable_dimension(move(t), vds);
+		unique_ptr<iHdlExpr> v = nullptr;
 		auto e = vda->expression();
 		if (e) {
 			v = ep.visitExpression(e);
@@ -106,12 +111,12 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 				}
 			}
 		}
-		auto var = new HdlVariableDef(name, t, v);
-		res.push_back(var);
+		auto var = make_unique<HdlVariableDef>(name, move(t), move(v));
+		res.push_back(move(var));
 	}
 
 }
-HdlVariableDef* VerDeclrParser::visitType_declaration(
+unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
 		sv2017Parser::Type_declarationContext *ctx) {
 	// type_declaration:
 	//     KW_TYPEDEF (
@@ -130,28 +135,28 @@ HdlVariableDef* VerDeclrParser::visitType_declaration(
 	if (_dt) {
 		auto dt = tp.visitData_type(_dt);
 		auto vds = ctx->variable_dimension();
-		dt = tp.applyVariable_dimension(dt, vds);
+		dt = tp.applyVariable_dimension(move(dt), vds);
 		auto name = ep.getIdentifierStr(id0);
-		return new HdlVariableDef(name, iHdlExpr::TYPE_T(), dt);
+		return make_unique<HdlVariableDef>(name, iHdlExpr::TYPE_T(), move(dt));
 	} else if (ctx->KW_ENUM() || ctx->KW_STRUCT() || ctx->KW_UNION()
 			|| ctx->KW_CLASS()) {
 		// forward typedef without actual type specified
 		auto name = ep.getIdentifierStr(id0);
-		return new HdlVariableDef(name, iHdlExpr::TYPE_T(), iHdlExpr::null());
+		return make_unique<HdlVariableDef>(name, iHdlExpr::TYPE_T(), iHdlExpr::null());
 	} else {
 		auto iwbs = ctx->identifier_with_bit_select();
 		auto val = ep.visitIdentifier_with_bit_select(iwbs, nullptr);
 		auto ids = ctx->identifier();
 		assert(ids.size() == 2);
 		auto id = ep.visitIdentifier(ids[0]);
-		val = new iHdlExpr(val, HdlOperatorType::DOT, id);
+		val = make_unique<iHdlExpr>(move(val), HdlOperatorType::DOT, move(id));
 		auto name = ep.getIdentifierStr(ids[1]);
-		return new HdlVariableDef(name, iHdlExpr::TYPE_T(), val);
+		return make_unique<HdlVariableDef>(name, iHdlExpr::TYPE_T(), move(val));
 	}
 }
 void VerDeclrParser::visitNet_type_declaration(
 		sv2017Parser::Net_type_declarationContext *ctx,
-		std::vector<hdlObjects::iHdlObj*> &res) {
+		vector<unique_ptr<iHdlObj>> &res) {
 	// net_type_declaration:
 	//     KW_NETTYPE ( data_type identifier ( KW_WITH package_or_class_scoped_id )? ) SEMI;
 	NotImplementedLogger::print("VerDeclrParser::visitNet_type_declaration",

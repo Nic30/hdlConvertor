@@ -18,10 +18,10 @@ public:
 	VhdlBlockDeclarationParser(bool hierarchyOnly);
 
 	void visitBlock_declarative_item(
-			vhdlParser::Block_declarative_itemContext * ctx,
-			std::vector<hdlObjects::iHdlObj*> & objs);
-	hdlObjects::HdlModuleDec * visitComponent_declaration(
-			vhdlParser::Component_declarationContext* ctx);
+			vhdlParser::Block_declarative_itemContext *ctx,
+			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &objs);
+	std::unique_ptr<hdlObjects::HdlModuleDec> visitComponent_declaration(
+			vhdlParser::Component_declarationContext *ctx);
 };
 
 }

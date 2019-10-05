@@ -38,6 +38,9 @@ public:
 	HdlStmForIn(std::unique_ptr<HdlVariableDef> var,
 			std::unique_ptr<iHdlExpr> collection,
 			std::unique_ptr<iHdlStatement> body);
+	HdlStmForIn(std::vector<std::unique_ptr<iHdlObj>> &vars,
+			std::unique_ptr<iHdlExpr> collection,
+			std::unique_ptr<iHdlStatement> body);
 	HdlStmForIn(std::vector<std::unique_ptr<iHdlExpr>> &vars,
 			std::unique_ptr<iHdlExpr> collection,
 			std::unique_ptr<iHdlStatement> body);

@@ -4,18 +4,18 @@
 #include <hdlConvertor/svConvertor/eventExprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-namespace hdlConvertor {
-namespace sv {
-
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace sv {
 
 VerDelayParser::VerDelayParser(SVCommentParser &_commentParser) :
 		commentParser(_commentParser) {
 
 }
-vector<iHdlExpr*>* VerDelayParser::visitEvent_control(
+VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 		sv2017Parser::Event_controlContext *ctx) {
 	// event_control:
 	//    AT ( LPAREN ( MUL
@@ -24,28 +24,26 @@ vector<iHdlExpr*>* VerDelayParser::visitEvent_control(
 	//         | MUL
 	//         | package_or_class_scoped_hier_id_with_select
 	//       );
+	auto res = make_unique<vector<unique_ptr<iHdlExpr>>>();
 	if (ctx->MUL()) {
-		auto res = new vector<iHdlExpr*>;
 		res->push_back(iHdlExpr::all());
 		return res;
 	}
 	auto pid = ctx->package_or_class_scoped_hier_id_with_select();
 	if (pid) {
 		VerExprParser ep(commentParser);
-		auto res = new vector<iHdlExpr*>;
 		res->push_back(
 				ep.visitPackage_or_class_scoped_hier_id_with_select(pid));
 		return res;
 	}
 	auto ee = ctx->event_expression();
 	assert(ee);
-	auto res = new vector<iHdlExpr*>;
 	VerEventExprParser eep(commentParser);
 	eep.visitEvent_expression(ee, *res);
 	return res;
 }
 
-pair<iHdlExpr*, vector<iHdlExpr*>*> VerDelayParser::visitProcedural_timing_control(
+pair<unique_ptr<iHdlExpr>, unique_ptr<vector<unique_ptr<iHdlExpr>>>> VerDelayParser::visitProcedural_timing_control(
 		sv2017Parser::Procedural_timing_controlContext *ctx) {
 	// procedural_timing_control:
 	//    delay_control
@@ -56,12 +54,12 @@ pair<iHdlExpr*, vector<iHdlExpr*>*> VerDelayParser::visitProcedural_timing_contr
 	auto _dc = ctx->delay_control();
 	if (_dc) {
 		auto dc = visitDelay_control(_dc);
-		return {dc, nullptr};
+		return {move(dc), nullptr};
 	}
 	auto _ec = ctx->event_control();
 	if (_ec) {
 		auto ec = visitEvent_control(_ec);
-		return {nullptr, ec};
+		return {nullptr, move(ec)};
 	}
 	if (ctx->cycle_delay()) {
 		NotImplementedLogger::print(
@@ -76,7 +74,7 @@ pair<iHdlExpr*, vector<iHdlExpr*>*> VerDelayParser::visitProcedural_timing_contr
 	return {iHdlExpr::null(), nullptr};
 }
 
-iHdlExpr* VerDelayParser::visitDelay_control(
+unique_ptr<iHdlExpr> VerDelayParser::visitDelay_control(
 		sv2017Parser::Delay_controlContext *ctx) {
 	// delay_control:
 	//     HASH ( LPAREN mintypmax_expression RPAREN
@@ -92,7 +90,7 @@ iHdlExpr* VerDelayParser::visitDelay_control(
 	}
 }
 
-iHdlExpr* VerDelayParser::visitDelay_value(
+unique_ptr<iHdlExpr> VerDelayParser::visitDelay_value(
 		sv2017Parser::Delay_valueContext *ctx) {
 	// delay_value:
 	//     UNSIGNED_NUMBER
@@ -119,7 +117,7 @@ iHdlExpr* VerDelayParser::visitDelay_value(
 	return VerExprParser(commentParser).visitPs_identifier(pi);
 }
 
-pair<iHdlExpr*, vector<iHdlExpr*>*> VerDelayParser::visitDelay_or_event_control(
+pair<unique_ptr<iHdlExpr>, VerDelayParser::HdlEventList> VerDelayParser::visitDelay_or_event_control(
 		sv2017Parser::Delay_or_event_controlContext *ctx) {
 	// delay_or_event_control:
 	//     delay_control
@@ -128,7 +126,7 @@ pair<iHdlExpr*, vector<iHdlExpr*>*> VerDelayParser::visitDelay_or_event_control(
 	auto _d = ctx->delay_control();
 	if (_d) {
 		auto d = visitDelay_control(_d);
-		return {d, nullptr};
+		return {move(d), nullptr};
 	}
 	auto ec = ctx->event_control();
 	auto e = ctx->expression();

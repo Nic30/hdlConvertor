@@ -4,14 +4,15 @@
 #include <assert.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-namespace hdlConvertor {
-namespace sv {
-
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 using TerminalNode = antlr4::tree::TerminalNode;
+using namespace std;
 
-iHdlExpr* VerLiteralParser::visitIntegral_number(
+namespace hdlConvertor {
+namespace sv {
+
+unique_ptr<iHdlExpr> VerLiteralParser::visitIntegral_number(
 		sv2017Parser::Integral_numberContext *ctx) {
 	// integral_number:
 	//    BASED_NUMBER_WITH_SIZE
@@ -45,12 +46,13 @@ size_t VerLiteralParser::parseSize_UNSIGNED_NUMBER(std::string str) {
 	str.erase(std::remove(str.begin(), str.end(), '_'), str.end());
 	return atoi(str.c_str());
 }
-iHdlExpr* VerLiteralParser::visitUNSIGNED_NUMBER(TerminalNode *ctx) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitUNSIGNED_NUMBER(TerminalNode *ctx) {
 	std::string str = ctx->getText();
 	str.erase(std::remove(str.begin(), str.end(), '_'), str.end());
 	return iHdlExpr::INT(str, 10);
 }
-iHdlExpr* VerLiteralParser::visitANY_BASED_NUMBER(std::string s, size_t size) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitANY_BASED_NUMBER(std::string s,
+		size_t size) {
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 
@@ -87,7 +89,8 @@ iHdlExpr* VerLiteralParser::visitANY_BASED_NUMBER(std::string s, size_t size) {
 	return iHdlExpr::INT(strVal, radix);
 
 }
-iHdlExpr* VerLiteralParser::visitNumber(sv2017Parser::NumberContext *ctx) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitNumber(
+		sv2017Parser::NumberContext *ctx) {
 	// number:
 	//     integral_number
 	//     | real_number
@@ -100,10 +103,10 @@ iHdlExpr* VerLiteralParser::visitNumber(sv2017Parser::NumberContext *ctx) {
 	assert(r);
 	return visitReal_number(r);
 }
-iHdlExpr* VerLiteralParser::visitSIMPLE_IDENTIFIER(TerminalNode *n) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitSIMPLE_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
-iHdlExpr* VerLiteralParser::visitC_IDENTIFIER(TerminalNode *n) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitC_IDENTIFIER(TerminalNode *n) {
 	return iHdlExpr::ID(n->getText());
 }
 std::string VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
@@ -111,11 +114,11 @@ std::string VerLiteralParser::visitESCAPED_IDENTIFIER(TerminalNode *n) {
 	s = s.substr(1);
 	return s;
 }
-iHdlExpr* VerLiteralParser::visitTIME_LITERAL(TerminalNode *n) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitTIME_LITERAL(TerminalNode *n) {
 	NotImplementedLogger::print("VerLiteralParser.visitTIME_LITERAL", n);
 	return iHdlExpr::null();
 }
-iHdlExpr* VerLiteralParser::visitReal_number(
+unique_ptr<iHdlExpr> VerLiteralParser::visitReal_number(
 		sv2017Parser::Real_numberContext *ctx) {
 	// real_number:
 	//    REAL_NUMBER_WITH_EXP
@@ -125,7 +128,7 @@ iHdlExpr* VerLiteralParser::visitReal_number(
 	double val = stod(s);
 	return iHdlExpr::FLOAT(val);
 }
-iHdlExpr* VerLiteralParser::visitSTRING(TerminalNode *n) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitSTRING(TerminalNode *n) {
 	std::string s = n->getText();
 	return iHdlExpr::STR(s.substr(1, s.length() - 2)); // skipping " at the end
 }
@@ -364,7 +367,7 @@ HdlOperatorType VerLiteralParser::visitAssignment_operator(
 	};
 }
 
-iHdlExpr* VerLiteralParser::visitPrimary_literal(
+unique_ptr<iHdlExpr> VerLiteralParser::visitPrimary_literal(
 		sv2017Parser::Primary_literalContext *ctx) {
 	// primary_literal:
 	//     TIME_LITERAL
@@ -407,7 +410,7 @@ iHdlExpr* VerLiteralParser::visitPrimary_literal(
 	return iHdlExpr::ID("$");
 }
 
-iHdlExpr* VerLiteralParser::visitAny_system_tf_identifier(
+unique_ptr<iHdlExpr> VerLiteralParser::visitAny_system_tf_identifier(
 		sv2017Parser::Any_system_tf_identifierContext *ctx) {
 	// any_system_tf_identifier:
 	//     SYSTEM_TF_IDENTIFIER

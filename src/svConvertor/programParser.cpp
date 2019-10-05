@@ -8,20 +8,20 @@
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/declrParser.h>
 
-namespace hdlConvertor {
-namespace sv {
-
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace sv {
 
 VerProgramParser::VerProgramParser(SVCommentParser &_commentParser) :
 		commentParser(_commentParser) {
 }
 
-HdlFunctionDef* VerProgramParser::visitTask_and_function_declaration_common(
+std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declaration_common(
 		sv2017Parser::Task_and_function_declaration_commonContext *ctx,
-		iHdlExpr *return_t, bool is_static, bool is_task) {
+		std::unique_ptr<iHdlExpr> return_t, bool is_static, bool is_task) {
 	// task_and_function_declaration_common:
 	//     ( identifier DOT | class_scope )? identifier
 	//     ( SEMI ( tf_item_declaration )*
@@ -44,8 +44,8 @@ HdlFunctionDef* VerProgramParser::visitTask_and_function_declaration_common(
 					cs);
 		name = VerExprParser::getIdentifierStr(ids[0]);
 	}
-	auto params = new std::vector<HdlVariableDef*>();
-	auto f = new HdlFunctionDef(name, false, return_t, params);
+	auto params = make_unique<std::vector<unique_ptr<HdlVariableDef>>>();
+	auto f = make_unique<HdlFunctionDef>(name, false, move(return_t), move(params));
 	f->is_static = is_static;
 	f->is_task = is_task;
 	f->is_declaration_only = false;
@@ -67,7 +67,7 @@ HdlFunctionDef* VerProgramParser::visitTask_and_function_declaration_common(
 	}
 	for (auto _stm : ctx->statement_or_null()) {
 		auto stm = sp.visitStatement_or_null(_stm);
-		f->body.push_back(stm);
+		f->body.push_back(move(stm));
 	}
 	if (non_ansi_port_groups.size()) {
 		NotImplementedLogger::print(
@@ -77,7 +77,7 @@ HdlFunctionDef* VerProgramParser::visitTask_and_function_declaration_common(
 	return f;
 }
 
-HdlFunctionDef* VerProgramParser::visitTask_declaration(
+std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_declaration(
 		sv2017Parser::Task_declarationContext *ctx) {
 	// task_declaration:
 	//     KW_TASK ( lifetime )?
@@ -89,11 +89,11 @@ HdlFunctionDef* VerProgramParser::visitTask_declaration(
 	bool is_static = tp.visitLifetime(ctx->lifetime());
 	auto return_t = iHdlExpr::ID("void");
 	auto tfcom = ctx->task_and_function_declaration_common();
-	return visitTask_and_function_declaration_common(tfcom, return_t, is_static,
+	return visitTask_and_function_declaration_common(tfcom, move(return_t), is_static,
 			true);
 }
 
-HdlFunctionDef* VerProgramParser::visitFunction_declaration(
+std::unique_ptr<HdlFunctionDef> VerProgramParser::visitFunction_declaration(
 		sv2017Parser::Function_declarationContext *ctx) {
 	//function_declaration:
 	//    KW_FUNCTION ( lifetime )?
@@ -106,7 +106,7 @@ HdlFunctionDef* VerProgramParser::visitFunction_declaration(
 	auto fdti = ctx->function_data_type_or_implicit();
 	auto return_t = tp.visitFunction_data_type_or_implicit(fdti);
 	auto tfcom = ctx->task_and_function_declaration_common();
-	return visitTask_and_function_declaration_common(tfcom, return_t, is_static,
+	return visitTask_and_function_declaration_common(tfcom, std::move(return_t), is_static,
 			false);
 }
 

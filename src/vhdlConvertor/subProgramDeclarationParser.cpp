@@ -4,6 +4,7 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -11,16 +12,16 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlFunctionDef * VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
-		vhdlParser::Subprogram_declarationContext* ctx) {
+std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
+		vhdlParser::Subprogram_declarationContext *ctx) {
 	// subprogram_declaration
 	// : subprogram_specification SEMI
 	// ;
 	return visitSubprogram_specification(ctx->subprogram_specification());
 }
 
-HdlFunctionDef * VhdlSubProgramDeclarationParser::visitSubprogram_specification(
-		vhdlParser::Subprogram_specificationContext* ctx) {
+std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitSubprogram_specification(
+		vhdlParser::Subprogram_specificationContext *ctx) {
 	// subprogram_specification
 	// : procedure_specification
 	// | function_specification
@@ -32,26 +33,28 @@ HdlFunctionDef * VhdlSubProgramDeclarationParser::visitSubprogram_specification(
 		return visitFunction_specification(ctx->function_specification());
 }
 
-HdlFunctionDef * VhdlSubProgramDeclarationParser::visitProcedure_specification(
-		vhdlParser::Procedure_specificationContext* ctx) {
+std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitProcedure_specification(
+		vhdlParser::Procedure_specificationContext *ctx) {
 	// procedure_specification
 	// : PROCEDURE designator ( LPAREN formal_parameter_list RPAREN )?
 	// ;
 	auto designator = ctx->designator();
-	iHdlExpr * returnT = NULL;
 	bool isOperator = VhdlLiteralParser::isStrDesignator(designator);
 	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
+	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> paramList;
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
-
-	return new HdlFunctionDef(name, isOperator, returnT, paramList);
+	else
+		paramList = std::make_unique<
+				std::vector<std::unique_ptr<HdlVariableDef>>>();
+	return std::make_unique<HdlFunctionDef>(name, isOperator, nullptr,
+			move(paramList));
 }
 
-HdlFunctionDef * VhdlSubProgramDeclarationParser::visitFunction_specification(
-		vhdlParser::Function_specificationContext* ctx) {
+std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitFunction_specification(
+		vhdlParser::Function_specificationContext *ctx) {
 	// function_specification
 	// : ( PURE | IMPURE )? FUNCTION designator
 	// ( LPAREN formal_parameter_list RPAREN )? RETURN subtype_indication
@@ -63,46 +66,33 @@ HdlFunctionDef * VhdlSubProgramDeclarationParser::visitFunction_specification(
 	// ;
 
 	auto designator = ctx->designator();
-	iHdlExpr * returnT = VhdlExprParser::visitType_mark(ctx->type_mark());
+	auto returnT = VhdlExprParser::visitType_mark(ctx->type_mark());
 	assert(returnT);
 
 	bool isOperator = VhdlLiteralParser::isStrDesignator(designator);
 	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::vector<HdlVariableDef*> * paramList = new std::vector<HdlVariableDef*>();
+	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> paramList;
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
-
-	return new HdlFunctionDef(name, isOperator, returnT, paramList);
+	else
+		paramList = std::make_unique<
+				std::vector<std::unique_ptr<HdlVariableDef>>>();
+	return std::make_unique<HdlFunctionDef>(name, isOperator,
+			std::move(returnT), std::move(paramList));
 }
 
-std::vector<HdlVariableDef*> * VhdlSubProgramDeclarationParser::visitFormal_parameter_list(
-		vhdlParser::Formal_parameter_listContext* ctx) {
+std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramDeclarationParser::visitFormal_parameter_list(
+		vhdlParser::Formal_parameter_listContext *ctx) {
 	// formal_parameter_list
 	// : interface_list
 	// ;
 	return VhdlInterfaceParser::visitInterface_list(ctx->interface_list());
 }
 
-std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_declarative_part(
-		vhdlParser::Subprogram_declarative_partContext* ctx) {
-	// subprogram_declarative_part
-	// : ( subprogram_declarative_item )*
-	// ;
-	std::vector<HdlVariableDef*> * vars = new std::vector<HdlVariableDef*>();
-	for (auto sd : ctx->subprogram_declarative_item()) {
-		auto spdis = visitSubprogram_declarative_item(sd);
-		for (auto spdi : *spdis)
-			vars->push_back(spdi);
-		delete spdis;
-	}
-
-	return vars;
-}
-
-std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_declarative_item(
-		vhdlParser::Subprogram_declarative_itemContext* ctx) {
+std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramDeclarationParser::visitSubprogram_declarative_item(
+		vhdlParser::Subprogram_declarative_itemContext *ctx) {
 	// subprogram_declarative_item
 	// : subprogram_declaration
 	// | subprogram_body
@@ -130,12 +120,14 @@ std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_d
 		auto sb = ctx->subprogram_body();
 		if (sb) {
 			//SubProgramParser::visitSubprogram_body(sb);
-			NotImplementedLogger::print("PackageParser.visitSubprogram_body", sb);
+			NotImplementedLogger::print("PackageParser.visitSubprogram_body",
+					sb);
 			break;
 		}
 		auto td = ctx->type_declaration();
 		if (td) {
-			NotImplementedLogger::print("PackageParser.visitType_declaration", td);
+			NotImplementedLogger::print("PackageParser.visitType_declaration",
+					td);
 			break;
 		}
 		auto st = ctx->subtype_declaration();
@@ -159,11 +151,13 @@ std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_d
 		}
 		auto fd = ctx->file_declaration();
 		if (fd) {
-			NotImplementedLogger::print("PackageParser.visitFile_declaration", fd);
+			NotImplementedLogger::print("PackageParser.visitFile_declaration",
+					fd);
 		}
 		auto aliasd = ctx->alias_declaration();
 		if (aliasd) {
-			NotImplementedLogger::print("PackageParser.visitAlias_declaration", aliasd);
+			NotImplementedLogger::print("PackageParser.visitAlias_declaration",
+					aliasd);
 			break;
 		}
 		auto atrd = ctx->attribute_declaration();
@@ -191,7 +185,8 @@ std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_d
 		}
 		auto gd = ctx->group_declaration();
 		if (gd) {
-			NotImplementedLogger::print("PackageParser.visitGroup_declaration", gd);
+			NotImplementedLogger::print("PackageParser.visitGroup_declaration",
+					gd);
 			break;
 		}
 
@@ -199,7 +194,7 @@ std::vector<HdlVariableDef*>* VhdlSubProgramDeclarationParser::visitSubprogram_d
 
 	NotImplementedLogger::print(
 			"SubProgramParser.visitSubprogram_declarative_item", ctx);
-	return new std::vector<HdlVariableDef*>();
+	return std::make_unique<std::vector<std::unique_ptr<HdlVariableDef>>>();
 }
 
 }

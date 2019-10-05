@@ -4,20 +4,20 @@
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 
-namespace hdlConvertor {
-namespace vhdl {
-
 using std::vector;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-vector<HdlVariableDef*> * VhdlInterfaceParser::extractVariables(
-		vhdlParser::Identifier_listContext* identifier_list,
-		vhdlParser::Subtype_indicationContext* subType,
-		vhdlParser::ExpressionContext* _expr) {
-	vector<HdlVariableDef*> * vl = new vector<HdlVariableDef*>();
-	iHdlExpr * _type = VhdlExprParser::visitSubtype_indication(subType);
-	iHdlExpr * expr = NULL;
+namespace hdlConvertor {
+namespace vhdl {
+
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::extractVariables(
+		vhdlParser::Identifier_listContext *identifier_list,
+		vhdlParser::Subtype_indicationContext *subType,
+		vhdlParser::ExpressionContext *_expr) {
+	auto vl = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
+	auto _type = VhdlExprParser::visitSubtype_indication(subType);
+	std::unique_ptr<iHdlExpr> expr = nullptr;
 	if (_expr)
 		expr = VhdlExprParser::visitExpression(_expr);
 
@@ -27,35 +27,36 @@ vector<HdlVariableDef*> * VhdlInterfaceParser::extractVariables(
 		// : identifier ( COMMA identifier )*
 		// ;
 		if (!firstIt)
-			_type = new iHdlExpr(*_type);
-		iHdlExpr * __expr;
+			_type = std::make_unique<iHdlExpr>(*_type);
+		std::unique_ptr<iHdlExpr> __expr;
 		if (!expr) {
-			__expr = nullptr;
 			firstIt = false;
+			__expr = nullptr;
 		} else if (firstIt) {
 			firstIt = false;
-			__expr = expr;
+			__expr = move(expr);
 		} else {
-			__expr = new iHdlExpr(*expr);
+			__expr = std::make_unique<iHdlExpr>(*expr);
 		}
-		HdlVariableDef * v = new HdlVariableDef(i->getText(), _type, __expr);
-		vl->push_back(v);
+		auto v = std::make_unique<HdlVariableDef>(i->getText(),
+				std::move(_type), std::move(__expr));
+		vl->push_back(std::move(v));
 	}
 	return vl;
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_constant_declaration(
-		vhdlParser::Interface_constant_declarationContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_constant_declaration(
+		vhdlParser::Interface_constant_declarationContext *ctx) {
 	// interface_constant_declaration:
 	//       ( CONSTANT )? identifier_list COLON ( IN )? subtype_indication ( VARASGN expression )?
 	// ;
 	auto consts = extractVariables(ctx->identifier_list(),
 			ctx->subtype_indication(), ctx->expression());
-	for (auto c : *consts)
+	for (auto &c : *consts)
 		c->is_const = true;
 	return consts;
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_signal_declaration(
-		vhdlParser::Interface_signal_declarationContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_signal_declaration(
+		vhdlParser::Interface_signal_declarationContext *ctx) {
 	// interface_signal_declaration:
 	//       ( SIGNAL )? identifier_list COLON ( signal_mode )? subtype_indication ( BUS )? ( VARASGN expression )?
 	// ;
@@ -66,36 +67,36 @@ vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_signal_declaration
 	auto sigs = extractVariables(ctx->identifier_list(),
 			ctx->subtype_indication(), ctx->expression());
 	auto m = visitSignalMode(ctx->signal_mode());
-	for (auto s : *sigs)
+	for (auto &s : *sigs)
 		s->direction = m;
 	return sigs;
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_variable_declaration(
-		vhdlParser::Interface_variable_declarationContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_variable_declaration(
+		vhdlParser::Interface_variable_declarationContext *ctx) {
 	// interface_variable_declaration:
 	//       ( VARIABLE )? identifier_list COLON ( signal_mode )? subtype_indication ( VARASGN expression )?
 	// ;
 	auto vars = extractVariables(ctx->identifier_list(),
 			ctx->subtype_indication(), ctx->expression());
 	auto m = visitSignalMode(ctx->signal_mode());
-	for (auto v : *vars) {
+	for (auto &v : *vars) {
 		v->direction = m;
 		v->is_latched = true;
 	}
 	return vars;
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_file_declaration(
-		vhdlParser::Interface_file_declarationContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_file_declaration(
+		vhdlParser::Interface_file_declarationContext *ctx) {
 	// interface_file_declaration:
 	//       FILE identifier_list COLON subtype_indication
 	// ;
 	NotImplementedLogger::print(
 			"InterfaceParser.visitInterface_file_declaration", ctx);
-	return new vector<HdlVariableDef*>();
+	return std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
 }
 
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_declaration(
-		vhdlParser::Interface_declarationContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_declaration(
+		vhdlParser::Interface_declarationContext *ctx) {
 	// interface_declaration:
 	//       interface_object_declaration
 	//       | interface_type_declaration
@@ -110,7 +111,6 @@ vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_declaration(
 		auto itd = ctx->interface_type_declaration();
 		if (itd) {
 			auto t = visitInterface_type_declaration(itd);
-			delete t;
 			NotImplementedLogger::print(
 					"InterfaceParser.visitInterface_declaration - interface_type_declaration",
 					itd);
@@ -132,10 +132,10 @@ vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_declaration(
 		}
 	} while (0);
 
-	return new vector<HdlVariableDef*>();
+	return std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
 }
-iHdlExpr * VhdlInterfaceParser::visitInterface_type_declaration(
-		vhdlParser::Interface_type_declarationContext * ctx) {
+std::unique_ptr<iHdlExpr> VhdlInterfaceParser::visitInterface_type_declaration(
+		vhdlParser::Interface_type_declarationContext *ctx) {
 	// interface_type_declaration:
 	//       interface_incomplete_type_declaration
 	// ;
@@ -143,8 +143,8 @@ iHdlExpr * VhdlInterfaceParser::visitInterface_type_declaration(
 	return VhdlLiteralParser::visitIdentifier(
 			ctx->interface_incomplete_type_declaration()->identifier());
 }
-std::vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_object_declaration(
-		vhdlParser::Interface_object_declarationContext * ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_object_declaration(
+		vhdlParser::Interface_object_declarationContext *ctx) {
 	// interface_object_declaration:
 	//       interface_constant_declaration
 	//       | interface_signal_declaration
@@ -167,23 +167,22 @@ std::vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_object_declar
 	assert(f);
 	return visitInterface_file_declaration(f);
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_list(
-		vhdlParser::Interface_listContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_list(
+		vhdlParser::Interface_listContext *ctx) {
 	// interface_list:
 	//       interface_element ( SEMI interface_element )*
 	// ;
-	vector<HdlVariableDef*> * elems = new vector<HdlVariableDef*>();
+	auto elems = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
 	for (auto ie : ctx->interface_element()) {
-		vector<HdlVariableDef*> *_elements = visitInterface_element(ie);
-		for (auto e : *_elements) {
-			elems->push_back(e);
+		auto _elements = visitInterface_element(ie);
+		for (auto &e : *_elements) {
+			elems->push_back(std::move(e));
 		}
-		delete _elements;
 	}
 	return elems;
 }
-vector<HdlVariableDef*> * VhdlInterfaceParser::visitInterface_element(
-		vhdlParser::Interface_elementContext* ctx) {
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_element(
+		vhdlParser::Interface_elementContext *ctx) {
 	// interface_element: interface_declaration;
 	auto intfDec = ctx->interface_declaration();
 	return visitInterface_declaration(intfDec);

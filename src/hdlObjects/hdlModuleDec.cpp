@@ -7,20 +7,16 @@ namespace hdlObjects {
 HdlModuleDec::HdlModuleDec() :
 		WithNameAndDoc() {
 }
-HdlVariableDef * HdlModuleDec::getPortByName(const std::string & name) {
-	for (auto p : ports) {
+HdlVariableDef* HdlModuleDec::getPortByName(const std::string &name) {
+	for (auto & p : ports) {
 		assert(!p->name.empty());
 		if (p->name == name)
-			return p;
+			return p.get();
 	}
 	return nullptr;
 }
 
 HdlModuleDec::~HdlModuleDec() {
-	for (auto g : generics)
-		delete g;
-	for (auto p : ports)
-		delete p;
 }
 
 }

@@ -15,7 +15,7 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlStmProcess* VhdlProcessParser::visitProcess_statement(
+std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_statement(
 		vhdlParser::Process_statementContext *ctx) {
 	// process_statement:
 	//           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?
@@ -24,25 +24,27 @@ HdlStmProcess* VhdlProcessParser::visitProcess_statement(
 	//               ( sequential_statement )*
 	//           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 	// ;
-	auto p = new HdlStmProcess();
+	auto p = std::make_unique<HdlStmProcess>();
+	auto &stms = dynamic_cast<HdlStmBlock*>(p->body.get())->statements;
 	p->position.update_from_elem(ctx);
 	auto sl = ctx->process_sensitivity_list();
 	if (sl) {
-		visitProcess_sensitivity_list(sl, p->sensitivity_list());
-		p->sensitivity_list_specified = true;
+		p->sensitivity_list = std::make_unique<
+				std::vector<std::unique_ptr<iHdlExpr>>>();
+		visitProcess_sensitivity_list(sl, *p->sensitivity_list);
 	}
 	for (auto pd : ctx->process_declarative_item()) {
-		visitProcess_declarative_item(pd, p);
+		visitProcess_declarative_item(pd, stms);
 	}
 	for (auto s : ctx->sequential_statement()) {
-		p->objs().push_back(VhdlStatementParser::visitSequential_statement(s));
+		stms.push_back(VhdlStatementParser::visitSequential_statement(s));
 	}
 
 	return p;
 }
 void VhdlProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
-		std::vector<iHdlExpr*> &sensitivity) {
+		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
 	if (ctx->KW_ALL()) {
 		sensitivity.push_back(iHdlExpr::all());
@@ -53,7 +55,7 @@ void VhdlProcessParser::visitProcess_sensitivity_list(
 
 void VhdlProcessParser::visitSensitivity_list(
 		vhdlParser::Sensitivity_listContext *ctx,
-		std::vector<iHdlExpr*> &sensitivity) {
+		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
 	// sensitivity_list: name ( COMMA name )*;
 	for (auto n : ctx->name()) {
 		sensitivity.push_back(VhdlReferenceParser::visitName(n));
@@ -61,7 +63,8 @@ void VhdlProcessParser::visitSensitivity_list(
 }
 
 void VhdlProcessParser::visitProcess_declarative_item(
-		vhdlParser::Process_declarative_itemContext *ctx, HdlStmProcess *p) {
+		vhdlParser::Process_declarative_itemContext *ctx,
+		std::vector<std::unique_ptr<iHdlObj>> &objs) {
 	//process_declarative_item
 	//  : subprogram_declaration
 	//  | subprogram_body
@@ -79,14 +82,15 @@ void VhdlProcessParser::visitProcess_declarative_item(
 	//  ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		p->objs().push_back(
-				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		objs.push_back(
+				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
+						sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
 		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
-		p->objs().push_back(f);
+		objs.push_back(std::move(f));
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -97,25 +101,23 @@ void VhdlProcessParser::visitProcess_declarative_item(
 	auto st = ctx->subtype_declaration();
 	if (st) {
 		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
-		p->objs().push_back(_st);
+		objs.push_back(std::move(_st));
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
 		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
-		for (auto c : *constants) {
-			p->objs().push_back(c);
+		for (auto &c : *constants) {
+			objs.push_back(std::move(c));
 		}
-		delete constants;
 		return;
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
 		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
-		for (auto v : *variables) {
-			p->objs().push_back(v);
+		for (auto &v : *variables) {
+			objs.push_back(std::move(v));
 		}
-		delete variables;
 		return;
 	}
 	auto fd = ctx->file_declaration();

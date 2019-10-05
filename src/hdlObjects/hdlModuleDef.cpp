@@ -4,8 +4,6 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlModuleDef::~HdlModuleDef() {
-	for (auto o: objs)
-		delete o;
 }
 
 }

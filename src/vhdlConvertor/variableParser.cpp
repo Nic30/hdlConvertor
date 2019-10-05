@@ -7,7 +7,7 @@ namespace vhdl {
 
 using namespace hdlConvertor::hdlObjects;
 
-std::vector<HdlVariableDef*> * VhdlVariableParser::visitVariable_declaration(
+std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlVariableParser::visitVariable_declaration(
 		vhdlParser::Variable_declarationContext *ctx) {
 	// variable_declaration :
 	// ( SHARED )? VARIABLE identifier_list COLON
@@ -18,10 +18,10 @@ std::vector<HdlVariableDef*> * VhdlVariableParser::visitVariable_declaration(
 		NotImplementedLogger::print(
 				"VariableParser.visitVariable_declaration - SHARED", ctx);
 
-	std::vector<HdlVariableDef*> * vl = VhdlInterfaceParser::extractVariables(
+	auto vl = VhdlInterfaceParser::extractVariables(
 			ctx->identifier_list(), ctx->subtype_indication(),
 			ctx->expression());
-	for (auto v: *vl)
+	for (auto & v: *vl)
 		v->is_latched = true;
 
 	return vl;

@@ -9,10 +9,11 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlObjects;
 
-VhdlEntityParser::VhdlEntityParser(VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
+VhdlEntityParser::VhdlEntityParser(VhdlCommentParser &_commentParser,
+		bool _hierarchyOnly) :
 		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
-HdlModuleDec* VhdlEntityParser::visitEntity_declaration(
+std::unique_ptr<HdlModuleDec> VhdlEntityParser::visitEntity_declaration(
 		vhdlParser::Entity_declarationContext *ctx) {
 	// entity_declaration:
 	//       KW_ENTITY identifier KW_IS
@@ -22,17 +23,17 @@ HdlModuleDec* VhdlEntityParser::visitEntity_declaration(
 	//       ( KW_BEGIN ( entity_statement )* )?
 	//       KW_END ( KW_ENTITY )? ( identifier )? SEMI
 	// ;
-	HdlModuleDec *e = new HdlModuleDec();
+	auto e = std::make_unique<HdlModuleDec>();
 	e->name = ctx->identifier(0)->getText();
 	e->__doc__ = commentParser.parse(ctx);
 
 	if (!hierarchyOnly) {
 		auto g = ctx->generic_clause();
 		if (g)
-			visitGeneric_clause(g, &e->generics);
+			visitGeneric_clause(g, e->generics);
 		auto pc = ctx->port_clause();
 		if (pc)
-			visitPort_clause(pc, &e->ports);
+			visitPort_clause(pc, e->ports);
 		for (auto d : ctx->entity_declarative_item()) {
 			visitEntity_declarative_item(d);
 		}
@@ -71,22 +72,22 @@ void VhdlEntityParser::visitEntity_declarative_item(
 	NotImplementedLogger::print("EntityParser.visitEntity_declarative_item",
 			ctx);
 }
-void VhdlEntityParser::visitGeneric_clause(vhdlParser::Generic_clauseContext *ctx,
-		std::vector<HdlVariableDef*> *generics) {
+void VhdlEntityParser::visitGeneric_clause(
+		vhdlParser::Generic_clauseContext *ctx,
+		std::vector<std::unique_ptr<HdlVariableDef>> &generics) {
 	// generic_clause:
 	//       GENERIC LPAREN generic_list RPAREN SEMI
 	// ;
 	// generic_list: interface_list;
 	auto gl = ctx->generic_list();
 	auto gs = VhdlInterfaceParser::visitInterface_list(gl->interface_list());
-	for (auto v : *gs) {
+	for (auto &v : *gs) {
 		assert(v);
-		generics->push_back(v);
+		generics.push_back(std::move(v));
 	}
-	delete gs;
 }
 void VhdlEntityParser::visitPort_clause(vhdlParser::Port_clauseContext *ctx,
-		std::vector<HdlVariableDef*> *ports) {
+		std::vector<std::unique_ptr<HdlVariableDef>> &ports) {
 	// port_clause:
 	//       PORT LPAREN port_list RPAREN SEMI
 	// ;
@@ -99,11 +100,10 @@ void VhdlEntityParser::visitPort_clause(vhdlParser::Port_clauseContext *ctx,
 
 	for (auto ie : il->interface_element()) {
 		auto ps = VhdlInterfaceParser::visitInterface_element(ie);
-		for (HdlVariableDef *p : *ps) {
+		for (auto &p : *ps) {
 			p->position.update_from_elem(ie);
-			ports->push_back(p);
+			ports.push_back(std::move(p));
 		}
-		delete ps;
 	}
 }
 

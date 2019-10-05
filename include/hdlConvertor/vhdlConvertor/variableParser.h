@@ -13,8 +13,9 @@ class VhdlVariableParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::vector<hdlObjects::HdlVariableDef*> * visitVariable_declaration(
-			vhdlParser::Variable_declarationContext* ctx);
+	static std::unique_ptr<
+			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitVariable_declaration(
+			vhdlParser::Variable_declarationContext *ctx);
 
 };
 

@@ -10,20 +10,20 @@ class VerLiteralParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	using TerminalNode = antlr4::tree::TerminalNode;
-	static hdlObjects::iHdlExpr* visitIntegral_number(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitIntegral_number(
 			sv2017Parser::Integral_numberContext *ctx);
-	static hdlObjects::iHdlExpr* visitUNSIGNED_NUMBER(TerminalNode *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitUNSIGNED_NUMBER(TerminalNode *ctx);
 	static size_t parseSize_UNSIGNED_NUMBER(std::string str);
-	static hdlObjects::iHdlExpr* visitANY_BASED_NUMBER(std::string str,
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitANY_BASED_NUMBER(std::string str,
 			size_t size);
-	static hdlObjects::iHdlExpr* visitNumber(sv2017Parser::NumberContext *ctx);
-	static hdlObjects::iHdlExpr* visitSIMPLE_IDENTIFIER(TerminalNode *n);
-	static hdlObjects::iHdlExpr* visitC_IDENTIFIER(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitNumber(sv2017Parser::NumberContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitSIMPLE_IDENTIFIER(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitC_IDENTIFIER(TerminalNode *n);
 	static std::string visitESCAPED_IDENTIFIER(TerminalNode *n);
-	static hdlObjects::iHdlExpr* visitReal_number(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitReal_number(
 			sv2017Parser::Real_numberContext *ctx);
-	static hdlObjects::iHdlExpr* visitTIME_LITERAL(TerminalNode *n);
-	static hdlObjects::iHdlExpr* visitSTRING(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitTIME_LITERAL(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitSTRING(TerminalNode *n);
 	static hdlObjects::HdlOperatorType visitUnary_module_path_operator(
 			sv2017Parser::Unary_module_path_operatorContext *ctx);
 	static hdlObjects::HdlOperatorType visitUnary_operator(
@@ -44,9 +44,9 @@ public:
 			sv2017Parser::Operator_implContext *ctx);
 	static hdlObjects::HdlOperatorType visitAssignment_operator(
 			sv2017Parser::Assignment_operatorContext *ctx);
-	static hdlObjects::iHdlExpr* visitPrimary_literal(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitPrimary_literal(
 			sv2017Parser::Primary_literalContext *ctx);
-	static hdlObjects::iHdlExpr* visitAny_system_tf_identifier(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitAny_system_tf_identifier(
 			sv2017Parser::Any_system_tf_identifierContext *ctx);
 };
 

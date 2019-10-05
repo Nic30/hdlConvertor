@@ -5,16 +5,17 @@
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 
+using namespace std;
+using namespace hdlConvertor::hdlObjects;
+
 namespace hdlConvertor {
 namespace sv {
-
-using namespace hdlConvertor::hdlObjects;
 
 VerTypeParser::VerTypeParser(SVCommentParser &_commentParser) :
 		commentParser(_commentParser) {
 }
 
-iHdlExpr* VerTypeParser::visitType_reference(
+unique_ptr<iHdlExpr> VerTypeParser::visitType_reference(
 		sv2017Parser::Type_referenceContext *ctx) {
 	// type_reference:
 	//     KW_TYPE LPAREN (
@@ -32,7 +33,7 @@ iHdlExpr* VerTypeParser::visitType_reference(
 	return visitData_type(dt);
 }
 
-iHdlExpr* VerTypeParser::visitInteger_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitInteger_type(
 		sv2017Parser::Integer_typeContext *ctx) {
 	// integer_type:
 	//     integer_vector_type
@@ -46,7 +47,7 @@ iHdlExpr* VerTypeParser::visitInteger_type(
 	return visitInteger_atom_type(iat);
 }
 
-iHdlExpr* VerTypeParser::visitNon_integer_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitNon_integer_type(
 		sv2017Parser::Non_integer_typeContext *ctx) {
 	// non_integer_type:
 	//     KW_SHORTREAL
@@ -55,7 +56,7 @@ iHdlExpr* VerTypeParser::visitNon_integer_type(
 	// ;
 	return iHdlExpr::ID(ctx->getText());
 }
-iHdlExpr* VerTypeParser::visitInteger_atom_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitInteger_atom_type(
 		sv2017Parser::Integer_atom_typeContext *ctx) {
 	// integer_atom_type:
 	//     KW_BYTE
@@ -68,7 +69,7 @@ iHdlExpr* VerTypeParser::visitInteger_atom_type(
 	return iHdlExpr::ID(ctx->getText());
 }
 
-iHdlExpr* VerTypeParser::visitInteger_vector_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitInteger_vector_type(
 		sv2017Parser::Integer_vector_typeContext *ctx) {
 	// integer_vector_type:
 	//     KW_BIT
@@ -78,7 +79,7 @@ iHdlExpr* VerTypeParser::visitInteger_vector_type(
 	return iHdlExpr::ID(ctx->getText());
 }
 
-iHdlExpr* VerTypeParser::visitData_type_primitive(
+unique_ptr<iHdlExpr> VerTypeParser::visitData_type_primitive(
 		sv2017Parser::Data_type_primitiveContext *ctx) {
 	// data_type_primitive:
 	//     integer_type ( signing )?
@@ -89,9 +90,12 @@ iHdlExpr* VerTypeParser::visitData_type_primitive(
 		auto t = visitInteger_type(it);
 		auto sig = ctx->signing();
 		if (sig && visitSigning(sig)) {
-			std::vector<iHdlExpr*> args = { new iHdlExpr(iHdlExpr::ID("signed"),
-					HdlOperatorType::MAP_ASSOCIATION, iHdlExpr::INT(1)) };
-			t = iHdlExpr::parametrization(t, args);
+			vector<unique_ptr<iHdlExpr>> args;
+			args.push_back(
+					make_unique<iHdlExpr>(iHdlExpr::ID("signed"),
+							HdlOperatorType::MAP_ASSOCIATION,
+							iHdlExpr::INT(1)));
+			t = iHdlExpr::parametrization(move(t), args);
 		}
 		return t;
 	} else {
@@ -101,7 +105,8 @@ iHdlExpr* VerTypeParser::visitData_type_primitive(
 	}
 }
 
-iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
+unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
+		sv2017Parser::Data_typeContext *ctx) {
 	// data_type:
 	//     KW_STRING
 	//     | KW_CHANDLE
@@ -127,15 +132,15 @@ iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
 				ctx);
 		auto ids = ctx->identifier();
 		VerExprParser ep(commentParser);
-		iHdlExpr *t = ep.visitIdentifier(ids[0]);
+		auto t = ep.visitIdentifier(ids[0]);
 		auto pva = ctx->parameter_value_assignment();
 		if (pva) {
 			auto p = ep.visitParameter_value_assignment(pva);
-			t = iHdlExpr::parametrization(t, p);
+			t = iHdlExpr::parametrization(move(t), p);
 		}
 		if (ids.size() == 2) {
 			auto id = ep.visitIdentifier(ids[1]);
-			t = new iHdlExpr(t, HdlOperatorType::DOT, id);
+			t = make_unique<iHdlExpr>(move(t), HdlOperatorType::DOT, move(id));
 		} else {
 			assert(ids.size() == 1);
 		}
@@ -146,7 +151,7 @@ iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
 		return iHdlExpr::ID("event");
 
 	auto dtp = ctx->data_type_primitive();
-	iHdlExpr *t = nullptr;
+	unique_ptr<iHdlExpr> t = nullptr;
 	if (dtp) {
 		t = visitData_type_primitive(dtp);
 	} else if (ctx->KW_ENUM()) {
@@ -163,12 +168,12 @@ iHdlExpr* VerTypeParser::visitData_type(sv2017Parser::Data_typeContext *ctx) {
 	}
 	VerTypeParser tp(commentParser);
 	auto vds = ctx->variable_dimension();
-	t = tp.applyVariable_dimension(t, vds);
+	t = tp.applyVariable_dimension(move(t), vds);
 	return t;
 }
 
-iHdlExpr* VerTypeParser::visitData_type_or_implicit(
-		sv2017Parser::Data_type_or_implicitContext *ctx, iHdlExpr *net_type) {
+unique_ptr<iHdlExpr> VerTypeParser::visitData_type_or_implicit(
+		sv2017Parser::Data_type_or_implicitContext *ctx, unique_ptr<iHdlExpr> net_type) {
 	// data_type_or_implicit:
 	//     data_type
 	//     | implicit_data_type
@@ -181,31 +186,37 @@ iHdlExpr* VerTypeParser::visitData_type_or_implicit(
 		return visitData_type(dt);
 	auto idt = ctx->implicit_data_type();
 	assert(idt);
-	return visitImplicit_data_type(idt, net_type);
+	return visitImplicit_data_type(idt, move(net_type));
 }
 
-iHdlExpr* VerTypeParser::visitUnpacked_dimension(
+unique_ptr<iHdlExpr> VerTypeParser::visitUnpacked_dimension(
 		sv2017Parser::Unpacked_dimensionContext *ctx) {
 	// unpacked_dimension: LSQUARE_BR range_expression RSQUARE_BR;
 	auto ra = ctx->range_expression();
 	return VerExprParser(commentParser).visitRange_expression(ra);
 }
-iHdlExpr* VerTypeParser::applyUnpacked_dimension(iHdlExpr *base_expr,
-		std::vector<sv2017Parser::Unpacked_dimensionContext*> &uds) {
+
+unique_ptr<iHdlExpr> VerTypeParser::applyUnpacked_dimension(
+		unique_ptr<iHdlExpr> base_expr,
+		vector<sv2017Parser::Unpacked_dimensionContext*> &uds) {
 	for (auto _ud : uds) {
 		auto ud = visitUnpacked_dimension(_ud);
-		base_expr = new iHdlExpr(base_expr, HdlOperatorType::INDEX, ud);
+		base_expr = make_unique<iHdlExpr>(move(base_expr),
+				HdlOperatorType::INDEX, move(ud));
 	}
 	return base_expr;
 }
-iHdlExpr* VerTypeParser::applyVariable_dimension(iHdlExpr *base_expr,
-		std::vector<sv2017Parser::Variable_dimensionContext*> &vds) {
+
+unique_ptr<iHdlExpr> VerTypeParser::applyVariable_dimension(
+		unique_ptr<iHdlExpr> base_expr,
+		vector<sv2017Parser::Variable_dimensionContext*> &vds) {
 	for (auto _vd : vds) {
-		base_expr = visitVariable_dimension(_vd, base_expr);
+		base_expr = visitVariable_dimension(_vd, move(base_expr));
 	}
 	return base_expr;
 }
-iHdlExpr* VerTypeParser::visitPacked_dimension(
+
+unique_ptr<iHdlExpr> VerTypeParser::visitPacked_dimension(
 		sv2017Parser::Packed_dimensionContext *ctx) {
 	// packed_dimension: LSQUARE_BR  ( range_expression )? RSQUARE_BR;
 	auto ra = ctx->range_expression();
@@ -227,8 +238,9 @@ bool VerTypeParser::visitSigning(sv2017Parser::SigningContext *ctx) {
 	}
 }
 
-iHdlExpr* VerTypeParser::visitImplicit_data_type(
-		sv2017Parser::Implicit_data_typeContext *ctx, iHdlExpr *net_type) {
+unique_ptr<iHdlExpr> VerTypeParser::visitImplicit_data_type(
+		sv2017Parser::Implicit_data_typeContext *ctx,
+		unique_ptr<iHdlExpr> net_type) {
 	// implicit_data_type:
 	//     signing ( packed_dimension )*
 	//     | ( packed_dimension )+
@@ -242,34 +254,35 @@ iHdlExpr* VerTypeParser::visitImplicit_data_type(
 	auto s = ctx->signing();
 	bool is_signed = false;
 	auto pds = ctx->packed_dimension();
-	iHdlExpr *e = nullptr;
+	unique_ptr<iHdlExpr> e = nullptr;
 	if (s) {
 		is_signed = visitSigning(s);
 	}
 	auto it = pds.begin();
 	if (it != pds.end()) {
 		auto r0 = visitPacked_dimension(*it);
-		e = Utils::mkWireT(net_type, r0, is_signed);
+		e = Utils::mkWireT(move(net_type), move(r0), is_signed);
 		++it;
 	} else {
 		e = Utils::mkWireT(iHdlExpr::null(), is_signed);
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = new iHdlExpr(e, HdlOperatorType::INDEX, pd);
+		e = make_unique<iHdlExpr>(move(e), HdlOperatorType::INDEX, move(pd));
 	}
 	return e;
 }
 
-iHdlExpr* VerTypeParser::visitVariable_dimension(
-		sv2017Parser::Variable_dimensionContext *ctx, iHdlExpr *selected_name) {
+unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
+		sv2017Parser::Variable_dimensionContext *ctx,
+		unique_ptr<iHdlExpr> selected_name) {
 	// variable_dimension:
 	//     LSQUARE_BR ( MUL
 	//              | data_type
 	//              | array_range_expression
 	//               )? RSQUARE_BR
 	// ;
-	iHdlExpr *index = nullptr;
+	unique_ptr<iHdlExpr> index = nullptr;
 	if (ctx->MUL()) {
 		NotImplementedLogger::print(
 				"VerExprParser.visitVariable_dimension - MUL", ctx);
@@ -287,9 +300,10 @@ iHdlExpr* VerTypeParser::visitVariable_dimension(
 			index = iHdlExpr::null();
 		}
 	}
-	return new iHdlExpr(selected_name, HdlOperatorType::INDEX, index);
+	return make_unique<iHdlExpr>(move(selected_name), HdlOperatorType::INDEX, move(index));
 }
-iHdlExpr* VerTypeParser::visitNet_type(sv2017Parser::Net_typeContext *ctx) {
+unique_ptr<iHdlExpr> VerTypeParser::visitNet_type(
+		sv2017Parser::Net_typeContext *ctx) {
 	// net_type:
 	//     KW_SUPPLY0
 	//     | KW_SUPPLY1
@@ -304,10 +318,9 @@ iHdlExpr* VerTypeParser::visitNet_type(sv2017Parser::Net_typeContext *ctx) {
 	//     | KW_WAND
 	//     | KW_WOR
 	// ;
-	auto t = iHdlExpr::ID(ctx->getText());
-	return t;
+	return iHdlExpr::ID(ctx->getText());
 }
-iHdlExpr* VerTypeParser::visitNet_port_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitNet_port_type(
 		sv2017Parser::Net_port_typeContext *ctx) {
 	// net_port_type:
 	//  KW_INTERCONNECT ( implicit_data_type )?
@@ -324,14 +337,14 @@ iHdlExpr* VerTypeParser::visitNet_port_type(
 		auto t = visitImplicit_data_type(idt, nullptr);
 		return t;
 	}
-	iHdlExpr *net_type = nullptr;
+	unique_ptr<iHdlExpr> net_type = nullptr;
 	auto _nt = ctx->net_type();
 	if (_nt)
 		net_type = visitNet_type(_nt);
 	auto dti = ctx->data_type_or_implicit();
-	return visitData_type_or_implicit(dti, net_type);
+	return visitData_type_or_implicit(dti, move(net_type));
 }
-std::pair<iHdlExpr*, bool> VerTypeParser::visitNet_or_var_data_type(
+pair<unique_ptr<iHdlExpr>, bool> VerTypeParser::visitNet_or_var_data_type(
 		sv2017Parser::Net_or_var_data_typeContext *ctx) {
 	// net_or_var_data_type:
 	//  KW_INTERCONNECT ( implicit_data_type )?
@@ -346,22 +359,22 @@ std::pair<iHdlExpr*, bool> VerTypeParser::visitNet_or_var_data_type(
 				"VerExprParser.visitNet_or_var_data_type.interconnect", ctx);
 		auto idt = ctx->implicit_data_type();
 		auto t = visitImplicit_data_type(idt, nullptr);
-		return {t, false};
+		return {move(t), false};
 	}
 	auto dti = ctx->data_type_or_implicit();
 	if (ctx->KW_VAR()) {
 		auto t = visitData_type_or_implicit(dti, nullptr);
-		return {t, true};
+		return {move(t), true};
 	}
 	auto nt = ctx->net_type();
 	if (nt) {
 		auto sub_t = visitNet_type(nt);
-		auto t = visitData_type_or_implicit(dti, sub_t);
-		return {t, false};
+		auto t = visitData_type_or_implicit(dti, move(sub_t));
+		return {move(t), false};
 	}
 	assert(dti);
 	auto t = visitData_type_or_implicit(dti, nullptr);
-	return {t, false};
+	return {move(t), false};
 }
 
 bool VerTypeParser::visitLifetime(sv2017Parser::LifetimeContext *ctx) {
@@ -372,7 +385,7 @@ bool VerTypeParser::visitLifetime(sv2017Parser::LifetimeContext *ctx) {
 	return !ctx || ctx->KW_STATIC();
 }
 
-iHdlExpr* VerTypeParser::visitData_type_or_void(
+unique_ptr<iHdlExpr> VerTypeParser::visitData_type_or_void(
 		sv2017Parser::Data_type_or_voidContext *ctx) {
 	// data_type_or_void:
 	//    KW_VOID
@@ -385,7 +398,7 @@ iHdlExpr* VerTypeParser::visitData_type_or_void(
 		return visitData_type(dt);
 	}
 }
-iHdlExpr* VerTypeParser::visitVar_data_type(
+unique_ptr<iHdlExpr> VerTypeParser::visitVar_data_type(
 		sv2017Parser::Var_data_typeContext *ctx) {
 	// var_data_type:
 	//   KW_VAR ( data_type_or_implicit )?
@@ -404,7 +417,7 @@ iHdlExpr* VerTypeParser::visitVar_data_type(
 	return Utils::mkWireT();
 }
 
-hdlObjects::iHdlExpr* VerTypeParser::visitFunction_data_type_or_implicit(
+unique_ptr<iHdlExpr> VerTypeParser::visitFunction_data_type_or_implicit(
 		sv2017Parser::Function_data_type_or_implicitContext *ctx) {
 	// function_data_type_or_implicit:
 	//     data_type_or_void
@@ -421,7 +434,6 @@ hdlObjects::iHdlExpr* VerTypeParser::visitFunction_data_type_or_implicit(
 		assert(idt);
 		return visitImplicit_data_type(idt, nullptr);
 	}
-
 }
 
 }

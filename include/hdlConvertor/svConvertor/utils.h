@@ -9,21 +9,24 @@ namespace sv {
 
 class Utils {
 public:
-	static hdlObjects::iHdlExpr* mkStringT();
+	static std::unique_ptr<hdlObjects::iHdlExpr> mkStringT();
 
-	static hdlObjects::iHdlExpr* mkIntT();
+	static std::unique_ptr<hdlObjects::iHdlExpr> mkIntT();
 	// wire type is represented by wire id or call wire(range, signed)
-	static hdlObjects::iHdlExpr* mkWireT();
-	static hdlObjects::iHdlExpr* mkWireT(hdlObjects::iHdlExpr *range,
-			bool signed_);
-	static hdlObjects::iHdlExpr* mkWireT(hdlObjects::iHdlExpr *net_type,
-			hdlObjects::iHdlExpr *range, bool signed_);
+	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT();
+	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
+			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
+	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
+			std::unique_ptr<hdlObjects::iHdlExpr> net_type,
+			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
 };
 
-hdlObjects::iHdlExpr* append_expr(hdlObjects::iHdlExpr *selected_name,
+std::unique_ptr<hdlObjects::iHdlExpr> append_expr(
+		std::unique_ptr<hdlObjects::iHdlExpr> selected_name,
 		hdlObjects::HdlOperatorType operator_to_join_with,
-		hdlObjects::iHdlExpr *new_part);
-hdlObjects::iHdlExpr* reduce(const std::vector<hdlObjects::iHdlExpr*> &ops,
+		std::unique_ptr<hdlObjects::iHdlExpr> new_part);
+std::unique_ptr<hdlObjects::iHdlExpr> reduce(
+		std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &ops,
 		hdlObjects::HdlOperatorType op);
 
 }

@@ -23,16 +23,14 @@ class VhdlPackageParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	hdlObjects::HdlNamespace * p;
+	std::unique_ptr<hdlObjects::HdlNamespace> p;
 	bool hierarchyOnly;
 
 	VhdlPackageParser(bool _hierarchyOnly);
-	hdlObjects::HdlNamespace * visitPackage_body(
-			vhdlParser::Package_bodyContext* ctx);
-	void visitPackage_body_declarative_part(
-			vhdlParser::Package_body_declarative_partContext* ctx);
+	std::unique_ptr<hdlObjects::HdlNamespace> visitPackage_body(
+			vhdlParser::Package_bodyContext *ctx);
 	void visitPackage_body_declarative_item(
-			vhdlParser::Package_body_declarative_itemContext* ctx);
+			vhdlParser::Package_body_declarative_itemContext *ctx);
 
 };
 

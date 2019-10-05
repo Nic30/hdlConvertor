@@ -4,7 +4,7 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/conversion_exception.h>
-
+#include <hdlConvertor/hdlObjects/hdlStm_others.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
@@ -28,11 +28,9 @@ VerModuleParser::VerModuleParser(SVCommentParser &commentParser,
 		bool _hierarchyOnly) :
 		commentParser(commentParser) {
 	hierarchyOnly = _hierarchyOnly;
-	ent = nullptr;
-	arch = nullptr;
 }
 void VerModuleParser::visitModule_header_common(
-		sv2017Parser::Module_header_commonContext *ctx) {
+		sv2017Parser::Module_header_commonContext *ctx, HdlModuleDec &ent) {
 	// module_header_common:
 	//   ( attribute_instance )* module_keyword ( lifetime )? identifier
 	//   ( package_import_declaration )* ( parameter_port_list )?;
@@ -42,8 +40,8 @@ void VerModuleParser::visitModule_header_common(
 		NotImplementedLogger::print(
 				"VerModuleParser.visitModule_header_common - lifetime", lt);
 	}
-	ent->__doc__ = commentParser.parse(ctx);
-	ent->name = ctx->identifier()->getText();
+	ent.__doc__ = commentParser.parse(ctx);
+	ent.name = ctx->identifier()->getText();
 	for (auto pid : ctx->package_import_declaration()) {
 		NotImplementedLogger::print(
 				"VerModuleParser.visitModule_header_common - package_import_declaration",
@@ -52,12 +50,12 @@ void VerModuleParser::visitModule_header_common(
 	auto mppl = ctx->parameter_port_list();
 	if (mppl) {
 		VerParamDefParser pp(commentParser);
-		pp.visitParameter_port_list(mppl, ent->generics);
+		pp.visitParameter_port_list(mppl, ent.generics);
 	}
 }
 void VerModuleParser::visitModule_declaration(
 		sv2017Parser::Module_declarationContext *ctx,
-		std::vector<iHdlObj*> &res) {
+		vector<unique_ptr<iHdlObj>> &res) {
 	// module_declaration:
 	//   KW_EXTERN module_header_common ( list_of_port_declarations )? SEMI
 	//    | module_header_common (list_of_port_declarations | (LPAREN DOT MUL RPAREN) )? SEMI
@@ -65,42 +63,41 @@ void VerModuleParser::visitModule_declaration(
 	//      KW_ENDMODULE ( COLON identifier | {_input->LA(1) != COLON}? )
 	// ;
 	auto mhc = ctx->module_header_common();
-	assert(ent == nullptr);
-	ent = new HdlModuleDec();
-
-	visitModule_header_common(mhc);
+	auto ent = make_unique<HdlModuleDec>();
+	ModuleCtx m_ctx(*ent);
+	visitModule_header_common(mhc, *ent);
 
 	auto lpd = ctx->list_of_port_declarations();
 	if (lpd) {
-		VerPortParser pp(commentParser, non_ANSI_port_groups);
+		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
 		auto ps = pp.visitList_of_port_declarations(lpd);
-		for (auto p : *ps) {
-			ent->ports.push_back(p);
+		for (auto &p : *ps) {
+			ent->ports.push_back(move(p));
 		}
-		delete ps;
 	} else {
 		if (ctx->MUL()) {
-			auto p = new HdlVariableDef(".*", iHdlExpr::all(), nullptr);
-			ent->ports.push_back(p);
+			auto p = make_unique<HdlVariableDef>(".*", iHdlExpr::all(),
+					nullptr);
+			ent->ports.push_back(move(p));
 		}
 	}
-	res.push_back(ent);
+	res.push_back(move(ent));
 	if (ctx->KW_EXTERN()) {
-		for (auto o : ent->generics) {
+		for (auto &o : ent->generics) {
 			if (!o->type) {
 				o->type = iHdlExpr::AUTO_T();
 			}
 		}
-		for (auto o : ent->ports) {
+		for (auto &o : ent->ports) {
 			if (!o->type) {
 				o->type = iHdlExpr::AUTO_T();
 			}
 		}
-		ent = nullptr;
 		return;
 	}
 
-	arch = new HdlModuleDef();
+	auto arch = make_unique<HdlModuleDef>();
+	m_ctx.arch = arch.get();
 	auto tid = ctx->timeunits_declaration();
 	if (tid) {
 		NotImplementedLogger::print(
@@ -108,57 +105,51 @@ void VerModuleParser::visitModule_declaration(
 				tid);
 	}
 	for (auto mi : ctx->module_item())
-		visitModule_item(mi, arch->objs);
+		visitModule_item(mi, arch->objs, m_ctx);
 
 	arch->entityName = iHdlExpr::ID(ent->name);
-	res.push_back(arch);
-	if (non_ANSI_port_groups.size()) {
-		VerPortParser pp(commentParser, non_ANSI_port_groups);
+	res.push_back(move(arch));
+	if (m_ctx.non_ANSI_port_groups.size()) {
+		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
 		pp.convert_non_ansi_ports_to_ansi(ent->ports, arch->objs);
 	}
-	auto consume_nonansi_ports_vars = [this](iHdlObj *o) {
-		auto v = dynamic_cast<HdlVariableDef*>(o);
+	auto consume_nonansi_ports_vars = [this, &m_ctx](unique_ptr<iHdlObj> &o) {
+		auto v = dynamic_cast<HdlVariableDef*>(o.get());
 		if (!v)
 			return false;
 
-		auto p = ent->getPortByName(v->name);
+		auto p = m_ctx.ent.getPortByName(v->name);
 		if (!p)
 			return false;
 
 		// this is a variable which specifies the real type of the non-ansi port
-		delete p->type;
-		p->type = v->type;
-		v->type = nullptr;
+		p->type = move(v->type);
 		if (v->value) {
-			delete p->value;
-			p->value = v->value;
-			v->value = nullptr;
+			p->value = move(v->value);
 		}
 		p->__doc__ += v->__doc__;
 		p->is_const |= v->is_const;
 		p->is_latched |= v->is_latched;
 		p->is_static |= v->is_static;
-		delete v;
 		return true;
 	};
 	arch->objs.erase(
-			std::remove_if(arch->objs.begin(), arch->objs.end(),
+			remove_if(arch->objs.begin(), arch->objs.end(),
 					consume_nonansi_ports_vars), arch->objs.end());
-	for (auto o : ent->generics) {
+	for (auto &o : ent->generics) {
 		if (!o->type) {
 			o->type = iHdlExpr::AUTO_T();
 		}
 	}
-	for (auto o : ent->ports) {
+	for (auto &o : ent->ports) {
 		if (!o->type) {
 			o->type = iHdlExpr::AUTO_T();
 		}
 	}
-	ent = nullptr;
-	arch = nullptr;
 }
 void VerModuleParser::visitModule_item_item(
-		sv2017Parser::Module_item_itemContext *ctx, vector<iHdlObj*> &res) {
+		sv2017Parser::Module_item_itemContext *ctx,
+		vector<unique_ptr<iHdlObj>> &res, ModuleCtx &m_ctx) {
 	// module_item_item:
 	//     parameter_override
 	//     | gate_instantiation
@@ -195,8 +186,8 @@ void VerModuleParser::visitModule_item_item(
 	//     | elaboration_system_task
 	//     | specparam_declaration
 	// ;
-	auto &res_stm = *reinterpret_cast<vector<iHdlStatement*>*>(&res);
-	auto &res_vars = *reinterpret_cast<vector<HdlVariableDef*>*>(&res);
+	auto &res_stm = reinterpret_cast<vector<unique_ptr<iHdlStatement>>&>(res);
+	auto &res_vars = reinterpret_cast<vector<unique_ptr<HdlVariableDef>>&>(res);
 	{
 		auto o = ctx->parameter_override();
 		if (o) {
@@ -228,9 +219,11 @@ void VerModuleParser::visitModule_item_item(
 		auto o = ctx->module_or_interface_or_program_or_udp_instantiation();
 		if (o) {
 
-			auto &res_comp = *reinterpret_cast<vector<HdlCompInstance*>*>(&res);
+			auto &res_comp =
+					reinterpret_cast<vector<unique_ptr<HdlCompInstance>>&>(res);
 			VerModuleInstanceParser mp(commentParser);
-			mp.visitModule_or_interface_or_program_or_udp_instantiation(o, res_comp);
+			mp.visitModule_or_interface_or_program_or_udp_instantiation(o,
+					res_comp);
 			return;
 		}
 	}
@@ -260,7 +253,7 @@ void VerModuleParser::visitModule_item_item(
 	}
 	{
 		if (ctx->SEMI()) {
-			res_stm.push_back(iHdlStatement::NOP());
+			res_stm.push_back(make_unique<HdlStmNop>());
 			return;
 		}
 	}
@@ -282,7 +275,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 			VerProgramParser pp(commentParser);
 			auto f = pp.visitTask_declaration(o);
-			res.push_back(f);
+			res.push_back(move(f));
 			return;
 		}
 	}
@@ -291,7 +284,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 			VerProgramParser pp(commentParser);
 			auto f = pp.visitFunction_declaration(o);
-			res.push_back(f);
+			res.push_back(move(f));
 			return;
 		}
 	}
@@ -439,7 +432,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 			VerStatementParser sp(commentParser);
 			auto ic = sp.visitInitial_construct(o);
-			res.push_back(ic);
+			res.push_back(move(ic));
 			return;
 		}
 	}
@@ -459,7 +452,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 			VerStatementParser sp(commentParser);
 			auto ac = sp.visitAlways_construct(o);
-			res.push_back(ac);
+			res.push_back(move(ac));
 			return;
 		}
 	}
@@ -486,7 +479,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 			VerStatementParser sp(commentParser);
 			auto est = sp.visitElaboration_system_task(o);
-			res.push_back(est);
+			res.push_back(move(est));
 			return;
 		}
 	}
@@ -500,7 +493,7 @@ void VerModuleParser::visitModule_item_item(
 
 }
 void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
-		std::vector<hdlObjects::iHdlObj*> &objs) {
+		vector<unique_ptr<iHdlObj>> &objs, ModuleCtx &m_ctx) {
 	// module_item:
 	//     generate_region
 	//     | ( attribute_instance )* module_item_item
@@ -523,9 +516,9 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		auto ai = ctx->attribute_instance();
 		VerAttributeParser::visitAttribute_instance(ai);
 		auto prev_size = objs.size();
-		visitModule_item_item(mii, objs);
+		visitModule_item_item(mii, objs, m_ctx);
 		if (objs.size() != prev_size) {
-			iHdlObj * _last = objs[prev_size];
+			iHdlObj *_last = objs[prev_size].get();
 			auto wd = dynamic_cast<WithDoc*>(_last);
 			wd->__doc__ = doc + wd->__doc__;
 			auto wp = dynamic_cast<WithPos*>(_last);
@@ -569,23 +562,19 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	assert(npd);
 	// update port in module header to an ansi port
 	bool first = true;
-	VerPortParser pp(commentParser, non_ANSI_port_groups);
-	std::vector<HdlVariableDef*> portsDeclr;
+	VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
+	vector<unique_ptr<HdlVariableDef>> portsDeclr;
 	pp.visitNonansi_port_declaration(npd, portsDeclr);
 
 	// convert non-ansi ports to ansi ports
-	for (auto declr : portsDeclr) {
-		HdlVariableDef *p = ent->getPortByName(declr->name);
+	for (auto &declr : portsDeclr) {
+		HdlVariableDef *p = m_ctx.ent.getPortByName(declr->name);
 		if (p) {
 			p->direction = declr->direction;
-			if (p->type)
-				delete p->type;
-			p->type = declr->type;
-			declr->type = nullptr;
+			p->type = move(declr->type);
 			if (declr->value) {
 				assert(p->value == nullptr);
-				p->value = declr->value;
-				declr->value = nullptr;
+				p->value = move(declr->value);
 			}
 			p->is_latched |= declr->is_latched;
 			p->is_const |= declr->is_const;
@@ -595,17 +584,17 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 				p->__doc__ += doc;
 				first = false;
 			}
-			delete declr;
+			declr.reset();
 		} else {
-			p = declr;
 			if (first) {
-				p->__doc__ += doc;
+				declr->__doc__ += doc;
 				first = false;
 			}
-			if (ent->ports.size() && ent->ports.back()->name == ".*") {
-				ent->ports.insert(ent->ports.end() - 1, p);
+			if (m_ctx.ent.ports.size()
+					&& m_ctx.ent.ports.back()->name == ".*") {
+				m_ctx.ent.ports.insert(m_ctx.ent.ports.end() - 1, move(declr));
 			} else {
-				ent->ports.push_back(p);
+				m_ctx.ent.ports.push_back(move(declr));
 			}
 		}
 	}
@@ -613,7 +602,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 
 void VerModuleParser::visitNet_declaration(
 		sv2017Parser::Net_declarationContext *ctx,
-		vector<HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// net_declaration:
 	//  ( KW_INTERCONNECT ( implicit_data_type )? ( HASH delay_value )? identifier ( unpacked_dimension )* (
 	//   COMMA identifier ( unpacked_dimension )* )?
@@ -631,7 +620,7 @@ void VerModuleParser::visitNet_declaration(
 		return;
 	}
 	VerTypeParser tp(commentParser);
-	iHdlExpr *net_type = nullptr;
+	unique_ptr<iHdlExpr> net_type = nullptr;
 	auto nt = ctx->net_type();
 	if (nt) {
 		net_type = tp.visitNet_type(nt);
@@ -676,45 +665,48 @@ void VerModuleParser::visitNet_declaration(
 	}
 
 	auto dti = ctx->data_type_or_implicit();
-	iHdlExpr *t = tp.visitData_type_or_implicit(dti, net_type);
+	auto t = tp.visitData_type_or_implicit(dti, move(net_type));
 	auto doc = commentParser.parse(ctx);
 	auto lna = ctx->list_of_net_decl_assignments();
-	visitList_of_net_decl_assignments(lna, t, false, doc, res);
+	visitList_of_net_decl_assignments(lna, move(t), false, doc, res);
 }
 
 // @note same as visitList_of_net_identifiers but without the dimensions and with the default value
 void VerModuleParser::visitList_of_net_decl_assignments(
 		sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
-		iHdlExpr *base_type, bool is_latched, const string &doc,
-		std::vector<HdlVariableDef*> &res) {
+		unique_ptr<iHdlExpr> base_type, bool is_latched, const string &doc,
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 
-	;
 	VerTypeParser tp(commentParser);
 	bool first = true;
+	auto base_type_tmp = base_type.get();
 	for (auto nd : ctx->net_decl_assignment()) {
 		// net_decl_assignment:
 		//  identifier ( unpacked_dimension )* ( ASSIGN expression )?;
 		auto _id = nd->identifier();
 		auto id = VerExprParser::getIdentifierStr(_id);
-		iHdlExpr *def_val = nullptr;
+		unique_ptr<iHdlExpr> def_val = nullptr;
 		auto e = nd->expression();
 		if (e)
 			def_val = VerExprParser(commentParser).visitExpression(e);
-		auto t = base_type;
-		if (!first) {
-			t = new iHdlExpr(*t);
+		unique_ptr<iHdlExpr> t;
+		if (first) {
+			t = move(base_type);
+		} else {
+			t = make_unique<iHdlExpr>(*t);
 		}
 		auto uds = nd->unpacked_dimension();
-		t = tp.applyUnpacked_dimension(t, uds);
-		auto v = new HdlVariableDef(id, base_type, def_val);
+		t = tp.applyUnpacked_dimension(move(t), uds);
+		auto v = make_unique<HdlVariableDef>(id, move(base_type),
+				move(def_val));
 		if (first) {
 			v->__doc__ = doc;
 			first = false;
 		}
 
 		v->is_latched = is_latched;
-		res.push_back(v);
+		res.push_back(move(v));
 	}
 }
 

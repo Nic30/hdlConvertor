@@ -12,8 +12,12 @@ namespace hdlObjects {
  * */
 class HdlStmBlock: public iHdlStatement {
 public:
+	// [todo] rename to obs
 	std::vector<std::unique_ptr<iHdlObj>> statements;
+
+	HdlStmBlock();
 	HdlStmBlock(std::vector<std::unique_ptr<iHdlObj>> &statements);
+	HdlStmBlock(std::unique_ptr<iHdlObj> obj);
 	virtual ~HdlStmBlock() override;
 };
 

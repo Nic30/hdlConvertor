@@ -13,23 +13,25 @@ class VhdlReferenceParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static hdlObjects::iHdlExpr* visitSelected_name(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitSelected_name(
 			vhdlParser::Selected_nameContext *ctx);
-	static hdlObjects::iHdlExpr* visitSuffix(vhdlParser::SuffixContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitSuffix(
+			vhdlParser::SuffixContext *ctx);
 
-	static hdlObjects::iHdlExpr* visitName(vhdlParser::NameContext *ctx);
-	static hdlObjects::iHdlExpr* visitAttribute_name(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitName(
+			vhdlParser::NameContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitAttribute_name(
 			vhdlParser::Attribute_nameContext *ctx);
-	static hdlObjects::iHdlExpr* visitName_attribute_part(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitName_attribute_part(
 			vhdlParser::Name_attribute_partContext *ctx,
-			hdlObjects::iHdlExpr *selected_name);
-	static hdlObjects::iHdlExpr* visitAttribute_designator(
+			std::unique_ptr<hdlObjects::iHdlExpr> selected_name);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitAttribute_designator(
 			vhdlParser::Attribute_designatorContext *ctx);
-	static hdlObjects::iHdlExpr* visitName_literal(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitName_literal(
 			vhdlParser::Name_literalContext *ctx);
-	static hdlObjects::iHdlExpr* visitName_slice_part(
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitName_slice_part(
 			vhdlParser::Name_slice_partContext *ctx,
-			hdlObjects::iHdlExpr *selected_name);
+			std::unique_ptr<hdlObjects::iHdlExpr> selected_name);
 };
 
 }

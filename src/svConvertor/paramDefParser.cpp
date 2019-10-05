@@ -7,12 +7,12 @@
 #include <hdlConvertor/svConvertor/typeParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 
-namespace hdlConvertor {
-namespace sv {
-
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
+
+namespace hdlConvertor {
+namespace sv {
 
 VerParamDefParser::VerParamDefParser(SVCommentParser &commentParser) :
 		commentParser(commentParser) {
@@ -20,7 +20,7 @@ VerParamDefParser::VerParamDefParser(SVCommentParser &commentParser) :
 
 void VerParamDefParser::visitParameter_port_list(
 		sv2017Parser::Parameter_port_listContext *ctx,
-		vector<HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// parameter_port_list:
 	//     HASH LPAREN (
 	//        ( list_of_param_assignments
@@ -39,7 +39,7 @@ void VerParamDefParser::visitParameter_port_list(
 
 void VerParamDefParser::visitParameter_port_declaration(
 		sv2017Parser::Parameter_port_declarationContext *ctx,
-		vector<HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// parameter_port_declaration:
 	//     KW_TYPE list_of_type_assignments
 	//     | parameter_declaration
@@ -68,40 +68,40 @@ void VerParamDefParser::visitParameter_port_declaration(
 	assert(lpa);
 	auto t = VerTypeParser(commentParser).visitData_type(dt);
 	auto doc = commentParser.parse(ctx);
-	visitTyped_list_of_param_assignments(t, lpa, doc, res);
+	visitTyped_list_of_param_assignments(move(t), lpa, doc, res);
 }
 
 void VerParamDefParser::visitTyped_list_of_param_assignments(
-		iHdlExpr *data_type,
+		unique_ptr<iHdlExpr> data_type,
 		sv2017Parser::List_of_param_assignmentsContext *lpa, const string &doc,
-		vector<HdlVariableDef*> &res) {
-	vector<HdlVariableDef*> res_tmp;
+		vector<unique_ptr<HdlVariableDef>> &res) {
+	vector<unique_ptr<HdlVariableDef>> res_tmp;
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
-	for (auto v : res_tmp) {
+	for (auto & v : res_tmp) {
 		if (first) {
-			v->type = data_type;
+			v->type = move(data_type);
 			v->__doc__ = doc + v->__doc__;
 			first = false;
 		} else
-			v->type = new iHdlExpr(*data_type);
-		res.push_back(v);
+			v->type = make_unique<iHdlExpr>(*data_type);
+		res.push_back(move(v));
 	}
 }
 
 void VerParamDefParser::visitList_of_param_assignments(
 		sv2017Parser::List_of_param_assignmentsContext *ctx,
-		vector<HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_param_assignments: param_assignment ( COMMA param_assignment )*;
 	for (auto pa : ctx->param_assignment())
 		res.push_back(visitParam_assignment(pa));
 }
-iHdlExpr* VerParamDefParser::visitConstant_param_expression(
+unique_ptr<iHdlExpr> VerParamDefParser::visitConstant_param_expression(
 		sv2017Parser::Constant_param_expressionContext *ctx) {
 	// constant_param_expression: param_expression;
 	return visitParam_expression(ctx->param_expression());
 }
-iHdlExpr* VerParamDefParser::visitParam_expression(
+unique_ptr<iHdlExpr> VerParamDefParser::visitParam_expression(
 		sv2017Parser::Param_expressionContext *ctx) {
 	// param_expression:
 	//     mintypmax_expression
@@ -121,38 +121,39 @@ iHdlExpr* VerParamDefParser::visitParam_expression(
 
 void VerParamDefParser::visitList_of_type_assignments(
 		sv2017Parser::List_of_type_assignmentsContext *ctx,
-		std::vector<hdlObjects::HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_type_assignments: type_assignment ( COMMA type_assignment )*;
 	// type_assignment: identifier ( ASSIGN data_type )?;
 	VerTypeParser tp(commentParser);
 	for (auto _ta : ctx->type_assignment()) {
 		auto name = VerExprParser::getIdentifierStr(_ta->identifier());
-		iHdlExpr *v = nullptr;
+		unique_ptr<iHdlExpr> v = nullptr;
 		auto _v = _ta->data_type();
 		if (_v)
 			v = tp.visitData_type(_v);
-		auto ta = new HdlVariableDef(name, iHdlExpr::TYPE_T(), v);
-		res.push_back(ta);
+		auto ta = make_unique<HdlVariableDef>(name, iHdlExpr::TYPE_T(),
+				move(v));
+		res.push_back(move(ta));
 	}
 }
 
-HdlVariableDef* VerParamDefParser::visitParam_assignment(
+unique_ptr<HdlVariableDef> VerParamDefParser::visitParam_assignment(
 		sv2017Parser::Param_assignmentContext *ctx) {
 	// param_assignment:
 	//     identifier ( unpacked_dimension )* ( ASSIGN constant_param_expression )?;
 	auto cpa = ctx->constant_param_expression();
-	iHdlExpr *value = nullptr;
+	unique_ptr<iHdlExpr> value = nullptr;
 	if (cpa) {
 		value = visitConstant_param_expression(cpa);
 	}
 	auto name = VerExprParser::getIdentifierStr(ctx->identifier());
-	HdlVariableDef *p = new HdlVariableDef(name, iHdlExpr::AUTO_T(), value);
+	auto p = make_unique<HdlVariableDef>(name, iHdlExpr::AUTO_T(), move(value));
 	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }
 void VerParamDefParser::visitParameter_declaration(
 		sv2017Parser::Parameter_declarationContext *ctx,
-		vector<HdlVariableDef*> &res) {
+		vector<unique_ptr<HdlVariableDef>> &res) {
 	// parameter_declaration:
 	//     KW_PARAMETER
 	//     ( KW_TYPE list_of_type_assignments
@@ -164,26 +165,26 @@ void VerParamDefParser::visitParameter_declaration(
 		visitList_of_type_assignments(lta, res);
 	} else {
 		auto _t = ctx->data_type_or_implicit();
-		auto t = VerTypeParser(commentParser).visitData_type_or_implicit(_t,
-				nullptr);
+		VerTypeParser tp(commentParser);
+		auto t = tp.visitData_type_or_implicit(_t, nullptr);
 		auto pds = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
-		visitTyped_list_of_param_assignments(t, pds, doc, res);
+		visitTyped_list_of_param_assignments(move(t), pds, doc, res);
 	}
 }
 void VerParamDefParser::visitLocal_parameter_declaration(
 		sv2017Parser::Local_parameter_declarationContext *ctx,
-		std::vector<hdlObjects::HdlVariableDef*> &_res) {
+		vector<unique_ptr<HdlVariableDef>> &_res) {
 	// local_parameter_declaration:
 	//  KW_LOCALPARAM ( KW_TYPE list_of_type_assignments
 	//                   | ( data_type_or_implicit )? list_of_param_assignments
 	//                   );
-	auto &res = *reinterpret_cast<std::vector<HdlVariableDef*>*>(&_res);
+	auto &res = *reinterpret_cast<vector<unique_ptr<HdlVariableDef>>*>(&_res);
 	if (ctx->KW_TYPE()) {
 		auto lta = ctx->list_of_type_assignments();
 		visitList_of_type_assignments(lta, res);
 	} else {
-		iHdlExpr *t;
+		unique_ptr<iHdlExpr> t;
 		auto dti = ctx->data_type_or_implicit();
 		if (dti) {
 			VerTypeParser tp(commentParser);
@@ -192,7 +193,7 @@ void VerParamDefParser::visitLocal_parameter_declaration(
 			t = iHdlExpr::AUTO_T();
 		auto lpa = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
-		visitTyped_list_of_param_assignments(t, lpa, doc, res);
+		visitTyped_list_of_param_assignments(move(t), lpa, doc, res);
 	}
 }
 

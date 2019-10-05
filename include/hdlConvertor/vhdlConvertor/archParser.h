@@ -6,14 +6,14 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlArchParser: public hdlObjects::Named {
+class VhdlArchParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	bool hierarchyOnly;
 	VhdlArchParser(bool _hierarchyOnly);
-	hdlObjects::HdlModuleDef * visitArchitecture_body(
-			vhdlParser::Architecture_bodyContext * ctx);
+	std::unique_ptr<hdlObjects::HdlModuleDef> visitArchitecture_body(
+			vhdlParser::Architecture_bodyContext *ctx);
 
 };
 

@@ -10,7 +10,6 @@
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 #include <string.h>
 
-
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -24,7 +23,7 @@ VhdlBlockDeclarationParser::VhdlBlockDeclarationParser(bool hierarchyOnly) :
  * */
 void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 		vhdlParser::Block_declarative_itemContext *ctx,
-		std::vector<hdlObjects::iHdlObj*> &objs) {
+		std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &objs) {
 	// block_declarative_item:
 	//       subprogram_declaration
 	//       | subprogram_body
@@ -50,14 +49,15 @@ void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 	//      ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		objs.push_back(
-				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		auto f = VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
+				sp);
+		objs.push_back(std::move(f));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
 		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
-		objs.push_back(f);
+		objs.push_back(std::move(f));
 		return;
 	}
 	auto sid = ctx->subprogram_instantiation_declaration();
@@ -70,14 +70,14 @@ void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 	if (pd) {
 		VhdlPackageHeaderParser ph(hierarchyOnly);
 		auto pac_header = ph.visitPackage_declaration(pd);
-		objs.push_back(pac_header);
+		objs.push_back(std::move(pac_header));
 		return;
 	}
 	auto pb = ctx->package_body();
 	if (pb) {
 		VhdlPackageParser pp(hierarchyOnly);
 		auto p = pp.visitPackage_body(pb);
-		objs.push_back(p);
+		objs.push_back(std::move(p));
 		return;
 	}
 	auto pid = ctx->package_instantiation_declaration();
@@ -95,34 +95,31 @@ void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 	auto st = ctx->subtype_declaration();
 	if (st) {
 		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
-		objs.push_back(_st);
+		objs.push_back(std::move(_st));
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
 		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
-		for (auto c : *constants) {
-			objs.push_back(c);
+		for (auto & c : *constants) {
+			objs.push_back(std::move(c));
 		}
-		delete constants;
 		return;
 	}
 	auto sd = ctx->signal_declaration();
 	if (sd) {
 		auto signals = VhdlSignalParser::visitSignal_declaration(sd);
-		for (auto s : *signals) {
-			objs.push_back(s);
+		for (auto & s : *signals) {
+			objs.push_back(std::move(s));
 		}
-		delete signals;
 		return;
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
 		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
-		for (auto v : *variables) {
-			objs.push_back(v);
+		for (auto & v : *variables) {
+			objs.push_back(std::move(v));
 		}
-		delete variables;
 		return;
 	}
 	auto fd = ctx->file_declaration();
@@ -177,13 +174,11 @@ void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 		return;
 	}
 	auto gd = ctx->group_declaration();
-#ifndef NDEBUG
 	assert(gd);
-#endif
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
-hdlObjects::HdlModuleDec* VhdlBlockDeclarationParser::visitComponent_declaration(
+std::unique_ptr<hdlObjects::HdlModuleDec> VhdlBlockDeclarationParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext *ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -191,15 +186,15 @@ hdlObjects::HdlModuleDec* VhdlBlockDeclarationParser::visitComponent_declaration
 	//           ( port_clause )?
 	//       END COMPONENT ( identifier )? SEMI
 	// ;
-	auto e = new hdlObjects::HdlModuleDec();
+	auto e = std::make_unique<hdlObjects::HdlModuleDec>();
 	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();
 		if (gc)
-			VhdlEntityParser::visitGeneric_clause(gc, &e->generics);
+			VhdlEntityParser::visitGeneric_clause(gc, e->generics);
 		auto pc = ctx->port_clause();
 		if (pc)
-			VhdlEntityParser::visitPort_clause(pc, &e->ports);
+			VhdlEntityParser::visitPort_clause(pc, e->ports);
 	}
 	return e;
 }

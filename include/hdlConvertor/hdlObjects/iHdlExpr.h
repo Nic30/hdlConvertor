@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
@@ -27,37 +28,44 @@ public:
 	// @note deepcopy
 	iHdlExpr(const iHdlExpr &expr);
 
-	iHdlExpr(HdlOperatorType operatorType, iHdlExpr *op0);
-	iHdlExpr(iHdlExpr *op0, HdlOperatorType operatorType, iHdlExpr *op1);
+	iHdlExpr(HdlOperatorType operatorType, std::unique_ptr<iHdlExpr> op0);
+	iHdlExpr(std::unique_ptr<iHdlExpr> op0, HdlOperatorType operatorType,
+			std::unique_ptr<iHdlExpr> op1);
 	iHdlExpr(const HdlValue &value);
 	iHdlExpr(HdlValue *value);
 	iHdlExpr(const BigInteger &value, int bits);
 	iHdlExpr(const BigInteger &value);
 
-	static iHdlExpr* ID(const std::string &value);
+	static std::unique_ptr<iHdlExpr> ID(const std::string &value);
 
-	static iHdlExpr* TYPE_T();
-	static iHdlExpr* AUTO_T();
+	static std::unique_ptr<iHdlExpr> TYPE_T();
+	static std::unique_ptr<iHdlExpr> AUTO_T();
 
-	static iHdlExpr* INT(int64_t val);
-	static iHdlExpr* INT(const std::string &strVal, int base);
-	static iHdlExpr* INT(const std::string &strVal, int bits, int base);
+	static std::unique_ptr<iHdlExpr> INT(int64_t val);
+	static std::unique_ptr<iHdlExpr> INT(const std::string &strVal, int base);
+	static std::unique_ptr<iHdlExpr> INT(const std::string &strVal, int bits,
+			int base);
+	static std::unique_ptr<iHdlExpr> FLOAT(double val);
+	static std::unique_ptr<iHdlExpr> STR(std::string strVal);
+	static std::unique_ptr<iHdlExpr> ARRAY(
+			std::vector<std::unique_ptr<iHdlExpr>> &arr);
+	static std::unique_ptr<iHdlExpr> ARRAY(
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr);
+	static std::unique_ptr<iHdlExpr> ternary(std::unique_ptr<iHdlExpr> cond,
+			std::unique_ptr<iHdlExpr> ifTrue,
+			std::unique_ptr<iHdlExpr> ifFalse);
+	static std::unique_ptr<iHdlExpr> call(std::unique_ptr<iHdlExpr> fnId,
+			std::vector<std::unique_ptr<iHdlExpr>> &args);
+	static std::unique_ptr<iHdlExpr> parametrization(
+			std::unique_ptr<iHdlExpr> fnId,
+			std::vector<std::unique_ptr<iHdlExpr>> &args);
+	static std::unique_ptr<iHdlExpr> slice(std::unique_ptr<iHdlExpr> fnId,
+			std::vector<std::unique_ptr<iHdlExpr>> &operands);
 
-	static iHdlExpr* FLOAT(double val);
-	static iHdlExpr* STR(std::string strVal);
-	static iHdlExpr* ARRAY(const std::vector<iHdlExpr*> &arr);
-	static iHdlExpr* ternary(iHdlExpr *cond, iHdlExpr *ifTrue,
-			iHdlExpr *ifFalse);
-	static iHdlExpr* call(iHdlExpr *fnId, const std::vector<iHdlExpr*> &args);
-	static iHdlExpr* parametrization(iHdlExpr *fnId,
-			const std::vector<iHdlExpr*> &args);
-	static iHdlExpr* slice(iHdlExpr *fnId,
-			const std::vector<iHdlExpr*> &operands);
-
-	static iHdlExpr* OPEN();
-	static iHdlExpr* all();
-	static iHdlExpr* null();
-	static iHdlExpr* others();
+	static std::unique_ptr<iHdlExpr> OPEN();
+	static std::unique_ptr<iHdlExpr> all();
+	static std::unique_ptr<iHdlExpr> null();
+	static std::unique_ptr<iHdlExpr> others();
 
 	// @return id of the variable string if this Expr is string value
 	const std::string& extractStr() const;

@@ -12,14 +12,14 @@ using namespace hdlConvertor::hdlObjects;
 VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
-HdlModuleDef * VhdlArchParser::visitArchitecture_body(
+std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 		vhdlParser::Architecture_bodyContext * ctx) {
-	auto a = new HdlModuleDef();
+	auto a = std::make_unique<HdlModuleDef>();
 	// architecture_body:
 	//       ARCHITECTURE identifier OF name IS
-	//           architecture_declarative_part
+	//           ( block_declarative_item )*
 	//       BEGIN
-	//           architecture_statement_part
+	//           ( concurrent_statement )*
 	//       END ( ARCHITECTURE )? ( identifier )? SEMI
 	// ;
 
@@ -28,21 +28,13 @@ HdlModuleDef * VhdlArchParser::visitArchitecture_body(
 	a->position.update_from_elem(ctx);
 
 	if (!hierarchyOnly) {
-		auto bdi =
-				ctx->architecture_declarative_part()->block_declarative_item();
-		for (auto bi : bdi) {
-			// architecture_declarative_part
-			// : ( block_declarative_item )*
-			// ;
+		for (auto bi : ctx->block_declarative_item()) {
 			VhdlBlockDeclarationParser bp(hierarchyOnly);
 			bp.visitBlock_declarative_item(bi, a->objs);
 		}
 	}
 	VhdlStatementParser sp(hierarchyOnly);
-	for (auto s : ctx->architecture_statement_part()->concurrent_statement()) {
-		// architecture_statement_part
-		// : ( concurrent_statement )*
-		// ;
+	for (auto s : ctx->concurrent_statement()) {
 		sp.visitConcurrent_statement(s, a->objs);
 	}
 

@@ -7,8 +7,8 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-std::vector<HdlVariableDef*> * VhdlSignalParser::visitSignal_declaration(
-		vhdlParser::Signal_declarationContext* ctx) {
+std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSignalParser::visitSignal_declaration(
+		vhdlParser::Signal_declarationContext *ctx) {
 	//signal_declaration
 	//	: SIGNAL identifier_list COLON
 	//	subtype_indication ( signal_kind )? ( VARASGN expression )? SEMI

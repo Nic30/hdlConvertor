@@ -22,8 +22,9 @@ public:
 
 	HdlStmProcess();
 	HdlStmProcess(
-			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _sensitivity,
-			std::unique_ptr<iHdlStatement> _body);
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _sensitivity);
+	HdlStmProcess(
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _sensitivity, std::unique_ptr<iHdlStatement> body);
 	virtual ~HdlStmProcess() override;
 };
 

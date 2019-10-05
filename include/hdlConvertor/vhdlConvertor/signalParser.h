@@ -12,8 +12,9 @@ class VhdlSignalParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::vector<hdlObjects::HdlVariableDef*> * visitSignal_declaration(
-			vhdlParser::Signal_declarationContext* ctx);
+	static std::unique_ptr<
+			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitSignal_declaration(
+			vhdlParser::Signal_declarationContext *ctx);
 
 };
 

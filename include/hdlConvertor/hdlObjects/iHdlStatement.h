@@ -19,11 +19,7 @@ namespace hdlObjects {
  */
 class iHdlStatement: public WithDoc, public WithPos, public iHdlObj {
 public:
-	class HdlExprAndStm {
-	public:
-		std::unique_ptr<iHdlExpr> expr;
-		std::unique_ptr<iHdlStatement> stm;
-	};
+
 	// an optional extra label specified in HDL
 	std::vector<std::string> labels;
 	// if true the statement is part of VHDL generate or other compile time evaluated statement
@@ -31,6 +27,16 @@ public:
 
 	iHdlStatement();
 	virtual ~iHdlStatement() override;
+};
+
+class HdlExprAndStm {
+public:
+	std::unique_ptr<iHdlExpr> expr;
+	std::unique_ptr<iHdlStatement> stm;
+	HdlExprAndStm();
+	HdlExprAndStm(std::unique_ptr<iHdlExpr> expr,
+			std::unique_ptr<iHdlStatement> stm);
+
 };
 
 }

@@ -4,12 +4,13 @@
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-namespace hdlConvertor {
-namespace sv {
-
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
+
+
+namespace hdlConvertor {
+namespace sv {
 
 VerEventExprParser::VerEventExprParser(SVCommentParser &_commentParser) :
 		commentParser(_commentParser) {
@@ -17,7 +18,7 @@ VerEventExprParser::VerEventExprParser(SVCommentParser &_commentParser) :
 
 void VerEventExprParser::visitEvent_expression(
 		sv2017Parser::Event_expressionContext *ctx,
-		std::vector<iHdlExpr*> &items) {
+		std::vector<std::unique_ptr<iHdlExpr>> &items) {
 	// event_expression: event_expression_item ( ( KW_OR | COMMA ) event_expression_item )*;
 	// @note 'or' and ',' is a Verilog-1995/2001 difference, they work exactly the same
 
@@ -28,7 +29,7 @@ void VerEventExprParser::visitEvent_expression(
 
 void VerEventExprParser::visitEvent_expression_item(
 		sv2017Parser::Event_expression_itemContext *ctx,
-		std::vector<iHdlExpr*> &items) {
+		std::vector<unique_ptr<iHdlExpr>> &items) {
 	// event_expression_item:
 	//     LPAREN event_expression RPAREN
 	//     | ( edge_identifier )? expression ( KW_IFF expression )?
@@ -45,14 +46,14 @@ void VerEventExprParser::visitEvent_expression_item(
 			// [todo] must have
 			auto edge_type = visitEvent_identifier(ei);
 			if (edge_type.second)
-				e = new iHdlExpr(edge_type.first, e);
+				e = make_unique<iHdlExpr>(edge_type.first, move(e));
 		}
 		if (_e.size() != 1) {
 			NotImplementedLogger::print(
 					"VerEventExprParser.visitEvent_expression_item - KW_IFF",
 					ctx);
 		}
-		items.push_back(e);
+		items.push_back(move(e));
 	}
 }
 std::pair<HdlOperatorType, bool> VerEventExprParser::visitEvent_identifier(
