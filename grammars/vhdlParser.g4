@@ -190,13 +190,10 @@ entity_statement:
 ;
 architecture_body:
       KW_ARCHITECTURE identifier KW_OF name KW_IS
-          architecture_declarative_part
+          ( block_declarative_item )*
       KW_BEGIN
-          architecture_statement_part
+          ( concurrent_statement )*
       KW_END ( KW_ARCHITECTURE )? ( identifier )? SEMI
-;
-architecture_declarative_part:
-      ( block_declarative_item )*
 ;
 block_declarative_item:
       subprogram_declaration
@@ -220,82 +217,74 @@ block_declarative_item:
       | use_clause
       | group_template_declaration
       | group_declaration
-     ;
-architecture_statement_part:
-      ( concurrent_statement )*
 ;
 configuration_declaration:
-      KW_CONFIGURATION identifier KW_OF name KW_IS
-          configuration_declarative_part
-          ( verification_unit_binding_indication SEMI )*
-          block_configuration
-      KW_END ( KW_CONFIGURATION )? ( identifier )? SEMI
-;
-configuration_declarative_part:
-      ( configuration_declarative_item )*
+    KW_CONFIGURATION identifier KW_OF name KW_IS
+        ( configuration_declarative_item )*
+        ( verification_unit_binding_indication SEMI )*
+        block_configuration
+    KW_END ( KW_CONFIGURATION )? ( identifier )? SEMI
 ;
 configuration_declarative_item:
-      use_clause
-      | attribute_specification
-      | group_declaration
+    use_clause
+    | attribute_specification
+    | group_declaration
 ;
 block_configuration:
-      KW_FOR block_specification
-          ( use_clause )*
-          ( configuration_item )*
-      KW_END KW_FOR SEMI
+    KW_FOR block_specification
+        ( use_clause )*
+        ( configuration_item )*
+    KW_END KW_FOR SEMI
 ;
 block_specification:
     label ( LPAREN generate_specification RPAREN )?
 ;
 generate_specification:
-      discrete_range
-      | expression
-      | label
+    discrete_range
+    | expression
+    | label
 ;
 configuration_item:
-      block_configuration
-      | component_configuration
+    block_configuration
+    | component_configuration
 ;
 component_configuration:
-      KW_FOR component_specification
-          ( binding_indication SEMI )?
-          ( verification_unit_binding_indication SEMI )*
-          ( block_configuration )?
-      KW_END KW_FOR SEMI
+    KW_FOR component_specification
+        ( binding_indication SEMI )?
+        ( verification_unit_binding_indication SEMI )*
+        ( block_configuration )?
+    KW_END KW_FOR SEMI
 ;
 subprogram_declaration:
-      subprogram_specification SEMI
+    subprogram_specification SEMI
 ;
 subprogram_specification:
-      procedure_specification | function_specification
+    procedure_specification
+    | function_specification
 ;
 procedure_specification:
-      KW_PROCEDURE designator
-          subprogram_header
-          ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )?
+    KW_PROCEDURE designator
+    ( subprogram_header )?
+    ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )?
 ;
 function_specification:
-      ( KW_PURE | KW_IMPURE )? KW_FUNCTION designator
-          subprogram_header
-          ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )? KW_RETURN type_mark
+    ( KW_PURE | KW_IMPURE )? KW_FUNCTION designator
+    ( subprogram_header )?
+    ( ( KW_PARAMETER )? LPAREN formal_parameter_list RPAREN )? KW_RETURN type_mark
 ;
 subprogram_header:
-      ( KW_GENERIC LPAREN generic_list RPAREN
-      ( generic_map_aspect )? )?
+    KW_GENERIC LPAREN generic_list RPAREN
+    ( generic_map_aspect )?
 ;
 designator: identifier | operator_symbol;
 operator_symbol: STRING_LITERAL;
 formal_parameter_list: interface_list;
 subprogram_body:
       subprogram_specification KW_IS
-          subprogram_declarative_part
+          ( subprogram_declarative_item )*
       KW_BEGIN
-          subprogram_statement_part
+          ( sequential_statement )*
       KW_END ( subprogram_kind )? ( designator )? SEMI
-;
-subprogram_declarative_part:
-      ( subprogram_declarative_item )*
 ;
 subprogram_declarative_item:
       subprogram_declaration
@@ -315,9 +304,6 @@ subprogram_declarative_item:
       | use_clause
       | group_template_declaration
       | group_declaration
-;
-subprogram_statement_part:
-      ( sequential_statement )*
 ;
 subprogram_kind: KW_PROCEDURE | KW_FUNCTION;
 subprogram_instantiation_declaration:
@@ -362,11 +348,8 @@ package_declarative_item:
      ;
 package_body:
       KW_PACKAGE KW_BODY identifier KW_IS
-          package_body_declarative_part
+          ( package_body_declarative_item )*
       KW_END ( KW_PACKAGE KW_BODY )? ( identifier )? SEMI
-;
-package_body_declarative_part:
-      ( package_body_declarative_item )*
 ;
 package_body_declarative_item:
       subprogram_declaration
@@ -442,8 +425,7 @@ index_constraint: LPAREN discrete_range ( COMMA discrete_range )* RPAREN;
 discrete_range: subtype_indication | range;
 record_type_definition:
       KW_RECORD
-          element_declaration
-          ( element_declaration )*
+          ( element_declaration )+
       KW_END KW_RECORD ( identifier )?
 ;
 element_declaration:
@@ -464,11 +446,8 @@ protected_type_definition:
 ;
 protected_type_declaration:
       KW_PROTECTED
-          protected_type_declarative_part
+          ( protected_type_declarative_item )*
       KW_END KW_PROTECTED ( identifier )?
-;
-protected_type_declarative_part:
-      ( protected_type_declarative_item )*
 ;
 protected_type_declarative_item:
       subprogram_declaration
@@ -478,11 +457,8 @@ protected_type_declarative_item:
 ;
 protected_type_body:
       KW_PROTECTED KW_BODY
-          protected_type_body_declarative_part
+          ( protected_type_body_declarative_item )*
       KW_END KW_PROTECTED KW_BODY ( identifier )?
-;
-protected_type_body_declarative_part:
-      ( protected_type_body_declarative_item )*
 ;
 protected_type_body_declarative_item:
       subprogram_declaration
@@ -524,7 +500,8 @@ subtype_indication:
       ( resolution_indication )? type_mark ( constraint )?
 ;
 resolution_indication:
-      name | LPAREN element_resolution RPAREN
+      name
+      | LPAREN element_resolution RPAREN
 ;
 element_resolution: array_element_resolution | record_resolution;
 array_element_resolution: resolution_indication;
@@ -595,7 +572,8 @@ interface_subprogram_declaration:
       interface_subprogram_specification ( KW_IS interface_subprogram_default )?
 ;
 interface_subprogram_specification:
-      interface_procedure_specification | interface_function_specification
+        interface_procedure_specification
+      | interface_function_specification
 ;
 interface_procedure_specification:
       KW_PROCEDURE designator
@@ -720,8 +698,7 @@ simple_configuration_specification:
 ;
 compound_configuration_specification:
       KW_FOR component_specification binding_indication SEMI
-          verification_unit_binding_indication SEMI
-          ( verification_unit_binding_indication SEMI )*
+          ( verification_unit_binding_indication SEMI )+
       KW_END KW_FOR SEMI
 ;
 component_specification:
@@ -768,7 +745,7 @@ external_pathname:
       | relative_pathname
 ;
 package_pathname:
-      AT identifier DOT identifier DOT ( identifier DOT )* identifier
+      AT identifier DOT identifier DOT identifier ( DOT identifier )*
 ;
 absolute_pathname: DOT partial_pathname;
 relative_pathname: ( UP DOT )* partial_pathname;
@@ -915,7 +892,7 @@ conditional_waveform_assignment:
 conditional_waveforms:
       waveform KW_WHEN condition
       ( KW_ELSE waveform KW_WHEN condition )*
-      ( KW_ELSE waveform )?
+      ( KW_ELSE waveform | {_input->LA(1) != KW_ELSE}? )
 ;
 conditional_force_assignment:
       target CONASGN KW_FORCE ( force_mode )? conditional_expressions SEMI
@@ -923,7 +900,7 @@ conditional_force_assignment:
 conditional_expressions:
       expression KW_WHEN condition
       ( KW_ELSE expression KW_WHEN condition )*
-      ( KW_ELSE expression )?
+      ( KW_ELSE expression | {_input->LA(1) != KW_ELSE}? )
 ;
 selected_signal_assignment:
       selected_waveform_assignment
@@ -934,8 +911,8 @@ selected_waveform_assignment:
           target CONASGN ( delay_mechanism )? selected_waveforms SEMI
 ;
 selected_waveforms:
-      ( waveform KW_WHEN choices COMMA )*
-      waveform KW_WHEN choices
+      waveform KW_WHEN choices (COMMA waveform KW_WHEN choices)*
+      
 ;
 selected_force_assignment:
       KW_WITH expression KW_SELECT ( QUESTIONMARK )?
@@ -967,8 +944,7 @@ if_statement:
               sequence_of_statements
           ( KW_ELSIF condition KW_THEN
               sequence_of_statements )*
-          ( KW_ELSE
-              sequence_of_statements )?
+          ( KW_ELSE sequence_of_statements | | {_input->LA(1) != KW_ELSE}? )
           KW_END KW_IF ( label )? SEMI
 ;
 case_statement:
@@ -1008,15 +984,15 @@ concurrent_statement_with_optional_label:
       process_statement
       | concurrent_procedure_call_statement
       | concurrent_assertion_statement
-      | concurrent_signal_assignment_statement;
-
+      | concurrent_signal_assignment_statement
+;
 concurrent_statement:
       label COLON (block_statement
                    | component_instantiation_statement
                    | generate_statement
                    | concurrent_statement_with_optional_label)
       | concurrent_statement_with_optional_label
-      ;
+;
 block_statement:
      KW_BLOCK ( LPAREN condition RPAREN )? ( KW_IS )?
          block_header
@@ -1031,7 +1007,6 @@ block_header:
       ( port_clause
       ( port_map_aspect SEMI )? )?
 ;
-
 process_statement:
           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?
               ( process_declarative_item )*
@@ -1040,7 +1015,6 @@ process_statement:
           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 ;
 process_sensitivity_list: KW_ALL | sensitivity_list;
-
 process_declarative_item:
       subprogram_declaration
       | subprogram_body
@@ -1091,38 +1065,37 @@ component_instantiation_statement:
           ( port_map_aspect )? SEMI
 ;
 instantiated_unit:
-      ( KW_COMPONENT )? name
-      | KW_ENTITY name ( LPAREN identifier RPAREN )?
-      | KW_CONFIGURATION name
+    ( KW_COMPONENT )? name
+    | KW_ENTITY name ( LPAREN identifier RPAREN )?
+    | KW_CONFIGURATION name
 ;
 generate_statement:
-      for_generate_statement
-      | if_generate_statement
-      | case_generate_statement
+    for_generate_statement
+    | if_generate_statement
+    | case_generate_statement
 ;
 for_generate_statement:
-          KW_FOR parameter_specification KW_GENERATE
-              generate_statement_body
-          KW_END KW_GENERATE ( label )? SEMI
+    KW_FOR parameter_specification KW_GENERATE
+        generate_statement_body
+    KW_END KW_GENERATE ( label )? SEMI
 ;
 if_generate_statement:
-          KW_IF ( label COLON )? condition KW_GENERATE
-              generate_statement_body
-          ( KW_ELSIF ( label COLON )? condition KW_GENERATE
-              generate_statement_body )*
-          ( KW_ELSE ( label COLON )? KW_GENERATE
-              generate_statement_body )?
-          KW_END KW_GENERATE ( label )? SEMI
+    KW_IF ( label COLON )? condition KW_GENERATE
+        generate_statement_body
+    ( KW_ELSIF ( label COLON )? condition KW_GENERATE
+        generate_statement_body )*
+    ( KW_ELSE ( label COLON )? KW_GENERATE
+        generate_statement_body | {_input->LA(1) != KW_ELSE}? )
+    KW_END KW_GENERATE ( label )? SEMI
 ;
 case_generate_statement:
-          KW_CASE expression KW_GENERATE
-              case_generate_alternative
-              ( case_generate_alternative )*
-          KW_END KW_GENERATE ( label )? SEMI
+    KW_CASE expression KW_GENERATE
+        ( case_generate_alternative )+
+    KW_END KW_GENERATE ( label )? SEMI
 ;
 case_generate_alternative:
-      KW_WHEN ( label COLON )? choices ARROW
-          generate_statement_body
+    KW_WHEN ( label COLON )? choices ARROW
+        generate_statement_body
 ;
 generate_statement_body:
     ( block_declarative_item*
@@ -1134,41 +1107,40 @@ generate_statement_body:
 ;
 label: identifier;
 use_clause:
-      KW_USE selected_name (COMMA selected_name)* SEMI
+    KW_USE selected_name (COMMA selected_name)* SEMI
 ;
 // the start rule
 design_file: design_unit* EOF;
 design_unit: context_clause library_unit;
 library_unit:
-      primary_unit
-      | secondary_unit
+    primary_unit
+    | secondary_unit
 ;
 primary_unit:
-      entity_declaration
-      | configuration_declaration
-      | package_declaration
-      | package_instantiation_declaration
-      | context_declaration
-     ;
+    entity_declaration
+    | configuration_declaration
+    | package_declaration
+    | package_instantiation_declaration
+    | context_declaration
+;
 secondary_unit:
-      architecture_body
-      | package_body
+    architecture_body
+    | package_body
 ;
 library_clause: KW_LIBRARY logical_name_list SEMI;
 logical_name_list: identifier_list;
 context_declaration:
-      KW_CONTEXT identifier KW_IS
-          context_clause
-      KW_END ( KW_CONTEXT )? ( identifier )? SEMI
+    KW_CONTEXT identifier KW_IS
+        context_clause
+    KW_END ( KW_CONTEXT )? ( identifier )? SEMI
 ;
 context_clause: ( context_item )*;
 context_item:
-      library_clause
-      | use_clause
-      | context_reference
+    library_clause
+    | use_clause
+    | context_reference
 ;
 context_reference:
-      KW_CONTEXT selected_name ( COMMA selected_name )* SEMI
+    KW_CONTEXT selected_name ( COMMA selected_name )* SEMI
 ;
-
 identifier: BASIC_IDENTIFIER | EXTENDED_IDENTIFIER;
