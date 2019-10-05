@@ -2,8 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <string.h>
-#include <assert.h>
 
 #include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>

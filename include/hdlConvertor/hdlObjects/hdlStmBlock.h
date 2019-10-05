@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
+
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -12,8 +12,8 @@ namespace hdlObjects {
  * */
 class HdlStmBlock: public iHdlStatement {
 public:
-	std::vector<iHdlObj*> statements;
-	HdlStmBlock(const std::vector<iHdlObj*> &statements);
+	std::vector<std::unique_ptr<iHdlObj>> statements;
+	HdlStmBlock(std::vector<std::unique_ptr<iHdlObj>> &statements);
 	virtual ~HdlStmBlock() override;
 };
 

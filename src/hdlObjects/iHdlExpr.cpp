@@ -1,7 +1,8 @@
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <stdexcept>
+#include <string.h>
+#include <assert.h>
 
-#include <hdlConvertor/hdlObjects/hdlValue.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 
 namespace hdlConvertor {
