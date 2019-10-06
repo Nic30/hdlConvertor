@@ -17,7 +17,7 @@ PyObject* ToPy::toPy(const HdlStmIf *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "if_true", o->ifTrue))
 		return nullptr;
-	if (toPy_property(py_inst, "elifs", o->elseIfs))
+	if (toPy_arr(py_inst, "elifs", o->elseIfs))
 		return nullptr;
 
 	if (o->ifFalse) {
@@ -26,6 +26,7 @@ PyObject* ToPy::toPy(const HdlStmIf *o) {
 	}
 	return py_inst;
 }
+
 PyObject* ToPy::toPy(const HdlStmBlock *o) {
 	auto py_inst = PyObject_CallObject(HdlStmBlockCls, NULL);
 	if (!py_inst) {
@@ -44,7 +45,7 @@ PyObject* ToPy::toPy(const HdlStmCase *o) {
 	}
 	if (toPy_property(py_inst, "switch_on", o->select_on))
 		return nullptr;
-	if (toPy_property(py_inst, "cases", o->cases))
+	if (toPy_arr(py_inst, "cases", o->cases))
 		return nullptr;
 
 	if (o->default_) {
@@ -174,8 +175,21 @@ PyObject* ToPy::toPy(const HdlStmProcess *o) {
 	}
 
 	if (o->sensitivity_list) {
-		if (toPy_arr(py_inst, "sensitivity", *o->sensitivity_list.get()))
+		auto sl = PyList_New(0);
+		if (!sl) {
+			Py_DECREF(py_inst);
 			return nullptr;
+		}
+		if (PyObject_SetAttrString(py_inst, "sensitivity", sl)) {
+			Py_DECREF(py_inst);
+			Py_DECREF(sl);
+			return nullptr;
+		}
+
+		if (toPy_arr(sl, *o->sensitivity_list.get())) {
+			Py_DECREF(py_inst);
+			return nullptr;
+		}
 	}
 	if (toPy_property(py_inst, "body", o->body))
 		return nullptr;
@@ -282,7 +296,8 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 			py_inst = toPy(im);
 			break;
 		}
-		std::string err_msg = std::string("Invalid StatementType:") + typeid(*o).name();
+		std::string err_msg = std::string("Invalid StatementType:")
+				+ typeid(*o).name();
 		PyErr_SetString(PyExc_TypeError, err_msg.c_str());
 		return nullptr;
 	} while (0);
@@ -301,55 +316,36 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(
-		const std::vector<hdlConvertor::hdlObjects::HdlExprAndStm> &cases) {
-	PyObject *py_cases = nullptr;
-	if (cases.size()) {
-		py_cases = PyList_New(cases.size());
-		if (!py_cases) {
-			return nullptr;
-		}
+PyObject* ToPy::toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o) {
+	// build tuple representing the elif item
+	auto py_inst = PyTuple_New(2);
+	if (!py_inst) {
+		return nullptr;
 	}
-	for (size_t case_cnt = 0; case_cnt < cases.size(); case_cnt++) {
-		// build tuple representing the elif item
-		auto case_ = PyTuple_New(2);
-		if (!case_) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-		// add to elif/case list
-		int e = PyList_SetItem(py_cases, case_cnt, case_);
-		if (e) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-		auto &case_rec = cases[case_cnt];
-		auto c = toPy(case_rec.expr);
-		if (!c) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-
-		e = PyTuple_SetItem(case_, 0, c);
-		if (e) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-
-		// fill statements in elif/case
-		PyObject *stms = toPy(case_rec.stm);
-		if (!stms) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-		e = PyTuple_SetItem(case_, 1, stms);
-		if (e) {
-			Py_DECREF(py_cases);
-			return nullptr;
-		}
-
+	auto c = toPy(o.expr);
+	if (!c) {
+		Py_DECREF(py_inst);
+		return nullptr;
 	}
-	return py_cases;
+
+	int e = PyTuple_SetItem(py_inst, 0, c);
+	if (e) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+
+	// fill statements in elif/case
+	auto stms = toPy(o.stm);
+	if (!stms) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	e = PyTuple_SetItem(py_inst, 1, stms);
+	if (e) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	return py_inst;
 }
 
 }

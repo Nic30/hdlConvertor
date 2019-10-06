@@ -137,11 +137,10 @@ public:
 		return toPy(o.get());
 	}
 
-	PyObject* toPy(
-			const std::vector<hdlConvertor::hdlObjects::HdlExprAndStm> &cases);
 	int toPy(const hdlObjects::WithNameAndDoc *o, PyObject *py_inst);
 	int toPy(const hdlObjects::WithDoc *o, PyObject *py_inst);
 
+	PyObject* toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o);
 	PyObject* toPy(const hdlObjects::iHdlStatement *o);
 	PyObject* toPy(const hdlObjects::HdlModuleDef *o);
 	PyObject* toPy(const hdlObjects::HdlCompInstance *o);

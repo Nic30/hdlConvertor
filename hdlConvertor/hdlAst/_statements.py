@@ -18,6 +18,12 @@ class HdlImport(iHdlStatement):
         super(HdlImport, self).__init__()
         self.path = []  # type: List[str]
 
+class HdlStmNop():
+    """
+    Nop statement in HDL
+    """
+    __slots__ = []
+
 
 class HdlStmBlock(iHdlStatement):
     """
@@ -66,7 +72,7 @@ class HdlStmIf(iHdlStatement):
 
     :ivar cond: condition in if statement
     :ivar if_true: block of statements which is in if true branch
-    :ivar elifs: type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
+    :ivar elifs: type: List[Tuple[iHdlExpr, iHdlStatement]]
                   = list of (condition, statement list)
     """
     __slots__ = ["cond", "if_true", "elifs", "if_false"]
@@ -74,9 +80,9 @@ class HdlStmIf(iHdlStatement):
     def __init__(self):
         super(HdlStmIf, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.if_true = []  # type: List[iHdlStatement]
-        self.elifs = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
-        self.if_false = None  # type: Optional[List[iHdlStatement]]
+        self.if_true = None  # type: iHdlStatement
+        self.elifs = []  # type: List[Tuple[iHdlExpr, iHdlStatement]]
+        self.if_false = None  # type: Optional[iHdlStatement]
 
 
 class HdlStmProcess(iHdlStatement):
@@ -95,8 +101,8 @@ class HdlStmProcess(iHdlStatement):
 
     def __init__(self):
         super(HdlStmProcess, self).__init__()
-        self.sensitivity = None  # type: Optional[iHdlExpr]
-        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
+        self.sensitivity = None  # type: Optional[List[iHdlExpr]]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmCase(iHdlStatement):
@@ -108,8 +114,8 @@ class HdlStmCase(iHdlStatement):
     def __init__(self):
         super(HdlStmCase, self).__init__()
         self.switch_on = None  # type: iHdlExpr
-        self.cases = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
-        self.default = None  # type: Optional[List[iHdlStatement]]
+        self.cases = []  # type: List[Tuple[iHdlExpr, iHdlStatement]]
+        self.default = None  # type: Optional[iHdlStatement]
 
 
 class HdlStmFor(iHdlStatement):
@@ -123,10 +129,10 @@ class HdlStmFor(iHdlStatement):
 
     def __init__(self):
         super(HdlStmFor, self).__init__()
-        self.init = []  # type: List[iHdlStatement]
+        self.init = None  # type: iHdlStatement
         self.cond = None  # type: iHdlExpr
-        self.step = []  # type: List[iHdlStatement]
-        self.body = []  # type: List[iHdlStatement]
+        self.step = None  # type: iHdlStatement
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmForIn(iHdlStatement):
@@ -142,9 +148,10 @@ class HdlStmForIn(iHdlStatement):
 
     def __init__(self):
         super(HdlStmForIn, self).__init__()
-        self.var_defs = []  # type: List[iHdlStatement]
+        # [todo] to iHdlStatement
+        self.var_defs = []  # type: List[iHdlObj]
         self.collection = None  # type: iHdlExpr
-        self.body = []  # type: List[iHdlStatement]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmWhile(iHdlStatement):
@@ -159,7 +166,7 @@ class HdlStmWhile(iHdlStatement):
     def __init__(self):
         super(HdlStmWhile, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmReturn(iHdlStatement):
