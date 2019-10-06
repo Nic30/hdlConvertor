@@ -138,7 +138,7 @@ class HdlStmForIn(iHdlStatement):
 
     :note: corresponds to VHDL "for" and is used also for Verilog "repeat"
     """
-    __slots__ = ["var", "collection", "body"]
+    __slots__ = ["var_defs", "collection", "body"]
 
     def __init__(self):
         super(HdlStmForIn, self).__init__()
