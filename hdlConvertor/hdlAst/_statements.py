@@ -142,7 +142,7 @@ class HdlStmForIn(iHdlStatement):
 
     def __init__(self):
         super(HdlStmForIn, self).__init__()
-        self.var = []  # type: List[iHdlStatement]
+        self.var_defs = []  # type: List[iHdlStatement]
         self.collection = None  # type: iHdlExpr
         self.body = []  # type: List[iHdlStatement]
 

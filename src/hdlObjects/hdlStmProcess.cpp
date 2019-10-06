@@ -7,7 +7,7 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlStmProcess::HdlStmProcess() :
-		iHdlStatement() {
+		iHdlStatement(), body(make_unique<HdlStmBlock>()) {
 }
 
 HdlStmProcess::HdlStmProcess(

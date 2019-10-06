@@ -58,7 +58,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declara
 		auto pl = ctx->tf_port_list();
 		if (pl) {
 			VerPortParser pp(commentParser, non_ansi_port_groups);
-			pp.visitTf_port_list(pl, *params);
+			pp.visitTf_port_list(pl, *f->params);
 		}
 	}
 	VerStatementParser sp(commentParser);

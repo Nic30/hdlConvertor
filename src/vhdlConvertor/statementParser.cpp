@@ -106,7 +106,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitSequential_statement - next_statement",
 				ns);
-		return nullptr;
+		return make_unique<HdlStmNop>();
 	}
 
 	auto es = ctx->exit_statement();
@@ -115,7 +115,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitSequential_statement - exit_statement",
 				es);
-		return nullptr;
+		return make_unique<HdlStmNop>();
 	}
 
 	auto rt = ctx->return_statement();

@@ -40,8 +40,9 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitNonansi_port(
 				"Source_textParser.visitPort - empty port record", ctx);
 	}
 	if (pi) {
-		non_ansi_port_groups.push_back(
-				{ ctx->identifier()->getText(), move(pe) });
+		// [todo] non_ansi_port_groups can not contains unique ptrs as the object are stored elsewhere
+		// non_ansi_port_groups.push_back(
+		// 		{ ctx->identifier()->getText(), clone(pe) });
 	}
 	return pe;
 }

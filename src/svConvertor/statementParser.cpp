@@ -468,6 +468,7 @@ void VerStatementParser::visitFor_variable_declaration(
 	VerExprParser ep(commentParser);
 
 	auto dt = tp.visitData_type(_dt);
+	auto dt_tmp = dt.get();
 	bool is_latched = ctx->KW_VAR() != nullptr;
 	bool first = true;
 	for (auto _fvdas : ctx->for_variable_declaration_var_assign()) {
@@ -476,7 +477,7 @@ void VerStatementParser::visitFor_variable_declaration(
 		if (first)
 			first = false;
 		else
-			dt = make_unique<iHdlExpr>(*dt);
+			dt = make_unique<iHdlExpr>(*dt_tmp);
 		auto _def_val = _fvdas->expression();
 		auto def_val = ep.visitExpression(_def_val);
 		auto vd = make_unique<HdlVariableDef>(name, move(dt), move(def_val),

@@ -78,13 +78,14 @@ void VerParamDefParser::visitTyped_list_of_param_assignments(
 	vector<unique_ptr<HdlVariableDef>> res_tmp;
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
+	auto data_type_tmp = data_type.get();
 	for (auto & v : res_tmp) {
 		if (first) {
 			v->type = move(data_type);
 			v->__doc__ = doc + v->__doc__;
 			first = false;
 		} else
-			v->type = make_unique<iHdlExpr>(*data_type);
+			v->type = make_unique<iHdlExpr>(*data_type_tmp);
 		res.push_back(move(v));
 	}
 }

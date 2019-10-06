@@ -83,12 +83,12 @@ void VerModuleParser::visitModule_declaration(
 	}
 	res.push_back(move(ent));
 	if (ctx->KW_EXTERN()) {
-		for (auto &o : ent->generics) {
+		for (auto &o : m_ctx.ent.generics) {
 			if (!o->type) {
 				o->type = iHdlExpr::AUTO_T();
 			}
 		}
-		for (auto &o : ent->ports) {
+		for (auto &o : m_ctx.ent.ports) {
 			if (!o->type) {
 				o->type = iHdlExpr::AUTO_T();
 			}
@@ -107,11 +107,11 @@ void VerModuleParser::visitModule_declaration(
 	for (auto mi : ctx->module_item())
 		visitModule_item(mi, arch->objs, m_ctx);
 
-	arch->entityName = iHdlExpr::ID(ent->name);
+	arch->entityName = iHdlExpr::ID(m_ctx.ent.name);
 	res.push_back(move(arch));
 	if (m_ctx.non_ANSI_port_groups.size()) {
 		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
-		pp.convert_non_ansi_ports_to_ansi(ent->ports, arch->objs);
+		pp.convert_non_ansi_ports_to_ansi(m_ctx.ent.ports, m_ctx.arch->objs);
 	}
 	auto consume_nonansi_ports_vars = [this, &m_ctx](unique_ptr<iHdlObj> &o) {
 		auto v = dynamic_cast<HdlVariableDef*>(o.get());
@@ -133,15 +133,15 @@ void VerModuleParser::visitModule_declaration(
 		p->is_static |= v->is_static;
 		return true;
 	};
-	arch->objs.erase(
-			remove_if(arch->objs.begin(), arch->objs.end(),
-					consume_nonansi_ports_vars), arch->objs.end());
-	for (auto &o : ent->generics) {
+	m_ctx.arch->objs.erase(
+			remove_if(m_ctx.arch->objs.begin(), m_ctx.arch->objs.end(),
+					consume_nonansi_ports_vars), m_ctx.arch->objs.end());
+	for (auto &o : m_ctx.ent.generics) {
 		if (!o->type) {
 			o->type = iHdlExpr::AUTO_T();
 		}
 	}
-	for (auto &o : ent->ports) {
+	for (auto &o : m_ctx.ent.ports) {
 		if (!o->type) {
 			o->type = iHdlExpr::AUTO_T();
 		}
@@ -694,12 +694,11 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		if (first) {
 			t = move(base_type);
 		} else {
-			t = make_unique<iHdlExpr>(*t);
+			t = make_unique<iHdlExpr>(*base_type_tmp);
 		}
 		auto uds = nd->unpacked_dimension();
 		t = tp.applyUnpacked_dimension(move(t), uds);
-		auto v = make_unique<HdlVariableDef>(id, move(base_type),
-				move(def_val));
+		auto v = make_unique<HdlVariableDef>(id, move(t), move(def_val));
 		if (first) {
 			v->__doc__ = doc;
 			first = false;
