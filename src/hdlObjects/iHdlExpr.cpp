@@ -137,14 +137,6 @@ std::unique_ptr<iHdlExpr> iHdlExpr::null() {
 std::unique_ptr<iHdlExpr> iHdlExpr::others() {
 	return make_unique<iHdlExpr>(new HdlValue(HdlValueType::symb_OTHERS));
 }
-const std::string& iHdlExpr::extractStr() const {
-	HdlValue *literal = dynamic_cast<HdlValue*>(data);
-	if (!literal)
-		throw std::runtime_error(
-				"Expr::extractStr called on expression which is not string or id");
-	return literal->_str;
-}
-
 iHdlExpr::~iHdlExpr() {
 	if (data && data != &Type_t && data != &AutoType_t)
 		delete data;

@@ -15,14 +15,16 @@ class VerPortParser {
 	SVCommentParser &commentParser;
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using Non_ANSI_port_info_t = std::pair<std::string, std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>*>;
+	using Non_ANSI_port_info_t = std::pair<std::string, hdlObjects::HdlVariableDef*>;
 	std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups;
 
 	VerPortParser(SVCommentParser &commentParser,
 			std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups);
-	std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitNonansi_port(
+	std::unique_ptr<hdlObjects::HdlVariableDef> visitNonansi_port(
 			sv2017Parser::Nonansi_portContext *ctx);
-	std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitNonansi_port__expr(
+	std::unique_ptr<hdlObjects::iHdlExpr> visitNonansi_port__expr_as_expr(
+			sv2017Parser::Nonansi_port__exprContext *ctx);
+	std::unique_ptr<hdlObjects::HdlVariableDef> visitNonansi_port__expr_as_var(
 			sv2017Parser::Nonansi_port__exprContext *ctx);
 	std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitList_of_port_declarations(
 			sv2017Parser::List_of_port_declarationsContext *ctx);
@@ -61,6 +63,7 @@ public:
 	// wrap children on non_ansi ports to new ANSI port with name of parent port
 	// module x (.a(b, c)); input b, c; endmodule -> module x (input [2:0] a); wire b, c; assign {b, c} = a; endmodule
 	void convert_non_ansi_ports_to_ansi(
+			sv2017Parser::Module_declarationContext *ctx_for_debug,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &ports,
 			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &body);
 	void visitTf_port_list(sv2017Parser::Tf_port_listContext *ctx,

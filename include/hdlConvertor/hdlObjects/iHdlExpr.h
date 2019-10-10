@@ -67,9 +67,6 @@ public:
 	static std::unique_ptr<iHdlExpr> null();
 	static std::unique_ptr<iHdlExpr> others();
 
-	// @return id of the variable string if this Expr is string value
-	const std::string& extractStr() const;
-
 	~iHdlExpr();
 };
 

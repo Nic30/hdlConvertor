@@ -9,7 +9,6 @@ HdlModuleDec::HdlModuleDec() :
 }
 HdlVariableDef* HdlModuleDec::getPortByName(const std::string &name) {
 	for (auto & p : ports) {
-		assert(!p->name.empty());
 		if (p->name == name)
 			return p.get();
 	}

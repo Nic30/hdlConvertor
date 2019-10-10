@@ -10,6 +10,7 @@
 #include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/moduleParser.h>
+#include <hdlConvertor/hdlObjects/hdlCall.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -24,55 +25,83 @@ VerPortParser::VerPortParser(SVCommentParser &commentParser,
 				_non_ansi_port_groups) {
 }
 
-unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitNonansi_port(
+std::pair<std::string, std::unique_ptr<iHdlExpr>> split_type_base_name_and_array_size(
+		std::unique_ptr<iHdlExpr> e, const char * typename_to_use) {
+	auto top = e.get();
+	while (true) {
+		auto c = dynamic_cast<HdlCall*>(top->data);
+		if (c) {
+			top = c->operands.at(0).get();
+		} else {
+			auto literal = dynamic_cast<HdlValue*>(top->data);
+			if (!literal)
+				throw std::runtime_error(
+						"Expr::extractStr called on expression which is not string or id");
+			if (top == e.get()) {
+				return {literal->_str, nullptr};
+			} else {
+				auto tmp = literal->_str;
+				literal->_str = typename_to_use;
+				return {tmp, move(e)};
+			}
+		}
+	}
+}
+
+unique_ptr<HdlVariableDef> VerPortParser::visitNonansi_port(
 		sv2017Parser::Nonansi_portContext *ctx) {
 	// nonansi_port:
 	//     nonansi_port__expr
 	//     | DOT identifier LPAREN ( nonansi_port__expr )? RPAREN;
-	auto pi = ctx->identifier();
 	auto _pe = ctx->nonansi_port__expr();
-	unique_ptr<vector<unique_ptr<HdlVariableDef>>> pe = nullptr;
-	if (_pe) {
-		pe = visitNonansi_port__expr(_pe);
-	} else {
-		pe = make_unique<vector<unique_ptr<HdlVariableDef>>>();
-		NotImplementedLogger::print(
-				"Source_textParser.visitPort - empty port record", ctx);
-	}
+	unique_ptr<HdlVariableDef> pe = nullptr;
+	auto pi = ctx->identifier();
 	if (pi) {
-		non_ansi_port_groups.push_back(
-				{ ctx->identifier()->getText(), pe.get() });
+		auto name = VerExprParser::getIdentifierStr(ctx->identifier());
+		unique_ptr<iHdlExpr> val = nullptr;
+		if (_pe)
+			val = visitNonansi_port__expr_as_expr(_pe);
+		pe = make_unique<HdlVariableDef>(name, nullptr, move(val));
+		non_ansi_port_groups.push_back( { name, pe.get() });
+	} else {
+		pe = visitNonansi_port__expr_as_var(_pe);
 	}
-	pe->at(0)->__doc__ = commentParser.parse(ctx);
+	pe->__doc__ = commentParser.parse(ctx);
 	return pe;
 }
-unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitNonansi_port__expr(
+unique_ptr<HdlVariableDef> VerPortParser::visitNonansi_port__expr_as_var(
 		sv2017Parser::Nonansi_port__exprContext *ctx) {
 	// nonansi_port__expr:
 	//     identifier_doted_index_at_end
 	//     | LBRACE identifier_doted_index_at_end ( COMMA identifier_doted_index_at_end )* RBRACE
 	// ;
-	auto ports = make_unique<vector<unique_ptr<HdlVariableDef>>>();
+	auto e = visitNonansi_port__expr_as_expr(ctx);
 	if (ctx->LBRACE()) {
-		NotImplementedLogger::print(
-				"VerPortParser.visitNonansi_port__expr - {}", ctx);
+		return make_unique<HdlVariableDef>("", nullptr, move(e));
 	}
-	if (ctx) {
-		VerExprParser ep(commentParser);
-		for (auto pr : ctx->identifier_doted_index_at_end()) {
-			auto id = ep.visitIdentifier_doted_index_at_end(pr);
-			try {
-				string id_name = id->extractStr();
-				ports->push_back(
-						make_unique<HdlVariableDef>(id_name, nullptr, nullptr));
-			} catch (const std::runtime_error &err) {
-				NotImplementedLogger::print(
-						"VerPortParser.visitNonansi_port__expr variable which is not just identifier",
-						pr);
-			}
+	auto id_and_t = split_type_base_name_and_array_size(move(e), "wire");
+	return make_unique<HdlVariableDef>(id_and_t.first, move(id_and_t.second),
+			nullptr);
+}
+unique_ptr<iHdlExpr> VerPortParser::visitNonansi_port__expr_as_expr(
+		sv2017Parser::Nonansi_port__exprContext *ctx) {
+	// nonansi_port__expr:
+	//     identifier_doted_index_at_end
+	//     | LBRACE identifier_doted_index_at_end ( COMMA identifier_doted_index_at_end )* RBRACE
+	// ;
+	VerExprParser ep(commentParser);
+	if (ctx->LBRACE()) {
+		vector<unique_ptr<iHdlExpr>> ops;
+		for (auto i : ctx->identifier_doted_index_at_end()) {
+			auto id = ep.visitIdentifier_doted_index_at_end(i);
+			ops.push_back(move(id));
 		}
+		auto v = reduce(ops, HdlOperatorType::CONCAT);
+		return v;
 	}
-	return ports;
+	auto _id = ctx->identifier_doted_index_at_end(0);
+	assert(_id);
+	return ep.visitIdentifier_doted_index_at_end(_id);
 }
 unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitList_of_port_declarations(
 		sv2017Parser::List_of_port_declarationsContext *ctx) {
@@ -84,10 +113,9 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitList_of_port_
 	//       | ( list_of_port_declarations_ansi_item ( COMMA list_of_port_declarations_ansi_item )* )
 	//     )? RPAREN;
 	auto ports = make_unique<vector<unique_ptr<HdlVariableDef>>>();
-	for (auto pd : ctx->nonansi_port()) {
-		auto pds = visitNonansi_port(pd);
-		for (auto &pd : *pds)
-			ports->push_back(move(pd));
+	for (auto _pd : ctx->nonansi_port()) {
+		auto pd = visitNonansi_port(_pd);
+		ports->push_back(move(pd));
 	}
 	pair<HdlVariableDef*, iHdlExpr*> prev = { nullptr, nullptr };
 	for (auto pdi : ctx->list_of_port_declarations_ansi_item()) {
@@ -255,12 +283,13 @@ typename std::vector<T>::iterator replace_seq_with_value(std::vector<T> &vec,
 }
 
 void VerPortParser::convert_non_ansi_ports_to_ansi(
+		sv2017Parser::Module_declarationContext *ctx_for_debug,
 		vector<unique_ptr<HdlVariableDef>> &ports,
 		vector<unique_ptr<iHdlObj>> &body) {
 	std::vector<unique_ptr<HdlVariableDef>> non_ansi_converted_ports(
 			non_ansi_port_groups.size());
 	// module x (.a(b, c)); input b, c; endmodule -> module x (input [2:0] a); wire b, c; assign {b, c} = a; endmodule
-	throw ParseException("Conversion of non-ANSI ports not implemented");
+	NotImplementedLogger::print("Conversion of non-ANSI ports not implemented", ctx_for_debug);
 	// size_t i = 0;
 	// for (auto &g : non_ansi_port_groups) {
 	// 	unique_ptr<iHdlExpr> lsb = iHdlExpr::INT(0), msb = nullptr;
@@ -268,7 +297,7 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 	// 	for (auto &p : g.second) {
 	// 		// [todo] resolve width of type
 	// 		if (p->type) {
-    //
+	//
 	// 		}
 	// 	}
 	// 	auto range = make_unique<iHdlExpr>(move(msb), HdlOperatorType::DOWNTO,

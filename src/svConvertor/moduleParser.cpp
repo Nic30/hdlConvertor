@@ -111,7 +111,7 @@ void VerModuleParser::visitModule_declaration(
 	res.push_back(move(arch));
 	if (m_ctx.non_ANSI_port_groups.size()) {
 		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
-		pp.convert_non_ansi_ports_to_ansi(m_ctx.ent.ports, m_ctx.arch->objs);
+		pp.convert_non_ansi_ports_to_ansi(ctx, m_ctx.ent.ports, m_ctx.arch->objs);
 	}
 	auto consume_nonansi_ports_vars = [this, &m_ctx](unique_ptr<iHdlObj> &o) {
 		auto v = dynamic_cast<HdlVariableDef*>(o.get());
