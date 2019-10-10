@@ -55,107 +55,109 @@
 //
 // https://opencores.org/websvn/filedetails?repname=aes_core&path=%2Faes_core%2Ftrunk%2Frtl%2Fverilog%2Ftimescale.v
 module aes_cipher_top (
-    input clk,
-    input rst,
-    input ld,
-    output done,
-    input [127:0] key,
-    input [127:0] text_in,
-    output [127:0] text_out
+    input wire clk,
+    input wire rst,
+    input wire ld,
+    output reg done,
+    input wire[127:0] key,
+    input wire[127:0] text_in,
+    output reg[127:0] text_out
 );
     ////////////////////////////////////////////////////////////////////
     //
     // Local Wires
     //
-    wire [31:0]  w0;
-    wire [31:0]  w1;
-    wire [31:0]  w2;
-    wire [31:0]  w3;
-    reg [127:0]  text_in_r;
-    reg [127:0]  text_out;
-    reg [7:0]  sa00;
-    reg [7:0]  sa01;
-    reg [7:0]  sa02;
-    reg [7:0]  sa03;
-    reg [7:0]  sa10;
-    reg [7:0]  sa11;
-    reg [7:0]  sa12;
-    reg [7:0]  sa13;
-    reg [7:0]  sa20;
-    reg [7:0]  sa21;
-    reg [7:0]  sa22;
-    reg [7:0]  sa23;
-    reg [7:0]  sa30;
-    reg [7:0]  sa31;
-    reg [7:0]  sa32;
-    reg [7:0]  sa33;
-    wire [7:0]  sa00_next;
-    wire [7:0]  sa01_next;
-    wire [7:0]  sa02_next;
-    wire [7:0]  sa03_next;
-    wire [7:0]  sa10_next;
-    wire [7:0]  sa11_next;
-    wire [7:0]  sa12_next;
-    wire [7:0]  sa13_next;
-    wire [7:0]  sa20_next;
-    wire [7:0]  sa21_next;
-    wire [7:0]  sa22_next;
-    wire [7:0]  sa23_next;
-    wire [7:0]  sa30_next;
-    wire [7:0]  sa31_next;
-    wire [7:0]  sa32_next;
-    wire [7:0]  sa33_next;
-    wire [7:0]  sa00_sub;
-    wire [7:0]  sa01_sub;
-    wire [7:0]  sa02_sub;
-    wire [7:0]  sa03_sub;
-    wire [7:0]  sa10_sub;
-    wire [7:0]  sa11_sub;
-    wire [7:0]  sa12_sub;
-    wire [7:0]  sa13_sub;
-    wire [7:0]  sa20_sub;
-    wire [7:0]  sa21_sub;
-    wire [7:0]  sa22_sub;
-    wire [7:0]  sa23_sub;
-    wire [7:0]  sa30_sub;
-    wire [7:0]  sa31_sub;
-    wire [7:0]  sa32_sub;
-    wire [7:0]  sa33_sub;
-    wire [7:0]  sa00_sr;
-    wire [7:0]  sa01_sr;
-    wire [7:0]  sa02_sr;
-    wire [7:0]  sa03_sr;
-    wire [7:0]  sa10_sr;
-    wire [7:0]  sa11_sr;
-    wire [7:0]  sa12_sr;
-    wire [7:0]  sa13_sr;
-    wire [7:0]  sa20_sr;
-    wire [7:0]  sa21_sr;
-    wire [7:0]  sa22_sr;
-    wire [7:0]  sa23_sr;
-    wire [7:0]  sa30_sr;
-    wire [7:0]  sa31_sr;
-    wire [7:0]  sa32_sr;
-    wire [7:0]  sa33_sr;
-    wire [7:0]  sa00_mc;
-    wire [7:0]  sa01_mc;
-    wire [7:0]  sa02_mc;
-    wire [7:0]  sa03_mc;
-    wire [7:0]  sa10_mc;
-    wire [7:0]  sa11_mc;
-    wire [7:0]  sa12_mc;
-    wire [7:0]  sa13_mc;
-    wire [7:0]  sa20_mc;
-    wire [7:0]  sa21_mc;
-    wire [7:0]  sa22_mc;
-    wire [7:0]  sa23_mc;
-    wire [7:0]  sa30_mc;
-    wire [7:0]  sa31_mc;
-    wire [7:0]  sa32_mc;
-    wire [7:0]  sa33_mc;
-    reg done;
+    wire[31:0] w0;
+    wire[31:0] w1;
+    wire[31:0] w2;
+    wire[31:0] w3;
+    reg[127:0] text_in_r;
+    reg[7:0] sa00;
+    reg[7:0] sa01;
+    reg[7:0] sa02;
+    reg[7:0] sa03;
+    reg[7:0] sa10;
+    reg[7:0] sa11;
+    reg[7:0] sa12;
+    reg[7:0] sa13;
+    reg[7:0] sa20;
+    reg[7:0] sa21;
+    reg[7:0] sa22;
+    reg[7:0] sa23;
+    reg[7:0] sa30;
+    reg[7:0] sa31;
+    reg[7:0] sa32;
+    reg[7:0] sa33;
+    wire[7:0] sa00_next;
+    wire[7:0] sa01_next;
+    wire[7:0] sa02_next;
+    wire[7:0] sa03_next;
+    wire[7:0] sa10_next;
+    wire[7:0] sa11_next;
+    wire[7:0] sa12_next;
+    wire[7:0] sa13_next;
+    wire[7:0] sa20_next;
+    wire[7:0] sa21_next;
+    wire[7:0] sa22_next;
+    wire[7:0] sa23_next;
+    wire[7:0] sa30_next;
+    wire[7:0] sa31_next;
+    wire[7:0] sa32_next;
+    wire[7:0] sa33_next;
+    wire[7:0] sa00_sub;
+    wire[7:0] sa01_sub;
+    wire[7:0] sa02_sub;
+    wire[7:0] sa03_sub;
+    wire[7:0] sa10_sub;
+    wire[7:0] sa11_sub;
+    wire[7:0] sa12_sub;
+    wire[7:0] sa13_sub;
+    wire[7:0] sa20_sub;
+    wire[7:0] sa21_sub;
+    wire[7:0] sa22_sub;
+    wire[7:0] sa23_sub;
+    wire[7:0] sa30_sub;
+    wire[7:0] sa31_sub;
+    wire[7:0] sa32_sub;
+    wire[7:0] sa33_sub;
+    wire[7:0] sa00_sr;
+    wire[7:0] sa01_sr;
+    wire[7:0] sa02_sr;
+    wire[7:0] sa03_sr;
+    wire[7:0] sa10_sr;
+    wire[7:0] sa11_sr;
+    wire[7:0] sa12_sr;
+    wire[7:0] sa13_sr;
+    wire[7:0] sa20_sr;
+    wire[7:0] sa21_sr;
+    wire[7:0] sa22_sr;
+    wire[7:0] sa23_sr;
+    wire[7:0] sa30_sr;
+    wire[7:0] sa31_sr;
+    wire[7:0] sa32_sr;
+    wire[7:0] sa33_sr;
+    wire[7:0] sa00_mc;
+    wire[7:0] sa01_mc;
+    wire[7:0] sa02_mc;
+    wire[7:0] sa03_mc;
+    wire[7:0] sa10_mc;
+    wire[7:0] sa11_mc;
+    wire[7:0] sa12_mc;
+    wire[7:0] sa13_mc;
+    wire[7:0] sa20_mc;
+    wire[7:0] sa21_mc;
+    wire[7:0] sa22_mc;
+    wire[7:0] sa23_mc;
+    wire[7:0] sa30_mc;
+    wire[7:0] sa31_mc;
+    wire[7:0] sa32_mc;
+    wire[7:0] sa33_mc;
     reg ld_r;
-    reg [3:0]  dcnt;
+    reg[3:0] dcnt;
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Misc Logic
+    //
     always @(posedge clk)
         if (!rst)
             dcnt <= #1 4'h0;
@@ -165,45 +167,49 @@ module aes_cipher_top (
             dcnt <= #1 (dcnt - 4'h1);
 
     always @(posedge clk)
-        done <= #1 ((!(|dcnt[1:3]) & dcnt[0]) & !ld);
+        done <= #1 ((!(|dcnt[3:1]) & dcnt[0]) & !ld);
     always @(posedge clk)
         if (ld)
             text_in_r <= #1 text_in;
 
     always @(posedge clk)
         ld_r <= #1 ld;
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Initial Permutation (AddRoundKey)
+    //
     always @(posedge clk)
-        sa33 <= #1 (ld_r) ? ((text_in_r[0:7] ^ w3[0:7])) : (sa33_next);
+        sa33 <= #1 (ld_r) ? ((text_in_r[007:000] ^ w3[07:00])) : (sa33_next);
     always @(posedge clk)
-        sa23 <= #1 (ld_r) ? ((text_in_r[8:15] ^ w3[8:15])) : (sa23_next);
+        sa23 <= #1 (ld_r) ? ((text_in_r[015:008] ^ w3[15:08])) : (sa23_next);
     always @(posedge clk)
-        sa13 <= #1 (ld_r) ? ((text_in_r[16:23] ^ w3[16:23])) : (sa13_next);
+        sa13 <= #1 (ld_r) ? ((text_in_r[023:016] ^ w3[23:16])) : (sa13_next);
     always @(posedge clk)
-        sa03 <= #1 (ld_r) ? ((text_in_r[24:31] ^ w3[24:31])) : (sa03_next);
+        sa03 <= #1 (ld_r) ? ((text_in_r[031:024] ^ w3[31:24])) : (sa03_next);
     always @(posedge clk)
-        sa32 <= #1 (ld_r) ? ((text_in_r[32:39] ^ w2[0:7])) : (sa32_next);
+        sa32 <= #1 (ld_r) ? ((text_in_r[039:032] ^ w2[07:00])) : (sa32_next);
     always @(posedge clk)
-        sa22 <= #1 (ld_r) ? ((text_in_r[40:47] ^ w2[8:15])) : (sa22_next);
+        sa22 <= #1 (ld_r) ? ((text_in_r[047:040] ^ w2[15:08])) : (sa22_next);
     always @(posedge clk)
-        sa12 <= #1 (ld_r) ? ((text_in_r[48:55] ^ w2[16:23])) : (sa12_next);
+        sa12 <= #1 (ld_r) ? ((text_in_r[055:048] ^ w2[23:16])) : (sa12_next);
     always @(posedge clk)
-        sa02 <= #1 (ld_r) ? ((text_in_r[56:63] ^ w2[24:31])) : (sa02_next);
+        sa02 <= #1 (ld_r) ? ((text_in_r[063:056] ^ w2[31:24])) : (sa02_next);
     always @(posedge clk)
-        sa31 <= #1 (ld_r) ? ((text_in_r[64:71] ^ w1[0:7])) : (sa31_next);
+        sa31 <= #1 (ld_r) ? ((text_in_r[071:064] ^ w1[07:00])) : (sa31_next);
     always @(posedge clk)
-        sa21 <= #1 (ld_r) ? ((text_in_r[72:79] ^ w1[8:15])) : (sa21_next);
+        sa21 <= #1 (ld_r) ? ((text_in_r[079:072] ^ w1[15:08])) : (sa21_next);
     always @(posedge clk)
-        sa11 <= #1 (ld_r) ? ((text_in_r[80:87] ^ w1[16:23])) : (sa11_next);
+        sa11 <= #1 (ld_r) ? ((text_in_r[087:080] ^ w1[23:16])) : (sa11_next);
     always @(posedge clk)
-        sa01 <= #1 (ld_r) ? ((text_in_r[88:95] ^ w1[24:31])) : (sa01_next);
+        sa01 <= #1 (ld_r) ? ((text_in_r[095:088] ^ w1[31:24])) : (sa01_next);
     always @(posedge clk)
-        sa30 <= #1 (ld_r) ? ((text_in_r[96:103] ^ w0[0:7])) : (sa30_next);
+        sa30 <= #1 (ld_r) ? ((text_in_r[103:096] ^ w0[07:00])) : (sa30_next);
     always @(posedge clk)
-        sa20 <= #1 (ld_r) ? ((text_in_r[104:111] ^ w0[8:15])) : (sa20_next);
+        sa20 <= #1 (ld_r) ? ((text_in_r[111:104] ^ w0[15:08])) : (sa20_next);
     always @(posedge clk)
-        sa10 <= #1 (ld_r) ? ((text_in_r[112:119] ^ w0[16:23])) : (sa10_next);
+        sa10 <= #1 (ld_r) ? ((text_in_r[119:112] ^ w0[23:16])) : (sa10_next);
     always @(posedge clk)
-        sa00 <= #1 (ld_r) ? ((text_in_r[120:127] ^ w0[24:31])) : (sa00_next);
+        sa00 <= #1 (ld_r) ? ((text_in_r[127:120] ^ w0[31:24])) : (sa00_next);
     ////////////////////////////////////////////////////////////////////
     //
     // Round Permutations
@@ -228,54 +234,84 @@ module aes_cipher_top (
     assign {{{sa01_mc, sa11_mc}, sa21_mc}, sa31_mc} = mix_col(sa01_sr, sa11_sr, sa21_sr, sa31_sr);
     assign {{{sa02_mc, sa12_mc}, sa22_mc}, sa32_mc} = mix_col(sa02_sr, sa12_sr, sa22_sr, sa32_sr);
     assign {{{sa03_mc, sa13_mc}, sa23_mc}, sa33_mc} = mix_col(sa03_sr, sa13_sr, sa23_sr, sa33_sr);
-    assign sa00_next = (sa00_mc ^ w0[24:31]);
-    assign sa01_next = (sa01_mc ^ w1[24:31]);
-    assign sa02_next = (sa02_mc ^ w2[24:31]);
-    assign sa03_next = (sa03_mc ^ w3[24:31]);
-    assign sa10_next = (sa10_mc ^ w0[16:23]);
-    assign sa11_next = (sa11_mc ^ w1[16:23]);
-    assign sa12_next = (sa12_mc ^ w2[16:23]);
-    assign sa13_next = (sa13_mc ^ w3[16:23]);
-    assign sa20_next = (sa20_mc ^ w0[8:15]);
-    assign sa21_next = (sa21_mc ^ w1[8:15]);
-    assign sa22_next = (sa22_mc ^ w2[8:15]);
-    assign sa23_next = (sa23_mc ^ w3[8:15]);
-    assign sa30_next = (sa30_mc ^ w0[0:7]);
-    assign sa31_next = (sa31_mc ^ w1[0:7]);
-    assign sa32_next = (sa32_mc ^ w2[0:7]);
-    assign sa33_next = (sa33_mc ^ w3[0:7]);
+    assign sa00_next = (sa00_mc ^ w0[31:24]);
+    assign sa01_next = (sa01_mc ^ w1[31:24]);
+    assign sa02_next = (sa02_mc ^ w2[31:24]);
+    assign sa03_next = (sa03_mc ^ w3[31:24]);
+    assign sa10_next = (sa10_mc ^ w0[23:16]);
+    assign sa11_next = (sa11_mc ^ w1[23:16]);
+    assign sa12_next = (sa12_mc ^ w2[23:16]);
+    assign sa13_next = (sa13_mc ^ w3[23:16]);
+    assign sa20_next = (sa20_mc ^ w0[15:08]);
+    assign sa21_next = (sa21_mc ^ w1[15:08]);
+    assign sa22_next = (sa22_mc ^ w2[15:08]);
+    assign sa23_next = (sa23_mc ^ w3[15:08]);
+    assign sa30_next = (sa30_mc ^ w0[07:00]);
+    assign sa31_next = (sa31_mc ^ w1[07:00]);
+    assign sa32_next = (sa32_mc ^ w2[07:00]);
+    assign sa33_next = (sa33_mc ^ w3[07:00]);
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Final text output
+    //
     always @(posedge clk)
-        text_out[120:127] <= #1 (sa00_sr ^ w0[24:31]);
+        text_out[127:120] <= #1 (sa00_sr ^ w0[31:24]);
     always @(posedge clk)
-        text_out[88:95] <= #1 (sa01_sr ^ w1[24:31]);
+        text_out[095:088] <= #1 (sa01_sr ^ w1[31:24]);
     always @(posedge clk)
-        text_out[56:63] <= #1 (sa02_sr ^ w2[24:31]);
+        text_out[063:056] <= #1 (sa02_sr ^ w2[31:24]);
     always @(posedge clk)
-        text_out[24:31] <= #1 (sa03_sr ^ w3[24:31]);
+        text_out[031:024] <= #1 (sa03_sr ^ w3[31:24]);
     always @(posedge clk)
-        text_out[112:119] <= #1 (sa10_sr ^ w0[16:23]);
+        text_out[119:112] <= #1 (sa10_sr ^ w0[23:16]);
     always @(posedge clk)
-        text_out[80:87] <= #1 (sa11_sr ^ w1[16:23]);
+        text_out[087:080] <= #1 (sa11_sr ^ w1[23:16]);
     always @(posedge clk)
-        text_out[48:55] <= #1 (sa12_sr ^ w2[16:23]);
+        text_out[055:048] <= #1 (sa12_sr ^ w2[23:16]);
     always @(posedge clk)
-        text_out[16:23] <= #1 (sa13_sr ^ w3[16:23]);
+        text_out[023:016] <= #1 (sa13_sr ^ w3[23:16]);
     always @(posedge clk)
-        text_out[104:111] <= #1 (sa20_sr ^ w0[8:15]);
+        text_out[111:104] <= #1 (sa20_sr ^ w0[15:08]);
     always @(posedge clk)
-        text_out[72:79] <= #1 (sa21_sr ^ w1[8:15]);
+        text_out[079:072] <= #1 (sa21_sr ^ w1[15:08]);
     always @(posedge clk)
-        text_out[40:47] <= #1 (sa22_sr ^ w2[8:15]);
+        text_out[047:040] <= #1 (sa22_sr ^ w2[15:08]);
     always @(posedge clk)
-        text_out[8:15] <= #1 (sa23_sr ^ w3[8:15]);
+        text_out[015:008] <= #1 (sa23_sr ^ w3[15:08]);
     always @(posedge clk)
-        text_out[96:103] <= #1 (sa30_sr ^ w0[0:7]);
+        text_out[103:096] <= #1 (sa30_sr ^ w0[07:00]);
     always @(posedge clk)
-        text_out[64:71] <= #1 (sa31_sr ^ w1[0:7]);
+        text_out[071:064] <= #1 (sa31_sr ^ w1[07:00]);
     always @(posedge clk)
-        text_out[32:39] <= #1 (sa32_sr ^ w2[0:7]);
+        text_out[039:032] <= #1 (sa32_sr ^ w2[07:00]);
     always @(posedge clk)
-        text_out[0:7] <= #1 (sa33_sr ^ w3[0:7]);
+        text_out[007:000] <= #1 (sa33_sr ^ w3[07:00]);
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Generic Functions
+    //
+    function wire[31:0] mix_col (
+        input wire[7:0] s0,
+        input wire[7:0] s1,
+        input wire[7:0] s2,
+        input wire[7:0] s3
+    );
+        reg[7:0] s0_o;
+        reg[7:0] s1_o;
+        reg[7:0] s2_o;
+        reg[7:0] s3_o;
+        begin
+            mix_col[31:24] = ((((xtime(s0) ^ xtime(s1)) ^ s1) ^ s2) ^ s3);
+            mix_col[23:16] = ((((s0 ^ xtime(s1)) ^ xtime(s2)) ^ s2) ^ s3);
+            mix_col[15:08] = ((((s0 ^ s1) ^ xtime(s2)) ^ xtime(s3)) ^ s3);
+            mix_col[07:00] = ((((xtime(s0) ^ s0) ^ s1) ^ s2) ^ xtime(s3));
+        end
+    endfunction
+    function wire[7:0] xtime (
+        input wire[7:0] b
+    );
+        xtime = ({b[6:0], 1'b0} ^ (8'h1b & {(8){b[7]}}));
+    endfunction
     aes_key_expand_128 u0 (
         .clk(clk),
         .kld(ld),
