@@ -143,13 +143,52 @@ def gen_method_for_labeled_rule(rule_loader: RuleLoader, rule_name,
     return "\n".join(buff)
 
 
+def gen_item_visitor():
+    items = [i.strip() for i in """
+        checker_declaration
+        dpi_import_export
+        extern_constraint_declaration
+        class_declaration
+        interface_class_declaration
+        class_constructor_declaration
+        covergroup_declaration
+        property_declaration
+        sequence_declaration
+        let_declaration
+        genvar_declaration
+        clocking_declaration
+        assertion_item
+        bind_directive
+        continuous_assign
+        net_alias
+        initial_construct
+        final_construct
+        always_construct
+        loop_generate_construct
+        conditional_generate_construct
+        elaboration_system_task
+        specparam_declaration
+    """.split()]
+    template = """\
+    {
+        auto o = ctx->%s();
+        if (o) {
+            NotImplementedLogger::print("VerModuleParser.visitModule_item_item.%s", o);
+            return iHdlStatement::NOP();
+        }
+    }"""
+    for i in items:
+        print(template % (i, i))
+
+
 if __name__ == "__main__":
     with open(os.path.join(os.path.dirname(__file__), "..", "grammars", "sv2017Parser.g4")) as file:
         rule_loader = RuleLoader.from_file(file)
         # print(gen_visitor_for_labeled_rule(rule_loader, "primary"))
         # print(gen_method_headers_for_labeled_rule(rule_loader, "primary",
         #                                           "hdlObjects::iHdlExpr*", prefix="static"))
-        print(gen_method_for_labeled_rule(rule_loader, "primary",
-                                          "hdlObjects::iHdlExpr*", "VerExprPrimaryParser",
-                                          "iHdlExpr::null()"))
+        #print(gen_method_for_labeled_rule(rule_loader, "primary",
+        #                                  "hdlObjects::iHdlExpr*", "VerExprPrimaryParser",
+        #                                  "iHdlExpr::null()"))
+        gen_item_visitor()
 
