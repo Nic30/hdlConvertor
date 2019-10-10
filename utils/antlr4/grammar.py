@@ -3,6 +3,9 @@ from typing import List, Optional
 
 class iAntlr4GramElem():
 
+    def __init__(self):
+        self.optimalizer_keep_out = False
+
     def walk(self, fn):
         fn(self)
 
@@ -18,6 +21,7 @@ class Antlr4Rule(iAntlr4GramElem):
     def __init__(self, name, body: iAntlr4GramElem, is_fragment: bool=False,
                  lexer_mode=None,
                  lexer_actions=None):
+        super(Antlr4Rule, self).__init__()
         self.name = name
         assert isinstance(body, iAntlr4GramElem), body
         self.body = body
@@ -37,7 +41,14 @@ class Antlr4Rule(iAntlr4GramElem):
         self.body.walk(fn)
 
     def toAntlr4(self, actual_lexer_node=None):
-        body = self.body.toAntlr4()
+        # from utils.antlr4.auto_format import auto_format
+        # self = deepcopy(self)
+        # auto_format([self, ])
+        if isinstance(self.body, Antlr4Sequence):
+            body = self.body.toAntlr4_as_top()
+        else:
+            body = self.body.toAntlr4()
+
         if body and not body[0].isspace():
             body = " " + body
         if actual_lexer_node != self.lexer_mode:
@@ -92,6 +103,7 @@ class Antlr4Indent(iAntlr4GramElem):
     INDENT = "    "
 
     def __init__(self, indent_cnt: int):
+        super(Antlr4Indent, self).__init__()
         self.indent_cnt = indent_cnt
 
     def __eq__(self, other):
@@ -102,6 +114,9 @@ class Antlr4Indent(iAntlr4GramElem):
 
 
 class Antlr4Newline(iAntlr4GramElem):
+
+    def __init__(self):
+        super(Antlr4Newline, self).__init__()
 
     def toAntlr4(self):
         return "\n"
@@ -115,13 +130,70 @@ class Antlr4Newline(iAntlr4GramElem):
 
 class Antlr4Sequence(list, iAntlr4GramElem):
 
+    def __init__(self, *args, **kwargs):
+        list.__init__(self, *args, **kwargs)
+        iAntlr4GramElem.__init__(self)
+
     def walk(self, fn):
         fn(self)
         for i in self:
             i.walk(fn)
 
     def __eq__(self, other):
-        return isinstance(other, Antlr4Sequence) and list.__eq__(self, other)
+        if self is other:
+            return True
+        if not isinstance(other, Antlr4Sequence):
+            return False
+        return list.__eq__(self, other)
+
+    def eq_relaxed(self, other):
+        """
+        equal operator with ignoring of difference between item and [item,]
+        """
+        if self is other:
+            return True
+        if not isinstance(other, Antlr4Sequence):
+            if len(self) == 1:
+                return self[0].eq_relaxed(other)
+            else:
+                return False
+
+        if len(self) != len(other):
+            return False
+
+        for a, b in zip(self, other):
+            if not a.eq_relaxed(b):
+                return False
+
+        return True
+
+    def toAntlr4_as_top(self):
+        # check if everythin is just whitespace and a single selection
+        ignore_parenthesis = True
+        selection_found = False
+        for i in self:
+            if isinstance(i, (Antlr4Indent, Antlr4Newline)):
+                continue
+            elif isinstance(i, Antlr4Selection):
+                if selection_found:
+                    ignore_parenthesis = False
+                    break
+                else:
+                    selection_found = True
+            else:
+                ignore_parenthesis = False
+                break
+
+        if ignore_parenthesis:
+            buff = [i.toAntlr4() for i in self]
+        else:
+            buff = []
+            for i in self:
+                if isinstance(i, Antlr4Selection):
+                    buff.append("( %s )" % i.toAntlr4())
+                else:
+                    buff.append(i.toAntlr4())
+        return " ".join(buff)
 
     def toAntlr4(self):
         buff = []
@@ -132,15 +204,21 @@ class Antlr4Sequence(list, iAntlr4GramElem):
                 buff.append(i.toAntlr4())
         return " ".join(buff)
 
+    def __repr__(self):
+        return self.toAntlr4()
+
 
 class Antlr4Iteration(iAntlr4GramElem):
 
     def __init__(self, body: iAntlr4GramElem, positive: bool=False):
+        super(Antlr4Iteration, self).__init__()
         assert isinstance(body, iAntlr4GramElem)
         self.body = body
         self.positive = positive
 
     def __eq__(self, other):
+        if self is other:
+            return True
         return (isinstance(other, Antlr4Iteration)
                 and self.positive == other.positive
                 and self.body == other.body)
@@ -156,10 +234,27 @@ class Antlr4Iteration(iAntlr4GramElem):
         else:
             return "( %s )*" % body
 
+    def eq_relaxed(self, other):
+        """
+        equal operator with ignoring of difference between item and [item,]
+        """
+        if self is other:
+            return True
+        if isinstance(other, Antlr4Sequence):
+            if len(other) == 1:
+                return self.eq_relaxed(other[0])
+            else:
+                return False
+
+        return (isinstance(other, Antlr4Iteration)
+                and self.positive == other.positive
+                and self.body.eq_relaxed(other.body))
+
 
 class Antlr4Option(iAntlr4GramElem):
 
     def __init__(self, body: iAntlr4GramElem):
+        super(Antlr4Option, self).__init__()
         assert isinstance(body, iAntlr4GramElem)
         self.body = body
 
@@ -168,13 +263,33 @@ class Antlr4Option(iAntlr4GramElem):
         self.body.walk(fn)
 
     def __eq__(self, other):
+        if self is other:
+            return True
         return isinstance(other, Antlr4Option) and self.body == other.body
+
+    def eq_relaxed(self, other):
+        """
+        equal operator with ignoring of difference between item and [item,]
+        """
+        if self is other:
+            return True
+        if isinstance(other, Antlr4Sequence):
+            if len(other) == 1:
+                return self.eq_relaxed(other[0])
+            else:
+                return False
+
+        return isinstance(other, Antlr4Option) and self.body.eq_relaxed(other.body)
 
     def toAntlr4(self):
         return "( %s )?" % (self.body.toAntlr4())
 
 
 class Antlr4Selection(list, iAntlr4GramElem):
+
+    def __init__(self, *args, **kwargs):
+        list.__init__(self, *args, **kwargs)
+        iAntlr4GramElem.__init__(self)
 
     def walk(self, fn):
         fn(self)
@@ -185,10 +300,33 @@ class Antlr4Selection(list, iAntlr4GramElem):
         items = [i.toAntlr4() for i in self]
         return " | ".join(items)
 
+    def eq_relaxed(self, other):
+        """
+        equal operator with ignoring of difference between item and [item,]
+        """
+        if self is other:
+            return True
+        if isinstance(other, Antlr4Sequence):
+            if len(other) == 1:
+                return self.eq_relaxed(other[0])
+            else:
+                return False
+        if not isinstance(other, Antlr4Selection) or len(self) != len(other):
+            return False
+        for a, b in zip(self, other):
+            if not a.eq_relaxed(b):
+                return False
+
+        return True
+
+    def __repr__(self):
+        return self.toAntlr4()
+
 
 class Antlr4Symbol(iAntlr4GramElem):
 
     def __init__(self, symbol: str, is_terminal: bool, is_regex: bool=False):
+        super(Antlr4Symbol, self).__init__()
         self.symbol = symbol
         self.is_terminal = is_terminal
         self.is_regex = is_regex
@@ -197,10 +335,25 @@ class Antlr4Symbol(iAntlr4GramElem):
         return not self.is_terminal and self.symbol == self.symbol.upper()
 
     def __eq__(self, other):
-        return (isinstance(other, Antlr4Symbol)
-                and self.symbol == other.symbol
-                and self.is_terminal == other.is_terminal
-                and self.is_regex == other.is_regex)
+        return self is other or (
+            isinstance(other, Antlr4Symbol)
+            and self.symbol == other.symbol
+            and self.is_terminal == other.is_terminal
+            and self.is_regex == other.is_regex)
+
+    def eq_relaxed(self, other):
+        """
+        equal operator with ignoring of difference between item and [item,]
+        """
+        if self is other:
+            return True
+        if isinstance(other, Antlr4Sequence):
+            if len(other) == 1:
+                return self.eq_relaxed(other[0])
+            else:
+                return False
+
+        return self == other
 
     def __hash__(self):
         return hash((self.symbol, self.is_terminal, self.is_regex))
@@ -214,7 +367,7 @@ class Antlr4Symbol(iAntlr4GramElem):
                     "\\": "\\\\",
                     '\v': '\\u000b',
                     '\f': '\\f',
-                    '\a': '\\u0007', # bell
+                    '\a': '\\u0007',  # bell
                 })
         return self.symbol.translate(tr)
 
@@ -392,3 +545,4 @@ def rule_by_name(rules: List[Antlr4Rule], name: str) -> Optional[Antlr4Rule]:
     for r in rules:
         if r.name == name:
             return r
+

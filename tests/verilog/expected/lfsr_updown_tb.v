@@ -4,7 +4,7 @@ module tb;
     reg reset;
     reg enable;
     reg up_down;
-    wire [(8 - 1):0]  count;
+    wire[(8 - 1):0] count;
     wire overflow;
     initial begin
         $monitor("rst %b en %b updown %b cnt %b overflow %b", reset, enable, up_down, count, overflow);

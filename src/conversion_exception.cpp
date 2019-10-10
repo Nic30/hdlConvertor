@@ -2,15 +2,12 @@
 
 namespace hdlConvertor {
 
-const char* get_my_py_error_message() {
-	try {
-		throw;
-	} catch (const ParseException& e) {
-		return e.what();
-	} catch (const std::exception &e) {
-		return e.what();
-	}
-	return nullptr;
+ParseException::ParseException(std::string msg) throw () :
+		_msg(msg) {
+}
+
+const char* ParseException::what() const throw () {
+	return _msg.c_str();
 }
 
 }

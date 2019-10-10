@@ -14,8 +14,8 @@ namespace hdlObjects {
  * */
 class HdlModuleDec: public WithNameAndDoc, public iHdlObj {
 public:
-	std::vector<HdlVariableDef*> generics;
-	std::vector<HdlVariableDef*> ports;
+	std::vector<std::unique_ptr<HdlVariableDef>> generics;
+	std::vector<std::unique_ptr<HdlVariableDef>> ports;
 
 	HdlModuleDec();
 	HdlVariableDef * getPortByName(const std::string & name);

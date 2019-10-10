@@ -1,12 +1,12 @@
-#include <hdlConvertor/vhdlConvertor/processParser.h>
-#include <hdlConvertor/vhdlConvertor/statementParser.h>
+#include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
-#include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
@@ -15,71 +15,56 @@ namespace vhdl {
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlStmProcess * ProcessParser::visitProcess_statement(
-		vhdlParser::Process_statementContext * ctx) {
+std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_statement(
+		vhdlParser::Process_statementContext *ctx) {
 	// process_statement:
-	//       ( label COLON )?
-	//           ( POSTPONED )? PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( IS )?
-	//               process_declarative_part
-	//           BEGIN
-	//               process_statement_part
-	//           END ( POSTPONED )? PROCESS ( label )? SEMI
+	//           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?
+	//               ( process_declarative_item )*
+	//           KW_BEGIN
+	//               ( sequential_statement )*
+	//           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 	// ;
-	auto p = new HdlStmProcess();
+	auto p = std::make_unique<HdlStmProcess>();
+	auto &stms = dynamic_cast<HdlStmBlock*>(p->body.get())->statements;
 	p->position.update_from_elem(ctx);
-	if (ctx->label(0)) {
-		auto l = LiteralParser::visitLabel(ctx->label(0));
-		p->labels.push_back(l);
-	}
 	auto sl = ctx->process_sensitivity_list();
 	if (sl) {
-		visitProcess_sensitivity_list(sl, p->sensitivity_list());
-		p->sensitivity_list_specified = true;
+		p->sensitivity_list = std::make_unique<
+				std::vector<std::unique_ptr<iHdlExpr>>>();
+		visitProcess_sensitivity_list(sl, *p->sensitivity_list);
 	}
-
-	visitProcess_declarative_part(ctx->process_declarative_part(), p);
-
-	auto statParts = visitProcess_statement_part(ctx->process_statement_part());
-	for (auto sp : *statParts) {
-		if (sp) {
-			p->objs().push_back(sp);
-		}
+	for (auto pd : ctx->process_declarative_item()) {
+		visitProcess_declarative_item(pd, stms);
+	}
+	for (auto s : ctx->sequential_statement()) {
+		stms.push_back(VhdlStatementParser::visitSequential_statement(s));
 	}
 
 	return p;
 }
-void ProcessParser::visitProcess_sensitivity_list(
+void VhdlProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
-		std::vector<iHdlExpr*> & sensitivity) {
+		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
-	if (ctx->ALL()) {
+	if (ctx->KW_ALL()) {
 		sensitivity.push_back(iHdlExpr::all());
 	} else {
 		visitSensitivity_list(ctx->sensitivity_list(), sensitivity);
 	}
 }
 
-void ProcessParser::visitSensitivity_list(
+void VhdlProcessParser::visitSensitivity_list(
 		vhdlParser::Sensitivity_listContext *ctx,
-		std::vector<iHdlExpr*> & sensitivity) {
+		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
 	// sensitivity_list: name ( COMMA name )*;
 	for (auto n : ctx->name()) {
-		sensitivity.push_back(ReferenceParser::visitName(n));
+		sensitivity.push_back(VhdlReferenceParser::visitName(n));
 	}
 }
 
-void ProcessParser::visitProcess_declarative_part(
-		vhdlParser::Process_declarative_partContext *ctx, HdlStmProcess * p) {
-	//process_declarative_part
-	//  : ( process_declarative_item )*
-	//  ;
-	for (auto pd : ctx->process_declarative_item()) {
-		visitProcess_declarative_item(pd, p);
-	}
-}
-
-void ProcessParser::visitProcess_declarative_item(
-		vhdlParser::Process_declarative_itemContext *ctx, HdlStmProcess * p) {
+void VhdlProcessParser::visitProcess_declarative_item(
+		vhdlParser::Process_declarative_itemContext *ctx,
+		std::vector<std::unique_ptr<iHdlObj>> &objs) {
 	//process_declarative_item
 	//  : subprogram_declaration
 	//  | subprogram_body
@@ -97,14 +82,15 @@ void ProcessParser::visitProcess_declarative_item(
 	//  ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		p->objs().push_back(
-				SubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		objs.push_back(
+				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
+						sp));
 		return;
 	}
 	auto sb = ctx->subprogram_body();
 	if (sb) {
-		auto f = SubProgramParser::visitSubprogram_body(sb);
-		p->objs().push_back(f);
+		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
+		objs.push_back(std::move(f));
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -114,26 +100,24 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = SubtypeDeclarationParser::visitSubtype_declaration(st);
-		p->objs().push_back(_st);
+		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
+		objs.push_back(std::move(_st));
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
-		auto constants = ConstantParser::visitConstant_declaration(constd);
-		for (auto c : *constants) {
-			p->objs().push_back(c);
+		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
+		for (auto &c : *constants) {
+			objs.push_back(std::move(c));
 		}
-		delete constants;
 		return;
 	}
 	auto vd = ctx->variable_declaration();
 	if (vd) {
-		auto variables = VariableParser::visitVariable_declaration(vd);
-		for (auto v : *variables) {
-			p->objs().push_back(v);
+		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
+		for (auto &v : *variables) {
+			objs.push_back(std::move(v));
 		}
-		delete variables;
 		return;
 	}
 	auto fd = ctx->file_declaration();
@@ -143,12 +127,14 @@ void ProcessParser::visitProcess_declarative_item(
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ProcessParser.visitAlias_declaration", aliasd);
+		NotImplementedLogger::print("ProcessParser.visitAlias_declaration",
+				aliasd);
 		return;
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration", atrd);
+		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration",
+				atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
@@ -173,20 +159,9 @@ void ProcessParser::visitProcess_declarative_item(
 		NotImplementedLogger::print("ProcessParser.visitGroup_declaration", gd);
 		return;
 	}
-	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item", ctx);
+	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item",
+			ctx);
 	return;
-}
-
-std::vector<iHdlStatement *> * ProcessParser::visitProcess_statement_part(
-		vhdlParser::Process_statement_partContext *ctx) {
-	//process_statement_part
-	//  : ( sequential_statement )*
-	//  ;
-	std::vector<iHdlStatement *> * statements = new std::vector<iHdlStatement*>();
-	for (auto s : ctx->sequential_statement()) {
-		statements->push_back(StatementParser::visitSequential_statement(s));
-	}
-	return statements;
 }
 
 }

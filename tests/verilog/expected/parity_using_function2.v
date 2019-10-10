@@ -6,10 +6,20 @@
 // Coder       : Deepak Kumar Tala
 //-----------------------------------------------------
 module parity_using_function2 (
-    input [7:0] data_in,
-    output parity_out
+    input wire[7:0] data_in,
+    // 8 bit data in
+    output wire parity_out
 );
-    wire parity_out;
+    function wire parity (
+        input wire[31:0] data
+    );
+        integer i;
+        begin
+            parity = 0;
+            for (i = 0; (i < 32); i = (i + 1))
+                parity = (parity ^ data[i]);
+        end
+    endfunction
     always @(data_in)
         parity_out = parity(data_in);
 endmodule

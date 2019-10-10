@@ -1,10 +1,10 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <hdlConvertor/hdlObjects/iHdlExprItem.h>
-#include <string.h>
-#include <assert.h>
-#include <vector>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -35,7 +35,7 @@ public:
 	BigInteger _int;
 	double _float;
 	std::string _str;
-	const std::vector<iHdlExpr*> *_arr;
+	std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _arr;
 
 	HdlValue();
 	HdlValue(HdlValueType type);
@@ -44,14 +44,31 @@ public:
 	HdlValue(const BigInteger &value, int bits);
 	HdlValue(double __float);
 	HdlValue(std::string __str);
-	HdlValue(const std::vector<iHdlExpr*> *arr);
+	HdlValue(const std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr);
 
-	iHdlExprItem* clone() const;
+	virtual iHdlExprItem* clone() const override;
 
-	virtual ~HdlValue();
+	virtual ~HdlValue() override;
 };
 
 const char* HdlValueType_toString(HdlValueType t);
+
+template<typename T>
+void clone_unique_ptr_vector(const std::vector<std::unique_ptr<T>> &from,
+		std::vector<std::unique_ptr<T>> &to) {
+	to.reserve(from.size());
+
+	for (const auto &e : from)
+		to.push_back(std::make_unique<T>(*e));
+}
+
+template<typename T>
+std::vector<std::unique_ptr<T>> clone_unique_ptr_vector(
+		const std::vector<std::unique_ptr<T>> &from) {
+	std::vector<std::unique_ptr<T>> to;
+	clone_unique_ptr_vector(from, to);
+	return to;
+}
 
 }
 }

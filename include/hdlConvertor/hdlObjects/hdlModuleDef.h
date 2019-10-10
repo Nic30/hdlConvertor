@@ -13,9 +13,9 @@ namespace hdlObjects {
  * */
 class HdlModuleDef: public WithNameAndDoc, public iHdlObj {
 public:
-	iHdlExpr * entityName;
+	std::unique_ptr<iHdlExpr> entityName;
 
-	std::vector<iHdlObj*> objs;
+	std::vector<std::unique_ptr<iHdlObj>> objs;
 
 	~HdlModuleDef();
 };

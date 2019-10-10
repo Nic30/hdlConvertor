@@ -9,12 +9,12 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class ConstantParser {
+class VhdlConstantParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::vector<hdlObjects::HdlVariableDef*> * visitConstant_declaration(
-			vhdlParser::Constant_declarationContext* ctx);
+	static std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitConstant_declaration(
+			vhdlParser::Constant_declarationContext *ctx);
 
 };
 

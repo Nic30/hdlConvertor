@@ -11,36 +11,51 @@ using namespace antlr4;
 MacroDef__LINE__::MacroDef__LINE__() :
 		aMacroDef("__line__") {
 }
-// [TODO] MacroDef__LINE__, MacroDef__FILE__ are showing the position in current file
-//        See chapter 22.13 __FILE__ and __LINE__ of system verilog 2012 spec.
 std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
-		bool args_specified, VerilogPreproc * unused(pp),
-		antlr4::ParserRuleContext * ctx) {
+		bool args_specified, VerilogPreproc*unused(pp),
+		antlr4::ParserRuleContext *ctx) {
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
 	string replacement = to_string(ctx->getStart()->getLine());
 	return replacement;
 }
-
+bool MacroDef__LINE__::requires_args() {
+	return false;
+}
 MacroDef__FILE__::MacroDef__FILE__() :
 		aMacroDef("__file__") {
 }
 
 std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
-		bool args_specified, VerilogPreproc * pp,
-		antlr4::ParserRuleContext * unused(ctx)) {
+		bool args_specified, VerilogPreproc *pp,
+		antlr4::ParserRuleContext*unused(ctx)) {
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	// [TODO] escape
 	string replacement = "\"" + pp->_tokens.getSourceName() + "\"";
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
+	auto replace_all = [](std::string &data, const std::string &to_search,
+			const std::string &replace_str) {
+		size_t pos = data.find(to_search);
+		while (pos != std::string::npos) {
+			data.replace(pos, to_search.size(), replace_str);
+			pos = data.find(to_search, pos + replace_str.size());
+		}
+	};
+	replace_all(replacement, "\\", "\\\\");
+#endif
 	return replacement;
 }
+bool MacroDef__FILE__::requires_args() {
+	return false;
+}
 
-void macroDB_add_default_defs(MacroDB & db) {
-	db.insert({"__LINE__", new MacroDef__LINE__()});
-	db.insert({"__FILE__", new MacroDef__FILE__()});
+void macroDB_add_default_defs(MacroDB &db, Language lang) {
+	if (lang >= Language::SV2009) {
+		db.insert( { "__LINE__", new MacroDef__LINE__() });
+		db.insert( { "__FILE__", new MacroDef__FILE__() });
+	}
 }
 
 }

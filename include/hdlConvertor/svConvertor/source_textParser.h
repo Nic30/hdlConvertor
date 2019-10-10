@@ -1,16 +1,22 @@
 #pragma once
+
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+
 #include <hdlConvertor/baseHdlParser/baseHdlParser.h>
-#include <hdlConvertor/svConvertor/sv2012Parser/sv2012Parser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class source_textParser: public BaseHdlParser {
+class Source_textParser: public BaseHdlParser {
 public:
-	typedef sv2012_antlr::sv2012Parser sv2012Parser;
-	source_textParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
+	using sv2017Parser = sv2017_antlr::sv2017Parser;
+
+	Source_textParser(antlr4::TokenStream &tokens, hdlObjects::HdlContext &ctx,
 			bool _hierarchyOnly);
-	void visitSource_text(sv2012Parser::Source_textContext *ctx);
+	void visitSource_text(sv2017Parser::Source_textContext *ctx);
+	void visitTimeunits_declaration(
+			sv2017Parser::Timeunits_declarationContext *ctx);
+	void visitDescription(sv2017Parser::DescriptionContext *ctx);
 };
 
 }

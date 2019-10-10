@@ -8,12 +8,12 @@ namespace hdlConvertor {
 
 class BaseHdlParser {
 public:
+	antlr4::TokenStream &tokens;
+	hdlObjects::HdlContext &context;
 	bool hierarchyOnly;
-	hdlObjects::HdlContext * context;
-	antlr4::TokenStream* tokens;
-	BaseHdlParser(antlr4::TokenStream* tokens, hdlObjects::HdlContext * ctx,
+
+	BaseHdlParser(antlr4::TokenStream &tokens, hdlObjects::HdlContext &ctx,
 			bool _hierarchyOnly);
-	hdlObjects::HdlContext * getContext();
 };
 
 }

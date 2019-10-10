@@ -14,12 +14,12 @@ namespace hdlConvertor {
 using namespace antlr4;
 using namespace std;
 
-void SyntaxErrorLogger::CheckErrors() {
+void SyntaxErrorLogger::check_errors() {
 	stringstream error_msg;
 	error_msg << endl;
 	for (auto & e : _errors) {
 		error_msg << e._filename << ':' << e._line << ':'
-				<< (uint32_t) e._charPosition << ":SyntaxError:" << e._message
+				<< (uint32_t) e._charPosition << ":" << error_prefix << "SyntaxError:" << e._message
 				<< endl;
 	}
 	if (_errors.size() > 0) {

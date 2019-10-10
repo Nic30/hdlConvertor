@@ -1,9 +1,11 @@
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <stdexcept>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-static const char* const opTypeToStr[] = {
+static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN + 1] = {
 		"RANGE",
 		"REVERSE_RANGE",
 		"ACROSS",
@@ -47,8 +49,10 @@ static const char* const opTypeToStr[] = {
 		"ROR",
 		"TERNARY",
 		"DOT",
+		"DOUBLE_COLON",
 		"APOSTROPHE",
 		"CALL",
+		"PARAMETRIZATION",
 		"ARROW",
 		"RISING",
 		"FALLING",
@@ -59,12 +63,28 @@ static const char* const opTypeToStr[] = {
 		"MATCH_LE",
 		"MATCH_GT",
 		"MATCH_GE",
+		"INCR_PRE",
+		"DECR_PRE",
+		"INCR_POST",
+		"DECR_POST",
+	    "ASSIGN",
+	    "PLUS_ASSIGN",
+	    "MINUS_ASSIGN",
+	    "MUL_ASSIGN",
+	    "DIV_ASSIGN",
+	    "MOD_ASSIGN",
+	    "AND_ASSIGN",
+	    "OR_ASSIGN",
+	    "XOR_ASSIGN",
+	    "SHIFT_LEFT_ASSIGN",
+	    "SHIFT_RIGHT_ASSIGN",
+	    "ARITH_SHIFT_LEFT_ASSIGN",
+	    "ARITH_SHIFT_RIGHT_ASSIGN",
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
-	if (opt < RANGE || opt > MAP_ASSOCIATION)
-		throw "Invalid operator type";
-
+	if (opt > HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN)
+		throw std::runtime_error("Invalid operator type");
 	return opTypeToStr[opt];
 }
 

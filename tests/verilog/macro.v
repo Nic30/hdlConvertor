@@ -1,14 +1,14 @@
 
 
-`define	sqr( x ) (x * x) // comment
+`define	sqr( x ) (x * x) // comment0
 
-`define	sum( a /* comment */ , b /* comment */ ) /* comment */ \
+`define	sum( a /* comment1 */ , b /* comment2 */ ) /* comment3 */ \
   (a + b)
 
 `define sumsqr(
-    a // comment
+    a // comment4
   ,
-    b // comment
+    b // comment5
   ) \
   `sum ( \
     `sqr(a) \
@@ -23,7 +23,7 @@ module macro(input clock, reset);
   wire [31:0] down_data;
  
   assign down_data = `sumsqr(
-            up_data /* input data */
+            up_data /* comment6 */
            ,
             (4 + 8) /* 12 */
            );

@@ -14,25 +14,23 @@
 #include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/hdlValue.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
-#include "../hdlObjects/hdlFunctionDef.h"
+#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class PackageParser {
+class VhdlPackageParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	hdlObjects::HdlNamespace * p;
+	std::unique_ptr<hdlObjects::HdlNamespace> p;
 	bool hierarchyOnly;
 
-	PackageParser(bool _hierarchyOnly);
-	hdlObjects::HdlNamespace * visitPackage_body(
-			vhdlParser::Package_bodyContext* ctx);
-	void visitPackage_body_declarative_part(
-			vhdlParser::Package_body_declarative_partContext* ctx);
+	VhdlPackageParser(bool _hierarchyOnly);
+	std::unique_ptr<hdlObjects::HdlNamespace> visitPackage_body(
+			vhdlParser::Package_bodyContext *ctx);
 	void visitPackage_body_declarative_item(
-			vhdlParser::Package_body_declarative_itemContext* ctx);
+			vhdlParser::Package_body_declarative_itemContext *ctx);
 
 };
 

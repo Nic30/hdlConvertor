@@ -9,19 +9,18 @@
 //-----------------------------------------------------
 module adder_implicit (
     // Output Port Declarations
-    output [3:0] result,
-    output carry,
+    output wire[3:0] result,
+    // Output of the adder
+    output wire carry,
+    // Carry output of adder
     // Input Port Declarations       
-    input [3:0] r1,
-    input [3:0] r2,
-    input ci
-);
     // Port Wires
-    wire [3:0]  r1;
-    wire [3:0]  r2;
-    wire ci;
-    wire [3:0]  result;
-    wire carry;
+    input wire[3:0] r1,
+    // first input
+    input wire[3:0] r2,
+    // second input
+    input wire ci
+);
     // Internal variables
     wire c1;
     wire c2;

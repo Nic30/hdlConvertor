@@ -14,10 +14,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -38,21 +34,18 @@ build/
 target/
 dist/
 _skbuild/
+.eggs/
+hdlConvertor.egg-info
 
-# parser soruce build dirs
-src/svConvertor/sv2012Parser
-src/verilogConvertor/Verilog2001Parser
-src/verilogPreproc/verilogPreprocParser
-src/vhdlConvertor/vhdlParser
+# parser generated source dirs/files
+src/svConvertor/sv2017Parser/
+src/verilogPreproc/verilogPreprocParser/
+src/vhdlConvertor/vhdlParser/
 
-
-include/hdlConvertor/svConvertor/sv2012Parser/*.h
-include/hdlConvertor/verilogConvertor/Verilog2001Parser/*.h
+include/hdlConvertor/svConvertor/sv2017Parser/*.h
 include/hdlConvertor/verilogPreproc/verilogPreprocParser/*.h
 include/hdlConvertor/vhdlConvertor/vhdlParser/*.h
 
-
-hdlConvertor.egg-info
 
 # devel archives
 *.zip
@@ -63,3 +56,9 @@ hdlConvertor.egg-info
 .project
 .pydevproject
 .settings/
+
+# coverage files
+*.gcda
+coverage.info
+coverage.info.raw
+

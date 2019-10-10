@@ -1,4 +1,7 @@
 
+#include(${CMAKE_CURRENT_SOURCE_DIR}../src/CMake_antlr4.txt)
+
+
 file(GLOB hdlConvertor_py_SRC
   "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
@@ -14,9 +17,22 @@ add_library(_hdlConvertor MODULE ${_hdlConvertor}
 								 ${hdlConvertor_py_SRC})
 python_extension_module(_hdlConvertor)
 
+if(CODE_COVERAGE)
+	target_link_libraries(_hdlConvertor
+		hdlConvertor_cpp_static
+		gcov
+	)
+else()
+	target_link_libraries(_hdlConvertor
+		hdlConvertor_cpp_static
+	)
+endif()
+
 target_link_libraries(_hdlConvertor
 	hdlConvertor_cpp_static
 )
+set_coverage_if_enabled(_hdlConvertor OFF)
+
 
 #set_target_properties(_hdlConvertor
 #	PROPERTIES VERSION "1.0.0"
@@ -27,3 +43,4 @@ target_link_libraries(_hdlConvertor
 
 install(TARGETS _hdlConvertor LIBRARY DESTINATION
 	hdlConvertor)
+	

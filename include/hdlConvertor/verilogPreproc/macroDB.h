@@ -11,14 +11,9 @@ namespace hdlConvertor {
 namespace verilog_pp {
 
 /**
- * class to store all the defined macro. The class herite from the
- * std::map<std:string, macro_replace*>
+ * Container to store all the defined macro.
  */
-class MacroDB: public std::map<std::string, aMacroDef*> {
-public:
-
-	virtual ~MacroDB();
-};
+typedef std::map<std::string, aMacroDef*> MacroDB;
 
 }
 }

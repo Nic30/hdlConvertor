@@ -9,11 +9,8 @@
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParserBaseVisitor.h>
 
-#include <hdlConvertor/syntaxErrorLogger.h>
+#include <hdlConvertor/verilogPreproc/verilogPreprocContainer.h>
 #include <hdlConvertor/conversion_exception.h>
-#include <hdlConvertor/language.h>
-#include <hdlConvertor/universal_fs.h>
-#include <hdlConvertor/verilogPreproc/macroDB.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
@@ -33,101 +30,84 @@ namespace verilog_pp {
  **/
 class VerilogPreproc: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
 
-	void remove_comment(antlr4::Token * start, antlr4::Token * end,
-			std::string * str);
-	void replace_context_by_bank(antlr4::ParserRuleContext * ctx);
+	void remove_comment(antlr4::Token *start, antlr4::Token *end,
+			std::string *str);
+	void replace_context_by_bank(antlr4::ParserRuleContext *ctx);
 
 public:
 	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
-
-	MacroDB & _defineDB;
-	antlr4::CommonTokenStream & _tokens;
-	std::vector<std::filesystem::path> _incdir;
+	VerilogPreprocContainer &container;
+	antlr4::CommonTokenStream &_tokens;
 	bool added_incdir;
-	std::vector<std::filesystem::path> & _stack_incfile;
-	Language _mode;
 	size_t include_depth_limit;
 	antlr4::TokenStreamRewriter _rewriter;
 
-	VerilogPreproc(antlr4::TokenStream & tokens,
-			std::vector<std::filesystem::path> &incdir, bool added_incdir,
-			MacroDB & defineDB,
-			std::vector<std::filesystem::path> &stack_incfile, Language mode =
-					Language::VERILOG2001, size_t include_depth_limit = 100);
+	VerilogPreproc(VerilogPreprocContainer &container,
+			antlr4::TokenStream &tokens, bool added_incdir,
+			size_t include_depth_limit = 100);
 
 	virtual ~VerilogPreproc();
 
 	virtual antlrcpp::Any visitResetall(
-			verilogPreprocParser::ResetallContext * ctx) override;
+			verilogPreprocParser::ResetallContext *ctx) override;
 	virtual antlrcpp::Any visitCelldefine(
-			verilogPreprocParser::CelldefineContext * ctx) override;
+			verilogPreprocParser::CelldefineContext *ctx) override;
 	virtual antlrcpp::Any visitEndcelldefine(
-			verilogPreprocParser::EndcelldefineContext * ctx) override;
+			verilogPreprocParser::EndcelldefineContext *ctx) override;
 
 	virtual antlrcpp::Any visitTiming_spec(
-			verilogPreprocParser::Timing_specContext * ctx) override;
+			verilogPreprocParser::Timing_specContext *ctx) override;
 	virtual antlrcpp::Any visitDefault_nettype(
-			verilogPreprocParser::Default_nettypeContext * ctx) override;
+			verilogPreprocParser::Default_nettypeContext *ctx) override;
 	virtual antlrcpp::Any visitUnconnected_drive(
-			verilogPreprocParser::Unconnected_driveContext * ctx) override;
+			verilogPreprocParser::Unconnected_driveContext *ctx) override;
 	virtual antlrcpp::Any visitNounconnected_drive(
-			verilogPreprocParser::Nounconnected_driveContext * ctx) override;
+			verilogPreprocParser::Nounconnected_driveContext *ctx) override;
 	virtual antlrcpp::Any visitLine_directive(
-			verilogPreprocParser::Line_directiveContext * ctx) override;
+			verilogPreprocParser::Line_directiveContext *ctx) override;
 
 	virtual antlrcpp::Any visitDefine_args_with_def_val(
 			verilogPreprocParser::Define_args_with_def_valContext *ctx)
 					override;
 	virtual antlrcpp::Any visitDefine_args_basic(
 			verilogPreprocParser::Define_args_basicContext *ctx) override;
-	virtual antlrcpp::Any visitDefine(verilogPreprocParser::DefineContext * ctx)
+	virtual antlrcpp::Any visitDefine(verilogPreprocParser::DefineContext *ctx)
 			override;
 
-	virtual antlrcpp::Any visitUndef(verilogPreprocParser::UndefContext * ctx)
+	virtual antlrcpp::Any visitUndef(verilogPreprocParser::UndefContext *ctx)
 			override;
+	virtual antlrcpp::Any visitUndefineall(
+			verilogPreprocParser::UndefineallContext *ctx) override;
 
-	virtual antlrcpp::Any visitToken_id(
-			verilogPreprocParser::Token_idContext * ctx) override;
+	void parse_macro_args(verilogPreprocParser::Macro_callContext *ctx,
+			std::vector<std::string> &args);
+	virtual antlrcpp::Any visitMacro_call(
+			verilogPreprocParser::Macro_callContext *ctx) override;
 
 	virtual antlrcpp::Any visitIfdef_directive(
-			verilogPreprocParser::Ifdef_directiveContext * ctx) override;
+			verilogPreprocParser::Ifdef_directiveContext *ctx) override;
 	virtual antlrcpp::Any visitIfndef_directive(
-			verilogPreprocParser::Ifndef_directiveContext * ctx) override;
+			verilogPreprocParser::Ifndef_directiveContext *ctx) override;
 
-	virtual antlrcpp::Any visitStringLiteral(
-			verilogPreprocParser::StringLiteralContext *ctx) override;
 	virtual antlrcpp::Any visitInclude(
-			verilogPreprocParser::IncludeContext * ctx) override;
+			verilogPreprocParser::IncludeContext *ctx) override;
 
 	virtual antlrcpp::Any visitKeywords_directive(
-			verilogPreprocParser::Keywords_directiveContext * ctx) override;
+			verilogPreprocParser::Keywords_directiveContext *ctx) override;
 	virtual antlrcpp::Any visitEndkeywords_directive(
-			verilogPreprocParser::Endkeywords_directiveContext * ctx) override;
+			verilogPreprocParser::Endkeywords_directiveContext *ctx) override;
 
-	virtual antlrcpp::Any visitPragma(verilogPreprocParser::PragmaContext * ctx)
+	virtual antlrcpp::Any visitPragma(verilogPreprocParser::PragmaContext *ctx)
 			override;
 
-	virtual antlrcpp::Any visitUndefineall(
-			verilogPreprocParser::UndefineallContext * ctx) override;
 	// thorw an error with a file location prompt
-	void throw_input_caused_error(antlr4::ParserRuleContext * ctx, const std::string & msg);
+	void throw_input_caused_error(antlr4::ParserRuleContext *ctx,
+			const std::string &msg);
 };
 
-std::string run_verilog_preproc(antlr4::ANTLRInputStream & input,
-		std::vector<std::filesystem::path> &incdir, bool added_incdir,
-		MacroDB & defineDB, std::vector<std::filesystem::path> & stack_incfile,
-		Language mode);
-std::string run_verilog_preproc_str(const std::string& verilog_str,
-		std::vector<std::filesystem::path> &incdir, MacroDB & defineDB,
-		std::vector<std::filesystem::path> & stack_incfile, Language mode);
-
-std::string run_verilog_preproc_file(const std::filesystem::path & filename,
-		std::vector<std::filesystem::path> &incdir, MacroDB & defineDB,
-		std::vector<std::filesystem::path> & stack_incfile, Language mode);
-
-std::string& rtrim(std::string& str, const std::string& chars = " \t\n\r");
-std::string& ltrim(std::string& str, const std::string& chars = " \t\n\r");
-std::string& trim(std::string& str, const std::string& chars = " \t\n\r");
+std::string& rtrim(std::string &str, const std::string &chars = " \t\n\r");
+std::string& ltrim(std::string &str, const std::string &chars = " \t\n\r");
+std::string& trim(std::string &str, const std::string &chars = " \t\n\r");
 
 }
 }

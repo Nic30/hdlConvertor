@@ -1,7 +1,7 @@
 // Examples of `define text macros
 module test;
-    reg [7:0]  a;
-    reg [7:0]  b;
+    reg[7:0] a;
+    reg[7:0] b;
     initial begin
         $display(5);
         $display("Hello world!");

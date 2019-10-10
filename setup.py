@@ -1,8 +1,9 @@
 from skbuild import setup
+import sys
 
 setup(
-    cmake_args= [
-        #'-DCMAKE_BUILD_TYPE=Debug'
+    cmake_args=[
+        # '-DCMAKE_BUILD_TYPE=Debug'
     ],
     name='hdlConvertor',
     version='1.2',
@@ -23,5 +24,7 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
-    test_suite="tests",
+    test_suite="tests.main_test_suite",
+    test_runner="tests:TimeLoggingTestRunner",
+    tests_require=["typing", "future"] if sys.version_info[0] == 2 else None,
 )

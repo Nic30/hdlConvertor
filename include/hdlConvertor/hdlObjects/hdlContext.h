@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 
 namespace hdlConvertor {
@@ -11,7 +12,7 @@ namespace hdlObjects {
  * */
 class HdlContext {
 public:
-	std::vector<iHdlObj*> objs;
+	std::vector<std::unique_ptr<iHdlObj>> objs;
 
 	~HdlContext();
 };

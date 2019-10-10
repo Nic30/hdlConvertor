@@ -10,8 +10,6 @@ HdlNamespace::HdlNamespace() :
 }
 
 HdlNamespace::~HdlNamespace() {
-	for (auto o : objs)
-		delete o;
 }
 
 }
