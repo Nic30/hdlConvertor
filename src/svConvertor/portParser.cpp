@@ -169,7 +169,7 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 			t = append_expr(move(t), HdlOperatorType::DOT, move(id));
 		}
 	}
-	if (!t and ctx->LPAREN()) {
+	if (!t && ctx->LPAREN()) {
 		// | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
 		auto _e = ctx->expression();
 		unique_ptr<iHdlExpr> def_val = nullptr;
