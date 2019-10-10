@@ -3,6 +3,7 @@ import sys
 from cpython.ref cimport PyObject
 from cython.operator cimport dereference as deref
 from cython.operator cimport preincrement as preinc
+from libcpp.memory cimport unique_ptr
 from libc.string cimport strerror
 from libc.errno cimport errno
 from libcpp cimport bool
@@ -17,7 +18,7 @@ include "verilogPreproc.pyx"
 
 cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
     cdef cppclass HdlContext:
-        pass
+        HdlContext()
 
 cdef extern from "toPy.h" namespace "hdlConvertor":
     cdef cppclass ToPy:
@@ -45,16 +46,19 @@ cdef int raise_cpp_py_error() except *:
 
 cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
     cdef cppclass Convertor:
+        unique_ptr[HdlContext] c
         MacroDB defineDB
 
-        HdlContext * parse(
+        Convertor(HdlContext & _c)
+
+        void parse(
             const vector[string] & hdl_file_names,
             Language language,
             vector[string] include_dirs,
             bool hierarchy_only,
             bool debug) except +raise_cpp_py_error
 
-        HdlContext * parse_str(
+        void parse_str(
             const string & hdl_str,
             Language language,
             vector[string] include_dirs,
@@ -79,16 +83,14 @@ cdef class HdlConvertor:
     :ivar proproc_macro_db: dictinary of symbols defined in preprocessor
     """
 
-    cdef Convertor * thisptr
+    cdef unique_ptr[Convertor] thisptr
+    cdef HdlContext context
     cdef public CppStdMapProxy preproc_macro_db
 
     # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
-        self.thisptr = new Convertor()
-        self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.defineDB)
-
-    def __dealloc__(self):
-        del self.thisptr
+        self.thisptr.reset(new Convertor(self.context))
+        self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.get().defineDB)
 
     @staticmethod
     def _translate_Language_enum(langue):
@@ -138,20 +140,18 @@ cdef class HdlConvertor:
         filenames = [str_encode(item) for item in filenames]
         incdirs = [str_encode(item) for item in incdirs]
 
-        cdef HdlContext * c
         cdef object d_py
         cdef PyObject * d
         cdef ToPy toPy
         if filenames:
-            c = self.thisptr.parse(
+            self.thisptr.get().parse(
                 filenames, langue_value, incdirs, hierarchyOnly, debug)
 
             toPy = ToPy()
-            d = toPy.toPy(c)
+            d = toPy.toPy(&self.context)
             if not d:
                 raise
             d_py = < object > d
-            del c
             return d_py
         else:
             return PyHdlContext()
@@ -171,20 +171,18 @@ cdef class HdlConvertor:
         hdl_str = str_encode(hdl_str)
         incdirs = [str_encode(item) for item in incdirs]
 
-        cdef HdlContext * c
         cdef object d_py
         cdef PyObject * d
         cdef ToPy toPy
         if hdl_str:
-            c = self.thisptr.parse_str(
+            self.thisptr.get().parse_str(
                 hdl_str, langue_value, incdirs, hierarchyOnly, debug)
 
             toPy = ToPy()
-            d = toPy.toPy(c)
+            d = toPy.toPy(&self.context)
             if not d:
                 raise
             d_py = < object > d
-            del c
             return d_py
         else:
             return PyHdlContext()
@@ -201,7 +199,7 @@ cdef class HdlConvertor:
         filename = str_encode(filename)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.verilog_pp(filename, incdirs, langue_value)
+        data = self.thisptr.get().verilog_pp(filename, incdirs, langue_value)
         data = str_decode(data)
 
         return data
@@ -217,7 +215,7 @@ cdef class HdlConvertor:
         verilog_str = str_encode(verilog_str)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.verilog_pp_str(verilog_str, incdirs, langue_value)
+        data = self.thisptr.get().verilog_pp_str(verilog_str, incdirs, langue_value)
         data = str_decode(data)
 
         return data

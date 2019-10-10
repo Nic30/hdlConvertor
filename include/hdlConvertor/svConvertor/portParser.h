@@ -15,7 +15,7 @@ class VerPortParser {
 	SVCommentParser &commentParser;
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using Non_ANSI_port_info_t = std::pair<std::string, std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>>>;
+	using Non_ANSI_port_info_t = std::pair<std::string, std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>*>;
 	std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups;
 
 	VerPortParser(SVCommentParser &commentParser,

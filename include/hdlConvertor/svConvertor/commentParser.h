@@ -30,7 +30,7 @@ namespace sv {
 class SVCommentParser {
 	antlr4::CommonTokenStream & tokens;
 public:
-	SVCommentParser(antlr4::TokenStream * _tokens);
+	SVCommentParser(antlr4::TokenStream & _tokens);
 
 	template<typename CONTEXT_T>
 	std::string parse(CONTEXT_T * ctx) {

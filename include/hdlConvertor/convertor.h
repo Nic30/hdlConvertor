@@ -20,13 +20,14 @@ class Convertor {
 public:
 	bool hierarchyOnly;
 	static bool debug;
-	hdlObjects::HdlContext *c;
+	hdlObjects::HdlContext& c;
 	verilog_pp::MacroDB defineDB;
 
-	hdlObjects::HdlContext* parse(const std::vector<std::string> &fileNames,
-			Language lang, std::vector<std::string> incdirs, bool hierarchyOnly,
-			bool debug);
-	hdlObjects::HdlContext* parse_str(const std::string &hdl_str, Language lang,
+	Convertor(hdlObjects::HdlContext& c);
+
+	void parse(const std::vector<std::string> &fileNames, Language lang,
+			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);
+	void parse_str(const std::string &hdl_str, Language lang,
 			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);
 
 	std::string verilog_pp(const std::string &filename,

@@ -42,7 +42,7 @@ public:
 	void parse_str(std::string &input_str, bool hierarchyOnly) = delete;
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly) = delete;
 
-	SVParserContainer(hdlObjects::HdlContext *context, Language _lang,
+	SVParserContainer(hdlObjects::HdlContext &context, Language _lang,
 			verilog_pp::MacroDB &_defineDB) :
 			iParserContainer(context, _lang, _defineDB), preproc(_lang,
 					this->syntaxErrLogger, _defineDB) {
@@ -74,7 +74,11 @@ public:
 	}
 };
 
-HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
+Convertor::Convertor(hdlObjects::HdlContext &_c) :
+		hierarchyOnly(false), c(_c) {
+}
+
+void Convertor::parse(const vector<string> &_fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 
 	hierarchyOnly = _hierarchyOnly;
@@ -91,19 +95,16 @@ HdlContext* Convertor::parse(const vector<string> &_fileNames, Language lang,
 		if (lang == Language::VHDL) {
 			VHDLParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly);
-			c = pc.context;
 		} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 			SVParserContainer pc(c, lang, defineDB);
 			pc.parse_file(fileName, hierarchyOnly, incdir);
-			c = pc.context;
 		} else {
 			throw runtime_error("Unsupported language.");
 		}
 	}
-	return c;
 }
 
-HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
+void Convertor::parse_str(const string &hdl_str, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
@@ -112,27 +113,26 @@ HdlContext* Convertor::parse_str(const string &hdl_str, Language lang,
 	if (lang == VHDL) {
 		VHDLParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly);
-		c = pc.context;
 	} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 		SVParserContainer pc(c, lang, defineDB);
 		pc.parse_str(hdl_str, hierarchyOnly, incdir);
-		c = pc.context;
 	} else {
 		throw runtime_error("Unsupported language.");
 	}
-	return c;
 }
 
 string Convertor::verilog_pp(const string &fileName,
 		const vector<string> _incdirs, Language lang) {
-	SVParserContainer pc(nullptr, lang, defineDB);
+	HdlContext c; // dummy context
+	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	return pc.preproc.run_preproc_file(fileName);
 }
 
 string Convertor::verilog_pp_str(const string &verilog_str,
 		const vector<string> _incdirs, Language lang) {
-	SVParserContainer pc(nullptr, lang, defineDB);
+	HdlContext c; // dummy context
+	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	return pc.preproc.run_preproc_str(verilog_str, 0);
 }

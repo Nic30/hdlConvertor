@@ -17,8 +17,8 @@ class VhdlDesignFileParser: public BaseHdlParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	VhdlDesignFileParser(antlr4::TokenStream *tokens,
-			hdlObjects::HdlContext *ctx, bool _hierarchyOnly);
+	VhdlDesignFileParser(antlr4::TokenStream &tokens,
+			hdlObjects::HdlContext &ctx, bool _hierarchyOnly);
 	void visitDesign_file(vhdlParser::Design_fileContext *ctx);
 	void visitDesign_unit(vhdlParser::Design_unitContext *ctx);
 	void visitLibrary_unit(vhdlParser::Library_unitContext *ctx);

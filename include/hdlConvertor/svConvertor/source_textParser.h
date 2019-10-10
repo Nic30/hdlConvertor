@@ -11,7 +11,7 @@ class Source_textParser: public BaseHdlParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
-	Source_textParser(antlr4::TokenStream *tokens, hdlObjects::HdlContext *ctx,
+	Source_textParser(antlr4::TokenStream &tokens, hdlObjects::HdlContext &ctx,
 			bool _hierarchyOnly);
 	void visitSource_text(sv2017Parser::Source_textContext *ctx);
 	void visitTimeunits_declaration(

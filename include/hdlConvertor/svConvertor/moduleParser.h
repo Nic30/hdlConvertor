@@ -48,7 +48,6 @@ public:
 	void visitList_of_net_decl_assignments(
 			sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
 			std::unique_ptr<hdlObjects::iHdlExpr> base_type, bool is_latched,
-			const std::string &doc,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 
 };

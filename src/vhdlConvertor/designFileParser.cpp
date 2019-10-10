@@ -14,8 +14,8 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-VhdlDesignFileParser::VhdlDesignFileParser(antlr4::TokenStream *tokens,
-		HdlContext *ctx, bool _hierarchyOnly) :
+VhdlDesignFileParser::VhdlDesignFileParser(antlr4::TokenStream &tokens,
+		HdlContext &ctx, bool _hierarchyOnly) :
 		BaseHdlParser(tokens, ctx, _hierarchyOnly), commentParser(tokens) {
 }
 
@@ -64,13 +64,13 @@ void VhdlDesignFileParser::visitSecondary_unit(
 	if (arch) {
 		VhdlArchParser aparser(hierarchyOnly);
 		auto a = aparser.visitArchitecture_body(arch);
-		context->objs.push_back(move(a));
+		context.objs.push_back(move(a));
 	}
 	auto pack = ctx->package_body();
 	if (pack) {
 		VhdlPackageParser pparser(hierarchyOnly);
 		auto p = pparser.visitPackage_body(pack);
-		context->objs.push_back(move(p));
+		context.objs.push_back(move(p));
 
 	}
 }
@@ -98,7 +98,7 @@ void VhdlDesignFileParser::visitPrimary_unit(
 	if (ed) {
 		VhdlEntityParser eParser(commentParser, hierarchyOnly);
 		auto e = eParser.visitEntity_declaration(ed);
-		context->objs.push_back(move(e));
+		context.objs.push_back(move(e));
 		return;
 	}
 	auto cd = ctx->configuration_declaration();
@@ -111,7 +111,7 @@ void VhdlDesignFileParser::visitPrimary_unit(
 	if (pd) {
 		VhdlPackageHeaderParser php(hierarchyOnly);
 		auto ph = php.visitPackage_declaration(pd);
-		context->objs.push_back(std::move(ph));
+		context.objs.push_back(std::move(ph));
 	}
 
 }
@@ -129,7 +129,7 @@ void VhdlDesignFileParser::visitContext_item(
 	}
 	auto u = ctx->use_clause();
 	if (u) {
-		visitUse_clause(u, context->objs);
+		visitUse_clause(u, context.objs);
 	}
 }
 

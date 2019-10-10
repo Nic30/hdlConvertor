@@ -247,7 +247,7 @@ void VerModuleParser::visitModule_item_item(
 		auto o = ctx->parameter_declaration();
 		if (o) {
 			VerParamDefParser pdp(commentParser);
-			pdp.visitParameter_declaration(o, res_vars);
+			pdp.visitParameter_declaration(o, m_ctx.ent.generics);
 			return;
 		}
 	}
@@ -267,7 +267,8 @@ void VerModuleParser::visitModule_item_item(
 	{
 		auto o = ctx->data_declaration();
 		if (o) {
-			return VerDeclrParser(commentParser).visitData_declaration(o, res);
+			VerDeclrParser dp(commentParser);
+			return dp.visitData_declaration(o, res);
 		}
 	}
 	{
@@ -666,15 +667,14 @@ void VerModuleParser::visitNet_declaration(
 
 	auto dti = ctx->data_type_or_implicit();
 	auto t = tp.visitData_type_or_implicit(dti, move(net_type));
-	auto doc = commentParser.parse(ctx);
 	auto lna = ctx->list_of_net_decl_assignments();
-	visitList_of_net_decl_assignments(lna, move(t), false, doc, res);
+	visitList_of_net_decl_assignments(lna, move(t), false, res);
 }
 
 // @note same as visitList_of_net_identifiers but without the dimensions and with the default value
 void VerModuleParser::visitList_of_net_decl_assignments(
 		sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
-		unique_ptr<iHdlExpr> base_type, bool is_latched, const string &doc,
+		unique_ptr<iHdlExpr> base_type, bool is_latched,
 		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 
@@ -700,7 +700,6 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		t = tp.applyUnpacked_dimension(move(t), uds);
 		auto v = make_unique<HdlVariableDef>(id, move(t), move(def_val));
 		if (first) {
-			v->__doc__ = doc;
 			first = false;
 		}
 

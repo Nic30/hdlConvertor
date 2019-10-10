@@ -167,7 +167,12 @@ void VerParamDefParser::visitParameter_declaration(
 	} else {
 		auto _t = ctx->data_type_or_implicit();
 		VerTypeParser tp(commentParser);
-		auto t = tp.visitData_type_or_implicit(_t, nullptr);
+		unique_ptr<iHdlExpr> t;
+		if (_t)
+			t = tp.visitData_type_or_implicit(_t, nullptr);
+		else
+			t = iHdlExpr::AUTO_T();
+
 		auto pds = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
 		visitTyped_list_of_param_assignments(move(t), pds, doc, res);

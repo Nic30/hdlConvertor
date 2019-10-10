@@ -40,10 +40,10 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitNonansi_port(
 				"Source_textParser.visitPort - empty port record", ctx);
 	}
 	if (pi) {
-		// [todo] non_ansi_port_groups can not contains unique ptrs as the object are stored elsewhere
-		// non_ansi_port_groups.push_back(
-		// 		{ ctx->identifier()->getText(), clone(pe) });
+		non_ansi_port_groups.push_back(
+				{ ctx->identifier()->getText(), pe.get() });
 	}
+	pe->at(0)->__doc__ = commentParser.parse(ctx);
 	return pe;
 }
 unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitNonansi_port__expr(
@@ -97,6 +97,7 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitList_of_port_
 		VerAttributeParser::visitAttribute_instance(pdi->attribute_instance());
 		auto apd = pdi->ansi_port_declaration();
 		auto pd = visitAnsi_port_declaration(apd, prev.first, prev.second);
+		pd.first->__doc__ = commentParser.parse(pdi);
 		prev = { pd.first.get(), pd.second };
 		ports->push_back(move(pd.first));
 	}

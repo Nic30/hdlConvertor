@@ -15,7 +15,7 @@ namespace vhdl {
 class VhdlCommentParser {
 	antlr4::CommonTokenStream & tokens;
 public:
-	VhdlCommentParser(antlr4::TokenStream * _tokens);
+	VhdlCommentParser(antlr4::TokenStream& _tokens);
 
 	template<typename CONTEXT_T>
 	std::string parse(CONTEXT_T * ctx) {

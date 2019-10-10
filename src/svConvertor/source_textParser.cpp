@@ -10,8 +10,8 @@ namespace sv {
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlObjects;
 
-Source_textParser::Source_textParser(antlr4::TokenStream *tokens,
-		HdlContext *ctx, bool _hierarchyOnly) :
+Source_textParser::Source_textParser(antlr4::TokenStream &tokens,
+		HdlContext &ctx, bool _hierarchyOnly) :
 		BaseHdlParser(tokens, ctx, _hierarchyOnly) {
 }
 
@@ -57,7 +57,7 @@ void Source_textParser::visitDescription(
 	{
 		auto o = ctx->module_declaration();
 		if (o) {
-			p.visitModule_declaration(o, context->objs);
+			p.visitModule_declaration(o, context.objs);
 			return;
 		}
 	}
