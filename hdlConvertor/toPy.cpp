@@ -223,6 +223,16 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
+	if (toPy_property(py_inst, "is_declaration_only", o->is_declaration_only))
+		return nullptr;
+	if (toPy_property(py_inst, "is_operator", o->is_operator))
+			return nullptr;
+	if (toPy_property(py_inst, "is_static", o->is_static))
+			return nullptr;
+	if (toPy_property(py_inst, "is_task", o->is_task))
+			return nullptr;
+	if (toPy_property(py_inst, "is_virtual", o->is_virtual))
+			return nullptr;
 	if (o->params) {
 		if (toPy_arr(py_inst, "params", *o->params))
 			return nullptr;
@@ -402,6 +412,8 @@ PyObject* ToPy::toPy(const HdlVariableDef *o) {
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
 
+	if (toPy_property(py_inst, "type", o->type))
+		return nullptr;
 	if (o->value) {
 		if (toPy_property(py_inst, "value", o->value))
 			return nullptr;
