@@ -5,6 +5,7 @@ from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn, HdlName, HdlIntValue
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, HdlModuleDef, \
     HdlNamespace, HdlImport
+from hdlConvertor.hdlAst._statements import HdlStmBlock
 
 
 class ToVhdl():
@@ -354,24 +355,29 @@ class ToVhdl():
                     w(", ")
             w(")")
         w("\n")
-        w("BEGIN\n")
-        with Indent(self.out):
-            for _o in body:
-                if isinstance(_o, iHdlStatement):
-                    self.print_statement(_o)
-                else:
-                    self.print_expr(_o)
-                    w(";\n")
-        w("END PROCESS;\n")
+        self.print_block(body, force_space_before=False)
+        w(" PROCESS;\n")
 
-    def print_block(self, stms):
+    def print_block(self, stms, force_space_before=True):
         """
-        :type stms: List[iHdlStatement]
+        :type stms: Union[List[iHdlStatement], iHdlStatement, iHdlExpr]
         :return: True if statements are wrapped in begin-end block
         """
         w = self.out.write
-        if len(stms) != 1:
-            w(" BEGIN\n")
+        if isinstance(stms, HdlStmBlock):
+            must_have_begin_end = True
+            stms = stms.body
+        elif isinstance(stms, list):
+            must_have_begin_end = len(stms) != 1
+        else:
+            must_have_begin_end = False
+            stms = [stms, ]
+
+        if must_have_begin_end:
+            if force_space_before:
+                w(" BEGIN\n")
+            else:
+                w("BEGIN\n")
         else:
             w("\n")
 
@@ -383,9 +389,10 @@ class ToVhdl():
                     self.print_expr(s)
                     w(";\n")
 
-        if len(stms) != 1:
+        if must_have_begin_end:
             w("END")
             return True
+
         return False
 
     def print_if(self, stm):
