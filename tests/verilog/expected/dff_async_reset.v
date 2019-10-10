@@ -8,8 +8,11 @@
 module dff_async_reset (
     //-----------Input Ports---------------
     input wire data,
+    // Data Input
     input wire clk,
+    // Clock Input
     input wire reset,
+    // Reset input
     //-----------Output Ports---------------
     //------------Internal Variables--------
     output reg q

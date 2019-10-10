@@ -7,7 +7,9 @@
 //-----------------------------------------------------
 module decoder_using_case (
     input wire[3:0] binary_in,
+    // 4 bit binary input
     output reg[15:0] decoder_out,
+    // 16-bit  out
     input wire enable
 );
     always @(enable, binary_in) begin

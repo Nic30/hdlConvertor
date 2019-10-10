@@ -7,7 +7,9 @@
 //-----------------------------------------------------
 module pri_encoder_using_if (
     output reg[3:0] binary_out,
+    // 4 bit binary output
     input wire[15:0] encoder_in,
+    // 16-bit input
     input wire enable
 );
     always @(enable, encoder_in) begin

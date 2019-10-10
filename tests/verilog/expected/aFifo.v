@@ -10,9 +10,9 @@
 //           Xilinx website. It has some minor modifications.
 //=========================================
 module aFifo #(
-    parameter  DATA_WIDTH = 8,
-    parameter  ADDRESS_WIDTH = 4,
-    parameter  FIFO_DEPTH = (1 << ADDRESS_WIDTH)
+    parameter DATA_WIDTH = 8,
+    parameter ADDRESS_WIDTH = 4,
+    parameter FIFO_DEPTH = (1 << ADDRESS_WIDTH)
 ) (
     output reg[(DATA_WIDTH - 1):0] Data_out,
     output reg Empty_out,
@@ -26,7 +26,7 @@ module aFifo #(
     input wire Clear_in
 );
     /////Internal connections & variables//////
-    reg[(DATA_WIDTH - 1):0] Mem [(FIFO_DEPTH - 1):0];
+    reg[(DATA_WIDTH - 1):0] Mem[(FIFO_DEPTH - 1):0];
     wire[(ADDRESS_WIDTH - 1):0] pNextWordToWrite;
     wire[(ADDRESS_WIDTH - 1):0] pNextWordToRead;
     wire EqualAddresses;

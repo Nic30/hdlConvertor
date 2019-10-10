@@ -6,22 +6,27 @@
 // Coder       : Deepak Kumar Tala
 //-----------------------------------------------------
 module ram_sp_ar_sw #(
-    parameter  DATA_WIDTH = 8,
-    parameter  ADDR_WIDTH = 8,
-    parameter  RAM_DEPTH = (1 << ADDR_WIDTH)
+    parameter DATA_WIDTH = 8,
+    parameter ADDR_WIDTH = 8,
+    parameter RAM_DEPTH = (1 << ADDR_WIDTH)
 ) (
     //--------------Input Ports-----------------------
     input wire clk,
+    // Clock Input
     input wire[(ADDR_WIDTH - 1):0] address,
+    // Address Input
     //--------------Inout Ports-----------------------
     inout wire[(DATA_WIDTH - 1):0] data,
+    // Data bi-directional
     input wire cs,
+    // Chip Select
     input wire we,
+    // Write Enable/Read Enable
     input wire oe
 );
     //--------------Internal variables----------------
     reg[(DATA_WIDTH - 1):0] data_out;
-    reg[(DATA_WIDTH - 1):0] mem [0:(RAM_DEPTH - 1)];
+    reg[(DATA_WIDTH - 1):0] mem[0:(RAM_DEPTH - 1)];
     //--------------Code Starts Here------------------
     // Tri-State Buffer control
     // output : When we = 0, oe = 1, cs = 1

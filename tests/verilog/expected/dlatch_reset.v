@@ -8,8 +8,11 @@
 module dlatch_reset (
     //-----------Input Ports---------------
     input wire data,
+    // Data Input
     input wire en,
+    // LatchInput
     input wire reset,
+    // Reset input
     //-----------Output Ports---------------
     //------------Internal Variables--------
     output reg q
