@@ -912,15 +912,14 @@ selected_waveform_assignment:
 ;
 selected_waveforms:
       waveform KW_WHEN choices (COMMA waveform KW_WHEN choices)*
-      
 ;
 selected_force_assignment:
       KW_WITH expression KW_SELECT ( QUESTIONMARK )?
           target CONASGN KW_FORCE ( force_mode )? selected_expressions SEMI
 ;
 selected_expressions:
-      ( expression KW_WHEN choices COMMA )*
-      expression KW_WHEN choices
+      expression KW_WHEN choices ( COMMA 
+      expression KW_WHEN choices )*
 ;
 variable_assignment_statement:
      simple_variable_assignment
