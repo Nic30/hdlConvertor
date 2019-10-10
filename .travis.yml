@@ -87,7 +87,7 @@ script:
 after_success:
   - lcov --compat-libtool --directory . --capture --output-file coverage.info.raw
   - lcov --remove coverage.info.raw -o coverage.info '/usr/*' './_skbuild/*'
-  - coveralls-lcov --verbose coverage.info
+  - coveralls-lcov coverage.info
 
 deploy:
   provider: pypi
