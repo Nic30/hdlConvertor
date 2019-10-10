@@ -25,6 +25,32 @@ using namespace hdlConvertor::hdlObjects;
 namespace hdlConvertor {
 namespace sv {
 
+void HdlStmIf_collapse_elifs(HdlStmIf &ifStm) {
+	if (ifStm.ifFalse) {
+		auto as_if = dynamic_cast<HdlStmIf*>(ifStm.ifFalse.get());
+		if (as_if) {
+			assert(ifStm.in_preproc == as_if->in_preproc);
+			auto tmp = move(ifStm.ifFalse);
+			// add if-then branch as if else
+			auto c = move(as_if->cond);
+			auto s = move(as_if->ifTrue);
+			ifStm.elseIfs.push_back(HdlExprAndStm(move(c), move(s)));
+
+			for (auto &elif : as_if->elseIfs) {
+				ifStm.elseIfs.push_back(move(elif));
+			}
+
+			ifStm.ifFalse = move(as_if->ifFalse);
+			// [todo] labels (if there was label for else, merge it with first label if there was any)
+			//for (auto & l: as_if->labels) {
+			//
+			//}
+			// [todo] doc, if there was a doc move it to first statement in branch
+		}
+	}
+
+}
+
 VerStatementParser::VerStatementParser(SVCommentParser &commentParser) :
 		commentParser(commentParser) {
 }
@@ -633,6 +659,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitConditional_statement(
 	auto ifStm = make_unique<HdlStmIf>(move(cond), move(ifTrue), move(ifFalse));
 	ifStm->position.update_from_elem(ctx);
 	ifStm->__doc__ = commentParser.parse(ctx);
+	HdlStmIf_collapse_elifs(*ifStm);
 	return ifStm;
 }
 
@@ -733,16 +760,16 @@ unique_ptr<iHdlStatement> VerStatementParser::visitSequence_match_item(
 	//     operator_assignment
 	//     | expression
 	// ;
+	VerExprParser ep(commentParser);
+	unique_ptr<iHdlExpr> e;
 	auto oa = ctx->operator_assignment();
 	if (oa) {
-		NotImplementedLogger::print(
-				"VerExprParser.visitSequence_match_item.operator_assignment",
-				ctx);
-		return make_unique<HdlStmNop>();
+		e = ep.visitOperator_assignment(oa);
+	} else {
+		auto _e = ctx->expression();
+		assert(_e);
+		e = ep.visitExpression(_e);
 	}
-	auto _e = ctx->expression();
-	assert(_e);
-	auto e = VerExprParser(commentParser).visitExpression(_e);
 	return make_unique<HdlStmExpr>(move(e));
 }
 
