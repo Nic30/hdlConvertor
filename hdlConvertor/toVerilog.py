@@ -3,6 +3,8 @@ from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn, HdlIntValue
     HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
     HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
     HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto, HdlStmBlock
+from copy import copy
+from hdlConvertor.hdlAst._defs import HdlFunctionDef
 
 PRIMITIVE_TYPES = {HdlName("reg"), HdlName("wire")}
 
@@ -130,9 +132,12 @@ class ToVerilog():
         w = self.out.write
         w("parameter ")
         is_array = self.print_type_first_part(g.type)
-        w(" ")
+        if g.type is not HdlTypeAuto:
+            w(" ")
         w(g.name)
         v = g.value
+        if is_array:
+            self.print_type_array_part(g.type)
         if v:
             w(" = ")
             self.print_expr(v)
@@ -151,9 +156,8 @@ class ToVerilog():
         w(" ")
 
         w(p.name)
-
         if is_array:
-            raise NotImplementedError(t)
+            self.print_type_array_part(t)
 
     def print_module_header(self, e):
         """
@@ -381,12 +385,12 @@ class ToVerilog():
         name = var.name
         t = var.type
         w = self.out.write
-
+        if var.is_const:
+            w("localparam ")
         is_array = self.print_type_first_part(t)
         w(" ")
         w(name)
         if is_array:
-            w(" ")
             self.print_type_array_part(t)
 
     def print_process(self, proc, is_top=False):
@@ -396,11 +400,19 @@ class ToVerilog():
         sens = proc.sensitivity
         body = proc.body
         w = self.out.write
-        skip_first = False
+        skip_body = False
         if sens is None:
-            if len(body) and isinstance(body[0], HdlStmWait):
-                skip_first = True
-                wait = body[0]
+            if isinstance(body, HdlStmWait):
+                skip_body = True
+                wait = body
+            elif isinstance(body, HdlStmBlock) and body.body and isinstance(body.body[0], HdlStmWait):
+                wait = body.body[0]
+                body = copy(body)
+                body.body = body.body[1:]
+            else:
+                wait = None
+
+            if wait is not None:
                 if is_top:
                     w("always ")
                 w("#")
@@ -419,38 +431,39 @@ class ToVerilog():
                     w(", ")
             w(")")
 
-        if skip_first:
-            _body = body[1:]
-        else:
-            _body = body
 
         # to prevent useless newline for empty always/time waits
-        if _body:
-            return self.print_block(_body, True)
-        else:
+        if skip_body:
             return True
-
-    def print_block(self, stms, space_before):
+        else:
+            return self.print_statement_in_statement(body)
+    
+    def print_statement_in_statement(self, stm):
         """
-        :type stms: List[iHdlStatement]
-        :type space_before: bool
-        :return: True if requires ;\n after end
+        Print statement which is body of other statement
+        e.g. body of process, branch of if-then-else or case of case stememnt
         """
         w = self.out.write
-        stm_cnt = len(stms)
-        if stm_cnt == 0:
-            w("\n")
-            return True
-        elif stm_cnt == 1:
-            w("\n")
-            with Indent(self.out):
-                return self.print_statement(stms[0])
+        if isinstance(stm, HdlStmBlock):
+            if len(stm.body) == 1:
+                stm = stm.body[0]
+            else:
+                w(" ")
+                return self.print_block(stm)
+        
+        w("\n")
+        with Indent(self.out):
+            return self.print_statement(stm)
 
-        if space_before:
-            w(" ")
+    def print_block(self, stm):
+        """
+        :type stm: HdlStmBlock
+        """
+        w = self.out.write
+
         w("begin\n")
         with Indent(self.out):
-            for s in stms:
+            for s in stm.body:
                 need_semi = self.print_statement(s)
                 if need_semi:
                     w(";\n")
@@ -471,7 +484,7 @@ class ToVerilog():
         w("if (")
         self.print_expr(c)
         w(")")
-        need_semi = self.print_block(ifTrue, True)
+        need_semi = self.print_statement_in_statement(ifTrue)
 
         for cond, stms in stm.elifs:
             if need_semi:
@@ -481,7 +494,7 @@ class ToVerilog():
             w("else if (")
             self.print_expr(cond)
             w(")")
-            need_semi = self.print_block(stms, True)
+            need_semi = self.print_statement_in_statement(stms)
 
         if ifFalse is not None:
             if need_semi:
@@ -489,7 +502,7 @@ class ToVerilog():
             else:
                 w(" ")
             w("else")
-            need_semi = self.print_block(ifFalse, True)
+            need_semi = self.print_statement_in_statement(ifFalse)
         if need_semi:
             w(";")
 
@@ -546,7 +559,7 @@ class ToVerilog():
             for k, stms in cases:
                 self.print_expr(k)
                 w(":")
-                need_semi = self.print_block(stms, True)
+                need_semi = self.print_statement_in_statement(stms)
                 if need_semi:
                     w(";\n")
                 else:
@@ -554,7 +567,7 @@ class ToVerilog():
             defal = cstm.default
             if defal is not None:
                 w("default:")
-                need_semi = self.print_block(defal, True)
+                need_semi = self.print_statement_in_statement(defal)
                 if need_semi:
                     w(";\n")
                 else:
@@ -583,19 +596,29 @@ class ToVerilog():
         """
         w = self.out.write
         w("for (")
-        for is_last, stm in iter_with_last_flag(o.init):
+        if isinstance(o.init, HdlStmBlock):
+            init_stms = o.init.body
+        else:
+            init_stms = [o.init, ]
+
+        for is_last, stm in iter_with_last_flag(init_stms):
             self.print_statement(stm)
             if not is_last:
                 w(", ")
         w("; ")
         self.print_expr(o.cond)
         w("; ")
-        for is_last, stm in iter_with_last_flag(o.step):
+        if isinstance(o.init, HdlStmBlock):
+            step_stms = o.step.body
+        else:
+            step_stms = [o.step, ]
+
+        for is_last, stm in iter_with_last_flag(step_stms):
             self.print_statement(stm)
             if not is_last:
                 w(", ")
         w(")")
-        return self.print_block(o.body, True)
+        return self.print_statement_in_statement(o.body)
 
     def print_for_in(self, o):
         """
@@ -641,7 +664,7 @@ class ToVerilog():
         elif isinstance(stm, HdlStmWhile):
             return self.print_while(stm)
         elif isinstance(stm, HdlStmBlock):
-            return self.print_block(stm.body, False)
+            return self.print_block(stm)
         else:
             self.print_expr(stm)
             return True
@@ -691,6 +714,60 @@ class ToVerilog():
             self.print_map(pms)
             w(")")
 
+    def print_function_def(self, o):
+        """
+        :type o: HdlFunctionDef
+        """
+        self.print_doc(o)
+        w = self.out.write
+        if o.is_task:
+            w("task ")
+        else:
+            w("function ")
+        if not o.is_static:
+            w("automatic ")
+        
+        if not o.is_task:
+            self.print_type_first_part(o.return_t)
+            self.print_type_array_part(o.return_t)
+        
+        if o.is_virtual or o.is_operator:
+            raise NotImplementedError(o)
+        w(" ")
+        w(o.name)
+        ps = o.params
+        if ps:
+            w(" (\n")
+            with Indent(self.out):
+                for last, p in iter_with_last_flag(ps):
+                    self.print_port_declr(p)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+            w(")")
+        w(";\n")
+        with Indent(self.out):
+            for s in o.body:
+                if isinstance(s, HdlVariableDef):
+                    self.print_variable(s)
+                    w(";\n")
+                elif isinstance(s, iHdlStatement):
+                    need_semi = self.print_statement(s)
+                    if need_semi:
+                        w(";\n")
+                    else:
+                        w("\n")
+                else:
+                    self.print_expr(s)
+                    w(";\n")
+
+        if o.is_task:
+            w("endtask")
+        else:
+            w("endfunction")
+        
+
     def print_module_body(self, a):
         """
         :type a: HdlModuleDef
@@ -710,6 +787,9 @@ class ToVerilog():
                         w(";\n")
                     else:
                         w("\n\n")
+                elif isinstance(o, HdlFunctionDef):
+                    self.print_function_def(o)
+                    w("\n")
                 else:
                     raise NotImplementedError(o)
 
