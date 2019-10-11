@@ -88,5 +88,3 @@ if sys.version_info[0] <= 2:
 else:
     def is_str(x):
         return isinstance(x, str)
-
-

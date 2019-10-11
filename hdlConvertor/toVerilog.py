@@ -1,9 +1,12 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
-from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn, HdlIntValue, \
-    HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
-    HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
-    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto, HdlStmBlock
 from copy import copy
+
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream,\
+    iter_with_last_flag, is_str
+from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn,\
+    HdlIntValue, HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf,\
+    HdlStmAssign, HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement,\
+    HdlModuleDec, HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile,\
+    HdlTypeAuto, HdlStmBlock
 from hdlConvertor.hdlAst._defs import HdlFunctionDef
 
 PRIMITIVE_TYPES = {HdlName("reg"), HdlName("wire")}
@@ -93,19 +96,19 @@ class ToVerilog():
         HdlBuiltinFn.SRL: ">>",
     }
     ASSIGN_OPS = {
-         HdlBuiltinFn.ASSIGN: '=',
-         HdlBuiltinFn.PLUS_ASSIGN: '+=',
-         HdlBuiltinFn.MINUS_ASSIGN: '-=',
-         HdlBuiltinFn.MUL_ASSIGN: '*=',
-         HdlBuiltinFn.DIV_ASSIGN: '/=',
-         HdlBuiltinFn.MOD_ASSIGN: '%=',
-         HdlBuiltinFn.AND_ASSIGN: '&=',
-         HdlBuiltinFn.OR_ASSIGN: '|=',
-         HdlBuiltinFn.XOR_ASSIGN: '^=',
-         HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
-         HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
-         HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
-         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
+        HdlBuiltinFn.ASSIGN: '=',
+        HdlBuiltinFn.PLUS_ASSIGN: '+=',
+        HdlBuiltinFn.MINUS_ASSIGN: '-=',
+        HdlBuiltinFn.MUL_ASSIGN: '*=',
+        HdlBuiltinFn.DIV_ASSIGN: '/=',
+        HdlBuiltinFn.MOD_ASSIGN: '%=',
+        HdlBuiltinFn.AND_ASSIGN: '&=',
+        HdlBuiltinFn.OR_ASSIGN: '|=',
+        HdlBuiltinFn.XOR_ASSIGN: '^=',
+        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
+        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
+        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
+        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
     def __init__(self, out_stream):
@@ -405,7 +408,9 @@ class ToVerilog():
             if isinstance(body, HdlStmWait):
                 skip_body = True
                 wait = body
-            elif isinstance(body, HdlStmBlock) and body.body and isinstance(body.body[0], HdlStmWait):
+            elif (isinstance(body, HdlStmBlock)
+                    and body.body
+                    and isinstance(body.body[0], HdlStmWait)):
                 wait = body.body[0]
                 body = copy(body)
                 body.body = body.body[1:]
@@ -431,13 +436,12 @@ class ToVerilog():
                     w(", ")
             w(")")
 
-
         # to prevent useless newline for empty always/time waits
         if skip_body:
             return True
         else:
             return self.print_statement_in_statement(body)
-    
+
     def print_statement_in_statement(self, stm):
         """
         Print statement which is body of other statement
@@ -450,7 +454,7 @@ class ToVerilog():
             else:
                 w(" ")
                 return self.print_block(stm)
-        
+
         w("\n")
         with Indent(self.out):
             return self.print_statement(stm)
@@ -670,7 +674,8 @@ class ToVerilog():
             return True
 
     def print_map_item(self, item):
-        if isinstance(item, HdlCall) and item.fn == HdlBuiltinFn.MAP_ASSOCIATION:
+        if isinstance(item, HdlCall)\
+                and item.fn == HdlBuiltinFn.MAP_ASSOCIATION:
             w = self.out.write
             # k, v pair
             k, v = item.ops
@@ -726,11 +731,11 @@ class ToVerilog():
             w("function ")
         if not o.is_static:
             w("automatic ")
-        
+
         if not o.is_task:
             self.print_type_first_part(o.return_t)
             self.print_type_array_part(o.return_t)
-        
+
         if o.is_virtual or o.is_operator:
             raise NotImplementedError(o)
         w(" ")
@@ -766,7 +771,6 @@ class ToVerilog():
             w("endtask")
         else:
             w("endfunction")
-        
 
     def print_module_body(self, a):
         """

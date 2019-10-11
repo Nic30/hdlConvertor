@@ -1,10 +1,10 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, \
-    UnIndent, is_str
-from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn, HdlName, HdlIntValue, \
-    HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess, HdlStmIf, \
-    HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
-    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, HdlModuleDef, \
-    HdlNamespace, HdlImport
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream,\
+    iter_with_last_flag, UnIndent, is_str
+from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn, HdlName,\
+    HdlIntValue, HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess,\
+    HdlStmIf, HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
+    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst,\
+    HdlModuleDef, HdlNamespace, HdlImport
 from hdlConvertor.hdlAst._statements import HdlStmBlock
 
 
