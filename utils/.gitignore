@@ -1,9 +1,0 @@
-*.pdf
-vhdl.g4
-sv2017Lexer.g4
-sv2017Parser.g4
-gen/
-# *.g4_proto
-*.interp
-*.java
-*.tokens
