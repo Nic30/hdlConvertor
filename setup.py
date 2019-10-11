@@ -20,7 +20,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Build Tools',
         'Programming Language :: C++',
-        'Programming Language :: Python :: 2.7'
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
     ],
     packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
