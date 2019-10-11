@@ -19,7 +19,6 @@ It is also possible to convert this AST back to original HDL or access the comme
 
 
 ## Installation
-**Use version from this repo as the pip package is currently very old (The pip package will be updated after specified functionality is implemented [issues/48](https://github.com/Nic30/hdlConvertor/issues/48).).**
 
 Linux:
 Installing dependencies (Ubuntu 19.04)
