@@ -48,7 +48,7 @@ matrix:
 
     - name: "Python 3.7 gcc-7"
       python: 3.7           
-      env: CC=gcc-7 CXX=g++-7
+      env: CC=gcc-7 CXX=g++-7 DO_DELPLOY=1
       addons:
         apt:
           sources:
@@ -97,7 +97,7 @@ deploy:
   on:
     tags: true
     branch: master
-
+    condition: $DO_DELPLOY = 1
 
 
 
