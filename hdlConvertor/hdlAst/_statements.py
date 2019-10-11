@@ -18,6 +18,7 @@ class HdlImport(iHdlStatement):
         super(HdlImport, self).__init__()
         self.path = []  # type: List[str]
 
+
 class HdlStmNop():
     """
     Nop statement in HDL
@@ -50,10 +51,13 @@ class HdlStmAssign(iHdlStatement):
 
     :ivar time_delay: delay which waits for a specified time
     :ivar event_delay: delay which waits for a specified event
-    :note: Evaluation of assignments with delay specified is generaly not synthetisable.
-        If statement is blocking the current statement waits until the condition is met
-        and then continues. If the assignment is not blocking the code continues and this statement
-        is executed asynchronously after condition is met.
+    :note: Evaluation of assignments with delay specified
+           is generaly not synthetisable.
+           If statement is blocking the current statement waits
+           until the condition is met and then continues.
+           If the assignment is not blocking the code continues
+           and this statement is executed asynchronously
+           after condition is met.
     """
     __slots__ = ["src", "dst", "is_blocking", "time_delay", "event_delay"]
 
@@ -94,8 +98,8 @@ class HdlStmProcess(iHdlStatement):
         the trigger signals of the evaluation of the process
     :note: sensitivity = None means that the process is executed immediately
         sensitivity = [] means the process is never executed
-    :note: Verilog always #time construct is translated to process without sensitivity and
-        wait #time as a first statement in body.
+    :note: Verilog always #time construct is translated to process
+           without sensitivity and wait #time as a first statement in body.
     """
     __slots__ = ["sensitivity", "body"]
 
@@ -148,7 +152,6 @@ class HdlStmForIn(iHdlStatement):
 
     def __init__(self):
         super(HdlStmForIn, self).__init__()
-        # [todo] to iHdlStatement
         self.var_defs = []  # type: List[iHdlObj]
         self.collection = None  # type: iHdlExpr
         self.body = None  # type: iHdlStatement

@@ -66,7 +66,8 @@ class HdlClassDef(iHdlObjWithName):
 
     """
     __slots__ = ["name", "parents", "is_virtual", "is_static",
-                 "is_struct", "is_union", "is_interface", "private", "public", "protected"]
+                 "is_struct", "is_union", "is_interface",
+                 "private", "public", "protected"]
 
     def __init__(self):
         super(HdlClassDef, self).__init__()

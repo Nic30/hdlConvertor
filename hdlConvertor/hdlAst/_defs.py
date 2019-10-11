@@ -55,12 +55,12 @@ class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     def __init__(self):
         iHdlObjWithName.__init__(self)
         iHdlObjInModule.__init__(self)
-        self.is_declaration_only = True # type:bool
+        self.is_declaration_only = True  # type:bool
         self.is_operator = False  # type: bool
         self.is_static = False  # type: bool
         self.is_task = False  # type: bool
         self.is_virtual = False  # type: bool
         self.return_t = None  # type: Optional[iHdlExpr]
         self.params = []  # type: List[HdlVariableDef]
-        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement]]
+        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement, iHdlExpr]]
 

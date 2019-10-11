@@ -6,13 +6,15 @@ class HdlDirection(Enum):
     """
     Direction of the interface
     """
-    (IN,
-    OUT,
-    INOUT,
-    BUFFER,
-    LINKAGE,
-    INTERNAL,
-    UNKNOWN) = range(7)
+    (
+     IN,
+     OUT,
+     INOUT,
+     BUFFER,
+     LINKAGE,
+     INTERNAL,
+     UNKNOWN
+    ) = range(7)
 
 
 class HdlName(str):
@@ -30,7 +32,8 @@ class HdlAll(object):
     __slots__ = []
 
     def __init__(self):
-        raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
 
 
 class HdlOthers(object):
@@ -40,7 +43,8 @@ class HdlOthers(object):
     __slots__ = []
 
     def __init__(self):
-        raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
 
 
 class HdlTypeType(object):
@@ -50,7 +54,8 @@ class HdlTypeType(object):
     __slots__ = []
 
     def __init__(self):
-        raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
 
 
 class HdlTypeAuto(object):
@@ -61,7 +66,8 @@ class HdlTypeAuto(object):
     __slots__ = []
 
     def __init__(self):
-        raise ValueError("This class (%s) is not supposed to be instantiated" % repr(self.__class__))
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
 
 
 class HdlBuiltinFn(Enum):
@@ -69,80 +75,81 @@ class HdlBuiltinFn(Enum):
     The build in functions and operators in HDL languages
     """
     (
-    RANGE, # range used in VHDL type specifications
-    REVERSE_RANGE,
-    ACROSS,
-    THROUGH,
-    REFERENCE,
-    TOLERANCE,
-    INDEX, # array index
-    DOWNTO, # downto for the slice specification
-    TO,  # to for the slice specification
-    SUB, # can also be unary minus
-    ADD, # can also be unary plus
-    DIV,
-    MUL,
-    MOD,
-    REM,
-    CONCAT, # concatenation of signals
-    REPL_CONCAT, # replicative concatenation {<N>, <item>} duplicates and concatenates the item N times
-    POW, # bin operator power of
-    ABS, # absolute value
-    NOT,
-    NEG, # negation
-    LOG_AND, # "and" in vhdl
-    LOG_OR,  # "or" in vhdl
-    AND, # & in vhdl
-    OR,  # | in vhdl
-    NAND,
-    NOR,
-    XOR,
-    XNOR,
-    EQ,  # ==
-    NEQ, # ~
-    LT, # <
-    LE,   # <=
-    GT, # >
-    GE,  # >=
-    SLL, # shift left logical
-    SRL, # shift right logical
-    SLA, # shift left arithmetical
-    SRA, # shift right arithmetical
-    ROL, # rotate left
-    ROR, # rotate right
-    TERNARY,
-    DOT, # accessing of property
-    DOUBLE_COLON, # SV accessing class/package static property/type
-    APOSTROPHE, # vhdl attribute access
-    CALL, # call of HDL function
-    PARAMETRIZATION, # specification of template arguments
-    ARROW, # arrow operator used in vhdl type descriptions
-    RISING, # rising edge/posedge event operator
-    FALLING, # falling edge/negedge event operator
-    MAP_ASSOCIATION,
-    MATCH_EQ, # VHDL-2008 matching ops (the X values are ignored while match)
-    MATCH_NEQ,
-    MATCH_LT,
-    MATCH_LE,
-    MATCH_GT,
-    MATCH_GE,
-    INCR_PRE,
-    DECR_PRE,
-    INCR_POST,
-    DECR_POST,
-    ASSIGN,
-    PLUS_ASSIGN,
-    MINUS_ASSIGN,
-    MUL_ASSIGN,
-    DIV_ASSIGN,
-    MOD_ASSIGN,
-    AND_ASSIGN,
-    OR_ASSIGN,
-    XOR_ASSIGN,
-    SHIFT_LEFT_ASSIGN,
-    SHIFT_RIGHT_ASSIGN,
-    ARITH_SHIFT_LEFT_ASSIGN,
-    ARITH_SHIFT_RIGHT_ASSIGN,
+     RANGE,  # range used in VHDL type specifications
+     REVERSE_RANGE,
+     ACROSS,
+     THROUGH,
+     REFERENCE,
+     TOLERANCE,
+     INDEX,  # array index
+     DOWNTO,  # downto for the slice specification
+     TO,  # to for the slice specification
+     SUB,  # can also be unary minus
+     ADD,  # can also be unary plus
+     DIV,
+     MUL,
+     MOD,
+     REM,
+     CONCAT,  # concatenation of signals
+     REPL_CONCAT,  # replicative concatenation {<N>, <item>}
+                   # duplicates and concatenates the item N times
+     POW,  # bin operator power of
+     ABS,  # absolute value
+     NOT,
+     NEG,  # negation
+     LOG_AND,  # "and" in vhdl
+     LOG_OR,  # "or" in vhdl
+     AND,  # & in vhdl
+     OR,  # | in vhdl
+     NAND,
+     NOR,
+     XOR,
+     XNOR,
+     EQ,  # ==
+     NEQ,  # ~
+     LT,  # <
+     LE,  # <=
+     GT,  # >
+     GE,  # >=
+     SLL,  # shift left logical
+     SRL,  # shift right logical
+     SLA,  # shift left arithmetical
+     SRA,  # shift right arithmetical
+     ROL,  # rotate left
+     ROR,  # rotate right
+     TERNARY,
+     DOT,  # accessing of property
+     DOUBLE_COLON,  # SV accessing class/package static property/type
+     APOSTROPHE,  # vhdl attribute access
+     CALL,  # call of HDL function
+     PARAMETRIZATION,  # specification of template arguments
+     ARROW,  # arrow operator used in vhdl type descriptions
+     RISING,  # rising edge/posedge event operator
+     FALLING,  # falling edge/negedge event operator
+     MAP_ASSOCIATION,
+     MATCH_EQ,  # VHDL-2008 matching ops (the X values are ignored while match)
+     MATCH_NEQ,
+     MATCH_LT,
+     MATCH_LE,
+     MATCH_GT,
+     MATCH_GE,
+     INCR_PRE,
+     DECR_PRE,
+     INCR_POST,
+     DECR_POST,
+     ASSIGN,
+     PLUS_ASSIGN,
+     MINUS_ASSIGN,
+     MUL_ASSIGN,
+     DIV_ASSIGN,
+     MOD_ASSIGN,
+     AND_ASSIGN,
+     OR_ASSIGN,
+     XOR_ASSIGN,
+     SHIFT_LEFT_ASSIGN,
+     SHIFT_RIGHT_ASSIGN,
+     ARITH_SHIFT_LEFT_ASSIGN,
+     ARITH_SHIFT_RIGHT_ASSIGN,
     ) = range(74)
     # note that in verilog bitewise operators can have only one argument
 
@@ -156,7 +163,7 @@ class HdlCall(object):
     def __init__(self):
         self.fn = None  # type: Union[HdlBuiltinFn, iHdlExpr]
         self.ops = []  # type: List[iHdlExpr]
-    
+
     def __eq__(self, other):
         if not isinstance(other, HdlCall):
             return False
@@ -169,7 +176,8 @@ class HdlCall(object):
 
 class HdlIntValue(object):
     """
-    Object for representation of int value in in HDL (= also for the bitstrings)
+    Object for representation of int value in in HDL
+    (= also for the bitstrings)
 
     :ivar val: int value or bitstring string
     :ivar bits: number of bits if specified
@@ -193,7 +201,9 @@ class HdlIntValue(object):
 
     def __eq__(self, other):
         if isinstance(other, HdlIntValue):
-            return self.val == other.val and self.bits == other.bits and  self.base == other.base
+            return (self.val == other.val
+                    and self.bits == other.bits
+                    and self.base == other.base)
         else:
             try:
                 return self.val == other
@@ -203,7 +213,9 @@ class HdlIntValue(object):
                 return False
 
     def __repr__(self):
-        return "<HdlIntValue: val=%r, bits=%r, base=%r>" % (self.val, self.bits, self.base)
+        return "<HdlIntValue: val=%r, bits=%r, base=%r>" % (
+                    self.val, self.bits, self.base
+                )
 
 
 # None is equivalent of HDL null
