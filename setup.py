@@ -6,7 +6,7 @@ setup(
         # '-DCMAKE_BUILD_TYPE=Debug'
     ],
     name='hdlConvertor',
-    version='1.2',
+    version='1.3',
     description='VHDL and System Verilog parser written in c++',
     url='https://github.com/Nic30/hdlConvertor',
     author='Michal Orsak',
