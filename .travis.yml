@@ -46,7 +46,7 @@ matrix:
             - gcc-8
             -
 
-    - name: "Python 3.7 gcc-7"
+    - name: "Python 3.7 gcc-7 (deploy on tag)"
       python: 3.7           
       env: CC=gcc-7 CXX=g++-7 DO_DELPLOY=1
       addons:
