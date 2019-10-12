@@ -10,6 +10,7 @@ enum HdlOperatorType {
 	THROUGH,
 	REFERENCE,
 	TOLERANCE,
+	TYPE_OF,
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification

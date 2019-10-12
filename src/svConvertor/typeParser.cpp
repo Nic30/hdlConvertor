@@ -23,14 +23,17 @@ unique_ptr<iHdlExpr> VerTypeParser::visitType_reference(
 	//         | data_type
 	//     ) RPAREN
 	// ;
+	unique_ptr<iHdlExpr> res = nullptr;
 	auto e = ctx->expression();
 	if (e) {
 		VerExprParser ep(commentParser);
-		return ep.visitExpression(e);
+		res = ep.visitExpression(e);
+	} else {
+		auto dt = ctx->data_type();
+		assert(dt);
+		res = visitData_type(dt);
 	}
-	auto dt = ctx->data_type();
-	assert(dt);
-	return visitData_type(dt);
+	return make_unique<iHdlExpr>(HdlOperatorType::TYPE_OF, move(res));
 }
 
 unique_ptr<iHdlExpr> VerTypeParser::visitInteger_type(
@@ -149,6 +152,10 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 
 	if (ctx->KW_EVENT())
 		return iHdlExpr::ID("event");
+	auto _tr = ctx->type_reference();
+	if (_tr) {
+		return visitType_reference(_tr);
+	}
 
 	auto dtp = ctx->data_type_primitive();
 	unique_ptr<iHdlExpr> t = nullptr;
@@ -164,6 +171,7 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 	} else {
 		VerExprParser ep(commentParser);
 		auto _p = ctx->package_or_class_scoped_path();
+		assert(_p);
 		t = ep.visitPackage_or_class_scoped_path(_p);
 	}
 	VerTypeParser tp(commentParser);
@@ -173,7 +181,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 }
 
 unique_ptr<iHdlExpr> VerTypeParser::visitData_type_or_implicit(
-		sv2017Parser::Data_type_or_implicitContext *ctx, unique_ptr<iHdlExpr> net_type) {
+		sv2017Parser::Data_type_or_implicitContext *ctx,
+		unique_ptr<iHdlExpr> net_type) {
 	// data_type_or_implicit:
 	//     data_type
 	//     | implicit_data_type
@@ -300,7 +309,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
 			index = iHdlExpr::null();
 		}
 	}
-	return make_unique<iHdlExpr>(move(selected_name), HdlOperatorType::INDEX, move(index));
+	return make_unique<iHdlExpr>(move(selected_name), HdlOperatorType::INDEX,
+			move(index));
 }
 unique_ptr<iHdlExpr> VerTypeParser::visitNet_type(
 		sv2017Parser::Net_typeContext *ctx) {

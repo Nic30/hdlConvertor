@@ -1302,7 +1302,7 @@ primary:
     | primary LSQUARE_BR array_range_expression RSQUARE_BR #PrimaryIndex
     | concatenation                                        #PrimaryConcat
     | streaming_concatenation                              #PrimaryStreaming_concatenation
-    | any_system_tf_identifier ( LPAREN data_type COMMA list_of_arguments
+    | any_system_tf_identifier ( LPAREN data_type (COMMA list_of_arguments)?
          ( COMMA clocking_event )? RPAREN
          | LPAREN list_of_arguments ( COMMA clocking_event )?  RPAREN
          )?                                       #PrimaryTfCall
