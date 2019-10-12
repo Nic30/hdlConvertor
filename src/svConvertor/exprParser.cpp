@@ -492,7 +492,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_hier_id_with_se
 		assert(exprs.size() == 2);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
-		auto sel = make_unique<iHdlExpr>(move(e0), HdlOperatorType::DOWNTO, move(e1));
+		auto sel = make_unique<iHdlExpr>(move(e0), HdlOperatorType::DOWNTO,
+				move(e1));
 		return append_expr(move(res), HdlOperatorType::INDEX, move(sel));
 	}
 	return res;
@@ -503,8 +504,12 @@ std::vector<unique_ptr<iHdlExpr>> VerExprParser::visitParameter_value_assignment
 	// parameter_value_assignment:
 	//   HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
 	auto lpa = ctx->list_of_parameter_value_assignments();
-	VerModuleInstanceParser mip(commentParser);
-	return mip.visitList_of_parameter_value_assignments(lpa);
+	if (lpa) {
+		VerModuleInstanceParser mip(commentParser);
+		return mip.visitList_of_parameter_value_assignments(lpa);
+	} else {
+		return {};
+	}
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_path_item(
@@ -576,7 +581,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_path(
 		} else {
 			if (ctx->KW_DOLAR_UNIT()) {
 				auto part = iHdlExpr::ID("$unit");
-				res = append_expr(move(res), HdlOperatorType::DOUBLE_COLON, move(part));
+				res = append_expr(move(res), HdlOperatorType::DOUBLE_COLON,
+						move(part));
 			} else {
 				auto pcspi = ctx->package_or_class_scoped_path_item();
 				assert(pcspi.size() > 0);
