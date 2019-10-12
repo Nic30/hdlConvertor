@@ -9,7 +9,7 @@
 The System Verilog and VHDL parser, preprocessor and code generator for Python/C++ written in C++. The lower layers are ANTLR4 generated parsers with full language support. Next layer converts this raw Verilog/VHDL AST to simple universal AST (Classes defined in [hdlConvertor::hdlObjects](https://github.com/Nic30/hdlConvertor/tree/master/include/hdlConvertor/hdlObjects) and it's [python equivalent](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/hdlAst).). So your project does not not have to care about Verilog/VHDL differences and deprecated ridiculous features.
 It is also possible to convert this AST back to original HDL or access the comments from HDL.
 
-![overview](doc/hdlConvertor_overview.png)
+![overview](https://raw.githubusercontent.com/nic30/hdlConvertor/master/doc/hdlConvertor_overview.png)
 
 
 ### Supported languages:
@@ -80,7 +80,7 @@ for o in d.objs:
     print(o)
 ```
 
-![overview](doc/hdlConvertor_typical_usage.png)
+![overview](https://raw.githubusercontent.com/nic30/hdlConvertor/master/doc/hdlConvertor_typical_usage.png)
 
 
 ### Similar projects:
