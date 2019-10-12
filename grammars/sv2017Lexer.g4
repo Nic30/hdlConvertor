@@ -192,6 +192,8 @@ KW_IMPLIES:
  'implies' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_IMPORT:
  'import' {language_version >= hdlConvertor::Language::SV2005}?;
+KW_INCDIR: 'incdir' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
+KW_INCLUDE: 'include' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
 KW_INITIAL: 'initial';
 KW_INOUT: 'inout';
 KW_INPUT: 'input';
@@ -216,6 +218,7 @@ KW_JOIN_NONE:
 KW_LARGE: 'large';
 KW_LET:
  'let' {language_version >= hdlConvertor::Language::SV2009}?;
+KW_LIBRARY: 'library' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
 KW_LIBLIST:
  'liblist' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_LOCAL:
