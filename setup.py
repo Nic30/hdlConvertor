@@ -1,5 +1,11 @@
+import os
 from skbuild import setup
 import sys
+
+
+this_directory = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_directory, "README.md")) as f:
+    long_description = f.read()
 
 setup(
     cmake_args=[
@@ -8,6 +14,8 @@ setup(
     name='hdlConvertor',
     version='1.3',
     description='VHDL and System Verilog parser written in c++',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/Nic30/hdlConvertor',
     author='Michal Orsak',
     author_email='michal.o.socials@gmail.com',
