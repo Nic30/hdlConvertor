@@ -34,6 +34,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
     ],
+    license="MIT",
     packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
     test_suite="tests.main_test_suite",
     test_runner="tests:TimeLoggingTestRunner",
