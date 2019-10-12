@@ -37,9 +37,8 @@ sudo pip3 install hdlConvertor
 sudo pip3 install -r requirements.txt
 sudo python3 setup.py install
 ```
-Or the same for python 2.7 with other options just for demonstration.
 
-Installer also supports other commands which may be usefull
+Installer also supports other options which may be usefull
 ```
 python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
 ```
