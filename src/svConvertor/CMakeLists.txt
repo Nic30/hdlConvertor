@@ -1,1 +1,1 @@
-AddParserToBuild("sv2012" "svConvertor" OFF OFF OFF)
+AddParserToBuild("sv2017" "svConvertor" OFF OFF ON)

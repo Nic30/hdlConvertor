@@ -1,10 +1,64 @@
-from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream, iter_with_last_flag, is_str
-from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuildinFn, HdlIntValue, \
-    HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf, HdlStmAssign, \
-    HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement, HdlModuleDec, \
-    HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile, HdlTypeAuto
+from copy import copy
 
-WIRE = HdlName('wire')
+from hdlConvertor.toHdlUtils import Indent, AutoIndentingStream,\
+    iter_with_last_flag, is_str
+from hdlConvertor.hdlAst import HdlName, HdlDirection, HdlBuiltinFn,\
+    HdlIntValue, HdlCall, HdlAll, HdlStmWait, HdlStmProcess, HdlStmIf,\
+    HdlStmAssign, HdlStmCase, HdlComponentInst, HdlVariableDef, iHdlStatement,\
+    HdlModuleDec, HdlModuleDef, HdlStmFor, HdlStmForIn, HdlStmWhile,\
+    HdlTypeAuto, HdlStmBlock
+from hdlConvertor.hdlAst._defs import HdlFunctionDef
+
+PRIMITIVE_TYPES = {HdlName("reg"), HdlName("wire")}
+
+
+def collect_array_dims(t):
+    array_dim = []
+    prev_t = t
+    while isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.INDEX:
+        array_dim.append(t.ops[1])
+        prev_t = t
+        t = t.ops[0]
+    if array_dim:
+        if (isinstance(t, HdlName) and t in PRIMITIVE_TYPES) \
+            or (isinstance(t, HdlCall)
+                and t.fn == HdlBuiltinFn.PARAMETRIZATION
+                and t.ops[0] in PRIMITIVE_TYPES):
+            # this dimensions is actually size of the vector
+            array_dim.pop()
+            t = prev_t
+        array_dim.reverse()
+    return t, array_dim
+
+
+def get_wire_t_params(t):
+
+    t, array_dim = collect_array_dims(t)
+
+    if t == HdlName('wire') or t == HdlName('reg'):
+        return t, None, False, array_dim
+
+    if isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.INDEX:
+        width = t.ops[1]
+        t = t.ops[0]
+
+    is_signed = False
+    if not isinstance(t, HdlName) or t not in PRIMITIVE_TYPES:
+        if not isinstance(t, HdlCall) or t.fn != HdlBuiltinFn.PARAMETRIZATION:
+            return None
+
+        if t.ops[0] != HdlName('wire') and t.ops != HdlName('reg'):
+            return None
+
+        _, is_signed = t.ops
+        t = t.ops[0]
+
+    is_signed = bool(is_signed)
+
+    if width == 1:
+        width = None
+
+    return t, width, is_signed, array_dim
 
 
 class ToVerilog():
@@ -19,27 +73,42 @@ class ToVerilog():
     }
 
     GENERIC_BIN_OPS = {
-        HdlBuildinFn.AND: "&",
-        HdlBuildinFn.LOG_AND: "&&",
-        HdlBuildinFn.OR: "|",
-        HdlBuildinFn.LOG_OR: "||",
-        HdlBuildinFn.SUB: "-",
-        HdlBuildinFn.ADD: "+",
-        HdlBuildinFn.MUL: "*",
-        HdlBuildinFn.DIV: "/",
-        HdlBuildinFn.MOD: "%",
-        HdlBuildinFn.NAND: "~&",
-        HdlBuildinFn.NOR: "~|",
-        HdlBuildinFn.XOR: "^",
-        HdlBuildinFn.XNOR: "~^",
-        HdlBuildinFn.EQ: '==',
-        HdlBuildinFn.NEQ: "!=",
-        HdlBuildinFn.LT: "<",
-        HdlBuildinFn.LE: "<=",
-        HdlBuildinFn.GT: ">",
-        HdlBuildinFn.GE: ">=",
-        HdlBuildinFn.SLL: "<<",
-        HdlBuildinFn.SRL: ">>",
+        HdlBuiltinFn.AND: "&",
+        HdlBuiltinFn.LOG_AND: "&&",
+        HdlBuiltinFn.OR: "|",
+        HdlBuiltinFn.LOG_OR: "||",
+        HdlBuiltinFn.SUB: "-",
+        HdlBuiltinFn.ADD: "+",
+        HdlBuiltinFn.MUL: "*",
+        HdlBuiltinFn.DIV: "/",
+        HdlBuiltinFn.MOD: "%",
+        HdlBuiltinFn.NAND: "~&",
+        HdlBuiltinFn.NOR: "~|",
+        HdlBuiltinFn.XOR: "^",
+        HdlBuiltinFn.XNOR: "~^",
+        HdlBuiltinFn.EQ: '==',
+        HdlBuiltinFn.NEQ: "!=",
+        HdlBuiltinFn.LT: "<",
+        HdlBuiltinFn.LE: "<=",
+        HdlBuiltinFn.GT: ">",
+        HdlBuiltinFn.GE: ">=",
+        HdlBuiltinFn.SLL: "<<",
+        HdlBuiltinFn.SRL: ">>",
+    }
+    ASSIGN_OPS = {
+        HdlBuiltinFn.ASSIGN: '=',
+        HdlBuiltinFn.PLUS_ASSIGN: '+=',
+        HdlBuiltinFn.MINUS_ASSIGN: '-=',
+        HdlBuiltinFn.MUL_ASSIGN: '*=',
+        HdlBuiltinFn.DIV_ASSIGN: '/=',
+        HdlBuiltinFn.MOD_ASSIGN: '%=',
+        HdlBuiltinFn.AND_ASSIGN: '&=',
+        HdlBuiltinFn.OR_ASSIGN: '|=',
+        HdlBuiltinFn.XOR_ASSIGN: '^=',
+        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
+        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
+        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
+        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
     def __init__(self, out_stream):
@@ -66,9 +135,12 @@ class ToVerilog():
         w = self.out.write
         w("parameter ")
         is_array = self.print_type_first_part(g.type)
-        w(" ")
+        if g.type is not HdlTypeAuto:
+            w(" ")
         w(g.name)
         v = g.value
+        if is_array:
+            self.print_type_array_part(g.type)
         if v:
             w(" = ")
             self.print_expr(v)
@@ -81,16 +153,14 @@ class ToVerilog():
         self.print_doc(p)
         self.print_direction(p.direction)
         w(" ")
-        l = p.is_latched
-        if l:
-            w("reg ")
 
         t = p.type
         is_array = self.print_type_first_part(t)
-        if is_array:
-            raise NotImplementedError(t)
+        w(" ")
 
         w(p.name)
+        if is_array:
+            self.print_type_array_part(t)
 
     def print_module_header(self, e):
         """
@@ -185,57 +255,65 @@ class ToVerilog():
                     pe(o.ops[1])
                     w(")")
                 return
-            if op == HdlBuildinFn.DOWNTO:
+            symbol = self.ASSIGN_OPS.get(op, None)
+            if symbol is not None:
+                pe(o.ops[0])
+                w(" ")
+                w(symbol)
+                w(" ")
+                pe(o.ops[1])
+                return
+            if op == HdlBuiltinFn.DOWNTO:
                 pe(o.ops[0])
                 w(":")
                 pe(o.ops[1])
                 return
-            elif op == HdlBuildinFn.TO:
+            elif op == HdlBuiltinFn.TO:
                 pe(o.ops[1])
                 w(":")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NOT:
+            elif op == HdlBuiltinFn.NOT:
                 w("!")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.RISING:
+            elif op == HdlBuiltinFn.RISING:
                 w("posedge ")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.FALLING:
+            elif op == HdlBuiltinFn.FALLING:
                 w("negedge ")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.NEG:
+            elif op == HdlBuiltinFn.NEG:
                 w("~")
                 pe(o.ops[0])
                 return
-            elif op == HdlBuildinFn.CONCAT:
+            elif op == HdlBuiltinFn.CONCAT:
                 w("{")
                 pe(o.ops[0])
                 w(", ")
                 pe(o.ops[1])
                 w("}")
                 return
-            elif op == HdlBuildinFn.INDEX:
+            elif op == HdlBuiltinFn.INDEX:
                 pe(o.ops[0])
                 w("[")
                 pe(o.ops[1])
                 w("]")
                 return
-            elif op == HdlBuildinFn.REPL_CONCAT:
+            elif op == HdlBuiltinFn.REPL_CONCAT:
                 w("{(")
                 pe(o.ops[0])
                 w("){")
                 pe(o.ops[1])
                 w("}}")
                 return
-            elif op == HdlBuildinFn.TERNARY:
+            elif op == HdlBuiltinFn.TERNARY:
                 w("(")
                 pe(o.ops[0])
                 w(") ? (")
@@ -245,7 +323,7 @@ class ToVerilog():
                 pe(o1)
                 w(")")
                 return
-            elif op == HdlBuildinFn.CALL:
+            elif op == HdlBuiltinFn.CALL:
                 pe(o.ops[0])
                 w("(")
                 for is_last, o_n in iter_with_last_flag(o.ops[1:]):
@@ -254,12 +332,20 @@ class ToVerilog():
                         w(", ")
                 w(")")
                 return
+            elif op == HdlBuiltinFn.TYPE_OF:
+                w("type(")
+                pe(o.ops[0])
+                w(")")
+                return
             else:
                 raise NotImplementedError(op)
         elif expr is HdlAll:
             w("*")
             return
         elif expr is HdlTypeAuto:
+            return
+        elif expr is None:
+            w("null")
             return
 
         raise NotImplementedError(expr)
@@ -270,40 +356,34 @@ class ToVerilog():
         :return: True if the type has also the array dimension part
         """
         w = self.out.write
-        if t != WIRE:
-            op = t if isinstance(t, HdlCall) else None
-            if op is None:
+        t, array_dims = collect_array_dims(t)
+        wire_params = get_wire_t_params(t)
+        if wire_params is None:
+            if t != HdlTypeAuto:
+                if isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.TYPE_OF:
+                    w("var ")
                 self.print_expr(t)
-                return False
-
-            if op and op.fn == HdlBuildinFn.CALL and op.ops[0] == WIRE:
+        else:
+            base_t, width, is_signed, _ = wire_params
+            w(base_t)
+            if width is not None:
                 # 1D vector
                 w("[")
-                ops = op.ops[1:]
-                size_expr = ops[0]
-                is_signed = bool(ops[1])
                 if is_signed:
-                    raise NotImplementedError(op)
-                self.print_expr(size_expr)
-                w("] ")
-            else:
-                o = op.fn
-                if o == HdlBuildinFn.INDEX:
-                    self.print_type_first_part(op.ops[0])
-                    return True
-                raise NotImplementedError(op)
-
-        return False
+                    raise NotImplementedError(t)
+                self.print_expr(width)
+                w("]")
+        return len(array_dims) > 0
 
     def print_type_array_part(self, t):
         """
         :type t: iHdlExpr
         """
         w = self.out.write
-        if isinstance(t, HdlCall) and t.fn == HdlBuildinFn.INDEX:
-            self.print_type_array_part(t.ops[0])
+        _, array_dim = collect_array_dims(t)
+        for ad in array_dim:
             w("[")
-            self.print_expr(t.ops[1])
+            self.print_expr(ad)
             w("]")
 
     def print_variable(self, var):
@@ -313,18 +393,13 @@ class ToVerilog():
         self.print_doc(var)
         name = var.name
         t = var.type
-        l = var.is_latched
         w = self.out.write
-        if l:
-            w("reg ")
-        else:
-            w("wire ")
+        if var.is_const:
+            w("localparam ")
         is_array = self.print_type_first_part(t)
-        if t != WIRE:
-            w(" ")
+        w(" ")
         w(name)
         if is_array:
-            w(" ")
             self.print_type_array_part(t)
 
     def print_process(self, proc, is_top=False):
@@ -334,11 +409,21 @@ class ToVerilog():
         sens = proc.sensitivity
         body = proc.body
         w = self.out.write
-        skip_first = False
+        skip_body = False
         if sens is None:
-            if len(body) and isinstance(body[0], HdlStmWait):
-                skip_first = True
-                wait = body[0]
+            if isinstance(body, HdlStmWait):
+                skip_body = True
+                wait = body
+            elif (isinstance(body, HdlStmBlock)
+                    and body.body
+                    and isinstance(body.body[0], HdlStmWait)):
+                wait = body.body[0]
+                body = copy(body)
+                body.body = body.body[1:]
+            else:
+                wait = None
+
+            if wait is not None:
                 if is_top:
                     w("always ")
                 w("#")
@@ -357,38 +442,38 @@ class ToVerilog():
                     w(", ")
             w(")")
 
-        if skip_first:
-            _body = body[1:]
-        else:
-            _body = body
-
         # to prevent useless newline for empty always/time waits
-        if _body:
-            return self.print_block(_body, True)
-        else:
+        if skip_body:
             return True
+        else:
+            return self.print_statement_in_statement(body)
 
-    def print_block(self, stms, space_before):
+    def print_statement_in_statement(self, stm):
         """
-        :type stms: List[iHdlStatement]
-        :type space_before: bool
-        :return: True if requires ;\n after end
+        Print statement which is body of other statement
+        e.g. body of process, branch of if-then-else or case of case stememnt
         """
         w = self.out.write
-        stm_cnt = len(stms)
-        if stm_cnt == 0:
-            w("\n")
-            return True
-        elif stm_cnt == 1:
-            w("\n")
-            with Indent(self.out):
-                return self.print_statement(stms[0])
+        if isinstance(stm, HdlStmBlock):
+            if len(stm.body) == 1:
+                stm = stm.body[0]
+            else:
+                w(" ")
+                return self.print_block(stm)
 
-        if space_before:
-            w(" ")
+        w("\n")
+        with Indent(self.out):
+            return self.print_statement(stm)
+
+    def print_block(self, stm):
+        """
+        :type stm: HdlStmBlock
+        """
+        w = self.out.write
+
         w("begin\n")
         with Indent(self.out):
-            for s in stms:
+            for s in stm.body:
                 need_semi = self.print_statement(s)
                 if need_semi:
                     w(";\n")
@@ -409,7 +494,7 @@ class ToVerilog():
         w("if (")
         self.print_expr(c)
         w(")")
-        need_semi = self.print_block(ifTrue, True)
+        need_semi = self.print_statement_in_statement(ifTrue)
 
         for cond, stms in stm.elifs:
             if need_semi:
@@ -419,7 +504,7 @@ class ToVerilog():
             w("else if (")
             self.print_expr(cond)
             w(")")
-            need_semi = self.print_block(stms, True)
+            need_semi = self.print_statement_in_statement(stms)
 
         if ifFalse is not None:
             if need_semi:
@@ -427,7 +512,7 @@ class ToVerilog():
             else:
                 w(" ")
             w("else")
-            need_semi = self.print_block(ifFalse, True)
+            need_semi = self.print_statement_in_statement(ifFalse)
         if need_semi:
             w(";")
 
@@ -484,7 +569,7 @@ class ToVerilog():
             for k, stms in cases:
                 self.print_expr(k)
                 w(":")
-                need_semi = self.print_block(stms, True)
+                need_semi = self.print_statement_in_statement(stms)
                 if need_semi:
                     w(";\n")
                 else:
@@ -492,7 +577,7 @@ class ToVerilog():
             defal = cstm.default
             if defal is not None:
                 w("default:")
-                need_semi = self.print_block(defal, True)
+                need_semi = self.print_statement_in_statement(defal)
                 if need_semi:
                     w(";\n")
                 else:
@@ -510,7 +595,7 @@ class ToVerilog():
         w = self.out.write
         w("#")
         assert len(o.val) == 1
-        self.print_expr(o.val[0]);
+        self.print_expr(o.val[0])
         return True
 
     def print_for(self, o):
@@ -521,19 +606,29 @@ class ToVerilog():
         """
         w = self.out.write
         w("for (")
-        for is_last, stm in iter_with_last_flag(o.init):
+        if isinstance(o.init, HdlStmBlock):
+            init_stms = o.init.body
+        else:
+            init_stms = [o.init, ]
+
+        for is_last, stm in iter_with_last_flag(init_stms):
             self.print_statement(stm)
             if not is_last:
                 w(", ")
         w("; ")
         self.print_expr(o.cond)
         w("; ")
-        for is_last, stm in iter_with_last_flag(o.step):
+        if isinstance(o.init, HdlStmBlock):
+            step_stms = o.step.body
+        else:
+            step_stms = [o.step, ]
+
+        for is_last, stm in iter_with_last_flag(step_stms):
             self.print_statement(stm)
             if not is_last:
                 w(", ")
         w(")")
-        return self.print_block(o.body, True)
+        return self.print_statement_in_statement(o.body)
 
     def print_for_in(self, o):
         """
@@ -578,12 +673,15 @@ class ToVerilog():
             return self.print_for_int(stm)
         elif isinstance(stm, HdlStmWhile):
             return self.print_while(stm)
+        elif isinstance(stm, HdlStmBlock):
+            return self.print_block(stm)
         else:
             self.print_expr(stm)
             return True
 
     def print_map_item(self, item):
-        if isinstance(item, HdlCall) and item.fn == HdlBuildinFn.MAP_ASSOCIATION:
+        if isinstance(item, HdlCall)\
+                and item.fn == HdlBuiltinFn.MAP_ASSOCIATION:
             w = self.out.write
             # k, v pair
             k, v = item.ops
@@ -627,6 +725,59 @@ class ToVerilog():
             self.print_map(pms)
             w(")")
 
+    def print_function_def(self, o):
+        """
+        :type o: HdlFunctionDef
+        """
+        self.print_doc(o)
+        w = self.out.write
+        if o.is_task:
+            w("task ")
+        else:
+            w("function ")
+        if not o.is_static:
+            w("automatic ")
+
+        if not o.is_task:
+            self.print_type_first_part(o.return_t)
+            self.print_type_array_part(o.return_t)
+
+        if o.is_virtual or o.is_operator:
+            raise NotImplementedError(o)
+        w(" ")
+        w(o.name)
+        ps = o.params
+        if ps:
+            w(" (\n")
+            with Indent(self.out):
+                for last, p in iter_with_last_flag(ps):
+                    self.print_port_declr(p)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+            w(")")
+        w(";\n")
+        with Indent(self.out):
+            for s in o.body:
+                if isinstance(s, HdlVariableDef):
+                    self.print_variable(s)
+                    w(";\n")
+                elif isinstance(s, iHdlStatement):
+                    need_semi = self.print_statement(s)
+                    if need_semi:
+                        w(";\n")
+                    else:
+                        w("\n")
+                else:
+                    self.print_expr(s)
+                    w(";\n")
+
+        if o.is_task:
+            w("endtask")
+        else:
+            w("endfunction")
+
     def print_module_body(self, a):
         """
         :type a: HdlModuleDef
@@ -646,6 +797,9 @@ class ToVerilog():
                         w(";\n")
                     else:
                         w("\n\n")
+                elif isinstance(o, HdlFunctionDef):
+                    self.print_function_def(o)
+                    w("\n")
                 else:
                     raise NotImplementedError(o)
 
@@ -678,16 +832,16 @@ if __name__ == "__main__":
     from hdlConvertor import HdlConvertor
     c = HdlConvertor()
     filenames = [os.path.join(TEST_DIR, "arbiter_tb.v")]
-    #AES = os.path.join(BASE_DIR, "..", "aes")
-    #files = [
+    # AES = os.path.join(BASE_DIR, "..", "aes")
+    # files = [
     #    # "aes_cipher_top.v",
     #    # "aes_key_expand_128.v",
     #    # "aes_inv_cipher_top.v",  "aes_rcon.v",
     #    "test_bench_top.v",
     #    # "aes_inv_sbox.v",        "aes_sbox.v",
-    #]
+    # ]
     #
-    #filenames = [os.path.join(AES, f) for f in files]
+    # filenames = [os.path.join(AES, f) for f in files]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
     tv = ToVerilog(sys.stdout)
     tv.print_context(d)

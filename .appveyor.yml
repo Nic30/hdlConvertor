@@ -14,6 +14,7 @@ environment:
     #  CYGWIN: "c:\\cygwin64"
 
 install:
+  - 'git submodule update --init --recursive'
   - "curl -fsS -o antlr4-complete.jar https://www.antlr.org/download/antlr-4.7.2-complete.jar"
   - "git clone https://github.com/antlr/antlr4"
   - "cd antlr4/runtime/Cpp"

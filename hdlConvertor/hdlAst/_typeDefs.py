@@ -9,7 +9,7 @@ HdlTypeFloat = float
 HdlTypeEnum = Enum
 
 
-# arrays are described as HdlCall(HdlBuildinFn.INDEX, (type, array size))
+# arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))
 class HdlTypeBitsDef(iHdlObjWithName):
     """
     The type which represents bit or bit vector in HDL (std_logic/_vector
@@ -66,7 +66,8 @@ class HdlClassDef(iHdlObjWithName):
 
     """
     __slots__ = ["name", "parents", "is_virtual", "is_static",
-                 "is_struct", "is_union", "is_interface", "private", "public", "protected"]
+                 "is_struct", "is_union", "is_interface",
+                 "private", "public", "protected"]
 
     def __init__(self):
         super(HdlClassDef, self).__init__()

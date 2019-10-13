@@ -5,7 +5,7 @@ from hdlConvertor.hdlAst._bases import iHdlObj, iHdlObjInModule, \
 from hdlConvertor.hdlAst._expr import iHdlExpr
 
 
-class HdlVariableDef(iHdlObj, iHdlObjInModule):
+class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
     """
     Definition of port/param/type etc in HDL
 
@@ -23,9 +23,8 @@ class HdlVariableDef(iHdlObj, iHdlObjInModule):
                  "is_virtual", "direction"]
 
     def __init__(self):
-        iHdlObj.__init__(self)
+        iHdlObjWithName.__init__(self)
         iHdlObjInModule.__init__(self)
-        self.name = None  # type HdlName
         self.type = None  # type: HdlType
         self.value = None  # iHdlExpr
         self.is_const = False  # type: bool
@@ -42,9 +41,11 @@ class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     :note: Verilog:
         * task automatic corresponds to is_static=False, is_task=True
         * task corresponds to is_static=True, is_task=True
+        * task/function in module is static by default, if in class it is automatic by default
 
     """
     __slots__ = [
+        "is_declaration_only",
         "is_operator",
         "is_static",
         "is_task",
@@ -52,11 +53,14 @@ class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
         "return_t", "params", "body"]
 
     def __init__(self):
+        iHdlObjWithName.__init__(self)
+        iHdlObjInModule.__init__(self)
+        self.is_declaration_only = True  # type:bool
         self.is_operator = False  # type: bool
         self.is_static = False  # type: bool
         self.is_task = False  # type: bool
         self.is_virtual = False  # type: bool
         self.return_t = None  # type: Optional[iHdlExpr]
         self.params = []  # type: List[HdlVariableDef]
-        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement]]
+        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement, iHdlExpr]]
 

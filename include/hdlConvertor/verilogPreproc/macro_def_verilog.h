@@ -6,11 +6,6 @@
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/verilogPreproc/a_macro_def.h>
 
-#if defined(_MSC_VER)
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-#endif
-
 namespace hdlConvertor {
 namespace verilog_pp {
 
@@ -66,6 +61,7 @@ public:
 			std::vector<MacroDefVerilog::Fragment> & res);
 	std::pair<size_t, size_t> get_possible_arg_cnt() const;
 	std::string get_possible_arg_cnt_str() const;
+	virtual bool requires_args() override;
 	// replace method without argument
 	virtual std::string replace(std::vector<std::string> args,
 			bool args_specified, VerilogPreproc * pp,

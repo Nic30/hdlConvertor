@@ -10,6 +10,7 @@ enum HdlOperatorType {
 	THROUGH,
 	REFERENCE,
 	TOLERANCE,
+	TYPE_OF,
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification
@@ -25,10 +26,10 @@ enum HdlOperatorType {
 	ABS, // absolute value
 	NOT,
 	NEG, // negation
-	LOG_AND,
-	LOG_OR,
-	AND,
-	OR,
+	LOG_AND, // "and" in vhdl
+	LOG_OR,  // "or" in vhdl
+	AND, // & in vhdl
+	OR,  // | in vhdl
 	NAND,
 	NOR,
 	XOR,
@@ -46,9 +47,11 @@ enum HdlOperatorType {
 	ROL, // rotate left
 	ROR, // rotate right
 	TERNARY,
-	DOT,
+	DOT, // accessing of property
+	DOUBLE_COLON, // SV accessing class/package static property/type
 	APOSTROPHE, // vhdl attribute access
-	CALL,
+	CALL, // call of HDL function
+	PARAMETRIZATION, // specification of template arguments
 	ARROW, // arrow operator used in vhdl type descriptions
 	RISING, // rising edge/posedge event operator
 	FALLING, // falling edge/negedge event operator
@@ -59,6 +62,23 @@ enum HdlOperatorType {
 	MATCH_LE,
 	MATCH_GT,
 	MATCH_GE,
+	INCR_PRE,
+	DECR_PRE,
+	INCR_POST,
+	DECR_POST,
+    ASSIGN,
+    PLUS_ASSIGN,
+    MINUS_ASSIGN,
+    MUL_ASSIGN,
+    DIV_ASSIGN,
+    MOD_ASSIGN,
+    AND_ASSIGN,
+    OR_ASSIGN,
+    XOR_ASSIGN,
+    SHIFT_LEFT_ASSIGN,
+    SHIFT_RIGHT_ASSIGN,
+    ARITH_SHIFT_LEFT_ASSIGN,
+    ARITH_SHIFT_RIGHT_ASSIGN,
 };
 
 const char* HdlOperatorType_toString(HdlOperatorType opt);

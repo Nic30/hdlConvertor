@@ -1,374 +1,351 @@
 #include "toPy.h"
 #include <tuple>
-#include <hdlConvertor/hdlObjects/hdlStmAssign.h>
 
 namespace hdlConvertor {
 
 using namespace hdlObjects;
 
-PyObject* ToPy::toPy(const iHdlStatement * o) {
-	auto & exprs = o->exprs;
-	auto & sub_statements = o->sub_statements;
-	auto type = o->type;
-	PyObject* py_inst = nullptr;
-	int e = 0;
-
-	if (type == s_EXPR) {
-		return toPy(exprs[0]);
-	} else if (type == s_IF) {
-		py_inst = PyObject_CallObject(HdlStmIfCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		e = PyObject_SetAttrString(py_inst, "cond", toPy(exprs[0]));
-		if (e < 0) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		assert(sub_statements.size());
-		e = toPy_arr(py_inst, "if_true", *sub_statements[0]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		PyObject * elseIfs;
-		size_t elif_cnt;
-		std::tie(elseIfs, elif_cnt) = cases_toPy(exprs.begin() + 1, exprs.end(),
-				sub_statements.begin() + 1);
-		if (elseIfs) {
-			if (PyObject_SetAttrString(py_inst, "elifs", elseIfs) < 0) {
-				Py_DECREF(py_inst);
-				return nullptr;
-			}
-		}
-		if (elif_cnt == SIZE_T_ERR) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		if (sub_statements.size() > elif_cnt + 1) {
-			auto & if_false = *sub_statements.at(elif_cnt + 1);
-			auto py_if_false = PyList_New(0);
-			if (!py_if_false)
-				e = -1;
-			if (!e)
-				e = PyObject_SetAttrString(py_inst, "if_false", py_if_false);
-			if (!e)
-				e = toPy_arr(py_inst, "if_false", if_false);
-			if (e) {
-				Py_DECREF(py_inst);
-				return nullptr;
-			}
-		}
-
-	} else if (type == s_CASE) {
-		py_inst = PyObject_CallObject(HdlStmCaseCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-		e = PyObject_SetAttrString(py_inst, "switch_on", toPy(exprs[0]));
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		PyObject * c;
-		size_t c_cnt;
-		std::tie(c, c_cnt) = cases_toPy(exprs.begin() + 1, exprs.end(),
-				sub_statements.begin());
-		if (c) {
-			PyObject_SetAttrString(py_inst, "cases", c);
-		}
-		if (c_cnt == SIZE_T_ERR) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		if (sub_statements.size() > c_cnt) {
-			auto & def = *sub_statements.at(c_cnt);
-			auto py_def = PyList_New(0);
-			if (!py_def)
-				e = -1;
-			if (!e)
-				e = PyObject_SetAttrString(py_inst, "default", py_def);
-			if (!e)
-				e = toPy_arr(py_inst, "default", def);
-
-			if (e) {
-				Py_DECREF(py_inst);
-				return nullptr;
-			}
-		}
-
-	} else if (type == s_FOR) {
-		py_inst = PyObject_CallObject(HdlStmForCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		e = toPy_arr(py_inst, "init", *sub_statements[0]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = PyObject_SetAttrString(py_inst, "cond", toPy(exprs[0]));
-		if (e < 0) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = toPy_arr(py_inst, "step", *sub_statements[1]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = toPy_arr(py_inst, "body", *sub_statements[2]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-	} else if (type == s_FOR_IN) {
-		py_inst = PyObject_CallObject(HdlStmForInCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		e = toPy_arr(py_inst, "var", *sub_statements[0]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = PyObject_SetAttrString(py_inst, "collection", toPy(exprs[0]));
-		if (e < 0) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = toPy_arr(py_inst, "body", *sub_statements[1]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-	} else if (type == s_RETURN) {
-		py_inst = PyObject_CallObject(HdlStmReturnCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		PyObject* v;
-		if (exprs.size()) {
-			assert(exprs.size() == 1);
-			v = toPy(exprs[0]);
-		} else {
-			Py_INCREF(Py_None);
-			v = Py_None;
-		}
-		e = PyObject_SetAttrString(py_inst, "val", v);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-
-	} else if (type == s_BREAK) {
-		py_inst = PyObject_CallObject(HdlStmBreakCls, NULL);
-	} else if (type == s_CONTINUE) {
-		py_inst = PyObject_CallObject(HdlStmContinueCls, NULL);
-	} else if (type == s_ASSIGNMENT) {
-		PyObject *src = nullptr, *dst = nullptr, *time_delay = nullptr,
-				*event_delay = nullptr;
-		do {
-			src = toPy(o->exprs[1]);
-			if (!src)
-				break;
-			dst = toPy(o->exprs[0]);
-			if (!dst) {
-				break;
-			}
-			if (o->exprs[2]) {
-				time_delay = toPy(o->exprs[2]);
-				if (!time_delay)
-					break;
-			} else {
-				Py_INCREF(Py_None);
-				time_delay = Py_None;
-			}
-			if (o->exprs.size() > 3) {
-				event_delay = PyList_New(o->exprs.size() - 3);
-				for (size_t i = 2; i < o->exprs.size(); i++) {
-					auto py_obj = toPy(o->exprs[i]);
-					if (py_obj == nullptr) {
-						break;
-					}
-					if (PyList_SetItem(event_delay, i, py_obj)) {
-						break;
-					}
-				}
-			}
-
-			py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignCls,
-					src, dst, time_delay, event_delay, NULL);
-			if (!py_inst) {
-				break;
-			}
-			auto _o = dynamic_cast<const HdlStmAssign*>(o);
-			e = PyObject_SetAttrString(py_inst, "is_blocking",
-					PyBool_FromLong((long) _o->is_blocking));
-
-		} while (0);
-		if (e || !py_inst) {
-			Py_DECREF(src);
-			Py_DECREF(dst);
-			Py_DECREF(time_delay);
-			Py_DECREF(event_delay);
-
-			return nullptr;
-		}
-
-	} else if (type == s_WHILE) {
-		py_inst = PyObject_CallObject(HdlStmWhileCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		e = PyObject_SetAttrString(py_inst, "cond", toPy(exprs[0]));
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-		e = toPy_arr(py_inst, "body", *sub_statements[0]);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-	} else if (type == s_PROCESS) {
-		auto p = dynamic_cast<const HdlStmProcess*>(o);
-		assert(p);
-
-		py_inst = PyObject_CallObject(HdlStmProcessCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		if (p->sensitivity_list_specified) {
-			auto & sl = p->sensitivity_list();
-			auto py_sl = PyList_New(0);
-			if (!py_sl)
-				e = -1;
-			if (!e)
-				e = PyObject_SetAttrString(py_inst, "sensitivity", py_sl);
-			if (!e)
-				e = toPy_arr(py_inst, "sensitivity", sl);
-		} else {
-			assert(exprs.size() == 0);
-		}
-		if (!e)
-			e = toPy_arr(py_inst, "body", p->objs());
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-	} else if (type == s_WAIT) {
-		py_inst = PyObject_CallObject(HdlStmWaitCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-		e = toPy_arr(py_inst, "val", exprs);
-	} else if (type == s_IMPORT) {
-		py_inst = PyObject_CallObject(HdlImportCls, NULL);
-		if (!py_inst) {
-			return nullptr;
-		}
-
-		e = toPy_arr(py_inst, "path", o->exprs);
-		if (e) {
-			Py_DECREF(py_inst);
-			return nullptr;
-		}
-	} else {
-		throw std::runtime_error("Invalid StatementType");
-	}
-	if (!e)
-		e = toPy(static_cast<const WithDoc*>(o), py_inst);
-	if (!e)
-		e = toPy_arr(py_inst, "labels", o->labels);
-	if (!e)
-		e = PyObject_SetAttrString(py_inst, "in_prepoc",
-				PyBool_FromLong((long) o->in_preproc));
-	if (e < 0) {
-		Py_XDECREF(py_inst);
+PyObject* ToPy::toPy(const HdlStmExpr *o) {
+	return toPy(o->expr);
+}
+PyObject* ToPy::toPy(const HdlStmIf *o) {
+	auto py_inst = PyObject_CallObject(HdlStmIfCls, NULL);
+	if (!py_inst) {
 		return nullptr;
 	}
+	if (toPy_property(py_inst, "cond", o->cond))
+		return nullptr;
+	if (toPy_property(py_inst, "if_true", o->ifTrue))
+		return nullptr;
+	if (toPy_arr(py_inst, "elifs", o->elseIfs))
+		return nullptr;
+
+	if (o->ifFalse) {
+		if (toPy_property(py_inst, "if_false", o->ifFalse))
+			return nullptr;
+	}
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmBlock *o) {
+	auto py_inst = PyObject_CallObject(HdlStmBlockCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_arr(py_inst, "body", o->statements))
+		return nullptr;
 
 	return py_inst;
 }
 
-std::pair<PyObject *, size_t> ToPy::cases_toPy(
-		std::vector<iHdlExpr*>::const_iterator cond_begin,
-		std::vector<iHdlExpr*>::const_iterator cond_end,
-		std::vector<std::vector<iHdlObj*>*>::const_iterator stms_begin) {
-	PyObject * cases = nullptr;
-	size_t size = cond_end - cond_begin;
-	if (size) {
-		cases = PyList_New(size);
-		if (!cases) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
+PyObject* ToPy::toPy(const HdlStmCase *o) {
+	auto py_inst = PyObject_CallObject(HdlStmCaseCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "switch_on", o->select_on))
+		return nullptr;
+	if (toPy_arr(py_inst, "cases", o->cases))
+		return nullptr;
+
+	if (o->default_) {
+		if (toPy_property(py_inst, "default", o->default_))
+			return nullptr;
+	}
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmFor *o) {
+	auto py_inst = PyObject_CallObject(HdlStmForCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "init", o->init))
+		return nullptr;
+	if (toPy_property(py_inst, "cond", o->cond))
+		return nullptr;
+	if (toPy_property(py_inst, "step", o->step))
+		return nullptr;
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmForIn *o) {
+	auto py_inst = PyObject_CallObject(HdlStmForInCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_arr(py_inst, "var_defs", o->var_defs))
+		return nullptr;
+	if (toPy_property(py_inst, "collection", o->collection))
+		return nullptr;
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmReturn *o) {
+	auto py_inst = PyObject_CallObject(HdlStmReturnCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (o->val)
+		if (toPy_property(py_inst, "val", o->val))
+			return nullptr;
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmAssign *o) {
+	PyObject *py_inst = nullptr, *src = nullptr, *dst = nullptr, *time_delay =
+			nullptr, *event_delay = nullptr;
+	int e = 0;
+	do {
+		src = toPy(o->src);
+		if (!src)
+			break;
+		dst = toPy(o->dst);
+		if (!dst) {
+			break;
+		}
+		if (o->time_delay) {
+			time_delay = toPy(o->time_delay);
+			if (!time_delay)
+				break;
+		} else {
+			Py_INCREF(Py_None);
+			time_delay = Py_None;
+		}
+		if (o->event_delay && o->event_delay->size()) {
+			event_delay = PyList_New(o->event_delay->size());
+			if (!event_delay)
+				break;
+			for (size_t i = 0; i < o->event_delay->size(); i++) {
+				auto py_obj = toPy((*o->event_delay)[i]);
+				if (py_obj == nullptr) {
+					e = -1;
+					break;
+				}
+				if (PyList_SetItem(event_delay, i, py_obj)) {
+					e = -1;
+					break;
+				}
+			}
+			if (e)
+				break;
+		}
+
+		py_inst = PyObject_CallFunctionObjArgs(HdlStmAssignCls, src, dst,
+				time_delay, event_delay, NULL);
+		if (!py_inst) {
+			break;
+		}
+		auto _o = dynamic_cast<const HdlStmAssign*>(o);
+		e = PyObject_SetAttrString(py_inst, "is_blocking",
+				PyBool_FromLong((long) _o->is_blocking));
+
+	} while (0);
+	if (e || !py_inst) {
+		Py_DECREF(src);
+		Py_DECREF(dst);
+		Py_DECREF(time_delay);
+		Py_DECREF(event_delay);
+
+		return nullptr;
+	}
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmWhile *o) {
+	auto py_inst = PyObject_CallObject(HdlStmWhileCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "cond", o->cond))
+		return nullptr;
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmProcess *o) {
+	auto py_inst = PyObject_CallObject(HdlStmProcessCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+
+	if (o->sensitivity_list) {
+		auto sl = PyList_New(0);
+		if (!sl) {
+			Py_DECREF(py_inst);
+			return nullptr;
+		}
+		if (PyObject_SetAttrString(py_inst, "sensitivity", sl)) {
+			Py_DECREF(py_inst);
+			Py_DECREF(sl);
+			return nullptr;
+		}
+
+		if (toPy_arr(sl, *o->sensitivity_list.get())) {
+			Py_DECREF(py_inst);
+			return nullptr;
 		}
 	}
-	for (size_t case_cnt = 0; case_cnt < size; case_cnt++) {
-		// build tuple representing the elif item
-		auto case_ = PyTuple_New(2);
-		if (!case_) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
-		// add to elif/case list
-		int e = PyList_SetItem(cases, case_cnt, case_);
-		if (e) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
 
-		iHdlExpr* _c = *cond_begin;
-		auto c = toPy(_c);
-		if (!c) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
-
-		e = PyTuple_SetItem(case_, 0, c);
-		if (e) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
-
-		// fill statements in elif/case
-		auto & stms = **stms_begin;
-		PyObject * stm_list = PyList_New(stms.size());
-		if (!stm_list) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
-		e = PyTuple_SetItem(case_, 1, stm_list);
-		if (e) {
-			Py_DECREF(cases);
-			return {nullptr, SIZE_T_ERR};
-		}
-		for (size_t i = 0; i < stms.size(); i++) {
-			auto _o = stms[i];
-			assert(_o);
-			PyObject * o = toPy(_o);
-			if (!o) {
-				Py_DECREF(cases);
-				return {nullptr, SIZE_T_ERR};
-			}
-			e = PyList_SetItem(stm_list, i, o);
-			if (e) {
-				Py_DECREF(cases);
-				return {nullptr, SIZE_T_ERR};
-			}
-		}
-
-		++cond_begin;
-		++stms_begin;
+PyObject* ToPy::toPy(const HdlStmImport *o) {
+	auto py_inst = PyObject_CallObject(HdlImportCls, NULL);
+	if (!py_inst) {
+		return nullptr;
 	}
-	return {cases, size};
+
+	if (toPy_arr(py_inst, "path", o->path)) {
+		return nullptr;
+	}
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const HdlStmWait *o) {
+	auto py_inst = PyObject_CallObject(HdlStmWaitCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_arr(py_inst, "val", o->val)) {
+		return nullptr;
+	}
+	return py_inst;
+}
+PyObject* ToPy::toPy(const iHdlStatement *o) {
+	PyObject *py_inst = nullptr;
+	do {
+		auto ex = dynamic_cast<const HdlStmExpr*>(o);
+		if (ex) {
+			// @attention currently ignoring labels, doc etc
+			return toPy(ex);
+		}
+		auto n = dynamic_cast<const HdlStmNop*>(o);
+		if (n) {
+			// @attention currently ignoring labels, doc etc
+			Py_RETURN_NONE;
+		}
+		auto b = dynamic_cast<const HdlStmBlock*>(o);
+		if (b) {
+			py_inst = toPy(b);
+			break;
+		}
+		auto i = dynamic_cast<const HdlStmIf*>(o);
+		if (i) {
+			py_inst = toPy(i);
+			break;
+		}
+		auto c = dynamic_cast<const HdlStmCase*>(o);
+		if (c) {
+			py_inst = toPy(c);
+			break;
+		}
+		auto f = dynamic_cast<const HdlStmFor*>(o);
+		if (f) {
+			py_inst = toPy(f);
+			break;
+		}
+		auto fi = dynamic_cast<const HdlStmForIn*>(o);
+		if (fi) {
+			py_inst = toPy(fi);
+			break;
+		}
+		auto r = dynamic_cast<const HdlStmReturn*>(o);
+		if (r) {
+			py_inst = toPy(r);
+			break;
+		}
+		auto br = dynamic_cast<const HdlStmBreak*>(o);
+		if (br) {
+			py_inst = PyObject_CallObject(HdlStmBreakCls, NULL);
+			break;
+		}
+		auto cn = dynamic_cast<const HdlStmContinue*>(o);
+		if (cn) {
+			py_inst = PyObject_CallObject(HdlStmContinueCls, NULL);
+			break;
+		}
+		auto a = dynamic_cast<const HdlStmAssign*>(o);
+		if (a) {
+			py_inst = toPy(a);
+			break;
+		}
+		auto w = dynamic_cast<const HdlStmWhile*>(o);
+		if (w) {
+			py_inst = toPy(w);
+			break;
+		}
+		auto p = dynamic_cast<const HdlStmProcess*>(o);
+		if (p) {
+			py_inst = toPy(p);
+			break;
+		}
+		auto wa = dynamic_cast<const HdlStmWait*>(o);
+		if (wa) {
+			py_inst = toPy(wa);
+			break;
+		}
+		auto im = dynamic_cast<const HdlStmImport*>(o);
+		if (im) {
+			py_inst = toPy(im);
+			break;
+		}
+		std::string err_msg = std::string("Invalid StatementType:")
+				+ typeid(*o).name();
+		PyErr_SetString(PyExc_TypeError, err_msg.c_str());
+		return nullptr;
+	} while (0);
+	if (!py_inst)
+		return nullptr;
+
+	if (toPy(static_cast<const WithDoc*>(o), py_inst))
+		return nullptr;
+
+	if (toPy_arr(py_inst, "labels", o->labels)) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "in_prepoc", o->in_preproc))
+		return nullptr;
+
+	return py_inst;
+}
+
+PyObject* ToPy::toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o) {
+	// build tuple representing the elif item
+	auto py_inst = PyTuple_New(2);
+	if (!py_inst) {
+		return nullptr;
+	}
+	auto c = toPy(o.expr);
+	if (!c) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+
+	int e = PyTuple_SetItem(py_inst, 0, c);
+	if (e) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+
+	// fill statements in elif/case
+	auto stms = toPy(o.stm);
+	if (!stms) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	e = PyTuple_SetItem(py_inst, 1, stms);
+	if (e) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	return py_inst;
 }
 
 }

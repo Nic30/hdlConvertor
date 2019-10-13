@@ -1,0 +1,23 @@
+
+function(set_coverage_if_enabled lib_name specify_link_interface)
+  if(CODE_COVERAGE)
+	message(STATUS "set_coverage_if_enabled: ${lib_name}")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+      # Add required flags (GCC & LLVM/Clang)
+      target_compile_options(${lib_name} PUBLIC
+        -O0        # no optimization
+        -g         # generate debug info
+        --coverage # sets all required flags
+      )
+      if(specify_link_interface)
+	      if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+	        target_link_options(${lib_name} INTERFACE --coverage)
+	      else()
+	        target_link_libraries(${lib_name} INTERFACE --coverage)
+	      endif()
+	  endif()
+    else()
+      message(ERROR "Code coverage supported only for gcc/clang compiler (current ${CMAKE_CXX_COMPILER_ID})")
+    endif()
+  endif()
+endfunction()

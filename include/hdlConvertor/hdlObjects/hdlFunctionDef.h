@@ -14,16 +14,19 @@ namespace hdlObjects {
  * */
 class HdlFunctionDef: public WithNameAndDoc, public iHdlObj {
 public:
-	const iHdlExpr * returnT;
-	const std::vector<HdlVariableDef*> * params;
-	std::vector<HdlVariableDef*> locals;
-	std::vector<iHdlStatement*> body;
+	std::unique_ptr<iHdlExpr> returnT;
+	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>> > params;
+	std::vector<std::unique_ptr<iHdlObj>> body;
 	const bool is_operator;
-	bool declaration_only;
+	bool is_static;
+	bool is_virtual;
+	bool is_task;
+	bool is_declaration_only;
 
-	HdlFunctionDef(const std::string & name, bool is_operator, iHdlExpr * returnT,
-			std::vector<HdlVariableDef*> * params);
-	~HdlFunctionDef();
+	HdlFunctionDef(const std::string &name, bool is_operator,
+			std::unique_ptr<iHdlExpr> returnT,
+			std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> params);
+	virtual ~HdlFunctionDef() override;
 };
 
 }

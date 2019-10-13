@@ -1,33 +1,30 @@
 #include <hdlConvertor/hdlObjects/hdlStmAssign.h>
 #include <stdexcept>
 
+using namespace std;
+
 namespace hdlConvertor {
 namespace hdlObjects {
 
-using namespace std;
-
-HdlStmAssign::HdlStmAssign(iHdlExpr * dst, iHdlExpr * src, bool _is_blocking) :
-		HdlStmAssign(dst, src, nullptr, nullptr, _is_blocking) {
-
+HdlStmAssign::HdlStmAssign(std::unique_ptr<iHdlExpr> _dst,
+		std::unique_ptr<iHdlExpr> _src, bool _is_blocking) :
+		HdlStmAssign(move(_dst), move(_src), nullptr, nullptr, _is_blocking) {
 }
 
-HdlStmAssign::HdlStmAssign(iHdlExpr* dst, iHdlExpr * src, iHdlExpr *time_delay,
-		vector<iHdlExpr*> * event_delay, bool _is_blocking) :
-		iHdlStatement(StatementType::s_ASSIGNMENT) {
+HdlStmAssign::HdlStmAssign(std::unique_ptr<iHdlExpr> _dst,
+		std::unique_ptr<iHdlExpr> _src, std::unique_ptr<iHdlExpr> _time_delay,
+		std::unique_ptr<vector<std::unique_ptr<iHdlExpr>>> _event_delay,
+		bool _is_blocking) :
+		iHdlStatement(), dst(move(_dst)), src(move(_src)), time_delay(
+				move(_time_delay)), event_delay(move(_event_delay)), is_blocking(
+				_is_blocking) {
 	if (dst == nullptr || src == nullptr) {
 		// [note] this happens only if there is a bug in this library
-		throw runtime_error("wrong assign initialisation");
+		throw runtime_error("wrong assign initialization");
 	}
-	exprs.push_back(dst);
-	exprs.push_back(src);
-	exprs.push_back(time_delay);
-	if (event_delay) {
-		for (auto e : *event_delay) {
-			exprs.push_back(e);
-		}
-		delete event_delay;
-	}
-	is_blocking = _is_blocking;
+}
+
+HdlStmAssign::~HdlStmAssign() {
 }
 
 }

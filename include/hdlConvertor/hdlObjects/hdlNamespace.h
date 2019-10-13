@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 
@@ -13,10 +14,10 @@ namespace hdlObjects {
 class HdlNamespace: public WithNameAndDoc, public iHdlObj {
 public:
 	bool defs_only;
-	std::vector<iHdlObj*> objs;
+	std::vector<std::unique_ptr<iHdlObj>> objs;
 
 	HdlNamespace();
-	~HdlNamespace();
+	virtual ~HdlNamespace() override;
 };
 
 }

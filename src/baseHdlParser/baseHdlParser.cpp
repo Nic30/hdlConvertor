@@ -4,16 +4,9 @@ namespace hdlConvertor {
 
 using namespace hdlConvertor::hdlObjects;
 
-BaseHdlParser::BaseHdlParser(antlr4::TokenStream* tokens, HdlContext * ctx, bool _hierarchyOnly) {
-	if (ctx == nullptr)
-		context = new HdlContext();
-	else
-		context = ctx;
-	this->tokens = tokens;
-	hierarchyOnly = _hierarchyOnly;
-}
-HdlContext * BaseHdlParser::getContext() {
-	return context;
+BaseHdlParser::BaseHdlParser(antlr4::TokenStream &_tokens, HdlContext &ctx,
+		bool _hierarchyOnly) :
+		tokens(_tokens), context(ctx), hierarchyOnly(_hierarchyOnly) {
 }
 
 }

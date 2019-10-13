@@ -10,25 +10,25 @@
 //           Xilinx website. It has some minor modifications.
 //=========================================
 module aFifo #(
-    parameter  DATA_WIDTH = 8,
-    parameter  ADDRESS_WIDTH = 4,
-    parameter  FIFO_DEPTH = (1 << ADDRESS_WIDTH)
+    parameter DATA_WIDTH = 8,
+    parameter ADDRESS_WIDTH = 4,
+    parameter FIFO_DEPTH = (1 << ADDRESS_WIDTH)
 ) (
-    output reg [(DATA_WIDTH - 1):0] Data_out,
+    output reg[(DATA_WIDTH - 1):0] Data_out,
     output reg Empty_out,
-    input ReadEn_in,
-    input RClk,
+    input wire ReadEn_in,
+    input wire RClk,
     //Writing port.
-    input [(DATA_WIDTH - 1):0] Data_in,
+    input wire[(DATA_WIDTH - 1):0] Data_in,
     output reg Full_out,
-    input WriteEn_in,
-    input WClk,
-    input Clear_in
+    input wire WriteEn_in,
+    input wire WClk,
+    input wire Clear_in
 );
     /////Internal connections & variables//////
-    reg [(DATA_WIDTH - 1):0]  Mem [(FIFO_DEPTH - 1):0];
-    wire [(ADDRESS_WIDTH - 1):0]  pNextWordToWrite;
-    wire [(ADDRESS_WIDTH - 1):0]  pNextWordToRead;
+    reg[(DATA_WIDTH - 1):0] Mem[(FIFO_DEPTH - 1):0];
+    wire[(ADDRESS_WIDTH - 1):0] pNextWordToWrite;
+    wire[(ADDRESS_WIDTH - 1):0] pNextWordToRead;
     wire EqualAddresses;
     wire NextWriteAddressEn;
     wire NextReadAddressEn;
@@ -37,10 +37,15 @@ module aFifo #(
     reg Status;
     wire PresetFull;
     wire PresetEmpty;
+    //////////////Code///////////////
+    //Data ports logic:
+    //(Uses a dual-port RAM).
+    //'Data_out' logic:
     always @(posedge RClk)
         if ((ReadEn_in & !Empty_out))
             Data_out <= Mem[pNextWordToRead];
 
+    //'Data_in' logic:
     always @(posedge WClk)
         if ((WriteEn_in & !Full_out))
             Mem[pNextWordToWrite] <= Data_in;
@@ -66,8 +71,9 @@ module aFifo #(
     //'EqualAddresses' logic:
     assign EqualAddresses = (pNextWordToWrite == pNextWordToRead);
     //'Quadrant selectors' logic:
-    assign Set_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] >> pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] ^ pNextWordToRead[(ADDRESS_WIDTH - 2)]));
-    assign Rst_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] ^ pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] >> pNextWordToRead[(ADDRESS_WIDTH - 2)]));
+    assign Set_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] ~^ pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] ^ pNextWordToRead[(ADDRESS_WIDTH - 2)]));
+    assign Rst_Status = ((pNextWordToWrite[(ADDRESS_WIDTH - 2)] ^ pNextWordToRead[(ADDRESS_WIDTH - 1)]) & (pNextWordToWrite[(ADDRESS_WIDTH - 1)] ~^ pNextWordToRead[(ADDRESS_WIDTH - 2)]));
+    //'Status' latch logic:
     always @(Set_Status, Rst_Status, Clear_in)
         // Latch w/ Asynchronous Clear & Preset.
         if ((Rst_Status | Clear_in))
@@ -78,6 +84,7 @@ module aFifo #(
     //Going 'Full'.
     //'Full_out' logic for the writing port:
     assign PresetFull = (Status & EqualAddresses);
+    //'Full' Fifo.
     always @(posedge WClk, posedge PresetFull)
         // Flip-Flop w/ Asynchronous Preset.
         if (PresetFull)
@@ -87,6 +94,7 @@ module aFifo #(
 
     //'Empty_out' logic for the reading port:
     assign PresetEmpty = (~Status & EqualAddresses);
+    //'Empty' Fifo.
     always @(posedge RClk, posedge PresetEmpty)
         // Flip-Flop w/ Asynchronous Preset.
         if (PresetEmpty)

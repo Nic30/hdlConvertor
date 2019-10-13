@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/hdlObjects/position.h>
@@ -10,13 +11,14 @@ namespace hdlObjects {
 
 class HdlCompInstance: public WithDoc, public WithPos, public iHdlObj {
 public:
-	iHdlExpr * name;
-	iHdlExpr * entityName;
-	std::vector<iHdlExpr*> genericMap;
-	std::vector<iHdlExpr*> portMap;
+	std::unique_ptr<iHdlExpr> name;
+	std::unique_ptr<iHdlExpr> entityName;
+	std::vector<std::unique_ptr<iHdlExpr>> genericMap;
+	std::vector<std::unique_ptr<iHdlExpr>> portMap;
 
-	HdlCompInstance(iHdlExpr * name, iHdlExpr * _entityName);
-	~HdlCompInstance();
+	HdlCompInstance(std::unique_ptr<iHdlExpr> name,
+			std::unique_ptr<iHdlExpr> _entityName);
+	virtual ~HdlCompInstance() override;
 };
 
 }

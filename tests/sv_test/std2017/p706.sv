@@ -23,7 +23,7 @@ bus_conn bconn3 (dataout[7:0]);
 endmodule
 
 
-module generic_fifo(clk, read, write, reset, out, full, empty );
+module generic_fifo(clk, in, read, write, reset, out, full, empty );
 
 parameter MSB=3,LSB=0, DEPTH=4; // these parameters can be redefined
 

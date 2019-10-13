@@ -16,6 +16,6 @@
 
 `timescale 1 ns / 1ps
 
-`unconnected_drive
+`unconnected_drive pull1
 
 `nounconnected_drive

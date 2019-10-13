@@ -42,8 +42,8 @@ endclocking
 endinterface
 typedef virtual SyncBus VI; // A virtual interface type
 task do_it( VI v );
-if( v.sb.a == 1 )
-v.sb.b <= 0;
-else
-v.sb.c <= ##1 1;
+	if( v.sb.a == 1 )
+		v.sb.b <= 0;
+	else
+		v.sb.c <= ##1 1;
 endtask

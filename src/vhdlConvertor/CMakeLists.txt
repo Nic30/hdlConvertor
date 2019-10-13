@@ -1,1 +1,1 @@
-AddParserToBuild("vhdl" "vhdlConvertor" OFF OFF OFF)
+AddParserToBuild("vhdl" "vhdlConvertor" OFF OFF ON)

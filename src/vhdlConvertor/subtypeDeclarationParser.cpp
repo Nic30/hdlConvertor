@@ -1,20 +1,22 @@
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
-
-namespace hdlConvertor {
-namespace vhdl {
+#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
 
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-HdlVariableDef * SubtypeDeclarationParser::visitSubtype_declaration(
-		vhdlParser::Subtype_declarationContext* ctx) {
+namespace hdlConvertor {
+namespace vhdl {
+
+std::unique_ptr<HdlVariableDef> VhdlSubtypeDeclarationParser::visitSubtype_declaration(
+		vhdlParser::Subtype_declarationContext *ctx) {
 	//subtype_declaration
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
-	auto t = ExprParser::visitSubtype_indication(ctx->subtype_indication());
-	auto v = new HdlVariableDef(ctx->identifier()->getText(),
-			iHdlExpr::TYPE_T(), t);
+	auto t = VhdlExprParser::visitSubtype_indication(ctx->subtype_indication());
+	auto v = std::make_unique<HdlVariableDef>(
+			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
+			iHdlExpr::TYPE_T(), std::move(t));
 	return v;
 }
 

@@ -5,9 +5,6 @@ from hdlConvertor import HdlConvertor, ParseException
 from hdlConvertor.language import Language
 
 
-SV = Language.SYSTEM_VERILOG_2012
-
-
 class VerilogPreprocGrammarTC(unittest.TestCase):
     '''
     Non regression of grammar.
@@ -22,7 +19,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
         c = HdlConvertor()
         f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
         incdirs = [path.join('sv_pp', 'raw'), ]
-        res = c.verilog_pp(f, incdirs, SV)
+        res = c.verilog_pp(f, Language.SYSTEM_VERILOG, incdirs)
         return res
 
     def check_pp_error_by_methodname(self, err_msg):
@@ -104,7 +101,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
     def test_include(self):
         self.check_pp_error_by_methodname(
-            'file1.txt was not found in include directories\n')
+            'Error: "file1.txt" was not found in include directories\n')
 
     def test_keywords1(self):
         self.run_pp_by_methodname()
@@ -162,6 +159,7 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
     def test_space_between_comments(self):
         self.run_pp_by_methodname()
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

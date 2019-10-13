@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 /*
  * path std namespace to have std::filesystem if required for older compilers
  * */
@@ -12,3 +12,6 @@ namespace std {
 #else
 #include <filesystem>
 #endif
+
+// the filename which is used if the code comes from string and not from file
+extern const std::string STRING_FILENAME;

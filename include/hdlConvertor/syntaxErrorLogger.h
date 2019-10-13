@@ -38,7 +38,8 @@ private:
 	std::vector<error_data> _errors;
 
 public:
-	void CheckErrors();
+	std::string error_prefix;
+	void check_errors();
 	void syntaxError(antlr4::Recognizer *recognizer,
 			antlr4::Token *offendingSymbol, size_t line,
 			size_t charPositionInLine, const std::string &msg,

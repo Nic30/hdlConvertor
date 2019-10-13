@@ -1,36 +1,46 @@
-import unittest
+import os
 from os import path
-
-try:
-    from tests.basic_tc import TEST_DIR
-except ImportError:
-    from basic_tc import TEST_DIR
+import unittest
+from tests.basic_tc import TEST_DIR
 
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
-
-SV = Language.SYSTEM_VERILOG_2012
-
-SRC_DIR = [path.dirname(__file__), 'sv_pp', 'src']
+from tests.file_utils import cd
 
 
-def _test_run(test_file, golden_file):
+def _test_run(test_file, golden_file, golden_str):
     c = HdlConvertor()
 
     incdirs = [path.join('sv_pp', 'src'), ]
-    test_result = c.verilog_pp(
-        test_file, incdirs, SV)
 
-    with open(golden_file) as myfile:
-        test_golden = myfile.read()
+    with cd(TEST_DIR):
+        # cd to have nice paths in error messages
+        test_result = c.verilog_pp(
+            test_file, Language.SYSTEM_VERILOG, incdirs)
+        # windows compatiblity
+        test_result = test_result.replace("sv_pp\\\\src\\\\", "sv_pp/src/")
+
+    # with open(os.path.join(TEST_DIR, golden_file), "w") as f:
+    #     f.write(test_result)
+
+    if golden_file is not None:
+        assert golden_str is None
+        with open(os.path.join(TEST_DIR, golden_file)) as f:
+            test_golden = f.read()
+    else:
+        assert golden_str is not None
+        test_golden = golden_str
 
     return test_result, test_golden
 
 
-def _test_run_rel(test_file, golden_file):
+def _test_run_rel(test_file, golden_file=None, golden_str=None):
+    if golden_file is not None:
+        golden_file = path.join('sv_pp', 'expected', golden_file)
     return _test_run(
-            path.join(TEST_DIR, 'sv_pp', 'src', test_file),
-            path.join(TEST_DIR, 'sv_pp', 'expected', golden_file)
+            path.join('sv_pp', 'src', test_file),
+            golden_file,
+            golden_str
     )
 
 
@@ -70,8 +80,8 @@ class VerilogPreprocTC(unittest.TestCase):
             c = HdlConvertor()
             c.verilog_pp(
                 f,
+                Language.SYSTEM_VERILOG,
                 [path.join('sv_pp', 'src'), ],
-                SV
             )
         e = str(context.exception)
         if contains:
@@ -86,12 +96,7 @@ class VerilogPreprocTC(unittest.TestCase):
                 self.assertEqual(err_msg, _e)
 
     def test_2012_p644_2(self):
-        # [TODO] platform dependent path
-        self.assertPPError(
-            '2012_p644_2.txt',
-            "SyntaxError:mismatched input",
-            contains=True
-        )
+        self.assertPPWorks('2012_p644_2.txt')
 
     def test_2012_p641_il1(self):
         self.assertPPError(
@@ -103,8 +108,7 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p641_il2(self):
         self.assertPPError(
             '2012_p641_il2.txt',
-            'Macro D missing value for parameter x and for parameters'
-            ' after (2 arguments expected but 0 provided).'
+            'Macro D missing value for parameter y (2 arguments expected but 0 provided).'
         )
 
     def test_2012_p641_il3(self):
@@ -129,50 +133,65 @@ class VerilogPreprocTC(unittest.TestCase):
     def test_2012_p642_il3(self):
         self.assertPPError(
             '2012_p642_il3.txt',
-            'Unfinished string in definition of macro first_half.'
+            'recognition error at: \'"',
+            contains=True
         )
 
     def test_FILE_LINE(self):
-        c = HdlConvertor()
-        f = path.join(path.dirname(__file__), 'sv_pp', 'src', 'test_FILE_LINE.sv')
-        incdirs = [path.join('sv_pp', 'src'), ]
-        test_result = c.verilog_pp(f, incdirs, SV)
-        expected_val = path.join(path.dirname(__file__),
-                                 'sv_pp', 'src', 'test_FILE_LINE.sv'
-                                 )
-        test_golden = ("module tb();\n\ninitial\n\t$display("
-                      "\"Internal error: null handle at %s, line %d.\",\n")
-        test_golden += "\"" + expected_val + "\", 5);\n\n\nendmodule\n"
+        test_golden = (
+            "module tb();\n\ninitial\n\t$display("
+            "\"Internal error: null handle at %s, line %d.\",\n"
+            "\"sv_pp/src/test_FILE_LINE.sv\", 5);\n\n\nendmodule\n"
+        )
+        test_result, test_golden = _test_run_rel('test_FILE_LINE.sv', golden_str=test_golden)
         self.assertEqual(test_result, test_golden)
 
     def test_verilog_pp_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.verilog_pp("", "", "badlang")
+            test_result = c.verilog_pp("", "badlang", [])
         e = str(context.exception)
-        self.assertIn("badlang is not recognized (expected <enum 'Language'>)", e)
+        self.assertIn("'badlang' is not recognized (expected hdlConvertor.language.Language value)", e)
 
     def test_parser_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.parse(None, Language.SYSTEM_VERILOG_2012, None)
+            test_result = c.parse(None, "bad", None)
         e = str(context.exception)
-        self.assertIn("Language.SYSTEM_VERILOG_2012 is not recognized (expected verilog, vhdl or systemVerilog", e)
+        self.assertIn("'bad' is not recognized (expected hdlConvertor.language.Language value)", e)
 
-    # def test_debug_macro(self):
-    #     c = HdlConvertor()
-    #     f = path.join(*SRC_DIR,'debug_macro.sv')
-    #     incdirs = [path.join(*SRC_DIR), ]
-    #     test_result = c.verilog_pp(f, incdirs, SV)
-    #     expected_val = path.join(*SRC_DIR, 'debug_macro.sv')
-    #     test_golden = ("")
-    #     print(test_result)
-    #     self.assertEqual(test_result, test_golden)
+    def test_debug_macro(self):
+        self.assertPPWorks("debug_macro.txt")
+
+    def test_def_in_def(self):
+        self.assertPPWorks("def_in_def.txt")
+
+    def test_defined_defargs(self):
+        self.assertPPWorks("defined_defargs.txt")
+
+    def test_indirect_ifdef(self):
+        self.assertPPError(
+            "indirect_ifdef.err.txt",
+            "SyntaxError:token recognition error at: '`'",
+            contains=True
+        )
+
+    def test_preproc_hash_table(self):
+        self.assertPPWorks("preproc_hash_table.txt")
+
+    def test_stringify_multiline(self):
+        self.assertPPWorks("stringify_multiline.txt")
+
+    def test_stringify(self):
+        self.assertPPWorks("stringify.txt")
+
+    def test_macro_args(self):
+        self.assertPPWorks("macro_args.txt")
 
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocTC('test_2012_p642'))
+    # suite.addTest(VerilogPreprocTC('test_stringify_multiline'))
     suite.addTest(unittest.makeSuite(VerilogPreprocTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

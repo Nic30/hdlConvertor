@@ -2,15 +2,17 @@
 #include <algorithm>
 #include <sstream>
 #include <assert.h>
-#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 #include <iostream>
-using namespace std;
+
+#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
 
-MacroDefVerilog::MacroDefVerilog(const string & _name, bool _has_params,
-		const vector<param_info_t> & _params, const string & _body) :
+using namespace std;
+
+MacroDefVerilog::MacroDefVerilog(const string &_name, bool _has_params,
+		const vector<param_info_t> &_params, const string &_body) :
 		aMacroDef(_name), has_params(_has_params), params(_params) {
 	parse_body(_params, _body, body);
 }
@@ -18,7 +20,7 @@ MacroDefVerilog::MacroDefVerilog(const string & _name, bool _has_params,
 std::pair<size_t, size_t> MacroDefVerilog::get_possible_arg_cnt() const {
 	size_t max_arg_cnt = params.size();
 	size_t optional_arg_cnt = 0;
-	for (auto & p : params) {
+	for (auto &p : params) {
 		if (p.has_def_val)
 			optional_arg_cnt++;
 	}
@@ -33,9 +35,8 @@ string MacroDefVerilog::get_possible_arg_cnt_str() const {
 	}
 }
 
-void MacroDefVerilog::parse_body(const std::vector<param_info_t> & params,
-		const std::string & body,
-		std::vector<MacroDefVerilog::Fragment> & res) {
+void MacroDefVerilog::parse_body(const std::vector<param_info_t> &params,
+		const std::string &body, std::vector<MacroDefVerilog::Fragment> &res) {
 	collect_string_intervals(body);
 	bool no_body = body.size() == 0;
 	if (no_body || params.size() == 0) {
@@ -49,7 +50,7 @@ void MacroDefVerilog::parse_body(const std::vector<param_info_t> & params,
 	found_param_usage.reserve(params.size());
 
 	for (size_t p_i = 0; p_i < params.size(); p_i++) {
-		const auto & p = params[p_i];
+		const auto &p = params[p_i];
 		size_t start_pos = 0;
 		while ((start_pos = body.find(p.name, start_pos)) != string::npos) {
 			if (start_pos > 0) {
@@ -113,8 +114,8 @@ void MacroDefVerilog::parse_body(const std::vector<param_info_t> & params,
 
 // return false to skip this find because it is
 // from an already substitution of the same macro replacement
-std::pair<size_t, size_t> * MacroDefVerilog::check_is_in_string(size_t start) {
-	for (auto & p : _string_intervals) {
+std::pair<size_t, size_t>* MacroDefVerilog::check_is_in_string(size_t start) {
+	for (auto &p : _string_intervals) {
 		if ((p.first <= start) && (start < p.first + p.second)) {
 			return &p;
 		}
@@ -124,29 +125,36 @@ std::pair<size_t, size_t> * MacroDefVerilog::check_is_in_string(size_t start) {
 /*
  * Look for String literal. In order to forbid them to be change by replacement
  */
-void MacroDefVerilog::collect_string_intervals(const string & tmpl) {
+void MacroDefVerilog::collect_string_intervals(const string &tmpl) {
 	size_t start_pos = 0;
 	auto npos = string::npos;
-	size_t pos1 = npos;
+	size_t prev_start_pos = npos;
 	while ((start_pos = tmpl.find('"', start_pos)) != npos) {
-		if (pos1 == npos
-				&& ((start_pos != 0 && tmpl[start_pos - 1] != '`')
-						|| start_pos == 0)) {
-			pos1 = start_pos;
-		} else if (pos1 != npos && tmpl[start_pos - 1] != '`') {
-			size_t length = start_pos - pos1;
-			_string_intervals.push_back(make_pair(pos1, length));
-			pos1 = npos;
+		// if " is not part of `" or \"
+		bool is_escaped = (start_pos != 0
+				&& (tmpl[start_pos - 1] == '`' || tmpl[start_pos - 1] == '\\'));
+		if (!is_escaped) {
+			if (prev_start_pos == npos) {
+				prev_start_pos = start_pos;
+			} else {
+				size_t length = start_pos - prev_start_pos;
+				_string_intervals.push_back(make_pair(prev_start_pos, length));
+				prev_start_pos = npos;
+			}
 		}
 		start_pos += 1;
 	}
-	if (pos1 != npos)
+	if (prev_start_pos != npos)
 		throw ParseException(
 				"Unfinished string in definition of macro " + name + ".");
 }
 
+bool MacroDefVerilog::requires_args() {
+	return has_params;
+}
+
 string MacroDefVerilog::replace(std::vector<std::string> args,
-		bool args_specified, VerilogPreproc *, antlr4::ParserRuleContext *) {
+		bool args_specified, VerilogPreproc*, antlr4::ParserRuleContext*) {
 	if (has_params && !args_specified) {
 		string msg = "Macro " + name + " requires braces and expects ";
 		msg += get_possible_arg_cnt_str() + " arguments.";
@@ -164,10 +172,15 @@ string MacroDefVerilog::replace(std::vector<std::string> args,
 			bool value_required = i >= orig_args_cnt;
 			bool use_defult_value = value_required || args[i].length() == 0;
 			if (use_defult_value) {
-				const auto & p = params[i];
+				const auto &p = params[i];
 				if (!p.has_def_val) {
 					if (!value_required)
 						continue;
+					if (args.size() == 0) {
+						// `macro() -> there is actualy arg ""
+						args.push_back("");
+						continue;
+					}
 					string msg = "Macro " + name
 							+ " missing value for parameter " + p.name + " ";
 					bool is_last = i == params.size() - 1;
@@ -194,7 +207,7 @@ string MacroDefVerilog::replace(std::vector<std::string> args,
 
 	if (!body.empty()) {
 		stringstream res;
-		for (const auto & elem : body) {
+		for (const auto &elem : body) {
 			if (elem.arg_no < 0) {
 				res << elem.str;
 			} else {

@@ -5,10 +5,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 from hdlConvertor.language import Language
 
-try:
-    from tests.basic_tc import TEST_DIR, BasicTC, parseFile
-except ImportError:
-    from basic_tc import TEST_DIR, BasicTC, parseFile
+from tests.basic_tc import TEST_DIR, BasicTC, parseFile
 
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
@@ -26,7 +23,7 @@ class VerilogConversionTC(BasicTC):
         self.parseWithRef("aFifo.v", VERILOG)
 
     # not implemented repeat construct
-    #def test_arbiter_tb(self):
+    # def test_arbiter_tb(self):
     #    self.parseWithRef("arbiter_tb.v", VERILOG)
 
     def test_arbiter(self):
@@ -36,8 +33,8 @@ class VerilogConversionTC(BasicTC):
         self.assertEqual(len(a.params), 0)
         self.assertEqual(len(a.ports), 10)
         ports = {
-            "clk" : HdlDirection.IN,
-            "rst" : HdlDirection.IN,
+            "clk": HdlDirection.IN,
+            "rst": HdlDirection.IN,
             "req3": HdlDirection.IN,
             "req2": HdlDirection.IN,
             "req1": HdlDirection.IN,
@@ -48,7 +45,7 @@ class VerilogConversionTC(BasicTC):
             "gnt0": HdlDirection.OUT,
         }
 
-        _ports = { p.name: p.direction for p in a.ports }
+        _ports = {p.name: p.direction for p in a.ports}
         self.assertDictEqual(_ports, ports)
 
     def test_cam(self):
@@ -110,12 +107,12 @@ class VerilogConversionTC(BasicTC):
 
     def test_multiple_files_at_once(self):
         language = VERILOG
-        f = [path.join(TEST_DIR, language.value, f)
+        f = [path.join(TEST_DIR, "verilog", f)
              for f in ["fifo_rx.v", "define.v", "arbiter.v", "uart.v"]]
-        inc_dir = path.join(TEST_DIR, language.value)
+        inc_dir = path.join(TEST_DIR, "verilog")
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
-        e = [ o for o in res.objs if isinstance(o, HdlModuleDef)]
+        e = [o for o in res.objs if isinstance(o, HdlModuleDef)]
         self.assertSetEqual(set(_e.module_name for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
@@ -124,10 +121,17 @@ class VerilogConversionTC(BasicTC):
         f, res = parseFile("mem_base_object.sv", SV)
         str(res)
 
+    def test_crc_functions(self):
+        f, res = parseFile("crc_functions.sv", SV)
+        str(res)
+
+    def test_operator_type(self):
+        self.parseWithRef("operator_type.sv", SV)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(VerilogConversionTC('test_uart'))
+    suite.addTest(VerilogConversionTC('test_operator_type'))
     # suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

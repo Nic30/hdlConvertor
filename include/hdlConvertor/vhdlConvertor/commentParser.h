@@ -12,10 +12,10 @@ namespace vhdl {
 /**
  * @note very similar implementation in <hdlConvertor/veriligConverotcommentParser.h>
  * */
-class CommentParser {
+class VhdlCommentParser {
 	antlr4::CommonTokenStream & tokens;
 public:
-	CommentParser(antlr4::TokenStream * _tokens);
+	VhdlCommentParser(antlr4::TokenStream& _tokens);
 
 	template<typename CONTEXT_T>
 	std::string parse(CONTEXT_T * ctx) {

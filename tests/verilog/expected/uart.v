@@ -7,36 +7,33 @@
 //-----------------------------------------------------
 module uart (
     // Port declarations
-    input reset,
-    input txclk,
-    input ld_tx_data,
-    input [7:0] tx_data,
-    input tx_enable,
-    output tx_out,
-    output tx_empty,
-    input rxclk,
-    input uld_rx_data,
-    output [7:0] rx_data,
-    input rx_enable,
-    input rx_in,
-    output rx_empty
+    input wire reset,
+    input wire txclk,
+    input wire ld_tx_data,
+    input wire[7:0] tx_data,
+    input wire tx_enable,
+    output reg tx_out,
+    output reg tx_empty,
+    input wire rxclk,
+    input wire uld_rx_data,
+    output reg[7:0] rx_data,
+    input wire rx_enable,
+    input wire rx_in,
+    output reg rx_empty
 );
-    // Internal Variables 
-    reg [7:0]  tx_reg;
-    reg tx_empty;
+    // Internal Variables (@note: interference with ports)
+    reg[7:0] tx_reg;
     reg tx_over_run;
-    reg [3:0]  tx_cnt;
-    reg tx_out;
-    reg [7:0]  rx_reg;
-    reg [7:0]  rx_data;
-    reg [3:0]  rx_sample_cnt;
-    reg [3:0]  rx_cnt;
+    reg[3:0] tx_cnt;
+    reg[7:0] rx_reg;
+    reg[3:0] rx_sample_cnt;
+    reg[3:0] rx_cnt;
     reg rx_frame_err;
     reg rx_over_run;
-    reg rx_empty;
     reg rx_d1;
     reg rx_d2;
     reg rx_busy;
+    // UART RX Logic
     always @(posedge rxclk, posedge reset)
         if (reset) begin
             rx_reg <= 0;
@@ -76,7 +73,7 @@ module uart (
                         else begin
                             rx_cnt <= (rx_cnt + 1);
                             // Start storing the rx data
-                            if ((((rx_cnt > 0) && rx_cnt) < 9))
+                            if (((rx_cnt > 0) && (rx_cnt < 9)))
                                 rx_reg[(rx_cnt - 1)] <= rx_d2;
                             if ((rx_cnt == 9)) begin
                                 rx_busy <= 0;
@@ -97,6 +94,7 @@ module uart (
                 rx_busy <= 0;
         end
 
+    // UART TX Logic
     always @(posedge txclk, posedge reset)
         if (reset) begin
             tx_reg <= 0;
@@ -116,7 +114,7 @@ module uart (
                 tx_cnt <= (tx_cnt + 1);
                 if ((tx_cnt == 0))
                     tx_out <= 0;
-                if ((((tx_cnt > 0) && tx_cnt) < 9))
+                if (((tx_cnt > 0) && (tx_cnt < 9)))
                     tx_out <= tx_reg[(tx_cnt - 1)];
                 if ((tx_cnt == 9)) begin
                     tx_out <= 1;

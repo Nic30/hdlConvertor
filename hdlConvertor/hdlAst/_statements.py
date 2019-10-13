@@ -19,6 +19,13 @@ class HdlImport(iHdlStatement):
         self.path = []  # type: List[str]
 
 
+class HdlStmNop():
+    """
+    Nop statement in HDL
+    """
+    __slots__ = []
+
+
 class HdlStmBlock(iHdlStatement):
     """
     Block of statements in HDL
@@ -27,7 +34,7 @@ class HdlStmBlock(iHdlStatement):
 
     def __init__(self):
         super(HdlStmBlock, self).__init__()
-        self.is_paralel = False
+        self.is_parallel = False
         self.join_any = False
         self.join_none = False
         self.body = []  # type: List[iHdlObj]
@@ -44,10 +51,13 @@ class HdlStmAssign(iHdlStatement):
 
     :ivar time_delay: delay which waits for a specified time
     :ivar event_delay: delay which waits for a specified event
-    :note: Evaluation of assignments with delay specified is generaly not synthetisable.
-        If statement is blocking the current statement waits until the condition is met
-        and then continues. If the assignment is not blocking the code continues and this statement
-        is executed asynchronously after condition is met.
+    :note: Evaluation of assignments with delay specified
+           is generaly not synthetisable.
+           If statement is blocking the current statement waits
+           until the condition is met and then continues.
+           If the assignment is not blocking the code continues
+           and this statement is executed asynchronously
+           after condition is met.
     """
     __slots__ = ["src", "dst", "is_blocking", "time_delay", "event_delay"]
 
@@ -66,7 +76,7 @@ class HdlStmIf(iHdlStatement):
 
     :ivar cond: condition in if statement
     :ivar if_true: block of statements which is in if true branch
-    :ivar elifs: type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
+    :ivar elifs: type: List[Tuple[iHdlExpr, iHdlStatement]]
                   = list of (condition, statement list)
     """
     __slots__ = ["cond", "if_true", "elifs", "if_false"]
@@ -74,9 +84,9 @@ class HdlStmIf(iHdlStatement):
     def __init__(self):
         super(HdlStmIf, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.if_true = []  # type: List[iHdlStatement]
-        self.elifs = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
-        self.if_false = None  # type: Optional[List[iHdlStatement]]
+        self.if_true = None  # type: iHdlStatement
+        self.elifs = []  # type: List[Tuple[iHdlExpr, iHdlStatement]]
+        self.if_false = None  # type: Optional[iHdlStatement]
 
 
 class HdlStmProcess(iHdlStatement):
@@ -88,15 +98,15 @@ class HdlStmProcess(iHdlStatement):
         the trigger signals of the evaluation of the process
     :note: sensitivity = None means that the process is executed immediately
         sensitivity = [] means the process is never executed
-    :note: Verilog always #time construct is translated to process without sensitivity and
-        wait #time as a first statement in body.
+    :note: Verilog always #time construct is translated to process
+           without sensitivity and wait #time as a first statement in body.
     """
     __slots__ = ["sensitivity", "body"]
 
     def __init__(self):
         super(HdlStmProcess, self).__init__()
-        self.sensitivity = None  # type: Optional[iHdlExpr]
-        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
+        self.sensitivity = None  # type: Optional[List[iHdlExpr]]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmCase(iHdlStatement):
@@ -108,8 +118,8 @@ class HdlStmCase(iHdlStatement):
     def __init__(self):
         super(HdlStmCase, self).__init__()
         self.switch_on = None  # type: iHdlExpr
-        self.cases = []  # type: List[Tuple[iHdlExpr, List[iHdlStatement]]]
-        self.default = None  # type: Optional[List[iHdlStatement]]
+        self.cases = []  # type: List[Tuple[iHdlExpr, iHdlStatement]]
+        self.default = None  # type: Optional[iHdlStatement]
 
 
 class HdlStmFor(iHdlStatement):
@@ -123,10 +133,10 @@ class HdlStmFor(iHdlStatement):
 
     def __init__(self):
         super(HdlStmFor, self).__init__()
-        self.init = []  # type: List[iHdlStatement]
+        self.init = None  # type: iHdlStatement
         self.cond = None  # type: iHdlExpr
-        self.step = []  # type: List[iHdlStatement]
-        self.body = []  # type: List[iHdlStatement]
+        self.step = None  # type: iHdlStatement
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmForIn(iHdlStatement):
@@ -138,13 +148,13 @@ class HdlStmForIn(iHdlStatement):
 
     :note: corresponds to VHDL "for" and is used also for Verilog "repeat"
     """
-    __slots__ = ["var", "collection", "body"]
+    __slots__ = ["var_defs", "collection", "body"]
 
     def __init__(self):
         super(HdlStmForIn, self).__init__()
-        self.var = []  # type: List[iHdlStatement]
+        self.var_defs = []  # type: List[iHdlObj]
         self.collection = None  # type: iHdlExpr
-        self.body = []  # type: List[iHdlStatement]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmWhile(iHdlStatement):
@@ -159,7 +169,7 @@ class HdlStmWhile(iHdlStatement):
     def __init__(self):
         super(HdlStmWhile, self).__init__()
         self.cond = None  # type: iHdlExpr
-        self.body = []  # type: Tuple[iHdlExpr, List[iHdlStatement]]
+        self.body = None  # type: iHdlStatement
 
 
 class HdlStmReturn(iHdlStatement):

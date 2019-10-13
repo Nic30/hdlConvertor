@@ -3,10 +3,7 @@ import unittest
 from hdlConvertor import ParseException
 from hdlConvertor.language import Language
 
-try:
-    from tests.basic_tc import BasicTC, parseFile as _parseFile
-except ImportError:
-    from basic_tc import BasicTC, parseFile as _parseFile
+from tests.basic_tc import BasicTC, parseFile as _parseFile
 
 
 def parseFile(fname):

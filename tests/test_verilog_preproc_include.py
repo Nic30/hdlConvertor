@@ -4,7 +4,6 @@ import unittest
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 
-SV = Language.SYSTEM_VERILOG_2012
 SRC_DIR = path.join(path.dirname(__file__), 'sv_pp', 'src')
 EXPECTED_DIR = path.join(path.dirname(__file__), 'sv_pp', 'expected')
 
@@ -19,7 +18,7 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
         if not isinstance(file, list):
             file = [file, ]
         f = path.join(SRC_DIR, *file)
-        res = c.verilog_pp(f, incdirs, SV)
+        res = c.verilog_pp(f, Language.VERILOG, incdirs)
         ref_file = path.join(EXPECTED_DIR, *file)
         with open(ref_file) as exp_f:
             expected = exp_f.read()
@@ -57,15 +56,17 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
     def test_spec_incdir2(self):
         incdir = [
             path.join(SRC_DIR, "include_many_dir", "dir0-a"),
-            path.join(SRC_DIR, "include_many_dir", ),
+            path.join(SRC_DIR, "include_many_dir",),
         ]
         self.run_test(
             ["include_many_dir", "dir0-a", "dir1-a", "spec_incdir.txt"],
             incdir)
+
     def test_transitive(self):
         self.run_test(
             ["include_many_dir", "transitive.txt"],
             [])
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

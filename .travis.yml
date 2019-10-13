@@ -4,6 +4,7 @@ language: python
 
 git:
   depth: 1
+  submodules: true
 
 cache:
   - apt: true
@@ -33,9 +34,9 @@ matrix:
             - g++-8
             - gcc-8
 
-    - name: "Python 3.7 gcc-8"
+    - name: "Python 3.7 gcc-8 Debug+Coverage"
       python: 3.7           
-      env: CC=gcc-8 CXX=g++-8 BUILD_ARGS="--build-type Debug"
+      env: CC=gcc-8 CXX=g++-8 BUILD_ARGS="--build-type Debug -- -DCODE_COVERAGE=ON" CODE_COVERAGE=1
       addons:
         apt:
           sources:
@@ -43,10 +44,11 @@ matrix:
           packages:
             - g++-8
             - gcc-8
+            -
 
-    - name: "Python 3.7 gcc-7"
+    - name: "Python 3.7 gcc-7 (deploy on tag)"
       python: 3.7           
-      env: CC=gcc-7 CXX=g++-7
+      env: CC=gcc-7 CXX=g++-7 DO_DELPLOY=1
       addons:
         apt:
           sources:
@@ -54,7 +56,6 @@ matrix:
           packages:
             - g++-7
             - gcc-7
-
 
 addons:
    apt:
@@ -70,10 +71,23 @@ addons:
 install:
 - sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
 - sudo apt update
-- sudo apt install libantlr4-runtime-dev antlr4
+- if [ "$CODE_COVERAGE" == "1" ];
+    sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
+    then sudo apt install -y lcov;
+    gem install coveralls-lcov;
+ fi
+- sudo apt install libantlr4-runtime-dev antlr4 -y
 - pip install -r requirements.txt
 - python setup.py build $BUILD_ARGS
-- python setup.py install
+- python setup.py install $BUILD_ARGS
+
+script: 
+  - python setup.py test $BUILD_ARGS # the scikit-build automatically executes setup.py develop which requires access to installation dir
+
+after_success:
+  - lcov --compat-libtool --directory . --capture --output-file coverage.info.raw
+  - lcov --remove coverage.info.raw -o coverage.info '/usr/*' './_skbuild/*'
+  - coveralls-lcov coverage.info
 
 deploy:
   provider: pypi
@@ -83,8 +97,7 @@ deploy:
   on:
     tags: true
     branch: master
+    condition: $DO_DELPLOY = 1
 
-script: 
-  - python setup.py test # the scikit-build automatically executes setup.py develop which requires access to installation dir
 
 
