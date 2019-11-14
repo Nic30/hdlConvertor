@@ -14,6 +14,8 @@
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
+#include <hdlConvertor/createObject.h>
+
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -32,7 +34,7 @@ std::unique_ptr<HdlNamespace> VhdlPackageHeaderParser::visitPackage_declaration(
 	//           package_declarative_part
 	//       END ( PACKAGE )? ( identifier )? SEMI
 	// ;
-	ph = std::make_unique<HdlNamespace>();
+	ph = create_object<HdlNamespace>(ctx);
 	ph->defs_only = true;
 	NotImplementedLogger::print(
 			"PackageHeaderParser.visitPackage_declaration - package_header",
@@ -190,7 +192,7 @@ std::unique_ptr<HdlModuleDec> VhdlPackageHeaderParser::visitComponent_declaratio
 	//       END COMPONENT ( identifier )? SEMI
 	// ;
 
-	auto e = std::make_unique<HdlModuleDec>();
+	auto e = create_object<HdlModuleDec>(ctx);
 	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

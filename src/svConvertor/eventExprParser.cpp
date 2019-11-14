@@ -1,6 +1,7 @@
 #include <hdlConvertor/svConvertor/eventExprParser.h>
 #include <memory>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
@@ -46,7 +47,7 @@ void VerEventExprParser::visitEvent_expression_item(
 			// [todo] must have
 			auto edge_type = visitEvent_identifier(ei);
 			if (edge_type.second)
-				e = make_unique<iHdlExpr>(edge_type.first, move(e));
+				e = create_object<iHdlExpr>(_e[0], edge_type.first, move(e));
 		}
 		if (_e.size() != 1) {
 			NotImplementedLogger::print(

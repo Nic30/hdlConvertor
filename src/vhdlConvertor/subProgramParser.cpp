@@ -5,6 +5,8 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 
+#include <hdlConvertor/createObject.h>
+
 using namespace hdlConvertor::hdlObjects;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
@@ -65,7 +67,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitProcedure_specificati
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return std::make_unique<HdlFunctionDef>(name, isOperator, nullptr, std::move(paramList));
+	return create_object<HdlFunctionDef>(ctx, name, isOperator, nullptr, std::move(paramList));
 }
 
 std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specification(
@@ -87,7 +89,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specificatio
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return std::make_unique<HdlFunctionDef>(name, isOperator, std::move(returnT),
+	return create_object<HdlFunctionDef>(ctx, name, isOperator, std::move(returnT),
 			std::move(paramList));
 }
 

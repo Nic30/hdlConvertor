@@ -4,6 +4,9 @@
 #include <assert.h>
 
 #include <hdlConvertor/hdlObjects/hdlCall.h>
+#include <hdlConvertor/createObject.h>
+
+#include <antlr4-runtime.h>
 
 using namespace std;
 
@@ -49,63 +52,69 @@ iHdlExpr::iHdlExpr(const BigInteger &value, int bits) {
 iHdlExpr::iHdlExpr(const BigInteger &value) :
 		data(new HdlValue(value, -1)) {
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::INT(const std::string &strVal, int base) {
-	return make_unique<iHdlExpr>(BigInteger(strVal, base));
+std::unique_ptr<iHdlExpr> iHdlExpr::INT(
+		TerminalNode *node, const std::string &strVal, int base) {
+  return create_object<iHdlExpr>(node, BigInteger(strVal, base));
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::INT(const std::string &strVal, int bits,
-		int base) {
-	return make_unique<iHdlExpr>(new HdlValue(BigInteger(strVal, base), bits));
+std::unique_ptr<iHdlExpr> iHdlExpr::INT(
+		TerminalNode *node, const std::string &strVal, int bits, int base) {
+	return create_object<iHdlExpr>(node, new HdlValue(BigInteger(strVal, base), bits));
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::INT(int64_t val) {
-	return make_unique<iHdlExpr>(BigInteger(val));
+std::unique_ptr<iHdlExpr> iHdlExpr::INT(TerminalNode *node, int64_t val) {
+	return create_object<iHdlExpr>(node, BigInteger(val));
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::FLOAT(double val) {
-	return make_unique<iHdlExpr>(new HdlValue(val));
+std::unique_ptr<iHdlExpr> iHdlExpr::FLOAT(TerminalNode *node, double val) {
+	return create_object<iHdlExpr>(node, new HdlValue(val));
 }
 
-std::unique_ptr<iHdlExpr> iHdlExpr::STR(std::string strVal) {
+std::unique_ptr<iHdlExpr> iHdlExpr::STR(TerminalNode *node, std::string strVal) {
 	auto l = new HdlValue(strVal);
 	l->type = HdlValueType::symb_STRING;
-	return make_unique<iHdlExpr>(l);
+	return create_object<iHdlExpr>(node, l);
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::ARRAY(
-		std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr) {
-	return make_unique<iHdlExpr>(new HdlValue(move(arr)));
+		ParserRuleContext *ctx, std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr) {
+	return create_object<iHdlExpr>(ctx, new HdlValue(move(arr)));
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::ARRAY(
-		std::vector<std::unique_ptr<iHdlExpr>> &arr) {
+		ParserRuleContext *ctx, std::vector<std::unique_ptr<iHdlExpr>> &arr) {
 	auto _arr = make_unique<std::vector<std::unique_ptr<iHdlExpr>>>(move(arr));
-	return ARRAY(move(_arr));
+	return ARRAY(ctx, move(_arr));
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::OPEN() {
-	return make_unique<iHdlExpr>(new HdlValue(HdlValueType::symb_OPEN));
+	return create_object<iHdlExpr>(nullptr, new HdlValue(HdlValueType::symb_OPEN));
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::ternary(std::unique_ptr<iHdlExpr> cond,
+std::unique_ptr<iHdlExpr> iHdlExpr::ternary(
+		ParserRuleContext *ctx, std::unique_ptr<iHdlExpr> cond,
 		std::unique_ptr<iHdlExpr> ifTrue, std::unique_ptr<iHdlExpr> ifFalse) {
-	auto e = make_unique<iHdlExpr>();
+	auto e = create_object<iHdlExpr>(ctx);
 	e->data = HdlCall::ternary(move(cond), move(ifTrue), move(ifFalse));
 	return e;
 }
-std::unique_ptr<iHdlExpr> iHdlExpr::call(std::unique_ptr<iHdlExpr> fnId,
+std::unique_ptr<iHdlExpr> iHdlExpr::call(
+		ParserRuleContext *ctx, std::unique_ptr<iHdlExpr> fnId,
 		std::vector<std::unique_ptr<iHdlExpr>> &args) {
-	auto e = make_unique<iHdlExpr>();
+	auto e = create_object<iHdlExpr>(ctx);
 	e->data = HdlCall::call(move(fnId), args);
 	return e;
 }
 std::unique_ptr<iHdlExpr> iHdlExpr::parametrization(
+		ParserRuleContext *ctx,
 		std::unique_ptr<iHdlExpr> fnId,
 		std::vector<std::unique_ptr<iHdlExpr>> &args) {
-	auto e = make_unique<iHdlExpr>();
+	auto e = create_object<iHdlExpr>(ctx);
 	e->data = HdlCall::parametrization(move(fnId), args);
 	return e;
 }
 
-std::unique_ptr<iHdlExpr> iHdlExpr::slice(std::unique_ptr<iHdlExpr> fnId,
+std::unique_ptr<iHdlExpr> iHdlExpr::slice(
+		ParserRuleContext *ctx,
+		std::unique_ptr<iHdlExpr> fnId,
 		std::vector<std::unique_ptr<iHdlExpr>> &operands) {
-	auto e = make_unique<iHdlExpr>();
+	auto e = create_object<iHdlExpr>(ctx);
 	e->data = HdlCall::slice(move(fnId), operands);
 	return e;
 }
@@ -113,29 +122,29 @@ std::unique_ptr<iHdlExpr> iHdlExpr::slice(std::unique_ptr<iHdlExpr> fnId,
 std::unique_ptr<iHdlExpr> iHdlExpr::ID(const std::string &value) {
 	auto s = new HdlValue(value);
 	s->type = HdlValueType::symb_ID;
-	return make_unique<iHdlExpr>(s);
+	return create_object<iHdlExpr>(nullptr, s);
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::TYPE_T() {
-	std::unique_ptr<iHdlExpr> e = make_unique<iHdlExpr>();
+	std::unique_ptr<iHdlExpr> e = create_object<iHdlExpr>(nullptr);
 	e->data = &Type_t;
 	return e;
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::AUTO_T() {
-	auto e = make_unique<iHdlExpr>();
+	auto e = create_object<iHdlExpr>(nullptr);
 	e->data = &AutoType_t;
 	return e;
 }
 
 std::unique_ptr<iHdlExpr> iHdlExpr::all() {
-	return make_unique<iHdlExpr>(new HdlValue(HdlValueType::symb_ALL));
+	return create_object<iHdlExpr>(nullptr, new HdlValue(HdlValueType::symb_ALL));
 }
 std::unique_ptr<iHdlExpr> iHdlExpr::null() {
-	return make_unique<iHdlExpr>(new HdlValue(HdlValueType::symb_NULL));
+	return create_object<iHdlExpr>(nullptr, new HdlValue(HdlValueType::symb_NULL));
 }
 std::unique_ptr<iHdlExpr> iHdlExpr::others() {
-	return make_unique<iHdlExpr>(new HdlValue(HdlValueType::symb_OTHERS));
+	return create_object<iHdlExpr>(nullptr, new HdlValue(HdlValueType::symb_OTHERS));
 }
 iHdlExpr::~iHdlExpr() {
 	if (data && data != &Type_t && data != &AutoType_t)

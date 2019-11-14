@@ -1,19 +1,23 @@
 #include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 #include <hdlConvertor/hdlObjects/hdlStmBlock.h>
 
+#include <hdlConvertor/createObject.h>
+
+#include <antlr4-runtime.h>
+
 using namespace std;
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlStmProcess::HdlStmProcess() :
-		iHdlStatement(), body(make_unique<HdlStmBlock>()) {
+		iHdlStatement(), body(create_object<HdlStmBlock>(nullptr)) {
 }
 
 HdlStmProcess::HdlStmProcess(
 		unique_ptr<vector<unique_ptr<iHdlExpr>>> _sensitivity) :
 		iHdlStatement(), sensitivity_list(move(_sensitivity)), body(
-				make_unique<HdlStmBlock>()) {
+				create_object<HdlStmBlock>(nullptr)) {
 }
 HdlStmProcess::HdlStmProcess(
 		unique_ptr<vector<unique_ptr<iHdlExpr>>> _sensitivity,

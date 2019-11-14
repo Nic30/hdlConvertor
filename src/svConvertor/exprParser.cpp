@@ -1,5 +1,6 @@
 #include <hdlConvertor/svConvertor/exprParser.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/paramDefParser.h>
@@ -36,7 +37,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitRange_expression(
 	auto l = visitExpression(exprs[0]);
 	if (exprs.size() == 2) {
 		auto h = visitExpression(exprs[1]);
-		return make_unique<iHdlExpr>(move(l), HdlOperatorType::DOWNTO, move(h));
+		return create_object<iHdlExpr>(ctx, move(l), HdlOperatorType::DOWNTO, move(h));
 	} else {
 		assert(exprs.size() == 1);
 		return l;
@@ -72,7 +73,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitPs_identifier(
 	auto ps = ctx->package_scope();
 	if (ps) {
 		auto _ps = visitPackage_scope(ps);
-		res = make_unique<iHdlExpr>(move(_ps), HdlOperatorType::DOUBLE_COLON,
+		res = create_object<iHdlExpr>(ctx, move(_ps), HdlOperatorType::DOUBLE_COLON,
 				move(res));
 	}
 	return res;
@@ -94,7 +95,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitArray_range_expression(
 				ctx);
 	}
 	auto e1 = visitExpression(es[1]);
-	return make_unique<iHdlExpr>(move(e0), HdlOperatorType::DOWNTO, move(e1));
+	return create_object<iHdlExpr>(ctx, move(e0), HdlOperatorType::DOWNTO, move(e1));
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitIdentifier_doted_index_at_end(
@@ -104,12 +105,12 @@ unique_ptr<iHdlExpr> VerExprParser::visitIdentifier_doted_index_at_end(
 	auto id = ctx->identifier();
 	auto res = visitIdentifier(id[0]);
 	if (id.size() >= 2) {
-		res = append_expr(move(res), HdlOperatorType::DOT,
+		res = append_expr(ctx, move(res), HdlOperatorType::DOT,
 				visitIdentifier(id[1]));
 	}
 	for (auto _re : ctx->range_expression()) {
 		auto re = visitRange_expression(_re);
-		res = append_expr(move(res), HdlOperatorType::INDEX, move(re));
+		res = append_expr(_re, move(res), HdlOperatorType::INDEX, move(re));
 	}
 	return res;
 }
@@ -148,7 +149,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitInc_or_dec_expression(
 		e = visitVariable_lvalue(c->variable_lvalue());
 		VerAttributeParser::visitAttribute_instance(c->attribute_instance());
 	}
-	return make_unique<iHdlExpr>(op, move(e));
+	return create_object<iHdlExpr>(ctx, op, move(e));
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitExpression(
@@ -200,7 +201,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 		if (_uo) {
 			auto uo = VerLiteralParser::visitUnary_operator(_uo);
 			assert(_p);
-			return make_unique<iHdlExpr>(uo, move(p));
+			return create_object<iHdlExpr>(_uo, uo, move(p));
 		} else {
 			return p;
 		}
@@ -287,7 +288,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 		} while (0);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
-		return make_unique<iHdlExpr>(move(e0), op, move(e1));
+		return create_object<iHdlExpr>(ctx, move(e0), op, move(e1));
 	}
 	//   | expression KW_INSIDE LBRACE open_range_list RBRACE
 	auto inside = ctx->KW_INSIDE();
@@ -312,7 +313,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 	auto e0 = visitExpression(exprs[0]);
 	auto e1 = visitExpression(exprs[1]);
 	auto e2 = visitExpression(exprs[2]);
-	return iHdlExpr::ternary(move(e0), move(e1), move(e2));
+	return iHdlExpr::ternary(ctx, move(e0), move(e1), move(e2));
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitConcatenation(
@@ -324,7 +325,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitConcatenation(
 		auto _e = ctx->expression(0);
 		auto e = visitExpression(_e);
 		auto c2 = visitConcatenation(c);
-		return make_unique<iHdlExpr>(move(e), HdlOperatorType::REPL_CONCAT,
+		return create_object<iHdlExpr>(ctx, move(e), HdlOperatorType::REPL_CONCAT,
 				move(c2));
 	}
 	unique_ptr<iHdlExpr> res = nullptr;
@@ -333,7 +334,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitConcatenation(
 		if (res == nullptr)
 			res = move(p);
 		else
-			res = make_unique<iHdlExpr>(move(res), HdlOperatorType::CONCAT,
+			res = create_object<iHdlExpr>(e, move(res), HdlOperatorType::CONCAT,
 					move(p));
 	}
 	return res;
@@ -353,7 +354,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitHierarchical_identifier(
 	}
 	auto _id = ctx->identifier();
 	auto id = visitIdentifier(_id);
-	return append_expr(move(selected_name), HdlOperatorType::DOT, move(id));
+	return append_expr(ctx, move(selected_name), HdlOperatorType::DOT, move(id));
 }
 
 string VerExprParser::getIdentifierStr(sv2017Parser::IdentifierContext *ctx) {
@@ -443,7 +444,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitEvent_trigger(
 	}
 	auto _e = ctx->hierarchical_identifier();
 	auto e = visitHierarchical_identifier(_e);
-	return make_unique<iHdlExpr>(HdlOperatorType::ARROW, move(e));
+	return create_object<iHdlExpr>(ctx, HdlOperatorType::ARROW, move(e));
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitBit_select(
@@ -452,7 +453,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitBit_select(
 	// bit_select: LSQUARE_BR expression RSQUARE_BR;
 	auto _e = ctx->expression();
 	auto e = visitExpression(_e);
-	return append_expr(move(selected_name), HdlOperatorType::INDEX, move(e));
+	return append_expr(_e, move(selected_name), HdlOperatorType::INDEX, move(e));
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitIdentifier_with_bit_select(
@@ -461,7 +462,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitIdentifier_with_bit_select(
 	// identifier_with_bit_select: identifier ( bit_select )*;
 	auto id = ctx->identifier();
 	auto res = VerExprParser::visitIdentifier(id);
-	res = append_expr(move(selected_name), HdlOperatorType::DOT, move(res));
+	res = append_expr(ctx, move(selected_name), HdlOperatorType::DOT, move(res));
 	for (auto bs : ctx->bit_select()) {
 		res = visitBit_select(bs, move(res));
 	}
@@ -492,9 +493,9 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_hier_id_with_se
 		assert(exprs.size() == 2);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
-		auto sel = make_unique<iHdlExpr>(move(e0), HdlOperatorType::DOWNTO,
+		auto sel = create_object<iHdlExpr>(ctx, move(e0), HdlOperatorType::DOWNTO,
 				move(e1));
-		return append_expr(move(res), HdlOperatorType::INDEX, move(sel));
+		return append_expr(ctx, move(res), HdlOperatorType::INDEX, move(sel));
 	}
 	return res;
 }
@@ -522,13 +523,13 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_path_item(
 	auto _id = ctx->identifier();
 	auto id = visitIdentifier(_id);
 	if (selected_name) {
-		id = make_unique<iHdlExpr>(move(selected_name), subname_access_type,
+		id = create_object<iHdlExpr>(ctx, move(selected_name), subname_access_type,
 				move(id));
 	}
 	auto _pva = ctx->parameter_value_assignment();
 	if (_pva) {
 		auto pva = visitParameter_value_assignment(_pva);
-		id = iHdlExpr::parametrization(move(id), pva);
+		id = iHdlExpr::parametrization(_pva, move(id), pva);
 	}
 	return id;
 }
@@ -543,13 +544,13 @@ unique_ptr<iHdlExpr> VerExprParser::visitImplicit_class_handle(
 	//  ;
 	if (ctx->KW_THIS()) {
 		auto t = iHdlExpr::ID("this");
-		selected_name = append_expr(move(selected_name), subname_access_type,
+		selected_name = append_expr(ctx, move(selected_name), subname_access_type,
 				move(t));
 		subname_access_type = HdlOperatorType::DOT;
 	}
 	if (ctx->KW_SUPER()) {
 		auto s = iHdlExpr::ID("super");
-		selected_name = append_expr(move(selected_name), subname_access_type,
+		selected_name = append_expr(ctx, move(selected_name), subname_access_type,
 				move(s));
 	}
 	assert(selected_name);
@@ -571,7 +572,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_path(
 		res = iHdlExpr::ID("local");
 	}
 	if (ctx->KW_DOLAR_ROOT()) {
-		res = append_expr(move(res), HdlOperatorType::DOUBLE_COLON,
+		res = append_expr(ctx, move(res), HdlOperatorType::DOUBLE_COLON,
 				iHdlExpr::ID("$root"));
 	} else {
 		auto _ich = ctx->implicit_class_handle();
@@ -581,7 +582,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_path(
 		} else {
 			if (ctx->KW_DOLAR_UNIT()) {
 				auto part = iHdlExpr::ID("$unit");
-				res = append_expr(move(res), HdlOperatorType::DOUBLE_COLON,
+				res = append_expr(ctx, move(res), HdlOperatorType::DOUBLE_COLON,
 						move(part));
 			} else {
 				auto pcspi = ctx->package_or_class_scoped_path_item();
@@ -654,7 +655,7 @@ void VerExprParser::visitList_of_arguments(
 					v = ep.visitExpression(_v);
 				else
 					v = iHdlExpr::ID("void");
-				auto e = make_unique<iHdlExpr>(move(name),
+				auto e = create_object<iHdlExpr>(c, move(name),
 						HdlOperatorType::MAP_ASSOCIATION, move(v));
 				args.push_back(move(e));
 			}
@@ -672,7 +673,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitOperator_assignment(
 	auto src = visitExpression(e);
 	auto op = VerLiteralParser::visitAssignment_operator(
 			ctx->assignment_operator());
-	return make_unique<iHdlExpr>(move(dst), op, move(src));
+	return create_object<iHdlExpr>(ctx, move(dst), op, move(src));
 }
 
 }

@@ -28,7 +28,7 @@ unique_ptr<iHdlExpr> VerLiteralParser::visitIntegral_number(
 		assert(f != std::string::npos);
 		size_t size = parseSize_UNSIGNED_NUMBER(t.substr(0, f));
 		auto _v = t.substr(f);
-		return visitANY_BASED_NUMBER(_v, size);
+		return visitANY_BASED_NUMBER(ctx, _v, size);
 	}
 	auto abn = ctx->ANY_BASED_NUMBER();
 	if (abn) {
@@ -37,7 +37,7 @@ unique_ptr<iHdlExpr> VerLiteralParser::visitIntegral_number(
 		if (un) {
 			size = parseSize_UNSIGNED_NUMBER(un->getText());
 		}
-		return visitANY_BASED_NUMBER(abn->getText(), size);
+		return visitANY_BASED_NUMBER(ctx, abn->getText(), size);
 	}
 	auto un = ctx->UNSIGNED_NUMBER();
 	return visitUNSIGNED_NUMBER(un);
@@ -49,10 +49,10 @@ size_t VerLiteralParser::parseSize_UNSIGNED_NUMBER(std::string str) {
 unique_ptr<iHdlExpr> VerLiteralParser::visitUNSIGNED_NUMBER(TerminalNode *ctx) {
 	std::string str = ctx->getText();
 	str.erase(std::remove(str.begin(), str.end(), '_'), str.end());
-	return iHdlExpr::INT(str, 10);
+	return iHdlExpr::INT(ctx, str, 10);
 }
-unique_ptr<iHdlExpr> VerLiteralParser::visitANY_BASED_NUMBER(std::string s,
-		size_t size) {
+unique_ptr<iHdlExpr> VerLiteralParser::visitANY_BASED_NUMBER(
+		sv2017Parser::Integral_numberContext *ctx, std::string s, size_t size) {
 	s.erase(std::remove(s.begin(), s.end(), '_'), s.end());
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
 
@@ -84,9 +84,10 @@ unique_ptr<iHdlExpr> VerLiteralParser::visitANY_BASED_NUMBER(std::string s,
 	}
 
 	std::string strVal = s.substr(valuePartStart, s.length()); // cut off prefix
+  TerminalNode *const n = dynamic_cast<TerminalNode *>(ctx);
 	if (size != std::string::npos)
-		return iHdlExpr::INT(strVal, size, radix);
-	return iHdlExpr::INT(strVal, radix);
+		return iHdlExpr::INT(n, strVal, size, radix);
+	return iHdlExpr::INT(n, strVal, radix);
 
 }
 unique_ptr<iHdlExpr> VerLiteralParser::visitNumber(
@@ -126,11 +127,11 @@ unique_ptr<iHdlExpr> VerLiteralParser::visitReal_number(
 	// ;
 	std::string s = ctx->getText();
 	double val = stod(s);
-	return iHdlExpr::FLOAT(val);
+	return iHdlExpr::FLOAT(dynamic_cast<TerminalNode *>(ctx), val);
 }
 unique_ptr<iHdlExpr> VerLiteralParser::visitSTRING(TerminalNode *n) {
 	std::string s = n->getText();
-	return iHdlExpr::STR(s.substr(1, s.length() - 2)); // skipping " at the end
+	return iHdlExpr::STR(n, s.substr(1, s.length() - 2)); // skipping " at the end
 }
 HdlOperatorType VerLiteralParser::visitUnary_module_path_operator(
 		sv2017Parser::Unary_module_path_operatorContext *ctx) {
@@ -392,7 +393,7 @@ unique_ptr<iHdlExpr> VerLiteralParser::visitPrimary_literal(
 		// ;
 		auto t = uul->getText();
 		assert(t.size() == 2);
-		return iHdlExpr::INT(t.substr(1), 10);
+		return iHdlExpr::INT(dynamic_cast<TerminalNode *>(ctx), t.substr(1), 10);
 	}
 	auto sl = ctx->STRING_LITERAL();
 	if (sl) {
