@@ -3,6 +3,9 @@
 # Basic project setup in Eclipse (eclipse + CDT -> C/C++ project)
 (Note that we will use python3-dbg, if you want to use python3/2 you have to recompile.
  Without -dbg you will mostly see only segfaults without explanation if there is some problem.)
+* in eclise.ini increase memory available for eclise or c++ indexing will be very slow (1min+)
+   `-Xms1024 -Xmx4096m` or more depending on how many plugins in eclipse you have installed.
+
 (Note that there python3.7 is used you may have to change this version if required.)
 * `sudo apt install python3-dev python3-dbg`
 * create a C/C++ project from this repo (or add C++ nature to Python project)
