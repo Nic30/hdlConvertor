@@ -2,6 +2,7 @@
 
 #include <hdlConvertor/svConvertor/utils.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
 #include <hdlConvertor/svConvertor/typeParser.h>
@@ -132,7 +133,7 @@ void VerParamDefParser::visitList_of_type_assignments(
 		auto _v = _ta->data_type();
 		if (_v)
 			v = tp.visitData_type(_v);
-		auto ta = make_unique<HdlVariableDef>(name, iHdlExpr::TYPE_T(),
+		auto ta = create_object<HdlVariableDef>(_ta, name, iHdlExpr::TYPE_T(),
 				move(v));
 		res.push_back(move(ta));
 	}
@@ -148,7 +149,7 @@ unique_ptr<HdlVariableDef> VerParamDefParser::visitParam_assignment(
 		value = visitConstant_param_expression(cpa);
 	}
 	auto name = VerExprParser::getIdentifierStr(ctx->identifier());
-	auto p = make_unique<HdlVariableDef>(name, iHdlExpr::AUTO_T(), move(value));
+	auto p = create_object<HdlVariableDef>(ctx, name, iHdlExpr::AUTO_T(), move(value));
 	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }

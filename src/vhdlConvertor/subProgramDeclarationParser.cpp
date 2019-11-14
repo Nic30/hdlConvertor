@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
@@ -49,7 +50,7 @@ std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::vis
 	else
 		paramList = std::make_unique<
 				std::vector<std::unique_ptr<HdlVariableDef>>>();
-	return std::make_unique<HdlFunctionDef>(name, isOperator, nullptr,
+	return create_object<HdlFunctionDef>(ctx, name, isOperator, nullptr,
 			move(paramList));
 }
 
@@ -79,7 +80,7 @@ std::unique_ptr<hdlObjects::HdlFunctionDef> VhdlSubProgramDeclarationParser::vis
 	else
 		paramList = std::make_unique<
 				std::vector<std::unique_ptr<HdlVariableDef>>>();
-	return std::make_unique<HdlFunctionDef>(name, isOperator,
+	return create_object<HdlFunctionDef>(ctx, name, isOperator,
 			std::move(returnT), std::move(paramList));
 }
 

@@ -4,6 +4,8 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 
+#include <hdlConvertor/createObject.h>
+
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -20,7 +22,6 @@ std::unique_ptr<HdlCompInstance> VhdlCompInstanceParser::visitComponent_instanti
 	// ;
 	auto ci = visitInstantiated_unit(ctx->instantiated_unit());
 	ci->name = iHdlExpr::ID(name);
-	ci->position.update_from_elem(ctx);
 
 	auto gma = ctx->generic_map_aspect();
 	if (gma) {
@@ -53,7 +54,7 @@ std::unique_ptr<HdlCompInstance> VhdlCompInstanceParser::visitInstantiated_unit(
 				"CompInstanceParser.visitInstantiated_unit - Identifier", _id);
 	}
 	auto ent_name = VhdlReferenceParser::visitName(ctx->name());
-	return std::make_unique<HdlCompInstance>(nullptr, std::move(ent_name));
+	return create_object<HdlCompInstance>(ctx, nullptr, std::move(ent_name));
 }
 
 std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> VhdlCompInstanceParser::visitGeneric_map_aspect(
