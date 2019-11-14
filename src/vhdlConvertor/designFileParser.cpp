@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/hdlObjects/hdlStm_others.h>
@@ -158,7 +159,7 @@ void VhdlDesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 		auto r = VhdlReferenceParser::visitSelected_name(sn);
 		std::vector<std::unique_ptr<iHdlExpr>> ref;
 		flatten_doted_expr(move(r), ref);
-		auto imp = std::make_unique<HdlStmImport>(ref);
+		auto imp = create_object<HdlStmImport>(sn, ref);
 		res.push_back(std::move(imp));
 
 	}

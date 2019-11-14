@@ -1,5 +1,6 @@
 #include <hdlConvertor/svConvertor/moduleInstanceParser.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/svConvertor/paramDefParser.h>
@@ -83,7 +84,7 @@ vector<unique_ptr<iHdlExpr>> VerModuleInstanceParser::visitList_of_parameter_val
 				v = iHdlExpr::null();
 			}
 			pcs.push_back(
-					make_unique<iHdlExpr>(move(k),
+					create_object<iHdlExpr>(pa, move(k),
 							HdlOperatorType::MAP_ASSOCIATION, move(v)));
 		}
 	}
@@ -106,7 +107,7 @@ unique_ptr<HdlCompInstance> VerModuleInstanceParser::visitHierarchical_instance(
 	name = tp.applyUnpacked_dimension(move(name), uds);
 	auto portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
-	auto c = make_unique<HdlCompInstance>(move(name), move(module_id));
+	auto c = create_object<HdlCompInstance>(ctx, move(name), move(module_id));
 	c->genericMap = move(genericMap);
 	c->portMap = move(portMap);
 	return c;
@@ -168,7 +169,7 @@ vector<unique_ptr<iHdlExpr>> VerModuleInstanceParser::visitList_of_port_connecti
 				v = iHdlExpr::null();
 			}
 			pcs.push_back(
-					make_unique<iHdlExpr>(move(k),
+					create_object<iHdlExpr>(pc, move(k),
 							HdlOperatorType::MAP_ASSOCIATION, move(v)));
 		}
 	}

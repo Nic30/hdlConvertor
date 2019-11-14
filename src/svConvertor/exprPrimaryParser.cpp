@@ -5,6 +5,7 @@
 #include <hdlConvertor/svConvertor/typeParser.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/createObject.h>
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
@@ -169,7 +170,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCast2(
 	auto _e = ctx->expression();
 	VerExprParser ep(commentParser);
 	auto e = ep.visitExpression(_e);
-	return make_unique<iHdlExpr>(move(p), HdlOperatorType::CALL, move(e));
+	return create_object<iHdlExpr>(ctx, move(p), HdlOperatorType::CALL, move(e));
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryBitSelect(
@@ -189,7 +190,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryDot(
 	auto p = visitPrimary(_p);
 	auto _id = ctx->identifier();
 	auto id = VerExprParser::visitIdentifier(_id);
-	return append_expr(move(p), HdlOperatorType::DOT, move(id));
+	return append_expr(_p, move(p), HdlOperatorType::DOT, move(id));
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryIndex(
@@ -200,7 +201,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryIndex(
 	auto _are = ctx->array_range_expression();
 	VerExprParser ep(commentParser);
 	auto are = ep.visitArray_range_expression(_are);
-	p = append_expr(move(p), HdlOperatorType::INDEX, move(are));
+	p = append_expr(_p, move(p), HdlOperatorType::INDEX, move(are));
 	return p;
 }
 
@@ -246,7 +247,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryTfCall(
 				"VerExprPrimaryParser.visitPrimaryTfCall.clocking_event", ctx);
 		// args.push_back(ep.visitClocking_event(ce));
 	}
-	return iHdlExpr::call(move(id), args);
+	return iHdlExpr::call(ctx, move(id), args);
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryRandomize(
@@ -304,7 +305,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCall(
 	auto loa = ctx->list_of_arguments();
 	if (loa)
 		ep.visitList_of_arguments(loa, args);
-	return iHdlExpr::call(move(p), args);
+	return iHdlExpr::call(ctx, move(p), args);
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
@@ -322,7 +323,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
 
 	VerExprParser ep(commentParser);
 	vector<unique_ptr<iHdlExpr>> args;
-	return iHdlExpr::call(move(p), args);
+	return iHdlExpr::call(ctx, move(p), args);
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallWith(
@@ -347,7 +348,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallWith(
 
 	VerExprParser ep(commentParser);
 	vector<unique_ptr<iHdlExpr>> args;
-	return iHdlExpr::call(move(p), args);
+	return iHdlExpr::call(ctx, move(p), args);
 }
 
 }
