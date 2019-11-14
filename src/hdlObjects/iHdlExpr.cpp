@@ -6,8 +6,6 @@
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/createObject.h>
 
-#include <antlr4-runtime.h>
-
 using namespace std;
 
 namespace hdlConvertor {

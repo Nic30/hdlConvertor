@@ -3,19 +3,9 @@
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/named.h>
 
-#include <tree/TerminalNode.h>
+#include <antlr4-runtime.h>
 
 #include <memory>
-
-namespace antlr4
-{
-	class ParserRuleContext;
-	namespace tree
-	{
-		class ParseTree;
-		class TreeNode;
-	}
-}
 
 namespace hdlConvertor {
 	template<typename T, typename... Args>
