@@ -3,6 +3,8 @@
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/named.h>
 
+#include <tree/TerminalNode.h>
+
 #include <memory>
 
 namespace antlr4
