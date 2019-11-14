@@ -5,7 +5,7 @@
  Without -dbg you will mostly see only segfaults without explanation if there is some problem.)
 (Note that there python3.7 is used you may have to change this version if required.)
 * `sudo apt install python3-dev python3-dbg`
-* create a C/C++ project from this repo
+* create a C/C++ project from this repo (or add C++ nature to Python project)
 * project properties ->
    * C/C++ General -> Paths and Symbols -> add Python and ANTLR include dir (for all lags)
   ```
