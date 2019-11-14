@@ -19,6 +19,7 @@
 
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
+#include <hdlConvertor/createObject.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -36,7 +37,7 @@ std::unique_ptr<HdlNamespace> VhdlPackageParser::visitPackage_body(
 	//           ( package_body_declarative_item )*
 	//       END ( PACKAGE BODY )? ( identifier )? SEMI
 	// ;
-	p = std::make_unique<HdlNamespace>();
+	p = create_object<HdlNamespace>(ctx);
 	p->name = VhdlLiteralParser::getIdentifierStr(ctx->identifier(0));
 
 	if (!hierarchyOnly) {

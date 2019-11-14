@@ -10,12 +10,13 @@ class VerLiteralParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	using TerminalNode = antlr4::tree::TerminalNode;
+
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitIntegral_number(
 			sv2017Parser::Integral_numberContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitUNSIGNED_NUMBER(TerminalNode *ctx);
 	static size_t parseSize_UNSIGNED_NUMBER(std::string str);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitANY_BASED_NUMBER(std::string str,
-			size_t size);
+	static std::unique_ptr<hdlObjects::iHdlExpr> visitANY_BASED_NUMBER(
+			sv2017Parser::Integral_numberContext *ctx, std::string str, size_t size);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitNumber(sv2017Parser::NumberContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitSIMPLE_IDENTIFIER(TerminalNode *n);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitC_IDENTIFIER(TerminalNode *n);

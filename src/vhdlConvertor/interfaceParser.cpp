@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/directionParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
@@ -39,7 +40,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		} else {
 			__expr = std::make_unique<iHdlExpr>(*expr);
 		}
-		auto v = std::make_unique<HdlVariableDef>(i->getText(),
+		auto v = create_object<HdlVariableDef>(i, i->getText(),
 				std::move(_type), std::move(__expr));
 		vl->push_back(std::move(v));
 	}

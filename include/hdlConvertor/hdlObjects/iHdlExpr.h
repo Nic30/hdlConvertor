@@ -11,6 +11,15 @@
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 
+namespace antlr4
+{
+	class ParserRuleContext;
+	namespace tree
+	{
+		class TerminalNode;
+	}
+}
+
 namespace hdlConvertor {
 namespace hdlObjects {
 
@@ -22,6 +31,9 @@ namespace hdlObjects {
  */
 class iHdlExpr: public WithPos, public iHdlObj {
 public:
+	using TerminalNode = antlr4::tree::TerminalNode;
+	using ParserRuleContext = antlr4::ParserRuleContext;
+
 	iHdlExprItem *data;
 
 	iHdlExpr();
@@ -41,25 +53,30 @@ public:
 	static std::unique_ptr<iHdlExpr> TYPE_T();
 	static std::unique_ptr<iHdlExpr> AUTO_T();
 
-	static std::unique_ptr<iHdlExpr> INT(int64_t val);
-	static std::unique_ptr<iHdlExpr> INT(const std::string &strVal, int base);
-	static std::unique_ptr<iHdlExpr> INT(const std::string &strVal, int bits,
+	static std::unique_ptr<iHdlExpr> INT(TerminalNode *node, int64_t val);
+	static std::unique_ptr<iHdlExpr> INT(TerminalNode *node, const std::string &strVal, int base);
+	static std::unique_ptr<iHdlExpr> INT(TerminalNode *node, const std::string &strVal, int bits,
 			int base);
-	static std::unique_ptr<iHdlExpr> FLOAT(double val);
-	static std::unique_ptr<iHdlExpr> STR(std::string strVal);
-	static std::unique_ptr<iHdlExpr> ARRAY(
+	static std::unique_ptr<iHdlExpr> FLOAT(TerminalNode *node, double val);
+	static std::unique_ptr<iHdlExpr> STR(TerminalNode *node, std::string strVal);
+	static std::unique_ptr<iHdlExpr> ARRAY(ParserRuleContext *ctx,
 			std::vector<std::unique_ptr<iHdlExpr>> &arr);
-	static std::unique_ptr<iHdlExpr> ARRAY(
+	static std::unique_ptr<iHdlExpr> ARRAY(ParserRuleContext *ctx,
 			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr);
-	static std::unique_ptr<iHdlExpr> ternary(std::unique_ptr<iHdlExpr> cond,
+	static std::unique_ptr<iHdlExpr> ternary(ParserRuleContext *ctx,
+			std::unique_ptr<iHdlExpr> cond,
 			std::unique_ptr<iHdlExpr> ifTrue,
 			std::unique_ptr<iHdlExpr> ifFalse);
-	static std::unique_ptr<iHdlExpr> call(std::unique_ptr<iHdlExpr> fnId,
-			std::vector<std::unique_ptr<iHdlExpr>> &args);
-	static std::unique_ptr<iHdlExpr> parametrization(
+	static std::unique_ptr<iHdlExpr> call(ParserRuleContext *ctx,
 			std::unique_ptr<iHdlExpr> fnId,
 			std::vector<std::unique_ptr<iHdlExpr>> &args);
-	static std::unique_ptr<iHdlExpr> slice(std::unique_ptr<iHdlExpr> fnId,
+	static std::unique_ptr<iHdlExpr> parametrization(
+			ParserRuleContext *ctx,
+			std::unique_ptr<iHdlExpr> fnId,
+			std::vector<std::unique_ptr<iHdlExpr>> &args);
+	static std::unique_ptr<iHdlExpr> slice(
+			ParserRuleContext *ctx,
+			std::unique_ptr<iHdlExpr> fnId,
 			std::vector<std::unique_ptr<iHdlExpr>> &operands);
 
 	static std::unique_ptr<iHdlExpr> OPEN();

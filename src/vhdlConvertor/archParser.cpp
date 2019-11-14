@@ -3,6 +3,8 @@
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 
+#include <hdlConvertor/createObject.h>
+
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -14,7 +16,7 @@ VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
 }
 std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 		vhdlParser::Architecture_bodyContext * ctx) {
-	auto a = std::make_unique<HdlModuleDef>();
+	auto a = create_object<HdlModuleDef>(ctx);
 	// architecture_body:
 	//       ARCHITECTURE identifier OF name IS
 	//           ( block_declarative_item )*
@@ -25,7 +27,6 @@ std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 
 	a->name = ctx->identifier(0)->getText();
 	a->entityName = VhdlReferenceParser::visitName(ctx->name());
-	a->position.update_from_elem(ctx);
 
 	if (!hierarchyOnly) {
 		for (auto bi : ctx->block_declarative_item()) {

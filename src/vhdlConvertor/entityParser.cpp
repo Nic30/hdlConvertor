@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
@@ -23,7 +24,7 @@ std::unique_ptr<HdlModuleDec> VhdlEntityParser::visitEntity_declaration(
 	//       ( KW_BEGIN ( entity_statement )* )?
 	//       KW_END ( KW_ENTITY )? ( identifier )? SEMI
 	// ;
-	auto e = std::make_unique<HdlModuleDec>();
+	auto e = create_object<HdlModuleDec>(ctx);
 	e->name = ctx->identifier(0)->getText();
 	e->__doc__ = commentParser.parse(ctx);
 
@@ -41,7 +42,6 @@ std::unique_ptr<HdlModuleDec> VhdlEntityParser::visitEntity_declaration(
 			NotImplementedLogger::print("EntityParser.entity_statement", ctx);
 		}
 	}
-	e->position.update_from_elem(ctx);
 	return e;
 }
 
@@ -101,7 +101,6 @@ void VhdlEntityParser::visitPort_clause(vhdlParser::Port_clauseContext *ctx,
 	for (auto ie : il->interface_element()) {
 		auto ps = VhdlInterfaceParser::visitInterface_element(ie);
 		for (auto &p : *ps) {
-			p->position.update_from_elem(ie);
 			ports.push_back(std::move(p));
 		}
 	}
