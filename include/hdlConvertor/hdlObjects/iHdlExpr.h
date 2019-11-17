@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <antlr4-runtime/tree/TerminalNode.h>
+#include <antlr4-runtime/ParserRuleContext.h>
 
 #include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
@@ -11,14 +13,6 @@
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 
-namespace antlr4
-{
-	class ParserRuleContext;
-	namespace tree
-	{
-		class TerminalNode;
-	}
-}
 
 namespace hdlConvertor {
 namespace hdlObjects {

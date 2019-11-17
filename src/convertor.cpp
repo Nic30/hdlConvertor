@@ -38,6 +38,7 @@ class SVParserContainer: public iParserContainer<sv2017_antlr::sv2017Lexer,
 		sv2017_antlr::sv2017Parser, sv::Source_textParser> {
 public:
 	verilog_pp::VerilogPreprocContainer preproc;
+	verilog_pp::FileLineMap file_line_map;
 
 	void parse_str(std::string &input_str, bool hierarchyOnly) = delete;
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly) = delete;
@@ -51,7 +52,11 @@ public:
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
 			std::vector<std::string> &_incdirs) {
 		preproc.init(_incdirs);
-		string preprocessed_code = preproc.run_preproc_file(file_name);
+		verilog_pp::VerilogPreprocOutBuffer preprocess_res;
+		preproc.run_preproc_file(file_name, preprocess_res);
+		string preprocessed_code = preprocess_res.str();
+		file_line_map = preprocess_res.file_line_map;
+
 		ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = file_name.u8string();
 		this->_parse(input_for_parser, hierarchyOnly);
@@ -60,11 +65,16 @@ public:
 	void parse_str(const std::string &input_str, bool hierarchyOnly,
 			const std::vector<string> &_incdirs) {
 		preproc.init(_incdirs);
-		string preprocessed_code = preproc.run_preproc_str(input_str, 0);
+		verilog_pp::VerilogPreprocOutBuffer preprocess_res(0);
+		preproc.run_preproc_str(input_str, preprocess_res);
+		string preprocessed_code = preprocess_res.str();
+		file_line_map = preprocess_res.file_line_map;
+
 		ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = STRING_FILENAME;
 		this->_parse(input_for_parser, hierarchyOnly);
 	}
+
 	virtual void parseFn() override {
 		lexer->language_version = lang;
 		sv2017_antlr::sv2017Parser::Source_textContext *tree =
@@ -126,7 +136,9 @@ string Convertor::verilog_pp(const string &fileName,
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
-	return pc.preproc.run_preproc_file(fileName);
+	verilog_pp::VerilogPreprocOutBuffer res;
+	pc.preproc.run_preproc_file(fileName, res);
+	return res.str();
 }
 
 string Convertor::verilog_pp_str(const string &verilog_str,
@@ -134,7 +146,9 @@ string Convertor::verilog_pp_str(const string &verilog_str,
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
-	return pc.preproc.run_preproc_str(verilog_str, 0);
+	verilog_pp::VerilogPreprocOutBuffer res(0);
+	pc.preproc.run_preproc_str(verilog_str, res);
+	return res.str();
 }
 
 Convertor::~Convertor() {
