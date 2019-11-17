@@ -17,11 +17,11 @@
 
   ```
    * C/C++ build ->
-       * Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 concurrent process)
+       * Build command: `python3-dbg setup.py `
        * uncheck Generate makefile automatically
        * set build directory to project root
-       * in Behavior tab change target Build (increamental) from "all" to "build"
-
+       * in Behavior tab change target Build (increamental) from "all" to "build -j8 --build-type Debug"
+			(-j8 for build with 8 concurrent process)
    * in place debuggin (if you just run `python3 setup.py build` the library with c-extension is not accessible)
      you need to copy or link library to it's package folder
      ```
