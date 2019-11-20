@@ -10,6 +10,7 @@ namespace verilog_pp {
 VerilogPreprocOutBuffer::VerilogPreprocOutBuffer(ssize_t _input_line_begin) :
 		output_line(0), input_line_offset(0), input_line_begin(
 				_input_line_begin) {
+	assert(_input_line_begin >= 0);
 }
 
 void VerilogPreprocOutBuffer::set_input_line(const std::string &file_name,

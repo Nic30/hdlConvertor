@@ -18,8 +18,10 @@ std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
 		throw_doest_not_support_args();
 	}
 	auto offset = pp->preproc_out.input_line_offset;
-	string replacement = to_string(offset + ctx->getStart()->getLine() - 1);
-	return replacement;
+	auto line = offset + ctx->getStart()->getLine();
+	assert(line > 0);
+	// numbering starts at 1
+	return to_string(line);
 }
 bool MacroDef__LINE__::requires_args() {
 	return false;
