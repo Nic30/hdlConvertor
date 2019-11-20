@@ -52,7 +52,7 @@ public:
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
 			std::vector<std::string> &_incdirs) {
 		preproc.init(_incdirs);
-		verilog_pp::VerilogPreprocOutBuffer preprocess_res;
+		verilog_pp::VerilogPreprocOutBuffer preprocess_res(0);
 		preproc.run_preproc_file(file_name, preprocess_res);
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
@@ -136,7 +136,7 @@ string Convertor::verilog_pp(const string &fileName,
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
-	verilog_pp::VerilogPreprocOutBuffer res;
+	verilog_pp::VerilogPreprocOutBuffer res(0);
 	pc.preproc.run_preproc_file(fileName, res);
 	return res.str();
 }
