@@ -325,8 +325,7 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 							+ ".");
 		}
 		container.macro_call_stack.push_back(macro_name);
-		auto input_line_no = preproc_out.input_line_offset
-				+ preproc_out.input_line_begin + ctx->start->getLine() - 1;
+		auto input_line_no = preproc_out.input_line_begin + ctx->start->getLine() - 1;
 		VerilogPreprocOutBuffer _replacement(input_line_no);
 		container.run_preproc_str(replacement, _replacement);
 		// [todo] it is expected that the macro call won't cause any change in
@@ -446,7 +445,7 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 			container.incdirs.pop_back();
 		}
 		// run the pre-processor on it
-		VerilogPreprocOutBuffer replacement;
+		VerilogPreprocOutBuffer replacement(0);
 		container.run_preproc_file(filename, replacement);
 		if (added_incdir) {
 			container.incdirs.push_back(my_incdir);
