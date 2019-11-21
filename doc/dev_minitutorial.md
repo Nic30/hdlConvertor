@@ -9,6 +9,7 @@
 (Note that there python3.7 is used you may have to change this version if required.)
 * `sudo apt install python3-dev python3-dbg`
 * create a C/C++ project from this repo (or add C++ nature to Python project)
+* or C/C++ makefile project, it odes not matter, we will override build command anyway
 * project properties ->
    * C/C++ General -> Paths and Symbols -> add Python and ANTLR include dir (for all lags)
   ```
@@ -39,6 +40,8 @@
         include/hdlConvertor/verilogPreproc/verilogPreprocParser/ \
         include/hdlConvertor/vhdlConvertor/vhdlParser/ -r
      ```
+   * Now add a pydev nature to this project so we can use code navigation and autocomplete for python. Right-Click on project -> PyDev -> add project; Then add "." and "hdlConvertor" direcotories in to PYTHONPATH in project properties -> PyDev - PYTHONPATH 
+
 
 # Debuging in Eclipse
 * apt install python3-dbg # because normal python crashes on some errors without reporting (like undefined symbol in c library)
