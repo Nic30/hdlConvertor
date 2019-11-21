@@ -17,7 +17,7 @@ std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	auto offset = pp->preproc_out.input_line_offset;
+	auto offset = pp->preproc_out.input_line_begin;
 	auto line = offset + ctx->getStart()->getLine();
 	assert(line > 0);
 	// numbering starts at 1
