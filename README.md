@@ -103,4 +103,4 @@ for o in d.objs:
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 * [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
-
+* [Surelog](https://github.com/alainmarcel/Surelog) - C++, System Verilog 2017 Pre-processor and parser 
