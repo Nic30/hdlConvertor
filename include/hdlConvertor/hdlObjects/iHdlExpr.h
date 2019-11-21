@@ -3,8 +3,10 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <antlr4-runtime/tree/TerminalNode.h>
-#include <antlr4-runtime/ParserRuleContext.h>
+
+// antlr4-runtime/
+#include <tree/TerminalNode.h>
+#include <ParserRuleContext.h>
 
 #include <hdlConvertor/hdlObjects/bigInteger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>

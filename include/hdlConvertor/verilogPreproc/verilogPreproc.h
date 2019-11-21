@@ -4,9 +4,11 @@
 #include <map>
 #include <sys/stat.h>
 #include <typeinfo>
-#include <antlr4-runtime/CommonTokenStream.h>
-#include <antlr4-runtime/TokenStream.h>
-#include <antlr4-runtime/support/Any.h>
+
+// antlr4-runtime/
+#include <CommonTokenStream.h>
+#include <TokenStream.h>
+#include <support/Any.h>
 
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocLexer.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>

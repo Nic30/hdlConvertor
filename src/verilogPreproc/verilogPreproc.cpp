@@ -1,7 +1,8 @@
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
 
-#include <antlr4-runtime/ParserRuleContext.h>
-#include <antlr4-runtime/misc/Interval.h>
+// antlr4-runtime/
+#include <ParserRuleContext.h>
+#include <misc/Interval.h>
 
 #include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 
