@@ -548,7 +548,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	auto id = ctx->interface_declaration();
 	if (id) {
 		NotImplementedLogger::print(
-				"ModuleParser.module_item.interface_declaration", pd);
+				"ModuleParser.module_item.interface_declaration", id);
 		return;
 	}
 	auto td = ctx->timeunits_declaration();
