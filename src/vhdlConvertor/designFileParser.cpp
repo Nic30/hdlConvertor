@@ -2,6 +2,7 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/hdlObjects/hdlStm_others.h>
+#include <hdlConvertor/hdlObjects/hdlLibrary.h>
 #include <hdlConvertor/vhdlConvertor/archParser.h>
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
@@ -124,14 +125,35 @@ void VhdlDesignFileParser::visitContext_item(
 	// ;
 	auto l = ctx->library_clause();
 	if (l) {
-		NotImplementedLogger::print(
-				"DesignFileParser.visitContext_item - library_clause", l);
-		return; //libraries are ignored
+		visitLibrary_clause(l);
 	}
 	auto u = ctx->use_clause();
 	if (u) {
 		visitUse_clause(u, context.objs);
 	}
+}
+
+void VhdlDesignFileParser::visitLibrary_clause(
+		vhdlParser::Library_clauseContext *ctx) {
+	//rhinton:: I didn't create a method to visit a logical name 
+	// list and then an identifier list.  Since these are all part 
+	// of one statement without parsing options and not reused 
+	// anywhere, it seemed silly to create more functions to pass 
+	// through.
+	vhdlParser::Logical_name_listContext *lnl_ctx = ctx->logical_name_list();
+	if (lnl_ctx) {
+		vhdlParser::Identifier_listContext *il_ctx = lnl_ctx->identifier_list();
+		if (il_ctx) {
+			for (auto i : il_ctx->identifier()) {
+				auto v = create_object<HdlLibrary>(i, i->getText());
+				context.objs.push_back(std::move(v));
+				//rhinton:: This approach adds more objects to the 'context' 
+				// list, one object per library name -- possibly several per 
+				// library clause.
+			}
+		}
+	}
+	//rhinton:: What should be done if lnl_ctx or il_ctx is null?
 }
 
 void flatten_doted_expr(std::unique_ptr<iHdlExpr> e,
@@ -161,7 +183,6 @@ void VhdlDesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 		flatten_doted_expr(move(r), ref);
 		auto imp = create_object<HdlStmImport>(sn, ref);
 		res.push_back(std::move(imp));
-
 	}
 }
 

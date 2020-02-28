@@ -4,6 +4,17 @@ from hdlConvertor.hdlAst._bases import iHdlObjWithName, iHdlObjInModule, iHdlObj
 from hdlConvertor.hdlAst._defs import HdlVariableDef
 
 
+class HdlLibrary(iHdlObjWithName):
+    """
+    The library clause in VHDL
+    """
+    __slots__ = []
+    #rhinton:: slots?
+
+    def __init__(self):
+        super(HdlLibrary, self).__init__()
+        
+
 class HdlNamespace(iHdlObjWithName):
     """
     Corresponds to VHDL package/package body or SystemVerilog namespace

@@ -26,6 +26,7 @@ public:
 	void visitContext_clause(vhdlParser::Context_clauseContext *ctx);
 	void visitPrimary_unit(vhdlParser::Primary_unitContext *ctx);
 	void visitContext_item(vhdlParser::Context_itemContext *ctx);
+        void visitLibrary_clause(vhdlParser::Library_clauseContext *ctx);
 	void visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &res);
 };

@@ -5,11 +5,11 @@
 
 #include <hdlConvertor/hdlObjects/hdlCompInstance.h>
 #include <hdlConvertor/hdlObjects/hdlContext.h>
+#include <hdlConvertor/hdlObjects/hdlLibrary.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
-#include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/hdlNamespace.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDec.h>
 #include <hdlConvertor/hdlObjects/hdlModuleDef.h>
@@ -57,6 +57,7 @@ class ToPy {
 	PyObject *HdlStmWaitCls;
 	PyObject *HdlStmBlockCls;
 	PyObject *HdlImportCls;
+	PyObject *HdlLibraryCls;
 	PyObject *HdlComponentInstCls;
 	PyObject *HdlFunctionDefCls;
 	PyObject *HdlNamespaceCls;
@@ -145,6 +146,7 @@ public:
 	PyObject* toPy(const hdlObjects::HdlModuleDef *o);
 	PyObject* toPy(const hdlObjects::HdlCompInstance *o);
 	PyObject* toPy(const hdlObjects::HdlContext *o);
+	PyObject* toPy(const hdlObjects::HdlLibrary *o);
 	PyObject* toPy(const hdlObjects::HdlDirection o);
 	PyObject* toPy(const hdlObjects::HdlModuleDec *o);
 	PyObject* toPy(const hdlObjects::iHdlExpr *o);
