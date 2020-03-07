@@ -29,7 +29,7 @@ ToPy::ToPy() {
 		obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
 		assert(
 				obj != NULL &&"Bug in this library hdlConvertor.hdlAst not as expected from C");
-};
+	};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");
 	import(HdlModuleDefCls, "HdlModuleDef");
@@ -56,6 +56,7 @@ ToPy::ToPy() {
 	import(HdlStmContinueCls, "HdlStmContinue");
 	import(HdlStmWaitCls, "HdlStmWait");
 	import(HdlStmBlockCls, "HdlStmBlock");
+	import(HdlLibraryCls, "HdlLibrary");
 	import(HdlImportCls, "HdlImport");
 	import(HdlComponentInstCls, "HdlComponentInst");
 	import(HdlFunctionDefCls, "HdlFunctionDef");
@@ -87,10 +88,22 @@ PyObject* ToPy::toPy(const HdlContext *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlLibrary *o) {
+	PyObject *py_inst = PyObject_CallObject(HdlLibraryCls, NULL);
+	if (!py_inst)
+		return nullptr;
+	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
+		return nullptr;
+	return py_inst;
+}
+
 PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto c = dynamic_cast<const HdlContext*>(o);
 	if (c)
 		return toPy(c);
+	auto lib = dynamic_cast<const HdlLibrary*>(o);
+	if (lib)
+		return toPy(lib);
 	auto md = dynamic_cast<const HdlModuleDec*>(o);
 	if (md)
 		return toPy(md);
@@ -442,6 +455,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlFunctionDefCls);
 	Py_XDECREF(HdlComponentInstCls);
 	Py_XDECREF(HdlImportCls);
+	Py_XDECREF(HdlLibraryCls);
 	Py_XDECREF(HdlStmBlockCls);
 	Py_XDECREF(HdlStmWaitCls);
 	Py_XDECREF(HdlStmContinueCls);

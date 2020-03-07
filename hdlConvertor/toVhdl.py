@@ -4,7 +4,7 @@ from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn, HdlName,\
     HdlIntValue, HdlAll, HdlCall, HdlOthers, iHdlStatement, HdlStmProcess,\
     HdlStmIf, HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst,\
-    HdlModuleDef, HdlNamespace, HdlImport
+    HdlModuleDef, HdlNamespace, HdlImport, HdlLibrary
 from hdlConvertor.hdlAst._statements import HdlStmBlock
 
 
@@ -190,11 +190,11 @@ class ToVhdl():
             w(f.format(v))
 
             return
-        elif isinstance(expr, HdlName):
-            w(v)
+        elif expr is HdlAll:  # one previous line had 'elif isinstance(expr, HdlAll)'
+            w("ALL")
             return
-        elif isinstance(expr, HdlAll):
-            w("*")
+        elif expr is HdlOthers:
+            w("OTHERS")
             return
         elif isinstance(expr, HdlCall):
             pe = self.print_expr
@@ -287,9 +287,6 @@ class ToVhdl():
                 return
             else:
                 raise NotImplementedError(op)
-        elif expr is HdlAll:
-            w("ALL")
-            return
         elif isinstance(expr, list):
             w("(\n")
             with Indent(self.out):
@@ -298,12 +295,6 @@ class ToVhdl():
                     if not is_last:
                         w(",\n")
             w(")")
-            return
-        elif expr is HdlAll:
-            w("ALL")
-            return
-        elif expr is HdlOthers:
-            w("OTHERS")
             return
         raise NotImplementedError(expr)
 
@@ -644,9 +635,11 @@ class ToVhdl():
         w("END FUNCTION;\n")
 
     def print_library(self, o):
+        lib_name = o.name
+        self.used_libraries.add(lib_name)
         w = self.out.write
         w("LIBRARY ")
-        self.print_expr(o)
+        w(lib_name)
         w(";\n")
 
     def print_hdl_import(self, o):
@@ -655,11 +648,6 @@ class ToVhdl():
         """
         self.print_doc(o)
         w = self.out.write
-        lib_name = o.path[0]
-        if lib_name not in self.used_libraries:
-            self.print_library(lib_name)
-            self.used_libraries.add(lib_name)
-
         w("USE ")
         for last, p in iter_with_last_flag(o.path):
             self.print_expr(p)
@@ -707,6 +695,8 @@ class ToVhdl():
         for o in context.objs:
             if isinstance(o, HdlImport):
                 self.print_hdl_import(o)
+            elif isinstance(o, HdlLibrary):
+                self.print_library(o)
             else:
                 self.print_main_obj(o)
 
