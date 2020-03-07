@@ -55,6 +55,12 @@ class VhdlConversionTC(BasicTC):
     def test_type_attribute_designator(self):
         self.parseWithRef("type_attribute_designator.vhd", Language.VHDL)
 
+    def test_library_declaration(self):
+        f, res = parseFile("ram.vhd")
+        self.assertEqual(str(type(res.objs[0])),
+                          "<class 'hdlConvertor.hdlAst._structural.HdlLibrary'>")
+        self.assertEqual(res.objs[0].name, 'ieee')
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

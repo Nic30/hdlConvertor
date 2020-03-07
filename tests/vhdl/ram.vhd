@@ -1,3 +1,5 @@
+library ieee;
+use ieee.std_logic_1164.all;
 -- https://surf-vhdl.com/vhdl-syntax-web-course-surf-vhdl/vhdl-generics/
 entity RAM is
 generic(
