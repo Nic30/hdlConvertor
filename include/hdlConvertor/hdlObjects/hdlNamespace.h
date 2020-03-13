@@ -13,7 +13,7 @@ namespace hdlObjects {
  * */
 class HdlNamespace: public WithNameAndDoc, public iHdlObj {
 public:
-	bool defs_only;
+	bool defs_only;  // true for VHDL package, false for VHDL package body
 	std::vector<std::unique_ptr<iHdlObj>> objs;
 
 	HdlNamespace();
