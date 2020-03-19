@@ -128,9 +128,9 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print("PackageHeaderParser.visitType_declaration",
-				td);
-		return;
+		auto t = VhdlTypeDeclarationParser::visitType_declaration(td);
+                ph->objs.push_back(std::move(t));
+                return;
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
