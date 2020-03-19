@@ -1,4 +1,6 @@
 #include <hdlConvertor/hdlObjects/hdlTypeDec.h>
+#include <hdlConvertor/hdlObjects/iHdlExpr.h>
+#include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -15,24 +17,12 @@ HdlTypeDec::~HdlTypeDec() {
 HdlEnumTypeDec::~HdlEnumTypeDec() {
 }
 
-HdlTypeDec::TypeClass HdlEnumTypeDec::typeClass() {
-	return hdltc_enum;
-}
-
 // array type
 HdlArrayTypeDec::~HdlArrayTypeDec() {
 }
 
-HdlTypeDec::TypeClass HdlArrayTypeDec::typeClass() {
-	return hdltc_array;
-}
-
 // struct or record type
 HdlStructTypeDec::~HdlStructTypeDec() {
-}
-
-HdlTypeDec::TypeClass HdlStructTypeDec::typeClass() {
-	return hdltc_struct;
 }
 
 
