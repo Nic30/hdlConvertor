@@ -79,8 +79,8 @@ cdef class HdlConvertor:
     """
     The container of the Convertor which parses HDL code to universal AST
 
-    :ivar thisptr: pointer on Convertor instance which is a wrapper around the parsers
-    :ivar proproc_macro_db: dictinary of symbols defined in preprocessor
+    :ivar ~.thisptr: pointer on Convertor instance which is a wrapper around the parsers
+    :ivar ~.proproc_macro_db: dictinary of symbols defined in preprocessor
     """
 
     cdef unique_ptr[Convertor] thisptr

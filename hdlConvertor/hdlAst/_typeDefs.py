@@ -15,7 +15,7 @@ class HdlTypeBitsDef(iHdlObjWithName):
     The type which represents bit or bit vector in HDL (std_logic/_vector
     in VHDL, [0:8] in Verilog )
 
-    :ivar states: 2 means that each bit can be 0 or 1
+    :ivar ~.states: 2 means that each bit can be 0 or 1
         4 - (0, 1, X, Z) (e.g. Verilog wire)
         9 - (0, 1, X, Z, U, W, L, H, -) (e.g. VHDL std_logic)
             'U': uninitialized. This signal hasn't been set yet.

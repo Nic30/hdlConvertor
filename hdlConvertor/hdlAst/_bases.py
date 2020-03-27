@@ -6,7 +6,7 @@ class iHdlObj(object):
     """
     Object with direct representation in HDL
 
-    :ivar doc: doc from the HDL related probably to this object
+    :ivar ~.doc: doc from the HDL related probably to this object
     """
     __slots__ = ["doc"]
 
@@ -16,14 +16,16 @@ class iHdlObj(object):
 
 class iHdlObjWithName(iHdlObj):
     """
-    :ivar name: reference to name of the object
+    :ivar ~.name: reference to name of the object
     """
     __slots__ = ["name"]
 
     def __init__(self):
         super(iHdlObjWithName, self).__init__()
         self.name = None  # type: HdlName
-
+    
+    def __repr__(self):
+        return "<%s %s>" % (self.__class__.__name__, self.name)
 
 class iHdlObjInModule(object):
     """
@@ -34,9 +36,9 @@ class iHdlObjInModule(object):
 
 class iHdlStatement(iHdlObj, iHdlObjInModule):
     """
-    :ivar labels: list of labels, the first label is for this statement
+    :ivar ~.labels: list of labels, the first label is for this statement
         the others are for it's branches
-    :ivar in_preproc: if True the statement is VHDL generate
+    :ivar ~.in_preproc: if True the statement is VHDL generate
             or other different of type of statement which should be evaluated
             compile time (note that this correspond s to VHDL generate statements
             and not to Verilog preprocessor ifdefs as they are processed before
