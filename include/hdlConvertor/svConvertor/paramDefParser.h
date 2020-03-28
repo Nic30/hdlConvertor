@@ -23,7 +23,7 @@ public:
 	 * Automatically add type to a parameters defined in parameter list
 	 * */
 	void visitTyped_list_of_param_assignments(
-			std::unique_ptr<hdlObjects::iHdlExpr> data_type,
+			std::unique_ptr<hdlObjects::HdlSubtype> data_type,
 			sv2017Parser::List_of_param_assignmentsContext *lpa,
 			const std::string &doc,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);

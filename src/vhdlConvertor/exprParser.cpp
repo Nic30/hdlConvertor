@@ -31,12 +31,10 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAssociation_element(
 	// association_element:
 	//       ( formal_part ARROW )? actual_part
 	// ;
-
-	auto _ap = ctx->actual_part();
-	auto ap = visitActual_part(_ap);
-	auto fp = ctx->formal_part();
+	auto ap = visitActual_part(ctx->actual_part());
+	auto fp = visitFormal_part(ctx->formal_part());
 	if (fp) {
-		return create_object<iHdlExpr>(ctx, visitFormal_part(fp), ARROW, move(ap));
+            return create_object<iHdlExpr>(ctx, move(fp), ARROW, move(ap));
 	}
 	return ap;
 }
@@ -62,36 +60,52 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitFormal_part(
 	}
 }
 
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitExplicit_range(
+std::unique_ptr<HdlRange> VhdlExprParser::visitExplicit_range(
 		vhdlParser::Explicit_rangeContext *ctx) {
 	// explicit_range
 	// : simple_expression direction simple_expression
 	// ;
-	HdlOperatorType op;
+	HdlRangeDirection dir;
 	if (ctx->direction()->KW_DOWNTO()) {
-		op = DOWNTO;
+		dir = DOWNTO;
 	} else {
-		op = TO;
+		dir = TO;
 	}
-	return create_object<iHdlExpr>(ctx,
-			visitSimple_expression(ctx->simple_expression(0)), op,
+	auto rng = create_object<HdlRange>(ctx);
+	rng->range = create_object<HdlSimpleRange>(ctx,
+			visitSimple_expression(ctx->simple_expression(0)), dir,
 			visitSimple_expression(ctx->simple_expression(1)));
+	return rng;
 }
 
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitRange(
+std::unique_ptr<HdlRange> VhdlExprParser::visitRange(
 		vhdlParser::RangeContext *ctx) {
 	//range:
 	//      attribute_name
 	//      | simple_expression direction simple_expression
 	//;
 	auto an = ctx->attribute_name();
-	if (an)
-		return VhdlReferenceParser::visitAttribute_name(an);
+	if (an) {
+		//TODO::return VhdlReferenceParser::visitAttribute_name(an);
+		//
+		// fill this in with appropriate HdlRange logic
+		NotImplementedLogger::print(
+				"ExprParser.visitRange - attribute name",
+				ctx);
+		return nullptr;
+	}
 	auto se = ctx->simple_expression();
-	auto a = visitSimple_expression(se[0]);
-	auto o = visitDirection(ctx->direction());
-	auto b = visitSimple_expression(se[1]);
-	return create_object<iHdlExpr>(ctx, std::move(a), o, std::move(b));
+	if (2 == se.size()) {
+		auto a = visitSimple_expression(se[0]);
+		auto o = visitDirection(ctx->direction());
+		auto b = visitSimple_expression(se[1]);
+		auto rng = create_object<HdlRange>(ctx);
+		rng->range = create_object<HdlSimpleRange>(ctx, std::move(a), o, std::move(b));
+		return rng;
+	}
+
+	NotImplementedLogger::print("ExprParser.visitRange - unrecognized range", ctx);
+	return nullptr;
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitActual_part(
@@ -121,11 +135,19 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitActual_designator(
 	if (ctx->KW_OPEN())
 		return iHdlExpr::OPEN();
 	auto sti = ctx->subtype_indication();
-	if (sti)
-		return visitSubtype_indication(sti);
+	if (sti) {
+		//TODO::return visitSubtype_indication(sti);
+		//
+		// rhinton doesn't know when a subtype indication might be
+		// appropriate in an actual part
+		NotImplementedLogger::print(
+				"ExprParser.visitActual_designator - subtype_indication",
+				sti);
+		return nullptr;
+	}
 	return visitExpression(ctx->expression());
 }
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitSubtype_indication(
+std::unique_ptr<HdlSubtype> VhdlExprParser::visitSubtype_indication(
 		vhdlParser::Subtype_indicationContext *ctx) {
 	// subtype_indication:
 	//       ( resolution_indication )? type_mark ( constraint )?
@@ -140,13 +162,12 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSubtype_indication(
 				_ri);
 	}
 
-	// type_mark: name;
-	auto e = visitType_mark(ctx->type_mark());
+	auto st = create_object<HdlSubtype>(ctx);
+	st->parent_type = visitType_mark(ctx->type_mark());
 	auto c = ctx->constraint();
-	if (c) {
-		e = visitConstraint(move(e), c);
-	}
-	return e;
+	if (c) 
+		st->constraint = visitConstraint(c);
+	return st;
 }
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitResolution_indication(
 		vhdlParser::Resolution_indicationContext *ctx) {
@@ -154,18 +175,21 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitResolution_indication(
 	//       name | LPAREN element_resolution RPAREN
 	// ;
 	// element_resolution: array_element_resolution | record_resolution;
-	auto n = ctx->name();
-	if (n) {
-		return VhdlReferenceParser::visitName(n);
-	}
-
 	NotImplementedLogger::print(
 			"ExprParser.visitResolution_indication - element_resolution", ctx);
 	return nullptr;
+
+	//TODO:: seems silly to return the just the name and pretend that the
+	// resolution indication is implemented.
+        //
+	//TODO::auto n = ctx->name();
+	//TODO::if (n) {
+	//TODO::	return VhdlReferenceParser::visitName(n);
+	//TODO::}
+
 }
 
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitConstraint(
-		std::unique_ptr<iHdlExpr> selectedName,
+std::unique_ptr<HdlConstraint> VhdlExprParser::visitConstraint(
 		vhdlParser::ConstraintContext *ctx) {
 	// constraint:
 	//       range_constraint
@@ -173,67 +197,77 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitConstraint(
 	//       | record_constraint
 	// ;
 
-	auto r = ctx->range_constraint();
-	HdlOperatorType op;
-	std::unique_ptr<iHdlExpr> op1 = nullptr;
-	if (r) {
+	auto rng = ctx->range_constraint();
+	if (rng) {
 		// range_constraint
 		// : RANGE range
 		// ;
-		op = RANGE;
-		op1 = visitRange(r->range());
-	} else {
-		auto i = ctx->array_constraint();
-		if (i) {
-			op = INDEX;
-			op1 = visitArray_constraint(i);
-		} else {
-#ifndef NDEBUG
-			auto r = ctx->record_constraint();
-			assert(r);
-#endif
-			NotImplementedLogger::print(
-					"ExprParser.visitConstraint - record_constraint", r);
-			op = DOT;
-			op1 = nullptr;
-		}
+		auto rcons = std::make_unique<HdlRangeConstraint>();
+		rcons->range = visitRange(rng->range());
+		return rcons;
+	} 
+	auto ary = ctx->array_constraint();
+	if (ary) 
+		return visitArray_constraint(ary);
+	auto rec = ctx->record_constraint();
+	if (rec) {
+		//TODO:: should be fairly easy with constraint infrastructure
+		NotImplementedLogger::print(
+				"ExprParser.visitConstraint - record_constraint", rec);
+		return nullptr;
 	}
 
-	return create_object<iHdlExpr>(ctx, std::move(selectedName), op, std::move(op1));
+	NotImplementedLogger::print(
+			"ExprParser.visitConstraint - unrecognized constraint", ctx);
+	return nullptr;
 }
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitArray_constraint(
+std::unique_ptr<HdlArrayConstraint> VhdlExprParser::visitArray_constraint(
 		vhdlParser::Array_constraintContext *ctx) {
 	// array_constraint:
 	//       index_constraint ( array_element_constraint )?
 	//       | LPAREN OPEN RPAREN ( array_element_constraint )?
 	// ;
+	std::unique_ptr<HdlArrayConstraint> cons;
 	auto ic = ctx->index_constraint();
+	if (ic) {
+		cons = visitIndex_constraint(ic);
+	} else {
+		cons = create_object<HdlArrayConstraint>(ctx);
+	}
+	// When OPEN, we could create a NoConstraint in the HdlArrayConstraint
+	// 'indexes' member.  But that seems unnecessary.
+
 	auto aec = ctx->array_element_constraint();
 	if (aec) {
-		NotImplementedLogger::print(
-				"ExprParser.visitArray_constraint - array_element_constraint",
-				aec);
+		cons->element = visitArray_element_constraint(aec);
 	}
-	if (ic) {
-		auto e = visitIndex_constraint(ic);
-		return e;
-	}
-	return nullptr;
-
+        return cons;
 }
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitIndex_constraint(
+std::unique_ptr<HdlArrayConstraint> VhdlExprParser::visitIndex_constraint(
 		vhdlParser::Index_constraintContext *ctx) {
 	// index_constraint
 	// : LPAREN discrete_range ( COMMA discrete_range )* RPAREN
 	// ;
-	if (ctx->discrete_range().size() > 1) {
-		NotImplementedLogger::print(
-				"ExprParser.visitIndex_constraint multiple discrete_range",
-				ctx);
+	auto acons = std::make_unique<HdlArrayConstraint>();
+	for (auto dr_ctx : ctx->discrete_range()) {
+		acons->indexes.push_back(visitDiscrete_range(dr_ctx));
 	}
-	return visitDiscrete_range(ctx->discrete_range(0));
+	return acons;
 }
-std::unique_ptr<iHdlExpr> VhdlExprParser::visitDiscrete_range(
+std::unique_ptr<HdlConstraint> VhdlExprParser::visitArray_element_constraint(
+		vhdlParser::Array_element_constraintContext *ctx) {
+	// array_element_constraint: element_constraint;
+	// element_constraint:
+	//       array_constraint
+	//       | record_constraint
+	// ;
+	NotImplementedLogger::print(
+			"ExprParser.visitArray_element_constraint",
+			ctx);
+	return nullptr;
+	//TODO:: this should be easy with constraint infrastructure
+}
+std::unique_ptr<HdlRange> VhdlExprParser::visitDiscrete_range(
 		vhdlParser::Discrete_rangeContext *ctx) {
 	// discrete_range
 	// : range
@@ -242,10 +276,12 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitDiscrete_range(
 	auto r = ctx->range();
 	if (r)
 		return visitRange(r);
-	return visitSubtype_indication(ctx->subtype_indication());
+	auto rcons = std::make_unique<HdlRange>();
+	rcons->subtype = visitSubtype_indication(ctx->subtype_indication());
+	return rcons;
 }
 
-hdlObjects::HdlOperatorType VhdlExprParser::visitSign(
+HdlOperatorType VhdlExprParser::visitSign(
 		vhdlParser::SignContext *ctx) {
 	// sign: PLUS | MINUS;
 	if (ctx->MINUS()) {
@@ -417,11 +453,18 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAllocator(
 	auto n = iHdlExpr::ID("new");
 	std::unique_ptr<iHdlExpr> e;
 	auto qe = ctx->qualified_expression();
-	if (qe)
+	if (qe) {
 		e = visitQualified_expression(qe);
-	else {
-		auto si = ctx->subtype_indication();
-		e = visitSubtype_indication(si);
+	} else {
+		//TODO::auto si = ctx->subtype_indication();
+		//TODO::e = make_unique<iHdlExpr>();
+		//TODO::e->asdf = visitSubtype_indication(si);
+		//
+		//rhinton: need to figure out how to make this subtype
+		// indication work.  VHDL is strange.
+		NotImplementedLogger::print(
+				"ExprParser.Allocator - subtype indication", 
+				ctx->subtype_indication());
 	}
 	return create_object<iHdlExpr>(ctx, std::move(n), HdlOperatorType::CALL, std::move(e));
 
@@ -564,7 +607,13 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitChoice(
 
 	auto dr = ctx->discrete_range();
 	if (dr) {
-		return visitDiscrete_range(dr);
+		//TODO::return visitDiscrete_range(dr);
+		//
+		//rhinton: need to figure out how to shoehorn a range into an
+		// expression
+		NotImplementedLogger::print(
+				"ExprParser.visitChoice - discrete range choice", dr);
+		return nullptr;
 	}
 	auto se = ctx->simple_expression();
 	if (se) {

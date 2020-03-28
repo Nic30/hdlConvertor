@@ -563,7 +563,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitLoop_statement(
 	return loop;
 }
 
-pair<unique_ptr<iHdlExpr>, unique_ptr<iHdlExpr>> VhdlStatementParser::visitParameter_specification(
+pair<unique_ptr<iHdlExpr>, unique_ptr<HdlRange>> VhdlStatementParser::visitParameter_specification(
 		vhdlParser::Parameter_specificationContext *ctx) {
 	//parameter_specification
 	//  : identifier IN discrete_range

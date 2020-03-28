@@ -2,6 +2,7 @@
 
 #include <hdlConvertor/hdlObjects/iHdlStatement.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
+#include <hdlConvertor/hdlObjects/hdlTypes.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 
 namespace hdlConvertor {
@@ -32,20 +33,20 @@ public:
 	// definition of variable(s) which will be used for iteration
 	std::vector<std::unique_ptr<iHdlObj>> var_defs;
 	// collection which will be iterated over
-	std::unique_ptr<iHdlExpr> collection;
+	std::unique_ptr<HdlRange> collection;
 	std::unique_ptr<iHdlStatement> body;
 
 	HdlStmForIn(std::unique_ptr<HdlVariableDef> var,
-			std::unique_ptr<iHdlExpr> collection,
+			std::unique_ptr<HdlRange> collection,
 			std::unique_ptr<iHdlStatement> body);
 	HdlStmForIn(std::vector<std::unique_ptr<iHdlObj>> &vars,
-			std::unique_ptr<iHdlExpr> collection,
+			std::unique_ptr<HdlRange> collection,
 			std::unique_ptr<iHdlStatement> body);
 	HdlStmForIn(std::vector<std::unique_ptr<iHdlExpr>> &vars,
-			std::unique_ptr<iHdlExpr> collection,
+			std::unique_ptr<HdlRange> collection,
 			std::unique_ptr<iHdlStatement> body);
 	HdlStmForIn(std::unique_ptr<iHdlExpr> var,
-			std::unique_ptr<iHdlExpr> collection,
+			std::unique_ptr<HdlRange> collection,
 			std::unique_ptr<iHdlStatement> body);
 
 	virtual ~HdlStmForIn() override;

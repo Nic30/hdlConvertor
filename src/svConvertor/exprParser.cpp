@@ -37,7 +37,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitRange_expression(
 	auto l = visitExpression(exprs[0]);
 	if (exprs.size() == 2) {
 		auto h = visitExpression(exprs[1]);
-		return create_object<iHdlExpr>(ctx, move(l), HdlOperatorType::DOWNTO, move(h));
+		//TODO::return create_object<iHdlExpr>(ctx, move(l), HdlRangeDirection::DOWNTO, move(h));
+		return nullptr;
 	} else {
 		assert(exprs.size() == 1);
 		return l;
@@ -95,7 +96,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitArray_range_expression(
 				ctx);
 	}
 	auto e1 = visitExpression(es[1]);
-	return create_object<iHdlExpr>(ctx, move(e0), HdlOperatorType::DOWNTO, move(e1));
+	//TODO::return create_object<iHdlExpr>(ctx, move(e0), HdlRangeDirection::DOWNTO, move(e1));
+	return nullptr;
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitIdentifier_doted_index_at_end(
@@ -508,9 +510,10 @@ unique_ptr<iHdlExpr> VerExprParser::visitPackage_or_class_scoped_hier_id_with_se
 		assert(exprs.size() == 2);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
-		auto sel = create_object<iHdlExpr>(ctx, move(e0), HdlOperatorType::DOWNTO,
-				move(e1));
-		return append_expr(ctx, move(res), HdlOperatorType::INDEX, move(sel));
+		//TODO::auto sel = create_object<iHdlExpr>(ctx, move(e0), HdlRangeDirection::DOWNTO,
+		//TODO::		move(e1));
+		//TODO::return append_expr(ctx, move(res), HdlOperatorType::INDEX, move(sel));
+		return append_expr(ctx, move(res), HdlOperatorType::INDEX, nullptr);
 	}
 	return res;
 }

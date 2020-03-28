@@ -6,6 +6,7 @@
 
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlObjects/hdlTypes.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -20,26 +21,27 @@ public:
 			vhdlParser::Association_elementContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitFormal_part(
 			vhdlParser::Formal_partContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitExplicit_range(
+	static std::unique_ptr<hdlObjects::HdlRange> visitExplicit_range(
 			vhdlParser::Explicit_rangeContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitRange(
+	static std::unique_ptr<hdlObjects::HdlRange> visitRange(
 			vhdlParser::RangeContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitActual_part(
 			vhdlParser::Actual_partContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitActual_designator(
 			vhdlParser::Actual_designatorContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSubtype_indication(
+	static std::unique_ptr<hdlObjects::HdlSubtype> visitSubtype_indication(
 			vhdlParser::Subtype_indicationContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitResolution_indication(
 			vhdlParser::Resolution_indicationContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitConstraint(
-			std::unique_ptr<hdlObjects::iHdlExpr> selectedName,
+	static std::unique_ptr<hdlObjects::HdlConstraint> visitConstraint(
 			vhdlParser::ConstraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitArray_constraint(
+	static std::unique_ptr<hdlObjects::HdlArrayConstraint> visitArray_constraint(
 			vhdlParser::Array_constraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitIndex_constraint(
+	static std::unique_ptr<hdlObjects::HdlArrayConstraint> visitIndex_constraint(
 			vhdlParser::Index_constraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitDiscrete_range(
+	static std::unique_ptr<hdlObjects::HdlConstraint> visitArray_element_constraint(
+			vhdlParser::Array_element_constraintContext *ctx);
+	static std::unique_ptr<hdlObjects::HdlRange> visitDiscrete_range(
 			vhdlParser::Discrete_rangeContext *ctx);
 	static hdlObjects::HdlOperatorType visitSign(vhdlParser::SignContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExpr> visitSimple_expression(

@@ -81,8 +81,10 @@ unique_ptr<HdlVariableDef> VerPortParser::visitNonansi_port__expr_as_var(
 		return create_object<HdlVariableDef>(ctx, "", nullptr, move(e));
 	}
 	auto id_and_t = split_type_base_name_and_array_size(move(e), "wire");
-	return create_object<HdlVariableDef>(ctx, id_and_t.first, move(id_and_t.second),
-			nullptr);
+	//TODO::return create_object<HdlVariableDef>(ctx, id_and_t.first, move(id_and_t.second),
+	//TODO::		nullptr);
+	//
+	//rhinton: update id_and_t type whatever it is
 }
 unique_ptr<iHdlExpr> VerPortParser::visitNonansi_port__expr_as_expr(
 		sv2017Parser::Nonansi_port__exprContext *ctx) {
@@ -176,9 +178,9 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 		unique_ptr<iHdlExpr> def_val = nullptr;
 		if (_e)
 			def_val = ep.visitExpression(_e);
-		auto p = create_object<HdlVariableDef>(ctx, name, iHdlExpr::AUTO_T(),
-				move(def_val), d, is_latched);
-		return {move(p), nullptr};
+		//TODO::auto p = create_object<HdlVariableDef>(ctx, name, iHdlExpr::AUTO_T(),
+		//TODO::		move(def_val), d, is_latched);
+		//TODO::return {move(p), nullptr};
 	}
 
 	if (!t) {
@@ -194,9 +196,10 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 	auto ce = ctx->constant_expression();
 	if (ce)
 		def_val = ep.visitConstant_expression(ce);
-	auto p = create_object<HdlVariableDef>(ctx, name, move(t), move(def_val), d,
-			is_latched);
-	return {move(p), base_type};
+	//TODO::auto p = create_object<HdlVariableDef>(ctx, name, move(t), move(def_val), d,
+	//TODO::		is_latched);
+	//TODO::return {move(p), base_type};
+	return {nullptr, base_type};
 }
 void VerPortParser::visitNonansi_port_declaration(
 		sv2017Parser::Nonansi_port_declarationContext *ctx,
@@ -357,14 +360,14 @@ void VerPortParser::visitList_of_tf_variable_identifiers(
 		if (_e)
 			def_val = ep.visitExpression(_e);
 
-		auto v = create_object<HdlVariableDef>(i, id, move(t), move(def_val));
-		if (first) {
-			first = false;
-			v->__doc__ = doc;
-		}
-		v->is_latched = is_latched;
-		v->direction = direction;
-		res.push_back(move(v));
+		//TODO::auto v = create_object<HdlVariableDef>(i, id, move(t), move(def_val));
+		//TODO::if (first) {
+		//TODO::	first = false;
+		//TODO::	v->__doc__ = doc;
+		//TODO::}
+		//TODO::v->is_latched = is_latched;
+		//TODO::v->direction = direction;
+		//TODO::res.push_back(move(v));
 	}
 }
 
@@ -388,14 +391,14 @@ void VerPortParser::visitList_of_variable_identifiers(
 		t = tp.applyVariable_dimension(move(t), vds);
 		auto _id = i->identifier();
 		auto id = VerExprParser::getIdentifierStr(_id);
-		auto v = create_object<HdlVariableDef>(i, id, move(t), nullptr);
-		if (first) {
-			first = false;
-			v->__doc__ = doc;
-		}
-		v->is_latched = is_latched;
-		v->direction = direction;
-		res.push_back(move(v));
+		//TODO::auto v = create_object<HdlVariableDef>(i, id, move(t), nullptr);
+		//TODO::if (first) {
+		//TODO::	first = false;
+		//TODO::	v->__doc__ = doc;
+		//TODO::}
+		//TODO::v->is_latched = is_latched;
+		//TODO::v->direction = direction;
+		//TODO::res.push_back(move(v));
 	}
 }
 
@@ -432,7 +435,8 @@ unique_ptr<HdlVariableDef> VerPortParser::visitTf_port_item(
 	}
 
 	bool is_latched = ctx->KW_VAR() != nullptr;
-	return create_object<HdlVariableDef>(ctx, name, move(t), move(v), d, is_latched);
+	//TODO::return create_object<HdlVariableDef>(ctx, name, move(t), move(v), d, is_latched);
+	return nullptr;
 }
 
 HdlDirection VerPortParser::visitPort_direction(

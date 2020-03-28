@@ -53,7 +53,7 @@ public:
 			vhdlParser::Return_statementContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlStatement> visitLoop_statement(
 			vhdlParser::Loop_statementContext *ctx);
-	static std::pair<std::unique_ptr<hdlObjects::iHdlExpr>, std::unique_ptr<hdlObjects::iHdlExpr>> visitParameter_specification(
+	static std::pair<std::unique_ptr<hdlObjects::iHdlExpr>, std::unique_ptr<hdlObjects::HdlRange>> visitParameter_specification(
 			vhdlParser::Parameter_specificationContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlStatement> visitSelected_waveforms(
 			vhdlParser::Selected_waveformsContext *ctx,

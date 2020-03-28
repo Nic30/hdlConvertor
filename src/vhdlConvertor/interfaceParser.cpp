@@ -29,7 +29,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		// : identifier ( COMMA identifier )*
 		// ;
 		if (!firstIt)
-			_type = std::make_unique<iHdlExpr>(*_type_tmp);
+			_type = std::make_unique<HdlSubtype>(*_type_tmp);
 		std::unique_ptr<iHdlExpr> __expr;
 		if (!expr) {
 			firstIt = false;
