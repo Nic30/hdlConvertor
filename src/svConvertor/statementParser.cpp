@@ -477,9 +477,10 @@ unique_ptr<iHdlStatement> VerStatementParser::visitLoop_statement(
 		std::vector<std::unique_ptr<iHdlObj>> var_defs;
 		visitLoop_variables(_vars,
 				reinterpret_cast<vector<unique_ptr<iHdlStatement>>&>(var_defs));
-		auto fi = create_object<HdlStmForIn>(ctx, var_defs, move(collecton),
-				move(stm));
-		return fi;
+		//TODO::auto fi = create_object<HdlStmForIn>(ctx, var_defs, move(collecton),
+		//TODO::		move(stm));
+		//TODO::return fi;
+		return nullptr;
 	}
 }
 
@@ -507,9 +508,9 @@ void VerStatementParser::visitFor_variable_declaration(
 			dt = create_object<iHdlExpr>(ctx, *dt_tmp);
 		auto _def_val = _fvdas->expression();
 		auto def_val = ep.visitExpression(_def_val);
-		auto vd = create_object<HdlVariableDef>(_fvdas, name, move(dt), move(def_val),
-				HdlDirection::DIR_INTERNAL, is_latched);
-		res.push_back(move(vd));
+		//TODO::auto vd = create_object<HdlVariableDef>(_fvdas, name, move(dt), move(def_val),
+		//TODO::		HdlDirection::DIR_INTERNAL, is_latched);
+		//TODO::res.push_back(move(vd));
 	}
 }
 

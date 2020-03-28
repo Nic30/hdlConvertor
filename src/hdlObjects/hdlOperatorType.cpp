@@ -6,16 +6,12 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN + 1] = {
-		"RANGE",
-		"REVERSE_RANGE",
 		"ACROSS",
 		"THROUGH",
 		"REFERENCE",
 		"TOLERANCE",
 		"TYPE_OF",
 		"INDEX",
-		"DOWNTO",
-		"TO",
 		"SUB",
 		"ADD",
 		"DIV",

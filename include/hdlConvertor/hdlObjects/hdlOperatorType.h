@@ -4,16 +4,12 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 enum HdlOperatorType {
-	RANGE, // range used in VHDL type specifications
-	REVERSE_RANGE,
 	ACROSS,
 	THROUGH,
 	REFERENCE,
 	TOLERANCE,
 	TYPE_OF,
-	INDEX, // array index
-	DOWNTO, // downto for the slice specification
-	TO,  // to for the slice specification
+        INDEX,
 	SUB, // can also be unary minus
 	ADD, // can also be unary plus
 	DIV,
@@ -80,6 +76,8 @@ enum HdlOperatorType {
     ARITH_SHIFT_LEFT_ASSIGN,
     ARITH_SHIFT_RIGHT_ASSIGN,
 };
+
+enum HdlRangeDirection {TO, DOWNTO};
 
 const char* HdlOperatorType_toString(HdlOperatorType opt);
 

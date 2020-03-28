@@ -16,7 +16,7 @@ HdlStmFor::~HdlStmFor() {
 }
 
 HdlStmForIn::HdlStmForIn(std::unique_ptr<HdlVariableDef> _var,
-		std::unique_ptr<iHdlExpr> _collection,
+		std::unique_ptr<HdlRange> _collection,
 		std::unique_ptr<iHdlStatement> _body) :
 		iHdlStatement() {
 	var_defs.push_back(move(_var));
@@ -25,7 +25,7 @@ HdlStmForIn::HdlStmForIn(std::unique_ptr<HdlVariableDef> _var,
 }
 
 HdlStmForIn::HdlStmForIn(std::vector<std::unique_ptr<iHdlObj>> &_vars,
-		std::unique_ptr<iHdlExpr> _collection,
+		std::unique_ptr<HdlRange> _collection,
 		std::unique_ptr<iHdlStatement> _body) {
 	var_defs = move(_vars);
 	collection = move(_collection);
@@ -33,7 +33,7 @@ HdlStmForIn::HdlStmForIn(std::vector<std::unique_ptr<iHdlObj>> &_vars,
 }
 
 HdlStmForIn::HdlStmForIn(std::vector<std::unique_ptr<iHdlExpr>> &vars,
-		std::unique_ptr<iHdlExpr> _collection,
+		std::unique_ptr<HdlRange> _collection,
 		std::unique_ptr<iHdlStatement> _body) :
 		iHdlStatement() {
 	for (auto &v : vars) {
@@ -44,7 +44,7 @@ HdlStmForIn::HdlStmForIn(std::vector<std::unique_ptr<iHdlExpr>> &vars,
 }
 
 HdlStmForIn::HdlStmForIn(std::unique_ptr<iHdlExpr> _var,
-		std::unique_ptr<iHdlExpr> _collection,
+		std::unique_ptr<HdlRange> _collection,
 		std::unique_ptr<iHdlStatement> _body) {
 	var_defs.push_back(std::make_unique<HdlStmExpr>(move(_var)));
 	collection = move(_collection);

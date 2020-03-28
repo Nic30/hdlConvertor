@@ -78,21 +78,25 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			auto p = create_object<HdlVariableDef>(ctx, ".*", iHdlExpr::all(),
-					nullptr);
-			ent->ports.push_back(move(p));
+			//TODO::auto p = create_object<HdlVariableDef>(ctx, ".*", iHdlExpr::all(),
+			//TODO::		nullptr);
+			//TODO::ent->ports.push_back(move(p));
 		}
 	}
 	res.push_back(move(ent));
 	if (ctx->KW_EXTERN()) {
 		for (auto &o : m_ctx.ent.generics) {
 			if (!o->type) {
-				o->type = iHdlExpr::AUTO_T();
+				//TODO::o->type = iHdlExpr::AUTO_T();
+				//
+				//rhiton: It looks like (System)Verilog has a default "type"?
 			}
 		}
 		for (auto &o : m_ctx.ent.ports) {
 			if (!o->type) {
-				o->type = iHdlExpr::AUTO_T();
+				//TODO::o->type = iHdlExpr::AUTO_T();
+				//
+				//rhiton: It looks like (System)Verilog has a default "type"?
 			}
 		}
 		return;
@@ -140,12 +144,16 @@ void VerModuleParser::visitModule_declaration(
 					consume_nonansi_ports_vars), m_ctx.arch->objs.end());
 	for (auto &o : m_ctx.ent.generics) {
 		if (!o->type) {
-			o->type = iHdlExpr::AUTO_T();
+			//TODO::o->type = iHdlExpr::AUTO_T();
+			//
+			// rhinton: SystemVerilog auto type
 		}
 	}
 	for (auto &o : m_ctx.ent.ports) {
 		if (!o->type) {
-			o->type = iHdlExpr::AUTO_T();
+			//TODO::o->type = iHdlExpr::AUTO_T();
+			//
+			// rhinton: SystemVerilog auto type
 		}
 	}
 }
@@ -696,13 +704,13 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		}
 		auto uds = nd->unpacked_dimension();
 		t = tp.applyUnpacked_dimension(move(t), uds);
-		auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
-		if (first) {
-			first = false;
-		}
-
-		v->is_latched = is_latched;
-		res.push_back(move(v));
+		//TODO::auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
+		//TODO::if (first) {
+		//TODO::	first = false;
+		//TODO::}
+                //TODO::
+		//TODO::v->is_latched = is_latched;
+		//TODO::res.push_back(move(v));
 	}
 }
 

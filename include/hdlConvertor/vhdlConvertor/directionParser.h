@@ -10,7 +10,7 @@ namespace vhdl {
 
 hdlObjects::HdlDirection visitSignalMode(
 		vhdl_antlr::vhdlParser::Signal_modeContext *ctx);
-hdlObjects::HdlOperatorType visitDirection(
+hdlObjects::HdlRangeDirection visitDirection(
 		vhdl_antlr::vhdlParser::DirectionContext *ctx);
 
 }

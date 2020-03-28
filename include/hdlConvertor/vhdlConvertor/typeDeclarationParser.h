@@ -1,8 +1,7 @@
 #pragma once
 
-//copy:#include <vector>
-//copy:
-//copy:#include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
+#include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/hdlObjects/hdlTypes.h>
 //copy:
 //copy:#include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 //copy:#include <hdlConvertor/hdlObjects/hdlFunctionDef.h>

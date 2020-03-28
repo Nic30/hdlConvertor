@@ -112,8 +112,8 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 				}
 			}
 		}
-		auto var = create_object<HdlVariableDef>(vda, name, move(t), move(v));
-		res.push_back(move(var));
+		//TODO::auto var = create_object<HdlVariableDef>(vda, name, move(t), move(v));
+		//TODO::res.push_back(move(var));
 	}
 
 }
@@ -138,12 +138,14 @@ unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
 		auto vds = ctx->variable_dimension();
 		dt = tp.applyVariable_dimension(move(dt), vds);
 		auto name = ep.getIdentifierStr(id0);
-		return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(dt));
+		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(dt));
+		return nullptr;
 	} else if (ctx->KW_ENUM() || ctx->KW_STRUCT() || ctx->KW_UNION()
 			|| ctx->KW_CLASS()) {
 		// forward typedef without actual type specified
 		auto name = ep.getIdentifierStr(id0);
-		return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), iHdlExpr::null());
+		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), iHdlExpr::null());
+		return nullptr;
 	} else {
 		auto iwbs = ctx->identifier_with_bit_select();
 		auto val = ep.visitIdentifier_with_bit_select(iwbs, nullptr);
@@ -152,7 +154,8 @@ unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
 		auto id = ep.visitIdentifier(ids[0]);
 		val = create_object<iHdlExpr>(iwbs, move(val), HdlOperatorType::DOT, move(id));
 		auto name = ep.getIdentifierStr(ids[1]);
-		return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(val));
+		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(val));
+		return nullptr;
 	}
 }
 void VerDeclrParser::visitNet_type_declaration(

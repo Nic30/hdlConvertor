@@ -12,6 +12,7 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 #include <hdlConvertor/createObject.h>
