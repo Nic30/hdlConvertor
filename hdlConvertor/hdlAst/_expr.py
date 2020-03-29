@@ -45,7 +45,8 @@ class HdlAll(object):
     __slots__ = []
 
     def __init__(self):
-        raise ValueError("This class (%r) is not supposed to be instantiated"
+        raise ValueError("This class (%r) is not supposed to be instantiated "
+                         "and should be used as a constant instead"
                          % self.__class__)
 
 
