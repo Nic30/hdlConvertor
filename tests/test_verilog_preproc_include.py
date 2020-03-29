@@ -4,6 +4,7 @@ import unittest
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
 
+
 SRC_DIR = path.join(path.dirname(__file__), 'sv_pp', 'src')
 EXPECTED_DIR = path.join(path.dirname(__file__), 'sv_pp', 'expected')
 

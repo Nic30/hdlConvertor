@@ -18,8 +18,10 @@ SUCESSFULL_TEST_FILTER_FILE = None
 
 
 def get_yosys_test_configs():
-    assert os.path.exists(YOSYS_ROOT) and len(os.listdir(YOSYS_ROOT)) > 0, "Yosys repo not downloaded correctly"
-    for verilog_file in chain(find_files(YOSYS_ROOT, "*.v"), find_files(YOSYS_ROOT, "*.sv")):
+    assert os.path.exists(YOSYS_ROOT) and len(os.listdir(YOSYS_ROOT)) > 0,\
+        "Yosys repo not downloaded correctly (git submodule in this test directory)"
+    for verilog_file in chain(find_files(YOSYS_ROOT, "*.v"),
+                              find_files(YOSYS_ROOT, "*.sv")):
         fn = get_file_name(verilog_file)
         should_fail = False
         lang = Language.SYSTEM_VERILOG_2009
@@ -33,7 +35,7 @@ def get_yosys_test_configs():
                 "abc_map",
                 "cells_latch",
                 "cells_map",
-                
+
                 # not a verilog file
                 "xcu_cells_xtra",
                 "xc7_cells_xtra",
@@ -56,26 +58,26 @@ def get_yosys_test_configs():
                 "flowp",
                 "flow",
                 "constmsk_testmap",
-                
+
                 # depends on generated file
                 "xc7_brams_map",
                 "xc6s_brams_map",
                 "brams_map",
                 # (2**i)'b0
                 "techmap",
-                
+
                 # error example
                 "syntax_err11",
                 "syntax_err08",
                 "syntax_err07",
                 "small",
-                
+
                 # incorrect escaped id
                 "svinterface_at_top_wrapper",
-                
+
                 # non std? +/- after specify_input_terminal_descriptor
                 "specify",
-                
+
                 # non std? extra , in module port list
                 "opt_share_add_sub",
                 "opt_share_cat",
@@ -86,14 +88,14 @@ def get_yosys_test_configs():
 
                 # non std ID'd1
                 "mulshift_map",
-                
+
                 # non std binary ~&/|
                 "logic",
-                
+
                 # non std based digit starting with _
                 "gate2lut",
                 "cmp2lut",
-                ]:
+        ]:
             should_fail = True
         if fn in ["test_dsp_model", "eagle_bb", "drams_map"]:
             lang = Language.VERILOG_2005

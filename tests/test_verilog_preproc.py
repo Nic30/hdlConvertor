@@ -1,11 +1,11 @@
-import os
 from os import path
+import os
 import unittest
-from tests.basic_tc import TEST_DIR
 
 from hdlConvertor import ParseException, HdlConvertor
 from hdlConvertor.language import Language
 from tests.file_utils import cd
+from tests.hdl_parse_tc import TEST_DIR
 
 
 def _test_run(test_file, golden_file, golden_str):
@@ -38,9 +38,9 @@ def _test_run_rel(test_file, golden_file=None, golden_str=None):
     if golden_file is not None:
         golden_file = path.join('sv_pp', 'expected', golden_file)
     return _test_run(
-            path.join('sv_pp', 'src', test_file),
-            golden_file,
-            golden_str
+        path.join('sv_pp', 'src', test_file),
+        golden_file,
+        golden_str
     )
 
 
@@ -143,22 +143,25 @@ class VerilogPreprocTC(unittest.TestCase):
             "\"Internal error: null handle at %s, line %d.\",\n"
             "\"sv_pp/src/test_FILE_LINE.sv\", 5);\n\n\nendmodule\n"
         )
-        test_result, test_golden = _test_run_rel('test_FILE_LINE.sv', golden_str=test_golden)
+        test_result, test_golden = _test_run_rel(
+            'test_FILE_LINE.sv', golden_str=test_golden)
         self.assertEqual(test_result, test_golden)
 
     def test_verilog_pp_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.verilog_pp("", "badlang", [])
+            c.verilog_pp("", "badlang", [])
         e = str(context.exception)
-        self.assertIn("'badlang' is not recognized (expected hdlConvertor.language.Language value)", e)
+        self.assertIn(
+            "'badlang' is not recognized (expected hdlConvertor.language.Language value)", e)
 
     def test_parser_Language_is_bad(self):
         with self.assertRaises(ValueError) as context:
             c = HdlConvertor()
-            test_result = c.parse(None, "bad", None)
+            c.parse(None, "bad", None)
         e = str(context.exception)
-        self.assertIn("'bad' is not recognized (expected hdlConvertor.language.Language value)", e)
+        self.assertIn(
+            "'bad' is not recognized (expected hdlConvertor.language.Language value)", e)
 
     def test_debug_macro(self):
         self.assertPPWorks("debug_macro.txt")

@@ -1,11 +1,9 @@
 import sys
-if sys.version_info[0] == 2:
-    from future.builtins import super
- 
 import time
 import unittest
 from unittest.runner import TextTestResult
-
+if sys.version_info[0] == 2:
+    from future.builtins import super
 
 
 class TimeLoggingTestResult(TextTestResult):
@@ -35,7 +33,7 @@ class TimeLoggingTestResult(TextTestResult):
 
 
 class TimeLoggingTestRunner(unittest.TextTestRunner):
-    
+
     def __init__(self, *args, **kwargs):
         if kwargs.get("resultclass", None) is None:
             kwargs["resultclass"] = TimeLoggingTestResult

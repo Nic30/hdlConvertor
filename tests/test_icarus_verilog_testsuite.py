@@ -205,7 +205,7 @@ def get_icarus_test_configs():
                                            "regress-ivl1.list",
                                            "regress-ivl2.list"]:
             continue
-        
+
         if file_name.endswith("vpi_regress.list"):
             dir_name = "vpi"
         else:

@@ -11,7 +11,8 @@ class ExternTestSpec():
     Container of informations about test
     """
 
-    def __init__(self, main_file, language, preproc_defs, include_dirs, should_fail):
+    def __init__(self, main_file, language, preproc_defs,
+                 include_dirs, should_fail):
         self.main_file = main_file
         self.language = language
         assert isinstance(language, Language), language
@@ -26,7 +27,7 @@ class ExternTestSpec():
     def generate_test_method_name(self, existing_prop_dict):
         fn = get_file_name(self.main_file)
         return generate_test_method_name(fn, self.language, existing_prop_dict)
-    
+
     def register_test_on_tc(self, test_filter, tc_property_dict):
         test_name = self.generate_test_method_name(tc_property_dict)
         if not test_filter.is_dissabled_test(test_name):
@@ -41,13 +42,13 @@ def gen_test(test_spec, test_filter):
     def test(self):
         c = HdlConvertor()
         c.preproc_macro_db.update(test_spec.preproc_defs)
-        
+
         try:
             c.parse([test_spec.main_file, ], test_spec.language,
                     test_spec.include_dirs, debug=test_spec.debug)
         except Exception:
             if test_spec.should_fail:
-                # [TODO] some expected erros in this test suite are not related to synatax
+                # [TODO] some expected erros in this test suite are not related to syntax
                 #        need to check maually if the error really means syntax error and
                 #        if this library is raising it correctly
                 pass
@@ -59,18 +60,20 @@ def gen_test(test_spec, test_filter):
     return test
 
 
-def generate_external_testcase_class(testcase_class_name, test_configs, SUCESSFULL_TEST_FILTER_FILE):
+def generate_external_testcase_class(testcase_class_name, test_configs,
+                                     SUCESSFULL_TEST_FILTER_FILE):
 
     # https://stackoverflow.com/questions/32899/how-do-you-generate-dynamic-parameterized-unit-tests-in-python
     class TestsuiteMeta(type):
-    
+
         def __new__(cls, name, bases, _dict):
             test_filter = TestFilter(SUCESSFULL_TEST_FILTER_FILE)
-    
+
             for test_spec in sorted(test_configs, key=lambda x: x.main_file):
                 test_spec.register_test_on_tc(test_filter, _dict)
-    
+
             return type.__new__(cls, name, bases, _dict)
-    
-    # https://www.oipapio.com/question-219175 , python2/3 compatible specification of metatype for class
+
+    # https://www.oipapio.com/question-219175 , python2/3 compatible
+    # specification of metatype for class
     return TestsuiteMeta(testcase_class_name, (unittest.TestCase,), {})

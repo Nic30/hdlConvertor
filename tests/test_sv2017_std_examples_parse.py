@@ -5,9 +5,9 @@ import unittest
 
 from hdlConvertor import HdlConvertor
 from hdlConvertor.language import Language
-
-from tests.time_logging_test_runner import TimeLoggingTestRunner
 from tests.file_utils import get_file_name
+from tests.time_logging_test_runner import TimeLoggingTestRunner
+
 
 HDL_CONVERTOR_ROOT = os.path.join(os.path.dirname(__file__), "..")
 SV2017_ROOT = os.path.join(HDL_CONVERTOR_ROOT, "tests", "sv_test", "std2017")
@@ -24,7 +24,8 @@ class Sv2017StdExamplesParseMeta(type):
             def test(self):
                 c = HdlConvertor()
                 incdirs = []
-                c.parse([sv_file, ], Language.SYSTEM_VERILOG_2017, incdirs, debug=False)
+                c.parse([sv_file, ], Language.SYSTEM_VERILOG_2017,
+                        incdirs, debug=False)
 
             return test
 
@@ -32,12 +33,14 @@ class Sv2017StdExamplesParseMeta(type):
             fn = get_file_name(sv_file)
             test_name = "test_%s" % fn
             t = gen_test(sv_file)
-            _dict[test_name] = t 
+            _dict[test_name] = t
         return type.__new__(cls, name, bases, _dict)
 
 
-# https://www.oipapio.com/question-219175 , python2/3 compatible specification of metatype for class
-Sv2017StdExamplesParseTC = Sv2017StdExamplesParseMeta('Sv2017StdExamplesParseTC', (unittest.TestCase,), {})
+# https://www.oipapio.com/question-219175 , python2/3 compatible
+# specification of metatype for class
+Sv2017StdExamplesParseTC = Sv2017StdExamplesParseMeta(
+    'Sv2017StdExamplesParseTC', (unittest.TestCase,), {})
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()

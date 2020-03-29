@@ -4,10 +4,11 @@ import re
 import unittest
 
 from hdlConvertor.language import Language
-from tests.file_utils import find_files, get_file_name
-from tests.time_logging_test_runner import TimeLoggingTestRunner
 from tests.extern_test_utils import generate_external_testcase_class, \
     ExternTestSpec
+from tests.file_utils import find_files, get_file_name
+from tests.time_logging_test_runner import TimeLoggingTestRunner
+
 
 VERILATOR_ROOT = os.path.join(os.path.dirname(__file__), "verilator")
 VERILATOR_TEST_ROOT = os.path.join(VERILATOR_ROOT, "test_regress", "t")
@@ -19,7 +20,8 @@ SUCESSFULL_TEST_FILTER_FILE = None
 
 
 def get_verilator_test_configs():
-    RE_TOPFILENAME = re.compile('top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
+    RE_TOPFILENAME = re.compile(
+        'top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
     for test_script_name in find_files(VERILATOR_TEST_ROOT, "*.pl"):
         do_ignore = False
         for ignored in ["t_flag_", "t_dist_", "t_vlcov_",
@@ -40,7 +42,8 @@ def get_verilator_test_configs():
             main_file = main_file.group(1)
             if "$Self->{obj_dir}" in main_file:
                 continue
-            assert main_file.startswith("t/") or main_file.startswith("t_"), main_file
+            assert main_file.startswith(
+                "t/") or main_file.startswith("t_"), main_file
             main_file = os.path.basename(main_file)
         else:
             verilog_file = test_script_name.replace(".pl", ".v")
@@ -94,7 +97,7 @@ def get_verilator_test_configs():
                 "t_parse_delay",
                 # non std.? parameters without the parenthesis?
                 "t_param_no_parentheses",
-                # non std. ordered and named port list mixed syntax 
+                # non std. ordered and named port list mixed syntax
                 "t_interface_modportlist",
                 # non std. missing return type of function
                 "t_interface_modport_export",
@@ -102,10 +105,9 @@ def get_verilator_test_configs():
                 "t_interface_gen",
                 # non std. case without items
                 "t_case_wild",
-                
                 # /dev/null is not present under windows
                 "t_lint_incabspath",
-                }:
+        }:
             should_fail = True
         if fn == "t_var_rsvd":
             lang = Language.SYSTEM_VERILOG_2005
@@ -113,9 +115,11 @@ def get_verilator_test_configs():
             "TEST_OBJ_DIR": "obj/",
             "PREDEF_COMMAND_LINE": '$display("PREDEF_COMMAND_LINE");'
         }
-        incdirs = [VERILATOR_TEST_ROOT, os.path.join(VERILATOR_ROOT, "include")]
+        incdirs = [VERILATOR_TEST_ROOT,
+                   os.path.join(VERILATOR_ROOT, "include")]
 
-        yield ExternTestSpec(os.path.join(VERILATOR_TEST_ROOT, main_file), lang, preproc_defs, incdirs, should_fail)
+        yield ExternTestSpec(os.path.join(VERILATOR_TEST_ROOT, main_file),
+                             lang, preproc_defs, incdirs, should_fail)
 
 
 VerilatorTestsuiteTC = generate_external_testcase_class(
