@@ -3,10 +3,10 @@ from copy import copy
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn
 from hdlConvertor.hdlAst._statements import HdlStmWait, HdlStmBlock
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
-from hdlConvertor.to.verilog.expr import ToVerilog2001Expr
+from hdlConvertor.to.verilog.expr import ToVerilog2005Expr
 
 
-class ToVerilog2001Stm(ToVerilog2001Expr):
+class ToVerilog2005Stm(ToVerilog2005Expr):
     ASSIGN_OPS = {
         HdlBuiltinFn.ASSIGN: '=',
         HdlBuiltinFn.PLUS_ASSIGN: '+=',

@@ -5,7 +5,7 @@ from hdlConvertor.to.hdlUtils import is_str, iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
 
 
-class ToVerilog2001Expr(ToHdlCommon):
+class ToVerilog2005Expr(ToHdlCommon):
 
     GENERIC_BIN_OPS = {
         HdlBuiltinFn.AND: "&",

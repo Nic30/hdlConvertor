@@ -3,10 +3,10 @@ from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn,\
     HdlTypeAuto
 from hdlConvertor.hdlAst._defs import HdlFunctionDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
-from hdlConvertor.to.verilog.stm import ToVerilog2001Stm
+from hdlConvertor.to.verilog.stm import ToVerilog2005Stm
 
 
-class ToVerilog2005(ToVerilog2001Stm):
+class ToVerilog2005(ToVerilog2005Stm):
     """
     Convert HdlConverotr hdlObject AST back to Verilog 2002
     """
@@ -17,7 +17,7 @@ class ToVerilog2005(ToVerilog2001Stm):
     }
 
     def print_doc(self, obj):
-        return super(ToVerilog2001, self).print_doc(obj, "//")
+        return super(ToVerilog2005, self).print_doc(obj, "//")
 
     def print_direction(self, d):
         """
