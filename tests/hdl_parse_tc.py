@@ -1,6 +1,7 @@
 from os import path
-import unittest
 import os
+import unittest
+
 try:
     # python2
     from StringIO import StringIO
@@ -9,10 +10,11 @@ except ImportError:
     # python3
     from io import StringIO
 
-from hdlConvertor.language import Language
 from hdlConvertor import HdlConvertor
-from hdlConvertor.toVerilog import ToVerilog
-from hdlConvertor.toVhdl import ToVhdl
+from hdlConvertor.language import Language
+from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
+from hdlConvertor.to.vhdl.vhdl2008 import ToVhdl2008
+
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -21,15 +23,30 @@ VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
 
 
-def parseFile(fname, language):
-    if language.is_system_verilog():
-        lang_dir = os.path.join("sv_test", "others")
-    elif language.is_verilog():
-        lang_dir = "verilog"
-    elif language.is_vhdl():
-        lang_dir = "vhdl"
+def get_language_path(lang_dir, language):
+    if lang_dir is None:
+        if language.is_system_verilog():
+            lang_dir = os.path.join("sv_test", "others")
+        elif language.is_verilog():
+            lang_dir = "verilog"
+        elif language.is_vhdl():
+            lang_dir = "vhdl"
+        else:
+            raise ValueError(language)
+    return lang_dir
+
+
+def get_to_hdl_cls(language):
+    if language == VERILOG or language == SV:
+        return ToVerilog2005
+    elif language == VHDL:
+        return ToVhdl2008
     else:
-        raise ValueError(language)
+        raise NotImplementedError(language)
+
+
+def parseFile(fname, language, lang_dir=None):
+    lang_dir = get_language_path(lang_dir, language)
     inc_dir = path.join(TEST_DIR, lang_dir)
     f = path.join(TEST_DIR, lang_dir, fname)
     c = HdlConvertor()
@@ -37,27 +54,45 @@ def parseFile(fname, language):
     return f, res
 
 
-class BasicTC(unittest.TestCase):
+def _default_to_hdl(context, language, buff):
+    to_hdl_cls = get_to_hdl_cls(language)
+    ser = to_hdl_cls(buff)
+    ser.print_HdlContext(context)
 
-    def parseWithRef(self, fname, language):
-        _, res = parseFile(fname, language)
+
+class HdlParseTC(unittest.TestCase):
+    """
+    A base class for HDL parser tests
+    """
+
+    def parseWithRef(self, fname, language, lang_dir=None,
+                     ref_fname=None, to_hdl=_default_to_hdl):
+        """
+        Parse file and compare it with a reference file.
+
+        :param fname: name of a file to parse
+        :type fname: str
+        :type language: Language
+        :param ref_fname: name of reference file in the case it is not the same
+            (relative to "expected/" )
+        :param lang_dir: path relative to a test directory where test file is stored
+        :param transform: a function which can be used to modify a HdlContext
+            pefore transformation to a target language
+        """
+
+        if ref_fname is None:
+            ref_fname = fname
+
+        lang_dir = get_language_path(lang_dir, language)
+        _, res = parseFile(fname, language, lang_dir=lang_dir)
+
         buff = StringIO()
         # import sys
         # buff = sys.stdout
-        if language == VERILOG or language == SV:
-            ser = ToVerilog(buff)
-        elif language == VHDL:
-            ser = ToVhdl(buff)
-        else:
-            raise NotImplementedError(language)
 
-        ser.print_context(res)
-        if language.is_verilog() or language.is_system_verilog():
-            lang_dir = "verilog"
-        elif language.is_vhdl():
-            lang_dir = "vhdl"
-        else:
-            raise ValueError(language)
+        # serialize a HDL code to a buff
+        to_hdl(res, language, buff)
+
         ref_file = path.join(TEST_DIR, lang_dir,
                              "expected", fname)
         res_str = buff.getvalue()
