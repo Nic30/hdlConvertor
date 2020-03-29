@@ -23,9 +23,10 @@ class iHdlObjWithName(iHdlObj):
     def __init__(self):
         super(iHdlObjWithName, self).__init__()
         self.name = None  # type: HdlName
-    
+
     def __repr__(self):
         return "<%s %s>" % (self.__class__.__name__, self.name)
+
 
 class iHdlObjInModule(object):
     """
