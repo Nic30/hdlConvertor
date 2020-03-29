@@ -10,7 +10,7 @@ class HdlImport(iHdlStatement):
 
     :note: note that this does not corresponds to include as include
             is processed by preprocessor
-    :ivar path: the list of names which are in the import
+    :ivar ~.path: the list of names which are in the import
     """
     __slots__ = ["path", ]
 
@@ -44,13 +44,13 @@ class HdlStmAssign(iHdlStatement):
     """
     HDL assignment statement
 
-    :ivar src: the source
-    :ivar dst: the destination
-    :ivar is_blocking: flag if true assignment should be evaluated immediately
+    :ivar ~.src: the source
+    :ivar ~.dst: the destination
+    :ivar ~.is_blocking: flag if true assignment should be evaluated immediately
         else the assignment is evaluated after end of the current event
 
-    :ivar time_delay: delay which waits for a specified time
-    :ivar event_delay: delay which waits for a specified event
+    :ivar ~.time_delay: delay which waits for a specified time
+    :ivar ~.event_delay: delay which waits for a specified event
     :note: Evaluation of assignments with delay specified
            is generaly not synthetisable.
            If statement is blocking the current statement waits
@@ -74,9 +74,9 @@ class HdlStmIf(iHdlStatement):
     """
     HDL if statement
 
-    :ivar cond: condition in if statement
-    :ivar if_true: block of statements which is in if true branch
-    :ivar elifs: type: List[Tuple[iHdlExpr, iHdlStatement]]
+    :ivar ~.cond: condition in if statement
+    :ivar ~.if_true: block of statements which is in if true branch
+    :ivar ~.elifs: type: List[Tuple[iHdlExpr, iHdlStatement]]
                   = list of (condition, statement list)
     """
     __slots__ = ["cond", "if_true", "elifs", "if_false"]
@@ -94,7 +94,7 @@ class HdlStmProcess(iHdlStatement):
     HDL process statement
     the container of statements with the sensitivity specified
 
-    :ivar sensitivity: optional list of expressions which specifies
+    :ivar ~.sensitivity: optional list of expressions which specifies
         the trigger signals of the evaluation of the process
     :note: sensitivity = None means that the process is executed immediately
         sensitivity = [] means the process is never executed
