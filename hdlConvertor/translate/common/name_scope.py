@@ -20,6 +20,9 @@ class ObjectForNameNotFound(KeyError):
     pass
 
 
+_INVALID = object()
+
+
 class NameScope(dict):
     """
     Scope of used names in hdl (node of hierarchical symbol table).
@@ -47,7 +50,7 @@ class NameScope(dict):
 
     def update(self, other):
         for k, v in other.items():
-            self.__registerName(k, v)
+            self.register_name(k, v)
 
     def __init__(self, parent, name, ignorecase):
         """
@@ -71,12 +74,6 @@ class NameScope(dict):
         self.children = {}
         self.name = name
 
-    def getParent(self, parent: "NameScope"):
-        if self.level < 1:
-            return None
-        else:
-            return parent[self.level - 1]
-
     # @internal
     def __incrPrefixCntr(self, prefix,
                          currentVal) -> str:
@@ -87,7 +84,7 @@ class NameScope(dict):
         return usableName
 
     # @internal
-    def __registerName(self, name, obj):
+    def register_name(self, name, obj):
         # search if name is already defined on me and parents
         actual = self
         o = None
@@ -105,15 +102,17 @@ class NameScope(dict):
                 continue
             break
 
-        if o is None or o is obj:
+        if o is obj:
+            pass
+        elif o is None:
             # we can use use the name, because it is not used
-            # in any parent
+            # in any parent and that means we are not redefinig the symbol
             self[_name] = obj
             self.reversed[obj] = _name
         else:
             raise NameOccupiedErr(o)
 
-    def get_children(self, name):
+    def get_child(self, name):
         if self.ignorecase:
             name = name.lower()
         return self.children[name]
@@ -129,12 +128,12 @@ class NameScope(dict):
         return i
 
     def level_pop(self):
-        return self.pop()
+        return self.parent
 
     def checkedName(self, suggestedName, obj) -> str:
         if not suggestedName.endswith("_"):
             try:
-                self.__registerName(suggestedName, obj)
+                self.register_name(suggestedName, obj)
                 return suggestedName
             except NameOccupiedErr:
                 suggestedName += "_"
@@ -159,7 +158,7 @@ class NameScope(dict):
             usableName = self.__incrPrefixCntr(
                 suggestedName, cntrVal)
         # setup for me and propagate to children
-        self.__registerName(usableName, obj)
+        self.register_name(usableName, obj)
         return usableName
 
     def __discard_prefix_cntrs_from_children(self, prefix):
@@ -171,6 +170,18 @@ class NameScope(dict):
         for c in self.children.values():
             cntr_val = max(cntr_val, c.__discard_prefix_cntrs_from_children(prefix))
         return cntr_val
+
+    def get_object_and_scope_by_name(self, name):
+        if self.ignorecase:
+            name = name.lower()
+        actual = self
+        while actual is not None:
+            o = actual.get(name, _INVALID)
+            if o is not _INVALID:
+                return (actual, o)
+            else:
+                actual = actual.parent
+        raise KeyError(name)
 
     def get_object_name(self, obj):
         assert obj is not None
