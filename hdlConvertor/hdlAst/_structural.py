@@ -53,7 +53,6 @@ class HdlComponentInst(iHdlObjWithName, iHdlObjInModule):
 
     :ivar ~.name: name of this component instance in this module
     :ivar ~.module_name: iHdlExpr made from HdlNames and dot operators (optionally)
-    :ivar ~.module: HdlModuleDec instance for this component instance
     :attention: module has to be find explicitly and is not present in default
         AST after parsing
     :ivar ~.param_map: same as port_map just port parameters of the component
@@ -66,7 +65,6 @@ class HdlComponentInst(iHdlObjWithName, iHdlObjInModule):
         iHdlObjWithName.__init__(self)
         iHdlObjInModule.__init__(self)
         self.module_name = None  # type: iHdlExpr
-        self.module = None  # type: HdlModuleDec
         self.param_map = []  # type: List[iHdlExpr]
         self.port_map = []  # type: List[iHdlExpr]
 
@@ -76,7 +74,9 @@ class HdlContext(object):
     The container of the objects specified in HDL files
 
     :ivar ~.objs: the list of the object from the HDL files
+    :ivar ~.name_scope: A NameScope instance build from objs
     """
 
     def __init__(self):
         self.objs = []  # type: List[iHdlObj]
+        self.name_scope = None
