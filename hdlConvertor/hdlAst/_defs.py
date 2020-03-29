@@ -9,15 +9,15 @@ class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
     """
     Definition of port/param/type etc in HDL
 
-    :ivar name: name of newly defined object
-    :ivar type: type of the defined variable (or type etc.)
-    :ivar value: initialisation of variable (typedef etc.)
-    :ivar is_const: flag if true the value is constants
-    :ivar is_latched: flag if true the object corresponds to VHDL variable/Verilog reg
-    :ivar is_static: flag if true static (same meaning as in C/C++)
-    :ivar is_static: flag if true the variable stores virtual type
+    :ivar ~.name: name of newly defined object
+    :ivar ~.type: type of the defined variable (or type etc.)
+    :ivar ~.value: initialisation of variable (typedef etc.)
+    :ivar ~.is_const: flag if true the value is constants
+    :ivar ~.is_latched: flag if true the object corresponds to VHDL variable/Verilog reg
+    :ivar ~.is_static: flag if true static (same meaning as in C/C++)
+    :ivar ~.is_static: flag if true the variable stores virtual type
         (corresponds to System Verilog virtual parameter)
-    :ivar direction: direction if the variable is port
+    :ivar ~.direction: direction if the variable is port
     """
     __slots__ = ["name", "type", "value", "is_latched", "is_const", "is_static",
                  "is_virtual", "direction"]
@@ -33,6 +33,24 @@ class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
         self.is_virtual = False  # type: bool
         self.direction = None  # type: HdlDirection
 
+    def __repr__(self):
+        t_str = []
+        if self.is_const:
+            t_str.append("const")
+        if self.is_static:
+            t_str.append("static")
+        if self.is_virtual:
+            t_str.append("virtual")
+        if self.is_latched:
+            t_str.append("reg")
+        if self.direction is not None:
+            t_str.append(repr(self.direction))
+        t_str = "".join(t_str)
+        if self.value is None:
+            v_str = ""
+        else:
+            v_str = " = %s" % (repr(self.value))
+        return "<%s %s%s>" % (self.__class__.__name__, t_str, v_str)
 
 class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     """
