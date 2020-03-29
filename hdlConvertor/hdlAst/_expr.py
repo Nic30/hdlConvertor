@@ -20,8 +20,21 @@ class HdlDirection(Enum):
 class HdlName(str):
     """
     String which is id in HDL
+
+    :ivar obj: an object which corresponds to this name
+        (has to be explicitly discovered and is not available imediately
+        after parsing)
     """
-    __slots__ = []
+
+    __slots__ = ["obj"]
+
+    def __init__(self, *args, **kwargs):
+        obj = kwargs.pop("obj", None)
+        super(HdlName, self).__init__()
+        self.obj = obj
+
+    def __repr__(self):
+        return "<%s %s>" % (self.__class__.__name__, self)
 
 
 class HdlAll(object):
@@ -172,7 +185,13 @@ class HdlCall(object):
             return self.fn == other.fn and self.ops == other.ops
 
     def __repr__(self):
-        return "%r(%s)" % (self.fn, ", ".join(repr(o) for o in self.ops))
+        fn, ops = self.fn, self.ops
+        cls_n = self.__class__.__name__
+        if isinstance(fn, HdlBuiltinFn):
+            if fn == HdlBuiltinFn.CALL:
+                return "<%s %r(%s)>" % (cls_n, ops[0], ", ".join(repr(o) for o in ops[1:]))
+
+        return "<%s %r(%s)>" % (cls_n, fn, ", ".join(repr(o) for o in ops))
 
 
 class HdlIntValue(object):
@@ -180,9 +199,9 @@ class HdlIntValue(object):
     Object for representation of int value in in HDL
     (= also for the bitstrings)
 
-    :ivar val: int value or bitstring string
-    :ivar bits: number of bits if specified
-    :ivar base: base for bitstring
+    :ivar ~.val: int value or bitstring string
+    :ivar ~.bits: number of bits if specified
+    :ivar ~.base: base for bitstring
     """
     __slots__ = ["val", "bits", "base"]
 
@@ -214,8 +233,14 @@ class HdlIntValue(object):
                 return False
 
     def __repr__(self):
-        return "<HdlIntValue: val=%r, bits=%r, base=%r>" % (
-                    self.val, self.bits, self.base
+        t_str = []
+        if self.bits is not None:
+            t_str.append(", bits=%r" % self.bits)
+        if self.base is not None:
+            t_str.append(", base=%r" % self.base)
+
+        return "<HdlIntValue %r%s>" % (
+                    self.val, "".join(t_str)
                 )
 
 
