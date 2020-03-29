@@ -5,13 +5,11 @@ from tests.hdl_parse_tc import HdlParseTC, VERILOG
 from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
 from hdlConvertor.translate.verilog_to_basic_hdl_sim_model import\
     verilog_to_basic_hdl_sim_model
-from hdlConvertor.to.basic_hdl_sim_model.utils import discover_stm_outputs_context
 
 
 def _to_basic_hdl_sim_model(context, language, buff):
-    verilog_to_basic_hdl_sim_model(context)
+    context, stm_outputs, _ = verilog_to_basic_hdl_sim_model(context)
     tv = ToBasicHdlSimModel(buff)
-    stm_outputs = discover_stm_outputs_context(context)
     tv.print_HdlContext(context, stm_outputs)
 
 
