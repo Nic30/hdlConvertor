@@ -2,12 +2,11 @@ from itertools import chain
 
 from hdlConvertor.hdlAst._defs import HdlVariableDef
 from hdlConvertor.hdlAst._expr import iHdlExpr, HdlCall, HdlBuiltinFn,\
-    HdlDirection
+    HdlDirection, HdlName
 from hdlConvertor.hdlAst._statements import HdlStmProcess
 from hdlConvertor.hdlAst._structural import HdlComponentInst, HdlModuleDec
 from hdlConvertor.hdlAst._typeDefs import HdlEnumDef, HdlClassDef
 from hdlConvertor.to.basic_hdl_sim_model.stm import BasicHdlSimModelStm
-from hdlConvertor.to.basic_hdl_sim_model.utils import discover_stm_outputs_context
 from hdlConvertor.to.hdlUtils import Indent
 
 
@@ -68,6 +67,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
         self.mod = mod
         try:
             w(DEFAULT_IMPORTS)
+            w("\n")
 
             extra_types = []
             components = []
@@ -105,6 +105,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                 w('"):\n')
                 with Indent(self.out):
                     w('BasicRtlSimModel.__init__(self, sim, name=name)\n')
+                    w('#ports\n')
                     for port in mod.ports:
                         self.print_HdlVariableDef(port)
                     w("# internal signals\n")
@@ -119,21 +120,32 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                         w('(sim, "')
                         w(c.name)
                         w('")\n')
+
                 w("def _init_body(self):\n")
                 with Indent(self.out):
                     for c in components:
-                        for p in c.port_map:
+                        for pm in c.port_map:
                             w("connectSimPort(self, self.")
                             w(c.name)
-                            assert isinstance(p, HdlCall) and\
-                                p.fn == HdlBuiltinFn.MAP_ASSOCIATION, p
-                            src, dst = p.ops
-                            w(src.name)
-                            w('    "')
-                            w(dst.name)
+                            w(', "')
+                            assert isinstance(pm, HdlCall) and\
+                                pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
+                            mod_port, connected_sig = pm.ops
+                            assert isinstance(connected_sig, HdlName), connected_sig
+                            self.print_iHdlExpr(connected_sig)
+                            w('", "')
+                            assert isinstance(mod_port, HdlName), mod_port
+                            self.print_iHdlExpr(mod_port)
                             w('", ')
-                            w(str(p.direction == HdlDirection.IN))
+                            p = mod_port.obj
+                            assert p is not None, (
+                                "HdlName to module ports "
+                                "shoudl have been discovered before")
+                            d = p.direction
+                            assert d in (HdlDirection.IN, HdlDirection.OUT), d
+                            w(str(d == HdlDirection.IN))
                             w(')\n')
+
                     w('self._interfaces = (\n')
                     with Indent(self.out):
                         for p in chain(mod.ports, private_vars):
@@ -176,7 +188,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                         w("self._outputs[self.")
                         w(proc.labels[0])
                         w("] = (\n")
-                        outputs = self.stm_outputs[(mod, proc)]
+                        outputs = self.stm_outputs[proc]
                         with Indent(self.out):
                             for outp in outputs:
                                 w("self.io.")
@@ -241,7 +253,6 @@ if __name__ == "__main__":
     c = HdlConvertor()
     filenames = [os.path.join(TEST_DIR, "arbiter.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
-    verilog_to_basic_hdl_sim_model(d)
+    d, stm_outputs = verilog_to_basic_hdl_sim_model(d)
     tv = ToBasicHdlSimModel(sys.stdout)
-    stm_outputs = discover_stm_outputs_context(d)
     tv.print_HdlContext(d, stm_outputs)
