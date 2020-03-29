@@ -23,20 +23,21 @@ class HdlModuleDec(HdlNamespace):
 
     Corresponds to VHDL entity and the first first part of the module with the ports and parameters
     """
-    __slots__ = ["params", "ports", "objs"]
+    __slots__ = ["params", "ports", "objs", "body"]
 
     def __init__(self):
         super(HdlModuleDec, self).__init__()
         self.params = []  # type: List[HdlVariableDef]
         self.ports = []  # type: List[HdlVariableDef]
+        self.body = None  # type: Optional[HdlModuleDef]
 
 
 class HdlModuleDef(iHdlObjWithName):
     """
     HDL module definition (body of module in Verilog/vhdl architecture)
 
-    :ivar name: name of the architecture in VHDL or name of module in Verilog
-    :ivar module_name: the name of entity in VHDL or same as name in Verilog
+    :ivar ~.name: name of the architecture in VHDL or name of module in Verilog
+    :ivar ~.module_name: the name of entity in VHDL or same as name in Verilog
     """
     __slots__ = ["module_name", "objs"]
 
@@ -50,18 +51,22 @@ class HdlComponentInst(iHdlObjWithName, iHdlObjInModule):
     """
     HDL Component instance
 
-    :ivar name: name of this component instance in this module
-    :ivar module_name: HdlId or iHdlExpr made from HdlIds and dot operators
-    :ivar param_map: same as port_map just port parameters of the component
-    :ivar port_map: the list of iHdlExpr with map operator for map assignment
+    :ivar ~.name: name of this component instance in this module
+    :ivar ~.module_name: iHdlExpr made from HdlNames and dot operators (optionally)
+    :ivar ~.module: HdlModuleDec instance for this component instance
+    :attention: module has to be find explicitly and is not present in default
+        AST after parsing
+    :ivar ~.param_map: same as port_map just port parameters of the component
+    :ivar ~.port_map: the list of iHdlExpr with map operator for map assignment
                     or any other iHdlExpr for positional mapping
     """
-    __slots__ = ["module_name", "param_map", "port_map"]
+    __slots__ = ["module_name", "module", "param_map", "port_map"]
 
     def __init__(self):
         iHdlObjWithName.__init__(self)
         iHdlObjInModule.__init__(self)
         self.module_name = None  # type: iHdlExpr
+        self.module = None  # type: HdlModuleDec
         self.param_map = []  # type: List[iHdlExpr]
         self.port_map = []  # type: List[iHdlExpr]
 
@@ -70,7 +75,7 @@ class HdlContext(object):
     """
     The container of the objects specified in HDL files
 
-    :ivar objs: the list of the object from the HDL files
+    :ivar ~.objs: the list of the object from the HDL files
     """
 
     def __init__(self):
