@@ -94,7 +94,7 @@ class HdlParseTC(unittest.TestCase):
         to_hdl(res, language, buff)
 
         ref_file = path.join(TEST_DIR, lang_dir,
-                             "expected", fname)
+                             "expected", ref_fname)
         res_str = buff.getvalue()
         # if fname == "aes.v":
         #     with open(ref_file, "w") as f:
