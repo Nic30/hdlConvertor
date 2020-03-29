@@ -73,7 +73,7 @@ c = HdlConvertor()
 d = c.parse(filenames, Language.VERILOG, include_dirs, hierarchyOnly=False, debug=True)
 
 tv = ToVerilog(sys.stdout)
-tv.print_context(d)
+tv.print_HdlContext(d)
 
 for o in d.objs:
     print(o)
