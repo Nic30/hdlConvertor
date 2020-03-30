@@ -110,8 +110,8 @@ class HdlBuiltinFn(Enum):
                    # duplicates and concatenates the item N times
      POW,  # bin operator power of
      ABS,  # absolute value
-     NOT,
-     NEG,  # negation
+     NOT,  # logical not
+     NEG,  # bitwise negation
      LOG_AND,  # "and" in vhdl
      LOG_OR,  # "or" in vhdl
      AND,  # & in vhdl
