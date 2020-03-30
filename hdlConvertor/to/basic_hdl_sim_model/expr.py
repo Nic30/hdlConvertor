@@ -39,12 +39,15 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.CONCAT: 1,
         HdlBuiltinFn.TERNARY: 1,
         HdlBuiltinFn.CALL: 1,
+        # parametrization values are parameters of component class
+        # constructor
+        HdlBuiltinFn.PARAMETRIZATION: 1,
     }
     _unaryEventOps = {
         HdlBuiltinFn.RISING: "._onRisingEdge()",
         HdlBuiltinFn.FALLING: "._onFallingEdge()",
     }
-    _unaryOps = {
+    GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NOT: "~",
         HdlBuiltinFn.NEG: "-",
     }

@@ -140,6 +140,13 @@ class HdlAstVisitor():
         """
         self.visit_iHdlStatement(proc.body)
 
+    def visit_HdlStmBlock(self, o, is_top=False):
+        """
+        :type o: HdlStmBlock
+        """
+        for o in o.body:
+            self.visit_iHdlStatement(o)
+
     def visit_HdlStmCase(self, o, is_top=False):
         """
         :type o: HdlStmCase
@@ -156,6 +163,19 @@ class HdlAstVisitor():
         :type o: HdlStmWait
         """
         self.visit_iHdlExpr(o.val)
+
+    def visit_HdlStmIf(self, o, is_top=False):
+        """
+        :type o: HdlStmIf
+        """
+        self.visit_iHdlExpr(o.cond)
+        if o.if_true is not None:
+            self.visit_iHdlStatement(o.if_true)
+        for c, stm in o.elifs:
+            self.visit_iHdlExpr(c)
+            self.visit_iHdlStatement(stm)
+        if o.if_false is not None:
+            self.visit_iHdlStatement(o.if_false)
 
     def visit_HdlStmFor(self, o, is_top=False):
         """

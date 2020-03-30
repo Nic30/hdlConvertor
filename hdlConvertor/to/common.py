@@ -77,7 +77,7 @@ class ToHdlCommon(HdlAstVisitor):
             return self._visit_bin_op(op, op_str)
         elif o == HdlBuiltinFn.INDEX:
             return self._visit_operator_index(op)
-        elif o == HdlBuiltinFn.CALL:
+        elif o == HdlBuiltinFn.CALL or o == HdlBuiltinFn.PARAMETRIZATION:
             return self.visit_operator_call(op)
         else:
             raise NotImplementedError(

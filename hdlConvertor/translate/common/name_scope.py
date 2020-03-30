@@ -121,6 +121,11 @@ class NameScope(dict):
         if self.ignorecase:
             name = name.lower()
 
+        i = self.children.get(name, None)
+        if i is not None:
+            # there is already a child with such a name
+            return i
+
         assert name in self, (
             name, "name has to be assigned to something in this scope")
         i = self.__class__(self, name, self.ignorecase)

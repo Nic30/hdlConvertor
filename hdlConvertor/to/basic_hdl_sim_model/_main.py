@@ -233,6 +233,6 @@ if __name__ == "__main__":
     c = HdlConvertor()
     filenames = [os.path.join(TEST_DIR, "arbiter.v")]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
-    d, stm_outputs = verilog_to_basic_hdl_sim_model(d)
+    d, stm_outputs, ns = verilog_to_basic_hdl_sim_model(d)
     tv = ToBasicHdlSimModel(sys.stdout)
     tv.visit_HdlContext(d, stm_outputs)

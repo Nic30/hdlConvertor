@@ -2,68 +2,88 @@ from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef,\
     HdlComponentInst
 from itertools import chain
 from hdlConvertor.hdlAst._defs import HdlVariableDef
-from hdlConvertor.hdlAst._statements import HdlStmAssign
 from hdlConvertor.hdlAst._bases import iHdlStatement
+from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 
 
-def discover_declarations_HdlVariableDef(name_scope, o):
-    """
-    :type name_scope: NameScope
-    :type o: HdlVariableDef
-    """
-    name_scope.register_name(o.name, o)
+class WithNameScope():
+
+    def __init__(self, discover_declarations, name_scope):
+        """
+        :type discover_declarations: DiscoverDeclarations
+        :type name_scope: NameScope
+        """
+        self.discover_declarations = discover_declarations
+        self.name_scope = name_scope
+
+    def __enter__(self):
+        self.original_name_scope = self.discover_declarations.name_scope
+        self.discover_declarations.name_scope = self.name_scope
+
+    def __exit__(self, type, value, traceback):
+        self.discover_declarations.name_scope = self.original_name_scope
 
 
-def discover_declarations_HdlModuleDec(name_scope, o):
-    """
-    :type name_scope: NameScope
-    :type o: HdlModuleDec
-    """
-    name_scope.register_name(o.name, o)
-    _name_scope = name_scope.level_push(o.name)
-    for p in chain(o.params, o.ports):
-        discover_declarations_HdlVariableDef(_name_scope, p)
+class DiscoverDeclarations(HdlAstVisitor):
+    def __init__(self, name_scope):
+        """
+        :type name_scope: NameScope
+        """
+        self.name_scope = name_scope
 
-    for o2 in o.objs:
-        raise NotImplementedError(o2)
-    if o.body is not None:
-        discover_declarations_HdlModuleDef(name_scope, o.body)
+    def visit_HdlVariableDef(self, o):
+        """
+        :type name_scope: NameScope
+        :type o: HdlVariableDef
+        """
+        self.name_scope.register_name(o.name, o)
 
+    def visit_HdlModuleDec(self, o):
+        """
+        :type name_scope: NameScope
+        :type o: HdlModuleDec
+        """
+        ns = self.name_scope
+        ns.register_name(o.name, o)
+        with WithNameScope(self, ns.level_push(o.name)):
+            for p in chain(o.params, o.ports):
+                self.visit_HdlVariableDef(p)
 
-def discover_declarations_HdlModuleDef(name_scope, o):
-    """
-    :type name_scope: NameScope
-    :type o: HdlModuleDef
-    """
-    name_scope = name_scope.get_child(o.module_name)
-    discover_declarations(name_scope, o.objs)
+            for o2 in o.objs:
+                raise NotImplementedError(o2)
 
+        if o.body is not None:
+            self.visit_HdlModuleDef(o.body)
 
-def discover_declarations_HdlComponentInst(name_scope, o):
-    """
-    :type name_scope: NameScope
-    :type o: HdlComponentInst
-    """
-    if o.name is not None:
-        name_scope.register_name(o.name, o)
-    # name_scope = name_scope.get_object_by_name(o.module_name)
+    def visit_HdlModuleDef(self, o):
+        """
+        :type o: HdlModuleDef
+        """
+        with WithNameScope(self, self.name_scope.get_child(o.module_name)):
+            self.discover_declarations(o.objs)
 
+    def visit_HdlComponentInst(self, o):
+        """
+        :type o: HdlComponentInst
+        """
+        if o.name is not None:
+            self.name_scope.register_name(o.name, o)
+        # name_scope = name_scope.get_object_by_name(o.module_name)
 
-def _discover_declarations(name_scope, o):
-    if isinstance(o, HdlVariableDef):
-        discover_declarations_HdlVariableDef(name_scope, o)
-    elif isinstance(o, HdlModuleDec):
-        discover_declarations_HdlModuleDec(name_scope, o)
-    elif isinstance(o, HdlModuleDef):
-        discover_declarations_HdlModuleDef(name_scope, o)
-    elif isinstance(o, iHdlStatement):
-        pass
-    elif isinstance(o, HdlComponentInst):
-        discover_declarations_HdlComponentInst(name_scope, o)
-    else:
-        raise NotImplementedError(o)
+    def _discover_declarations(self, o):
+        if isinstance(o, HdlVariableDef):
+            self.visit_HdlVariableDef(o)
+        elif isinstance(o, HdlModuleDec):
+            self.visit_HdlModuleDec(o)
+        elif isinstance(o, HdlModuleDef):
+            self.visit_HdlModuleDef(o)
+        elif isinstance(o, iHdlStatement):
+            pass
+        elif isinstance(o, HdlComponentInst):
+            self.visit_HdlComponentInst(o)
+        else:
+            raise NotImplementedError(o)
 
-
-def discover_declarations(name_scope, objs):
-    for o in objs:
-        _discover_declarations(name_scope, o)
+    def discover_declarations(self, objs):
+        for o in objs:
+            self._discover_declarations(o)
