@@ -14,37 +14,37 @@ class ToVhdl2008(ToVhdl2008Stm):
         HdlDirection.INOUT: "INOUT",
     }
 
-    def print_doc(self, obj):
-        return super(ToVhdl2008, self).print_doc(obj, "--")
+    def visit_doc(self, obj):
+        return super(ToVhdl2008, self).visit_doc(obj, "--")
 
-    def print_direction(self, d):
+    def visit_direction(self, d):
         vd = self.DIR2V[d]
         self.out.write(vd)
 
-    def print_generic_or_port_declr(self, o):
+    def visit_generic_or_port_declr(self, o):
         """
         :type p: HdlVariableDef
         """
-        self.print_doc(o)
+        self.visit_doc(o)
         w = self.out.write
         w(o.name)
         w(" : ")
         d = o.direction
         if d != HdlDirection.INTERNAL:
-            self.print_direction(d)
+            self.visit_direction(d)
             w(" ")
-        self.print_type(o.type)
+        self.visit_type(o.type)
         v = o.value
         if v:
             w(" := ")
-            self.print_iHdlExpr(v)
+            self.visit_iHdlExpr(v)
 
-    def print_HdlModuleDec(self, e, vhdl_obj_name="ENTITY"):
+    def visit_HdlModuleDec(self, e, vhdl_obj_name="ENTITY"):
         """
         :param e: Entity
         :type e: HdlModuleDec
         """
-        self.print_doc(e)
+        self.visit_doc(e)
         w = self.out.write
         w(vhdl_obj_name)
         w(" ")
@@ -56,7 +56,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                 w("GENERIC(\n")
                 with Indent(self.out):
                     for last, g in iter_with_last(gs):
-                        self.print_generic_or_port_declr(g)
+                        self.visit_generic_or_port_declr(g)
                         if last:
                             w("\n")
                         else:
@@ -69,7 +69,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                 w("PORT(\n")
                 with Indent(self.out):
                     for last, p in iter_with_last(ps):
-                        self.print_generic_or_port_declr(p)
+                        self.visit_generic_or_port_declr(p)
                         if last:
                             w("\n")
                         else:
@@ -79,23 +79,23 @@ class ToVhdl2008(ToVhdl2008Stm):
         w(vhdl_obj_name)
         w(";\n")
 
-    def print_component(self, o):
+    def visit_component(self, o):
         """
         :type o: HdlModuleDec
         """
-        self.print_HdlModuleDec(o, vhdl_obj_name="COMPONENT")
+        self.visit_HdlModuleDec(o, vhdl_obj_name="COMPONENT")
 
-    def print_type(self, t):
+    def visit_type(self, t):
         """
         :type t: iHdlExpr
         """
-        self.print_iHdlExpr(t)
+        self.visit_iHdlExpr(t)
 
-    def print_HdlVariableDef(self, var, end=";\n"):
+    def visit_HdlVariableDef(self, var, end=";\n"):
         """
         :type var: HdlVariableDef
         """
-        self.print_doc(var)
+        self.visit_doc(var)
         name = var.name
         t = var.type
         latch = var.is_latched
@@ -109,64 +109,64 @@ class ToVhdl2008(ToVhdl2008Stm):
             w("SIGNAL ")
         w(name)
         w(" : ")
-        self.print_type(t)
+        self.visit_type(t)
         v = var.value
         if v is not None:
             w(" := ")
-            self.print_iHdlExpr(v)
+            self.visit_iHdlExpr(v)
         w(end)
 
-    def print_map_item(self, item):
-        self.print_iHdlExpr(item)
+    def visit_map_item(self, item):
+        self.visit_iHdlExpr(item)
 
-    def print_map(self, map_):
+    def visit_map(self, map_):
         w = self.out.write
         with Indent(self.out):
             for last, m in iter_with_last(map_):
-                self.print_map_item(m)
+                self.visit_map_item(m)
                 if last:
                     w("\n")
                 else:
                     w(",\n")
 
-    def print_component_instance(self, c):
+    def visit_component_instance(self, c):
         """
         :type c: HdlComponentInst
         """
-        self.print_doc(c)
+        self.visit_doc(c)
         w = self.out.write
-        self.print_iHdlExpr(c.name)
+        self.visit_iHdlExpr(c.name)
         w(": ")
-        self.print_iHdlExpr(c.module_name)
+        self.visit_iHdlExpr(c.module_name)
         gms = c.param_map
         if gms:
             w(" GENERIC MAP(\n")
-            self.print_map(gms)
+            self.visit_map(gms)
             w(")")
 
         pms = c.port_map
         if pms:
             w(" PORT MAP(\n")
-            self.print_map(pms)
+            self.visit_map(pms)
             w(")")
         w(";")
 
-    def print_body_items(self, objs):
+    def visit_body_items(self, objs):
         w = self.out.write
         in_def_section = True
         with Indent(self.out):
             for o in objs:
                 if isinstance(o, HdlVariableDef):
                     assert in_def_section, o
-                    self.print_HdlVariableDef(o)
+                    self.visit_HdlVariableDef(o)
                     continue
                 elif isinstance(o, HdlModuleDec):
                     assert in_def_section, o
-                    self.print_component(o)
+                    self.visit_component(o)
                     continue
                 elif isinstance(o, HdlFunctionDef):
                     assert in_def_section, o
-                    self.print_HdlFunctionDef(o)
+                    self.visit_HdlFunctionDef(o)
                     continue
 
                 if in_def_section:
@@ -175,16 +175,16 @@ class ToVhdl2008(ToVhdl2008Stm):
                     in_def_section = False
 
                 if isinstance(o, HdlComponentInst):
-                    self.print_component_instance(o)
+                    self.visit_component_instance(o)
                     w("\n")
                 elif isinstance(o, iHdlStatement):
-                    self.print_iHdlStatement(o)
+                    self.visit_iHdlStatement(o)
                 else:
                     raise NotImplementedError(o)
         if in_def_section:
             w("BEGIN\n")
 
-    def print_HdlModuleDef(self, a):
+    def visit_HdlModuleDef(self, a):
         """
         :type a: HdlModuleDef
         """
@@ -194,15 +194,15 @@ class ToVhdl2008(ToVhdl2008Stm):
         w(" OF ")
         w(a.module_name)
         w(" IS\n")
-        self.print_body_items(a.objs)
+        self.visit_body_items(a.objs)
         self.out.write("END ARCHITECTURE;\n")
 
-    def print_HdlFunctionDef(self, o):
+    def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
         w = self.out.write
-        self.print_doc(o)
+        self.visit_doc(o)
         is_procedure = o.return_t is None
         if is_procedure:
             w("PROCEDURE ")
@@ -214,45 +214,45 @@ class ToVhdl2008(ToVhdl2008Stm):
         w(" (")
         with Indent(self.out):
             for is_last, par in iter_with_last(o.params):
-                self.print_HdlVariableDef(par, end="")
+                self.visit_HdlVariableDef(par, end="")
                 if not is_last:
                     w(",\n")
         w(")")
         if not is_procedure:
             w(" RETURN ")
-            self.print_type(o.return_t)
+            self.visit_type(o.return_t)
         if o.is_declaration_only:
             w(";\n")
         else:
             w("\n")
             w("IS\n")
-            self.print_body_items(o.body)
+            self.visit_body_items(o.body)
             w("END FUNCTION;\n")
 
-    def print_library(self, o):
+    def visit_library(self, o):
         w = self.out.write
         w("LIBRARY ")
-        self.print_iHdlExpr(o)
+        self.visit_iHdlExpr(o)
         w(";\n")
 
-    def print_HdlImport(self, o):
+    def visit_HdlImport(self, o):
         """
         :type o: HdlImport
         """
-        self.print_doc(o)
+        self.visit_doc(o)
         w = self.out.write
         w("USE ")
         for last, p in iter_with_last(o.path):
-            self.print_iHdlExpr(p)
+            self.visit_iHdlExpr(p)
             if not last:
                 w(".")
         w(";\n")
 
-    def print_HdlNamespace(self, o):
+    def visit_HdlNamespace(self, o):
         """
         :type o: HdlNamespace
         """
-        self.print_doc(o)
+        self.visit_doc(o)
         w = self.out.write
         # if o.declaration_only:
         w("PACKAGE ")
@@ -260,7 +260,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         w(" IS\n")
         with Indent(self.out):
             for _o in o.objs:
-                self.print_main_obj(_o)
+                self.visit_main_obj(_o)
 
         w("END PACKAGE;\n")
 
@@ -276,4 +276,4 @@ if __name__ == "__main__":
     filenames = [os.path.join(TEST_DIR, "package_constants.vhd")]
     d = c.parse(filenames, Language.VHDL, [], False, True)
     tv = ToVhdl2008(sys.stdout)
-    tv.print_HdlContext(d)
+    tv.visit_HdlContext(d)

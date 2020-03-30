@@ -1,152 +1,131 @@
-from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
-    HdlCall, HdlTypeAuto
+from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
+    HdlCall
 from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import is_str, iter_with_last
+from hdlConvertor.to.hdlUtils import is_str
 
 
 class ToBasicHdlSimModelExpr(ToHdlCommon):
+    OP_PRECEDENCE = {
+        HdlBuiltinFn.RISING: 1,
+        HdlBuiltinFn.FALLING: 1,
+        HdlBuiltinFn.DOWNTO: 1,
+        HdlBuiltinFn.TO: 1,
+
+        # note that HdlExpressions in BasicHdlSimModel
+        # do not use == but ._eq()
+        HdlBuiltinFn.EQ: 11,
+        HdlBuiltinFn.NEQ: 11,
+        HdlBuiltinFn.GT: 11,
+        HdlBuiltinFn.LT: 11,
+        HdlBuiltinFn.GE: 11,
+        HdlBuiltinFn.LE: 11,
+
+        HdlBuiltinFn.OR: 10,
+        HdlBuiltinFn.XOR: 9,
+        HdlBuiltinFn.AND: 8,
+
+        HdlBuiltinFn.ADD: 6,
+        HdlBuiltinFn.SUB: 6,
+
+        HdlBuiltinFn.DIV: 5,
+        HdlBuiltinFn.MUL: 5,
+        HdlBuiltinFn.MOD: 5,
+
+        HdlBuiltinFn.NOT: 4,
+        HdlBuiltinFn.NEG: 4,
+        HdlBuiltinFn.POW: 3,
+        HdlBuiltinFn.INDEX: 2,
+
+        HdlBuiltinFn.CONCAT: 1,
+        HdlBuiltinFn.TERNARY: 1,
+        HdlBuiltinFn.CALL: 1,
+    }
+    _unaryEventOps = {
+        HdlBuiltinFn.RISING: "._onRisingEdge()",
+        HdlBuiltinFn.FALLING: "._onFallingEdge()",
+    }
+    _unaryOps = {
+        HdlBuiltinFn.NOT: "~",
+        HdlBuiltinFn.NEG: "-",
+    }
+
     GENERIC_BIN_OPS = {
+        **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: "&",
-        # HdlBuiltinFn.LOG_AND: "&&",
         HdlBuiltinFn.OR: "|",
-        # HdlBuiltinFn.LOG_OR: "||",
-        HdlBuiltinFn.SUB: "-",
-        HdlBuiltinFn.ADD: "+",
-        HdlBuiltinFn.MUL: "*",
-        HdlBuiltinFn.DIV: "//",
-        # HdlBuiltinFn.MOD: "%",
-        # HdlBuiltinFn.NAND: "~&",
-        # HdlBuiltinFn.NOR: "~|",
         HdlBuiltinFn.XOR: "^",
-        # HdlBuiltinFn.XNOR: "~^",
-        # HdlBuiltinFn.EQ: '==',
+
+        HdlBuiltinFn.EQ: '==',
         HdlBuiltinFn.NEQ: "!=",
-        HdlBuiltinFn.LT: "<",
-        HdlBuiltinFn.LE: "<=",
-        HdlBuiltinFn.GT: ">",
-        HdlBuiltinFn.GE: ">=",
+
+        HdlBuiltinFn.DIV: "//",
+        HdlBuiltinFn.POW: "**",
+        HdlBuiltinFn.MOD: "%",
+
         HdlBuiltinFn.SLL: "<<",
         HdlBuiltinFn.SRL: ">>",
     }
 
-    def print_iHdlExpr(self, expr):
+    def visit_HdlIntValue(self, o):
         """
-        :type expr: iHdlExpr
+        :type o: HdlIntValue
         """
         w = self.out.write
-        if isinstance(expr, HdlName):
-            w(expr)
-            return
-        elif is_str(expr):
-            w('"%s"' % expr)
-            return
-        elif isinstance(expr, HdlIntValue):
-            if expr.bits is None:
-                w(str(expr.val))
+        if o.bits is None:
+            w(str(o.val))
+        else:
+            if o.base is None:
+                f = "{0}'h{1:x}"
             else:
-                if expr.base is None:
-                    f = "{0}'h{1:x}"
+                b = o.base
+                if b == 2:
+                    base_char = 'b'
+                elif b == 8:
+                    base_char = 'O'
+                elif b == 10:
+                    base_char = 'd'
+                elif b == 16:
+                    base_char = 'h'
                 else:
-                    b = expr.base
-                    if b == 2:
-                        base_char = 'b'
-                    elif b == 8:
-                        base_char = 'O'
-                    elif b == 10:
-                        base_char = 'd'
-                    elif b == 16:
-                        base_char = 'h'
-                    else:
-                        raise NotImplementedError(b)
-                    f = "{0}'" + base_char + "{1}"
-                w(f.format(expr.bits, expr.val))
-            return
-        elif isinstance(expr, HdlCall):
-            pe = self.print_iHdlExpr
+                    raise NotImplementedError(b)
+                f = "{0}'" + base_char + "{1}"
+            w(f.format(o.bits, o.val))
 
-            o = expr
-            op = expr.fn
-            symbol = self.GENERIC_BIN_OPS.get(op, None)
-            if symbol is not None:
-                op_cnt = len(o.ops)
-                if op_cnt == 1:
-                    w("(")
-                    w(symbol)
-                    pe(o.ops[0])
-                    w(")")
-                elif op_cnt == 2:
-                    w("(")
-                    pe(o.ops[0])
-                    w(" ")
-                    w(symbol)
-                    w(" ")
-                    pe(o.ops[1])
-                    w(")")
-                return
-            if op == HdlBuiltinFn.DOWNTO:
-                pe(o.ops[0])
-                w(":")
-                pe(o.ops[1])
-                return
-            elif op == HdlBuiltinFn.TO:
-                pe(o.ops[1])
-                w(":")
-                pe(o.ops[0])
-                return
-            elif op == HdlBuiltinFn.NEG:
-                w("~")
-                pe(o.ops[0])
-                return
-            elif op == HdlBuiltinFn.NEG:
-                w("~")
-                pe(o.ops[0])
-                return
-            elif op == HdlBuiltinFn.CONCAT:
-                w("{")
-                pe(o.ops[0])
-                w(", ")
-                pe(o.ops[1])
-                w("}")
-                return
-            elif op == HdlBuiltinFn.INDEX:
-                pe(o.ops[0])
-                w("[")
-                pe(o.ops[1])
-                w("]")
-                return
-            elif op == HdlBuiltinFn.TERNARY:
-                w("(")
-                pe(o.ops[0])
-                w(") ? (")
-                o0, o1 = o.ops[1:]
-                pe(o0)
-                w(") : (")
-                pe(o1)
-                w(")")
-                return
-            elif op == HdlBuiltinFn.CALL:
-                pe(o.ops[0])
-                w("(")
-                for is_last, o_n in iter_with_last(o.ops[1:]):
-                    pe(o_n)
-                    if not is_last:
-                        w(", ")
-                w(")")
-                return
-            elif op == HdlBuiltinFn.TYPE_OF:
-                w("type(")
-                pe(o.ops[0])
-                w(")")
-                return
-            else:
-                raise NotImplementedError(op)
-        elif expr is HdlAll:
-            w("*")
+    def visit_iHdlExpr(self, o):
+        """
+        :type o: iHdlExpr
+        """
+        w = self.out.write
+        if isinstance(o, HdlName):
+            w(o)
             return
-        elif expr is HdlTypeAuto:
+        elif is_str(o):
+            w('"%s"' % o)
             return
-        elif expr is None:
-            w("null")
+        elif isinstance(o, HdlIntValue):
+            self.visit_HdlIntValue(o)
+            return
+        elif isinstance(o, HdlCall):
+            self.visit_HdlCall(o)
+            return
+        elif o is None:
+            w("None")
             return
 
-        raise NotImplementedError(expr)
+        raise NotImplementedError(o)
+
+    def visit_HdlCall(self, o):
+        """
+        :type op: HdlCall
+        """
+        ops = o.ops
+        op = o.fn
+        w = self.out.write
+
+        op_str = self._unaryEventOps.get(op, None)
+        if op_str is not None:
+            op0 = ops[0]
+            w(op0)
+            w(op_str)
+        else:
+            return super(ToBasicHdlSimModelExpr, self).visit_HdlCall(o)

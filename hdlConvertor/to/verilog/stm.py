@@ -23,7 +23,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
-    def print_HdlStmProcess(self, proc, is_top=False):
+    def visit_HdlStmProcess(self, proc, is_top=False):
         """
         :type proc: HdlStmProcess
         """
@@ -49,7 +49,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                     w("always ")
                 w("#")
                 assert len(wait.val) == 1
-                self.print_iHdlExpr(wait.val[0])
+                self.visit_iHdlExpr(wait.val[0])
             else:
                 assert is_top
                 w("initial")
@@ -58,7 +58,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 w("always ")
             w("@(")
             for last, item in iter_with_last(sens):
-                self.print_iHdlExpr(item)
+                self.visit_iHdlExpr(item)
                 if not last:
                     w(", ")
             w(")")
@@ -67,9 +67,9 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         if skip_body:
             return True
         else:
-            return self.print_iHdlStatement_in_statement(body)
+            return self.visit_iHdlStatement_in_statement(body)
 
-    def print_iHdlStatement_in_statement(self, stm):
+    def visit_iHdlStatement_in_statement(self, stm):
         """
         Print statement which is body of other statement
         e.g. body of process, branch of if-then-else or case of case stememnt
@@ -80,13 +80,13 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 stm = stm.body[0]
             else:
                 w(" ")
-                return self.print_HdlStmBlock(stm)
+                return self.visit_HdlStmBlock(stm)
 
         w("\n")
         with Indent(self.out):
-            return self.print_iHdlStatement(stm)
+            return self.visit_iHdlStatement(stm)
 
-    def print_HdlStmBlock(self, stm):
+    def visit_HdlStmBlock(self, stm):
         """
         :type stm: HdlStmBlock
         """
@@ -95,7 +95,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         w("begin\n")
         with Indent(self.out):
             for s in stm.body:
-                need_semi = self.print_iHdlStatement(s)
+                need_semi = self.visit_iHdlStatement(s)
                 if need_semi:
                     w(";\n")
                 else:
@@ -103,7 +103,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         w("end")
         return False
 
-    def print_HdlStmIf(self, stm):
+    def visit_HdlStmIf(self, stm):
         """
         :type stm: HdlStmIf
         """
@@ -113,9 +113,9 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         ifFalse = stm.if_false
 
         w("if (")
-        self.print_iHdlExpr(c)
+        self.visit_iHdlExpr(c)
         w(")")
-        need_semi = self.print_iHdlStatement_in_statement(ifTrue)
+        need_semi = self.visit_iHdlStatement_in_statement(ifTrue)
 
         for cond, stms in stm.elifs:
             if need_semi:
@@ -123,9 +123,9 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             else:
                 w(" ")
             w("else if (")
-            self.print_iHdlExpr(cond)
+            self.visit_iHdlExpr(cond)
             w(")")
-            need_semi = self.print_iHdlStatement_in_statement(stms)
+            need_semi = self.visit_iHdlStatement_in_statement(stms)
 
         if ifFalse is not None:
             if need_semi:
@@ -133,11 +133,11 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             else:
                 w(" ")
             w("else")
-            need_semi = self.print_iHdlStatement_in_statement(ifFalse)
+            need_semi = self.visit_iHdlStatement_in_statement(ifFalse)
         if need_semi:
             w(";")
 
-    def print_HdlStmAssign(self, a, is_top=False):
+    def visit_HdlStmAssign(self, a, is_top=False):
         """
         :type a: HdlStmAssign
         :return: True if requires ;\n after end
@@ -147,10 +147,10 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         w = self.out.write
         if is_top:
             w("assign ")
-            self.print_iHdlExpr(d)
+            self.visit_iHdlExpr(d)
             w(" = ")
         else:
-            self.print_iHdlExpr(d)
+            self.visit_iHdlExpr(d)
             if a.is_blocking:
                 w(" = ")
             else:
@@ -158,24 +158,24 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
 
         if a.time_delay is not None:
             w("#")
-            self.print_iHdlExpr(a.time_delay)
+            self.visit_iHdlExpr(a.time_delay)
             w(" ")
         if a.event_delay is not None:
             w("@")
             if len(a.event_delay) > 1:
                 w("(")
             for is_last, e in iter_with_last(a.event_delay):
-                self.print_iHdlExpr(e)
+                self.visit_iHdlExpr(e)
                 if not is_last:
                     w(", ")
             if len(a.event_delay) > 1:
                 w(")")
             w(" ")
 
-        self.print_iHdlExpr(s)
+        self.visit_iHdlExpr(s)
         return True
 
-    def print_HdlStmCase(self, cstm):
+    def visit_HdlStmCase(self, cstm):
         """
         :type cstm: HdlStmCase
 
@@ -183,14 +183,14 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         """
         w = self.out.write
         w("case(")
-        self.print_iHdlExpr(cstm.switch_on)
+        self.visit_iHdlExpr(cstm.switch_on)
         w(")\n")
         with Indent(self.out):
             cases = cstm.cases
             for k, stms in cases:
-                self.print_iHdlExpr(k)
+                self.visit_iHdlExpr(k)
                 w(":")
-                need_semi = self.print_iHdlStatement_in_statement(stms)
+                need_semi = self.visit_iHdlStatement_in_statement(stms)
                 if need_semi:
                     w(";\n")
                 else:
@@ -198,7 +198,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             defal = cstm.default
             if defal is not None:
                 w("default:")
-                need_semi = self.print_iHdlStatement_in_statement(defal)
+                need_semi = self.visit_iHdlStatement_in_statement(defal)
                 if need_semi:
                     w(";\n")
                 else:
@@ -206,20 +206,20 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         w("endcase")
         return False
 
-    def print_HdlStmWait(self, o):
+    def visit_HdlStmWait(self, o):
         """
         :type o: HdlStmWait
 
         :return: True if requires ;\n after end
         """
-        self.print_doc(o)
+        self.visit_doc(o)
         w = self.out.write
         w("#")
         assert len(o.val) == 1
-        self.print_iHdlExpr(o.val[0])
+        self.visit_iHdlExpr(o.val[0])
         return True
 
-    def print_HdlStmFor(self, o):
+    def visit_HdlStmFor(self, o):
         """
         :type o: HdlStmFor
 
@@ -233,11 +233,11 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             init_stms = [o.init, ]
 
         for is_last, stm in iter_with_last(init_stms):
-            self.print_iHdlStatement(stm)
+            self.visit_iHdlStatement(stm)
             if not is_last:
                 w(", ")
         w("; ")
-        self.print_iHdlExpr(o.cond)
+        self.visit_iHdlExpr(o.cond)
         w("; ")
         if isinstance(o.init, HdlStmBlock):
             step_stms = o.step.body
@@ -245,26 +245,26 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             step_stms = [o.step, ]
 
         for is_last, stm in iter_with_last(step_stms):
-            self.print_iHdlStatement(stm)
+            self.visit_iHdlStatement(stm)
             if not is_last:
                 w(", ")
         w(")")
-        return self.print_iHdlStatement_in_statement(o.body)
+        return self.visit_iHdlStatement_in_statement(o.body)
 
-    def print_HdlStmForIn(self, o):
+    def visit_HdlStmForIn(self, o):
         """
         :type o: HdlStmForIn
         :return: True if requires ;\n after end
         """
         raise NotImplementedError()
 
-    def print_HdlStmWhile(self, o):
+    def visit_HdlStmWhile(self, o):
         """
         :type o: HdlStmWhile
         :return: True if requires ;\n after end
         """
         w = self.out.write
         w("while (")
-        self.print_iHdlExpr(o.cond)
+        self.visit_iHdlExpr(o.cond)
         w(") ")
-        return self.print_HdlStmBlock(o.body, True)
+        return self.visit_HdlStmBlock(o.body, True)

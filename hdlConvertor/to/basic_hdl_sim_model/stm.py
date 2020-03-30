@@ -5,7 +5,7 @@ from hdlConvertor.hdlAst._statements import HdlStmIf, HdlStmBlock, HdlStmAssign
 
 class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
 
-    def print_HdlStmProcess(self, proc):
+    def visit_HdlStmProcess(self, proc):
         """
         :type proc: HdlStmProcess
         """
@@ -15,30 +15,30 @@ class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         w("(self):\n")
         body = proc.body
         with Indent(self.out):
-            self.print_iHdlStatement_in_statement(body)
+            self.visit_iHdlStatement_in_statement(body)
         w("\n")
 
-    def print_iHdlStatement_in_statement(self, stm):
+    def visit_iHdlStatement_in_statement(self, stm):
         if isinstance(stm, HdlStmAssign):
-            self.print_HdlStmAssign(stm)
+            self.visit_HdlStmAssign(stm)
         elif isinstance(stm, HdlStmIf):
-            self.print_HdlStmIf(stm)
+            self.visit_HdlStmIf(stm)
         elif isinstance(stm, HdlStmBlock):
-            self.print_HdlStmBlock(stm)
+            self.visit_HdlStmBlock(stm)
         else:
             raise NotImplementedError(stm)
 
-    def print_HdlStmBlock(self, stm):
+    def visit_HdlStmBlock(self, stm):
         """
         :type stm: HdlStmBlock
         """
         w = self.out.write
         for is_last, i in iter_with_last(stm.body):
-            self.print_iHdlStatement_in_statement(i)
+            self.visit_iHdlStatement_in_statement(i)
             if not is_last:
                 w("\n")
 
-    def print_HdlStmIf(self, stm):
+    def visit_HdlStmIf(self, stm):
         """
         :type stm: HdlStmIf
 
@@ -62,18 +62,18 @@ class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         ifTrue = stm.if_true
         ifFalse = stm.if_false
         w("if ")
-        self.print_iHdlExpr(c)
+        self.visit_iHdlExpr(c)
         w(":\n")
         with Indent(self.out):
-            self.print_iHdlStatement_in_statement(ifTrue)
+            self.visit_iHdlStatement_in_statement(ifTrue)
             w("\n")
 
         for (c, _stm) in stm.elifs:
             w("elif ")
-            self.print_iHdlExpr(c)
+            self.visit_iHdlExpr(c)
             w(":\n")
             with Indent(self.out):
-                self.print_iHdlStatement_in_statement(_stm)
+                self.visit_iHdlStatement_in_statement(_stm)
                 w("\n")
 
         w("else:\n")
@@ -81,14 +81,14 @@ class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
             if ifFalse is None:
                 w("pass")
             else:
-                self.print_iHdlStatement_in_statement(ifFalse)
+                self.visit_iHdlStatement_in_statement(ifFalse)
 
-    def print_HdlStmAssign(self, a):
+    def visit_HdlStmAssign(self, a):
         """
         :type a: HdlStmAssign
         """
         w = self.out.write
-        self.print_iHdlExpr(a.dst)
+        self.visit_iHdlExpr(a.dst)
         w(" = ")
         if a.is_blocking:
             raise NotImplementedError(a)
@@ -96,4 +96,4 @@ class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
             raise NotImplementedError()
         if a.event_delay is not None:
             raise NotImplementedError()
-        self.print_iHdlExpr(a.src)
+        self.visit_iHdlExpr(a.src)

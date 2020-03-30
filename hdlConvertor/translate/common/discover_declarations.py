@@ -3,6 +3,7 @@ from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef,\
 from itertools import chain
 from hdlConvertor.hdlAst._defs import HdlVariableDef
 from hdlConvertor.hdlAst._statements import HdlStmAssign
+from hdlConvertor.hdlAst._bases import iHdlStatement
 
 
 def discover_declarations_HdlVariableDef(name_scope, o):
@@ -55,7 +56,7 @@ def _discover_declarations(name_scope, o):
         discover_declarations_HdlModuleDec(name_scope, o)
     elif isinstance(o, HdlModuleDef):
         discover_declarations_HdlModuleDef(name_scope, o)
-    elif isinstance(o, HdlStmAssign):
+    elif isinstance(o, iHdlStatement):
         pass
     elif isinstance(o, HdlComponentInst):
         discover_declarations_HdlComponentInst(name_scope, o)

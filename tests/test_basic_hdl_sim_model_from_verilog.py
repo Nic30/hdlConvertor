@@ -10,7 +10,7 @@ from hdlConvertor.translate.verilog_to_basic_hdl_sim_model import\
 def _to_basic_hdl_sim_model(context, language, buff):
     context, stm_outputs, _ = verilog_to_basic_hdl_sim_model(context)
     tv = ToBasicHdlSimModel(buff)
-    tv.print_HdlContext(context, stm_outputs)
+    tv.visit_HdlContext(context, stm_outputs)
 
 
 class BasicHdlSimModelFromVerilogTC(HdlParseTC):
