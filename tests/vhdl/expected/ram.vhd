@@ -16,3 +16,4 @@ ENTITY RAM IS
         addr : IN std_logic_vector(addr_width - 1 DOWNTO 0)
     );
 END ENTITY;
+
