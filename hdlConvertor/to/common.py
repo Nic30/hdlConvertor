@@ -61,27 +61,27 @@ class ToHdlCommon(HdlAstVisitor):
         """
         :type op: HdlCall
         """
-        ops = op.ops
         o = op.fn
         w = self.out.write
-
-        op_str = self.GENERIC_UNARY_OPS.get(o, None)
-        if op_str is not None:
-            w(op_str)
-            self._visit_operand(ops[0], 0, op, False, False)
-            return
-
-        op_str = self.GENERIC_BIN_OPS.get(o, None)
-        if op_str is not None:
-            # [todo] unary +/-
-            return self._visit_bin_op(op, op_str)
-        elif o == HdlBuiltinFn.INDEX:
+        argc = len(op.ops)
+        if argc == 1:
+            op_str = self.GENERIC_UNARY_OPS.get(o, None)
+            if op_str is not None:
+                w(op_str)
+                self._visit_operand(op.ops[0], 0, op, False, False)
+                return
+        if argc == 2:
+            op_str = self.GENERIC_BIN_OPS.get(o, None)
+            if op_str is not None:
+                # [todo] unary +/-
+                return self._visit_bin_op(op, op_str)
+        if o == HdlBuiltinFn.INDEX:
             return self._visit_operator_index(op)
         elif o == HdlBuiltinFn.CALL or o == HdlBuiltinFn.PARAMETRIZATION:
             return self.visit_operator_call(op)
         else:
             raise NotImplementedError(
-                "Do not know how to convert %s" % (o))
+                "Do not know how to convert %s argc:%d" % (o, argc))
 
     def visit_iHdlExpr(self, o):
         """
@@ -174,7 +174,10 @@ class ToHdlCommon(HdlAstVisitor):
         """
         :type operator: HdlCall
         """
-        op0, op1 = operator.ops
+        try:
+            op0, op1 = operator.ops
+        except:
+            raise
         self._visit_operand(op0, 0, operator, expr_requires_parenthesis,
                             cancel_parenthesis)
         self.out.write(op_str)
@@ -196,7 +199,7 @@ class ToHdlCommon(HdlAstVisitor):
         """
         :type operator: HdlCall
         """
-        self._visit_operand(o.ops[0], 0, o, True, False)
+        self._visit_operand(o.ops[0], 0, o, False, False)
         w = self.out.write
         w("(")
         for is_last, (o_i, _o) in iter_with_last(enumerate(o.ops[1:])):
@@ -211,13 +214,13 @@ class ToHdlCommon(HdlAstVisitor):
         """
         raise TypeError("does not support HdlFunctionDef", self, o)
 
-    def visit_HdlStmProcess(self, o, is_top=False):
+    def visit_HdlStmProcess(self, o):
         """
         :type proc: HdlStmProcess
         """
         raise TypeError("does not support HdlStmProcess", self, o)
 
-    def visit_HdlStmCase(self, o, is_top=False):
+    def visit_HdlStmCase(self, o):
         """
         :type o: HdlStmCase
 
@@ -225,31 +228,31 @@ class ToHdlCommon(HdlAstVisitor):
         """
         raise TypeError("does not support HdlStmCase", self, o)
 
-    def visit_HdlStmWait(self, o, is_top=False):
+    def visit_HdlStmWait(self, o):
         """
         :type o: HdlStmWait
         """
         raise TypeError("does not support HdlStmWait", self, o)
 
-    def visit_HdlStmFor(self, o, is_top=False):
+    def visit_HdlStmFor(self, o):
         """
         :type o: HdlStmFor
         """
         raise TypeError("does not support HdlStmFor", self, o)
 
-    def visit_HdlStmForIn(self, o, is_top=False):
+    def visit_HdlStmForIn(self, o):
         """
         :type o: HdlStmForIn
         """
         raise TypeError("does not support HdlStmForIn", self, o)
 
-    def visit_HdlStmWhile(self, o, is_top=False):
+    def visit_HdlStmWhile(self, o):
         """
         :type o: HdlStmWhile
         """
         raise TypeError("does not support HdlStmWhile", self, o)
 
-    def visit_HdlStmAssign(self, o, is_top=False):
+    def visit_HdlStmAssign(self, o):
         """
         :type o: HdlStmAssign
         """
