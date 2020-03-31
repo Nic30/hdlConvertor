@@ -2,7 +2,10 @@ from hdlConvertor.hdlAst._structural import HdlContext, HdlModuleDef,\
     HdlModuleDec
 
 
-def link_module_dec_def(context: HdlContext):
+def link_module_dec_def(context):
+    """
+    :type context: HdlContext
+    """
     objs = []
     last = None
     for o in context.objs:

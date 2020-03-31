@@ -5,14 +5,22 @@ from hdlConvertor.hdlAst import iHdlExpr, HdlName, \
     HdlStmIf, HdlStmBlock
 
 
-def get_output_ids(e: iHdlExpr, outputs: Set[HdlName]):
+def get_output_ids(e, outputs):
+    """
+    :type e: iHdlExpr
+    :type outputs: Set[HdlName]
+    """
     if isinstance(e, HdlName):
         outputs.add(e)
     else:
         raise NotImplementedError(e)
 
 
-def discover_outputs(stm, outputs: Dict["HdlStm", Set[HdlName]]):
+def discover_outputs(stm, outputs):
+    """
+    :type stm: iHdlStm
+    :type outputs: Dict["HdlStm", Set[HdlName]]
+    """
     _outputs = None
     if isinstance(stm, HdlStmAssign):
         o = set()
@@ -48,7 +56,11 @@ def discover_outputs(stm, outputs: Dict["HdlStm", Set[HdlName]]):
     return o
 
 
-def discover_stm_outputs(stm) -> Dict["HdlStm", List[HdlName]]:
+def discover_stm_outputs(stm):
+    """
+    :type stm: iHdlStm
+    :return: Dict["HdlStm", List[HdlName]]
+    """
     _outputs = {}
     # :type _outputs: Dict[HdlStm, Set[HdlName]]
     discover_outputs(stm, _outputs)
@@ -59,7 +71,10 @@ def discover_stm_outputs(stm) -> Dict["HdlStm", List[HdlName]]:
     return _outputs
 
 
-def discover_stm_outputs_context(c: HdlContext):
+def discover_stm_outputs_context(c):
+    """
+    :type c: HdlContext
+    """
     outputs = {}
     # :type _outputs: Dict[HdlStm, Set[HdlName]]
     for o0 in c.objs:
