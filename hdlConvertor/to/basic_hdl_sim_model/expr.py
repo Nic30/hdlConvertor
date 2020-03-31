@@ -1,15 +1,14 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
     HdlCall
 from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import is_str
+from hdlConvertor.to.hdlUtils import is_str, iter_with_last
 
 
 class ToBasicHdlSimModelExpr(ToHdlCommon):
     OP_PRECEDENCE = {
-        HdlBuiltinFn.RISING: 1,
-        HdlBuiltinFn.FALLING: 1,
-        HdlBuiltinFn.DOWNTO: 1,
-        HdlBuiltinFn.TO: 1,
+        # TO/DOWNTO becomes a call to slice
+        # HdlBuiltinFn.DOWNTO: 1,
+        # HdlBuiltinFn.TO: 1,
 
         # note that HdlExpressions in BasicHdlSimModel
         # do not use == but ._eq()
@@ -24,49 +23,54 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.XOR: 9,
         HdlBuiltinFn.AND: 8,
 
-        HdlBuiltinFn.ADD: 6,
-        HdlBuiltinFn.SUB: 6,
+        HdlBuiltinFn.ADD: 7,
+        HdlBuiltinFn.SUB: 7,
 
-        HdlBuiltinFn.DIV: 5,
-        HdlBuiltinFn.MUL: 5,
-        HdlBuiltinFn.MOD: 5,
+        HdlBuiltinFn.DIV: 6,
+        HdlBuiltinFn.MUL: 6,
+        HdlBuiltinFn.MOD: 6,
 
-        HdlBuiltinFn.NOT: 4,
-        HdlBuiltinFn.NEG: 4,
-        HdlBuiltinFn.POW: 3,
-        HdlBuiltinFn.INDEX: 2,
+        HdlBuiltinFn.NEG_LOG: 5,
+        HdlBuiltinFn.NEG: 5,
+        HdlBuiltinFn.POW: 4,
+        HdlBuiltinFn.INDEX: 3,
 
-        HdlBuiltinFn.CONCAT: 1,
-        HdlBuiltinFn.TERNARY: 1,
-        HdlBuiltinFn.CALL: 1,
+        # concat/ternary become a call to _concat, _ternary__val function
+        # HdlBuiltinFn.CONCAT: 2,
+        # HdlBuiltinFn.TERNARY: 2,
+        # rising/faling as ._onRisingEdge(), ._onFallingEdge()
+        HdlBuiltinFn.RISING: 2,
+        HdlBuiltinFn.FALLING: 2,
+        HdlBuiltinFn.CALL: 2,
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: 1,
+        HdlBuiltinFn.PARAMETRIZATION: 2,
+        HdlBuiltinFn.DOT: 1,
     }
     _unaryEventOps = {
         HdlBuiltinFn.RISING: "._onRisingEdge()",
         HdlBuiltinFn.FALLING: "._onFallingEdge()",
     }
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.NOT: "~",
-        HdlBuiltinFn.NEG: "-",
+        HdlBuiltinFn.NEG_LOG: "~",
+        HdlBuiltinFn.NEG: "~",
     }
 
     GENERIC_BIN_OPS = {
         **ToHdlCommon.GENERIC_BIN_OPS,
-        HdlBuiltinFn.AND: "&",
-        HdlBuiltinFn.OR: "|",
-        HdlBuiltinFn.XOR: "^",
+        HdlBuiltinFn.AND: " & ",
+        HdlBuiltinFn.OR: " | ",
+        HdlBuiltinFn.XOR: " ^ ",
 
-        HdlBuiltinFn.EQ: '==',
-        HdlBuiltinFn.NEQ: "!=",
+        HdlBuiltinFn.EQ: ' == ',
+        HdlBuiltinFn.NEQ: " != ",
 
-        HdlBuiltinFn.DIV: "//",
-        HdlBuiltinFn.POW: "**",
-        HdlBuiltinFn.MOD: "%",
+        HdlBuiltinFn.DIV: " // ",
+        HdlBuiltinFn.POW: " ** ",
+        HdlBuiltinFn.MOD: " % ",
 
-        HdlBuiltinFn.SLL: "<<",
-        HdlBuiltinFn.SRL: ">>",
+        HdlBuiltinFn.SLL: " << ",
+        HdlBuiltinFn.SRL: " >> ",
     }
 
     def visit_HdlIntValue(self, o):
@@ -78,21 +82,18 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
             w(str(o.val))
         else:
             if o.base is None:
-                f = "{0}'h{1:x}"
+                w(str(o.val))
             else:
                 b = o.base
                 if b == 2:
-                    base_char = 'b'
+                    f = "0b{0:b}"
                 elif b == 8:
-                    base_char = 'O'
-                elif b == 10:
-                    base_char = 'd'
+                    f = "0o{0:o}"
                 elif b == 16:
-                    base_char = 'h'
+                    f = "0x{0:x}"
                 else:
                     raise NotImplementedError(b)
-                f = "{0}'" + base_char + "{1}"
-            w(f.format(o.bits, o.val))
+                w(f.format(o.val))
 
     def visit_iHdlExpr(self, o):
         """
@@ -107,6 +108,18 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
             return
         elif isinstance(o, HdlIntValue):
             self.visit_HdlIntValue(o)
+            return
+        elif isinstance(o, list):
+            with_nl = len(o) > 3
+            w("(")
+            for is_last, elem in iter_with_last(o):
+                self.visit_iHdlExpr(elem)
+                if not is_last:
+                    if with_nl:
+                        w(", \n")
+                    else:
+                        w(", ")
+            w(")")
             return
         elif isinstance(o, HdlCall):
             self.visit_HdlCall(o)

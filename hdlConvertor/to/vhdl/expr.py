@@ -8,9 +8,9 @@ class ToVhdl2008Expr(ToHdlCommon):
     GENERIC_BIN_OPS = {
         **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: " AND ",
-        HdlBuiltinFn.LOG_AND: " AND ",
+        HdlBuiltinFn.AND_LOG: " AND ",
         HdlBuiltinFn.OR: " OR ",
-        HdlBuiltinFn.LOG_OR: " OR ",
+        HdlBuiltinFn.OR_LOG: " OR ",
         HdlBuiltinFn.DIV: " / ",
         HdlBuiltinFn.MOD: " MOD ",
         HdlBuiltinFn.NAND: " NAND ",
@@ -34,41 +34,54 @@ class ToVhdl2008Expr(ToHdlCommon):
         256: "",
     }
     OP_PRECEDENCE = {
-        HdlBuiltinFn.RANGE: 9,
+        HdlBuiltinFn.CALL: 1,
+        HdlBuiltinFn.INDEX: 1,
+        HdlBuiltinFn.RISING: 1,
+        HdlBuiltinFn.FALLING: 1,
 
-        HdlBuiltinFn.DOWNTO: 8,
-        HdlBuiltinFn.TO: 8,
-        HdlBuiltinFn.TERNARY: 8,
+        HdlBuiltinFn.POW: 2,
+        HdlBuiltinFn.ABS: 2,
+        HdlBuiltinFn.NEG: 2,
 
-        HdlBuiltinFn.XOR: 7,
-        HdlBuiltinFn.AND: 7,
-        HdlBuiltinFn.OR: 7,
+        HdlBuiltinFn.MUL: 3,
+        HdlBuiltinFn.DIV: 3,
+        HdlBuiltinFn.MOD: 3,
+        HdlBuiltinFn.REM: 3,
 
-        HdlBuiltinFn.EQ: 6,
-        HdlBuiltinFn.NEQ: 6,
-        HdlBuiltinFn.GT: 6,
-        HdlBuiltinFn.LT: 6,
-        HdlBuiltinFn.GE: 6,
-        HdlBuiltinFn.LE: 6,
-
+        HdlBuiltinFn.PLUS_UNARY: 4,
+        HdlBuiltinFn.MINUS_UNARY: 4,
 
         HdlBuiltinFn.CONCAT: 5,
         HdlBuiltinFn.ADD: 5,
         HdlBuiltinFn.SUB: 5,
 
-        HdlBuiltinFn.NEG: 4,
+        HdlBuiltinFn.SLL: 6,
+        HdlBuiltinFn.SRL: 6,
+        HdlBuiltinFn.SLA: 6,
+        HdlBuiltinFn.SRA: 6,
+        HdlBuiltinFn.ROL: 6,
+        HdlBuiltinFn.ROR: 6,
 
-        HdlBuiltinFn.DIV: 3,
-        HdlBuiltinFn.MUL: 3,
-        HdlBuiltinFn.MOD: 3,
+        HdlBuiltinFn.EQ: 7,
+        HdlBuiltinFn.NEQ: 7,
+        HdlBuiltinFn.GT: 7,
+        HdlBuiltinFn.LT: 7,
+        HdlBuiltinFn.GE: 7,
+        HdlBuiltinFn.LE: 7,
 
-        HdlBuiltinFn.NOT: 2,
-        HdlBuiltinFn.POW: 2,
+        HdlBuiltinFn.AND: 8,
+        HdlBuiltinFn.OR: 8,
+        HdlBuiltinFn.NAND: 8,
+        HdlBuiltinFn.NOR: 8,
+        HdlBuiltinFn.XOR: 8,
+        HdlBuiltinFn.XNOR: 8,
 
-        HdlBuiltinFn.RISING: 1,
-        HdlBuiltinFn.FALLING: 1,
-        HdlBuiltinFn.INDEX: 1,
-        HdlBuiltinFn.CALL: 1,
+        HdlBuiltinFn.DOWNTO: 9,
+        HdlBuiltinFn.TO: 9,
+        HdlBuiltinFn.TERNARY: 9,
+
+        HdlBuiltinFn.RANGE: 10,
+        HdlBuiltinFn.RANGE_REVERSE: 10,
     }
 
     def visit_HdlIntValue(self, o):
@@ -108,7 +121,7 @@ class ToVhdl2008Expr(ToHdlCommon):
 
         w = self.out.write
         op = o.fn
-        if op == HdlBuiltinFn.NOT or op == HdlBuiltinFn.NEG:
+        if op == HdlBuiltinFn.NEG_LOG or op == HdlBuiltinFn.NEG:
             w("NOT ")
             self._visit_operand(o.ops[0], 0, o, False, False)
             return

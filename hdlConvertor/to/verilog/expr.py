@@ -3,6 +3,7 @@ from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
 from hdlConvertor.to.common import ToHdlCommon
 from hdlConvertor.to.hdlUtils import is_str, iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
+from hdlConvertor.hdlAst._expr import HdlBuiltinFn
 
 
 class ToVerilog2005Expr(ToHdlCommon):
@@ -10,9 +11,9 @@ class ToVerilog2005Expr(ToHdlCommon):
     GENERIC_BIN_OPS = {
         **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: "&",
-        HdlBuiltinFn.LOG_AND: "&&",
+        HdlBuiltinFn.AND_LOG: "&&",
         HdlBuiltinFn.OR: "|",
-        HdlBuiltinFn.LOG_OR: "||",
+        HdlBuiltinFn.OR_LOG: "||",
         HdlBuiltinFn.NAND: "~&",
         HdlBuiltinFn.NOR: "~|",
         HdlBuiltinFn.XOR: "^",
@@ -45,7 +46,65 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
     OP_PRECEDENCE = {
-        **{k: 18 for k in [
+        HdlBuiltinFn.INDEX: 1,
+
+        HdlBuiltinFn.CALL: 2,
+        HdlBuiltinFn.TYPE_OF: 2,
+        HdlBuiltinFn.PARAMETRIZATION: 2,
+
+        HdlBuiltinFn.DOWNTO: 2,
+        HdlBuiltinFn.TO: 2,
+
+        **{k: 3 for k in [
+            HdlBuiltinFn.NEG,
+            HdlBuiltinFn.NEG_LOG,
+            HdlBuiltinFn.OR_UNARY,
+            HdlBuiltinFn.AND_UNARY,
+            HdlBuiltinFn.NAND_UNARY,
+            HdlBuiltinFn.NOR_UNARY,
+            HdlBuiltinFn.XOR_UNARY,
+            HdlBuiltinFn.XNOR_UNARY
+        ]},
+
+        HdlBuiltinFn.MINUS_UNARY: 4,
+        HdlBuiltinFn.PLUS_UNARY: 4,
+
+        HdlBuiltinFn.CONCAT: 5,
+
+        HdlBuiltinFn.REPL_CONCAT: 6,
+
+        HdlBuiltinFn.DIV: 7,
+        HdlBuiltinFn.MUL: 7,
+        HdlBuiltinFn.MOD: 7,
+
+        HdlBuiltinFn.ADD: 8,
+        HdlBuiltinFn.SUB: 8,
+
+        HdlBuiltinFn.SLL: 9,
+        HdlBuiltinFn.SRL: 9,
+
+        HdlBuiltinFn.GT: 10,
+        HdlBuiltinFn.LT: 10,
+        HdlBuiltinFn.GE: 10,
+        HdlBuiltinFn.LE: 10,
+
+        HdlBuiltinFn.EQ: 11,
+        HdlBuiltinFn.NEQ: 11,
+
+        HdlBuiltinFn.AND: 12,
+        HdlBuiltinFn.XOR: 12,
+        HdlBuiltinFn.OR: 12,
+        HdlBuiltinFn.NAND: 12,
+        HdlBuiltinFn.XNOR: 12,
+
+        HdlBuiltinFn.AND_LOG: 13,
+        HdlBuiltinFn.OR_LOG: 13,
+
+        HdlBuiltinFn.TERNARY: 14,
+
+        HdlBuiltinFn.RISING: 15,
+        HdlBuiltinFn.FALLING: 15,
+        **{k: 16 for k in [
             HdlBuiltinFn.ASSIGN,
             HdlBuiltinFn.PLUS_ASSIGN,
             HdlBuiltinFn.MINUS_ASSIGN,
@@ -60,47 +119,19 @@ class ToVerilog2005Expr(ToHdlCommon):
             HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
             HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
         ]},
-        HdlBuiltinFn.RISING: 17,
-        HdlBuiltinFn.FALLING: 17,
 
-        HdlBuiltinFn.TERNARY: 16,
-
-        HdlBuiltinFn.AND: 11,
-        HdlBuiltinFn.XOR: 11,
-        HdlBuiltinFn.OR: 11,
-        HdlBuiltinFn.NAND: 11,
-        HdlBuiltinFn.XNOR: 11,
-
-        HdlBuiltinFn.EQ: 10,
-        HdlBuiltinFn.NEQ: 10,
-        HdlBuiltinFn.GT: 9,
-        HdlBuiltinFn.LT: 9,
-        HdlBuiltinFn.GE: 9,
-        HdlBuiltinFn.LE: 9,
-
-        HdlBuiltinFn.CONCAT: 5,
-        HdlBuiltinFn.REPL_CONCAT: 5,
-        HdlBuiltinFn.ADD: 7,
-        HdlBuiltinFn.SUB: 7,
-        HdlBuiltinFn.DIV: 6,
-        HdlBuiltinFn.NEG: 5,
-        HdlBuiltinFn.MUL: 3,
-
-        HdlBuiltinFn.NOT: 3,
-
-        HdlBuiltinFn.DOWNTO: 2,
-        HdlBuiltinFn.TO: 2,
-
-        HdlBuiltinFn.CALL: 2,
-        HdlBuiltinFn.TYPE_OF: 2,
-        HdlBuiltinFn.INDEX: 1,
-
-        HdlBuiltinFn.SLL: 8,
-        HdlBuiltinFn.SRL: 8,
     }
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.NOT: "!",
+        HdlBuiltinFn.NEG_LOG: "!",
         HdlBuiltinFn.NEG: "~",
+        HdlBuiltinFn.MINUS_UNARY: "-",
+        HdlBuiltinFn.PLUS_UNARY: "+",
+        HdlBuiltinFn.OR_UNARY: "|",
+        HdlBuiltinFn.AND_UNARY: "&",
+        HdlBuiltinFn.NAND_UNARY: "~&",
+        HdlBuiltinFn.NOR_UNARY: "~|",
+        HdlBuiltinFn.XOR_UNARY: "^",
+        HdlBuiltinFn.XNOR_UNARY: "~^",
         HdlBuiltinFn.RISING: "posedge ",
         HdlBuiltinFn.FALLING: "negedge ",
     }
@@ -133,28 +164,26 @@ class ToVerilog2005Expr(ToHdlCommon):
     def visit_iHdlExpr(self, o):
         """
         :type o: iHdlExpr
+        :return: True, the flag used to mark that the ; should be added if this is a statement
         """
         w = self.out.write
         if isinstance(o, HdlName):
             w(o)
-            return
         elif is_str(o):
             w('"%s"' % o)
-            return
         elif isinstance(o, HdlIntValue):
-            return self.visit_HdlIntValue(o)
+            self.visit_HdlIntValue(o)
         elif isinstance(o, HdlCall):
-            return self.visit_HdlCall(o)
+            self.visit_HdlCall(o)
         elif o is HdlAll:
             w("*")
-            return
         elif o is HdlTypeAuto:
-            return
+            pass
         elif o is None:
             w("null")
-            return
-
-        raise NotImplementedError(o)
+        else:
+            raise NotImplementedError(o)
+        return True
 
     def visit_HdlCall(self, o):
         """
