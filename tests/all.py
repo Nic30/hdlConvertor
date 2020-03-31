@@ -38,4 +38,18 @@ def main_test_suite():
 if __name__ == "__main__":
     suite = main_test_suite()
     runner = TimeLoggingTestRunner(verbosity=3)
-    runner.run(suite)
+
+    try:
+        from concurrencytest import ConcurrentTestSuite, fork_for_tests
+        useParallerlTest = True
+    except ImportError:
+        # concurrencytest is not installed, use regular test runner
+        useParallerlTest = False
+    # useParallerlTest = False
+
+    if useParallerlTest:
+        # Run same tests across 4 processes
+        concurrent_suite = ConcurrentTestSuite(suite, fork_for_tests())
+        runner.run(concurrent_suite)
+    else:
+        runner.run(suite)
