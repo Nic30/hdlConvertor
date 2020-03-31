@@ -1,6 +1,6 @@
+from hdlConvertor.hdlAst import HdlCall, HdlStmIf, HdlStmBlock, HdlStmAssign
 from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
-from hdlConvertor.hdlAst._statements import HdlStmIf, HdlStmBlock, HdlStmAssign
 
 
 class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
@@ -10,6 +10,17 @@ class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         :type proc: HdlStmProcess
         """
         w = self.out.write
+        w("# sensitivity: ")
+        for last, s in iter_with_last(proc.sensitivity):
+            if isinstance(s, HdlCall):
+                w(str(s.fn))
+                w(" ")
+                self.visit_iHdlExpr(s.ops[0])
+            else:
+                self.visit_iHdlExpr(s)
+            if not last:
+                w(", ")
+        w("\n")
         w("def ")
         w(proc.labels[0])
         w("(self):\n")
