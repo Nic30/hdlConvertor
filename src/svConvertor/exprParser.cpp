@@ -221,6 +221,7 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 			auto e0 = visitExpression(exprs[i-1]);
 			res = create_object<iHdlExpr>(ctx, move(e0), op, move(res));
 		}
+		return res;
 	}
 
 
