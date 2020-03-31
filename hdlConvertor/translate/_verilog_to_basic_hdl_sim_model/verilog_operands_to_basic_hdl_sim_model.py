@@ -1,5 +1,6 @@
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlCall, HdlName
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
+from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import hdl_getattr
 
 
 def to_property_call(o, prop_name):
@@ -10,7 +11,8 @@ def to_property_call(o, prop_name):
     o.fn = HdlBuiltinFn.CALL
     _op0 = HdlCall()
     _op0.fn = HdlBuiltinFn.DOT
-    o.ops[0] = _op0.ops.extend([o.ops[0], HdlName(prop_name)])
+    o.ops[0] = hdl_getattr(o.ops[0], prop_name)
+    return o
 
 
 class BasicHdlSimModelTranslateVerilogOperands(HdlAstVisitor):
