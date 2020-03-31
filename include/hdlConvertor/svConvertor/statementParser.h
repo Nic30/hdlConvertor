@@ -8,6 +8,9 @@
 #include <hdlConvertor/hdlObjects/hdlStmBlock.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
 #include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/exprParser.h>
+#include <hdlConvertor/createObject.h>
+
 
 namespace hdlConvertor {
 namespace sv {
@@ -53,8 +56,31 @@ public:
 			std::vector<std::unique_ptr<hdlObjects::iHdlStatement>> &res);
 	std::unique_ptr<hdlObjects::HdlStmAssign> visitNonblocking_assignment(
 			sv2017Parser::Nonblocking_assignmentContext *ctx);
+	template<typename BLOCK_T>
+	std::unique_ptr<hdlObjects::HdlStmBlock> visit_block(BLOCK_T* ctx) {
+		//     X ( COLON identifier | {_input->LA(1) != COLON}? )
+		//         ( block_item_declaration )* ( statement_or_null )*
+		//     X (COLON identifier |  {_input->LA(1) != COLON}?);
+		auto _label = ctx->identifier(0);
+		std::vector<std::unique_ptr<hdlObjects::iHdlObj>> items;
+		for (auto bid : ctx->block_item_declaration()) {
+			visitBlock_item_declaration(bid, items);
+		}
+		for (auto stm : ctx->statement_or_null()) {
+			auto i = visitStatement_or_null(stm);
+			items.push_back(move(i));
+		}
+		auto b = create_object<hdlObjects::HdlStmBlock>(ctx, items);
+		if (_label) {
+			VerExprParser ep(commentParser);
+			b->labels.push_back(ep.getIdentifierStr(_label));
+		}
+		return b;
+	}
 	std::unique_ptr<hdlObjects::HdlStmBlock> visitSeq_block(
 			sv2017Parser::Seq_blockContext *ctx);
+	std::unique_ptr<hdlObjects::HdlStmBlock> visitPar_block(
+				sv2017Parser::Par_blockContext *ctx);
 	void visitBlock_item_declaration(
 			sv2017Parser::Block_item_declarationContext *ctx,
 			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &res);

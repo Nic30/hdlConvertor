@@ -2,6 +2,7 @@ from typing import List, Optional, Union, Tuple
 
 from hdlConvertor.hdlAst._bases import iHdlStatement
 from hdlConvertor.hdlAst._expr import iHdlExpr
+from enum import Enum
 
 
 class HdlImport(iHdlStatement):
@@ -26,17 +27,27 @@ class HdlStmNop():
     __slots__ = []
 
 
+class HdlStmBlockJoinType(Enum):
+    """
+    Python equivalent of C++ hdlConvertor::hdlObjects::HdlStmBlockJoinType
+    """
+    (
+        SEQ,  # sequential block
+        PAR_JOIN,  # parallel block where we are wainting on all threads
+        PAR_JOIN_ANY,  # parallel block where we are wainting on first finished thread
+        PAR_JOIN_NONE,  # parallel block where we are are not waiting on any thread
+    ) = range(4)
+
+
 class HdlStmBlock(iHdlStatement):
     """
     Block of statements in HDL
     """
-    __slots__ = ["is_parallel", "join_any", "join_none", "body", ]
+    __slots__ = ["join_t", "body", ]
 
     def __init__(self):
         super(HdlStmBlock, self).__init__()
-        self.is_parallel = False
-        self.join_any = False
-        self.join_none = False
+        self.join_t = HdlStmBlockJoinType.SEQ  # type: HdlStmBlockJoinType
         self.body = []  # type: List[iHdlObj]
 
 

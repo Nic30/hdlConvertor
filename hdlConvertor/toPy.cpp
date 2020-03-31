@@ -55,6 +55,7 @@ ToPy::ToPy() {
 	import(HdlStmBreakCls, "HdlStmBreak");
 	import(HdlStmContinueCls, "HdlStmContinue");
 	import(HdlStmWaitCls, "HdlStmWait");
+	import(HdlStmBlockJoinTypeCls, "HdlStmBlockJoinType");
 	import(HdlStmBlockCls, "HdlStmBlock");
 	import(HdlLibraryCls, "HdlLibrary");
 	import(HdlImportCls, "HdlImport");
@@ -457,6 +458,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlImportCls);
 	Py_XDECREF(HdlLibraryCls);
 	Py_XDECREF(HdlStmBlockCls);
+	Py_XDECREF(HdlStmBlockJoinTypeCls);
 	Py_XDECREF(HdlStmWaitCls);
 	Py_XDECREF(HdlStmContinueCls);
 	Py_XDECREF(HdlStmBreakCls);

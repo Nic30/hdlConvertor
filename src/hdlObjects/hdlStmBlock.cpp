@@ -4,19 +4,34 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 HdlStmBlock::HdlStmBlock() :
-		iHdlStatement() {
+		iHdlStatement(), join_t(HdlStmBlockJoinType::SEQ) {
 }
 
 HdlStmBlock::HdlStmBlock(std::vector<std::unique_ptr<iHdlObj>> &_statements) :
-		iHdlStatement(), statements(move(_statements)) {
+		iHdlStatement(), join_t(HdlStmBlockJoinType::SEQ), statements(move(_statements)) {
 }
 
 HdlStmBlock::HdlStmBlock(std::unique_ptr<iHdlObj> obj) :
-		iHdlStatement() {
+		HdlStmBlock() {
 	statements.push_back(move(obj));
 }
 
 HdlStmBlock::~HdlStmBlock() {
+}
+
+const char* HdlStmBlockJoinType_toString(HdlStmBlockJoinType o) {
+	switch (o) {
+	case HdlStmBlockJoinType::SEQ:
+		return "SEQ";
+	case HdlStmBlockJoinType::PAR_JOIN:
+		return "PAR_JOIN";
+	case HdlStmBlockJoinType::PAR_JOIN_ANY:
+		return "PAR_JOIN_ANY";
+	case HdlStmBlockJoinType::PAR_JOIN_NONE:
+		return "PAR_JOIN_NONE";
+	default:
+		throw std::runtime_error("invalid value for HdlStmBlockJoinType");
+	}
 }
 
 }

@@ -56,6 +56,7 @@ class ToPy {
 	PyObject *HdlStmContinueCls;
 	PyObject *HdlStmWaitCls;
 	PyObject *HdlStmBlockCls;
+	PyObject *HdlStmBlockJoinTypeCls;
 	PyObject *HdlImportCls;
 	PyObject *HdlLibraryCls;
 	PyObject *HdlComponentInstCls;
@@ -159,6 +160,7 @@ public:
 	PyObject* toPy(const hdlObjects::HdlVariableDef *o);
 	PyObject* toPy(const hdlObjects::HdlStmExpr *o);
 	PyObject* toPy(const hdlObjects::HdlStmIf *o);
+	PyObject* toPy(const hdlObjects::HdlStmBlockJoinType o);
 	PyObject* toPy(const hdlObjects::HdlStmBlock *o);
 	PyObject* toPy(const hdlObjects::HdlStmCase *o);
 	PyObject* toPy(const hdlObjects::HdlStmFor *o);

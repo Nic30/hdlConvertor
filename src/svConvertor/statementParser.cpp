@@ -196,9 +196,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitStatement_item(
 	}
 	auto pb = ctx->par_block();
 	if (pb) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitStatement_item.par_block", pb);
-		return create_object<HdlStmNop>(ctx);
+		return visitPar_block(pb);
 	}
 	auto ptcs = ctx->procedural_timing_control_statement();
 	if (ptcs) {
@@ -587,22 +585,36 @@ unique_ptr<HdlStmBlock> VerStatementParser::visitSeq_block(
 	//     KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
 	//         ( block_item_declaration )* ( statement_or_null )*
 	//     KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
-	auto _label = ctx->identifier(0);
-	vector<unique_ptr<iHdlObj>> items;
-	for (auto bid : ctx->block_item_declaration()) {
-		visitBlock_item_declaration(bid, items);
+	return visit_block(ctx);
+}
+
+HdlStmBlockJoinType visitJoin_keyword(sv2017Parser::Join_keywordContext * ctx) {
+	// join_keyword:
+	//     KW_JOIN
+	//     | KW_JOIN_ANY
+	//     | KW_JOIN_NONE
+	// ;
+	if (ctx->KW_JOIN())
+		return HdlStmBlockJoinType::PAR_JOIN;
+	else if (ctx->KW_JOIN_ANY())
+		return HdlStmBlockJoinType::PAR_JOIN_ANY;
+	else {
+		assert(ctx->KW_JOIN_NONE());
+		return HdlStmBlockJoinType::PAR_JOIN_NONE;
 	}
-	for (auto stm : ctx->statement_or_null()) {
-		auto i = visitStatement_or_null(stm);
-		items.push_back(move(i));
-	}
-	auto b = create_object<HdlStmBlock>(ctx, items);
-	if (_label) {
-		VerExprParser ep(commentParser);
-		b->labels.push_back(ep.getIdentifierStr(_label));
-	}
+}
+
+unique_ptr<HdlStmBlock> VerStatementParser::visitPar_block(
+		sv2017Parser::Par_blockContext *ctx) {
+	// par_block:
+	//     KW_FORK ( COLON identifier | {_input->LA(1) != COLON}? )
+	//         ( block_item_declaration )* ( statement_or_null )*
+	//     join_keyword ( COLON identifier |  {_input->LA(1) != COLON}? );
+	auto b = visit_block(ctx);
+	b->join_t = visitJoin_keyword(ctx->join_keyword());
 	return b;
 }
+
 
 void VerStatementParser::visitBlock_item_declaration(
 		sv2017Parser::Block_item_declarationContext *ctx,

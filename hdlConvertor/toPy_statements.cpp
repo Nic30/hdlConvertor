@@ -27,11 +27,34 @@ PyObject* ToPy::toPy(const HdlStmIf *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlStmBlockJoinType o) {
+	const char *name;
+	try {
+		name = HdlStmBlockJoinType_toString(o);
+	} catch (const std::runtime_error &e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+		return nullptr;
+	}
+	return PyObject_GetAttrString(HdlStmBlockJoinTypeCls, name);
+}
+
 PyObject* ToPy::toPy(const HdlStmBlock *o) {
 	auto py_inst = PyObject_CallObject(HdlStmBlockCls, NULL);
 	if (!py_inst) {
 		return nullptr;
 	}
+	auto join_t = toPy(o->join_t);
+	if (!join_t) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	int e = PyObject_SetAttrString(py_inst, "join_t", join_t);
+	if (e) {
+		Py_DECREF(join_t);
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+
 	if (toPy_arr(py_inst, "body", o->statements))
 		return nullptr;
 

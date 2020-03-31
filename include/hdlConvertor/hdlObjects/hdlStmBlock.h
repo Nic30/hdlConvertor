@@ -7,12 +7,20 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+enum HdlStmBlockJoinType {
+    SEQ,  // sequential block
+    PAR_JOIN,  // parallel block where we are wainting on all threads
+    PAR_JOIN_ANY,  // parallel block where we are wainting on first finished thread
+    PAR_JOIN_NONE,  // parallel block where we are are not waiting on any thread
+};
+
 /*
  * HDL AST node for block statement (begin-end in SV)
  * */
 class HdlStmBlock: public iHdlStatement {
 public:
 	// [todo] rename to obs
+	HdlStmBlockJoinType join_t;
 	std::vector<std::unique_ptr<iHdlObj>> statements;
 
 	HdlStmBlock();
@@ -20,6 +28,8 @@ public:
 	HdlStmBlock(std::unique_ptr<iHdlObj> obj);
 	virtual ~HdlStmBlock() override;
 };
+
+const char * HdlStmBlockJoinType_toString(HdlStmBlockJoinType o);
 
 }
 }

@@ -21,8 +21,8 @@ from hdlConvertor.hdlAst._expr import (HdlAll, HdlBuiltinFn, HdlCall,
     HdlDirection, HdlIntValue, HdlName, HdlOthers, HdlTypeAuto, HdlTypeType,
     iHdlExpr)
 from hdlConvertor.hdlAst._statements import (HdlImport, HdlStmAssign,
-    HdlStmBlock, HdlStmBreak, HdlStmCase, HdlStmContinue, HdlStmFor,
-    HdlStmForIn, HdlStmIf, HdlStmProcess, HdlStmReturn, HdlStmWait,
+    HdlStmBlockJoinType, HdlStmBlock, HdlStmBreak, HdlStmCase, HdlStmContinue,
+    HdlStmFor, HdlStmForIn, HdlStmIf, HdlStmProcess, HdlStmReturn, HdlStmWait,
     HdlStmWhile)
 from hdlConvertor.hdlAst._structural import (HdlComponentInst, HdlContext,
     HdlModuleDec, HdlModuleDef, HdlNamespace, HdlLibrary)
