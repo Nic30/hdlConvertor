@@ -7,13 +7,13 @@ class HdlDirection(Enum):
     Direction of the interface
     """
     (
-     IN,
-     OUT,
-     INOUT,
-     BUFFER,
-     LINKAGE,
-     INTERNAL,
-     UNKNOWN
+        IN,
+        OUT,
+        INOUT,
+        BUFFER,
+        LINKAGE,
+        INTERNAL,
+        UNKNOWN
     ) = range(7)
 
 
@@ -86,86 +86,96 @@ class HdlTypeAuto(object):
 
 class HdlBuiltinFn(Enum):
     """
-    The build in functions and operators in HDL languages
+    The build in functions and operators in HDL languages.
+    (Python equivalent of c++ hdlConvertor::hdlObjects::HdlOperatorType)
     """
     (
-     RANGE,  # range used in VHDL type specifications
-     REVERSE_RANGE,
-     ACROSS,
-     THROUGH,
-     REFERENCE,
-     TOLERANCE,
-     TYPE_OF,
-     INDEX,  # array index
-     DOWNTO,  # downto for the slice specification
-     TO,  # to for the slice specification
-     SUB,  # can also be unary minus
-     ADD,  # can also be unary plus
-     DIV,
-     MUL,
-     MOD,
-     REM,
-     CONCAT,  # concatenation of signals
-     REPL_CONCAT,  # replicative concatenation {<N>, <item>}
-                   # duplicates and concatenates the item N times
-     POW,  # bin operator power of
-     ABS,  # absolute value
-     NOT,  # logical not
-     NEG,  # bitwise negation
-     LOG_AND,  # "and" in vhdl
-     LOG_OR,  # "or" in vhdl
-     AND,  # & in vhdl
-     OR,  # | in vhdl
-     NAND,
-     NOR,
-     XOR,
-     XNOR,
-     EQ,  # ==
-     NEQ,  # ~
-     LT,  # <
-     LE,  # <=
-     GT,  # >
-     GE,  # >=
-     SLL,  # shift left logical
-     SRL,  # shift right logical
-     SLA,  # shift left arithmetical
-     SRA,  # shift right arithmetical
-     ROL,  # rotate left
-     ROR,  # rotate right
-     TERNARY,
-     DOT,  # accessing of property
-     DOUBLE_COLON,  # SV accessing class/package static property/type
-     APOSTROPHE,  # vhdl attribute access
-     CALL,  # call of HDL function
-     PARAMETRIZATION,  # specification of template arguments
-     ARROW,  # arrow operator used in vhdl type descriptions
-     RISING,  # rising edge/posedge event operator
-     FALLING,  # falling edge/negedge event operator
-     MAP_ASSOCIATION,
-     MATCH_EQ,  # VHDL-2008 matching ops (the X values are ignored while match)
-     MATCH_NEQ,
-     MATCH_LT,
-     MATCH_LE,
-     MATCH_GT,
-     MATCH_GE,
-     INCR_PRE,
-     DECR_PRE,
-     INCR_POST,
-     DECR_POST,
-     ASSIGN,
-     PLUS_ASSIGN,
-     MINUS_ASSIGN,
-     MUL_ASSIGN,
-     DIV_ASSIGN,
-     MOD_ASSIGN,
-     AND_ASSIGN,
-     OR_ASSIGN,
-     XOR_ASSIGN,
-     SHIFT_LEFT_ASSIGN,
-     SHIFT_RIGHT_ASSIGN,
-     ARITH_SHIFT_LEFT_ASSIGN,
-     ARITH_SHIFT_RIGHT_ASSIGN,
-    ) = range(75)
+        RANGE,  # range used in VHDL type specifications
+        RANGE_REVERSE,  # reverse range used in VHDL type specifications
+        ACROSS,
+        THROUGH,
+        REFERENCE,
+        TOLERANCE,
+        TYPE_OF,  # SV type operator
+        INDEX,  # array index
+        DOWNTO,  # downto for the slice specification
+        TO,  # to for the slice specification
+        MINUS_UNARY,
+        PLUS_UNARY,
+        OR_UNARY,  # SV or reduction (|a)
+        AND_UNARY,  # SV and reduction (&a)
+        NAND_UNARY,  # SV nand reduction (~&a)
+        NOR_UNARY,  # SV nor reduction (~|a)
+        XOR_UNARY,  # SV xor reduction (^a)
+        XNOR_UNARY,  # SV and reduction (~^a) or (^~a)
+        SUB,
+        ADD,
+        DIV,
+        MUL,
+        MOD,  # modulo
+        REM,  # reminder
+        CONCAT,  # concatenation of signals
+        REPL_CONCAT,  # replicative concatenation {<N>, <item>}
+                 # duplicates and concatenates the item N times
+        POW,  # power of
+        ABS,  # absolute value
+        NEG_LOG,  # logical negation "not" in vhdl
+        NEG,  # negation
+        AND_LOG,  # "and" in vhdl
+        OR_LOG,  # "or" in vhdl
+        AND,  # & in vhdl
+        OR,  # | in vhdl
+        NAND,
+        NOR,
+        XOR,
+        XNOR,
+        EQ,  # ==
+        NEQ,  # ~
+        LT,  # <
+        LE,   # <=
+        GT,  # >
+        GE,  # >=
+        SLL,  # shift left logical
+        SRL,  # shift right logical
+        SLA,  # shift left arithmetical
+        SRA,  # shift right arithmetical
+        ROL,  # rotate left
+        ROR,  # rotate right
+        TERNARY,
+        DOT,  # accessing of property
+        DOUBLE_COLON,  # SV accessing class/package static property/type
+        APOSTROPHE,  # vhdl attribute access
+        CALL,  # call of HDL function
+        PARAMETRIZATION,  # specification of template arguments
+        ARROW,  # arrow operator used in vhdl type descriptions
+        RISING,  # rising edge/posedge event operator
+        FALLING,  # falling edge/negedge event operator
+        MAP_ASSOCIATION,
+        # VHDL-2008 matching ops (the X values are ignored while match)
+        EQ_MATCH,
+        NEQ_MATCH,
+        LT_MATCH,
+        LE_MATCH,
+        GT_MATCH,
+        GE_MATCH,
+        INCR_PRE,
+        DECR_PRE,
+        INCR_POST,
+        DECR_POST,
+        ASSIGN,
+        PLUS_ASSIGN,  # +=
+        MINUS_ASSIGN,  # -=
+        MUL_ASSIGN,  # *=
+        DIV_ASSIGN,  # /=
+        MOD_ASSIGN,  # %=
+        AND_ASSIGN,  # &=
+        OR_ASSIGN,  # |=
+        XOR_ASSIGN,  # ^=
+        SHIFT_LEFT_ASSIGN,  # <<=
+        SHIFT_RIGHT_ASSIGN,  # >>=
+        ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
+        ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
+    ) = range(83)
     # note that in verilog bitewise operators can have only one argument
 
 
@@ -241,8 +251,8 @@ class HdlIntValue(object):
             t_str.append(", base=%r" % self.base)
 
         return "<HdlIntValue %r%s>" % (
-                    self.val, "".join(t_str)
-                )
+            self.val, "".join(t_str)
+        )
 
 
 # None is equivalent of HDL null
