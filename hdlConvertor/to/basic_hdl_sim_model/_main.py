@@ -1,13 +1,11 @@
 from itertools import chain
 
-from hdlConvertor.hdlAst._defs import HdlVariableDef
-from hdlConvertor.hdlAst._expr import iHdlExpr, HdlCall, HdlBuiltinFn,\
-    HdlDirection, HdlName
-from hdlConvertor.hdlAst._statements import HdlStmProcess
-from hdlConvertor.hdlAst._structural import HdlComponentInst, HdlModuleDec
-from hdlConvertor.hdlAst._typeDefs import HdlEnumDef, HdlClassDef
+from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,\
+    HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
+    HdlEnumDef, HdlClassDef
 from hdlConvertor.to.basic_hdl_sim_model.stm import BasicHdlSimModelStm
 from hdlConvertor.to.hdlUtils import Indent
+from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
 
 
 DEFAULT_IMPORTS = """\
@@ -20,23 +18,6 @@ from pycocotb.basic_hdl_simulator.model_utils import sensitivity, connectSimPort
 from pycocotb.basic_hdl_simulator.proxy import BasicRtlSimProxy
 from pycocotb.basic_hdl_simulator.sim_utils import sim_eval_cond
 """
-
-
-def isOp(e: iHdlExpr):
-    if isinstance(e, HdlCall):
-        return True
-
-
-def sensitivityByOp(op: HdlBuiltinFn):
-    """
-    get sensitivity type for operator
-    """
-    if op == HdlBuiltinFn.RISING:
-        return (True, False)
-    elif op == HdlBuiltinFn.FALLING:
-        return (False, True)
-    else:
-        raise TypeError(op)
 
 
 class ToBasicHdlSimModel(BasicHdlSimModelStm):
@@ -74,9 +55,10 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                 raise NotImplementedError(o)
 
         for c in components:
-            w('if "%s" not in locals(): # support for all models in single file\n' % c.name)
+            w('if "%s" not in locals(): # support for all models in single file\n' %
+              c.module_name)
             with Indent(self.out):
-                w('from .%s import %s' % (c.name, c.name))
+                w('from .%s import %s\n' % (c.module_name, c.module_name))
 
         self.visit_doc(mod)
         w("class ")
@@ -93,7 +75,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
             w('"):\n')
             with Indent(self.out):
                 w('BasicRtlSimModel.__init__(self, sim, name=name)\n')
-                w('#ports\n')
+                w('# ports\n')
                 for port in mod.ports:
                     self.visit_HdlVariableDef(port)
                 w("# internal signals\n")
@@ -104,7 +86,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                     w("self.")
                     w(c.name)
                     w(" = ")
-                    w(c.name)
+                    w(c.module_name)
                     w('(sim, "')
                     w(c.name)
                     w('")\n')
@@ -119,7 +101,8 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                         assert isinstance(pm, HdlCall) and\
                             pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
                         mod_port, connected_sig = pm.ops
-                        assert isinstance(connected_sig, HdlName), connected_sig
+                        assert isinstance(
+                            connected_sig, HdlName), connected_sig
                         self.visit_iHdlExpr(connected_sig)
                         w('", "')
                         assert isinstance(mod_port, HdlName), mod_port
@@ -162,7 +145,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                     w(proc.labels[0])
                     w(', ')
                     for s in proc.sensitivity:
-                        if isOp(s):
+                        if isinstance(s, HdlCall):
                             w("(")
                             w(str(sensitivityByOp(s.fn)))
                             w(", self.io.")
@@ -198,17 +181,19 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
         w = self.out.write
         w("self.io.")
         w(var.name)
-        w(' = BasicRtlSimProxy(sim, self, "')
-        w(var.name)
-        w('",\n')
-        w("    ")
-        self.visit_type(var.type)
-        w(", ")
+        w(' = BasicRtlSimProxy(\n')
+        with Indent(self.out):
+            w('sim, self, "')
+            w(var.name)
+            w('",\n')
+            self.visit_type(var.type)
+            w(", None")
         if var.value is None:
-            w("None")
+            w(")\n")
         else:
+            w(".init_def_val(")
             w(var.value)
-        w(")\n")
+            w("\n")
 
     def visit_HdlContext(self, context, stm_outputs):
         """
