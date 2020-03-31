@@ -38,15 +38,6 @@ class ToHdlCommon(HdlAstVisitor):
                 w(d)
                 w("\n")
 
-    def visit_main_obj(self, o):
-        if isinstance(o, HdlModuleDec):
-            w = self.out.write
-            w("\n")
-            self.visit_HdlModuleDec(o)
-            w("\n")
-        else:
-            super(ToHdlCommon, self).visit_main_obj(o)
-
     def _precedence_of_expr(self, o):
         """
         :type o: iHdlExpr
@@ -127,16 +118,14 @@ class ToHdlCommon(HdlAstVisitor):
                     right = None
                     left = None
                     argc = len(parent.ops)
+                    assert argc, parent
                     if argc == 1:
                         pass
-                    elif argc == 2:
+                    else:
                         if i == 0:
                             right = parent.ops[1]
                         else:
-                            assert i == 1, i
-                            left = parent.ops[0]
-                    else:
-                        raise NotImplementedError(parent)
+                            left = parent.ops[i-1]
 
                     if left is not None:  # "operand" is right
                         # same precedence -> parenthesis on right if it is expression
@@ -148,7 +137,7 @@ class ToHdlCommon(HdlAstVisitor):
                         # a * (b + c)
                         if precedence_my >= precedence_parent:
                             use_parenthesis = True
-                    else:
+                    if right is not None:
                         # "operand" is left
                         if precedence_my == precedence_parent:
                             if self._precedence_of_expr(right) == precedence_my:
