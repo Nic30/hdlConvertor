@@ -255,6 +255,14 @@ hdlObjects::HdlOperatorType VhdlExprParser::visitSign(
 		return HdlOperatorType::ADD;
 	}
 }
+
+void aggregate_to_parenthesis(std::unique_ptr<iHdlExpr> & o) {
+	auto v = dynamic_cast<HdlValue*>(o->data);
+	if (v && v->_arr && v->_arr->size() == 1) {
+		o = move(v->_arr->at(0));
+	}
+}
+
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		vhdlParser::Simple_expressionContext *ctx) {
 	// simple_expression:
@@ -268,7 +276,9 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		return visitPrimary(_primary[0]);
 	} else if (_primary.size() == 2) {
 		auto p0 = visitPrimary(_primary[0]);
+		aggregate_to_parenthesis(p0);
 		auto p1 = visitPrimary(_primary[1]);
+		aggregate_to_parenthesis(p1);
 		assert(ctx->DOUBLESTAR());
 		return create_object<iHdlExpr>(ctx, move(p0), HdlOperatorType::POW, move(p1));
 	}
@@ -290,6 +300,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 			}
 		}
 		auto se0 = visitSimple_expression(se[0]);
+		aggregate_to_parenthesis(se0);
 		return create_object<iHdlExpr>(ctx, op, move(se0));
 	} else {
 		assert(se.size() == 2);
@@ -303,7 +314,9 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		}
 
 		auto se0 = visitSimple_expression(se[0]);
+		aggregate_to_parenthesis(se0);
 		auto se1 = visitSimple_expression(se[1]);
+		aggregate_to_parenthesis(se1);
 		return create_object<iHdlExpr>(ctx, std::move(se0), op, std::move(se1));
 	}
 }
@@ -323,6 +336,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitExpression(
 		auto p = ctx->primary();
 		assert(p);
 		auto vp = visitPrimary(p);
+		aggregate_to_parenthesis(vp);
 		return vp;
 	}
 	auto _se = ctx->simple_expression();
