@@ -26,6 +26,8 @@ class ToHdlCommon(HdlAstVisitor):
     def visit_doc(self, obj, line_comment_prefix):
         """
         Format doc as line comments
+
+        :type line_comment_prefix: str
         """
         doc = obj.doc
         if doc is not None:
@@ -95,7 +97,7 @@ class ToHdlCommon(HdlAstVisitor):
             raise NotImplementedError(
                 "Do not know how to convert %s" % (o))
 
-    def _visit_operand(self, operand, i: int,
+    def _visit_operand(self, operand, i,
                        parent,
                        expr_requires_parenthesis,
                        cancel_parenthesis):
@@ -157,16 +159,14 @@ class ToHdlCommon(HdlAstVisitor):
         if use_parenthesis:
             w(")")
 
-    def _visit_bin_op(self, operator, op_str: str,
+    def _visit_bin_op(self, operator, op_str,
                       expr_requires_parenthesis=False,
                       cancel_parenthesis=False):
         """
         :type operator: HdlCall
+        :type op_str: str
         """
-        try:
-            op0, op1 = operator.ops
-        except:
-            raise
+        op0, op1 = operator.ops
         self._visit_operand(op0, 0, operator, expr_requires_parenthesis,
                             cancel_parenthesis)
         self.out.write(op_str)
@@ -246,4 +246,3 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: HdlStmAssign
         """
         raise TypeError("does not support HdlStmAssign", self, o)
-
