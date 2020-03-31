@@ -173,8 +173,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 	//   | expression AND_LOG              ( attribute_instance )* expression
 	//   | expression OR_LOG               ( attribute_instance )* expression
 	//   | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
-	//   | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
-	//   | expression operator_impl        ( attribute_instance )* expression
+	//   | expression ( KW_MATCHES pattern )? (QUESTIONMARK ( attribute_instance )* expression COLON expression)+ // right associative
+	//   | expression (operator_impl        ( attribute_instance )* expression)+ // right associative
 	// ;
 
 	auto oa = ctx->operator_assignment();
@@ -211,6 +211,19 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 		return visitInc_or_dec_expression(ide);
 	}
 	auto exprs = ctx->expression();
+	//   | expression (operator_impl        ( attribute_instance )* expression)+ // right associative
+	auto oi = ctx->operator_impl();
+	if (oi.size()) {
+		std::unique_ptr<iHdlExpr> res = visitExpression(exprs[oi.size()]);
+		for (size_t i = oi.size(); i != 0; i--) {
+			// construct a implication operators by walking from backwards
+			auto op = VerLiteralParser::visitOperator_impl(oi[i-1]);
+			auto e0 = visitExpression(exprs[i-1]);
+			res = create_object<iHdlExpr>(ctx, move(e0), op, move(res));
+		}
+	}
+
+
 	if (exprs.size() == 2) {
 		//   | expression DOUBLESTAR           ( attribute_instance )* expression
 		//   | expression operator_mul_div_mod ( attribute_instance )* expression
@@ -223,11 +236,12 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 		//   | expression BAR                  ( attribute_instance )* expression
 		//   | expression AND_LOG              ( attribute_instance )* expression
 		//   | expression OR_LOG               ( attribute_instance )* expression
-		//   | expression operator_impl        ( attribute_instance )* expression
-		auto op = HdlOperatorType::POW;
+		HdlOperatorType op;
 		do {
-			if (ctx->DOUBLESTAR())
+			if (ctx->DOUBLESTAR()) {
+				op = HdlOperatorType::POW;
 				break;
+			}
 			auto omudm = ctx->operator_mul_div_mod();
 			if (omudm) {
 				op = VerLiteralParser::visitOperator_mul_div_mod(omudm);
@@ -278,11 +292,6 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 				op = HdlOperatorType::OR_LOG;
 				break;
 			}
-			auto oi = ctx->operator_impl();
-			if (oi) {
-				op = VerLiteralParser::visitOperator_impl(oi);
-				break;
-			}
 
 			assert(false && "unknown binary");
 		} while (0);
@@ -308,12 +317,17 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 				"VerExprParser.visitExpression - TRIPLE_AND", ctx);
 		return iHdlExpr::null();
 	}
-	//   | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
-	assert(exprs.size() == 3);
-	auto e0 = visitExpression(exprs[0]);
-	auto e1 = visitExpression(exprs[1]);
-	auto e2 = visitExpression(exprs[2]);
-	return iHdlExpr::ternary(ctx, move(e0), move(e1), move(e2));
+	//   | expression (( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression)+
+	assert(exprs.size() >= 3);
+	auto qm = ctx->QUESTIONMARK();
+	std::unique_ptr<iHdlExpr> res = visitExpression(exprs.at(qm.size() * 2));
+	for (size_t i = qm.size(); i > 0; i--) {
+		// construct a ternary operators by walking backwards
+		auto e0 = visitExpression(exprs.at(2 * i - 2));
+		auto e1 = visitExpression(exprs.at(2 * i - 1));
+		res = iHdlExpr::ternary(ctx, move(e0), move(e1), move(res));
+	}
+	return res;
 }
 
 unique_ptr<iHdlExpr> VerExprParser::visitConcatenation(
