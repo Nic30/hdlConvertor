@@ -119,16 +119,22 @@ package p_38 is
 	-- (see 16.2).
 	signal A, B: Word (1 to 4);
 	signal C: Word (5 downto 0);
+end package;
+
+architecture rtl of e_p48 is
+	begin
 	Instance: entity E
 		generic map (ROM(1 to 2) => (others => (others => '0')))
 		port map (A, Op2(3 to 4) => B(1 to 2), Op2(2) => B(3),
 				Result => C(3 downto 1));
-			-- In this instance, the index range of ROM is 1 to 2 (matching
-			-- that of the actual), the index range of Op1 is 1 to 4 (matching
-			-- the index range of A), the index range of Op2 is 2 to 4, and
-			-- the index range of Result is (3 downto 1) (again matching the
-			-- index range of the actual).
+		-- In this instance, the index range of ROM is 1 to 2 (matching
+		-- that of the actual), the index range of Op1 is 1 to 4 (matching
+		-- the index range of A), the index range of Op2 is 2 to 4, and
+		-- the index range of Result is (3 downto 1) (again matching the
+		-- index range of the actual).
+end architecture;
 
+package p_48 is
 	type E is array (NATURAL range <>) of INTEGER;
 	type T is array (1 to 10) of E (1 to 0);
 
@@ -319,17 +325,3 @@ package p_38 is
 	end protected body VariableSizeBitArray;
 
 end package;
-
-
-architecture test of test_ent is
-	variable x: distance;
-	variable y: duration;
-	variable z: integer;
-begin
-	x := 5 Å + 13 ft - 27 inch;
-	y := 3 ns + 5 min;
-	z := ns / ps;
-	x := z * mi;
-	y := y/10;
-	z := 39.34 inch / m;
-end architecture;
