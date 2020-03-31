@@ -2,6 +2,7 @@ from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
+from hdlConvertor.hdlAst._structural import HdlNamespace
 
 
 class ToVhdl2008(ToVhdl2008Stm):
@@ -20,6 +21,12 @@ class ToVhdl2008(ToVhdl2008Stm):
     def visit_direction(self, d):
         vd = self.DIR2V[d]
         self.out.write(vd)
+
+    def visit_main_obj(self, o):
+        ToVhdl2008Stm.visit_main_obj(self, o)
+        add_nl = isinstance(o, (HdlModuleDec, HdlModuleDec, HdlNamespace))
+        if add_nl:
+            self.out.write("\n")
 
     def visit_generic_or_port_declr(self, o):
         """
