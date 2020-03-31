@@ -9,7 +9,6 @@ from hdlConvertor.hdlAst._expr import HdlBuiltinFn
 class ToVerilog2005Expr(ToHdlCommon):
 
     GENERIC_BIN_OPS = {
-        **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: " & ",
         HdlBuiltinFn.AND_LOG: " && ",
         HdlBuiltinFn.OR: " | ",
@@ -45,23 +44,14 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: ' >>>= ',
     }
+    GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
+
     OP_PRECEDENCE = {
         HdlBuiltinFn.INDEX: 1,
 
         HdlBuiltinFn.CALL: 2,
         HdlBuiltinFn.TYPE_OF: 2,
         HdlBuiltinFn.PARAMETRIZATION: 2,
-
-        **{k: 3 for k in [
-            HdlBuiltinFn.NEG,
-            HdlBuiltinFn.NEG_LOG,
-            HdlBuiltinFn.OR_UNARY,
-            HdlBuiltinFn.AND_UNARY,
-            HdlBuiltinFn.NAND_UNARY,
-            HdlBuiltinFn.NOR_UNARY,
-            HdlBuiltinFn.XOR_UNARY,
-            HdlBuiltinFn.XNOR_UNARY
-        ]},
 
         HdlBuiltinFn.MINUS_UNARY: 4,
         HdlBuiltinFn.PLUS_UNARY: 4,
@@ -101,24 +91,35 @@ class ToVerilog2005Expr(ToHdlCommon):
 
         HdlBuiltinFn.RISING: 15,
         HdlBuiltinFn.FALLING: 15,
-        **{k: 16 for k in [
-            HdlBuiltinFn.ASSIGN,
-            HdlBuiltinFn.PLUS_ASSIGN,
-            HdlBuiltinFn.MINUS_ASSIGN,
-            HdlBuiltinFn.MUL_ASSIGN,
-            HdlBuiltinFn.DIV_ASSIGN,
-            HdlBuiltinFn.MOD_ASSIGN,
-            HdlBuiltinFn.AND_ASSIGN,
-            HdlBuiltinFn.OR_ASSIGN,
-            HdlBuiltinFn.XOR_ASSIGN,
-            HdlBuiltinFn.SHIFT_LEFT_ASSIGN,
-            HdlBuiltinFn.SHIFT_RIGHT_ASSIGN,
-            HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
-            HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
-        ]},
         HdlBuiltinFn.DOWNTO: 16,
         HdlBuiltinFn.TO: 16,
     }
+    OP_PRECEDENCE.update({k: 3 for k in [
+        HdlBuiltinFn.NEG,
+        HdlBuiltinFn.NEG_LOG,
+        HdlBuiltinFn.OR_UNARY,
+        HdlBuiltinFn.AND_UNARY,
+        HdlBuiltinFn.NAND_UNARY,
+        HdlBuiltinFn.NOR_UNARY,
+        HdlBuiltinFn.XOR_UNARY,
+        HdlBuiltinFn.XNOR_UNARY
+    ]})
+    OP_PRECEDENCE.update({k: 16 for k in [
+        HdlBuiltinFn.ASSIGN,
+        HdlBuiltinFn.PLUS_ASSIGN,
+        HdlBuiltinFn.MINUS_ASSIGN,
+        HdlBuiltinFn.MUL_ASSIGN,
+        HdlBuiltinFn.DIV_ASSIGN,
+        HdlBuiltinFn.MOD_ASSIGN,
+        HdlBuiltinFn.AND_ASSIGN,
+        HdlBuiltinFn.OR_ASSIGN,
+        HdlBuiltinFn.XOR_ASSIGN,
+        HdlBuiltinFn.SHIFT_LEFT_ASSIGN,
+        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN,
+        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
+        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
+    ]})
+
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NEG_LOG: "!",
         HdlBuiltinFn.NEG: "~",

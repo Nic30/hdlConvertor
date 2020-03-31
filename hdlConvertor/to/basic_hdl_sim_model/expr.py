@@ -57,7 +57,6 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
     }
 
     GENERIC_BIN_OPS = {
-        **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: " & ",
         HdlBuiltinFn.OR: " | ",
         HdlBuiltinFn.XOR: " ^ ",
@@ -72,6 +71,7 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.SLL: " << ",
         HdlBuiltinFn.SRL: " >> ",
     }
+    GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
 
     def visit_HdlIntValue(self, o):
         """

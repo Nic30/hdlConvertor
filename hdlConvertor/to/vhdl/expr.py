@@ -6,7 +6,6 @@ from hdlConvertor.to.hdlUtils import is_str, iter_with_last, Indent
 
 class ToVhdl2008Expr(ToHdlCommon):
     GENERIC_BIN_OPS = {
-        **ToHdlCommon.GENERIC_BIN_OPS,
         HdlBuiltinFn.AND: " AND ",
         HdlBuiltinFn.AND_LOG: " AND ",
         HdlBuiltinFn.OR: " OR ",
@@ -27,6 +26,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.MAP_ASSOCIATION: " => ",
         HdlBuiltinFn.RANGE: " RANGE ",
     }
+    GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
     NUM_BASES = {
         2: "B",
         8: "O",
