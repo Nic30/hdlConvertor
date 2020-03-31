@@ -1,4 +1,3 @@
-
 -- https://surf-vhdl.com/vhdl-syntax-web-course-surf-vhdl/vhdl-generics/
 ENTITY RAM IS
     GENERIC(
@@ -11,8 +10,7 @@ ENTITY RAM IS
         oeb : IN std_logic,
         wrb : IN std_logic,
         csb : IN std_logic,
-        data : INOUT std_logic_vector(((data_width - 1) DOWNTO 0)),
-        addr : IN std_logic_vector(((addr_width - 1) DOWNTO 0))
+        data : INOUT std_logic_vector(data_width - 1 DOWNTO 0),
+        addr : IN std_logic_vector(addr_width - 1 DOWNTO 0)
     );
 END ENTITY;
-

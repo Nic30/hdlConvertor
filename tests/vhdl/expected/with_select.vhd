@@ -7,7 +7,7 @@ END ENTITY;
 
 ARCHITECTURE behave OF ex_select IS
     SIGNAL r_Index : integer := 2;
-    SIGNAL w_One_Hot : std_logic_vector((3 DOWNTO 0));
+    SIGNAL w_One_Hot : std_logic_vector(3 DOWNTO 0);
 BEGIN
     CASE r_Index IS
         WHEN 0 => 
