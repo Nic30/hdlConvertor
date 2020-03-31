@@ -174,12 +174,19 @@ class ToVhdl2008Expr(ToHdlCommon):
             w("OTHERS")
             return
         elif isinstance(expr, list):
-            w("(\n")
+            with_nl = len(expr) > 3
+            if with_nl:
+                w("(\n")
+            else:
+                w("(")
             with Indent(self.out):
                 for is_last, elem in iter_with_last(expr):
                     self.visit_iHdlExpr(elem)
                     if not is_last:
-                        w(",\n")
+                        if with_nl:
+                            w(",\n")
+                        else:
+                            w(",")
             w(")")
             return
         ToHdlCommon.visit_iHdlExpr(self, expr)
