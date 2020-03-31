@@ -26,8 +26,6 @@ class HdlName(str):
         after parsing)
     """
 
-    __slots__ = ["obj"]
-
     def __init__(self, *args, **kwargs):
         obj = kwargs.pop("obj", None)
         super(HdlName, self).__init__()
