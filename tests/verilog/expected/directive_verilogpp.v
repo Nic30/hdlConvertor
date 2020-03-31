@@ -38,17 +38,17 @@ module fifo_rx #(
     input wire reset,
     input wire wr_en,
     input wire rd_en,
-    input wire[(DWIDTH - 1):0] data_in,
+    input wire[DWIDTH - 1:0] data_in,
     output reg f_full,
     output reg f_empty,
     output reg open_slot_fct,
     output reg overflow_credit_error,
-    output wire[(DWIDTH - 1):0] data_out,
-    output reg[(AWIDTH - 1):0] counter
+    output wire[DWIDTH - 1:0] data_out,
+    output reg[AWIDTH - 1:0] counter
 );
-    reg[(AWIDTH - 1):0] wr_ptr;
-    reg[(AWIDTH - 1):0] rd_ptr;
-    reg[(AWIDTH - 1):0] credit_counter;
+    reg[AWIDTH - 1:0] wr_ptr;
+    reg[AWIDTH - 1:0] rd_ptr;
+    reg[AWIDTH - 1:0] credit_counter;
     reg[1:0] state_data_write;
     reg[1:0] next_state_data_write;
     reg[1:0] state_data_read;
@@ -61,17 +61,17 @@ module fifo_rx #(
         next_state_open_slot = state_open_slot;
         case(state_open_slot)
             2'd0:
-                if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63)))
+                if (rd_ptr == 6'd7 || rd_ptr == 6'd15 || rd_ptr == 6'd23 || rd_ptr == 6'd31 || rd_ptr == 6'd39 || rd_ptr == 6'd47 || rd_ptr == 6'd55 || rd_ptr == 6'd63)
                     next_state_open_slot = 2'd1;
                 else
                     next_state_open_slot = 2'd0;
             2'd1:
-                if ((counter_wait != 11'd300))
+                if (counter_wait != 11'd300)
                     next_state_open_slot = 2'd1;
                 else
                     next_state_open_slot = 2'd2;
             2'd2:
-                if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63)))
+                if (rd_ptr == 6'd7 || rd_ptr == 6'd15 || rd_ptr == 6'd23 || rd_ptr == 6'd31 || rd_ptr == 6'd39 || rd_ptr == 6'd47 || rd_ptr == 6'd55 || rd_ptr == 6'd63)
                     next_state_open_slot = 2'd2;
                 else
                     next_state_open_slot = 2'd0;
@@ -85,7 +85,7 @@ module fifo_rx #(
         next_state_data_write = state_data_write;
         case(state_data_write)
             2'd0:
-                if ((wr_en && !f_full))
+                if (wr_en && !f_full)
                     next_state_data_write = 2'd1;
                 else
                     next_state_data_write = 2'd0;
@@ -106,7 +106,7 @@ module fifo_rx #(
         next_state_data_read = state_data_read;
         case(state_data_read)
             2'd0:
-                if ((rd_en && !f_empty))
+                if (rd_en && !f_empty)
                     next_state_data_read = 2'd1;
                 else
                     next_state_data_read = 2'd0;
@@ -131,14 +131,14 @@ module fifo_rx #(
             state_open_slot <= next_state_open_slot;
             case(state_open_slot)
                 2'd0:
-                    if (((((((((rd_ptr == 6'd7) || (rd_ptr == 6'd15)) || (rd_ptr == 6'd23)) || (rd_ptr == 6'd31)) || (rd_ptr == 6'd39)) || (rd_ptr == 6'd47)) || (rd_ptr == 6'd55)) || (rd_ptr == 6'd63))) begin
+                    if (rd_ptr == 6'd7 || rd_ptr == 6'd15 || rd_ptr == 6'd23 || rd_ptr == 6'd31 || rd_ptr == 6'd39 || rd_ptr == 6'd47 || rd_ptr == 6'd55 || rd_ptr == 6'd63) begin
                         open_slot_fct <= 1'b1;
-                        counter_wait <= (counter_wait + 11'd1);
+                        counter_wait <= counter_wait + 11'd1;
                     end else
                         open_slot_fct <= 1'b0;
                 2'd1: begin
-                    if ((counter_wait != 11'd300))
-                        counter_wait <= (counter_wait + 11'd1);
+                    if (counter_wait != 11'd300)
+                        counter_wait <= counter_wait + 11'd1;
                     else
                         counter_wait <= counter_wait;
                     open_slot_fct <= 1'b1;
@@ -156,7 +156,7 @@ module fifo_rx #(
     always @(posedge clock, negedge reset)
         if (!reset) begin
             state_data_write <= 2'd0;
-            wr_ptr <= {(AWIDTH){1'b0}};
+            wr_ptr <= {AWIDTH{1'b0}};
         end else begin
             state_data_write <= next_state_data_write;
             case(state_data_write)
@@ -165,7 +165,7 @@ module fifo_rx #(
                 2'd1:
                     wr_ptr <= wr_ptr;
                 2'd2:
-                    wr_ptr <= (wr_ptr + 6'd1);
+                    wr_ptr <= wr_ptr + 6'd1;
                 default:
                     wr_ptr <= wr_ptr;
             endcase
@@ -177,24 +177,24 @@ module fifo_rx #(
             f_full <= 1'b0;
             f_empty <= 1'b0;
             overflow_credit_error <= 1'b0;
-            counter <= {(AWIDTH){1'b0}};
+            counter <= {AWIDTH{1'b0}};
         end else begin
-            if ((state_data_write == 2'd2))
-                counter <= (counter + 6'd1);
+            if (state_data_write == 2'd2)
+                counter <= counter + 6'd1;
             else
-                if (((counter > 6'd0) && (state_data_read == 2'd2)))
-                    counter <= (counter - 6'd1);
+                if (counter > 6'd0 && state_data_read == 2'd2)
+                    counter <= counter - 6'd1;
                 else
                     counter <= counter;
-            if ((counter > 6'd56))
+            if (counter > 6'd56)
                 overflow_credit_error <= 1'b1;
             else
                 overflow_credit_error <= 1'b0;
-            if ((counter == 6'd56))
+            if (counter == 6'd56)
                 f_full <= 1'b1;
             else
                 f_full <= 1'b0;
-            if ((counter == 6'd0))
+            if (counter == 6'd0)
                 f_empty <= 1'b1;
             else
                 f_empty <= 1'b0;
@@ -203,14 +203,14 @@ module fifo_rx #(
     //Read pointer
     always @(posedge clock, negedge reset)
         if (!reset) begin
-            rd_ptr <= {(AWIDTH){1'b0}};
+            rd_ptr <= {AWIDTH{1'b0}};
             state_data_read <= 2'd0;
         end else begin
             state_data_read <= next_state_data_read;
             case(state_data_read)
                 2'd0:
                     if (rd_en)
-                        rd_ptr <= (rd_ptr + 6'd1);
+                        rd_ptr <= rd_ptr + 6'd1;
                     else
                         rd_ptr <= rd_ptr;
                 2'd1:

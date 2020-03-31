@@ -58,33 +58,33 @@ module uart (
             // Receive data only when rx is enabled
             if (rx_enable) begin
                 // Check if just received start of frame
-                if ((!rx_busy && !rx_d2)) begin
+                if (!rx_busy && !rx_d2) begin
                     rx_busy <= 1;
                     rx_sample_cnt <= 1;
                     rx_cnt <= 0;
                 end
                 // Start of frame detected, Proceed with rest of data
                 if (rx_busy) begin
-                    rx_sample_cnt <= (rx_sample_cnt + 1);
+                    rx_sample_cnt <= rx_sample_cnt + 1;
                     // Logic to sample at middle of data
-                    if ((rx_sample_cnt == 7))
-                        if (((rx_d2 == 1) && (rx_cnt == 0)))
+                    if (rx_sample_cnt == 7)
+                        if (rx_d2 == 1 && rx_cnt == 0)
                             rx_busy <= 0;
                         else begin
-                            rx_cnt <= (rx_cnt + 1);
+                            rx_cnt <= rx_cnt + 1;
                             // Start storing the rx data
-                            if (((rx_cnt > 0) && (rx_cnt < 9)))
-                                rx_reg[(rx_cnt - 1)] <= rx_d2;
-                            if ((rx_cnt == 9)) begin
+                            if (rx_cnt > 0 && rx_cnt < 9)
+                                rx_reg[rx_cnt - 1] <= rx_d2;
+                            if (rx_cnt == 9) begin
                                 rx_busy <= 0;
                                 // Check if End of frame received correctly
-                                if ((rx_d2 == 0))
+                                if (rx_d2 == 0)
                                     rx_frame_err <= 1;
                                 else begin
                                     rx_empty <= 0;
                                     rx_frame_err <= 0;
                                     // Check if last rx data was not unloaded,
-                                    rx_over_run <= (rx_empty) ? (0) : (1);
+                                    rx_over_run <= rx_empty ? 0 : 1;
                                 end
                             end
                         end
@@ -110,13 +110,13 @@ module uart (
                     tx_reg <= tx_data;
                     tx_empty <= 0;
                 end
-            if ((tx_enable && !tx_empty)) begin
-                tx_cnt <= (tx_cnt + 1);
-                if ((tx_cnt == 0))
+            if (tx_enable && !tx_empty) begin
+                tx_cnt <= tx_cnt + 1;
+                if (tx_cnt == 0)
                     tx_out <= 0;
-                if (((tx_cnt > 0) && (tx_cnt < 9)))
-                    tx_out <= tx_reg[(tx_cnt - 1)];
-                if ((tx_cnt == 9)) begin
+                if (tx_cnt > 0 && tx_cnt < 9)
+                    tx_out <= tx_reg[tx_cnt - 1];
+                if (tx_cnt == 9) begin
                     tx_out <= 1;
                     tx_cnt <= 0;
                     tx_empty <= 1;
