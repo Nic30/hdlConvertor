@@ -1,4 +1,3 @@
-
 from pyMathBitPrecise.array3t import Array3t, Array3val
 from pyMathBitPrecise.bits3t import Bits3t, Bits3val
 from pyMathBitPrecise.enum3t import define_Enum3t
@@ -29,7 +28,7 @@ class subunit0(BasicRtlSimModel):
             self.assig_process_b,
         )
         self._units = ()
-        sensitivity(self.assig_process_b, self.io.a, )
+        sensitivity(self.assig_process_b, self.io.a)
         self._outputs[self.assig_process_b] = (
             self.io.b,
         )
@@ -40,8 +39,6 @@ class subunit0(BasicRtlSimModel):
     def assig_process_b(self):
         self.io.b.val_next = (self.io.a.val, 0)
     
-
-
 from pyMathBitPrecise.array3t import Array3t, Array3val
 from pyMathBitPrecise.bits3t import Bits3t, Bits3val
 from pyMathBitPrecise.enum3t import define_Enum3t
@@ -106,4 +103,3 @@ class SimpleSubunit(BasicRtlSimModel):
     def assig_process_sig_subunit0_a(self):
         self.io.sig_subunit0_a.val_next = (self.io.a.val, 0)
     
-

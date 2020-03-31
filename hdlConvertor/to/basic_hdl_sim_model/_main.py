@@ -4,7 +4,7 @@ from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,
     HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
     HdlEnumDef, HdlClassDef
 from hdlConvertor.to.basic_hdl_sim_model.stm import BasicHdlSimModelStm
-from hdlConvertor.to.hdlUtils import Indent
+from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
 
 
@@ -144,7 +144,7 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                     w("sensitivity(self.")
                     w(proc.labels[0])
                     w(', ')
-                    for s in proc.sensitivity:
+                    for last, s in iter_with_last(proc.sensitivity):
                         if isinstance(s, HdlCall):
                             w("(")
                             w(str(sensitivityByOp(s.fn)))
@@ -154,7 +154,8 @@ class ToBasicHdlSimModel(BasicHdlSimModelStm):
                         else:
                             w("self.io.")
                             self.visit_iHdlExpr(s)
-                        w(", ")
+                        if not last:
+                            w(", ")
                     w(")\n")
                     w("self._outputs[self.")
                     w(proc.labels[0])
