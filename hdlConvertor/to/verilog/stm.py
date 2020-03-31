@@ -23,7 +23,24 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
-    def visit_HdlStmProcess(self, proc, is_top=False):
+    def __init__(self, out_stream):
+        super(ToVerilog2005Stm, self).__init__(out_stream)
+        self.top_stm = None
+
+    def visit_iHdlStatement(self, stm):
+        """
+        :type stm: iHdlStatement
+        """
+        if self.top_stm is None:
+            self.top_stm = stm
+            try:
+                return ToVerilog2005Expr.visit_iHdlStatement(self, stm)
+            finally:
+                self.top_stm = None
+        else:
+            return ToVerilog2005Expr.visit_iHdlStatement(self, stm)
+
+    def visit_HdlStmProcess(self, proc):
         """
         :type proc: HdlStmProcess
         """
@@ -45,16 +62,16 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 wait = None
 
             if wait is not None:
-                if is_top:
+                if self.top_stm is proc:
                     w("always ")
                 w("#")
                 assert len(wait.val) == 1
                 self.visit_iHdlExpr(wait.val[0])
             else:
-                assert is_top
+                assert self.top_stm is proc
                 w("initial")
         else:
-            if is_top:
+            if self.top_stm is proc:
                 w("always ")
             w("@(")
             for last, item in iter_with_last(sens):
@@ -137,7 +154,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         if need_semi:
             w(";")
 
-    def visit_HdlStmAssign(self, a, is_top=False):
+    def visit_HdlStmAssign(self, a):
         """
         :type a: HdlStmAssign
         :return: True if requires ;\n after end
@@ -145,7 +162,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         s = a.src
         d = a.dst
         w = self.out.write
-        if is_top:
+        if self.top_stm is a:
             w("assign ")
             self.visit_iHdlExpr(d)
             w(" = ")

@@ -1,10 +1,9 @@
+from itertools import chain
+
 from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, HdlStmForIn,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
-    HdlNamespace, HdlVariableDef, HdlFunctionDef
-from hdlConvertor.hdlAst._expr import HdlCall
-from hdlConvertor.hdlAst._structural import HdlComponentInst
-from itertools import chain
+    HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst
 
 
 class HdlAstVisitor():
@@ -35,27 +34,26 @@ class HdlAstVisitor():
         else:
             raise NotImplementedError(o)
 
-    def visit_iHdlStatement(self, stm, is_top=False):
+    def visit_iHdlStatement(self, stm):
         """
         :type o: iHdlStatement
-        :return: True if requires ;\n after end
         """
         # statement can be also expressin
         if isinstance(stm, iHdlStatement):
             self.visit_doc(stm)
 
         if isinstance(stm, HdlStmProcess):
-            return self.visit_HdlStmProcess(stm, is_top=is_top)
+            return self.visit_HdlStmProcess(stm)
         elif isinstance(stm, HdlStmIf):
             return self.visit_HdlStmIf(stm)
         elif isinstance(stm, HdlStmAssign):
-            return self.visit_HdlStmAssign(stm, is_top=is_top)
+            return self.visit_HdlStmAssign(stm)
         elif isinstance(stm, HdlStmCase):
             return self.visit_HdlStmCase(stm)
         elif isinstance(stm, HdlStmWait):
             return self.visit_HdlStmWait(stm)
         elif isinstance(stm, HdlStmReturn):
-            self.visit_return(stm)
+            return self.visit_return(stm)
         elif isinstance(stm, HdlStmFor):
             return self.visit_HdlStmFor(stm)
         elif isinstance(stm, HdlStmForIn):
@@ -65,8 +63,7 @@ class HdlAstVisitor():
         elif isinstance(stm, HdlStmBlock):
             return self.visit_HdlStmBlock(stm)
         else:
-            self.visit_iHdlExpr(stm)
-            return True
+            return self.visit_iHdlExpr(stm)
 
     def visit_HdlModuleDec(self, o):
         """
@@ -92,14 +89,18 @@ class HdlAstVisitor():
     def visit_iHdlExpr(self, o):
         """
         :type o: iHdlExpr
+        :return: iHdlExpr
         """
-        pass
+        return o
 
     def visit_HdlCall(self, o):
         """
         :type o: HdlCall
+        :return: iHdlExpr
         """
-        pass
+        for op in o.ops:
+            self.visit_iHdlExpr(op)
+        return o
 
     def visit_port(self, o):
         return self.visit_HdlVariableDef(o)
@@ -134,20 +135,20 @@ class HdlAstVisitor():
         """
         raise TypeError("does not support HdlFunctionDef", self, o)
 
-    def visit_HdlStmProcess(self, proc, is_top=False):
+    def visit_HdlStmProcess(self, proc):
         """
         :type proc: HdlStmProcess
         """
         self.visit_iHdlStatement(proc.body)
 
-    def visit_HdlStmBlock(self, o, is_top=False):
+    def visit_HdlStmBlock(self, o):
         """
         :type o: HdlStmBlock
         """
         for o in o.body:
             self.visit_iHdlStatement(o)
 
-    def visit_HdlStmCase(self, o, is_top=False):
+    def visit_HdlStmCase(self, o):
         """
         :type o: HdlStmCase
         """
@@ -158,13 +159,13 @@ class HdlAstVisitor():
         if o.default is not None:
             self.visit_iHdlStatement(o.default)
 
-    def visit_HdlStmWait(self, o, is_top=False):
+    def visit_HdlStmWait(self, o):
         """
         :type o: HdlStmWait
         """
         self.visit_iHdlExpr(o.val)
 
-    def visit_HdlStmIf(self, o, is_top=False):
+    def visit_HdlStmIf(self, o):
         """
         :type o: HdlStmIf
         """
@@ -177,7 +178,7 @@ class HdlAstVisitor():
         if o.if_false is not None:
             self.visit_iHdlStatement(o.if_false)
 
-    def visit_HdlStmFor(self, o, is_top=False):
+    def visit_HdlStmFor(self, o):
         """
         :type o: HdlStmFor
         """
@@ -186,20 +187,20 @@ class HdlAstVisitor():
         self.visit_iHdlStatement(o.step)
         self.visit_iHdlStatement(o.body)
 
-    def visit_HdlStmForIn(self, o, is_top=False):
+    def visit_HdlStmForIn(self, o):
         """
         :type o: HdlStmForIn
         """
         raise TypeError("does not support HdlStmForIn", self, o)
 
-    def visit_HdlStmWhile(self, o, is_top=False):
+    def visit_HdlStmWhile(self, o):
         """
         :type o: HdlStmWhile
         """
         self.visit_iHdlExpr(o.cond)
         self.visit_iHdlStatement(o.body)
 
-    def visit_HdlStmAssign(self, o, is_top=False):
+    def visit_HdlStmAssign(self, o):
         """
         :type o: HdlStmAssign
         """

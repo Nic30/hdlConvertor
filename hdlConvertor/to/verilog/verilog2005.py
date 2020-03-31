@@ -223,7 +223,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                     self.visit_component_instance(o)
                     w(";\n\n")
                 elif isinstance(o, iHdlStatement):
-                    need_semi = self.visit_iHdlStatement(o, is_top=True)
+                    need_semi = self.visit_iHdlStatement(o)
                     if need_semi:
                         w(";\n")
                     else:
