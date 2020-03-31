@@ -73,8 +73,8 @@ class ResolveNames(HdlAstVisitor):
             o.module_name)
         mod_name_scope = mod_name_scope.get_child(o.module_name)
         o.module_name.obj = mod_def
-        self.visit_port_param_map(ns, mod_name_scope, o.param_map)
-        self.visit_port_param_map(ns, mod_name_scope, o.port_map)
+        self.visit_port_param_map(mod_name_scope, o.param_map)
+        self.visit_port_param_map(mod_name_scope, o.port_map)
 
     def visit_iHdlExpr(self, o):
         """
