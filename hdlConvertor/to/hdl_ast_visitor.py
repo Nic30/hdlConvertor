@@ -4,6 +4,7 @@ from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, HdlStmForIn,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
     HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst
+from hdlConvertor.hdlAst._structural import HdlLibrary
 
 
 class HdlAstVisitor():
@@ -17,8 +18,16 @@ class HdlAstVisitor():
         for o in context.objs:
             if isinstance(o, HdlImport):
                 self.visit_HdlImport(o)
+            elif isinstance(o, HdlLibrary):
+                self.visit_HdlLibrary(o)
             else:
                 self.visit_main_obj(o)
+
+    def visit_HdlLibrary(self, o):
+        """
+        :type o: HdlLibrary
+        """
+        pass
 
     def visit_main_obj(self, o):
         if isinstance(o, HdlModuleDec):

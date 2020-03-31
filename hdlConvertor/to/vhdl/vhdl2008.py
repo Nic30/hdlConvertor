@@ -229,10 +229,13 @@ class ToVhdl2008(ToVhdl2008Stm):
             self.visit_body_items(o.body)
             w("END FUNCTION;\n")
 
-    def visit_library(self, o):
+    def visit_HdlLibrary(self, o):
+        """
+        :type o: HdlLibrary
+        """
         w = self.out.write
         w("LIBRARY ")
-        self.visit_iHdlExpr(o)
+        w(o.name)
         w(";\n")
 
     def visit_HdlImport(self, o):

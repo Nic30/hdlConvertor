@@ -25,14 +25,14 @@ public:
 	VhdlPackageHeaderParser(bool _hierarchyOnly);
 	std::unique_ptr<hdlObjects::HdlNamespace> visitPackage_declaration(
 			vhdlParser::Package_declarationContext *ctx);
+	void visitPackage_header(
+			vhdlParser::Package_headerContext *ctx);
 	void visitPackage_declarative_part(
 			vhdlParser::Package_declarative_partContext *ctx);
 	void visitPackage_declarative_item(
 			vhdlParser::Package_declarative_itemContext *ctx);
 	std::unique_ptr<hdlObjects::HdlModuleDec> visitComponent_declaration(
 			vhdlParser::Component_declarationContext *ctx);
-	static std::unique_ptr<hdlObjects::HdlVariableDef> visitSubtype_declaration(
-			vhdlParser::Subtype_declarationContext *ctx);
 };
 
 }

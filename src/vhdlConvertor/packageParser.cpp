@@ -39,6 +39,7 @@ std::unique_ptr<HdlNamespace> VhdlPackageParser::visitPackage_body(
 	// ;
 	p = create_object<HdlNamespace>(ctx);
 	p->name = VhdlLiteralParser::getIdentifierStr(ctx->identifier(0));
+        p->defs_only = false;
 
 	if (!hierarchyOnly) {
 		auto pbdi = ctx->package_body_declarative_item();
@@ -156,7 +157,7 @@ void VhdlPackageParser::visitPackage_body_declarative_item(
         return;
 	}
 	NotImplementedLogger::print(
-			"PackageParser.visitProcess_declarative_item", ctx);
+			"VhdlPackageParser.visitPackage_body_declarative_item", ctx);
 }
 
 }

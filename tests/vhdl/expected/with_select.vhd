@@ -1,10 +1,8 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-
 -- https://www.nandland.com/vhdl/examples/example-select.html
 ENTITY ex_select IS
 END ENTITY;
-
 ARCHITECTURE behave OF ex_select IS
     SIGNAL r_Index : integer := 2;
     SIGNAL w_One_Hot : std_logic_vector(3 DOWNTO 0);
