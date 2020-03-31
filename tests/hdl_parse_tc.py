@@ -57,7 +57,7 @@ def parseFile(fname, language, lang_dir=None):
 def _default_to_hdl(context, language, buff):
     to_hdl_cls = get_to_hdl_cls(language)
     ser = to_hdl_cls(buff)
-    ser.print_HdlContext(context)
+    ser.visit_HdlContext(context)
 
 
 class HdlParseTC(unittest.TestCase):
