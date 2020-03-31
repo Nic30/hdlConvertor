@@ -188,7 +188,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
 	if (cc) {
 		// condition_clause: UNTIL condition;
 		auto e = VhdlExprParser::visitCondition(cc->condition());
-		e = create_object<iHdlExpr>(cc, HdlOperatorType::NOT, move(e));
+		e = create_object<iHdlExpr>(cc, HdlOperatorType::NEG_LOG, move(e));
 		sens.push_back(move(e));
 	}
 

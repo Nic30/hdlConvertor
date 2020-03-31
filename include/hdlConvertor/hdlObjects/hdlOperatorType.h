@@ -5,29 +5,38 @@ namespace hdlObjects {
 
 enum HdlOperatorType {
 	RANGE, // range used in VHDL type specifications
-	REVERSE_RANGE,
+	RANGE_REVERSE, // reverse range used in VHDL type specifications
 	ACROSS,
 	THROUGH,
 	REFERENCE,
 	TOLERANCE,
-	TYPE_OF,
+	TYPE_OF, // SV type operator
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification
-	SUB, // can also be unary minus
-	ADD, // can also be unary plus
+	MINUS_UNARY,
+	PLUS_UNARY,
+	OR_UNARY, // SV or reduction (|a)
+	AND_UNARY, // SV and reduction (&a)
+	NAND_UNARY, // SV nand reduction (~&a)
+	NOR_UNARY, // SV nor reduction (~|a)
+	XOR_UNARY, // SV xor reduction (^a)
+	XNOR_UNARY, // SV and reduction (~^a) or (^~a)
+	SUB,
+	ADD,
 	DIV,
 	MUL,
-	MOD,
-	REM,
+	MOD, // modulo
+	REM, // reminder
 	CONCAT, // concatenation of signals
-	REPL_CONCAT, // replicative concatenation {<N>, <item>} duplicates and concatenates the item N times
-	POW, // bin operator power of
+	REPL_CONCAT, // replicative concatenation {<N>, <item>}
+	             //duplicates and concatenates the item N times
+	POW, // power of
 	ABS, // absolute value
-	NOT,
+	NEG_LOG, // logical negation "not" in vhdl
 	NEG, // negation
-	LOG_AND, // "and" in vhdl
-	LOG_OR,  // "or" in vhdl
+	AND_LOG, // "and" in vhdl
+	OR_LOG,  // "or" in vhdl
 	AND, // & in vhdl
 	OR,  // | in vhdl
 	NAND,
@@ -56,31 +65,32 @@ enum HdlOperatorType {
 	RISING, // rising edge/posedge event operator
 	FALLING, // falling edge/negedge event operator
 	MAP_ASSOCIATION,
-	MATCH_EQ, // VHDL-2008 matching ops (the X values are ignored while match)
-	MATCH_NEQ,
-	MATCH_LT,
-	MATCH_LE,
-	MATCH_GT,
-	MATCH_GE,
+	EQ_MATCH, // VHDL-2008 matching ops (the X values are ignored while match)
+	NEQ_MATCH,
+	LT_MATCH,
+	LE_MATCH,
+	GT_MATCH,
+	GE_MATCH,
 	INCR_PRE,
 	DECR_PRE,
 	INCR_POST,
 	DECR_POST,
     ASSIGN,
-    PLUS_ASSIGN,
-    MINUS_ASSIGN,
-    MUL_ASSIGN,
-    DIV_ASSIGN,
-    MOD_ASSIGN,
-    AND_ASSIGN,
-    OR_ASSIGN,
-    XOR_ASSIGN,
-    SHIFT_LEFT_ASSIGN,
-    SHIFT_RIGHT_ASSIGN,
-    ARITH_SHIFT_LEFT_ASSIGN,
-    ARITH_SHIFT_RIGHT_ASSIGN,
+    PLUS_ASSIGN, // +=
+    MINUS_ASSIGN, // -=
+    MUL_ASSIGN, // *=
+    DIV_ASSIGN, // /=
+    MOD_ASSIGN, // %=
+    AND_ASSIGN, // &=
+    OR_ASSIGN, // |=
+    XOR_ASSIGN, // ^=
+    SHIFT_LEFT_ASSIGN, // <<=
+    SHIFT_RIGHT_ASSIGN, // >>=
+    ARITH_SHIFT_LEFT_ASSIGN, // <<<=
+    ARITH_SHIFT_RIGHT_ASSIGN, // >>>=
 };
 
+HdlOperatorType HdlOperatorType_toUnary(HdlOperatorType o);
 const char* HdlOperatorType_toString(HdlOperatorType opt);
 
 }

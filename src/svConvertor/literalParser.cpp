@@ -147,24 +147,24 @@ HdlOperatorType VerLiteralParser::visitUnary_module_path_operator(
 	//     | XORN
 	// ;
 	if (ctx->NOT()) {
-		return HdlOperatorType::NOT;
+		return HdlOperatorType::NEG_LOG;
 	} else if (ctx->NEG()) {
 		return HdlOperatorType::NEG;
 	} else if (ctx->AMPERSAND()) {
-		return HdlOperatorType::AND;
+		return HdlOperatorType::AND_UNARY;
 	} else if (ctx->NAND()) {
-		return HdlOperatorType::NAND;
+		return HdlOperatorType::NAND_UNARY;
 	} else if (ctx->BAR()) {
-		return HdlOperatorType::OR;
+		return HdlOperatorType::OR_UNARY;
 	} else if (ctx->NOR()) {
-		return HdlOperatorType::NOR;
+		return HdlOperatorType::NOR_UNARY;
 	} else if (ctx->XOR()) {
-		return HdlOperatorType::XOR;
+		return HdlOperatorType::XOR_UNARY;
 	} else if (ctx->NXOR()) {
-		return HdlOperatorType::XNOR;
+		return HdlOperatorType::XNOR_UNARY;
 	} else {
 		assert(ctx->XORN());
-		return HdlOperatorType::XNOR;
+		return HdlOperatorType::XNOR_UNARY;
 	}
 }
 HdlOperatorType VerLiteralParser::visitUnary_operator(
@@ -175,9 +175,9 @@ HdlOperatorType VerLiteralParser::visitUnary_operator(
 	//     | unary_module_path_operator
 	// ;
 	if (ctx->PLUS()) {
-		return HdlOperatorType::ADD;
+		return HdlOperatorType::PLUS_UNARY;
 	} else if (ctx->MINUS()) {
-		return HdlOperatorType::SUB;
+		return HdlOperatorType::MINUS_UNARY;
 	} else {
 		auto umpo = ctx->unary_module_path_operator();
 		assert(umpo);

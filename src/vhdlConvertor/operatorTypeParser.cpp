@@ -30,7 +30,7 @@ hdlObjects::HdlOperatorType HdlOperatorType_from(
 }
 hdlObjects::HdlOperatorType HdlOperatorType_from(
 		vhdl_antlr::vhdlParser::Relational_operatorContext *op) {
-	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | MATCH_EQ | MATCH_NEQ | MATCH_LT | MATCH_LE | MATCH_GT | MATCH_GE;
+	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | EQ_MATCH | NEQ_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
 	using hdlObjects::HdlOperatorType;
 	if (op->EQ())
 		return HdlOperatorType::EQ;
@@ -45,18 +45,18 @@ hdlObjects::HdlOperatorType HdlOperatorType_from(
 		return HdlOperatorType::GT;
 	if (op->GE())
 		return HdlOperatorType::GE;
-	if (op->MATCH_EQ())
-		return HdlOperatorType::MATCH_EQ;
-	if (op->MATCH_NEQ())
-		return HdlOperatorType::MATCH_NEQ;
-	if (op->MATCH_LT())
-		return HdlOperatorType::MATCH_LT;
-	if (op->MATCH_LE())
-		return HdlOperatorType::MATCH_LE;
-	if (op->MATCH_GT())
-		return HdlOperatorType::MATCH_GT;
-	assert(op->MATCH_GE());
-	return HdlOperatorType::MATCH_GE;
+	if (op->EQ_MATCH())
+		return HdlOperatorType::EQ_MATCH;
+	if (op->NEQ_MATCH())
+		return HdlOperatorType::NEQ_MATCH;
+	if (op->LT_MATCH())
+		return HdlOperatorType::LT_MATCH;
+	if (op->LE_MATCH())
+		return HdlOperatorType::LE_MATCH;
+	if (op->GT_MATCH())
+		return HdlOperatorType::GT_MATCH;
+	assert(op->GE_MATCH());
+	return HdlOperatorType::GE_MATCH;
 }
 hdlObjects::HdlOperatorType HdlOperatorType_from(
 		vhdl_antlr::vhdlParser::Logical_operatorContext *op) {

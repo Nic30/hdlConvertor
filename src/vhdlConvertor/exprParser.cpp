@@ -288,7 +288,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		if (ctx->KW_ABS()) {
 			op = HdlOperatorType::ABS;
 		} else if (ctx->KW_NOT()) {
-			op = HdlOperatorType::NOT;
+			op = HdlOperatorType::NEG_LOG;
 		} else {
 			auto lo = ctx->logical_operator();
 			if (lo) {
@@ -298,6 +298,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 				assert(s);
 				op = HdlOperatorType_from(s);
 			}
+			op = HdlOperatorType_toUnary(op);
 		}
 		auto se0 = visitSimple_expression(se[0]);
 		aggregate_to_parenthesis(se0);

@@ -7,7 +7,7 @@ namespace hdlObjects {
 
 static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN + 1] = {
 		"RANGE",
-		"REVERSE_RANGE",
+		"RANGE_REVERSE",
 		"ACROSS",
 		"THROUGH",
 		"REFERENCE",
@@ -16,6 +16,14 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 		"INDEX",
 		"DOWNTO",
 		"TO",
+		"MINUS_UNARY",
+		"PLUS_UNARY",
+		"OR_UNARY",
+		"AND_UNARY",
+		"NAND_UNARY",
+		"NOR_UNARY",
+		"XOR_UNARY",
+		"XNOR_UNARY",
 		"SUB",
 		"ADD",
 		"DIV",
@@ -26,10 +34,10 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 		"REPL_CONCAT",
 		"POW",
 		"ABS",
-		"NOT",
+		"NEG_LOG",
 		"NEG",
-		"LOG_AND",
-		"LOG_OR",
+		"AND_LOG",
+		"OR_LOG",
 		"AND",
 		"OR",
 		"NAND",
@@ -58,12 +66,12 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 		"RISING",
 		"FALLING",
 		"MAP_ASSOCIATION",
-		"MATCH_EQ",
-		"MATCH_NEQ",
-		"MATCH_LT",
-		"MATCH_LE",
-		"MATCH_GT",
-		"MATCH_GE",
+		"EQ_MATCH",
+		"NEQ_MATCH",
+		"LT_MATCH",
+		"LE_MATCH",
+		"GT_MATCH",
+		"GE_MATCH",
 		"INCR_PRE",
 		"DECR_PRE",
 		"INCR_POST",
@@ -82,6 +90,30 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 	    "ARITH_SHIFT_LEFT_ASSIGN",
 	    "ARITH_SHIFT_RIGHT_ASSIGN",
 };
+
+
+HdlOperatorType HdlOperatorType_toUnary(HdlOperatorType o) {
+	switch(o) {
+	case HdlOperatorType::SUB:
+		return HdlOperatorType::MINUS_UNARY;
+	case HdlOperatorType::ADD:
+		return HdlOperatorType::PLUS_UNARY;
+	case HdlOperatorType::OR:
+		return HdlOperatorType::OR_UNARY;
+	case HdlOperatorType::AND:
+		return HdlOperatorType::AND_UNARY;
+	case HdlOperatorType::NAND:
+		return HdlOperatorType::NAND_UNARY;
+	case HdlOperatorType::NOR:
+		return HdlOperatorType::NOR_UNARY;
+	case HdlOperatorType::XOR:
+		return HdlOperatorType::XOR_UNARY;
+	case HdlOperatorType::XNOR:
+		return HdlOperatorType::XNOR;
+	default:
+		throw std::runtime_error("Invalid operator type");
+	}
+}
 
 const char* HdlOperatorType_toString(HdlOperatorType opt) {
 	if (opt > HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN)

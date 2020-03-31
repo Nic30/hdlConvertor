@@ -1085,8 +1085,8 @@ bins_selection:
 select_expression:
     LPAREN select_expression RPAREN
     | ( NOT )? select_condition
-    | select_expression ( LOG_AND
-                            | LOG_OR
+    | select_expression ( AND_LOG
+                            | OR_LOG
                         ) select_expression
     | select_expression KW_WITH LPAREN covergroup_expression RPAREN
                         ( KW_MATCHES covergroup_expression )?
@@ -1339,8 +1339,8 @@ expression:
     | expression AMPERSAND            ( attribute_instance )* expression
     | expression operator_xor         ( attribute_instance )* expression
     | expression BAR                  ( attribute_instance )* expression
-    | expression LOG_AND              ( attribute_instance )* expression
-    | expression LOG_OR               ( attribute_instance )* expression
+    | expression AND_LOG              ( attribute_instance )* expression
+    | expression OR_LOG               ( attribute_instance )* expression
     | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
     | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
     | expression operator_impl        ( attribute_instance )* expression

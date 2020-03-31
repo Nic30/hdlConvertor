@@ -170,8 +170,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 	//   | expression AMPERSAND            ( attribute_instance )* expression
 	//   | expression operator_xor         ( attribute_instance )* expression
 	//   | expression BAR                  ( attribute_instance )* expression
-	//   | expression LOG_AND              ( attribute_instance )* expression
-	//   | expression LOG_OR               ( attribute_instance )* expression
+	//   | expression AND_LOG              ( attribute_instance )* expression
+	//   | expression OR_LOG               ( attribute_instance )* expression
 	//   | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
 	//   | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
 	//   | expression operator_impl        ( attribute_instance )* expression
@@ -221,8 +221,8 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 		//   | expression AMPERSAND            ( attribute_instance )* expression
 		//   | expression operator_xor         ( attribute_instance )* expression
 		//   | expression BAR                  ( attribute_instance )* expression
-		//   | expression LOG_AND              ( attribute_instance )* expression
-		//   | expression LOG_OR               ( attribute_instance )* expression
+		//   | expression AND_LOG              ( attribute_instance )* expression
+		//   | expression OR_LOG               ( attribute_instance )* expression
 		//   | expression operator_impl        ( attribute_instance )* expression
 		auto op = HdlOperatorType::POW;
 		do {
@@ -268,14 +268,14 @@ unique_ptr<iHdlExpr> VerExprParser::visitExpression(
 				op = HdlOperatorType::OR;
 				break;
 			}
-			auto ola = ctx->LOG_AND();
+			auto ola = ctx->AND_LOG();
 			if (ola) {
-				op = HdlOperatorType::LOG_AND;
+				op = HdlOperatorType::AND_LOG;
 				break;
 			}
-			auto olo = ctx->LOG_OR();
+			auto olo = ctx->OR_LOG();
 			if (olo) {
-				op = HdlOperatorType::LOG_OR;
+				op = HdlOperatorType::OR_LOG;
 				break;
 			}
 			auto oi = ctx->operator_impl();
