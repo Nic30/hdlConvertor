@@ -6,7 +6,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/CMake_coverage.txt)
 # there are two types of distribution the all in one antlr4-complete.jar or group of antrl4 jars
 find_jar(_ANTLR_JAR_LOCATION_antlr4_complete "antlr4-complete"
 	PATHS "/usr/share/java/antlr4-complete.jar"
-		  "antlr4-complete.jar")
+		  "antlr4-complete.jar" ENV ANTLR_COMPLETE_PATH)
 if(_ANTLR_JAR_LOCATION_antlr4_complete)
 	MESSAGE(STATUS "using antlr4-complete.jar found in ${_ANTLR_JAR_LOCATION_antlr4_complete}")
 	set(ANTLR_CLASSPATH "${_ANTLR_JAR_LOCATION_antlr4_complete}")
@@ -45,7 +45,7 @@ else()
 endif()
 include_directories(${ANTLR4CPP_INCLUDE_DIRS})
 
-find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so antlr4-runtime-static.lib
+find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so libantlr4-runtime.dylib antlr4-runtime-static.lib
     HINTS "${ANTLR4CPP_ROOT}/usr/lib"
           "${ANTLR4CPP_ROOT}/lib")
 if(NOT ANTLR4CPP_LIBRARIES)
