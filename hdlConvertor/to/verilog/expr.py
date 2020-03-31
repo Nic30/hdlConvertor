@@ -10,40 +10,40 @@ class ToVerilog2005Expr(ToHdlCommon):
 
     GENERIC_BIN_OPS = {
         **ToHdlCommon.GENERIC_BIN_OPS,
-        HdlBuiltinFn.AND: "&",
-        HdlBuiltinFn.AND_LOG: "&&",
-        HdlBuiltinFn.OR: "|",
-        HdlBuiltinFn.OR_LOG: "||",
-        HdlBuiltinFn.NAND: "~&",
-        HdlBuiltinFn.NOR: "~|",
-        HdlBuiltinFn.XOR: "^",
-        HdlBuiltinFn.XNOR: "~^",
+        HdlBuiltinFn.AND: " & ",
+        HdlBuiltinFn.AND_LOG: " && ",
+        HdlBuiltinFn.OR: " | ",
+        HdlBuiltinFn.OR_LOG: " || ",
+        HdlBuiltinFn.NAND: " ~& ",
+        HdlBuiltinFn.NOR: " ~| ",
+        HdlBuiltinFn.XOR: " ^ ",
+        HdlBuiltinFn.XNOR: " ~^ ",
 
-        HdlBuiltinFn.DIV: "/",
-        HdlBuiltinFn.POW: "**",
-        HdlBuiltinFn.MOD: "%",
+        HdlBuiltinFn.DIV: " / ",
+        HdlBuiltinFn.POW: " ** ",
+        HdlBuiltinFn.MOD: " % ",
 
-        HdlBuiltinFn.EQ: '==',
-        HdlBuiltinFn.NEQ: "!=",
+        HdlBuiltinFn.EQ: ' == ',
+        HdlBuiltinFn.NEQ: " != ",
 
-        HdlBuiltinFn.SLL: "<<",
-        HdlBuiltinFn.SRL: ">>",
+        HdlBuiltinFn.SLL: " << ",
+        HdlBuiltinFn.SRL: " >> ",
 
         HdlBuiltinFn.DOWNTO: ":",
 
-        HdlBuiltinFn.ASSIGN: '=',
-        HdlBuiltinFn.PLUS_ASSIGN: '+=',
-        HdlBuiltinFn.MINUS_ASSIGN: '-=',
-        HdlBuiltinFn.MUL_ASSIGN: '*=',
-        HdlBuiltinFn.DIV_ASSIGN: '/=',
-        HdlBuiltinFn.MOD_ASSIGN: '%=',
-        HdlBuiltinFn.AND_ASSIGN: '&=',
-        HdlBuiltinFn.OR_ASSIGN: '|=',
-        HdlBuiltinFn.XOR_ASSIGN: '^=',
-        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
-        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
-        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
-        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
+        HdlBuiltinFn.ASSIGN: ' = ',
+        HdlBuiltinFn.PLUS_ASSIGN: ' += ',
+        HdlBuiltinFn.MINUS_ASSIGN: ' -= ',
+        HdlBuiltinFn.MUL_ASSIGN: ' *= ',
+        HdlBuiltinFn.DIV_ASSIGN: ' /= ',
+        HdlBuiltinFn.MOD_ASSIGN: ' %= ',
+        HdlBuiltinFn.AND_ASSIGN: ' &= ',
+        HdlBuiltinFn.OR_ASSIGN: ' |= ',
+        HdlBuiltinFn.XOR_ASSIGN: ' ^= ',
+        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: ' <<= ',
+        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: ' >>= ',
+        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
+        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: ' >>>= ',
     }
     OP_PRECEDENCE = {
         HdlBuiltinFn.INDEX: 1,
@@ -51,9 +51,6 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.CALL: 2,
         HdlBuiltinFn.TYPE_OF: 2,
         HdlBuiltinFn.PARAMETRIZATION: 2,
-
-        HdlBuiltinFn.DOWNTO: 2,
-        HdlBuiltinFn.TO: 2,
 
         **{k: 3 for k in [
             HdlBuiltinFn.NEG,
@@ -119,7 +116,8 @@ class ToVerilog2005Expr(ToHdlCommon):
             HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
             HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
         ]},
-
+        HdlBuiltinFn.DOWNTO: 16,
+        HdlBuiltinFn.TO: 16,
     }
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NEG_LOG: "!",
@@ -213,7 +211,7 @@ class ToVerilog2005Expr(ToHdlCommon):
             return
         elif op == HdlBuiltinFn.TERNARY:
             cond, v0, v1 = o.ops
-            self._visit_operand(cond, 0, o, False, False)
+            self._visit_operand(cond, 0, o, True, False)
             w(" ? ")
             self._visit_operand(v0, 1, o, False, False)
             w(" : ")
