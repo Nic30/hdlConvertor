@@ -125,7 +125,7 @@ mode DIRECTIVE_MODE;
     TIMESCALE:       'timescale'       F_WS+ -> popMode,pushMode(TIMING_SPEC_MODE);
     DEFAULT_NETTYPE: 'default_nettype' F_WS+ -> popMode,pushMode(DEFAULT_NETTYPE_MODE);
     LINE:            'line'            F_WS+ -> popMode,pushMode(LINE_MODE) ;
-    UNCONNECTED_DRIVE: 'unconnected_drive'     WS_ENDING_NEW_LINE -> popMode;
+    UNCONNECTED_DRIVE: 'unconnected_drive' ANY_WS+ ('pull0' | 'pull1') WS_ENDING_NEW_LINE -> popMode;
     NOUNCONNECTED_DRIVE: 'nounconnected_drive' WS_ENDING_NEW_LINE -> popMode;
     PROTECTED: 'protected' ANY_WS -> popMode,pushMode(PROTECTED_MODE);
     OTHER_MACRO_CALL_WITH_ARGS:  F_ID F_WS* '(' {

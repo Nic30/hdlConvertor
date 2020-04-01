@@ -8,6 +8,9 @@
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+
+#include <hdlConvertor/createObject.h>
+
 #include <string.h>
 
 namespace hdlConvertor {
@@ -186,7 +189,7 @@ std::unique_ptr<hdlObjects::HdlModuleDec> VhdlBlockDeclarationParser::visitCompo
 	//           ( port_clause )?
 	//       END COMPONENT ( identifier )? SEMI
 	// ;
-	auto e = std::make_unique<hdlObjects::HdlModuleDec>();
+	auto e = create_object<hdlObjects::HdlModuleDec>(ctx);
 	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

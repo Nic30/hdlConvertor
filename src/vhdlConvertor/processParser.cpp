@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
@@ -24,9 +25,8 @@ std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_state
 	//               ( sequential_statement )*
 	//           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 	// ;
-	auto p = std::make_unique<HdlStmProcess>();
+	auto p = create_object<HdlStmProcess>(ctx);
 	auto &stms = dynamic_cast<HdlStmBlock*>(p->body.get())->statements;
-	p->position.update_from_elem(ctx);
 	auto sl = ctx->process_sensitivity_list();
 	if (sl) {
 		p->sensitivity_list = std::make_unique<

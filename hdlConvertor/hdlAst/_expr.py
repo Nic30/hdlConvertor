@@ -81,6 +81,7 @@ class HdlBuiltinFn(Enum):
      THROUGH,
      REFERENCE,
      TOLERANCE,
+     TYPE_OF,
      INDEX,  # array index
      DOWNTO,  # downto for the slice specification
      TO,  # to for the slice specification
@@ -150,7 +151,7 @@ class HdlBuiltinFn(Enum):
      SHIFT_RIGHT_ASSIGN,
      ARITH_SHIFT_LEFT_ASSIGN,
      ARITH_SHIFT_RIGHT_ASSIGN,
-    ) = range(74)
+    ) = range(75)
     # note that in verilog bitewise operators can have only one argument
 
 

@@ -14,6 +14,8 @@
 #include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
+#include <hdlConvertor/createObject.h>
+
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -32,16 +34,39 @@ std::unique_ptr<HdlNamespace> VhdlPackageHeaderParser::visitPackage_declaration(
 	//           package_declarative_part
 	//       END ( PACKAGE )? ( identifier )? SEMI
 	// ;
-	ph = std::make_unique<HdlNamespace>();
-	ph->defs_only = true;
-	NotImplementedLogger::print(
-			"PackageHeaderParser.visitPackage_declaration - package_header",
-			ctx);
-
+	ph = create_object<HdlNamespace>(ctx);
 	ph->name = VhdlLiteralParser::getIdentifierStr(ctx->identifier(0));
-	visitPackage_declarative_part(ctx->package_declarative_part());
+	ph->defs_only = true;
+
+	if (!hierarchyOnly) {
+		auto ph_ctx = ctx->package_header();
+		if (ph_ctx)
+			visitPackage_header(ph_ctx);
+		auto pdp = ctx->package_declarative_part();
+		if (pdp)
+			visitPackage_declarative_part(pdp);
+	}
 	return std::move(ph);
 }
+
+void VhdlPackageHeaderParser::visitPackage_header(
+		vhdlParser::Package_headerContext *ctx) {
+	// package_header:
+	//       ( generic_clause
+	//       ( generic_map_aspect SEMI )? )?
+	// ;
+	auto gc = ctx->generic_clause();
+	if (gc)
+		//visitGeneric_clause(gc);
+		NotImplementedLogger::print(
+				"PackageHeaderParser.visitGeneric_clause", gc);
+	auto gma = ctx->generic_map_aspect();
+	if (gma)
+		//visitGeneric_map_aspect(gma);
+		NotImplementedLogger::print(
+				"PackageHeaderParser.visitGeneric_map_aspect", gma);
+}
+
 void VhdlPackageHeaderParser::visitPackage_declarative_part(
 		vhdlParser::Package_declarative_partContext *ctx) {
 	// package_declarative_part
@@ -54,6 +79,7 @@ void VhdlPackageHeaderParser::visitPackage_declarative_part(
 
 void VhdlPackageHeaderParser::visitPackage_declarative_item(
 		vhdlParser::Package_declarative_itemContext *ctx) {
+	// VHDL-93 syntax, maybe -- 
 	// package_declarative_item
 	// : subprogram_declaration
 	// | type_declaration
@@ -76,9 +102,7 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	// ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		auto f = VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
-				sp);
-		ph->objs.push_back(std::move(f));
+		ph->objs.push_back(VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
 		return;
 	}
 	auto sid = ctx->subprogram_instantiation_declaration();
@@ -106,6 +130,7 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	if (td) {
 		NotImplementedLogger::print("PackageHeaderParser.visitType_declaration",
 				td);
+		return;
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
@@ -141,45 +166,56 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	if (fd) {
 		NotImplementedLogger::print("PackageHeaderParser.visitFile_declaration",
 				fd);
+		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitAlias_declaration", aliasd);
+		return;
 	}
 	auto compd = ctx->component_declaration();
 	if (compd) {
 		ph->objs.push_back(visitComponent_declaration(compd));
+		return;
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitAttribute_declaration", atrd);
+		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitAttribute_specification", as);
+		return;
 	}
 	auto discs = ctx->disconnection_specification();
 	if (discs) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitDisconnection_specification", discs);
+		return;
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
 		NotImplementedLogger::print("PackageHeaderParser.visitUse_clause", uc);
+		return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitGroup_template_declaration", gtd);
+		return;
 	}
 	auto gd = ctx->group_declaration();
 	if (gd) {
 		NotImplementedLogger::print(
 				"PackageHeaderParser.visitGroup_declaration", gd);
+		return;
 	}
+	NotImplementedLogger::print(
+			"VhdlPackageHeaderParser.visitPackage_declarative_item", ctx);
 }
 std::unique_ptr<HdlModuleDec> VhdlPackageHeaderParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext *ctx) {
@@ -190,7 +226,7 @@ std::unique_ptr<HdlModuleDec> VhdlPackageHeaderParser::visitComponent_declaratio
 	//       END COMPONENT ( identifier )? SEMI
 	// ;
 
-	auto e = std::make_unique<HdlModuleDec>();
+	auto e = create_object<HdlModuleDec>(ctx);
 	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

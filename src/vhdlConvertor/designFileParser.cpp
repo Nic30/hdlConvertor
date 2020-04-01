@@ -1,6 +1,8 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlCall.h>
 #include <hdlConvertor/hdlObjects/hdlStm_others.h>
+#include <hdlConvertor/hdlObjects/hdlLibrary.h>
 #include <hdlConvertor/vhdlConvertor/archParser.h>
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
@@ -123,13 +125,27 @@ void VhdlDesignFileParser::visitContext_item(
 	// ;
 	auto l = ctx->library_clause();
 	if (l) {
-		NotImplementedLogger::print(
-				"DesignFileParser.visitContext_item - library_clause", l);
-		return; //libraries are ignored
+		visitLibrary_clause(l);
 	}
 	auto u = ctx->use_clause();
 	if (u) {
 		visitUse_clause(u, context.objs);
+	}
+}
+
+void VhdlDesignFileParser::visitLibrary_clause(
+		vhdlParser::Library_clauseContext *ctx) {
+	// library_clause: KW_LIBRARY logical_name_list SEMI;
+	// logical_name_list: identifier_list;
+	vhdlParser::Logical_name_listContext *lnl_ctx = ctx->logical_name_list();
+	if (lnl_ctx) {
+		vhdlParser::Identifier_listContext *il_ctx = lnl_ctx->identifier_list();
+		if (il_ctx) {
+			for (auto i : il_ctx->identifier()) {
+				auto v = create_object<HdlLibrary>(i, i->getText());
+				context.objs.push_back(std::move(v));
+			}
+		}
 	}
 }
 
@@ -158,9 +174,8 @@ void VhdlDesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 		auto r = VhdlReferenceParser::visitSelected_name(sn);
 		std::vector<std::unique_ptr<iHdlExpr>> ref;
 		flatten_doted_expr(move(r), ref);
-		auto imp = std::make_unique<HdlStmImport>(ref);
+		auto imp = create_object<HdlStmImport>(sn, ref);
 		res.push_back(std::move(imp));
-
 	}
 }
 

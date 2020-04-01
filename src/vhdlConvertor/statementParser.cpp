@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlStmExpr.h>
 #include <hdlConvertor/hdlObjects/hdlStm_others.h>
@@ -35,11 +36,10 @@ unique_ptr<HdlStmBlock> VhdlStatementParser::visitSequence_of_statements(
 	// sequence_of_statements
 	// : ( sequential_statement )*
 	// ;
-	auto b = make_unique<HdlStmBlock>();
+	auto b = create_object<HdlStmBlock>(ctx);
 	for (auto ss : ctx->sequential_statement()) {
 		auto st = visitSequential_statement(ss);
 		assert(st);
-		st->position.update_from_elem(ctx);
 		b->statements.push_back(move(st));
 	}
 	return b;
@@ -85,7 +85,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 
 	auto pcs = ctx->procedure_call_statement();
 	if (pcs)
-		return make_unique<HdlStmExpr>(
+		return create_object<HdlStmExpr>(ctx,
 				VhdlExprParser::visitProcedure_call_statement(pcs));
 
 	auto ifStm = ctx->if_statement();
@@ -106,7 +106,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitSequential_statement - next_statement",
 				ns);
-		return make_unique<HdlStmNop>();
+		return create_object<HdlStmNop>(ctx);
 	}
 
 	auto es = ctx->exit_statement();
@@ -115,7 +115,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 		NotImplementedLogger::print(
 				"StatementParser.visitSequential_statement - exit_statement",
 				es);
-		return make_unique<HdlStmNop>();
+		return create_object<HdlStmNop>(ctx);
 	}
 
 	auto rt = ctx->return_statement();
@@ -147,8 +147,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
 		auto e = VhdlExprParser::visitExpression(_e);
 		args.push_back(move(e));
 	}
-	auto call = iHdlExpr::call(move(fn_name), args);
-	return make_unique<HdlStmExpr>(move(call));
+	auto call = iHdlExpr::call(ctx, move(fn_name), args);
+	return create_object<HdlStmExpr>(ctx, move(call));
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
@@ -165,8 +165,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
 		auto e = VhdlExprParser::visitExpression(_e);
 		args.push_back(move(e));
 	}
-	auto c = iHdlExpr::call(move(fn_name), args);
-	return make_unique<HdlStmExpr>(move(c));
+	auto c = iHdlExpr::call(ctx, move(fn_name), args);
+	return create_object<HdlStmExpr>(ctx, move(c));
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
@@ -188,7 +188,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
 	if (cc) {
 		// condition_clause: UNTIL condition;
 		auto e = VhdlExprParser::visitCondition(cc->condition());
-		e = make_unique<iHdlExpr>(HdlOperatorType::NOT, move(e));
+		e = create_object<iHdlExpr>(cc, HdlOperatorType::NOT, move(e));
 		sens.push_back(move(e));
 	}
 
@@ -197,15 +197,15 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
 		auto e = VhdlExprParser::visitExpression(tc->expression());
 		sens.push_back(move(e));
 	}
-	return make_unique<HdlStmWait>(sens);
+	return create_object<HdlStmWait>(ctx, sens);
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitNull_statement(
-		vhdlParser::Null_statementContext*) {
+		vhdlParser::Null_statementContext* ctx) {
 	// null_statement:
 	//        NULL_SYM SEMI
 	// ;
-	return make_unique<HdlStmExpr>(iHdlExpr::null());
+	return create_object<HdlStmExpr>(ctx, iHdlExpr::null());
 }
 unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 		vhdlParser::Case_statementContext *ctx) {
@@ -240,12 +240,11 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 			}
 		}
 	}
-	auto cstm = make_unique<HdlStmCase>(move(e), alternatives, move(_default));
+	auto cstm = create_object<HdlStmCase>(ctx, move(e), alternatives, move(_default));
 	auto label = ctx->label();
 	if (label) {
 		cstm->labels.push_back(VhdlLiteralParser::visitLabel(label));
 	}
-	cstm->position.update_from_elem(ctx);
 	return cstm;
 }
 
@@ -304,7 +303,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_waveform_assignment(
 
 	auto dst = VhdlExprParser::visitTarget(ctx->target());
 	auto src = VhdlExprParser::visitWaveform(ctx->waveform());
-	return make_unique<HdlStmAssign>(move(dst), move(src), false);
+	return create_object<HdlStmAssign>(ctx, move(dst), move(src), false);
 }
 
 unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_force_assignment(
@@ -317,7 +316,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_force_assignment(
 				"StatementParser.visitSimple_force_assignment - force_mode",
 				ctx);
 
-	return make_unique<HdlStmAssign>(VhdlExprParser::visitTarget(ctx->target()),
+	return create_object<HdlStmAssign>(ctx, VhdlExprParser::visitTarget(ctx->target()),
 			VhdlExprParser::visitExpression(ctx->expression()), false);
 }
 
@@ -332,7 +331,8 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_release_assignment(
 				"StatementParser.visitSimple_release_assignment - force_mode",
 				ctx);
 
-	return make_unique<HdlStmAssign>(VhdlExprParser::visitTarget(ctx->target()),
+	return create_object<HdlStmAssign>(ctx,
+      VhdlExprParser::visitTarget(ctx->target()),
 			iHdlExpr::null(), false);
 
 }
@@ -368,7 +368,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConditional_waveform_assignm
 	auto src = VhdlExprParser::visitTarget(ctx->target());
 	auto dst = VhdlExprParser::visitConditional_waveforms(
 			ctx->conditional_waveforms());
-	return make_unique<HdlStmAssign>(move(src), move(dst), false);
+	return create_object<HdlStmAssign>(ctx, move(src), move(dst), false);
 
 }
 
@@ -387,7 +387,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConditional_force_assignment
 			"StatementParser.visitConditional_force_assignment - conditional_expression",
 			ctx);
 
-	return make_unique<HdlStmAssign>(VhdlExprParser::visitTarget(ctx->target()),
+	return create_object<HdlStmAssign>(ctx,
+      VhdlExprParser::visitTarget(ctx->target()),
 			iHdlExpr::null(), false);
 
 }
@@ -433,7 +434,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_variable_assignment(
 	//  : target VARASGN expression SEMI
 	//  ;
 
-	return make_unique<HdlStmAssign>(VhdlExprParser::visitTarget(ctx->target()),
+	return create_object<HdlStmAssign>(ctx, VhdlExprParser::visitTarget(ctx->target()),
 			VhdlExprParser::visitExpression(ctx->expression()), true);
 }
 
@@ -447,7 +448,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitConditional_variable_assignme
 			"StatementParser.visitConditional_variable_assignment - conditional_expression",
 			ctx);
 
-	return make_unique<HdlStmAssign>(VhdlExprParser::visitTarget(ctx->target()),
+	return create_object<HdlStmAssign>(ctx, VhdlExprParser::visitTarget(ctx->target()),
 			iHdlExpr::null(), true);
 }
 
@@ -461,7 +462,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSelected_variable_assignment(
 	NotImplementedLogger::print(
 			"StatementParser.visitSelected_variable_assignments", ctx);
 
-	return make_unique<HdlStmAssign>(
+	return create_object<HdlStmAssign>(ctx,
 			VhdlExprParser::visitExpression(ctx->expression()),
 			iHdlExpr::null(), true);
 }
@@ -499,9 +500,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitIf_statement(
 	if (sIt != s.end()) {
 		ifFalse = visitSequence_of_statements(*sIt);
 	}
-	ifStm = make_unique<HdlStmIf>(move(cond), move(ifTrue), elseIfs,
+	ifStm = create_object<HdlStmIf>(ctx, move(cond), move(ifTrue), elseIfs,
 			move(ifFalse));
-	ifStm->position.update_from_elem(ctx);
 	auto label = ctx->label();
 	if (label) {
 		ifStm->labels.push_back(VhdlLiteralParser::visitLabel(label));
@@ -516,9 +516,9 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitReturn_statement(
 	// ;
 	auto e = ctx->expression();
 	if (e) {
-		return make_unique<HdlStmReturn>(VhdlExprParser::visitExpression(e));
+		return create_object<HdlStmReturn>(ctx, VhdlExprParser::visitExpression(e));
 	} else {
-		return make_unique<HdlStmReturn>();
+		return create_object<HdlStmReturn>(ctx);
 	}
 }
 
@@ -541,20 +541,19 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitLoop_statement(
 			auto c = VhdlExprParser::visitCondition(is->condition());
 			auto body = visitSequence_of_statements(
 					ctx->sequence_of_statements());
-			loop = make_unique<HdlStmWhile>(move(c), move(body));
+			loop = create_object<HdlStmWhile>(ctx, move(c), move(body));
 		} else {
 			auto args = visitParameter_specification(
 					is->parameter_specification());
 			auto stms = visitSequence_of_statements(
 					ctx->sequence_of_statements());
-			loop = make_unique<HdlStmForIn>(move(args.first), move(args.second),
+			loop = create_object<HdlStmForIn>(ctx, move(args.first), move(args.second),
 					move(stms));
 		}
 	} else {
-		loop = make_unique<HdlStmWhile>(iHdlExpr::ID("True"),
+		loop = create_object<HdlStmWhile>(ctx, iHdlExpr::ID("True"),
 				visitSequence_of_statements(ctx->sequence_of_statements()));
 	}
-	loop->position.update_from_elem(ctx);
 
 	auto label = ctx->label();
 	if (label) {
@@ -596,7 +595,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSelected_waveforms(
 				// so dst instance is not shared between statements
 				dst = make_unique<iHdlExpr>(*dst_tmp);
 			}
-			auto assig = make_unique<HdlStmAssign>(move(dst), move(wf_expr),
+			auto assig = create_object<HdlStmAssign>(_choices, move(dst), move(wf_expr),
 					is_blocking);
 			if (is_others(c)) {
 				default_ = move(assig);
@@ -607,7 +606,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSelected_waveforms(
 		++wf;
 	}
 
-	return make_unique<HdlStmCase>(move(sel), cases, move(default_));
+	return create_object<HdlStmCase>(ctx, move(sel), cases, move(default_));
 }
 unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_selected_signal_assignment(
 		vhdlParser::Concurrent_selected_signal_assignmentContext *ctx) {
@@ -687,7 +686,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_signal_assignment
 		assert(cwf);
 		src = VhdlExprParser::visitConditional_waveforms(cwf);
 	}
-	return make_unique<HdlStmAssign>(move(dst), move(src), false);
+	return create_object<HdlStmAssign>(t, move(dst), move(src), false);
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_statement_with_optional_label(

@@ -44,7 +44,7 @@ class BasicTC(unittest.TestCase):
         buff = StringIO()
         # import sys
         # buff = sys.stdout
-        if language == VERILOG:
+        if language == VERILOG or language == SV:
             ser = ToVerilog(buff)
         elif language == VHDL:
             ser = ToVhdl(buff)

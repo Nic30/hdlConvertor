@@ -1,5 +1,6 @@
 #include <hdlConvertor/svConvertor/programParser.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
 #include <hdlConvertor/svConvertor/typeParser.h>
@@ -88,7 +89,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declara
 		name = VerExprParser::getIdentifierStr(ids[0]);
 	}
 	auto params = make_unique<std::vector<unique_ptr<HdlVariableDef>>>();
-	auto f = make_unique<HdlFunctionDef>(name, false, move(return_t),
+	auto f = create_object<HdlFunctionDef>(ctx, name, false, move(return_t),
 			move(params));
 	f->is_static = is_static;
 	f->is_task = is_task;

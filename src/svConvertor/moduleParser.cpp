@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/conversion_exception.h>
 #include <hdlConvertor/hdlObjects/hdlStm_others.h>
@@ -63,7 +64,8 @@ void VerModuleParser::visitModule_declaration(
 	//      KW_ENDMODULE ( COLON identifier | {_input->LA(1) != COLON}? )
 	// ;
 	auto mhc = ctx->module_header_common();
-	auto ent = make_unique<HdlModuleDec>();
+	auto ent = create_object<HdlModuleDec>(ctx);
+
 	ModuleCtx m_ctx(*ent);
 	visitModule_header_common(mhc, *ent);
 
@@ -76,7 +78,7 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			auto p = make_unique<HdlVariableDef>(".*", iHdlExpr::all(),
+			auto p = create_object<HdlVariableDef>(ctx, ".*", iHdlExpr::all(),
 					nullptr);
 			ent->ports.push_back(move(p));
 		}
@@ -96,7 +98,7 @@ void VerModuleParser::visitModule_declaration(
 		return;
 	}
 
-	auto arch = make_unique<HdlModuleDef>();
+	auto arch = create_object<HdlModuleDef>(ctx);
 	m_ctx.arch = arch.get();
 	auto tid = ctx->timeunits_declaration();
 	if (tid) {
@@ -253,7 +255,7 @@ void VerModuleParser::visitModule_item_item(
 	}
 	{
 		if (ctx->SEMI()) {
-			res_stm.push_back(make_unique<HdlStmNop>());
+			res_stm.push_back(create_object<HdlStmNop>(ctx));
 			return;
 		}
 	}
@@ -522,10 +524,6 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 			iHdlObj *_last = objs[prev_size].get();
 			auto wd = dynamic_cast<WithDoc*>(_last);
 			wd->__doc__ = doc + wd->__doc__;
-			auto wp = dynamic_cast<WithPos*>(_last);
-			if (wp) {
-				wp->position.update_from_elem(ctx);
-			}
 		}
 		return;
 	}
@@ -550,7 +548,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	auto id = ctx->interface_declaration();
 	if (id) {
 		NotImplementedLogger::print(
-				"ModuleParser.module_item.interface_declaration", pd);
+				"ModuleParser.module_item.interface_declaration", id);
 		return;
 	}
 	auto td = ctx->timeunits_declaration();
@@ -698,7 +696,7 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		}
 		auto uds = nd->unpacked_dimension();
 		t = tp.applyUnpacked_dimension(move(t), uds);
-		auto v = make_unique<HdlVariableDef>(id, move(t), move(def_val));
+		auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
 		if (first) {
 			first = false;
 		}

@@ -5,6 +5,7 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
+#include <hdlConvertor/createObject.h>
 #include <assert.h>
 
 namespace hdlConvertor {
@@ -35,11 +36,8 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAssociation_element(
 	auto ap = visitActual_part(_ap);
 	auto fp = ctx->formal_part();
 	if (fp) {
-		auto vfp = std::make_unique<iHdlExpr>(visitFormal_part(fp), ARROW, move(ap));
-		vfp->position.update_from_elem(ctx);
-		return vfp;
+		return create_object<iHdlExpr>(ctx, visitFormal_part(fp), ARROW, move(ap));
 	}
-	ap->position.update_from_elem(ctx);
 	return ap;
 }
 
@@ -58,7 +56,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitFormal_part(
 	if (names.size() > 1) {
 		std::vector<std::unique_ptr<iHdlExpr>> args;
 		args.push_back(VhdlReferenceParser::visitName(names[1]));
-		return iHdlExpr::call(move(id), args);
+		return iHdlExpr::call(ctx, move(id), args);
 	} else {
 		return id;
 	}
@@ -75,7 +73,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitExplicit_range(
 	} else {
 		op = TO;
 	}
-	return std::make_unique<iHdlExpr>(
+	return create_object<iHdlExpr>(ctx,
 			visitSimple_expression(ctx->simple_expression(0)), op,
 			visitSimple_expression(ctx->simple_expression(1)));
 }
@@ -93,7 +91,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitRange(
 	auto a = visitSimple_expression(se[0]);
 	auto o = visitDirection(ctx->direction());
 	auto b = visitSimple_expression(se[1]);
-	return std::make_unique<iHdlExpr>(std::move(a), o, std::move(b));
+	return create_object<iHdlExpr>(ctx, std::move(a), o, std::move(b));
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitActual_part(
@@ -109,7 +107,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitActual_part(
 	if (name) {
 		std::vector<std::unique_ptr<iHdlExpr>> ops;
 		ops.push_back(move(ad));
-		return iHdlExpr::call(VhdlReferenceParser::visitName(name), ops);
+		return iHdlExpr::call(ctx, VhdlReferenceParser::visitName(name), ops);
 	}
 	return ad;
 }
@@ -201,8 +199,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitConstraint(
 		}
 	}
 
-	return std::make_unique<iHdlExpr>(std::move(selectedName), op, std::move(op1));
-
+	return create_object<iHdlExpr>(ctx, std::move(selectedName), op, std::move(op1));
 }
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitArray_constraint(
 		vhdlParser::Array_constraintContext *ctx) {
@@ -273,7 +270,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		auto p0 = visitPrimary(_primary[0]);
 		auto p1 = visitPrimary(_primary[1]);
 		assert(ctx->DOUBLESTAR());
-		return std::make_unique<iHdlExpr>(move(p0), HdlOperatorType::POW, move(p1));
+		return create_object<iHdlExpr>(ctx, move(p0), HdlOperatorType::POW, move(p1));
 	}
 	auto se = ctx->simple_expression();
 	HdlOperatorType op;
@@ -293,7 +290,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 			}
 		}
 		auto se0 = visitSimple_expression(se[0]);
-		return std::make_unique<iHdlExpr>(op, move(se0));
+		return create_object<iHdlExpr>(ctx, op, move(se0));
 	} else {
 		assert(se.size() == 2);
 		auto mo = ctx->multiplying_operator();
@@ -307,7 +304,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 
 		auto se0 = visitSimple_expression(se[0]);
 		auto se1 = visitSimple_expression(se[1]);
-		return std::make_unique<iHdlExpr>(std::move(se0), op, std::move(se1));
+		return create_object<iHdlExpr>(ctx, std::move(se0), op, std::move(se1));
 	}
 }
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitExpression(
@@ -350,8 +347,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitExpression(
 			op = HdlOperatorType_from(lo);
 		}
 	}
-	return std::make_unique<iHdlExpr>(std::move(op0), op, std::move(op1));
-
+	return create_object<iHdlExpr>(ctx, std::move(op0), op, std::move(op1));
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitPrimary(
@@ -373,7 +369,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitPrimary(
 
 	auto bsl = ctx->BIT_STRING_LITERAL();
 	if (bsl) {
-		return VhdlLiteralParser::visitBIT_STRING_LITERAL(bsl->getText());
+		return VhdlLiteralParser::visitBIT_STRING_LITERAL(bsl, bsl->getText());
 	}
 	auto al = ctx->allocator();
 	if (al)
@@ -396,7 +392,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitQualified_expression(
 	auto tm = visitType_mark(_tm);
 	auto a = ctx->aggregate();
 	auto e = visitAggregate(a);
-	return std::make_unique<iHdlExpr>(std::move(tm), HdlOperatorType::APOSTROPHE, std::move(e));
+	return create_object<iHdlExpr>(ctx, std::move(tm), HdlOperatorType::APOSTROPHE, std::move(e));
 }
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitAllocator(
 		vhdlParser::AllocatorContext *ctx) {
@@ -412,7 +408,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAllocator(
 		auto si = ctx->subtype_indication();
 		e = visitSubtype_indication(si);
 	}
-	return std::make_unique<iHdlExpr>(std::move(n), HdlOperatorType::CALL, std::move(e));
+	return create_object<iHdlExpr>(ctx, std::move(n), HdlOperatorType::CALL, std::move(e));
 
 }
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitAggregate(
@@ -425,7 +421,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAggregate(
 		auto e = visitElement_association(elm);
 		elements.push_back(move(e));
 	}
-	std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(elements);
+	std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
 
 	return arr;
 }
@@ -445,7 +441,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitElement_association(
 					_c);
 		}
 		assert(ch.size());
-		return std::make_unique<iHdlExpr>(std::move(ch[0]),
+		return create_object<iHdlExpr>(ctx, std::move(ch[0]),
 				HdlOperatorType::MAP_ASSOCIATION, std::move(e));
 	}
 	return e;
@@ -482,7 +478,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitWaveform(
 	auto top = visitWaveform_element(*weIt);
 	++weIt;
 	while (weIt != we.end()) {
-		top = std::make_unique<iHdlExpr>(move(top), DOT,
+		top = create_object<iHdlExpr>(ctx, move(top), DOT,
 				visitWaveform_element(*weIt));
 		++weIt;
 	}
@@ -521,7 +517,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitConditional_waveforms(
 			}
 		}
 		auto c_expr = visitCondition(*c);
-		res = iHdlExpr::ternary(move(c_expr), move(w_expr), move(res));
+		res = iHdlExpr::ternary(*w, move(c_expr), move(w_expr), move(res));
 		c++;
 	}
 	return res;
@@ -590,7 +586,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitProcedure_call(
 
 	if (c == nullptr || c->op != HdlOperatorType::CALL) {
 		std::vector<std::unique_ptr<iHdlExpr>> args;
-		return iHdlExpr::call(move(fnCall), args);
+		return iHdlExpr::call(ctx, move(fnCall), args);
 	}
 	return fnCall;
 }

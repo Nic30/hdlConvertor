@@ -1,3 +1,4 @@
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
 #include <hdlConvertor/hdlObjects/hdlStmFor.h>
@@ -66,14 +67,13 @@ std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitFor_generate_st
 	auto args = VhdlStatementParser::visitParameter_specification(
 			ctx->parameter_specification());
 	auto objs = visitGenerate_statement_body(ctx->generate_statement_body());
-	auto fstm = std::make_unique<HdlStmForIn>(move(args.first),
+	auto fstm = create_object<HdlStmForIn>(ctx, move(args.first),
 			move(args.second), move(objs));
 	auto label = ctx->label();
 	if (label) {
 		auto l = VhdlLiteralParser::visitLabel(label);
 		fstm->labels.push_back(l);
 	}
-	fstm->position.update_from_elem(ctx);
 	fstm->in_preproc = true;
 	return fstm;
 }
@@ -114,9 +114,8 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 		ifFalse = visitGenerate_statement_body(*sIt);
 	}
 
-	ifStm = std::make_unique<HdlStmIf>(move(cond), move(ifTrue), elseIfs,
+	ifStm = create_object<HdlStmIf>(ctx, move(cond), move(ifTrue), elseIfs,
 			move(ifFalse));
-	ifStm->position.update_from_elem(ctx);
 	auto labels = ctx->label();
 	if (labels.size()) {
 		ifStm->labels.push_back(VhdlLiteralParser::visitLabel(labels[0]));
@@ -163,9 +162,8 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 			}
 		}
 	}
-	auto cstm = make_unique<HdlStmCase>(move(e), alternatives, move(_default));
+	auto cstm = create_object<HdlStmCase>(ctx, move(e), alternatives, move(_default));
 	cstm->in_preproc = true;
-	cstm->position.update_from_elem(ctx);
 	return cstm;
 }
 
@@ -179,7 +177,7 @@ std::unique_ptr<hdlObjects::HdlStmBlock> VhdlGenerateStatementParser::visitGener
 	//      )
 	//      | ( concurrent_statement )*
 	// ;
-	auto b = make_unique<HdlStmBlock>();
+	auto b = create_object<HdlStmBlock>(ctx);
 	auto bdis = ctx->block_declarative_item();
 	if (bdis.size()) {
 		VhdlBlockDeclarationParser _bdp(hierarchyOnly);

@@ -1,5 +1,6 @@
 #include <hdlConvertor/svConvertor/typeParser.h>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
 #include <hdlConvertor/svConvertor/utils.h>
@@ -23,14 +24,17 @@ unique_ptr<iHdlExpr> VerTypeParser::visitType_reference(
 	//         | data_type
 	//     ) RPAREN
 	// ;
+	unique_ptr<iHdlExpr> res = nullptr;
 	auto e = ctx->expression();
 	if (e) {
 		VerExprParser ep(commentParser);
-		return ep.visitExpression(e);
+		res = ep.visitExpression(e);
+	} else {
+		auto dt = ctx->data_type();
+		assert(dt);
+		res = visitData_type(dt);
 	}
-	auto dt = ctx->data_type();
-	assert(dt);
-	return visitData_type(dt);
+	return create_object<iHdlExpr>(ctx, HdlOperatorType::TYPE_OF, move(res));
 }
 
 unique_ptr<iHdlExpr> VerTypeParser::visitInteger_type(
@@ -92,10 +96,10 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type_primitive(
 		if (sig && visitSigning(sig)) {
 			vector<unique_ptr<iHdlExpr>> args;
 			args.push_back(
-					make_unique<iHdlExpr>(iHdlExpr::ID("signed"),
+					create_object<iHdlExpr>(ctx, iHdlExpr::ID("signed"),
 							HdlOperatorType::MAP_ASSOCIATION,
-							iHdlExpr::INT(1)));
-			t = iHdlExpr::parametrization(move(t), args);
+							iHdlExpr::INT(nullptr, 1)));
+			t = iHdlExpr::parametrization(ctx, move(t), args);
 		}
 		return t;
 	} else {
@@ -136,11 +140,11 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 		auto pva = ctx->parameter_value_assignment();
 		if (pva) {
 			auto p = ep.visitParameter_value_assignment(pva);
-			t = iHdlExpr::parametrization(move(t), p);
+			t = iHdlExpr::parametrization(ctx, move(t), p);
 		}
 		if (ids.size() == 2) {
 			auto id = ep.visitIdentifier(ids[1]);
-			t = make_unique<iHdlExpr>(move(t), HdlOperatorType::DOT, move(id));
+			t = create_object<iHdlExpr>(ids[1], move(t), HdlOperatorType::DOT, move(id));
 		} else {
 			assert(ids.size() == 1);
 		}
@@ -149,6 +153,10 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 
 	if (ctx->KW_EVENT())
 		return iHdlExpr::ID("event");
+	auto _tr = ctx->type_reference();
+	if (_tr) {
+		return visitType_reference(_tr);
+	}
 
 	auto dtp = ctx->data_type_primitive();
 	unique_ptr<iHdlExpr> t = nullptr;
@@ -164,6 +172,7 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 	} else {
 		VerExprParser ep(commentParser);
 		auto _p = ctx->package_or_class_scoped_path();
+		assert(_p);
 		t = ep.visitPackage_or_class_scoped_path(_p);
 	}
 	VerTypeParser tp(commentParser);
@@ -173,7 +182,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 }
 
 unique_ptr<iHdlExpr> VerTypeParser::visitData_type_or_implicit(
-		sv2017Parser::Data_type_or_implicitContext *ctx, unique_ptr<iHdlExpr> net_type) {
+		sv2017Parser::Data_type_or_implicitContext *ctx,
+		unique_ptr<iHdlExpr> net_type) {
 	// data_type_or_implicit:
 	//     data_type
 	//     | implicit_data_type
@@ -201,7 +211,7 @@ unique_ptr<iHdlExpr> VerTypeParser::applyUnpacked_dimension(
 		vector<sv2017Parser::Unpacked_dimensionContext*> &uds) {
 	for (auto _ud : uds) {
 		auto ud = visitUnpacked_dimension(_ud);
-		base_expr = make_unique<iHdlExpr>(move(base_expr),
+		base_expr = create_object<iHdlExpr>(_ud, move(base_expr),
 				HdlOperatorType::INDEX, move(ud));
 	}
 	return base_expr;
@@ -261,14 +271,14 @@ unique_ptr<iHdlExpr> VerTypeParser::visitImplicit_data_type(
 	auto it = pds.begin();
 	if (it != pds.end()) {
 		auto r0 = visitPacked_dimension(*it);
-		e = Utils::mkWireT(move(net_type), move(r0), is_signed);
+		e = Utils::mkWireT(*it, move(net_type), move(r0), is_signed);
 		++it;
 	} else {
-		e = Utils::mkWireT(iHdlExpr::null(), is_signed);
+		e = Utils::mkWireT(nullptr, iHdlExpr::null(), is_signed);
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = make_unique<iHdlExpr>(move(e), HdlOperatorType::INDEX, move(pd));
+		e = create_object<iHdlExpr>(*it, move(e), HdlOperatorType::INDEX, move(pd));
 	}
 	return e;
 }
@@ -300,7 +310,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
 			index = iHdlExpr::null();
 		}
 	}
-	return make_unique<iHdlExpr>(move(selected_name), HdlOperatorType::INDEX, move(index));
+	return create_object<iHdlExpr>(ctx, move(selected_name), HdlOperatorType::INDEX,
+			move(index));
 }
 unique_ptr<iHdlExpr> VerTypeParser::visitNet_type(
 		sv2017Parser::Net_typeContext *ctx) {

@@ -142,6 +142,7 @@ KW_ENDPROPERTY:
 KW_ENDSEQUENCE:
  'endsequence' {language_version >= hdlConvertor::Language::SV2005}?;
 KW_ENDSPECIFY: 'endspecify';
+KW_ENDTABLE: 'endtable';
 KW_ENDTASK: 'endtask';
 KW_ENUM:
  'enum' {language_version >= hdlConvertor::Language::SV2005}?;
@@ -191,6 +192,8 @@ KW_IMPLIES:
  'implies' {language_version >= hdlConvertor::Language::SV2009}?;
 KW_IMPORT:
  'import' {language_version >= hdlConvertor::Language::SV2005}?;
+KW_INCDIR: 'incdir' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
+KW_INCLUDE: 'include' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
 KW_INITIAL: 'initial';
 KW_INOUT: 'inout';
 KW_INPUT: 'input';
@@ -215,6 +218,7 @@ KW_JOIN_NONE:
 KW_LARGE: 'large';
 KW_LET:
  'let' {language_version >= hdlConvertor::Language::SV2009}?;
+KW_LIBRARY: 'library' {language_version >= hdlConvertor::Language::SV2005}?; // used only in sv library file
 KW_LIBLIST:
  'liblist' {language_version >= hdlConvertor::Language::VERILOG2001}?;
 KW_LOCAL:
@@ -635,7 +639,7 @@ fragment ANY_ASCII_CHARACTERS:
 fragment ANY_PRINTABLE_ASCII_CHARACTER_EXCEPT_WHITE_SPACE: '\u0021'..'\u007E';
 
 mode TABLE_MODE;
-    KW_ENDTABLE: 'endtable' -> popMode;
+    TABLE_MODE_KW_ENDTABLE: KW_ENDTABLE -> popMode,type(KW_ENDTABLE);
     LEVEL_SYMBOL:
         QUESTIONMARK 
         | [01xXbB] 

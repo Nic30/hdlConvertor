@@ -3,6 +3,7 @@
 #include <string.h>
 #include <algorithm>
 
+#include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
@@ -14,7 +15,7 @@ using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitBIT_STRING_LITERAL(
-		const std::string &_s) {
+		TerminalNode *ctx, const std::string &_s) {
 	std::string s = _s;
 	std::size_t fdRadix = s.find('"') - 1;
 	std::transform(s.begin(), s.end(), s.begin(), ::tolower);
@@ -52,7 +53,7 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitBIT_STRING_LITERAL(
 		bits = strlen(strVal) * bitRatio;
 	}
 
-	return iHdlExpr::INT(strVal, bits, radix);
+	return iHdlExpr::INT(ctx, strVal, bits, radix);
 }
 
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitNumeric_literal(
@@ -70,7 +71,7 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitNumeric_literal(
 	if (_dl) {
 		auto dl = visitDECIMAL_LITERAL(_dl);
 		if (name) {
-			return std::make_unique<iHdlExpr>(move(dl), HdlOperatorType::MUL,
+			return create_object<iHdlExpr>(ctx, move(dl), HdlOperatorType::MUL,
 					move(name));
 		} else {
 			return dl;
@@ -80,7 +81,7 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitNumeric_literal(
 	if (_bl) {
 		auto bl = visitBASED_LITERAL(_bl);
 		if (name) {
-			return std::make_unique<iHdlExpr>(move(bl), HdlOperatorType::MUL,
+			return create_object<iHdlExpr>(_bl, move(bl), HdlOperatorType::MUL,
 					move(name));
 		} else {
 			return bl;
@@ -97,17 +98,17 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitPhysical_literal(
 	auto _dl = ctx->DECIMAL_LITERAL();
 	if (_dl) {
 		auto dl = visitDECIMAL_LITERAL(_dl);
-		return std::make_unique<iHdlExpr>(std::move(dl), HdlOperatorType::MUL, std::move(name));
+		return create_object<iHdlExpr>(_dl, std::move(dl), HdlOperatorType::MUL, std::move(name));
 	}
 	auto _bl = ctx->BASED_LITERAL();
 	if (_bl) {
 		auto bl = visitBASED_LITERAL(_bl);
-		return std::make_unique<iHdlExpr>(std::move(bl), HdlOperatorType::MUL, std::move(name));
+		return create_object<iHdlExpr>(_bl, std::move(bl), HdlOperatorType::MUL, std::move(name));
 	}
 	return name;
 }
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitDECIMAL_LITERAL(
-		antlr4::tree::TerminalNode *ctx) {
+		TerminalNode *ctx) {
 	// decimal_literal: integer ( DOT integer )? ( exponent )?;
 	auto n = ctx->getText();
 	bool is_float = false;
@@ -118,14 +119,14 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitDECIMAL_LITERAL(
 		}
 	}
 	if (is_float)
-		return iHdlExpr::FLOAT(atof(n.c_str()));
+		return iHdlExpr::FLOAT(ctx, atof(n.c_str()));
 	else {
 		auto _n = atoi(n.c_str());
-		return iHdlExpr::INT(_n);
+		return iHdlExpr::INT(ctx, _n);
 	}
 }
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitBASED_LITERAL(
-		antlr4::tree::TerminalNode *ctx) {
+		TerminalNode *ctx) {
 	// BASED_LITERAL:
 	//       BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
 	// ;
@@ -154,7 +155,7 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitBASED_LITERAL(
 		NotImplementedLogger::print(
 				"LiteralParser.visitBased_literal - EXPONENT", ctx);
 	}
-	return std::make_unique<iHdlExpr>(val);
+	return create_object<iHdlExpr>(ctx, val);
 }
 
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitEnumeration_literal(
@@ -165,12 +166,12 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitEnumeration_literal(
 		return visitIdentifier(id);
 
 	auto _cl = ctx->CHARACTER_LITERAL()->getText();
-	auto cl = visitCHARACTER_LITERAL(_cl);
+	auto cl = visitCHARACTER_LITERAL(ctx->CHARACTER_LITERAL(), _cl);
 	dynamic_cast<HdlValue*>(cl->data)->bits = 8;
 	return cl;
 }
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitSTRING_LITERAL(
-		const std::string &ctx) {
+		TerminalNode *n, const std::string &ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
 	auto replace_all = [](std::string &data, const std::string &to_search,
 			const std::string &replace_str) {
@@ -181,11 +182,11 @@ std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitSTRING_LITERAL(
 		}
 	};
 	replace_all(str, "\"\"", "\"");
-	return iHdlExpr::STR(str);
+	return iHdlExpr::STR(n, str);
 }
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitCHARACTER_LITERAL(
-		const std::string &ctx) {
-	return iHdlExpr::INT(ctx.substr(1, 1), BigInteger::CHAR_BASE);
+		TerminalNode *n, const std::string &ctx) {
+	return iHdlExpr::INT(n, ctx.substr(1, 1), BigInteger::CHAR_BASE);
 }
 std::unique_ptr<iHdlExpr> VhdlLiteralParser::visitIdentifier(
 		vhdlParser::IdentifierContext *ctx) {

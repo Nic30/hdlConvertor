@@ -332,6 +332,11 @@ class ToVerilog():
                         w(", ")
                 w(")")
                 return
+            elif op == HdlBuiltinFn.TYPE_OF:
+                w("type(")
+                pe(o.ops[0])
+                w(")")
+                return
             else:
                 raise NotImplementedError(op)
         elif expr is HdlAll:
@@ -354,8 +359,9 @@ class ToVerilog():
         t, array_dims = collect_array_dims(t)
         wire_params = get_wire_t_params(t)
         if wire_params is None:
-            op = t if isinstance(t, HdlCall) else None
-            if op is None:
+            if t != HdlTypeAuto:
+                if isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.TYPE_OF:
+                    w("var ")
                 self.print_expr(t)
         else:
             base_t, width, is_signed, _ = wire_params
@@ -364,7 +370,7 @@ class ToVerilog():
                 # 1D vector
                 w("[")
                 if is_signed:
-                    raise NotImplementedError(op)
+                    raise NotImplementedError(t)
                 self.print_expr(width)
                 w("]")
         return len(array_dims) > 0
