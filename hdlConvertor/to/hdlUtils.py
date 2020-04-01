@@ -1,7 +1,7 @@
 import sys
 
 
-class Indent():
+class Indent(object):
     """
     indentation context
     """

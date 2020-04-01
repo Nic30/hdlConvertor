@@ -7,7 +7,7 @@ from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
 from hdlConvertor.hdlAst._structural import HdlLibrary
 
 
-class HdlAstVisitor():
+class HdlAstVisitor(object):
     def visit_doc(self, o):
         pass
 
