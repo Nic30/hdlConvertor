@@ -3,7 +3,6 @@ from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
 from hdlConvertor.to.common import ToHdlCommon
 from hdlConvertor.to.hdlUtils import is_str, iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn
 
 
 class ToVerilog2005Expr(ToHdlCommon):
