@@ -33,25 +33,6 @@ class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
         self.is_virtual = False  # type: bool
         self.direction = None  # type: HdlDirection
 
-    def __repr__(self):
-        t_str = []
-        if self.is_const:
-            t_str.append("const")
-        if self.is_static:
-            t_str.append("static")
-        if self.is_virtual:
-            t_str.append("virtual")
-        if self.is_latched:
-            t_str.append("reg")
-        if self.direction is not None:
-            t_str.append(repr(self.direction))
-        t_str = "".join(t_str)
-        if self.value is None:
-            v_str = ""
-        else:
-            v_str = " = %s" % (repr(self.value))
-        return "<%s %s%s>" % (self.__class__.__name__, t_str, v_str)
-
 
 class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     """
