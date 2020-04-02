@@ -2,7 +2,7 @@ from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.hdlAst._statements import HdlImport
 from hdlConvertor.hdlAst._structural import HdlLibrary
 from hdlConvertor.hdlAst._expr import HdlDirection, HdlName, HdlIntValue,\
-    HdlCall, HdlAll, HdlTypeAuto
+    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
 from hdlConvertor.to.hdlUtils import is_str
 
 
@@ -298,7 +298,10 @@ class ToJson(HdlAstVisitor):
             d = self.visit_HdlIntValue(o)
         elif isinstance(o, HdlCall):
             d = self.visit_HdlCall(o)
-        elif o is HdlAll or o is HdlTypeAuto:
+        elif o is HdlAll or\
+                o is HdlTypeAuto or\
+                o is HdlOthers or\
+                o is HdlTypeType:
             d = {
                 "__class__": o.__class__.__name__,
             }
