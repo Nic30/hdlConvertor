@@ -5,6 +5,7 @@ from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
     HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst
 from hdlConvertor.hdlAst._structural import HdlLibrary
+from hdlConvertor.hdlAst._statements import HdlStmBreak, HdlStmContinue
 
 
 class HdlAstVisitor(object):
@@ -66,7 +67,11 @@ class HdlAstVisitor(object):
         elif isinstance(stm, HdlStmWait):
             return self.visit_HdlStmWait(stm)
         elif isinstance(stm, HdlStmReturn):
-            return self.visit_return(stm)
+            return self.visit_HdlStmReturn(stm)
+        elif isinstance(stm, HdlStmBreak):
+            return self.visit_HdlStmBreak(stm)
+        elif isinstance(stm, HdlStmContinue):
+            return self.visit_HdlStmContinue(stm)
         elif isinstance(stm, HdlStmFor):
             return self.visit_HdlStmFor(stm)
         elif isinstance(stm, HdlStmForIn):
@@ -142,11 +147,16 @@ class HdlAstVisitor(object):
         for pm in chain(o.param_map, o.port_map):
             self.visit_iHdlExpr(pm)
 
-    def visit_HdlFunctionDef_def(self, o):
+    def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
-        raise TypeError("does not support HdlFunctionDef", self, o)
+        for p in o.params:
+            self.visit_HdlVariableDef(p)
+        if o.return_t is not None:
+            self.visit_iHdlExpr(o.return_t)
+        for o2 in o.body:
+            self.visit_main_obj(o2)
 
     def visit_HdlStmProcess(self, proc):
         """

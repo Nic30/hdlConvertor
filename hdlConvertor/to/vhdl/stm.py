@@ -163,7 +163,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                     w("\n")
         w("END CASE;\n")
 
-    def visit_return(self, o):
+    def visit_HdlStmReturn(self, o):
         """
         :type o: HdlStmReturn
         """
@@ -173,6 +173,20 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             w(" ")
             self.visit_iHdlExpr(o.val)
         w(";\n")
+
+    def visit_HdlStmContinue(self, o):
+        """
+        :type o: HdlStmContinue
+        """
+        w = self.out.write
+        w("CONTINUE")
+
+    def visit_HdlStmBreak(self, o):
+        """
+        :type o: HdlStmBreak
+        """
+        w = self.out.write
+        w("BREAK")
 
     def visit_HdlStmFor(self, o):
         """

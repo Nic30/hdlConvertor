@@ -88,7 +88,6 @@ class ToJson(HdlAstVisitor):
         if o.value is not None:
             d["value"] = self.visit_iHdlExpr(o.value)
         d["direction"] = self.visit_HdlDirection(o.direction)
-        self.visit_type(o.type)
         return d
 
     def visit_HdlModuleDec(self, o):
@@ -133,11 +132,24 @@ class ToJson(HdlAstVisitor):
         d["port_map"] = [self.visit_iHdlExpr(pm) for pm in o.port_map]
         return d
 
-    def visit_HdlFunctionDef_def(self, o):
+    def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
-        raise TypeError("does not support HdlFunctionDef", self, o)
+        d = self.visit_iHdlObjWithName(o)
+        for f in ["is_declaration_only",
+                  "is_operator",
+                  "is_static",
+                  "is_task",
+                  "is_virtual",
+                  ]:
+            if getattr(o, f):
+                d[f] = True
+        if o.return_t is not None:
+            d["return_t"] = self.visit_iHdlExpr(o.return_t)
+        d["params"] = [self.visit_HdlVariableDef(v) for v in o.params]
+        d["body"] = [self.visit_main_obj(o2) for o2 in o.body]
+        return d
 
     def visit_HdlStmProcess(self, o):
         """
@@ -210,7 +222,7 @@ class ToJson(HdlAstVisitor):
         d["init"] = self.visit_iHdlStatement(o.init)
         d["cond"] = self.visit_iHdlExpr(o.cond)
         d["step"] = self.visit_iHdlStatement(o.step)
-        d["body"] = self.visit_HdlModuleDef(o.body)
+        d["body"] = self.visit_iHdlStatement(o.body)
         return d
 
     def visit_HdlStmForIn(self, o):
@@ -220,7 +232,7 @@ class ToJson(HdlAstVisitor):
         d = self._visit_iHdlStatement(o)
         d["var_defs"] = [self.visit_main_obj(o2) for o2 in o.var_defs]
         d["collection"] = self.visit_iHdlExpr(o.collection)
-        d["body"] = self.visit_HdlModuleDef(o.body)
+        d["body"] = self.visit_iHdlStatement(o.body)
         return d
 
     def visit_HdlStmWhile(self, o):
@@ -229,7 +241,7 @@ class ToJson(HdlAstVisitor):
         """
         d = self._visit_iHdlStatement(o)
         d["cond"] = self.visit_iHdlExpr(o.cond)
-        d["body"] = self.visit_HdlModuleDef(o.body)
+        d["body"] = self.visit_iHdlStatement(o.body)
         return d
 
     def visit_HdlStmAssign(self, o):
@@ -244,6 +256,27 @@ class ToJson(HdlAstVisitor):
         d["src"] = self.visit_iHdlExpr(o.src)
         d["dst"] = self.visit_iHdlExpr(o.dst)
         return d
+
+    def visit_HdlStmReturn(self, o):
+        """
+        :type o: HdlStmReturn
+        """
+        d = self._visit_iHdlStatement(o)
+        if o.val is not None:
+            d["val"] = self.visit_iHdlExpr(o.val)
+        return d
+
+    def visit_HdlStmContinue(self, o):
+        """
+        :type o: HdlStmContinue
+        """
+        return self._visit_iHdlStatement(o)
+
+    def visit_HdlStmBreak(self, o):
+        """
+        :type o: HdlStmBreak
+        """
+        return self._visit_iHdlStatement(o)
 
     def visit_iHdlExpr(self, o):
         """

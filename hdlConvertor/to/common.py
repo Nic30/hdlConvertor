@@ -197,7 +197,7 @@ class ToHdlCommon(HdlAstVisitor):
                 w(", ")
         w(")")
 
-    def visit_HdlFunctionDef_def(self, o):
+    def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
@@ -258,3 +258,21 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: HdlStmAssign
         """
         raise TypeError("does not support HdlStmAssign", self, o)
+
+    def visit_HdlStmReturn(self, o):
+        """
+        :type o: HdlStmReturn
+        """
+        raise TypeError("does not support HdlStmReturn", self, o)
+
+    def visit_HdlStmContinue(self, o):
+        """
+        :type o: HdlStmContinue
+        """
+        raise TypeError("does not support HdlStmContinue", self, o)
+
+    def visit_HdlStmBreak(self, o):
+        """
+        :type o: HdlStmBreak
+        """
+        raise TypeError("does not support HdlStmBreak", self, o)

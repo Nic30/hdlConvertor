@@ -156,7 +156,7 @@ class ToVerilog2005(ToVerilog2005Stm):
             self.visit_map(pms)
             w(")")
 
-    def visit_HdlFunctionDef_def(self, o):
+    def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
@@ -229,7 +229,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                     else:
                         w("\n\n")
                 elif isinstance(o, HdlFunctionDef):
-                    self.visit_HdlFunctionDef_def(o)
+                    self.visit_HdlFunctionDef(o)
                     w("\n")
                 else:
                     raise NotImplementedError(o)
