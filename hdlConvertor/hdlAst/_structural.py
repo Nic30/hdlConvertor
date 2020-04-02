@@ -2,6 +2,12 @@ from typing import List, Union
 
 from hdlConvertor.hdlAst._bases import iHdlObjWithName, iHdlObjInModule, iHdlObj
 from hdlConvertor.hdlAst._defs import HdlVariableDef
+try:
+    # python2
+    from StringIO import StringIO
+except ImportError:
+    # python3
+    from io import StringIO
 
 
 class HdlLibrary(iHdlObjWithName):
@@ -12,7 +18,7 @@ class HdlLibrary(iHdlObjWithName):
 
     def __init__(self):
         super(HdlLibrary, self).__init__()
-        
+
 
 class HdlNamespace(iHdlObjWithName):
     """
@@ -90,3 +96,12 @@ class HdlContext(object):
     def __init__(self):
         self.objs = []  # type: List[iHdlObj]
         self.name_scope = None
+
+    def __repr__(self):
+        from hdlConvertor.to.json import ToJson
+        from pprint import pprint
+        to = ToJson()
+        d = getattr(to, "visit_" + self.__class__.__name__)(self)
+        s = StringIO()
+        pprint(d, stream=s, depth=3)
+        return s.getvalue() 

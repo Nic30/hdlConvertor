@@ -1,5 +1,11 @@
 from typing import Union, List
 from hdlConvertor.hdlAst._expr import HdlName
+try:
+    # python2
+    from StringIO import StringIO
+except ImportError:
+    # python3
+    from io import StringIO
 
 
 class iHdlObj(object):
@@ -12,6 +18,15 @@ class iHdlObj(object):
 
     def __init__(self):
         self.doc = ""  # type: str
+
+    def __repr__(self):
+        from hdlConvertor.to.json import ToJson
+        from pprint import pprint
+        to = ToJson()
+        d = getattr(to, "visit_" + self.__class__.__name__)(self)
+        s = StringIO()
+        pprint(d, stream=s, depth=3)
+        return s.getvalue()
 
 
 class iHdlObjWithName(iHdlObj):
@@ -28,14 +43,14 @@ class iHdlObjWithName(iHdlObj):
         return "<%s %s>" % (self.__class__.__name__, self.name)
 
 
-class iHdlObjInModule(object):
+class iHdlObjInModule(iHdlObj):
     """
     Object which can appear in the module body
     """
     __slots__ = []
 
 
-class iHdlStatement(iHdlObj, iHdlObjInModule):
+class iHdlStatement(iHdlObjInModule):
     """
     :ivar ~.labels: list of labels, the first label is for this statement
         the others are for it's branches
@@ -49,7 +64,6 @@ class iHdlStatement(iHdlObj, iHdlObjInModule):
     __slots__ = ["labels", "in_prepoc"]
 
     def __init__(self):
-        iHdlObj.__init__(self)
         iHdlObjInModule.__init__(self)
         self.labels = []  # type: List[HdlName]
         self.in_prepoc = False  # type: bool

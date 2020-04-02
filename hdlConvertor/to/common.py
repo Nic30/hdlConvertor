@@ -209,6 +209,18 @@ class ToHdlCommon(HdlAstVisitor):
         """
         raise TypeError("does not support HdlStmProcess", self, o)
 
+    def visit_HdlStmBlock(self, o):
+        """
+        :type o: HdlStmBlock
+        """
+        raise TypeError("does not support HdlStmBlock", self, o)
+
+    def visit_HdlStmIf(self, o):
+        """
+        :type o: HdlStmIf
+        """
+        raise TypeError("does not support HdlStmIf", self, o)
+
     def visit_HdlStmCase(self, o):
         """
         :type o: HdlStmCase

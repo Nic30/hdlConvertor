@@ -31,17 +31,21 @@ class HdlAstVisitor(object):
 
     def visit_main_obj(self, o):
         if isinstance(o, HdlModuleDec):
-            self.visit_HdlModuleDec(o)
+            return self.visit_HdlModuleDec(o)
         elif isinstance(o, HdlModuleDef):
-            self.visit_HdlModuleDef(o)
+            return self.visit_HdlModuleDef(o)
         elif isinstance(o, HdlNamespace):
-            self.visit_HdlNamespace(o)
+            return self.visit_HdlNamespace(o)
         elif isinstance(o, HdlVariableDef):
-            self.visit_HdlVariableDef(o)
+            return self.visit_HdlVariableDef(o)
         elif isinstance(o, HdlFunctionDef):
-            self.visit_HdlFunctionDef(o)
+            return self.visit_HdlFunctionDef(o)
+        elif isinstance(o, iHdlStatement):
+            return self.visit_iHdlStatement(o)
+        elif isinstance(o, HdlComponentInst):
+            return self.visit_HdlComponentInst(o)
         else:
-            raise NotImplementedError(o)
+            return self.visit_iHdlExpr(o)
 
     def visit_iHdlStatement(self, stm):
         """
@@ -136,7 +140,7 @@ class HdlAstVisitor(object):
         :type o: HdlComponentInst
         """
         for pm in chain(o.param_map, o.port_map):
-            self.visit_HdlCall(pm)
+            self.visit_iHdlExpr(pm)
 
     def visit_HdlFunctionDef_def(self, o):
         """

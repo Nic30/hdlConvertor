@@ -15,7 +15,7 @@ class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
     :ivar ~.is_const: flag if true the value is constants
     :ivar ~.is_latched: flag if true the object corresponds to VHDL variable/Verilog reg
     :ivar ~.is_static: flag if true static (same meaning as in C/C++)
-    :ivar ~.is_static: flag if true the variable stores virtual type
+    :ivar ~.is_virtual: flag if true the variable stores virtual type
         (corresponds to System Verilog virtual parameter)
     :ivar ~.direction: direction if the variable is port
     """
@@ -52,6 +52,7 @@ class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
             v_str = " = %s" % (repr(self.value))
         return "<%s %s%s>" % (self.__class__.__name__, t_str, v_str)
 
+
 class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     """
     HDL Function definition or declaration
@@ -59,8 +60,8 @@ class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
     :note: Verilog:
         * task automatic corresponds to is_static=False, is_task=True
         * task corresponds to is_static=True, is_task=True
-        * task/function in module is static by default, if in class it is automatic by default
-
+        * task/function in module is static by default,
+          if in class it is automatic by default
     """
     __slots__ = [
         "is_declaration_only",
