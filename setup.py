@@ -4,7 +4,7 @@
 import os
 from skbuild import setup
 import sys
-
+from setuptools import find_packages
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, "README.md")) as f:
@@ -38,7 +38,7 @@ setup(
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
     ],
     license="MIT",
-    packages=['hdlConvertor', 'hdlConvertor.hdlAst'],
+    packages=[p for p in find_packages() if p != "tests"],
     test_suite="tests.main_test_suite",
     test_runner="tests:TimeLoggingTestRunner",
     tests_require=["typing", "future"] if sys.version_info[0] == 2 else None,
