@@ -1,8 +1,8 @@
 #pragma once
 #include <hdlConvertor/hdlObjects/named.h>
-#include <hdlConvertor/hdlObjects/position.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
+#include "codePosition.h"
 
 
 namespace hdlConvertor {

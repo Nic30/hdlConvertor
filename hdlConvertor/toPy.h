@@ -141,6 +141,7 @@ public:
 
 	int toPy(const hdlObjects::WithNameAndDoc *o, PyObject *py_inst);
 	int toPy(const hdlObjects::WithDoc *o, PyObject *py_inst);
+	int toPy(const hdlObjects::WithPos *o, PyObject *py_inst);
 
 	PyObject* toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o);
 	PyObject* toPy(const hdlObjects::iHdlStatement *o);
@@ -171,7 +172,9 @@ public:
 	PyObject* toPy(const hdlObjects::HdlStmProcess *o);
 	PyObject* toPy(const hdlObjects::HdlStmWait *o);
 	PyObject* toPy(const hdlObjects::HdlStmImport *o);
+	PyObject* toPy(const hdlObjects::CodePosition o);
 	PyObject* toPy(const std::string &o);
+	PyObject* toPy(size_t o);
 	PyObject* toPy(bool o);
 	~ToPy();
 };

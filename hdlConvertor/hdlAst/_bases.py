@@ -14,10 +14,11 @@ class iHdlObj(object):
 
     :ivar ~.doc: doc from the HDL related probably to this object
     """
-    __slots__ = ["doc"]
+    __slots__ = ["doc", "position"]
 
     def __init__(self):
         self.doc = ""  # type: str
+        self.position = None  # type: Optional[CodePosition]
 
     def __repr__(self):
         from hdlConvertor.to.json import ToJson
@@ -67,4 +68,3 @@ class iHdlStatement(iHdlObjInModule):
         iHdlObjInModule.__init__(self)
         self.labels = []  # type: List[HdlName]
         self.in_prepoc = False  # type: bool
-

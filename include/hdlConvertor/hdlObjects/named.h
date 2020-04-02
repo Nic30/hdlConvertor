@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include <hdlConvertor/hdlObjects/position.h>
+
+#include "codePosition.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -31,7 +32,7 @@ public:
  * */
 class WithPos {
 public:
-	Position position;
+	CodePosition position;
 };
 
 /*

@@ -3,8 +3,8 @@
 
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/position.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
+#include "codePosition.h"
 
 namespace hdlConvertor {
 namespace hdlObjects {

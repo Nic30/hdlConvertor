@@ -155,12 +155,12 @@ void ToString::dump(const HdlStmProcess * p, int indent) {
 	mkIndent(indent) << "}";
 }
 
-void ToString::dump(const Position * o, int indent) {
+void ToString::dump(const CodePosition * o, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
 	auto dump_size_t = [&](const std::string & name, size_t val) {
 		mkIndent(indent) << "\"" << name << "\":";
-		if (val != Position::INVALID) {
+		if (val != CodePosition::INVALID) {
 			std::cout << val;
 		} else {
 			std::cout << "null";
@@ -168,10 +168,10 @@ void ToString::dump(const Position * o, int indent) {
 		std::cout << ",\n";
 	};
 
-	dump_size_t("startLine", o->startLine);
-	dump_size_t("stopLine", o->stopLine);
-	dump_size_t("startColumn", o->startColumn);
-	dump_size_t("stopColumn", o->stopColumn);
+	dump_size_t("startLine", o->start_line);
+	dump_size_t("stopLine", o->stop_line);
+	dump_size_t("startColumn", o->start_column);
+	dump_size_t("stopColumn", o->stop_column);
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
 }

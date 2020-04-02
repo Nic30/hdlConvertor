@@ -33,10 +33,15 @@ class ToJson(HdlAstVisitor):
         """
         :type o: iHdlObj
         """
-
         d = self.visit_iHdlObj(o)
         d["name"] = o.name
         return d
+
+    def visit_CodePosition(self, o):
+        """
+        :type o: CodePosition
+        """
+        return (o.start_line, o.start_column, o.stop_line, o.stop_column)
 
     def visit_iHdlObj(self, o):
         """
@@ -47,6 +52,8 @@ class ToJson(HdlAstVisitor):
         }
         if o.doc:
             d["doc"] = o.doc
+        if o.position:
+            d["position"] = self.visit_CodePosition(o.position)
         return d
 
     def visit_HdlImport(self, o):

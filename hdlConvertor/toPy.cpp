@@ -154,6 +154,9 @@ int ToPy::toPy(const WithNameAndDoc *o, PyObject *py_inst) {
 	e = toPy(static_cast<const WithDoc*>(o), py_inst);
 	if (e < 0)
 		return e;
+	e = toPy(static_cast<const WithPos*>(o), py_inst);
+		if (e < 0)
+			return e;
 	return 0;
 }
 
@@ -162,6 +165,27 @@ int ToPy::toPy(const WithDoc *o, PyObject *py_inst) {
 		if (toPy_property(py_inst, "doc", o->__doc__))
 			return -1;
 	return 0;
+}
+
+int ToPy::toPy(const WithPos *o, PyObject *py_inst) {
+	if (toPy_property(py_inst, "position", o->position))
+		return -1;
+	return 0;
+}
+
+PyObject* ToPy::toPy(const CodePosition o) {
+	PyObject *py_inst = PyObject_CallObject(CodePositionCls, NULL);
+	if (!py_inst)
+		return nullptr;
+	if (toPy_property(py_inst, "start_line", o.start_line))
+		return nullptr;
+	if (toPy_property(py_inst, "start_column", o.start_column))
+		return nullptr;
+	if (toPy_property(py_inst, "stop_line", o.stop_line))
+		return nullptr;
+	if (toPy_property(py_inst, "stop_column", o.stop_column))
+		return nullptr;
+	return py_inst;
 }
 
 PyObject* ToPy::toPy(const HdlModuleDef *o) {
@@ -441,6 +465,14 @@ PyObject* ToPy::toPy(const HdlVariableDef *o) {
 	if (toPy_property(py_inst, "direction", o->direction))
 		return nullptr;
 	return py_inst;
+}
+
+PyObject* ToPy::toPy(size_t o) {
+	if (o == std::numeric_limits<size_t>::max()) {
+		Py_RETURN_NONE;
+	} else {
+		return PyLong_FromLong((long) o);
+	}
 }
 
 PyObject* ToPy::toPy(bool o) {

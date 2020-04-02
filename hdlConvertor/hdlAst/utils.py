@@ -1,10 +1,14 @@
 
-
 class CodePosition(object):
-    __slots__ = ["startLine", "stopLine", "startColumn", "stopColumn"]
+    __slots__ = [
+        "start_line",
+        "stop_line",
+        "start_column",
+        "stop_column",
+    ]
 
-    def __init__(self, startLine, stopLine, startColumn, stopColumn):
-        self.startLine = startLine  # type: int
-        self.stopLine = stopLine  # type: int
-        self.startColumn = startColumn  # type: int
-        self.stopColumn = stopColumn  # type: int
+    def __init__(self):
+        self.start_line = None
+        self.start_line = None
+        self.start_column = None
+        self.stop_column = None
