@@ -5,7 +5,8 @@ from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
     HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst
 from hdlConvertor.hdlAst._structural import HdlLibrary
-from hdlConvertor.hdlAst._statements import HdlStmBreak, HdlStmContinue
+from hdlConvertor.hdlAst._statements import HdlStmBreak, HdlStmContinue,\
+    HdlStmRepeat
 
 
 class HdlAstVisitor(object):
@@ -66,6 +67,8 @@ class HdlAstVisitor(object):
             return self.visit_HdlStmCase(stm)
         elif isinstance(stm, HdlStmWait):
             return self.visit_HdlStmWait(stm)
+        elif isinstance(stm, HdlStmRepeat):
+            return self.visit_HdlStmRepeat(stm)
         elif isinstance(stm, HdlStmReturn):
             return self.visit_HdlStmReturn(stm)
         elif isinstance(stm, HdlStmBreak):

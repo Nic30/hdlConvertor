@@ -259,6 +259,12 @@ class ToHdlCommon(HdlAstVisitor):
         """
         raise TypeError("does not support HdlStmAssign", self, o)
 
+    def visit_HdlStmRepeat(self, o):
+        """
+        :type o: HdlStmRepeat
+        """
+        raise TypeError("does not support HdlStmRepeat", self, o)
+
     def visit_HdlStmReturn(self, o):
         """
         :type o: HdlStmReturn

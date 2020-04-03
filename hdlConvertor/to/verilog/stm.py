@@ -284,4 +284,15 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         w("while (")
         self.visit_iHdlExpr(o.cond)
         w(") ")
-        return self.visit_HdlStmBlock(o.body, True)
+        return self.visit_iHdlStatement(o.body)
+
+    def visit_HdlStmRepeat(self, o):
+        """
+        :type o: HdlStmRepeat
+        :return: True if requires ;\n after end
+        """
+        w = self.out.write
+        w("repeat (")
+        self.visit_iHdlExpr(o.n)
+        w(") ")
+        return self.visit_iHdlStatement(o.body)

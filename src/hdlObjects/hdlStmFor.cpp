@@ -54,5 +54,11 @@ HdlStmForIn::HdlStmForIn(std::unique_ptr<iHdlExpr> _var,
 HdlStmForIn::~HdlStmForIn() {
 }
 
+HdlStmRepeat::HdlStmRepeat(std::unique_ptr<iHdlExpr> _n,
+		std::unique_ptr<iHdlStatement> _body): n(move(_n)), body(move(_body)) {
+}
+HdlStmRepeat::~HdlStmRepeat() {
+}
+
 }
 }

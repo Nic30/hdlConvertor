@@ -251,6 +251,15 @@ class ToJson(HdlAstVisitor):
         d["body"] = self.visit_iHdlStatement(o.body)
         return d
 
+    def visit_HdlStmRepeat(self, o):
+        """
+        :type o: HdlStmRepeat
+        """
+        d = self._visit_iHdlStatement(o)
+        d["n"] = self.visit_iHdlExpr(o.n)
+        d["body"] = self.visit_iHdlStatement(o.body)
+        return d
+
     def visit_HdlStmAssign(self, o):
         """
         :type o: HdlStmAssign
@@ -339,7 +348,8 @@ class ToJson(HdlAstVisitor):
         """
         d = {
             "__class__": o.__class__.__name__,
-            "ops": [self.visit_iHdlExpr(op) for op in o.ops]
+            "ops": [self.visit_iHdlExpr(op) for op in o.ops],
+            "fn": o.fn.name
         }
         return d
 

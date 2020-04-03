@@ -241,6 +241,19 @@ PyObject* ToPy::toPy(const HdlStmWait *o) {
 	}
 	return py_inst;
 }
+
+PyObject* ToPy::toPy(const HdlStmRepeat *o) {
+	auto py_inst = PyObject_CallObject(HdlStmRepeatCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "n", o->n))
+		return nullptr;
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
+
 PyObject* ToPy::toPy(const iHdlStatement *o) {
 	PyObject *py_inst = nullptr;
 	do {
@@ -279,9 +292,14 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 			py_inst = toPy(fi);
 			break;
 		}
-		auto r = dynamic_cast<const HdlStmReturn*>(o);
-		if (r) {
-			py_inst = toPy(r);
+		auto rep = dynamic_cast<const HdlStmRepeat*>(o);
+		if (rep) {
+			py_inst = toPy(rep);
+			break;
+		}
+		auto ret = dynamic_cast<const HdlStmReturn*>(o);
+		if (ret) {
+			py_inst = toPy(ret);
 			break;
 		}
 		auto br = dynamic_cast<const HdlStmBreak*>(o);

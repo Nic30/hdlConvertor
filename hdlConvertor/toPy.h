@@ -51,6 +51,7 @@ class ToPy {
 	PyObject *HdlStmForCls;
 	PyObject *HdlStmForInCls;
 	PyObject *HdlStmWhileCls;
+	PyObject *HdlStmRepeatCls;
 	PyObject *HdlStmReturnCls;
 	PyObject *HdlStmBreakCls;
 	PyObject *HdlStmContinueCls;
@@ -166,6 +167,7 @@ public:
 	PyObject* toPy(const hdlObjects::HdlStmCase *o);
 	PyObject* toPy(const hdlObjects::HdlStmFor *o);
 	PyObject* toPy(const hdlObjects::HdlStmForIn *o);
+	PyObject* toPy(const hdlObjects::HdlStmRepeat *o);
 	PyObject* toPy(const hdlObjects::HdlStmReturn *o);
 	PyObject* toPy(const hdlObjects::HdlStmAssign *o);
 	PyObject* toPy(const hdlObjects::HdlStmWhile *o);

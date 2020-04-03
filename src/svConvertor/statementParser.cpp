@@ -428,16 +428,16 @@ unique_ptr<iHdlStatement> VerStatementParser::visitLoop_statement(
 		return create_object<HdlStmWhile>(ctx, iHdlExpr::INT(ctx->KW_FOREVER(), 1), move(stm));
 
 	} else if (ctx->KW_REPEAT()) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitLoop_statement.repeat", ctx);
-		return create_object<HdlStmNop>(ctx);
+		auto _e = ctx->expression();
+		auto c = ep.visitExpression(_e);
+		return create_object<HdlStmRepeat>(ctx, move(c), move(stm));
 
 	} else if (ctx->KW_WHILE()) {
 		auto _e = ctx->expression();
 		auto c = ep.visitExpression(_e);
 		return create_object<HdlStmWhile>(ctx, move(c), move(stm));
 
-	} else if (ctx->KW_WHILE()) {
+	} else if (ctx->KW_DO()) {
 		auto _e = ctx->expression();
 		auto c = ep.visitExpression(_e);
 		return create_object<HdlStmDoWhile>(ctx, move(stm), move(c));

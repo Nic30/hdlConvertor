@@ -183,6 +183,21 @@ class HdlStmWhile(iHdlStatement):
         self.body = None  # type: iHdlStatement
 
 
+class HdlStmRepeat(iHdlStatement):
+    """
+    HDL repeat statement
+
+    for _ in range(n):
+        body
+    """
+    __slots__ = ["n", "body"]
+
+    def __init__(self):
+        super(HdlStmRepeat, self).__init__()
+        self.n = None  # type: iHdlExpr
+        self.body = None  # type: iHdlStatement
+
+
 class HdlStmReturn(iHdlStatement):
     """
     HDL return statement

@@ -51,5 +51,16 @@ public:
 	virtual ~HdlStmForIn() override;
 };
 
+/*
+ * HDL AST node for repeat-statement
+ * */
+class HdlStmRepeat: public iHdlStatement {
+public:
+	std::unique_ptr<iHdlExpr> n;
+	std::unique_ptr<iHdlStatement> body;
+	HdlStmRepeat(std::unique_ptr<iHdlExpr> n,
+			std::unique_ptr<iHdlStatement> body);
+	virtual ~HdlStmRepeat() override;
+};
 }
 }
