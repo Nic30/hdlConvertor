@@ -25,6 +25,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.ARROW: " => ",
         HdlBuiltinFn.MAP_ASSOCIATION: " => ",
         HdlBuiltinFn.RANGE: " RANGE ",
+        HdlBuiltinFn.CONCAT: " & ",
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
     NUM_BASES = {
@@ -165,6 +166,40 @@ class ToVhdl2008Expr(ToHdlCommon):
         else:
             return ToHdlCommon.visit_HdlCall(self, o)
 
+    def visit_str(self, o):
+        """
+        :type o: str
+        """
+        w = self.out.write
+        if o == "":
+            w('""')
+        else:
+            ESCAPES = {
+                '\n': 'LF\n',
+                '\c': 'CR'
+            }
+            CONC = self.GENERIC_BIN_OPS[HdlBuiltinFn.CONCAT]
+            first = True
+            string_begin = True
+            for c in o:
+                esc = ESCAPES.get(c, None)
+                if esc is not None:
+                    if not string_begin:
+                        w('"')  # string end "
+                        string_begin = True
+                    if not first:
+                        w(CONC)
+                    w(esc)
+                else:
+                    if string_begin:
+                        string_begin = False
+                        w('"')  # string start "
+                    w(c)
+                first = False
+
+            if not string_begin:
+                w('"')  # string end "
+
     def visit_iHdlExpr(self, expr):
         w = self.out.write
         if expr is HdlAll:
@@ -173,6 +208,8 @@ class ToVhdl2008Expr(ToHdlCommon):
         elif expr is HdlOthers:
             w("OTHERS")
             return
+        elif is_str(expr):
+            self.visit_str(expr)
         elif isinstance(expr, list):
             with_nl = len(expr) > 3
             if with_nl:
