@@ -303,9 +303,12 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCall(
 	VerExprParser ep(commentParser);
 	vector<unique_ptr<iHdlExpr>> args;
 	auto loa = ctx->list_of_arguments();
-	if (loa)
+	if (loa) {
 		ep.visitList_of_arguments(loa, args);
-	return iHdlExpr::call(ctx, move(p), args);
+		return iHdlExpr::call(ctx, move(p), args);
+	} else {
+		return p;
+	}
 }
 
 unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
