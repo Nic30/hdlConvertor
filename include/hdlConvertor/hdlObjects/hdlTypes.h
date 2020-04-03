@@ -5,6 +5,7 @@
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlObjects/iHdlExprItem.h>
 
 
 namespace hdlConvertor {
@@ -71,6 +72,7 @@ public:
 	std::unique_ptr<HdlConstraint> constraint;
 	
 	HdlSubtype();
+	// @note deepcopy
 	HdlSubtype(const HdlSubtype& other);
 	virtual ~HdlSubtype();
 };
@@ -91,15 +93,18 @@ public:
 	HdlRangeDirection dir;
 	std::unique_ptr<iHdlExpr> right;
 	HdlSimpleRange(std::unique_ptr<iHdlExpr> left, HdlRangeDirection dir, std::unique_ptr<iHdlExpr> right);
+	// @note deepcopy
+	HdlSimpleRange(const HdlSimpleRange& rng);
 	virtual ~HdlSimpleRange();
 };
 
 // HdlRange is a conflation of the different ways of specifying a range.
-class HdlRange : public iHdlObj {
+class HdlRange : public iHdlExprItem {
 public:
 	std::unique_ptr<HdlSubtype> subtype;
 	std::unique_ptr<HdlSimpleRange> range;
 	std::unique_ptr<iHdlExpr> attribute;
+	virtual iHdlExprItem* clone() const override;
 	virtual ~HdlRange();
 };
 

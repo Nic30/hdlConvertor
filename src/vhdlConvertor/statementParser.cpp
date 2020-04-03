@@ -232,6 +232,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 		for (auto &ch : VhdlExprParser::visitChoices(a->choices())) {
 			auto s = a->sequence_of_statements();
 			auto stms = visitSequence_of_statements(s);
+			assert(ch);//DEBUG::
 			if (is_others(ch)) {
 				assert(_default == nullptr);
 				_default = move(stms);

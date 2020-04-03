@@ -50,6 +50,9 @@ iHdlExpr::iHdlExpr(const BigInteger &value, int bits) {
 iHdlExpr::iHdlExpr(const BigInteger &value) :
 		data(new HdlValue(value, -1)) {
 }
+iHdlExpr::iHdlExpr(std::unique_ptr<HdlRange> range) :
+		data(range.release()) {
+}
 std::unique_ptr<iHdlExpr> iHdlExpr::INT(
 		TerminalNode *node, const std::string &strVal, int base) {
   return create_object<iHdlExpr>(node, BigInteger(strVal, base));

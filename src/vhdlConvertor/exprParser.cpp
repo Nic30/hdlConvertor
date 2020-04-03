@@ -32,9 +32,12 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAssociation_element(
 	//       ( formal_part ARROW )? actual_part
 	// ;
 	auto ap = visitActual_part(ctx->actual_part());
-	auto fp = visitFormal_part(ctx->formal_part());
-	if (fp) {
-            return create_object<iHdlExpr>(ctx, move(fp), ARROW, move(ap));
+        auto fp_ctx = ctx->formal_part();
+	if (fp_ctx) {
+		auto fp = visitFormal_part(fp_ctx);
+		if (fp) {
+	        	return create_object<iHdlExpr>(ctx, move(fp), ARROW, move(ap));
+		}
 	}
 	return ap;
 }
@@ -592,13 +595,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitChoice(
 
 	auto dr = ctx->discrete_range();
 	if (dr) {
-		//TODO::return visitDiscrete_range(dr);
-		//
-		//rhinton: need to figure out how to shoehorn a range into an
-		// expression
-		NotImplementedLogger::print(
-				"ExprParser.visitChoice - discrete range choice", dr);
-		return nullptr;
+		return create_object<iHdlExpr>(ctx, visitDiscrete_range(dr));
 	}
 	auto se = ctx->simple_expression();
 	if (se) {
