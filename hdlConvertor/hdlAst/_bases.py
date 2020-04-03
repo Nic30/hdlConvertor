@@ -1,5 +1,5 @@
 from typing import Union, List
-from hdlConvertor.hdlAst._expr import HdlName
+
 try:
     # python2
     from StringIO import StringIO

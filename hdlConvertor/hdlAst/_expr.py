@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Optional, Union, List
+from hdlConvertor.hdlAst._bases import iHdlObj
 
 
 class HdlDirection(Enum):
@@ -177,7 +178,7 @@ class HdlBuiltinFn(Enum):
     # note that in verilog bitewise operators can have only one argument
 
 
-class HdlCall(object):
+class HdlCall(iHdlObj):
     """
     Container for call of the HDL function in HDL code
     """
@@ -193,17 +194,8 @@ class HdlCall(object):
         else:
             return self.fn == other.fn and self.ops == other.ops
 
-    def __repr__(self):
-        fn, ops = self.fn, self.ops
-        cls_n = self.__class__.__name__
-        if isinstance(fn, HdlBuiltinFn):
-            if fn == HdlBuiltinFn.CALL:
-                return "<%s %r(%s)>" % (cls_n, ops[0], ", ".join(repr(o) for o in ops[1:]))
 
-        return "<%s %r(%s)>" % (cls_n, fn, ", ".join(repr(o) for o in ops))
-
-
-class HdlIntValue(object):
+class HdlIntValue(iHdlObj):
     """
     Object for representation of int value in in HDL
     (= also for the bitstrings)
@@ -240,17 +232,6 @@ class HdlIntValue(object):
                 return False
             except ValueError:
                 return False
-
-    def __repr__(self):
-        t_str = []
-        if self.bits is not None:
-            t_str.append(", bits=%r" % self.bits)
-        if self.base is not None:
-            t_str.append(", base=%r" % self.base)
-
-        return "<HdlIntValue %r%s>" % (
-            self.val, "".join(t_str)
-        )
 
 
 # None is equivalent of HDL null
