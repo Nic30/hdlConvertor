@@ -398,25 +398,21 @@ PyObject* ToPy::toPy(const HdlDirection o) {
 }
 
 PyObject* ToPy::toPy(const HdlCall *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlCallCls, NULL);
-	if (!py_inst)
+	auto fn = toPy(o->op);
+	if (!fn) {
 		return nullptr;
+	}
+	auto ops = PyList_New(0);
+	if (!ops) {
+		Py_DECREF(fn);
+		return nullptr;
+	}
+	if (toPy_arr(ops, o->operands)) {
+		Py_DECREF(fn);
+		return nullptr;
+	}
 
-	auto op = toPy(o->op);
-	if (!op) {
-		Py_DECREF(py_inst);
-		return nullptr;
-	}
-	int e = PyObject_SetAttrString(py_inst, "fn", op);
-	if (e) {
-		Py_DECREF(op);
-		Py_DECREF(py_inst);
-		return nullptr;
-	}
-	if (toPy_arr(py_inst, "ops", o->operands)) {
-		return nullptr;
-	}
-	return py_inst;
+	return PyObject_CallFunctionObjArgs(HdlCallCls, fn, ops, NULL);
 }
 
 // [TODO] too similar with the code for HdlModuleDef

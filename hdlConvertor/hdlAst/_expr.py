@@ -184,9 +184,13 @@ class HdlCall(iHdlObj):
     """
     __slots__ = ["fn", "ops"]
 
-    def __init__(self):
-        self.fn = None  # type: Union[HdlBuiltinFn, iHdlExpr]
-        self.ops = []  # type: List[iHdlExpr]
+    def __init__(self, fn, ops):
+        """
+        :type fn: Union[HdlBuiltinFn, iHdlExpr]
+        :type ops: List[iHdlExpr]
+        """
+        self.fn = fn
+        self.ops = ops
 
     def __eq__(self, other):
         if not isinstance(other, HdlCall):
