@@ -12,6 +12,7 @@
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
 #include <hdlConvertor/hdlObjects/iHdlExprItem.h>
 #include <hdlConvertor/hdlObjects/hdlValue.h>
+#include <hdlConvertor/hdlObjects/hdlTypes.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 
@@ -43,6 +44,7 @@ public:
 	iHdlExpr(HdlValue *value);
 	iHdlExpr(const BigInteger &value, int bits);
 	iHdlExpr(const BigInteger &value);
+	iHdlExpr(std::unique_ptr<HdlRange> range);
 
 	static std::unique_ptr<iHdlExpr> ID(const std::string &value);
 

@@ -25,11 +25,12 @@ HdlTypeDec::~HdlTypeDec() {
 // subtype
 HdlSubtype::HdlSubtype() {
 }
-HdlSubtype::HdlSubtype(const HdlSubtype& other) 
-	: iHdlObj(other), 
-	parent_type(std::make_unique<iHdlExpr>(*other.parent_type)), 
-	constraint(std::make_unique<HdlConstraint>(*other.constraint))
+HdlSubtype::HdlSubtype(const HdlSubtype& other) : iHdlObj(other)
 {
+	if (other.parent_type)
+		parent_type = std::make_unique<iHdlExpr>(*other.parent_type);
+	if (other.constraint)
+		constraint = std::make_unique<HdlConstraint>(*other.constraint);
 }
 HdlSubtype::~HdlSubtype() {}
 
@@ -47,7 +48,22 @@ HdlSimpleRange::HdlSimpleRange(
 	: left(std::move(left)), dir(dir), right(std::move(right))
 {
 }
+HdlSimpleRange::HdlSimpleRange(const HdlSimpleRange& rng)
+	: left(std::make_unique<iHdlExpr>(*rng.left)), 
+		dir(rng.dir), 
+		right(std::make_unique<iHdlExpr>(*rng.right)) {
+}
 HdlSimpleRange::~HdlSimpleRange() {}
+iHdlExprItem* HdlRange::clone() const {
+	HdlRange *obj = new HdlRange();
+	if (subtype) 
+		obj->subtype = std::make_unique<HdlSubtype>(*subtype);
+	if (range)
+		obj->range = std::make_unique<HdlSimpleRange>(*range);
+	if (attribute)
+		obj->attribute = std::make_unique<iHdlExpr>(*attribute);
+	return obj;
+}
 HdlRange::~HdlRange() {}
 
 // enumerated type
