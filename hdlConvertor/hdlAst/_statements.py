@@ -15,9 +15,12 @@ class HdlImport(iHdlStatement):
     """
     __slots__ = ["path", ]
 
-    def __init__(self):
+    def __init__(self, path):
+        """
+        :type path: List[Union[HdlName, HdlAll]]
+        """
         super(HdlImport, self).__init__()
-        self.path = []  # type: List[str]
+        self.path = path
 
 
 class HdlStmNop():
