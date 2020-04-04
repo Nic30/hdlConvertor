@@ -42,6 +42,21 @@ class ToPy {
 	PyObject *HdlDirectionEnum;
 	PyObject *HdlAllCls;
 	PyObject *HdlOthersCls;
+	PyObject *HdlSimpleRangeCls;
+	PyObject *HdlRangeCls;
+	PyObject *HdlSubtypeCls;
+//rhinton
+	//base:PyObject *HdlConstraintCls;
+	//PyObject *HdlNoConstraintCls;
+	PyObject *HdlRangeConstraintCls;
+	PyObject *HdlArrayConstraintCls;
+	PyObject *HdlRecordConstraintCls;
+	//base:PyObject *HdlTypeDecCls;
+	PyObject *HdlSubtypeDecCls;
+	PyObject *HdlEnumTypeDecCls;
+	PyObject *HdlArrayTypeDecCls;
+	PyObject *HdlStructTypeDecCls;
+//rhinton
 	PyObject *HdlTypeTypeCls;
 	PyObject *HdlTypeAutoCls;
 	PyObject *HdlStmIfCls;
@@ -65,6 +80,36 @@ class ToPy {
 	PyObject *HdlNamespaceCls;
 
 	std::string PyObject_repr(PyObject *o);
+
+	template<typename OBJ_T>
+	int toPy_dict(PyObject *parent, const std::string &prop_name,
+			const std::vector<std::pair<std::string, OBJ_T>> &objs) {
+		PyObject *parent_dict = PyObject_GetAttrString(parent,
+				prop_name.c_str());
+		if (parent_dict == nullptr) {
+			std::string err_msg = (std::string(
+					"ToPy::toPy_arr object does not have specified property:")
+					+ prop_name + std::string(" : ") + PyObject_repr(parent));
+			Py_DECREF(parent);
+			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
+			return -1;
+		}
+		for (auto &o : objs) {
+			auto& key = o.first;
+			auto& py_val = toPy(o.second);
+			if (py_val == nullptr) {
+				Py_DECREF(parent_dict);
+				return -1;
+			}
+			auto e = PyDict_SetItemString(parent_dict, key, py_val);
+			Py_DECREF(py_val); // needed? docs say SetItem doesn't steal a reference
+			if (e) {
+				Py_DECREF(parent_dict);
+				return e;
+			}
+		}
+		return 0;
+	}
 
 	template<typename OBJ_T>
 	int toPy_arr(PyObject *parent, const std::string &prop_name,
@@ -153,6 +198,19 @@ public:
 	PyObject* toPy(const hdlObjects::HdlDirection o);
 	PyObject* toPy(const hdlObjects::HdlModuleDec *o);
 	PyObject* toPy(const hdlObjects::iHdlExpr *o);
+	PyObject* toPy(const hdlObjects::HdlSubtype *o);
+	PyObject* toPy(const hdlObjects::HdlRange *o);
+	PyObject* toPy(const hdlObjects::HdlSimpleRange *o);
+//rhinton
+	PyObject* toPy(const hdlObjects::HdlRangeConstraint *o);
+	PyObject* toPy(const hdlObjects::HdlArrayConstraint *o);
+	PyObject* toPy(const hdlObjects::HdlRecordConstraint *o);
+	PyObject* toPy(const hdlObjects::HdlTypeDec *o);
+	PyObject* toPy(const hdlObjects::HdlSubtypeDec *o);
+	PyObject* toPy(const hdlObjects::HdlEnumTypeDec *o);
+	PyObject* toPy(const hdlObjects::HdlArrayTypeDec *o);
+	PyObject* toPy(const hdlObjects::HdlStructTypeDec *o);
+//rhinton
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);
 	PyObject* toPy(const hdlObjects::HdlCall *o);

@@ -20,9 +20,9 @@ public:
 	virtual ~HdlConstraint();
 };
 
-class HdlNoConstraint : public HdlConstraint {
-	virtual ~HdlNoConstraint();
-};
+//class HdlNoConstraint : public HdlConstraint {
+//	virtual ~HdlNoConstraint();
+//};
 
 class HdlRange;
 
@@ -114,7 +114,7 @@ public:
 	// single-quotes, e.g. "'U'"s; SV allows identifiers to have an
 	// associated value, while VHDL scalar types do not have this concept
 	std::vector<std::pair<std::string, std::unique_ptr<iHdlExpr>>> ids;
-	std::unique_ptr<HdlSubtypeDec> base_type;
+	std::unique_ptr<HdlSubtype> base_type;
 
 	HdlEnumTypeDec(const std::string& name);
 	TypeClass typeClass() override {return hdltc_enum;};

@@ -20,11 +20,8 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.NEQ: " /= ",
         HdlBuiltinFn.SLL: " SLL ",
         HdlBuiltinFn.SRL: " SRL ",
-        HdlBuiltinFn.TO: " TO ",
-        HdlBuiltinFn.DOWNTO: " DOWNTO ",
         HdlBuiltinFn.ARROW: " => ",
         HdlBuiltinFn.MAP_ASSOCIATION: " => ",
-        HdlBuiltinFn.RANGE: " RANGE ",
         HdlBuiltinFn.CONCAT: " & ",
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
@@ -77,12 +74,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.XOR: 8,
         HdlBuiltinFn.XNOR: 8,
 
-        HdlBuiltinFn.DOWNTO: 9,
-        HdlBuiltinFn.TO: 9,
         HdlBuiltinFn.TERNARY: 9,
-
-        HdlBuiltinFn.RANGE: 10,
-        HdlBuiltinFn.RANGE_REVERSE: 10,
     }
 
     def visit_HdlIntValue(self, o):
@@ -176,7 +168,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         else:
             ESCAPES = {
                 '\n': 'LF\n',
-                '\c': 'CR'
+                '\r': 'CR'
             }
             CONC = self.GENERIC_BIN_OPS[HdlBuiltinFn.CONCAT]
             first = True

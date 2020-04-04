@@ -27,8 +27,6 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.SLL: " << ",
         HdlBuiltinFn.SRL: " >> ",
 
-        HdlBuiltinFn.DOWNTO: ":",
-
         HdlBuiltinFn.ASSIGN: ' = ',
         HdlBuiltinFn.PLUS_ASSIGN: ' += ',
         HdlBuiltinFn.MINUS_ASSIGN: ' -= ',
@@ -90,8 +88,6 @@ class ToVerilog2005Expr(ToHdlCommon):
 
         HdlBuiltinFn.RISING: 15,
         HdlBuiltinFn.FALLING: 15,
-        HdlBuiltinFn.DOWNTO: 16,
-        HdlBuiltinFn.TO: 16,
     }
     OP_PRECEDENCE.update({k: 3 for k in [
         HdlBuiltinFn.NEG,

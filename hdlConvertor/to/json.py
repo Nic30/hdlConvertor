@@ -3,6 +3,7 @@ from hdlConvertor.hdlAst._statements import HdlImport
 from hdlConvertor.hdlAst._structural import HdlLibrary
 from hdlConvertor.hdlAst._expr import HdlDirection, HdlName, HdlIntValue,\
     HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
+from hdlConvertor.hdlAst._typeDefs import HdlSubtype, HdlRange, HdlSimpleRange
 from hdlConvertor.to.hdlUtils import is_str
 
 
@@ -314,6 +315,10 @@ class ToJson(HdlAstVisitor):
             d = self.visit_HdlIntValue(o)
         elif isinstance(o, HdlCall):
             d = self.visit_HdlCall(o)
+        elif isinstance(o, HdlSubtype):
+            d = self.visit_HdlSubtype(o)
+        elif isinstance(o, HdlRange):
+            d = self.visit_HdlRange(o)
         elif o is HdlAll or\
                 o is HdlTypeAuto or\
                 o is HdlOthers or\
@@ -324,7 +329,7 @@ class ToJson(HdlAstVisitor):
         elif isinstance(o, list):
             return [self.visit_iHdlExpr(o2) for o2 in o]
         else:
-            raise NotImplementedError(o)
+            raise NotImplementedError("Unexpected object of type "+str(type(o)))
         return d
 
     def visit_HdlIntValue(self, o):
@@ -339,6 +344,33 @@ class ToJson(HdlAstVisitor):
             d["bits"] = o.bits
         if o.base is not None:
             d["base"] = o.base
+        return d
+
+    def visit_HdlSubtype(self, o):
+        """
+        :type o: HdlSubtype
+        """
+        d = {
+            "__class__": o.__class__.__name__,
+            "parent_type": o.parent_type,
+        }
+        if o.constraint is not None:
+            d['constraint'] = o.constraint
+        return d
+
+    def visit_HdlRange(self, o):
+        """
+        :type o: HdlRange
+        """
+        d = {
+            "__class__": o.__class__.__name__,
+        }
+        if o.subtype is not None:
+            d['subtype'] = o.subtype
+        if o.range is not None:
+            d['range'] = o.range
+        if o.attribute is not None:
+            d['attribuge'] = o.attribute
         return d
 
     def visit_HdlCall(self, o):

@@ -69,14 +69,8 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_slice_part(
 	// ;
 	auto _er = ctx->explicit_range();
 	auto er = VhdlExprParser::visitExplicit_range(_er);
-	//TODO::return create_object<iHdlExpr>(ctx, move(selected_name), HdlOperatorType::INDEX, move(er));
-	//
-	//rhinton: a slicing, indexing operation has a "left" operand that's
-	// the name, and "right" operand that's the range for the slice.  So
-	// this is another place where it would be nice to wrap an HdlRange in
-	// an expression.
-	NotImplementedLogger::print("ExprParser.visitName_slice_part - name_slice_part", ctx);
-	return nullptr;
+	auto er_expr = std::make_unique<iHdlExpr>(std::move(er));
+	return create_object<iHdlExpr>(ctx, move(selected_name), HdlOperatorType::INDEX, move(er_expr));
 }
 std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName(
 		vhdlParser::NameContext *ctx) {

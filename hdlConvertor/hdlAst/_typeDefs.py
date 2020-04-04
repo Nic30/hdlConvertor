@@ -1,12 +1,50 @@
 from enum import Enum
 from typing import Dict, Union, Tuple, List
-from hdlConvertor.hdlAst._bases import iHdlObjWithName
+from hdlConvertor.hdlAst._bases import iHdlObj,iHdlObjWithName
 
 HdlTypeInt = int
 HdlTypeStr = str
 # Verilog real
 HdlTypeFloat = float
 HdlTypeEnum = Enum
+
+
+class HdlSimpleRange(iHdlObj):
+    """Simple range A:B, A to B, A DOWNTO B.
+    """
+    __slots__ = ["left", "dir", "right"]
+    def __init__(self):
+        super(HdlSimpleRange, self).__init__()
+        self.left = None
+        self.dir = None
+        self.right = None
+
+class HdlRange(iHdlObj):
+    """Combined concept of an HDL range.
+
+    The range may be defined as a subtype, (simple) range, or attribute with
+    corresponding attributes.
+    """
+    __slots__ = ["subtype", "range", "attribute"]
+    def __init__(self, subtype=None, rng=None, attribute=None):
+        super(HdlRange, self).__init__()
+        self.subtype = subtype
+        self.range = rng
+        self.attribute = attribute
+
+class HdlSubtype(iHdlObj):
+    """HDL subtype indication concept.
+
+    A subtype indication is used pretty much any time an object is declared:
+    generic/port/parameter declaration lists, variable and signal declarations,
+    etc.
+
+    """
+    __slots__ = ["parent_type", "constraint"]
+    def __init__(self, parent_type=None, constraint=None):
+        super(HdlSubtype, self).__init__()
+        self.parent_type = parent_type
+        self.constraint = constraint
 
 
 # arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))

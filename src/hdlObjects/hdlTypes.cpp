@@ -8,7 +8,7 @@ namespace hdlObjects {
 
 // constraints
 HdlConstraint::~HdlConstraint() {}
-HdlNoConstraint::~HdlNoConstraint() {}
+//HdlNoConstraint::~HdlNoConstraint() {}
 HdlRangeConstraint::HdlRangeConstraint() {}
 HdlRangeConstraint::~HdlRangeConstraint() {}
 HdlRecordConstraint::~HdlRecordConstraint() {}

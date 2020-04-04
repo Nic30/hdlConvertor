@@ -89,16 +89,12 @@ class HdlBuiltinFn(Enum):
     (Python equivalent of c++ hdlConvertor::hdlObjects::HdlOperatorType)
     """
     (
-        RANGE,  # range used in VHDL type specifications
-        RANGE_REVERSE,  # reverse range used in VHDL type specifications
         ACROSS,
         THROUGH,
         REFERENCE,
         TOLERANCE,
         TYPE_OF,  # SV type operator
         INDEX,  # array index
-        DOWNTO,  # downto for the slice specification
-        TO,  # to for the slice specification
         MINUS_UNARY,
         PLUS_UNARY,
         OR_UNARY,  # SV or reduction (|a)
@@ -174,7 +170,7 @@ class HdlBuiltinFn(Enum):
         SHIFT_RIGHT_ASSIGN,  # >>=
         ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
         ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
-    ) = range(83)
+    ) = range(79)
     # note that in verilog bitewise operators can have only one argument
 
 
