@@ -46,6 +46,35 @@ class HdlSubtype(iHdlObj):
         self.parent_type = parent_type
         self.constraint = constraint
 
+class HdlConstraint(iHdlObj):
+    """HDL subtype constraint
+
+    Represents any kind of constraint applied in an object declaration, port
+    declaration, etc.
+    """
+    __slots__ = ["range", "indexes", "element", "field_cons"]
+    def __init__(self):
+        super(HdlConstraint, self).__init__()
+        self.range = None
+        self.indexes = []
+        self.element = None
+        self.field_cons = {}
+
+class HdlTypeDec(iHdlObjWithName):
+    """HDL type declaration
+
+    HDL type declarations including array, record, struct, union, subtype,
+    physical, access, file, etc.
+    """
+    __slots__ = ["subtype", "ids", "base_type", "isUnion", "array_cons", "fields"]
+    def __init__(self):
+        super(HdlTypeDec, self).__init__()
+        self.subtype = None
+        self.ids = {}
+        self.base_type = None
+        self.isUnion = False
+        self.array_cons = None
+        self.fields = {}
 
 # arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))
 class HdlTypeBitsDef(iHdlObjWithName):

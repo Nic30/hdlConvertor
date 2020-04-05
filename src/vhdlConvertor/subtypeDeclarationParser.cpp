@@ -10,13 +10,13 @@ using vhdlParser = vhdl_antlr::vhdlParser;
 namespace hdlConvertor {
 namespace vhdl {
 
-std::unique_ptr<HdlSubtypeDec> VhdlSubtypeDeclarationParser::visitSubtype_declaration(
+std::unique_ptr<HdlTypeDec> VhdlSubtypeDeclarationParser::visitSubtype_declaration(
 		vhdlParser::Subtype_declarationContext *ctx) {
 	//subtype_declaration
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
 	auto st = VhdlExprParser::visitSubtype_indication(ctx->subtype_indication());
-	auto v = create_object<HdlSubtypeDec>(ctx,
+	auto v = create_object<HdlTypeDec>(ctx,
 			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
 			std::move(st));
 	return v;

@@ -27,7 +27,10 @@ ToPy::ToPy() {
 	}
 	auto import = [this](PyObject *&obj, const std::string &name) {
 		obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
-		assert(obj != NULL &&"Bug in this library hdlConvertor.hdlAst not as expected from C");
+		if (nullptr == obj) {
+			std::cout << "Bug in this library hdlConvertor.hdlAst not as expected from C\n";
+			std::cout << "  missing Python class " << name << "\n";
+		}
 	};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");
@@ -44,6 +47,8 @@ ToPy::ToPy() {
 	import(HdlSimpleRangeCls, "HdlSimpleRange");
 	import(HdlRangeCls, "HdlRange");
 	import(HdlSubtypeCls, "HdlSubtype");
+	import(HdlConstraintCls, "HdlConstraint");
+	import(HdlTypeDecCls, "HdlTypeDec");
 	import(HdlTypeAutoCls, "HdlTypeAuto");
 	import(HdlTypeTypeCls, "HdlTypeType");
 	import(HdlStmIfCls, "HdlStmIf");
@@ -310,17 +315,11 @@ PyObject* ToPy::toPy(const HdlSimpleRange *o) {
 	}
 	return py_inst;
 }
-PyObject* ToPy::toPy(const hdlObjects::HdlRangeConstraint *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlRangeConstraintCls, NULL);
+PyObject* ToPy::toPy(const hdlObjects::HdlConstraint *o) {
+	PyObject *py_inst = PyObject_CallObject(HdlConstraintCls, NULL);
 	if (!py_inst)
 		return nullptr;
 	if (toPy_property(py_inst, "range", o->range))
-		return nullptr;
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlArrayConstraint *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlArrayConstraintCls, NULL);
-	if (!py_inst)
 		return nullptr;
 	if (toPy_arr(py_inst, "indexes", o->indexes))
 		return nullptr;
@@ -328,52 +327,18 @@ PyObject* ToPy::toPy(const hdlObjects::HdlArrayConstraint *o) {
 		if (toPy_property(py_inst, "element", o->element))
 			return nullptr;
 	}
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlRecordConstraint *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlRecordConstraintCls, NULL);
-	if (!py_inst)
-		return nullptr;
 	if (toPy_dict(py_inst, "field_cons", o->field_cons)) 
 		return nullptr;
 	return py_inst;
 }
 PyObject* ToPy::toPy(const hdlObjects::HdlTypeDec *o) {
-	auto sub = dynamic_cast<const HdlSubtypeDec*>(o);
-	if (sub) 
-		return toPy(sub);
-
-	auto en = dynamic_cast<const HdlEnumTypeDec*>(o);
-	if (en) 
-		return toPy(en);
-	
-	auto arr = dynamic_cast<const HdlArrayTypeDec*>(o);
-	if (arr) 
-		return toPy(arr);
-	
-	auto st = dynamic_cast<const HdlStructTypeDec*>(o);
-	if (st) 
-		return toPy(st);
-	
-	PyErr_SetString(PyExc_ValueError,
-			"ToPy::toPy - Unexpected type declaration class");
-	return nullptr;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlSubtypeDec *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlSubtypeDecCls, NULL);
+	PyObject *py_inst = PyObject_CallObject(HdlTypeDecCls, NULL);
 	if (!py_inst)
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
-	if (toPy_arr(py_inst, "subtype", o->subtype))
-		return nullptr;
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlEnumTypeDec *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlEnumTypeDecCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
+	//TODO:: convert the 'type' member into a string if it's wanted
+	if (toPy_property(py_inst, "subtype", o->subtype))
 		return nullptr;
 	if (toPy_dict(py_inst, "ids", o->ids))
 		return nullptr;
@@ -381,33 +346,25 @@ PyObject* ToPy::toPy(const hdlObjects::HdlEnumTypeDec *o) {
 		if (toPy_property(py_inst, "base_type", o->base_type))
 			return nullptr;
 	}
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlArrayTypeDec *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlArrayConstraintCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
-		return nullptr;
-	if (toPy_property(py_inst, "cons", o->cons))
-		return nullptr;
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlStructTypeDec *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlStructTypeDecCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
-		return nullptr;
-	if (toPy_arr(py_inst, "indexes", o->indexes))
-		return nullptr;
-	if (o->element) {
-		if (toPy_property(py_inst, "element", o->element))
+	if (o->isUnion) {
+		if (toPy_property(py_inst, "isUnion", Py_True))
+			return nullptr;
+	} else {
+		if (toPy_property(py_inst, "isUnion", Py_False))
 			return nullptr;
 	}
+	if (toPy_property(py_inst, "array_cons", o->array_cons))
+		return nullptr;
+	if (toPy_dict(py_inst, "fields", o->fields))
+		return nullptr;
+//	if (toPy_arr(py_inst, "indexes", o->indexes))
+//		return nullptr;
+//	if (o->element) {
+//		if (toPy_property(py_inst, "element", o->element))
+//			return nullptr;
+//	}
 	return py_inst;
 }
-//rhinton above needs modification
 PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlFunctionDefCls, NULL);
 	if (py_inst == nullptr)
@@ -654,6 +611,8 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmIfCls);
 	Py_XDECREF(HdlTypeTypeCls);
 	Py_XDECREF(HdlTypeAutoCls);
+	Py_XDECREF(HdlTypeDecCls);
+	Py_XDECREF(HdlConstraintCls);
 	Py_XDECREF(HdlSubtypeCls);
 	Py_XDECREF(HdlRangeCls);
 	Py_XDECREF(HdlSimpleRangeCls);

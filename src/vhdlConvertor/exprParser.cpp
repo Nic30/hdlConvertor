@@ -205,7 +205,7 @@ std::unique_ptr<HdlConstraint> VhdlExprParser::visitConstraint(
 		// range_constraint
 		// : RANGE range
 		// ;
-		auto rcons = std::make_unique<HdlRangeConstraint>();
+		auto rcons = std::make_unique<HdlConstraint>();
 		rcons->range = visitRange(rng->range());
 		return rcons;
 	} 
@@ -224,20 +224,20 @@ std::unique_ptr<HdlConstraint> VhdlExprParser::visitConstraint(
 			"ExprParser.visitConstraint - unrecognized constraint", ctx);
 	return nullptr;
 }
-std::unique_ptr<HdlArrayConstraint> VhdlExprParser::visitArray_constraint(
+std::unique_ptr<HdlConstraint> VhdlExprParser::visitArray_constraint(
 		vhdlParser::Array_constraintContext *ctx) {
 	// array_constraint:
 	//       index_constraint ( array_element_constraint )?
 	//       | LPAREN OPEN RPAREN ( array_element_constraint )?
 	// ;
-	std::unique_ptr<HdlArrayConstraint> cons;
+	std::unique_ptr<HdlConstraint> cons;
 	auto ic = ctx->index_constraint();
 	if (ic) {
 		cons = visitIndex_constraint(ic);
 	} else {
-		cons = create_object<HdlArrayConstraint>(ctx);
+		cons = create_object<HdlConstraint>(ctx);
 	}
-	// When OPEN, we could create a NoConstraint in the HdlArrayConstraint
+	// When OPEN, we could create a NoConstraint in the HdlConstraint
 	// 'indexes' member.  But that seems unnecessary.
 
 	auto aec = ctx->array_element_constraint();
@@ -246,12 +246,12 @@ std::unique_ptr<HdlArrayConstraint> VhdlExprParser::visitArray_constraint(
 	}
         return cons;
 }
-std::unique_ptr<HdlArrayConstraint> VhdlExprParser::visitIndex_constraint(
+std::unique_ptr<HdlConstraint> VhdlExprParser::visitIndex_constraint(
 		vhdlParser::Index_constraintContext *ctx) {
 	// index_constraint
 	// : LPAREN discrete_range ( COMMA discrete_range )* RPAREN
 	// ;
-	auto acons = std::make_unique<HdlArrayConstraint>();
+	auto acons = std::make_unique<HdlConstraint>();
 	for (auto dr_ctx : ctx->discrete_range()) {
 		acons->indexes.push_back(visitDiscrete_range(dr_ctx));
 	}

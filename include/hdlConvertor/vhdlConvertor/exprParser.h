@@ -35,9 +35,9 @@ public:
 			vhdlParser::Resolution_indicationContext *ctx);
 	static std::unique_ptr<hdlObjects::HdlConstraint> visitConstraint(
 			vhdlParser::ConstraintContext *ctx);
-	static std::unique_ptr<hdlObjects::HdlArrayConstraint> visitArray_constraint(
+	static std::unique_ptr<hdlObjects::HdlConstraint> visitArray_constraint(
 			vhdlParser::Array_constraintContext *ctx);
-	static std::unique_ptr<hdlObjects::HdlArrayConstraint> visitIndex_constraint(
+	static std::unique_ptr<hdlObjects::HdlConstraint> visitIndex_constraint(
 			vhdlParser::Index_constraintContext *ctx);
 	static std::unique_ptr<hdlObjects::HdlConstraint> visitArray_element_constraint(
 			vhdlParser::Array_element_constraintContext *ctx);

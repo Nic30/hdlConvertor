@@ -7,20 +7,23 @@ namespace hdlObjects {
 
 
 // constraints
+HdlConstraint::HdlConstraint(const HdlConstraint& other) {
+	if (other.range)
+		range = std::make_unique<HdlRange>(*other.range);
+	if (other.element)
+		element = std::make_unique<HdlConstraint>(*other.element);
+	field_cons.reserve(other.field_cons.size());
+	for ( auto& fc : other.field_cons ) {
+		field_cons.push_back(std::make_pair(fc.first, 
+				std::make_unique<HdlConstraint>(*fc.second)));
+	}
+	indexes.reserve(other.indexes.size());
+	for ( auto& idx : other.indexes ) {
+		indexes.push_back(std::make_unique<HdlRange>(*idx));
+	}
+}
+HdlConstraint::HdlConstraint() {}
 HdlConstraint::~HdlConstraint() {}
-//HdlNoConstraint::~HdlNoConstraint() {}
-HdlRangeConstraint::HdlRangeConstraint() {}
-HdlRangeConstraint::~HdlRangeConstraint() {}
-HdlRecordConstraint::~HdlRecordConstraint() {}
-HdlArrayConstraint::~HdlArrayConstraint() {}
-
-// type declaration base class
-HdlTypeDec::HdlTypeDec(const std::string& name) :
-		WithNameAndDoc(name), iHdlObj() {
-}
-    
-HdlTypeDec::~HdlTypeDec() {
-}
 
 // subtype
 HdlSubtype::HdlSubtype() {
@@ -33,13 +36,6 @@ HdlSubtype::HdlSubtype(const HdlSubtype& other) : iHdlObj(other)
 		constraint = std::make_unique<HdlConstraint>(*other.constraint);
 }
 HdlSubtype::~HdlSubtype() {}
-
-HdlSubtypeDec::HdlSubtypeDec(const std::string& name, std::unique_ptr<HdlSubtype> sti)
-	: HdlTypeDec(name), subtype(std::move(subtype))
-{
-}
-
-HdlSubtypeDec::~HdlSubtypeDec() {}
 
 // ranges
 HdlSimpleRange::HdlSimpleRange(
@@ -54,42 +50,35 @@ HdlSimpleRange::HdlSimpleRange(const HdlSimpleRange& rng)
 		right(std::make_unique<iHdlExpr>(*rng.right)) {
 }
 HdlSimpleRange::~HdlSimpleRange() {}
+
 iHdlExprItem* HdlRange::clone() const {
-	HdlRange *obj = new HdlRange();
-	if (subtype) 
-		obj->subtype = std::make_unique<HdlSubtype>(*subtype);
-	if (range)
-		obj->range = std::make_unique<HdlSimpleRange>(*range);
-	if (attribute)
-		obj->attribute = std::make_unique<iHdlExpr>(*attribute);
-	return obj;
+	return new HdlRange(*this);
+}
+HdlRange::HdlRange() {}
+HdlRange::HdlRange(const HdlRange& other) {
+	if (other.subtype) 
+		subtype = std::make_unique<HdlSubtype>(*other.subtype);
+	if (other.range)
+		range = std::make_unique<HdlSimpleRange>(*other.range);
+	if (other.attribute)
+		attribute = std::make_unique<iHdlExpr>(*other.attribute);
 }
 HdlRange::~HdlRange() {}
 
-// enumerated type
-HdlEnumTypeDec::HdlEnumTypeDec(const std::string& name)
-	: HdlTypeDec(name)
+// type declaration base class
+HdlTypeDec::HdlTypeDec(const std::string& name) 
+	: WithNameAndDoc(name), iHdlObj(), type(hdltc_error), isUnion(false) 
 {
 }
-HdlEnumTypeDec::~HdlEnumTypeDec() {
-}
-
-// array type
-HdlArrayTypeDec::HdlArrayTypeDec(const std::string& name)
-	: HdlTypeDec(name)
+// subtype declaration
+HdlTypeDec::HdlTypeDec(const std::string& name, const std::unique_ptr<HdlSubtype>& sti) 
+	: WithNameAndDoc(name), iHdlObj(), type(hdltc_error), 
+	subtype(std::make_unique<HdlSubtype>(*sti)), isUnion(false) 
 {
 }
-HdlArrayTypeDec::~HdlArrayTypeDec() {
+HdlTypeDec::~HdlTypeDec() {
 }
 
-// struct or record type
-HdlStructTypeDec::HdlStructTypeDec(const std::string& name)
-	: HdlTypeDec(name), isUnion(false) 
-{
-}
-
-HdlStructTypeDec::~HdlStructTypeDec() {
-}
 
 
 }

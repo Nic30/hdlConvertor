@@ -144,7 +144,7 @@ std::unique_ptr<hdlObjects::HdlTypeDec> VhdlTypeDeclarationParser::visitEnumerat
 	//enumeration_type_definition:
 	//      LPAREN enumeration_literal ( COMMA enumeration_literal )* RPAREN
 	//;
-	std::unique_ptr<HdlEnumTypeDec> typ = create_object<HdlEnumTypeDec>(ctx, std::move(name));
+	std::unique_ptr<HdlTypeDec> typ = create_object<HdlTypeDec>(ctx, std::move(name));
 	for (auto lit : ctx->enumeration_literal()) {
 		auto id = lit->identifier();
 		auto cl = lit->CHARACTER_LITERAL();

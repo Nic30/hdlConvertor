@@ -13,7 +13,7 @@ class VhdlSubtypeDeclarationParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::unique_ptr<hdlObjects::HdlSubtypeDec> visitSubtype_declaration(
+	static std::unique_ptr<hdlObjects::HdlTypeDec> visitSubtype_declaration(
 			vhdlParser::Subtype_declarationContext *ctx);
 
 };

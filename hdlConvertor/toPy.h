@@ -45,18 +45,8 @@ class ToPy {
 	PyObject *HdlSimpleRangeCls;
 	PyObject *HdlRangeCls;
 	PyObject *HdlSubtypeCls;
-//rhinton
-	//base:PyObject *HdlConstraintCls;
-	//PyObject *HdlNoConstraintCls;
-	PyObject *HdlRangeConstraintCls;
-	PyObject *HdlArrayConstraintCls;
-	PyObject *HdlRecordConstraintCls;
-	//base:PyObject *HdlTypeDecCls;
-	PyObject *HdlSubtypeDecCls;
-	PyObject *HdlEnumTypeDecCls;
-	PyObject *HdlArrayTypeDecCls;
-	PyObject *HdlStructTypeDecCls;
-//rhinton
+	PyObject *HdlConstraintCls;
+	PyObject *HdlTypeDecCls;
 	PyObject *HdlTypeTypeCls;
 	PyObject *HdlTypeAutoCls;
 	PyObject *HdlStmIfCls;
@@ -94,14 +84,14 @@ class ToPy {
 			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 			return -1;
 		}
-		for (auto &o : objs) {
-			auto& key = o.first;
-			auto& py_val = toPy(o.second);
+		for (const auto &o : objs) {
+			const auto& key = o.first;
+			const auto& py_val = toPy(o.second);
 			if (py_val == nullptr) {
 				Py_DECREF(parent_dict);
 				return -1;
 			}
-			auto e = PyDict_SetItemString(parent_dict, key, py_val);
+			auto e = PyDict_SetItemString(parent_dict, key.c_str(), py_val);
 			Py_DECREF(py_val); // needed? docs say SetItem doesn't steal a reference
 			if (e) {
 				Py_DECREF(parent_dict);
@@ -146,14 +136,8 @@ class ToPy {
 		return 0;
 	}
 
-	template<typename OBJ_T>
-	int toPy_property(PyObject *py_inst, const char *prop_name,
-			const std::unique_ptr<OBJ_T> &o) {
-		auto py_o = toPy(o.get());
-		if (!py_o) {
-			Py_DECREF(py_inst);
-			return -1;
-		}
+	int toPy_property(PyObject *py_inst, const char *prop_name, 
+			PyObject *py_o) {
 		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
 		if (e < 0) {
 			Py_DECREF(py_inst);
@@ -163,18 +147,23 @@ class ToPy {
 	}
 	template<typename OBJ_T>
 	int toPy_property(PyObject *py_inst, const char *prop_name,
+			const std::unique_ptr<OBJ_T> &o) {
+		auto py_o = toPy(o.get());
+		if (!py_o) {
+			Py_DECREF(py_inst);
+			return -1;
+		}
+		return toPy_property(py_inst, prop_name, py_o);
+	}
+	template<typename OBJ_T>
+	int toPy_property(PyObject *py_inst, const char *prop_name,
 			const OBJ_T &o) {
 		auto py_o = toPy(o);
 		if (!py_o) {
 			Py_DECREF(py_inst);
 			return -1;
 		}
-		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
-		if (e < 0) {
-			Py_DECREF(py_inst);
-			return -1;
-		}
-		return 0;
+		return toPy_property(py_inst, prop_name, py_o);
 	}
 public:
 	ToPy();
@@ -201,16 +190,8 @@ public:
 	PyObject* toPy(const hdlObjects::HdlSubtype *o);
 	PyObject* toPy(const hdlObjects::HdlRange *o);
 	PyObject* toPy(const hdlObjects::HdlSimpleRange *o);
-//rhinton
-	PyObject* toPy(const hdlObjects::HdlRangeConstraint *o);
-	PyObject* toPy(const hdlObjects::HdlArrayConstraint *o);
-	PyObject* toPy(const hdlObjects::HdlRecordConstraint *o);
+	PyObject* toPy(const hdlObjects::HdlConstraint *o);
 	PyObject* toPy(const hdlObjects::HdlTypeDec *o);
-	PyObject* toPy(const hdlObjects::HdlSubtypeDec *o);
-	PyObject* toPy(const hdlObjects::HdlEnumTypeDec *o);
-	PyObject* toPy(const hdlObjects::HdlArrayTypeDec *o);
-	PyObject* toPy(const hdlObjects::HdlStructTypeDec *o);
-//rhinton
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);
 	PyObject* toPy(const hdlObjects::HdlCall *o);

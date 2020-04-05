@@ -12,41 +12,64 @@ namespace hdlConvertor {
 namespace hdlObjects {
 
 class iHdlExpr;
-class HdlVariableDef;
+
+class HdlRange;
 
 /* Constraints for ranges, arrays, and structures for use with data types */
 class HdlConstraint : public iHdlObj {
 public:
+	// scalar range constraint
+	std::unique_ptr<HdlRange> range;
+	// scalar range constraint
+	std::vector<std::pair<std::string, std::unique_ptr<HdlConstraint>>> field_cons; 
+	// array constraint
+	std::vector<std::unique_ptr<HdlRange>> indexes;
+	std::unique_ptr<HdlConstraint> element;
+
+	HdlConstraint();
+	// @note deepcopy
+	HdlConstraint(const HdlConstraint& other);
 	virtual ~HdlConstraint();
 };
 
-//class HdlNoConstraint : public HdlConstraint {
-//	virtual ~HdlNoConstraint();
-//};
-
-class HdlRange;
-
-class HdlRangeConstraint : public HdlConstraint {
+/* HdlSubtype represents a "subtype indication" in VHDL, generally it's "the
+   type of a thingy". */
+class HdlSubtype : public iHdlObj {
 public:
-	std::unique_ptr<HdlRange> range;
-	HdlRangeConstraint();
-	virtual ~HdlRangeConstraint();
+	std::unique_ptr<iHdlExpr> parent_type; // must be a type mark
+	std::unique_ptr<HdlConstraint> constraint;
+	
+	HdlSubtype();
+	// @note deepcopy
+	HdlSubtype(const HdlSubtype& other);
+	virtual ~HdlSubtype();
 };
 
-class HdlRecordConstraint : public HdlConstraint {
+class HdlSimpleRange : public iHdlObj {
 public:
-	//maybe?std::vector<std::unique_ptr<HdlVariableDef>> field_cons;
-	std::vector<std::pair<std::string, std::unique_ptr<HdlConstraint>>> field_cons;
-	virtual ~HdlRecordConstraint();
+	std::unique_ptr<iHdlExpr> left;
+	HdlRangeDirection dir;
+	std::unique_ptr<iHdlExpr> right;
+
+	HdlSimpleRange(std::unique_ptr<iHdlExpr> left, HdlRangeDirection dir, 
+		std::unique_ptr<iHdlExpr> right);
+	HdlSimpleRange(const HdlSimpleRange& rng);
+	~HdlSimpleRange();
 };
 
-class HdlArrayConstraint : public HdlConstraint {
+/* HdlRange is a conflation of the different ways of specifying a range. */
+class HdlRange : public iHdlExprItem {
 public:
-	std::vector<std::unique_ptr<HdlRange>> indexes;
-	std::unique_ptr<HdlConstraint> element;
-	virtual ~HdlArrayConstraint();
-};
+	std::unique_ptr<HdlSimpleRange> range;
+	std::unique_ptr<HdlSubtype> subtype;
+	std::unique_ptr<iHdlExpr> attribute;
 
+	virtual iHdlExprItem* clone() const override;
+	HdlRange();
+	// @note deepcopy
+	HdlRange(const HdlRange& other);
+	virtual ~HdlRange();
+};
 
 /*
  * HDL AST node for module declaration
@@ -60,85 +83,30 @@ public:
 		hdltc_struct, hdltc_class, hdltc_physical, hdltc_integral, 
 		hdltc_float, hdltc_access, hdltc_file, hdltc_protected};
 
-	HdlTypeDec(const std::string& name);
-	virtual TypeClass typeClass() {return hdltc_error;};
-	virtual ~HdlTypeDec();
-};
+	TypeClass type;  // which kind of type-ish declaration
 
-// HdlSubtype represents a "subtype indication" in VHDL
-class HdlSubtype : public iHdlObj {
-public:
-	std::unique_ptr<iHdlExpr> parent_type; // must be a type mark
-	std::unique_ptr<HdlConstraint> constraint;
-	
-	HdlSubtype();
-	// @note deepcopy
-	HdlSubtype(const HdlSubtype& other);
-	virtual ~HdlSubtype();
-};
-
-// HdlSubtypeDec represents a subtype declaration in VHDL, which has a name and
-// associated subtype indication.
-class HdlSubtypeDec : public HdlTypeDec {
-public:
+	// declared subtype
 	std::unique_ptr<HdlSubtype> subtype;
-	HdlSubtypeDec(const std::string& name, std::unique_ptr<HdlSubtype> subtype);
-	virtual TypeClass typeClass() {return hdltc_error;};
-	virtual ~HdlSubtypeDec();
-};
 
-class HdlSimpleRange : public iHdlObj {
-public:
-	std::unique_ptr<iHdlExpr> left;
-	HdlRangeDirection dir;
-	std::unique_ptr<iHdlExpr> right;
-	HdlSimpleRange(std::unique_ptr<iHdlExpr> left, HdlRangeDirection dir, std::unique_ptr<iHdlExpr> right);
-	// @note deepcopy
-	HdlSimpleRange(const HdlSimpleRange& rng);
-	virtual ~HdlSimpleRange();
-};
-
-// HdlRange is a conflation of the different ways of specifying a range.
-class HdlRange : public iHdlExprItem {
-public:
-	std::unique_ptr<HdlSubtype> subtype;
-	std::unique_ptr<HdlSimpleRange> range;
-	std::unique_ptr<iHdlExpr> attribute;
-	virtual iHdlExprItem* clone() const override;
-	virtual ~HdlRange();
-};
-
-class HdlEnumTypeDec: public HdlTypeDec {
-public:
-	// VHDL character enumerations are stored as strings including the
-	// single-quotes, e.g. "'U'"s; SV allows identifiers to have an
-	// associated value, while VHDL scalar types do not have this concept
+	// Enumerated "scalar" type declaration: VHDL character enumerations
+	// are stored as strings including the single-quotes, e.g. "'U'"s; SV
+	// allows identifiers to have an associated value, while VHDL scalar
+	// types do not have this concept
 	std::vector<std::pair<std::string, std::unique_ptr<iHdlExpr>>> ids;
 	std::unique_ptr<HdlSubtype> base_type;
 
-	HdlEnumTypeDec(const std::string& name);
-	TypeClass typeClass() override {return hdltc_enum;};
-	virtual ~HdlEnumTypeDec();
-};
+	// Array type declaration: uses the same information as an array
+	// constraint
+	std::unique_ptr<HdlConstraint> array_cons;
 
-class HdlArrayTypeDec: public HdlTypeDec {
-public:
-	HdlArrayConstraint cons;
-
-	HdlArrayTypeDec(const std::string& name);
-	virtual ~HdlArrayTypeDec();
-	TypeClass typeClass() override {return hdltc_array;};
-};
-
-// HdlStructTypeDec class handles VHDL records, SV structs, and SV unions
-class HdlStructTypeDec: public HdlTypeDec {
-public:
+	// Structure, union, record type declaration
 	bool isUnion;
-	std::vector<std::unique_ptr<HdlVariableDef>> fields;
-
-	HdlStructTypeDec(const std::string& name);
-	virtual ~HdlStructTypeDec();
-	TypeClass typeClass() override {return hdltc_struct;};
+	std::vector<std::pair<std::string, std::unique_ptr<HdlSubtype>>> fields;
+	
+	HdlTypeDec(const std::string& name);
+	HdlTypeDec(const std::string& name, const std::unique_ptr<HdlSubtype>& sti);  // subtype declaration
+	virtual TypeClass typeClass() {return hdltc_error;};
+	virtual ~HdlTypeDec();
 };
 
 //TODO:: SV classes; VHDL physical types, integral types, floating-point types,

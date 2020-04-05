@@ -27,5 +27,5 @@ from hdlConvertor.hdlAst._statements import (HdlImport, HdlStmAssign,
 from hdlConvertor.hdlAst._structural import (HdlComponentInst, HdlContext,
     HdlModuleDec, HdlModuleDef, HdlNamespace, HdlLibrary)
 from hdlConvertor.hdlAst._typeDefs import (HdlSimpleRange, HdlRange, HdlSubtype, 
-    HdlClassDef, HdlEnumDef, HdlTypeBitsDef)
+    HdlConstraint, HdlTypeDec, HdlClassDef, HdlEnumDef, HdlTypeBitsDef)
 from hdlConvertor.hdlAst.utils import CodePosition
