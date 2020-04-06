@@ -8,6 +8,8 @@ from hdlConvertor.translate.verilog_to_basic_hdl_sim_model import\
 
 
 def _to_basic_hdl_sim_model(context, language, buff):
+    if language != VERILOG:
+        raise NotImplementedError()
     context, stm_outputs, _ = verilog_to_basic_hdl_sim_model(context)
     tv = ToBasicHdlSimModel(buff)
     tv.visit_HdlContext(context, stm_outputs)
