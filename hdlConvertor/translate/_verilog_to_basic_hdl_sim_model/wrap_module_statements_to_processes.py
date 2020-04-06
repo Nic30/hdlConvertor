@@ -25,7 +25,7 @@ def collect_indexes(expr):
     """
     if isinstance(expr, HdlCall) and expr.fn == HdlBuiltinFn.INDEX:
         assert len(expr.ops) == 2, expr.ops
-        for i in collect_indexes(expr.ops[0])
+        for i in collect_indexes(expr.ops[0]):
             yield i
         yield expr.ops[1]
 
