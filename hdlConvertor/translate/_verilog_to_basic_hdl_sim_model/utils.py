@@ -1,6 +1,16 @@
 from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn, HdlName
 
 
+def to_property_call(o, prop_name):
+    """
+    :note: a * b -> a.prop_name(b)
+    :type o: HdlCall
+    """
+    o.fn = HdlBuiltinFn.CALL
+    o.ops[0] = hdl_getattr(o.ops[0], prop_name)
+    return o
+
+
 def hdl_name_prefix(prefix_name, o):
     """
     :type o: HdlName
