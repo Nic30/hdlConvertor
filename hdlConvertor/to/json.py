@@ -1,9 +1,7 @@
-from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._statements import HdlImport
-from hdlConvertor.hdlAst._structural import HdlLibrary
-from hdlConvertor.hdlAst._expr import HdlDirection, HdlName, HdlIntValue,\
+from hdlConvertor.hdlAst import HdlDirection, HdlName, HdlIntValue,\
     HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
 from hdlConvertor.to.hdlUtils import is_str
+from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 
 
 class ToJson(HdlAstVisitor):
@@ -14,12 +12,7 @@ class ToJson(HdlAstVisitor):
         """
         res = []
         for o in context.objs:
-            if isinstance(o, HdlImport):
-                d = self.visit_HdlImport(o)
-            elif isinstance(o, HdlLibrary):
-                d = self.visit_HdlLibrary(o)
-            else:
-                d = self.visit_main_obj(o)
+            d = self.visit_main_obj(o)
             res.append(d)
         return res
 
@@ -87,6 +80,7 @@ class ToJson(HdlAstVisitor):
         :type o: HdlVariableDef
         """
         d = self.visit_iHdlObjWithName(o)
+        
         for flag_name in ["is_latched", "is_const", "is_static",
                           "is_virtual", ]:
             if getattr(o, flag_name):
@@ -104,8 +98,6 @@ class ToJson(HdlAstVisitor):
         d = self.visit_HdlNamespace(o)
         d["params"] = [self.visit_HdlVariableDef(p) for p in o.params]
         d["ports"] = [self.visit_HdlVariableDef(p) for p in o.ports]
-        if o.body:
-            d["body"] = self.visit_HdlModuleDef(o.body)
         return d
 
     def visit_HdlModuleDef(self, o):
@@ -113,6 +105,8 @@ class ToJson(HdlAstVisitor):
         :type o: HdlModuleDec
         """
         d = self.visit_iHdlObjWithName(o)
+        if o.dec is not None:
+            d["dec"] = self.visit_HdlModuleDec(o.dec)
         if o.module_name is not None:
             d["module_name"] = self.visit_iHdlExpr(o.module_name)
         d["objs"] = [self.visit_main_obj(o2) for o2 in o.objs]
@@ -374,7 +368,6 @@ if __name__ == "__main__":
     #
     # filenames = [os.path.join(AES, f) for f in files]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
-    print(repr(d))
-    #tv = ToJson()
-    #res = tv.visit_HdlContext(d)
-    #pprint(res)
+    tv = ToJson()
+    res = tv.visit_HdlContext(d)
+    pprint(res)

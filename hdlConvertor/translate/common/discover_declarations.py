@@ -25,10 +25,12 @@ class WithNameScope():
 
 
 class DiscoverDeclarations(HdlAstVisitor):
+
     def __init__(self, name_scope):
         """
         :type name_scope: NameScope
         """
+        super(DiscoverDeclarations, self).__init__()
         self.name_scope = name_scope
 
     def visit_HdlVariableDef(self, o):
@@ -52,14 +54,14 @@ class DiscoverDeclarations(HdlAstVisitor):
             for o2 in o.objs:
                 raise NotImplementedError(o2)
 
-        if o.body is not None:
-            self.visit_HdlModuleDef(o.body)
-
     def visit_HdlModuleDef(self, o):
         """
         :type o: HdlModuleDef
         """
-        with WithNameScope(self, self.name_scope.get_child(o.module_name)):
+        if o.dec is not None:
+            self.visit_HdlModuleDec(o.dec)
+
+        with WithNameScope(self, self.name_scope.get_child(o.module_name.val)):
             self.discover_declarations(o.objs)
 
     def visit_HdlComponentInst(self, o):

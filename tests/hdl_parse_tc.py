@@ -2,6 +2,13 @@ from os import path
 import os
 import unittest
 
+from hdlConvertor import HdlConvertor
+from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef
+from hdlConvertor.language import Language
+from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
+from hdlConvertor.to.vhdl.vhdl2008 import ToVhdl2008
+
+
 try:
     # python2
     from StringIO import StringIO
@@ -10,10 +17,6 @@ except ImportError:
     # python3
     from io import StringIO
 
-from hdlConvertor import HdlConvertor
-from hdlConvertor.language import Language
-from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
-from hdlConvertor.to.vhdl.vhdl2008 import ToVhdl2008
 
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -106,10 +109,22 @@ class HdlParseTC(unittest.TestCase):
         self.assertEqual(ref, res_str)
 
     def check_obj_names(self, context, obj_cls, names):
-        filtered = [o.name for o in context.objs if isinstance(o, obj_cls)]
+        if obj_cls == HdlModuleDec:
+            filtered = []
+            for o in context.objs:
+                if isinstance(o, HdlModuleDef) and o.dec is not None:
+                    filtered.append(o.dec.name)
+        else:
+            filtered = [o.name for o in context.objs if isinstance(o, obj_cls)]
         self.assertSequenceEqual(names, filtered)
 
     def find_obj_by_name(self, context, obj_cls, name):
+        if obj_cls == HdlModuleDec:
+            for o in context.objs:
+                if (isinstance(o, HdlModuleDec) and o.name == name) or\
+                        (isinstance(o, HdlModuleDef) and o.dec.name == name):
+                    return o.dec
+            
         for o in context.objs:
             if isinstance(o, obj_cls) and o.name == name:
                 return o

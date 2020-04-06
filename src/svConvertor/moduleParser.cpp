@@ -83,7 +83,6 @@ void VerModuleParser::visitModule_declaration(
 			ent->ports.push_back(move(p));
 		}
 	}
-	res.push_back(move(ent));
 	if (ctx->KW_EXTERN()) {
 		for (auto &o : m_ctx.ent.generics) {
 			if (!o->type) {
@@ -95,6 +94,7 @@ void VerModuleParser::visitModule_declaration(
 				o->type = iHdlExpr::AUTO_T();
 			}
 		}
+		res.push_back(move(ent));
 		return;
 	}
 
@@ -109,8 +109,9 @@ void VerModuleParser::visitModule_declaration(
 	for (auto mi : ctx->module_item())
 		visitModule_item(mi, arch->objs, m_ctx);
 
-	arch->entityName = iHdlExpr::ID(m_ctx.ent.name);
-	res.push_back(move(arch));
+	arch->module_name = iHdlExpr::ID(m_ctx.ent.name);
+	arch->dec = move(ent);
+
 	if (m_ctx.non_ANSI_port_groups.size()) {
 		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
 		pp.convert_non_ansi_ports_to_ansi(ctx, m_ctx.ent.ports, m_ctx.arch->objs);
@@ -148,6 +149,7 @@ void VerModuleParser::visitModule_declaration(
 			o->type = iHdlExpr::AUTO_T();
 		}
 	}
+	res.push_back(move(arch));
 }
 void VerModuleParser::visitModule_item_item(
 		sv2017Parser::Module_item_itemContext *ctx,

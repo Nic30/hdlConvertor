@@ -26,7 +26,7 @@ std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 	// ;
 
 	a->name = ctx->identifier(0)->getText();
-	a->entityName = VhdlReferenceParser::visitName(ctx->name());
+	a->module_name = VhdlReferenceParser::visitName(ctx->name());
 
 	if (!hierarchyOnly) {
 		for (auto bi : ctx->block_declarative_item()) {

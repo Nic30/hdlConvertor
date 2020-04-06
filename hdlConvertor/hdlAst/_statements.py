@@ -23,7 +23,7 @@ class HdlImport(iHdlStatement):
         self.path = path
 
 
-class HdlStmNop():
+class HdlStmNop(iHdlStatement):
     """
     Nop statement in HDL
     """
@@ -237,3 +237,20 @@ class HdlStmContinue(iHdlStatement):
     HDL continue statement
     """
     __slots__ = []
+
+ALL_STATEMENT_CLASSES = (
+    HdlStmNop,
+    HdlStmBlock,
+    HdlStmAssign,
+    HdlStmIf,
+    HdlStmProcess,
+    HdlStmCase,
+    HdlStmFor,
+    HdlStmForIn,
+    HdlStmWhile,
+    HdlStmRepeat,
+    HdlStmReturn,
+    HdlStmWait,
+    HdlStmBreak,
+    HdlStmContinue,
+)

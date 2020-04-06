@@ -90,6 +90,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         """
         :type o: HdlModuleDec
         """
+        self.visit_doc(o)
         self.visit_HdlModuleDec(o, vhdl_obj_name="COMPONENT")
 
     def visit_type(self, t):
@@ -191,25 +192,29 @@ class ToVhdl2008(ToVhdl2008Stm):
         if in_def_section:
             w("BEGIN\n")
 
-    def visit_HdlModuleDef(self, a):
+    def visit_HdlModuleDef(self, o):
         """
-        :type a: HdlModuleDef
+        :type o: HdlModuleDef
         """
         w = self.out.write
+        if o.dec is not None:
+            self.visit_HdlModuleDec(o.dec)
+            w("\n")
+        self.visit_doc(o)
         w("ARCHITECTURE ")
-        w(a.name)
+        w(o.name)
         w(" OF ")
-        w(a.module_name)
+        w(o.module_name.val)
         w(" IS\n")
-        self.visit_body_items(a.objs)
+        self.visit_body_items(o.objs)
         self.out.write("END ARCHITECTURE;\n")
 
     def visit_HdlFunctionDef(self, o):
         """
         :type o: HdlFunctionDef
         """
-        w = self.out.write
         self.visit_doc(o)
+        w = self.out.write
         is_procedure = o.return_t is None
         if is_procedure:
             w("PROCEDURE ")
@@ -240,6 +245,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         """
         :type o: HdlLibrary
         """
+        self.visit_doc(o)
         w = self.out.write
         w("LIBRARY ")
         w(o.name)

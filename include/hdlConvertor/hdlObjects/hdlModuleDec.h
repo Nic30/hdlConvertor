@@ -2,7 +2,7 @@
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/hdlVariableDef.h>
-#include "codePosition.h"
+#include <hdlConvertor/hdlObjects/codePosition.h>
 
 
 namespace hdlConvertor {

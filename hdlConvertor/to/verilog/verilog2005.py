@@ -61,39 +61,6 @@ class ToVerilog2005(ToVerilog2005Stm):
         if is_array:
             self.visit_type_array_part(t)
 
-    def visit_HdlModuleDec(self, e):
-        """
-        :type e: HdlModuleDef
-        """
-        self.visit_doc(e)
-        w = self.out.write
-        w("module ")
-        w(e.name)
-        gs = e.params
-        if gs:
-            w(" #(\n")
-            with Indent(self.out):
-                for last, g in iter_with_last(gs):
-                    self.visit_generic_declr(g)
-                    if last:
-                        w("\n")
-                    else:
-                        w(",\n")
-
-            w(")")
-        ps = e.ports
-        if ps:
-            w(" (\n")
-            with Indent(self.out):
-                for last, p in iter_with_last(ps):
-                    self.visit_port_declr(p)
-                    if last:
-                        w("\n")
-                    else:
-                        w(",\n")
-            w(")")
-        w(";\n")
-
     def visit_HdlVariableDef(self, var):
         """
         :type var: HdlVariableDef
@@ -209,10 +176,44 @@ class ToVerilog2005(ToVerilog2005Stm):
         else:
             w("endfunction")
 
+    def visit_HdlModuleDec(self, e):
+        raise ValueError(self, "does not support a module headers without body")
+
     def visit_HdlModuleDef(self, a):
         """
         :type a: HdlModuleDef
         """
+        e = a.dec
+        assert e is not None, a
+        self.visit_doc(e)
+        w = self.out.write
+        w("module ")
+        w(e.name)
+        gs = e.params
+        if gs:
+            w(" #(\n")
+            with Indent(self.out):
+                for last, g in iter_with_last(gs):
+                    self.visit_generic_declr(g)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+
+            w(")")
+        ps = e.ports
+        if ps:
+            w(" (\n")
+            with Indent(self.out):
+                for last, p in iter_with_last(ps):
+                    self.visit_port_declr(p)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+            w(")")
+        w(";\n")
+        
         w = self.out.write
         with Indent(self.out):
             for o in a.objs:

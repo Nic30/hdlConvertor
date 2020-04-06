@@ -3,13 +3,31 @@ from itertools import chain
 from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, HdlStmForIn,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
-    HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst
-from hdlConvertor.hdlAst._structural import HdlLibrary
-from hdlConvertor.hdlAst._statements import HdlStmBreak, HdlStmContinue,\
-    HdlStmRepeat
+    HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst, \
+    HdlIntValue, HdlStmBreak, HdlStmContinue, HdlStmRepeat, HdlLibrary, HdlContext
 
 
 class HdlAstVisitor(object):
+    def __init__(self):
+        self._visit_call_dispatch_dict = {
+            cls: getattr(self, "visit_" + cls.__name__)
+            for cls in [
+                HdlContext, HdlImport, HdlLibrary, HdlModuleDec, HdlModuleDef,
+                HdlNamespace, HdlVariableDef, HdlFunctionDef,
+                HdlComponentInst, HdlStmProcess, HdlStmIf, HdlStmAssign,
+                HdlStmCase, HdlStmWait, HdlStmRepeat, HdlStmReturn,
+                HdlStmBreak, HdlStmContinue, HdlStmFor, HdlStmForIn,
+                HdlStmWhile, HdlStmBlock, HdlCall, HdlIntValue
+            ]
+        }
+
+    def visit_iHdlObj(self, o):
+        visit_fn = self._visit_call_dispatch_dict.get(o.__class__, None)
+        if visit_fn is not None:
+            return visit_fn(o)
+        else:
+            return self.visit_iHdlExpr(o)
+
     def visit_doc(self, o):
         pass
 
@@ -18,12 +36,13 @@ class HdlAstVisitor(object):
         :type context: HdlContext
         """
         for o in context.objs:
-            if isinstance(o, HdlImport):
-                self.visit_HdlImport(o)
-            elif isinstance(o, HdlLibrary):
-                self.visit_HdlLibrary(o)
-            else:
-                self.visit_main_obj(o)
+            self.visit_main_obj(o)
+
+    def visit_HdlImport(self, o):
+        """
+        :type o: HdlImport
+        """
+        pass
 
     def visit_HdlLibrary(self, o):
         """
@@ -31,78 +50,49 @@ class HdlAstVisitor(object):
         """
         pass
 
+    def visit_HdlNamespace(self, o):
+        """
+        :type o: HdlNamespace
+        """
+        self.visit_doc(o)
+        for o2 in o.objs:
+            self.visit_iHdlObj(o2)
+
     def visit_main_obj(self, o):
-        if isinstance(o, HdlModuleDec):
-            return self.visit_HdlModuleDec(o)
-        elif isinstance(o, HdlModuleDef):
-            return self.visit_HdlModuleDef(o)
-        elif isinstance(o, HdlNamespace):
-            return self.visit_HdlNamespace(o)
-        elif isinstance(o, HdlVariableDef):
-            return self.visit_HdlVariableDef(o)
-        elif isinstance(o, HdlFunctionDef):
-            return self.visit_HdlFunctionDef(o)
-        elif isinstance(o, iHdlStatement):
-            return self.visit_iHdlStatement(o)
-        elif isinstance(o, HdlComponentInst):
-            return self.visit_HdlComponentInst(o)
+        visit_fn = self._visit_call_dispatch_dict.get(o.__class__, None)
+        if visit_fn is not None:
+            return visit_fn(o)
         else:
             return self.visit_iHdlExpr(o)
 
-    def visit_iHdlStatement(self, stm):
+    def visit_iHdlStatement(self, o):
         """
         :type o: iHdlStatement
         """
         # statement can be also expressin
-        if isinstance(stm, iHdlStatement):
-            self.visit_doc(stm)
-
-        if isinstance(stm, HdlStmProcess):
-            return self.visit_HdlStmProcess(stm)
-        elif isinstance(stm, HdlStmIf):
-            return self.visit_HdlStmIf(stm)
-        elif isinstance(stm, HdlStmAssign):
-            return self.visit_HdlStmAssign(stm)
-        elif isinstance(stm, HdlStmCase):
-            return self.visit_HdlStmCase(stm)
-        elif isinstance(stm, HdlStmWait):
-            return self.visit_HdlStmWait(stm)
-        elif isinstance(stm, HdlStmRepeat):
-            return self.visit_HdlStmRepeat(stm)
-        elif isinstance(stm, HdlStmReturn):
-            return self.visit_HdlStmReturn(stm)
-        elif isinstance(stm, HdlStmBreak):
-            return self.visit_HdlStmBreak(stm)
-        elif isinstance(stm, HdlStmContinue):
-            return self.visit_HdlStmContinue(stm)
-        elif isinstance(stm, HdlStmFor):
-            return self.visit_HdlStmFor(stm)
-        elif isinstance(stm, HdlStmForIn):
-            return self.visit_HdlStmForInt(stm)
-        elif isinstance(stm, HdlStmWhile):
-            return self.visit_HdlStmWhile(stm)
-        elif isinstance(stm, HdlStmBlock):
-            return self.visit_HdlStmBlock(stm)
+        visit_fn = self._visit_call_dispatch_dict.get(o.__class__, None)
+        if visit_fn is not None:
+            return visit_fn(o)
         else:
-            return self.visit_iHdlExpr(stm)
+            return self.visit_iHdlExpr(o)
 
     def visit_HdlModuleDec(self, o):
         """
         :type o: HdlModuleDec
         """
+        self.visit_doc(o)
         for p in o.params:
             self.visit_param(p)
         for p in o.ports:
             self.visit_port(p)
         for o in o.objs:
             raise NotImplementedError()
-        if o.body:
-            self.visit_HdlModuleDef(o.body)
 
     def visit_HdlVariableDef(self, o):
         """
         :type o: HdlVariableDef
         """
+        self.visit_doc(o)
         self.visit_type(o.type)
         if o.value is not None:
             self.visit_iHdlExr(o.value)
@@ -123,6 +113,12 @@ class HdlAstVisitor(object):
             self.visit_iHdlExpr(op)
         return o
 
+    def visit_HdlIntValue(self, o):
+        """
+        :type o: HdlIntValue
+        """
+        pass
+
     def visit_port(self, o):
         return self.visit_HdlVariableDef(o)
 
@@ -133,6 +129,10 @@ class HdlAstVisitor(object):
         """
         :type o: HdlModuleDef
         """
+        if o.dec is not None:
+            self.visit_HdlModuleDec(o.dec)
+
+        self.visit_doc(o)
         for _o in o.objs:
             if isinstance(_o, iHdlStatement):
                 self.visit_iHdlStatement(_o)
@@ -147,6 +147,7 @@ class HdlAstVisitor(object):
         """
         :type o: HdlComponentInst
         """
+        self.visit_doc(o)
         for pm in chain(o.param_map, o.port_map):
             self.visit_iHdlExpr(pm)
 
@@ -154,6 +155,7 @@ class HdlAstVisitor(object):
         """
         :type o: HdlFunctionDef
         """
+        self.visit_doc(o)
         for p in o.params:
             self.visit_HdlVariableDef(p)
         if o.return_t is not None:
@@ -161,16 +163,18 @@ class HdlAstVisitor(object):
         for o2 in o.body:
             self.visit_main_obj(o2)
 
-    def visit_HdlStmProcess(self, proc):
+    def visit_HdlStmProcess(self, o):
         """
-        :type proc: HdlStmProcess
+        :type o: HdlStmProcess
         """
-        self.visit_iHdlStatement(proc.body)
+        self.visit_doc(o)
+        self.visit_iHdlStatement(o.body)
 
     def visit_HdlStmBlock(self, o):
         """
         :type o: HdlStmBlock
         """
+        self.visit_doc(o)
         for o in o.body:
             self.visit_iHdlStatement(o)
 
@@ -178,6 +182,7 @@ class HdlAstVisitor(object):
         """
         :type o: HdlStmCase
         """
+        self.visit_doc(o)
         self.visit_iHdlExpr(o.switch_on)
         for c, stm in o.cases:
             self.visit_iHdlExpr(c)
@@ -189,12 +194,14 @@ class HdlAstVisitor(object):
         """
         :type o: HdlStmWait
         """
+        self.visit_doc(o)
         self.visit_iHdlExpr(o.val)
 
     def visit_HdlStmIf(self, o):
         """
         :type o: HdlStmIf
         """
+        self.visit_doc(o)
         self.visit_iHdlExpr(o.cond)
         if o.if_true is not None:
             self.visit_iHdlStatement(o.if_true)
@@ -208,6 +215,7 @@ class HdlAstVisitor(object):
         """
         :type o: HdlStmFor
         """
+        self.visit_doc(o)
         self.visit_iHdlStatement(o.init)
         self.visit_iHdlExpr(o.cond)
         self.visit_iHdlStatement(o.step)
@@ -217,19 +225,53 @@ class HdlAstVisitor(object):
         """
         :type o: HdlStmForIn
         """
-        raise TypeError("does not support HdlStmForIn", self, o)
+        self.visit_doc(o)
+        for v in o.var_defs:
+            self.visit_main_obj(v)
+        self.visit_iHdlExpr(o.collection)
+        self.visit_iHdlStatement(o.body)
 
     def visit_HdlStmWhile(self, o):
         """
         :type o: HdlStmWhile
         """
+        self.visit_doc(o)
         self.visit_iHdlExpr(o.cond)
         self.visit_iHdlStatement(o.body)
+
+    def visit_HdlStmRepeat(self, o):
+        """
+        :type o: HdlStmRepeat
+        """
+        self.visit_doc(o)
+        self.visit_iHdlExpr(o.n)
+        self.visit_iHdlStatement(o.body)
+
+    def visit_HdlStmReturn(self, o):
+        """
+        :type o: HdlStmReturn
+        """
+        self.visit_doc(o)
+        if o.val is not None:
+            self.visit_iHdlExpr(o.val)
+
+    def visit_HdlStmBreak(self, o):
+        """
+        :type o: HdlStmBreak
+        """
+        self.visit_doc(o)
+
+    def visit_HdlStmContinue(self, o):
+        """
+        :type o: HdlStmContinue
+        """
+        self.visit_doc(o)
 
     def visit_HdlStmAssign(self, o):
         """
         :type o: HdlStmAssign
         """
+        self.visit_doc(o)
         self.visit_iHdlExpr(o.src)
         self.visit_iHdlExpr(o.dst)
         if o.event_delay is not None:

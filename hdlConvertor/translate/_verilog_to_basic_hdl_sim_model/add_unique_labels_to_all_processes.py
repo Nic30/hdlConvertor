@@ -12,7 +12,7 @@ class AddUniqueLabelsToAllProcesses():
         self.name_scope = name_scope
         self.stm_outputs = stm_outputs
 
-    def module_def(self, m):
+    def visit_HdlModuleDef(self, m):
         """
         :type m: HdlModuleDef
         """
@@ -21,7 +21,7 @@ class AddUniqueLabelsToAllProcesses():
                 if not o.labels:
                     outputs = self.stm_outputs[o]
                     if outputs:
-                        suggested_name = "assig_process_" + outputs[0]
+                        suggested_name = "assig_process_" + outputs[0].val
                     else:
                         suggested_name = "proc"
 
@@ -32,9 +32,9 @@ class AddUniqueLabelsToAllProcesses():
         :type context: HdlContext
         """
         for o in context.objs:
-            if isinstance(o, HdlModuleDec):
+            if isinstance(o, HdlModuleDef):
                 try:
-                    self.name_scope = self.name_scope.get_child(o.name)
-                    self.module_def(o.body)
+                    self.name_scope = self.name_scope.get_child(o.dec.name)
+                    self.visit_HdlModuleDef(o)
                 finally:
                     self.name_scope = self.name_scope.level_pop()

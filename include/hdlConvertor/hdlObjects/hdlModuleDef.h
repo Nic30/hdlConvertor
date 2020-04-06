@@ -1,9 +1,8 @@
 #pragma once
 
 #include <vector>
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/named.h>
-#include <hdlConvertor/hdlObjects/iHdlObj.h>
+#include <hdlConvertor/hdlObjects/hdlModuleDec.h>
+
 
 namespace hdlConvertor {
 namespace hdlObjects {
@@ -13,7 +12,8 @@ namespace hdlObjects {
  * */
 class HdlModuleDef: public WithNameAndDoc, public iHdlObj {
 public:
-	std::unique_ptr<iHdlExpr> entityName;
+	std::unique_ptr<iHdlExpr> module_name;
+	std::unique_ptr<HdlModuleDec> dec;
 
 	std::vector<std::unique_ptr<iHdlObj>> objs;
 
