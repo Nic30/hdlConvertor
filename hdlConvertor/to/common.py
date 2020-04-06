@@ -21,6 +21,7 @@ class ToHdlCommon(HdlAstVisitor):
     }
 
     def __init__(self, out_stream):
+        super(ToHdlCommon, self).__init__()
         self.out = AutoIndentingStream(out_stream, self.INDENT_STEP)
 
     def visit_doc(self, obj, line_comment_prefix):
@@ -82,7 +83,7 @@ class ToHdlCommon(HdlAstVisitor):
         """
         w = self.out.write
         if isinstance(o, HdlName):
-            w(o)
+            w(o.val)
             return
         elif is_str(o):
             w('"%s"' % o)

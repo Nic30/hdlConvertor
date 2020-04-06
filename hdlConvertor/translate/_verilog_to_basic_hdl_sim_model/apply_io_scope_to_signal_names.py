@@ -22,6 +22,7 @@ class ApplyIoScopeToSignalNames(HdlAstVisitor):
     """
 
     def __init__(self):
+        super(ApplyIoScopeToSignalNames, self).__init__()
         self._stm_dst = False
 
     def visit_HdlVariableDef(self, var):
