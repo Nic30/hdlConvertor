@@ -1,4 +1,5 @@
 import sys
+from hdlConvertor.hdlAst._expr import HdlIntValue
 
 
 class Indent(object):
@@ -80,6 +81,38 @@ def iter_with_last(it):
 
     # Last item
     yield True, prev
+
+
+def bit_string(v, width, vld_mask=None):
+    """
+    :type v: int
+    :type width: int
+    :type vld_mask: Optional[int]
+    :param v: integer value of bitstring
+    :param widht: number of bits in value
+    :param vld_mask: mask which has 1 for every valid bit in value
+    :return: HdlIntValue
+    """
+    if vld_mask is None:
+        vld_mask = (1 << width) - 1
+    # if can be in hex
+    if width % 4 == 0 and vld_mask == (1 << width) - 1:
+        base = 16
+        bit_string = ("%0" + str(width // 4) + 'x') % (width)
+    else:  # else in binary
+        base = 2
+        buff = []
+        for i in range(width - 1, -1, -1):
+            mask = (1 << i)
+            b = v & mask
+
+            if vld_mask & mask:
+                s = "1" if b else "0"
+            else:
+                s = "x"
+            buff.append(s)
+        bit_string = "".join(buff)
+    return HdlIntValue(bit_string, width, base)
 
 
 if sys.version_info[0] <= 2:
