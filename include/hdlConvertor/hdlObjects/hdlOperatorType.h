@@ -34,7 +34,7 @@ enum HdlOperatorType {
 	POW, // power of
 	ABS, // absolute value
 	NEG_LOG, // logical negation "not" in vhdl
-	NEG, // negation
+	NEG, // bitwise negation
 	AND_LOG, // "and" in vhdl
 	OR_LOG,  // "or" in vhdl
 	AND, // & in vhdl
