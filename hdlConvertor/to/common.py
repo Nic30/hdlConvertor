@@ -67,7 +67,6 @@ class ToHdlCommon(HdlAstVisitor):
         if argc == 2:
             op_str = self.GENERIC_BIN_OPS.get(o, None)
             if op_str is not None:
-                # [todo] unary +/-
                 return self._visit_bin_op(op, op_str)
         if o == HdlBuiltinFn.INDEX:
             return self._visit_operator_index(op)
