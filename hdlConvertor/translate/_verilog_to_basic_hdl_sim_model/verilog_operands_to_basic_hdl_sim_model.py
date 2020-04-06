@@ -9,8 +9,6 @@ def to_property_call(o, prop_name):
     :type o: HdlCall
     """
     o.fn = HdlBuiltinFn.CALL
-    _op0 = HdlCall()
-    _op0.fn = HdlBuiltinFn.DOT
     o.ops[0] = hdl_getattr(o.ops[0], prop_name)
     return o
 

@@ -8,9 +8,7 @@ def hdl_name_prefix(prefix_name, o):
     :return: HdlCall
     """
     assert isinstance(o, HdlName), o
-    res = HdlCall()
-    res.fn = HdlBuiltinFn.DOT
-    res.ops = [prefix_name, o]
+    res = HdlCall(HdlBuiltinFn.DOT, [prefix_name, o])
     return res
 
 
@@ -20,7 +18,5 @@ def hdl_getattr(o, prop_name):
     :type prop_name: str
     :return: HdlCall
     """
-    res = HdlCall()
-    res.fn = HdlBuiltinFn.DOT
-    res.ops = [o, HdlName(prop_name)]
+    res = HdlCall(HdlBuiltinFn.DOT, [o, HdlName(prop_name)])
     return res
