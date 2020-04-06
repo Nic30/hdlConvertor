@@ -32,20 +32,23 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
 
         HdlBuiltinFn.NEG_LOG: 5,
         HdlBuiltinFn.NEG: 5,
+        HdlBuiltinFn.MINUS_UNARY: 5,
         HdlBuiltinFn.POW: 4,
-        HdlBuiltinFn.INDEX: 3,
+
+        HdlBuiltinFn.DOT: 1,
+        HdlBuiltinFn.RISING: 1,
+        HdlBuiltinFn.FALLING: 1,
+
+        HdlBuiltinFn.INDEX: 1,
 
         # concat/ternary become a call to _concat, _ternary__val function
         # HdlBuiltinFn.CONCAT: 2,
         # HdlBuiltinFn.TERNARY: 2,
         # rising/faling as ._onRisingEdge(), ._onFallingEdge()
-        HdlBuiltinFn.RISING: 2,
-        HdlBuiltinFn.FALLING: 2,
-        HdlBuiltinFn.CALL: 2,
+        HdlBuiltinFn.CALL: 1,
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: 2,
-        HdlBuiltinFn.DOT: 1,
+        HdlBuiltinFn.PARAMETRIZATION: 1,
     }
     _unaryEventOps = {
         HdlBuiltinFn.RISING: "._onRisingEdge()",
@@ -54,6 +57,7 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NEG_LOG: "~",
         HdlBuiltinFn.NEG: "~",
+        HdlBuiltinFn.MINUS_UNARY: "-",
     }
 
     GENERIC_BIN_OPS = {

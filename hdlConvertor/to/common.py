@@ -1,12 +1,14 @@
-from hdlConvertor.hdlAst import HdlModuleDec, HdlCall
+from hdlConvertor.hdlAst import HdlCall
+from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last, is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
 
 
 class ToHdlCommon(HdlAstVisitor):
     INDENT_STEP = "    "
-    GENERIC_UNARY_OPS = {}
+    GENERIC_UNARY_OPS = {
+        HdlBuiltinFn.MINUS_UNARY: "-",
+    }
     GENERIC_BIN_OPS = {
         HdlBuiltinFn.ADD: " + ",
         HdlBuiltinFn.SUB: " - ",
@@ -127,7 +129,7 @@ class ToHdlCommon(HdlAstVisitor):
                         if i == 0:
                             right = parent.ops[1]
                         else:
-                            left = parent.ops[i-1]
+                            left = parent.ops[i - 1]
 
                     if left is not None:  # "operand" is right
                         # same precedence -> parenthesis on right if it is expression
@@ -149,7 +151,8 @@ class ToHdlCommon(HdlAstVisitor):
                         elif precedence_my > precedence_parent:
                             # left with higher precedence -> parenthesis for left
                             # (a + b) * c
-                            # a + b + c + d = (a + b) + c + d = ((a + b) + c) + d
+                            # a + b + c + d = (a + b) + c + d = ((a + b) + c) +
+                            # d
                             use_parenthesis = True
 
         w = self.out.write
@@ -224,8 +227,6 @@ class ToHdlCommon(HdlAstVisitor):
     def visit_HdlStmCase(self, o):
         """
         :type o: HdlStmCase
-
-        :return: True if requires ;\n after end
         """
         raise TypeError("does not support HdlStmCase", self, o)
 
