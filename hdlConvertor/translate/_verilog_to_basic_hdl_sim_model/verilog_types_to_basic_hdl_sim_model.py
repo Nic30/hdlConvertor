@@ -1,8 +1,6 @@
-from itertools import chain
 
 from hdlConvertor.hdlAst._defs import HdlVariableDef
 from hdlConvertor.hdlAst._expr import HdlTypeAuto
-from hdlConvertor.hdlAst._structural import HdlModuleDec
 from hdlConvertor.to.basic_hdl_sim_model.utils import BitsT
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
