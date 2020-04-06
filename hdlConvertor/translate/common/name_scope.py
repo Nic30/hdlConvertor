@@ -76,8 +76,10 @@ class NameScope(dict):
         self.name = name
 
     # @internal
-    def __incrPrefixCntr(self, prefix,
-                         currentVal) -> str:
+    def __incrPrefixCntr(self, prefix, currentVal):
+        """
+        :return: str
+        """
         # [TODO] check if new name is not defined in any direction (parent-children)
         currentVal += 1
         self.cntrsForPrefixNames[prefix] = currentVal
@@ -138,7 +140,10 @@ class NameScope(dict):
     def level_pop(self):
         return self.parent
 
-    def checkedName(self, suggestedName, obj) -> str:
+    def checkedName(self, suggestedName, obj):
+        """
+        :return: str
+        """
         assert is_str(suggestedName), suggestedName
         if not suggestedName.endswith("_"):
             try:
