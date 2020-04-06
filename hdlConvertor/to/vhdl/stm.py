@@ -11,6 +11,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type args: List[iHdlExpr]
         """
+        self.visit_doc(o)
         w = self.out.write
         w("ASSERT ")
         for is_last, (prefix, a) in iter_with_last(
@@ -33,12 +34,12 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             if not is_last:
                 w(" ")
 
-    def visit_HdlStmProcess(self, proc):
+    def visit_HdlStmProcess(self, o):
         """
         :type proc: HdlStmProcess
         """
-        sens = proc.sensitivity
-        body = proc.body
+        self.visit_doc(o)
+        sens = o.sensitivity
         w = self.out.write
 
         w("PROCESS")
@@ -50,7 +51,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                     w(", ")
             w(")")
         w("\n")
-        self.visit_HdlStmBlock(body, force_space_before=False)
+        self.visit_HdlStmBlock(o.body, force_space_before=False)
         w(" PROCESS;\n")
 
     def visit_HdlStmBlock(self, stms, force_space_before=True):
@@ -60,6 +61,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         w = self.out.write
         if isinstance(stms, HdlStmBlock):
+            self.visit_doc(stms)
             must_have_begin_end = True
             stms = stms.body
         elif isinstance(stms, list):
@@ -90,21 +92,19 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
 
         return False
 
-    def visit_HdlStmIf(self, stm):
+    def visit_HdlStmIf(self, o):
         """
-        :type stm: HdlStmIf
+        :type o: HdlStmIf
         """
+        self.visit_doc(o)
         w = self.out.write
-        c = stm.cond
-        ifTrue = stm.if_true
-        ifFalse = stm.if_false
 
         w("IF ")
-        self.visit_iHdlExpr(c)
+        self.visit_iHdlExpr(o.cond)
         w(" THEN ")
-        need_space = self.visit_HdlStmBlock(ifTrue)
+        need_space = self.visit_HdlStmBlock(o.if_true)
 
-        for cond, stms in stm.elifs:
+        for cond, stms in o.elifs:
             if need_space:
                 w(" ")
             w("ELSIF ")
@@ -112,6 +112,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             w(" THEN ")
             need_space = self.visit_HdlStmBlock(stms)
 
+        ifFalse = o.if_false
         if ifFalse is not None:
             if need_space:
                 w(" ")
@@ -121,33 +122,32 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             w("\n")
         w("END IF;\n")
 
-    def visit_HdlStmAssign(self, a):
+    def visit_HdlStmAssign(self, o):
         """
-        :type a: HdlStmAssign
+        :type o: HdlStmAssign
         """
-        s = a.src
-        d = a.dst
         w = self.out.write
-        if a.time_delay is not None:
+        if o.time_delay is not None:
             raise NotImplementedError()
-        if a.event_delay is not None:
+        if o.event_delay is not None:
             raise NotImplementedError()
 
-        self.visit_iHdlExpr(d)
+        self.visit_iHdlExpr(o.dst)
         w(" <= ")
-        self.visit_iHdlExpr(s)
+        self.visit_iHdlExpr(o.src)
         w(";\n")
 
-    def visit_HdlStmCase(self, cstm):
+    def visit_HdlStmCase(self, o):
         """
-        :type cstm: HdlStmCase
+        :type o: HdlStmCase
         """
+        self.visit_doc(o)
         w = self.out.write
         w("CASE ")
-        self.visit_iHdlExpr(cstm.switch_on)
+        self.visit_iHdlExpr(o.switch_on)
         w(" IS\n")
         with Indent(self.out):
-            cases = cstm.cases
+            cases = o.cases
             for k, stms in cases:
                 w("WHEN ")
                 self.visit_iHdlExpr(k)
@@ -155,7 +155,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                 is_block = self.visit_HdlStmBlock(stms)
                 if is_block:
                     w("\n")
-            defal = cstm.default
+            defal = o.default
             if defal is not None:
                 is_block = w("WHEN OTHERS => ")
                 self.visit_HdlStmBlock(defal)
@@ -167,6 +167,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmReturn
         """
+        self.visit_doc(o)
         w = self.out.write
         w("RETURN")
         if o.val is not None:
@@ -178,20 +179,21 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmContinue
         """
-        w = self.out.write
-        w("CONTINUE")
+        self.visit_doc(o)
+        self.out.write("CONTINUE")
 
     def visit_HdlStmBreak(self, o):
         """
         :type o: HdlStmBreak
         """
-        w = self.out.write
-        w("BREAK")
+        self.visit_doc(o)
+        self.out.write("BREAK")
 
     def visit_HdlStmFor(self, o):
         """
         :type o: HdlStmFor
         """
+        self.visit_doc(o)
         w = self.out.write
         w("FOR ")
         self.visit_iHdlExpr(o.params[0])
@@ -207,6 +209,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmWait
         """
+        self.visit_doc(o)
         w = self.out.write
         w("WAIT")
         for e in o.val:

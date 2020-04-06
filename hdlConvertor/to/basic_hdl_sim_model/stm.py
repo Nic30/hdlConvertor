@@ -3,7 +3,7 @@ from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 
 
-class BasicHdlSimModelStm(ToBasicHdlSimModelExpr):
+class ToBasicHdlSimModelStm(ToBasicHdlSimModelExpr):
 
     def visit_HdlStmProcess(self, proc):
         """
