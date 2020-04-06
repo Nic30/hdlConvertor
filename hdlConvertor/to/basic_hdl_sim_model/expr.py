@@ -64,9 +64,11 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.EQ: ' == ',
         HdlBuiltinFn.NEQ: " != ",
 
+        HdlBuiltinFn.MUL: " * ",
         HdlBuiltinFn.DIV: " // ",
         HdlBuiltinFn.POW: " ** ",
         HdlBuiltinFn.MOD: " % ",
+        
 
         HdlBuiltinFn.SLL: " << ",
         HdlBuiltinFn.SRL: " >> ",
@@ -143,5 +145,10 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
             op0 = ops[0]
             w(op0.val)
             w(op_str)
+        elif op == HdlBuiltinFn.MAP_ASSOCIATION:
+            # kwargs, [todo]: dict constructor
+            self._visit_operand(o.ops[0], 0, o, False, False)
+            w("=")
+            self._visit_operand(o.ops[1], 1, o, False, False)
         else:
             return super(ToBasicHdlSimModelExpr, self).visit_HdlCall(o)
