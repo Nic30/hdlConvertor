@@ -18,22 +18,31 @@ class HdlDirection(Enum):
     ) = range(7)
 
 
-class HdlName(str):
+class HdlName(object):
     """
     String which is id in HDL
 
-    :ivar obj: an object which corresponds to this name
+    :type ~.val: str
+    :ivar ~.obj: an object which corresponds to this name
         (has to be explicitly discovered and is not available imediately
         after parsing)
     """
 
-    def __init__(self, *args, **kwargs):
-        obj = kwargs.pop("obj", None)
-        super(HdlName, self).__init__()
+    def __init__(self, val, obj=None):
+        self.val = val
         self.obj = obj
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.val == other.val
+
+    def __hash__(self):
+        return hash(self.val)
+
+    def __str__(self):
+        return self.val
+
     def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, self)
+        return "<%s %s>" % (self.__class__.__name__, self.val)
 
 
 class HdlAll(object):
@@ -232,7 +241,7 @@ class HdlIntValue(iHdlObj):
         else:
             try:
                 return self.val == other
-            except TypeError:
+            except Exception:
                 return False
             except ValueError:
                 return False

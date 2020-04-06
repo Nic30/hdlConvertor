@@ -208,7 +208,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         elif expr is HdlOthers:
             w("OTHERS")
             return
-        elif not isinstance(expr, HdlName) and is_str(expr):
+        elif is_str(expr):
             return self.visit_str(expr)
         elif isinstance(expr, list):
             with_nl = len(expr) > 3

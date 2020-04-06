@@ -113,7 +113,7 @@ class VerilogConversionTC(HdlParseTC):
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
         e = [o for o in res.objs if isinstance(o, HdlModuleDef)]
-        self.assertSetEqual(set(_e.module_name for _e in e),
+        self.assertSetEqual(set(_e.module_name.val for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
 

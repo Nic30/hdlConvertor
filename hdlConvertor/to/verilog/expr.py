@@ -166,7 +166,7 @@ class ToVerilog2005Expr(ToHdlCommon):
         """
         w = self.out.write
         if isinstance(o, HdlName):
-            w(o)
+            w(o.val)
         elif is_str(o):
             w('"%s"' % o)
         elif isinstance(o, HdlIntValue):
@@ -224,6 +224,7 @@ class ToVerilog2005Expr(ToHdlCommon):
             return
         else:
             super(ToVerilog2005Expr, self).visit_HdlCall(o)
+        return True
 
     def visit_type_first_part(self, t):
         """
@@ -240,7 +241,7 @@ class ToVerilog2005Expr(ToHdlCommon):
                 self.visit_iHdlExpr(t)
         else:
             base_t, width, is_signed, _ = wire_params
-            w(base_t)
+            w(base_t.val)
             if width is not None:
                 # 1D vector
                 w("[")

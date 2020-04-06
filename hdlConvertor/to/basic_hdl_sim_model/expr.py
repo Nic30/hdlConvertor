@@ -101,7 +101,7 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         """
         w = self.out.write
         if isinstance(o, HdlName):
-            w(o)
+            w(o.val)
             return
         elif is_str(o):
             w('"%s"' % o)
@@ -141,7 +141,7 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         op_str = self._unaryEventOps.get(op, None)
         if op_str is not None:
             op0 = ops[0]
-            w(op0)
+            w(op0.val)
             w(op_str)
         else:
             return super(ToBasicHdlSimModelExpr, self).visit_HdlCall(o)

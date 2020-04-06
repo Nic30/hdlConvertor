@@ -1,7 +1,8 @@
 from typing import Optional
+from hdlConvertor.to.hdlUtils import is_str
 
 
-class LangueKeyword(object):
+class LanguageKeyword(object):
     """
     Base class for keywords of target language.
     Used to notify that the name represents a language keyword
@@ -113,11 +114,13 @@ class NameScope(dict):
             raise NameOccupiedErr(o)
 
     def get_child(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
         return self.children[name]
 
     def level_push(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
 
@@ -136,6 +139,7 @@ class NameScope(dict):
         return self.parent
 
     def checkedName(self, suggestedName, obj) -> str:
+        assert is_str(suggestedName), suggestedName
         if not suggestedName.endswith("_"):
             try:
                 self.register_name(suggestedName, obj)
@@ -177,6 +181,7 @@ class NameScope(dict):
         return cntr_val
 
     def get_object_and_scope_by_name(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
         actual = self
@@ -189,6 +194,9 @@ class NameScope(dict):
         raise KeyError(name)
 
     def get_object_name(self, obj):
+        """
+        :return: str
+        """
         assert obj is not None
         actual = self
         while actual is not None:
