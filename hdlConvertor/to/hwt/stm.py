@@ -6,17 +6,17 @@ from hdlConvertor.to.hwt.expr import ToHwtExpr
 
 class ToHwtStm(ToHwtExpr):
 
-    def visit_HdlStmProcess(self, proc):
+    def visit_HdlStmProcess(self, o):
         """
-        :type proc: HdlStmProcess
+        :type o: HdlStmProcess
         """
         w = self.out.write
         w("# ")
-        if proc.labels:
-            w(proc.labels[0])
+        if o.labels:
+            w(o.labels[0])
             w(", ")
         w("sens: ")
-        for last, s in iter_with_last(proc.sensitivity):
+        for last, s in iter_with_last(o.sensitivity):
             if isinstance(s, HdlCall):
                 w(str(s.fn))
                 w(" ")
@@ -26,21 +26,22 @@ class ToHwtStm(ToHwtExpr):
             if not last:
                 w(", ")
         w("\n")
-        body = proc.body
-        self.visit_iHdlStatement(body)
+        self.visit_doc(o)
+        self.visit_iHdlStatement(o.body)
         #w("\n")
 
-    def visit_HdlStmBlock(self, stm):
+    def visit_HdlStmBlock(self, o):
         """
-        :type stm: HdlStmBlock
+        :type o: HdlStmBlock
         """
+        self.visit_doc(o)
         w = self.out.write
-        for is_last, i in iter_with_last(stm.body):
+        for is_last, i in iter_with_last(o.body):
             self.visit_iHdlStatement(i)
             if not is_last:
                 w(",\n")
 
-    def visit_HdlStmIf(self, stm):
+    def visit_HdlStmIf(self, o):
         """
         :type stm: HdlStmIf
 
@@ -59,45 +60,70 @@ class ToHwtStm(ToHwtExpr):
         else:
             ...
         """
+        self.visit_doc(o)
         w = self.out.write
-        c = stm.cond
-        ifTrue = stm.if_true
-        ifFalse = stm.if_false
         w("If(")
-        self.visit_iHdlExpr(c)
+        self.visit_iHdlExpr(o.cond)
         w(",\n")
         with Indent(self.out):
-            self.visit_iHdlStatement(ifTrue)
+            self.visit_iHdlStatement(o.if_true)
             w("\n")
-        for (c, _stm) in stm.elifs:
-            w(").Elif(")
+        w(")")
+        for (c, _stm) in o.elifs:
+            w(".Elif(")
             self.visit_iHdlExpr(c)
             w(",\n")
             with Indent(self.out):
                 self.visit_iHdlStatement(_stm)
             w("\n")
             w(")")
-        if not stm.elifs:
-            w(")")
 
+        ifFalse = o.if_false
         if ifFalse is not None:
             w(".Else(\n")
             with Indent(self.out):
                 self.visit_iHdlStatement(ifFalse)
-            w(")\n")
+                w("\n")
+            w(")")
 
-    def visit_HdlStmAssign(self, a):
+    def visit_HdlStmAssign(self, o):
         """
-        :type a: HdlStmAssign
+        :type o: HdlStmAssign
         """
+        self.visit_doc(o)
         w = self.out.write
-        self.visit_iHdlExpr(a.dst)
-        if a.is_blocking:
-            raise NotImplementedError(a)
-        if a.time_delay is not None:
+        self.visit_iHdlExpr(o.dst)
+        if o.is_blocking:
+            raise NotImplementedError(o)
+        if o.time_delay is not None:
             raise NotImplementedError()
-        if a.event_delay is not None:
+        if o.event_delay is not None:
             raise NotImplementedError()
         w("(")
-        self.visit_iHdlExpr(a.src)
+        self.visit_iHdlExpr(o.src)
         w(")")
+
+    def visit_HdlStmCase(self, o):
+        """
+        :type o: HdlStmCase
+        """
+        self.visit_doc(o)
+        w = self.out.write
+        w("Switch(")
+        self.visit_iHdlExpr(o.switch_on)
+        w(")")
+        with Indent(self.out):
+            for c, stm in o.cases:
+                w("\\\n")
+                w(".Case(")
+                self.visit_iHdlExpr(c)
+                w(",\n")
+                with Indent(self.out):
+                    self.visit_iHdlStatement(stm)
+                w(")")
+            if o.default is not None:
+                w("\\\n")
+                w(".Default(\n")
+                with Indent(self.out):
+                    self.visit_iHdlStatement(o.default)
+                    w(")")
