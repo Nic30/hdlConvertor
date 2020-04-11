@@ -137,6 +137,9 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto fn = dynamic_cast<const HdlFunctionDef*>(o);
 	if (fn)
 		return toPy(fn);
+	auto td = dynamic_cast<const HdlTypeDec*>(o);
+	if (td)
+		return toPy(td);
 
 	std::string err_msg;
 	if (o)
@@ -272,7 +275,7 @@ PyObject* ToPy::toPy(const HdlSubtype *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlSubtypeCls, NULL);
 	if (!py_inst)
 		return nullptr;
-	if (toPy_property(py_inst, "parent_type", o->parent_type))
+	if (toPy_property(py_inst, "parent_type", o->parent_type)) // required
 		return nullptr;
 	if (o->constraint) {
 		if (toPy_property(py_inst, "constraint", o->constraint))
@@ -302,15 +305,16 @@ PyObject* ToPy::toPy(const HdlSimpleRange *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlSimpleRangeCls, NULL);
 	if (!py_inst)
 		return nullptr;
-	if (toPy_property(py_inst, "left", o->left))
+	if (toPy_property(py_inst, "left", o->left)) // required
 		return nullptr;
-	if (toPy_property(py_inst, "right", o->right))
+	if (toPy_property(py_inst, "right", o->right)) // required
 		return nullptr;
+        using namespace std::string_literals;
 	if (HdlRangeDirection::DOWNTO == o->dir) {
-		if (toPy_property(py_inst, "dir", "downto"))
+		if (toPy_property(py_inst, "dir", "downto"s)) //note std::string literal
 			return nullptr;
 	} else {
-		if (toPy_property(py_inst, "dir", "to"))
+		if (toPy_property(py_inst, "dir", "to"s)) //note std::string literal
 			return nullptr;
 	}
 	return py_inst;
@@ -319,8 +323,10 @@ PyObject* ToPy::toPy(const hdlObjects::HdlConstraint *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlConstraintCls, NULL);
 	if (!py_inst)
 		return nullptr;
-	if (toPy_property(py_inst, "range", o->range))
-		return nullptr;
+	if (o->range) {
+		if (toPy_property(py_inst, "range", o->range))
+			return nullptr;
+	}
 	if (toPy_arr(py_inst, "indexes", o->indexes))
 		return nullptr;
 	if (o->element) {
@@ -338,8 +344,10 @@ PyObject* ToPy::toPy(const hdlObjects::HdlTypeDec *o) {
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
 	//TODO:: convert the 'type' member into a string if it's wanted
-	if (toPy_property(py_inst, "subtype", o->subtype))
-		return nullptr;
+	if (o->subtype) {
+		if (toPy_property(py_inst, "subtype", o->subtype))
+			return nullptr;
+	}
 	if (toPy_dict(py_inst, "ids", o->ids))
 		return nullptr;
 	if (o->base_type) {
@@ -353,16 +361,16 @@ PyObject* ToPy::toPy(const hdlObjects::HdlTypeDec *o) {
 		if (toPy_property(py_inst, "isUnion", Py_False))
 			return nullptr;
 	}
-	if (toPy_property(py_inst, "array_cons", o->array_cons))
-		return nullptr;
+	if (o->indexes) {
+		if (toPy_property(py_inst, "indexes", o->indexes))
+			return nullptr;
+	}
+	if (o->elem_type) {
+		if (toPy_property(py_inst, "elem_type", o->elem_type))
+			return nullptr;
+	}
 	if (toPy_dict(py_inst, "fields", o->fields))
 		return nullptr;
-//	if (toPy_arr(py_inst, "indexes", o->indexes))
-//		return nullptr;
-//	if (o->element) {
-//		if (toPy_property(py_inst, "element", o->element))
-//			return nullptr;
-//	}
 	return py_inst;
 }
 PyObject* ToPy::toPy(const HdlFunctionDef *o) {
@@ -556,7 +564,7 @@ PyObject* ToPy::toPy(const HdlVariableDef *o) {
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
 
-	if (toPy_property(py_inst, "type", o->type))
+	if (toPy_property(py_inst, "type", o->type)) // required
 		return nullptr;
 	if (o->value) {
 		if (toPy_property(py_inst, "value", o->value))

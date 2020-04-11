@@ -3,7 +3,7 @@ from hdlConvertor.hdlAst._statements import HdlImport
 from hdlConvertor.hdlAst._structural import HdlLibrary
 from hdlConvertor.hdlAst._expr import HdlDirection, HdlName, HdlIntValue,\
     HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
-from hdlConvertor.hdlAst._typeDefs import HdlSubtype, HdlRange, HdlSimpleRange
+from hdlConvertor.hdlAst._typeDefs import HdlSubtype, HdlRange, HdlSimpleRange, HdlTypeDec
 from hdlConvertor.to.hdlUtils import is_str
 
 
@@ -319,6 +319,8 @@ class ToJson(HdlAstVisitor):
             d = self.visit_HdlSubtype(o)
         elif isinstance(o, HdlRange):
             d = self.visit_HdlRange(o)
+        elif isinstance(o, HdlTypeDec):
+            d = self.visit_HdlTypeDec(o)
         elif o is HdlAll or\
                 o is HdlTypeAuto or\
                 o is HdlOthers or\
@@ -370,7 +372,30 @@ class ToJson(HdlAstVisitor):
         if o.range is not None:
             d['range'] = o.range
         if o.attribute is not None:
-            d['attribuge'] = o.attribute
+            d['attribute'] = o.attribute
+        return d
+
+    def visit_HdlTypeDec(self, o):
+        """
+        :type o: HdlTypeDec
+        """
+        d = {
+            "__class__": o.__class__.__name__,
+        }
+        #TODO:: add 'type' if we decide to translate this to the Python object
+        if o.subtype is not None:
+            d['subtype'] = o.subtype
+        if o.ids is not None:
+            d['ids'] = o.ids
+        if o.base_type is not None:
+            d['base_type'] = o.base_type
+        if o.indexes is not None:
+            d['indexes'] = o.indexes
+        if o.elem_type is not None:
+            d['elem_type'] = o.elem_type
+        d['isUnion'] = o.isUnion
+        if o.fields is not None:
+            d['fields'] = o.fields
         return d
 
     def visit_HdlCall(self, o):

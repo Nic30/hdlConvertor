@@ -144,18 +144,19 @@ std::unique_ptr<hdlObjects::HdlTypeDec> VhdlTypeDeclarationParser::visitEnumerat
 	//enumeration_type_definition:
 	//      LPAREN enumeration_literal ( COMMA enumeration_literal )* RPAREN
 	//;
-	std::unique_ptr<HdlTypeDec> typ = create_object<HdlTypeDec>(ctx, std::move(name));
+	std::unique_ptr<HdlTypeDec> tdecl = create_object<HdlTypeDec>(ctx, std::move(name));
+	tdecl->type = HdlTypeDec::hdltc_enum;
 	for (auto lit : ctx->enumeration_literal()) {
 		auto id = lit->identifier();
 		auto cl = lit->CHARACTER_LITERAL();
 		if (id)
-			typ->ids.push_back(std::make_pair(id->getText(), nullptr));
+			tdecl->ids.push_back(std::make_pair(id->getText(), nullptr));
 		else if (cl)
-			typ->ids.push_back(std::make_pair(cl->getText(), nullptr));
+			tdecl->ids.push_back(std::make_pair(cl->getText(), nullptr));
 		else
 			NotImplementedLogger::print("TypeDeclarationParser.enumeration_literal", ctx);
 	}
-	return typ;
+	return tdecl;
 }
 
 std::unique_ptr<hdlObjects::HdlTypeDec> VhdlTypeDeclarationParser::visitInteger_type_definition(
@@ -217,10 +218,11 @@ std::unique_ptr<hdlObjects::HdlTypeDec> VhdlTypeDeclarationParser::visitConstrai
 	//constrained_array_definition:
 	//      KW_ARRAY index_constraint KW_OF subtype_indication
 	//;
-	
-	NotImplementedLogger::print("TypeDeclarationParser.constrained_array_definition", ctx);
-	return nullptr;
-	//todo: create an hdltc_error type
+	auto tdecl = create_object<HdlTypeDec>(ctx, std::move(name));
+	tdecl->type = HdlTypeDec::hdltc_array;
+	tdecl->indexes = VhdlExprParser::visitIndex_constraint(ctx->index_constraint());
+	tdecl->elem_type = VhdlExprParser::visitSubtype_indication(ctx->subtype_indication());
+	return tdecl;
 }
 
 std::unique_ptr<hdlObjects::HdlTypeDec> VhdlTypeDeclarationParser::visitRecord_type_definition(

@@ -22,7 +22,8 @@ public:
 	std::unique_ptr<HdlRange> range;
 	// scalar range constraint
 	std::vector<std::pair<std::string, std::unique_ptr<HdlConstraint>>> field_cons; 
-	// array constraint
+	// array constraint; indexes used in array decl, indexes and element
+	// used in array subtype indication
 	std::vector<std::unique_ptr<HdlRange>> indexes;
 	std::unique_ptr<HdlConstraint> element;
 
@@ -95,9 +96,9 @@ public:
 	std::vector<std::pair<std::string, std::unique_ptr<iHdlExpr>>> ids;
 	std::unique_ptr<HdlSubtype> base_type;
 
-	// Array type declaration: uses the same information as an array
-	// constraint
-	std::unique_ptr<HdlConstraint> array_cons;
+	// Array type declaration: uses index constraint and subtype indication
+	std::unique_ptr<HdlConstraint> indexes;
+	std::unique_ptr<HdlSubtype> elem_type;
 
 	// Structure, union, record type declaration
 	bool isUnion;

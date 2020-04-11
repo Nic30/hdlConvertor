@@ -66,14 +66,15 @@ class HdlTypeDec(iHdlObjWithName):
     HDL type declarations including array, record, struct, union, subtype,
     physical, access, file, etc.
     """
-    __slots__ = ["subtype", "ids", "base_type", "isUnion", "array_cons", "fields"]
+    __slots__ = ["subtype", "ids", "base_type", "isUnion", "indexes", "elem_type", "fields"]
     def __init__(self):
         super(HdlTypeDec, self).__init__()
         self.subtype = None
         self.ids = {}
         self.base_type = None
         self.isUnion = False
-        self.array_cons = None
+        self.indexes = None
+        self.elem_type = None
         self.fields = {}
 
 # arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))
