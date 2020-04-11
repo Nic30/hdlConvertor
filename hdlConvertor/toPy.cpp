@@ -31,6 +31,7 @@ ToPy::ToPy() {
 			std::cout << "Bug in this library hdlConvertor.hdlAst not as expected from C\n";
 			std::cout << "  missing Python class " << name << "\n";
 		}
+                assert(obj != NULL &&"Bug in this library hdlConvertor.hdlAst not as expected from C");
 	};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");

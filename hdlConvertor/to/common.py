@@ -101,7 +101,6 @@ class ToHdlCommon(HdlAstVisitor):
         elif isinstance(o, HdlSimpleRange):
             self.visit_HdlSimpleRange(o)
         else:
-            print(f"Failed to recognize iHdlExpr of type {type(o)}.")#DEBUG::
             raise NotImplementedError(
                 "Do not know how to convert %s" % (o))
 
