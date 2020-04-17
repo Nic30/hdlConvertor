@@ -1,8 +1,7 @@
 from itertools import chain
 
-from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,\
-    HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
-    HdlEnumDef, HdlClassDef
+from hdlConvertor.hdlAst import HdlVariableDef, HdlCall, HdlBuiltinFn,\
+    HdlDirection, HdlName, HdlComponentInst, HdlEnumDef, HdlClassDef
 from hdlConvertor.to.basic_hdl_sim_model.stm import ToBasicHdlSimModelStm
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
