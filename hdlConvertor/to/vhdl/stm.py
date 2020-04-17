@@ -11,7 +11,6 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type args: List[iHdlExpr]
         """
-        # self.visit_doc(o)
         w = self.out.write
         w("ASSERT ")
         for is_last, (prefix, a) in iter_with_last(

@@ -97,7 +97,7 @@ class ToHdlCommon(HdlAstVisitor):
             return
         else:
             raise NotImplementedError(
-                "Do not know how to convert %s" % (o))
+                "Do not know how to convert %r" % (o))
 
     def _visit_operand(self, operand, i,
                        parent,
