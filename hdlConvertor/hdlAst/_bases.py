@@ -13,12 +13,15 @@ class iHdlObj(object):
     Object with direct representation in HDL
 
     :ivar ~.doc: doc from the HDL related probably to this object
+    :ivar ~.origin: an object which is responsible for this HdlObject
+        (not used by this library, used in user code)
     """
-    __slots__ = ["doc", "position"]
+    __slots__ = ["doc", "position", "origin"]
 
     def __init__(self):
         self.doc = ""  # type: str
         self.position = None  # type: Optional[CodePosition]
+        self.origin = None
 
     def __repr__(self):
         from hdlConvertor.to.json import ToJson
