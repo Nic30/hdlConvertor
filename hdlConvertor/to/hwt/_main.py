@@ -48,7 +48,7 @@ class ToHwt(ToHwtStm):
         w("\n")
 
         types, variables, processes, components = \
-            ToBasicHdlSimModel.split_HdlModuleDefObjs(mod_def.body.objs)
+            ToBasicHdlSimModel.split_HdlModuleDefObjs(self, mod_def.objs)
 
         self.visit_doc(mod_dec)
         ToBasicHdlSimModel.visit_component_imports(self, components)
