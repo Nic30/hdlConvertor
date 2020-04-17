@@ -293,10 +293,6 @@ class ToJson(HdlAstVisitor):
         :type o: iHdlExpr
         :return: iHdlExpr
         """
-        """
-        :type o: iHdlExpr
-        :return: True, the flag used to mark that the ; should be added if this is a statement
-        """
         if isinstance(o, HdlName):
             d = {
                 "__class__": o.__class__.__name__,
@@ -315,7 +311,7 @@ class ToJson(HdlAstVisitor):
             d = {
                 "__class__": o.__class__.__name__,
             }
-        elif isinstance(o, list):
+        elif isinstance(o, (list, tuple)):
             return [self.visit_iHdlExpr(o2) for o2 in o]
         else:
             raise NotImplementedError(o)

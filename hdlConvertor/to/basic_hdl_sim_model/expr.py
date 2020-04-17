@@ -115,7 +115,7 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         elif isinstance(o, HdlIntValue):
             self.visit_HdlIntValue(o)
             return
-        elif isinstance(o, list):
+        elif isinstance(o, (list, tuple)):
             with_nl = len(o) > 3
             w("(")
             for is_last, elem in iter_with_last(o):
