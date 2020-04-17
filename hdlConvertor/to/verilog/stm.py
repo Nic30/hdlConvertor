@@ -62,15 +62,16 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             else:
                 wait = None
 
-            if wait is not None:
+            if wait is None:
+                assert self.top_stm is proc
+                w("initial")
+            else:
                 if self.top_stm is proc:
                     w("always ")
                 w("#")
                 assert len(wait.val) == 1
                 self.visit_iHdlExpr(wait.val[0])
-            else:
-                assert self.top_stm is proc
-                w("initial")
+
         else:
             if self.top_stm is proc:
                 w("always ")
