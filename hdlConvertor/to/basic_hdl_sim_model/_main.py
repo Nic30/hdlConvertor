@@ -29,12 +29,19 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
     :ivar ~.module_path_prefix: if None serialized output will be in a single file
         and no imports of components are produced, else
     :type ~.module_path_prefix: Optional[str]
+    :type stm_outputs: Optional[Dict[iHdlStm, List[str]]]
+    :attention: if you want to serialize a module definitions you need to set stm_outputs
     """
+    ALL_STATEMENT_CLASSES = ALL_STATEMENT_CLASSES
 
     def __init__(self, out_stream):
+        """
+        :type out_stream: StringIO
+        """
         ToBasicHdlSimModelStm.__init__(self, out_stream)
         self.module_path_prefix = None
         self.add_imports = True
+        self.stm_outputs = None
 
     def visit_doc(self, obj):
         return super(ToBasicHdlSimModel, self).visit_doc(obj, "#")
@@ -48,8 +55,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 with Indent(self.out):
                     w('from %s.%s import %s\n' % (prefix, n, n))
 
-    @staticmethod
-    def split_HdlModuleDefObjs(objs):
+    def split_HdlModuleDefObjs(self, objs):
         """
         :type mod: List[iHdlObj]
         """
@@ -63,7 +69,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
             HdlVariableDef: variables,
             HdlComponentInst: components,
         }
-        for stmCls in ALL_STATEMENT_CLASSES:
+        for stmCls in self.ALL_STATEMENT_CLASSES:
             obj_type_containers[stmCls] = processes
         for o in objs:
             obj_type_containers[o.__class__].append(o)
@@ -190,6 +196,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                     with Indent(self.out):
                         for outp in outputs:
                             w("self.io.")
+                            assert isinstance(outp, HdlName)
                             w(outp.val)
                             w(",\n")
                     w(")\n")
