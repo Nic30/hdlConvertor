@@ -68,7 +68,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 body = body.body
                 wait = body[-1]
                 assert isinstance(wait, HdlStmWait), wait
-                assert wait.val is None
+                assert len(wait.val) == 0
                 body = body[:-1]
                 w("initial")
             else:
