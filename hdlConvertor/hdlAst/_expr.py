@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Optional, Union, List
+
 from hdlConvertor.hdlAst._bases import iHdlObj
 
 
@@ -29,11 +30,17 @@ class HdlName(object):
     """
 
     def __init__(self, val, obj=None):
+        assert isinstance(val, str), val
         self.val = val
         self.obj = obj
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and self.val == other.val
+
+    def __lt__(self, other):
+        if not isinstance(other, HdlName):
+            return False
+        return self.val < other.val
 
     def __hash__(self):
         return hash(self.val)
@@ -201,6 +208,12 @@ class HdlCall(iHdlObj):
         self.fn = fn
         self.ops = ops
 
+    def __lt__(self, other):
+        if isinstance(other, HdlName):
+            return True
+        else:
+            return (self.fn.value, *self.ops) < (other.fn.value, *other.ops)
+
     def __eq__(self, other):
         if not isinstance(other, HdlCall):
             return False
@@ -229,6 +242,12 @@ class HdlIntValue(iHdlObj):
 
     def __bool__(self):
         return bool(self.val)
+
+    def __hash__(self):
+        return hash((self.val, self.bits, self.base))
+
+    def __lt__(self, other):
+        return (self.val, self.bits, self.base) < (other.val, other.bits, other.base)
 
     def __nonzero__(self):
         return self.__bool__()
