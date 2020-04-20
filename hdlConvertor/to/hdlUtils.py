@@ -93,13 +93,24 @@ def bit_string(v, width, vld_mask=None):
     :param vld_mask: mask which has 1 for every valid bit in value
     :return: HdlIntValue
     """
+    all_mask = (1 << width) - 1
     if vld_mask is None:
-        vld_mask = (1 << width) - 1
-    # if can be in hex
-    if width % 4 == 0 and vld_mask == (1 << width) - 1:
+        vld_mask = all_mask
+
+    if vld_mask == 0:
+        if width % 4 == 0:
+            base = 16
+            bit_string = "".join(["x" for _ in range(width//4)])
+        else:
+            base = 2
+            bit_string = "".join(["x" for _ in range(width)])
+
+    elif width % 4 == 0 and vld_mask == (1 << width) - 1:
+        # hex full valid
         base = 16
         bit_string = ("%0" + str(width // 4) + 'x') % (width)
-    else:  # else in binary
+    else:
+        # binary
         base = 2
         buff = []
         for i in range(width - 1, -1, -1):
@@ -113,11 +124,3 @@ def bit_string(v, width, vld_mask=None):
             buff.append(s)
         bit_string = "".join(buff)
     return HdlIntValue(bit_string, width, base)
-
-
-if sys.version_info[0] <= 2:
-    def is_str(x):
-        return isinstance(x, (basestring, unicode))
-else:
-    def is_str(x):
-        return isinstance(x, str)
