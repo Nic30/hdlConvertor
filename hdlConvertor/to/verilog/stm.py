@@ -53,17 +53,23 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
             if isinstance(body, HdlStmWait):
                 skip_body = True
                 wait = body
+                body = []
             elif (isinstance(body, HdlStmBlock)
                     and body.body
                     and isinstance(body.body[0], HdlStmWait)):
                 wait = body.body[0]
-                body = copy(body)
-                body.body = body.body[1:]
+                body = body.body[1:]
             else:
                 wait = None
 
             if wait is None:
                 assert self.top_stm is proc
+                assert isinstance(body, HdlStmBlock), body
+                body = body.body
+                wait = body[-1]
+                assert isinstance(wait, HdlStmWait), wait
+                assert wait.val is None
+                body = body[:-1]
                 w("initial")
             else:
                 if self.top_stm is proc:
@@ -71,7 +77,9 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 w("#")
                 assert len(wait.val) == 1
                 self.visit_iHdlExpr(wait.val[0])
-
+            _body = HdlStmBlock()
+            _body.body = body
+            body = _body
         else:
             if self.top_stm is proc:
                 w("always ")
