@@ -36,7 +36,7 @@ def hdl_call(o, args):
     :type args: List[iHdlExpr]
     :return: HdlCall
     """
-    return HdlCall(HdlBuiltinFn.CALL, [o,] + args)
+    return HdlCall(HdlBuiltinFn.CALL, [o, ] + args)
 
 
 def hdl_index(o, i):
@@ -46,6 +46,10 @@ def hdl_index(o, i):
     :return: HdlCall
     """
     return HdlCall(HdlBuiltinFn.INDEX, [o, i])
+
+
+def hdl_downto(msb, lsb):
+    return HdlCall(HdlBuiltinFn.DOWNTO, [msb, lsb])
 
 
 def hdl_map_asoc(o1, o2):

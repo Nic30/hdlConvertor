@@ -1,7 +1,8 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
     HdlCall
 from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import is_str, iter_with_last
+from hdlConvertor.to.hdlUtils import iter_with_last, Indent
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 class ToBasicHdlSimModelExpr(ToHdlCommon):
@@ -35,27 +36,28 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.MINUS_UNARY: 5,
         HdlBuiltinFn.POW: 4,
 
-        HdlBuiltinFn.DOT: 1,
-        HdlBuiltinFn.RISING: 1,
-        HdlBuiltinFn.FALLING: 1,
+        HdlBuiltinFn.RISING: 2,
+        HdlBuiltinFn.FALLING: 2,
 
-        HdlBuiltinFn.INDEX: 1,
+        HdlBuiltinFn.INDEX: 2,
 
         # concat/ternary become a call to _concat, _ternary__val function
         # HdlBuiltinFn.CONCAT: 2,
         # HdlBuiltinFn.TERNARY: 2,
         # rising/faling as ._onRisingEdge(), ._onFallingEdge()
-        HdlBuiltinFn.CALL: 1,
+        HdlBuiltinFn.CALL: 2,
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: 1,
+        HdlBuiltinFn.PARAMETRIZATION: 2,
+
+        HdlBuiltinFn.DOT: 1,
     }
     _unaryEventOps = {
         HdlBuiltinFn.RISING: "._onRisingEdge()",
         HdlBuiltinFn.FALLING: "._onFallingEdge()",
     }
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.NEG_LOG: "~",
+        HdlBuiltinFn.NEG_LOG: "not ",
         HdlBuiltinFn.NEG: "~",
         HdlBuiltinFn.MINUS_UNARY: "-",
     }
@@ -72,7 +74,6 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.DIV: " // ",
         HdlBuiltinFn.POW: " ** ",
         HdlBuiltinFn.MOD: " % ",
-        
 
         HdlBuiltinFn.SLL: " << ",
         HdlBuiltinFn.SRL: " >> ",
@@ -118,13 +119,12 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         elif isinstance(o, (list, tuple)):
             with_nl = len(o) > 3
             w("(")
-            for is_last, elem in iter_with_last(o):
+            for elem in o:
                 self.visit_iHdlExpr(elem)
-                if not is_last:
-                    if with_nl:
-                        w(", \n")
-                    else:
-                        w(", ")
+                if with_nl:
+                    w(", \n")
+                else:
+                    w(", ")
             w(")")
             return
         elif isinstance(o, HdlCall):
@@ -133,8 +133,20 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         elif o is None:
             w("None")
             return
-
-        raise NotImplementedError(o)
+        elif isinstance(o, dict):
+            w("{")
+            with Indent(self.out):
+                for last, (k, v) in iter_with_last(sorted(o.items(), key=lambda x: x[0])):
+                    self.visit_iHdlExpr(k)
+                    w(": ")
+                    self.visit_iHdlExpr(v)
+                    if not last:
+                        w(",\n")
+                    else:
+                        w("\n")
+            w("}")
+            return
+        raise NotImplementedError(o.__class__, o)
 
     def visit_HdlCall(self, o):
         """
