@@ -1,5 +1,5 @@
 sudo: required
-dist: bionic
+dist: disco
 language: python
 
 git:
@@ -69,7 +69,6 @@ addons:
 
 # command to install dependencies
 install:
-- sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
 - sudo apt update
 - if [ "$CODE_COVERAGE" == "1" ];
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
