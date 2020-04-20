@@ -1,8 +1,9 @@
 from hdlConvertor.hdlAst._bases import iHdlStatement
 from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn
 from hdlConvertor.hdlAst._statements import HdlStmBlock
-from hdlConvertor.to.hdlUtils import iter_with_last, Indent
+from hdlConvertor.to.hdlUtils import iter_with_last, Indent, UnIndent
 from hdlConvertor.to.vhdl.expr import ToVhdl2008Expr
+from hdlConvertor.hdlAst._defs import HdlVariableDef
 
 
 class ToVhdl2008Stm(ToVhdl2008Expr):
@@ -40,7 +41,9 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         self.visit_doc(o)
         sens = o.sensitivity
         w = self.out.write
-
+        if o.labels:
+            w(o.labels[0])
+            w(": ")
         w("PROCESS")
         if sens:
             w("(")
@@ -50,10 +53,20 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                     w(", ")
             w(")")
         w("\n")
-        self.visit_HdlStmBlock(o.body, force_space_before=False)
+        self.visit_HdlStmBlock(o.body, force_space_before=False, force_begin_end=True)
         w(" PROCESS;\n")
 
-    def visit_HdlStmBlock(self, stms, force_space_before=True):
+    def _write_begin(self, begin_end, must_have_begin_end, force_space_before):
+        w = self.out.write
+        if begin_end and must_have_begin_end:
+            if force_space_before:
+                w(" BEGIN\n")
+            else:
+                w("BEGIN\n")
+        else:
+            w("\n")
+
+    def visit_HdlStmBlock(self, stms, force_space_before=True, begin_end=True, force_begin_end=False):
         """
         :type stms: Union[List[iHdlStatement], iHdlStatement, iHdlExpr]
         :return: True if statements are wrapped in begin-end block
@@ -68,24 +81,31 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         else:
             must_have_begin_end = False
             stms = [stms, ]
+        must_have_begin_end |= force_begin_end
 
-        if must_have_begin_end:
-            if force_space_before:
-                w(" BEGIN\n")
-            else:
-                w("BEGIN\n")
-        else:
-            w("\n")
-
+        non_declarative_seen = False
         with Indent(self.out):
             for s in stms:
                 if isinstance(s, iHdlStatement):
+                    if not non_declarative_seen:
+                        non_declarative_seen = True
+                        with UnIndent(self.out):
+                            self._write_begin(begin_end, must_have_begin_end, force_space_before)
                     self.visit_iHdlStatement(s)
+                elif isinstance(s, HdlVariableDef):
+                    self.visit_HdlVariableDef(s)
                 else:
+                    if not non_declarative_seen:
+                        non_declarative_seen = True
+                        with UnIndent(self.out):
+                            self._write_begin(begin_end, must_have_begin_end, force_space_before)
                     self.visit_iHdlExpr(s)
                     w(";\n")
 
-        if must_have_begin_end:
+        if not non_declarative_seen:
+            self._write_begin(begin_end, must_have_begin_end, force_space_before)
+
+        if begin_end and must_have_begin_end:
             w("END")
             return True
 
@@ -101,7 +121,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         w("IF ")
         self.visit_iHdlExpr(o.cond)
         w(" THEN ")
-        need_space = self.visit_HdlStmBlock(o.if_true)
+        need_space = self.visit_HdlStmBlock(o.if_true, begin_end=False)
 
         for cond, stms in o.elifs:
             if need_space:
@@ -109,14 +129,14 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             w("ELSIF ")
             self.visit_iHdlExpr(cond)
             w(" THEN ")
-            need_space = self.visit_HdlStmBlock(stms)
+            need_space = self.visit_HdlStmBlock(stms, begin_end=False)
 
         ifFalse = o.if_false
         if ifFalse is not None:
             if need_space:
                 w(" ")
             w("ELSE")
-            self.visit_HdlStmBlock(ifFalse)
+            self.visit_HdlStmBlock(ifFalse, begin_end=False)
         if need_space:
             w("\n")
         w("END IF;\n")
@@ -132,7 +152,10 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             raise NotImplementedError()
 
         self.visit_iHdlExpr(o.dst)
-        w(" <= ")
+        if o.is_blocking:
+            w(" := ")
+        else:
+            w(" <= ")
         self.visit_iHdlExpr(o.src)
         w(";\n")
 
@@ -151,13 +174,13 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                 w("WHEN ")
                 self.visit_iHdlExpr(k)
                 w(" => ")
-                is_block = self.visit_HdlStmBlock(stms)
+                is_block = self.visit_HdlStmBlock(stms, begin_end=False)
                 if is_block:
                     w("\n")
             defal = o.default
             if defal is not None:
                 is_block = w("WHEN OTHERS => ")
-                self.visit_HdlStmBlock(defal)
+                self.visit_HdlStmBlock(defal, begin_end=False)
                 if is_block:
                     w("\n")
         w("END CASE;\n")
