@@ -31,7 +31,7 @@ class HdlName(object):
     """
 
     def __init__(self, val, obj=None):
-        assert is_str(val, str), val
+        assert is_str(val), val
         self.val = val
         self.obj = obj
 
