@@ -6,6 +6,7 @@ from hdlConvertor.to.basic_hdl_sim_model.stm import ToBasicHdlSimModelStm
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
 from hdlConvertor.hdlAst._statements import ALL_STATEMENT_CLASSES
+from hdlConvertor.hdlAst._expr import HdlTypeType
 
 
 DEFAULT_IMPORTS = """\
@@ -71,7 +72,10 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
         for stmCls in self.ALL_STATEMENT_CLASSES:
             obj_type_containers[stmCls] = processes
         for o in objs:
-            obj_type_containers[o.__class__].append(o)
+            if o.__class__ is HdlVariableDef and o.type == HdlTypeType:
+                types.append(o)
+            else:
+                obj_type_containers[o.__class__].append(o)
 
         return types, variables, processes, components
 
@@ -138,15 +142,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                         w('", "')
                         assert isinstance(mod_port, HdlName), mod_port
                         self.visit_iHdlExpr(mod_port)
-                        w('", ')
-                        p = mod_port.obj
-                        assert p is not None, (
-                            "HdlName to module ports "
-                            "shoudl have been discovered before")
-                        d = p.direction
-                        assert d in (HdlDirection.IN, HdlDirection.OUT), d
-                        w(str(d == HdlDirection.IN))
-                        w(')\n')
+                        w('")\n')
 
                 w('self._interfaces = (\n')
                 with Indent(self.out):
@@ -160,7 +156,10 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 with Indent(self.out):
                     for p in processes:
                         w("self.")
-                        w(p.labels[0])
+                        try:
+                            w(p.labels[0])
+                        except Exception:
+                            raise
                         w(",\n")
                 w(")\n")
                 w('self._units = (')
@@ -206,6 +205,31 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 # extra line to separate a process functions
                 w("\n")
 
+    def visit_type_declr(self, t):
+        """
+        :type t: HdlVariableDef
+        """
+        self.visit_doc(t)
+        w = self.out.write
+        w(t.name)
+        w(" = ")
+        val = t.value
+        if isinstance(val, HdlEnumDef):
+            w('define_Enum3t("')
+            w(t.name)
+            w('", [')
+            for last, v in iter_with_last(val.values):
+                w('"%s"' % v)
+                if not last:
+                    w(", ")
+            w("])()\n")
+        elif isinstance(val, HdlCall) and val.fn == HdlBuiltinFn.INDEX:
+            # array type def.
+            self.visit_iHdlExpr(val)
+            w("\n")
+        else:
+            raise NotImplementedError()
+
     def visit_HdlVariableDef(self, var):
         """
         :type var: HdlVariableDef
@@ -220,13 +244,12 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
             w(var.name)
             w('",\n')
             self.visit_type(var.type)
-            w(", None")
+            w(", ")
         if var.value is None:
-            w(")\n")
+            w("None)\n")
         else:
-            w(".init_def_val(")
-            w(var.value)
-            w("\n")
+            self.visit_iHdlExpr(var.value)
+            w(")\n")
 
     def visit_HdlContext(self, context, stm_outputs):
         """

@@ -37,7 +37,7 @@ class subunit0(BasicRtlSimModel):
 
     # sensitivity: a
     def assig_process_b(self):
-        self.io.b.val_next = (self.io.a.val, 0)
+        self.io.b.val_next = (self.io.a.val, 0, )
     
 class SimpleSubunit(BasicRtlSimModel):
     def __init__(self, sim: "BasicRtlSimulator", name="SimpleSubunit"):
@@ -59,8 +59,8 @@ class SimpleSubunit(BasicRtlSimModel):
         # component instances
         self.subunit0_inst = subunit0(sim, "subunit0_inst")
     def _init_body(self):
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_a", "a", True)
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_b", "b", False)
+        connectSimPort(self, self.subunit0_inst, "sig_subunit0_a", "a")
+        connectSimPort(self, self.subunit0_inst, "sig_subunit0_b", "b")
         self._interfaces = (
             self.io.a,
             self.io.b,
@@ -86,9 +86,9 @@ class SimpleSubunit(BasicRtlSimModel):
 
     # sensitivity: sig_subunit0_b
     def assig_process_b(self):
-        self.io.b.val_next = (self.io.sig_subunit0_b.val, 0)
+        self.io.b.val_next = (self.io.sig_subunit0_b.val, 0, )
     
     # sensitivity: a
     def assig_process_sig_subunit0_a(self):
-        self.io.sig_subunit0_a.val_next = (self.io.a.val, 0)
+        self.io.sig_subunit0_a.val_next = (self.io.a.val, 0, )
     
