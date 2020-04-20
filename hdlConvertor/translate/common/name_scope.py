@@ -62,7 +62,7 @@ class NameScope(dict):
         :param ignorecase: if True the name comparison does not
             care about lowercase/uppercase
         """
-        super().__init__()
+        super(NameScope, self).__init__()
         self.parent = parent
         self.ignorecase = ignorecase
 
