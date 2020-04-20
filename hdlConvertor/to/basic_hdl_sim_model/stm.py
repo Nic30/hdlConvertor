@@ -37,7 +37,7 @@ class ToBasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         elif isinstance(stm, HdlStmBlock):
             self.visit_HdlStmBlock(stm)
         else:
-            raise NotImplementedError(stm)
+            raise NotImplementedError(stm.__class__, stm)
 
     def visit_HdlStmBlock(self, stm):
         """
@@ -101,8 +101,8 @@ class ToBasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         w = self.out.write
         self.visit_iHdlExpr(a.dst)
         w(" = ")
-        if a.is_blocking:
-            raise NotImplementedError(a)
+        # if a.is_blocking:
+        #     raise NotImplementedError(a)
         if a.time_delay is not None:
             raise NotImplementedError()
         if a.event_delay is not None:
