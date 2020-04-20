@@ -64,7 +64,7 @@ Example of usage:
 ```python
 import sys
 from hdlConvertor.language import Language
-from hdlConvertor.toVerilog import ToVerilog
+from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
 from hdlConvertor import HdlConvertor
 
 filenames = ["your.v", ]
@@ -72,7 +72,7 @@ include_dirs = []
 c = HdlConvertor()
 d = c.parse(filenames, Language.VERILOG, include_dirs, hierarchyOnly=False, debug=True)
 
-tv = ToVerilog(sys.stdout)
+tv = ToVerilog2005(sys.stdout)
 tv.print_HdlContext(d)
 
 for o in d.objs:
