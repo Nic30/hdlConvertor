@@ -1,6 +1,7 @@
-from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from copy import copy
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn
+
+from hdlConvertor.hdlAst import HdlBuiltinFn
+from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 
 
 class ToHwtExpr(ToBasicHdlSimModelExpr):
