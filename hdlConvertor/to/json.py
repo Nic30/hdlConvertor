@@ -1,6 +1,6 @@
 from hdlConvertor.hdlAst import HdlDirection, HdlName, HdlIntValue,\
     HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
-from hdlConvertor.to.hdlUtils import is_str
+from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 
 
@@ -80,7 +80,7 @@ class ToJson(HdlAstVisitor):
         :type o: HdlVariableDef
         """
         d = self.visit_iHdlObjWithName(o)
-        
+
         for flag_name in ["is_latched", "is_const", "is_static",
                           "is_virtual", ]:
             if getattr(o, flag_name):

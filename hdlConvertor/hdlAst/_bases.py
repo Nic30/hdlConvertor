@@ -1,5 +1,6 @@
 from typing import Union, List
 
+
 try:
     # python2
     from StringIO import StringIO
@@ -24,12 +25,12 @@ class iHdlObj(object):
         self.origin = None
 
     def __repr__(self):
-        from hdlConvertor.to.json import ToJson
+        from hdlConvertor.to.json_debug import ToJsonDebug
         from pprint import pprint
-        to = ToJson()
+        to = ToJsonDebug()
         d = getattr(to, "visit_" + self.__class__.__name__)(self)
         s = StringIO()
-        pprint(d, stream=s, depth=3)
+        pprint(d, stream=s, depth=None)
         return s.getvalue()
 
 
