@@ -60,7 +60,7 @@ class HdlModuleDef(iHdlObjWithName):
 
     def __init__(self):
         super(HdlModuleDef, self).__init__()
-        self.dec = None # type: Optional[HdlModuleDec]
+        self.dec = None  # type: Optional[HdlModuleDec]
         self.module_name = None  # type: HdlName
         self.objs = []  # type: List[Union[iHdlObj, iHdlObjInModule]]
 

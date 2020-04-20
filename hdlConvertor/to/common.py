@@ -1,6 +1,7 @@
 from hdlConvertor.hdlAst import HdlCall
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
-from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last, is_str
+from hdlConvertor.py_ver_compatibility import is_str
+from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 
 
@@ -50,7 +51,6 @@ class ToHdlCommon(HdlAstVisitor):
         # not id or value
         if not isinstance(o, HdlCall):
             return -1
-
         return self.OP_PRECEDENCE[o.fn]
 
     def visit_HdlCall(self, op):
