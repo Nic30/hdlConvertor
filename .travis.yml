@@ -69,7 +69,7 @@ addons:
 
 # command to install dependencies
 install:
-- sudo cp .travis/disco.list /etc/apt/sources.list.d/eoan.list
+- sudo cp .travis/eoan.list /etc/apt/sources.list.d/eoan.list
 - sudo apt update
 - if [ "$CODE_COVERAGE" == "1" ];
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
