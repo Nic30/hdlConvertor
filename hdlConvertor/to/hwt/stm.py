@@ -11,20 +11,22 @@ class ToHwtStm(ToHwtExpr):
         :type o: HdlStmProcess
         """
         w = self.out.write
-        w("# ")
         if o.labels:
-            w(o.labels[0])
-            w(", ")
-        w("sens: ")
-        for last, s in iter_with_last(o.sensitivity):
-            if isinstance(s, HdlCall):
-                w(str(s.fn))
-                w(" ")
-                self.visit_iHdlExpr(s.ops[0])
-            else:
-                self.visit_iHdlExpr(s)
-            if not last:
+            w("# ")
+            if o.labels:
+                w(o.labels[0])
                 w(", ")
+        #w("sens: ")
+        #if o.sensitivity:
+        #    for last, s in iter_with_last(o.sensitivity):
+        #        if isinstance(s, HdlCall):
+        #            w(str(s.fn))
+        #            w(" ")
+        #            self.visit_iHdlExpr(s.ops[0])
+        #        else:
+        #            self.visit_iHdlExpr(s)
+        #        if not last:
+        #            w(", ")
         w("\n")
         self.visit_doc(o)
         self.visit_iHdlStatement(o.body)
