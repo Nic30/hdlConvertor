@@ -1,7 +1,8 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
     HdlCall, HdlTypeAuto
+from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import is_str, iter_with_last
+from hdlConvertor.to.hdlUtils import iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
 
 
@@ -180,7 +181,7 @@ class ToVerilog2005Expr(ToHdlCommon):
         elif o is None:
             w("null")
         else:
-            raise NotImplementedError(o)
+            raise NotImplementedError(o.__class__, o)
         return True
 
     def visit_HdlCall(self, o):
@@ -241,12 +242,18 @@ class ToVerilog2005Expr(ToHdlCommon):
                 self.visit_iHdlExpr(t)
         else:
             base_t, width, is_signed, _ = wire_params
-            w(base_t.val)
+            if base_t is not HdlTypeAuto:
+                w(base_t.val)
+            if is_signed is None:
+                pass
+            elif is_signed:
+                w(" signed")
+            else:
+                w(" unsigned")
+
             if width is not None:
                 # 1D vector
                 w("[")
-                if is_signed:
-                    raise NotImplementedError(t)
                 self.visit_iHdlExpr(width)
                 w("]")
         return len(array_dims) > 0
