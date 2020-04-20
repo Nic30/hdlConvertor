@@ -1,5 +1,5 @@
 from typing import Optional
-from hdlConvertor.to.hdlUtils import is_str
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 class LanguageKeyword(object):
