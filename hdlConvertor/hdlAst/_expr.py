@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional, Union, List
 
 from hdlConvertor.hdlAst._bases import iHdlObj
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 class HdlDirection(Enum):
@@ -30,7 +31,7 @@ class HdlName(object):
     """
 
     def __init__(self, val, obj=None):
-        assert isinstance(val, str), val
+        assert is_str(val, str), val
         self.val = val
         self.obj = obj
 
