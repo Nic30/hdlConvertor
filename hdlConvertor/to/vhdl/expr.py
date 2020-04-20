@@ -1,7 +1,8 @@
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue,\
     HdlAll, HdlCall, HdlOthers
+from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import is_str, iter_with_last, Indent
+from hdlConvertor.to.hdlUtils import iter_with_last, Indent
 
 
 class ToVhdl2008Expr(ToHdlCommon):
@@ -90,17 +91,28 @@ class ToVhdl2008Expr(ToHdlCommon):
         v = o.val
         bits = o.bits
         if is_str(v):
-            w('%s"%s"' % (self.NUM_BASES[o.base], v))
+            v = v.upper()
+            if o.base == 256:
+                w("'%s'" % v)
+            else:
+                w('%s"%s"' % (self.NUM_BASES[o.base], v))
             return
 
         if bits is None:
             if o.base is not None:
+                b = self.NUM_BASES[o.base]
                 if o.base == 256:
-                    w("'%s'" % str(v))
-                    return
-                b = self.bases[o.base]
-                w('%s"%"' % (b, v))
-            w(str(v))
+                    w("'%d'" % v)
+                elif o.base == 16:
+                    w('%s"%X"' % (b, v))
+                elif o.base == 8:
+                    w('%s"%o"' % (b, v))
+                elif o.base == 2:
+                    w('{0}"{1:b}"'.format(b, v))
+                else:
+                    raise NotImplementedError(o.base)
+            else:
+                w(str(v))
             return
         elif bits % 8 == 0:
             f = 'X"{0:0%dx}"' % (bits / 8)
@@ -127,7 +139,7 @@ class ToVhdl2008Expr(ToHdlCommon):
             self._visit_operand(o.ops[0], 0, o, False, False)
             return
         elif op == HdlBuiltinFn.RISING:
-            w("RISIG_EDGE(")
+            w("RISING_EDGE(")
             self._visit_operand(o.ops[0], 0, o, False, True)
             w(")")
             return
@@ -147,9 +159,9 @@ class ToVhdl2008Expr(ToHdlCommon):
             return
         elif op == HdlBuiltinFn.TERNARY:
             cond, o0, o1 = o.ops
-            self._visit_operand(cond, 0, o, True, False)
-            w(" WHEN ")
             self._visit_operand(o0, 1, o, True, False)
+            w(" WHEN ")
+            self._visit_operand(cond, 0, o, True, False)
             w(" ELSE ")
             self._visit_operand(o1, 2, o, True, False)
             return
