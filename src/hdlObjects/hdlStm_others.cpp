@@ -20,7 +20,9 @@ HdlStmReturn::HdlStmReturn(std::unique_ptr<iHdlExpr> _val) :
 
 HdlStmReturn::~HdlStmReturn() {
 }
-
+HdlStmWait::HdlStmWait() :
+		iHdlStatement() {
+}
 HdlStmWait::HdlStmWait(std::unique_ptr<iHdlExpr> _val) :
 		iHdlStatement() {
 	val.push_back(move(_val));
