@@ -1,12 +1,11 @@
-from itertools import chain
-
 from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,\
     HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
     HdlEnumDef, HdlClassDef
-from hdlConvertor.to.hdlUtils import Indent, iter_with_last
-from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
+from hdlConvertor.to.hdlUtils import Indent
 from hdlConvertor.to.hwt.stm import ToHwtStm
 from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
+from hdlConvertor.to.common import ToHdlCommon
+from hdlConvertor.hdlAst._statements import ALL_STATEMENT_CLASSES
 
 
 DEFAULT_IMPORTS = """\
@@ -29,8 +28,12 @@ class ToHwt(ToHwtStm):
     :ivar _is_param: flag which specifies if the current HdlVariableDef is a param/generic
     :ivar _is_port: flag which specifies if the current HdlVariableDef is a port
     """
+    ALL_STATEMENT_CLASSES = ALL_STATEMENT_CLASSES
+
     def __init__(self, out_stream):
-        ToBasicHdlSimModel.__init__(self, out_stream)
+        ToHdlCommon.__init__(self, out_stream)
+        self.module_path_prefix = None
+        self.add_imports = True
         self._is_port = False
         self._is_param = False
 
@@ -158,7 +161,6 @@ class ToHwt(ToHwtStm):
     def visit_HdlContext(self, context):
         """
         :type context: HdlContext
-        :type stm_outputs: Dict[HdlStm, List[HdlName]]
         """
         return super(ToHwt, self).visit_HdlContext(context)
 
