@@ -3,6 +3,7 @@
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 #include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/utils.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -35,7 +36,7 @@ public:
 	std::unique_ptr<hdlObjects::iHdlExpr> visitData_type_or_implicit(
 			sv2017Parser::Data_type_or_implicitContext *ctx,
 			std::unique_ptr<hdlObjects::iHdlExpr> net_type);
-	static bool visitSigning(sv2017Parser::SigningContext *ctx);
+	static SIGNING_VAL visitSigning(sv2017Parser::SigningContext *ctx);
 	/*
 	 * @note net_type can be nullptr, if specified it is used as base type
 	 * */
@@ -52,6 +53,8 @@ public:
 			std::vector<sv2017Parser::Variable_dimensionContext*> &vds);
 	std::unique_ptr<hdlObjects::iHdlExpr> visitPacked_dimension(
 			sv2017Parser::Packed_dimensionContext *ctx);
+	std::unique_ptr<hdlObjects::iHdlExpr> _visitVariable_dimension(
+			sv2017Parser::Variable_dimensionContext *ctx);
 	std::unique_ptr<hdlObjects::iHdlExpr> visitVariable_dimension(
 			sv2017Parser::Variable_dimensionContext *ctx,
 			std::unique_ptr<hdlObjects::iHdlExpr> selected_name);

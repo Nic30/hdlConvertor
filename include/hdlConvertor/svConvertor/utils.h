@@ -12,6 +12,12 @@ namespace antlr4
 namespace hdlConvertor {
 namespace sv {
 
+enum SIGNING_VAL {
+	UNSIGNED = 0,
+	SIGNED = 1,
+	NO_SIGN,
+};
+
 class Utils {
 public:
 	static std::unique_ptr<hdlObjects::iHdlExpr> mkStringT();
@@ -21,11 +27,12 @@ public:
 	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT();
 	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
 			antlr4::ParserRuleContext *const ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
+			std::unique_ptr<hdlObjects::iHdlExpr> range, SIGNING_VAL signed_);
 	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
 			antlr4::ParserRuleContext *const ctx,
 			std::unique_ptr<hdlObjects::iHdlExpr> net_type,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
+			std::unique_ptr<hdlObjects::iHdlExpr> range, SIGNING_VAL signed_);
+	static std::unique_ptr<hdlObjects::iHdlExpr> signing(SIGNING_VAL signing);
 };
 
 std::unique_ptr<hdlObjects::iHdlExpr> append_expr(

@@ -5,6 +5,10 @@ from hdlConvertor.hdlAst._expr import HdlTypeAuto
 PRIMITIVE_TYPES = (
     HdlName("reg"),
     HdlName("wire"),
+    HdlName("bit"),
+    HdlName("logic"),
+    HdlName("signed"),
+    HdlName("unsigned"),
     HdlTypeAuto,
 )
 
@@ -29,24 +33,26 @@ def get_wire_t_params(t):
     t, array_dim = collect_array_dims(t)
 
     if t in PRIMITIVE_TYPES:
-        return t, None, False, array_dim
+        is_signed = None
+        if t == HdlName("signed"):
+            is_signed = True
+        elif t == HdlName("unsigned"):
+            is_signed = False
+        return t, None, is_signed, array_dim
 
     # 1b scala
-    width = None
-    is_signed = False
-    if not isinstance(t, HdlName) or t not in PRIMITIVE_TYPES:
-        if not isinstance(t, HdlCall) or t.fn != HdlBuiltinFn.PARAMETRIZATION:
-            return None
+    if not isinstance(t, HdlCall) or t.fn != HdlBuiltinFn.PARAMETRIZATION or len(t.ops) != 3:
+        return None
 
-        if t.ops[0] not in PRIMITIVE_TYPES:
-            return None
+    if t.ops[0] not in PRIMITIVE_TYPES:
+        return None
 
-        t, width, is_signed = t.ops
-        if width == NULL:
-            width = None
-        if is_signed == NULL:
-            is_signed = None
-        else:
-            is_signed = bool(is_signed)
+    t, width, is_signed = t.ops
+    if width == NULL:
+        width = None
+    if is_signed is None:
+        is_signed = None
+    else:
+        is_signed = bool(is_signed)
 
     return t, width, is_signed, array_dim

@@ -5,6 +5,7 @@
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
+#include <hdlConvertor/hdlObjects/hdlCall.h>
 
 using namespace std;
 using namespace hdlConvertor::hdlObjects;
@@ -80,7 +81,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitInteger_vector_type(
 	//     | KW_LOGIC
 	//     | KW_REG
 	// ;
-	return iHdlExpr::ID(ctx->getText());
+	return Utils::mkWireT(ctx, iHdlExpr::ID(ctx->getText()), iHdlExpr::null(),
+			SIGNING_VAL::NO_SIGN);
 }
 
 unique_ptr<iHdlExpr> VerTypeParser::visitData_type_primitive(
@@ -92,14 +94,25 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type_primitive(
 	auto it = ctx->integer_type();
 	if (it) {
 		auto t = visitInteger_type(it);
-		auto sig = ctx->signing();
-		if (sig && visitSigning(sig)) {
-			vector<unique_ptr<iHdlExpr>> args;
-			args.push_back(
-					create_object<iHdlExpr>(ctx, iHdlExpr::ID("signed"),
-							HdlOperatorType::MAP_ASSOCIATION,
-							iHdlExpr::INT(nullptr, 1)));
-			t = iHdlExpr::parametrization(ctx, move(t), args);
+		auto sig = ctx->signing(); // [TODO] wire in correct format (parametrization <t, widt, sign>)
+		if (sig) {
+			auto _sig = visitSigning(sig);
+			if (_sig != SIGNING_VAL::NO_SIGN) {
+				auto c = dynamic_cast<HdlCall*>(t->data);
+				if (c && c->op == HdlOperatorType::PARAMETRIZATION
+						&& c->operands.size() == 3) {
+					// fill up sign flag for wire/reg types
+					c->operands[2] = Utils::signing(_sig);
+				} else {
+					// specify sign for rest of the types
+					vector<unique_ptr<iHdlExpr>> args;
+					args.push_back(
+							create_object<iHdlExpr>(ctx, iHdlExpr::ID("signed"),
+									HdlOperatorType::MAP_ASSOCIATION,
+									iHdlExpr::INT(nullptr, 1)));
+					t = iHdlExpr::parametrization(ctx, move(t), args);
+				}
+			}
 		}
 		return t;
 	} else {
@@ -144,7 +157,8 @@ unique_ptr<iHdlExpr> VerTypeParser::visitData_type(
 		}
 		if (ids.size() == 2) {
 			auto id = ep.visitIdentifier(ids[1]);
-			t = create_object<iHdlExpr>(ids[1], move(t), HdlOperatorType::DOT, move(id));
+			t = create_object<iHdlExpr>(ids[1], move(t), HdlOperatorType::DOT,
+					move(id));
 		} else {
 			assert(ids.size() == 1);
 		}
@@ -220,7 +234,33 @@ unique_ptr<iHdlExpr> VerTypeParser::applyUnpacked_dimension(
 unique_ptr<iHdlExpr> VerTypeParser::applyVariable_dimension(
 		unique_ptr<iHdlExpr> base_expr,
 		vector<sv2017Parser::Variable_dimensionContext*> &vds) {
+	// optionally fill up width of wire/reg datatypes
+	auto wire_reg_parametrization = dynamic_cast<HdlCall*>(base_expr->data);
+	if (wire_reg_parametrization) {
+		if (wire_reg_parametrization->op != HdlOperatorType::PARAMETRIZATION) {
+			wire_reg_parametrization = nullptr;
+		} else if (wire_reg_parametrization->operands.size() != 3) {
+			wire_reg_parametrization = nullptr;
+
+		} else {
+			auto w =
+					dynamic_cast<HdlValue*>(wire_reg_parametrization->operands[1]->data);
+			if (w) {
+				if (w->type != HdlValueType::symb_NULL)
+					wire_reg_parametrization = nullptr;
+			} else {
+				wire_reg_parametrization = nullptr;
+			}
+		}
+	}
+
 	for (auto _vd : vds) {
+		if (wire_reg_parametrization) {
+			wire_reg_parametrization->operands[1] = _visitVariable_dimension(
+					_vd);
+			wire_reg_parametrization = nullptr;
+			continue;
+		}
 		base_expr = visitVariable_dimension(_vd, move(base_expr));
 	}
 	return base_expr;
@@ -235,16 +275,16 @@ unique_ptr<iHdlExpr> VerTypeParser::visitPacked_dimension(
 	return iHdlExpr::null();
 }
 
-bool VerTypeParser::visitSigning(sv2017Parser::SigningContext *ctx) {
+SIGNING_VAL VerTypeParser::visitSigning(sv2017Parser::SigningContext *ctx) {
 	// signing:
 	//     KW_SIGNED
 	//     | KW_UNSIGNED
 	// ;
 	if (ctx->KW_SIGNED()) {
-		return true;
+		return SIGNING_VAL::SIGNED;
 	} else {
 		assert(ctx->KW_UNSIGNED());
-		return false;
+		return SIGNING_VAL::UNSIGNED;
 	}
 }
 
@@ -262,12 +302,12 @@ unique_ptr<iHdlExpr> VerTypeParser::visitImplicit_data_type(
 			return Utils::mkWireT();
 	}
 	auto s = ctx->signing();
-	bool is_signed = false;
+	SIGNING_VAL is_signed = SIGNING_VAL::NO_SIGN;
 	auto pds = ctx->packed_dimension();
-	unique_ptr<iHdlExpr> e = nullptr;
 	if (s) {
 		is_signed = visitSigning(s);
 	}
+	unique_ptr<iHdlExpr> e = nullptr;
 	auto it = pds.begin();
 	if (it != pds.end()) {
 		auto r0 = visitPacked_dimension(*it);
@@ -278,14 +318,13 @@ unique_ptr<iHdlExpr> VerTypeParser::visitImplicit_data_type(
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = create_object<iHdlExpr>(*it, move(e), HdlOperatorType::INDEX, move(pd));
+		e = create_object<iHdlExpr>(*it, move(e), HdlOperatorType::INDEX,
+				move(pd));
 	}
 	return e;
 }
-
-unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
-		sv2017Parser::Variable_dimensionContext *ctx,
-		unique_ptr<iHdlExpr> selected_name) {
+unique_ptr<iHdlExpr> VerTypeParser::_visitVariable_dimension(
+		sv2017Parser::Variable_dimensionContext *ctx) {
 	// variable_dimension:
 	//     LSQUARE_BR ( MUL
 	//              | data_type
@@ -296,7 +335,7 @@ unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
 	if (ctx->MUL()) {
 		NotImplementedLogger::print(
 				"VerExprParser.visitVariable_dimension - MUL", ctx);
-		return selected_name;
+		return nullptr;
 	}
 	auto dt = ctx->data_type();
 	if (dt) {
@@ -310,8 +349,18 @@ unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
 			index = iHdlExpr::null();
 		}
 	}
-	return create_object<iHdlExpr>(ctx, move(selected_name), HdlOperatorType::INDEX,
-			move(index));
+	return index;
+}
+unique_ptr<iHdlExpr> VerTypeParser::visitVariable_dimension(
+		sv2017Parser::Variable_dimensionContext *ctx,
+		unique_ptr<iHdlExpr> selected_name) {
+	auto index = _visitVariable_dimension(ctx);
+	if (index == nullptr) {
+		return selected_name;
+	} else {
+		return create_object<iHdlExpr>(ctx, move(selected_name),
+				HdlOperatorType::INDEX, move(index));
+	}
 }
 unique_ptr<iHdlExpr> VerTypeParser::visitNet_type(
 		sv2017Parser::Net_typeContext *ctx) {
