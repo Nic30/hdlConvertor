@@ -3,6 +3,8 @@ from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
 from hdlConvertor.hdlAst._structural import HdlNamespace
+from hdlConvertor.hdlAst._expr import HdlTypeType, HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst._typeDefs import HdlEnumDef
 
 
 class ToVhdl2008(ToVhdl2008Stm):
@@ -68,7 +70,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                         if last:
                             w("\n")
                         else:
-                            w(",\n")
+                            w(";\n")
 
                 w(");\n")
         ps = e.ports
@@ -81,7 +83,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                         if last:
                             w("\n")
                         else:
-                            w(",\n")
+                            w(";\n")
                 w(");\n")
         w("END ")
         w(vhdl_obj_name)
@@ -190,24 +192,46 @@ class ToVhdl2008(ToVhdl2008Stm):
         :type var: HdlVariableDef
         """
         self.visit_doc(var)
+        w = self.out.write
         name = var.name
         t = var.type
-        latch = var.is_latched
-        c = var.is_const
-        w = self.out.write
-        if c:
-            w("CONSTANT ")
-        elif latch:
-            w("VARIABLE ")
+        if t == HdlTypeType:
+            # typedef
+            w("TYPE ")
+            w(name)
+            w(" IS ")
+            _t = var.value
+            if isinstance(_t, HdlEnumDef):
+                w('(')
+                for last, ev in iter_with_last(_t.values):
+                    w(ev)
+                    if not last:
+                        w(", ")
+                w(")")
+            elif isinstance(_t, HdlCall) and _t.fn == HdlBuiltinFn.INDEX:
+                w("ARRAY (")
+                self.visit_iHdlExpr(_t.ops[1])
+                w(") OF ")
+                self.visit_iHdlExpr(_t.ops[0])
+            else:
+                raise NotImplementedError(_t)
         else:
-            w("SIGNAL ")
-        w(name)
-        w(" : ")
-        self.visit_type(t)
-        v = var.value
-        if v is not None:
-            w(" := ")
-            self.visit_iHdlExpr(v)
+            # signal/variable/port/generic
+            latch = var.is_latched
+            c = var.is_const
+            if c:
+                w("CONSTANT ")
+            elif latch:
+                w("VARIABLE ")
+            else:
+                w("SIGNAL ")
+            w(name)
+            w(" : ")
+            self.visit_type(t)
+            v = var.value
+            if v is not None:
+                w(" := ")
+                self.visit_iHdlExpr(v)
         w(end)
 
     def visit_HdlFunctionDef(self, o):
