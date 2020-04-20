@@ -33,8 +33,10 @@ class ToVerilog2005(ToVerilog2005Stm):
         self.visit_doc(g)
         w = self.out.write
         w("parameter ")
-        is_array = self.visit_type_first_part(g.type)
-        if g.type is not HdlTypeAuto:
+        if g.type is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(g.type)
             w(" ")
         w(g.name)
         v = g.value
@@ -54,8 +56,11 @@ class ToVerilog2005(ToVerilog2005Stm):
         w(" ")
 
         t = p.type
-        is_array = self.visit_type_first_part(t)
-        w(" ")
+        if t is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(t)
+            w(" ")
 
         w(p.name)
         if is_array:
@@ -71,8 +76,11 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         if var.is_const:
             w("localparam ")
-        is_array = self.visit_type_first_part(t)
-        w(" ")
+        if t is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(t)
+            w(" ")
         w(name)
         if is_array:
             self.visit_type_array_part(t)
@@ -213,7 +221,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                         w(",\n")
             w(")")
         w(";\n")
-        
+
         w = self.out.write
         with Indent(self.out):
             for o in a.objs:
