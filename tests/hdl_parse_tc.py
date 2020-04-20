@@ -18,7 +18,6 @@ except ImportError:
     from io import StringIO
 
 
-
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 
 VHDL = Language.VHDL
@@ -124,7 +123,7 @@ class HdlParseTC(unittest.TestCase):
                 if (isinstance(o, HdlModuleDec) and o.name == name) or\
                         (isinstance(o, HdlModuleDef) and o.dec.name == name):
                     return o.dec
-            
+
         for o in context.objs:
             if isinstance(o, obj_cls) and o.name == name:
                 return o
