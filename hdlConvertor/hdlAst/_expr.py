@@ -212,7 +212,7 @@ class HdlCall(iHdlObj):
         if isinstance(other, HdlName):
             return True
         else:
-            return (self.fn.value, *self.ops) < (other.fn.value, *other.ops)
+            return (self.fn.value, self.ops) < (other.fn.value, other.ops)
 
     def __eq__(self, other):
         if not isinstance(other, HdlCall):
