@@ -108,7 +108,7 @@ def bit_string(v, width, vld_mask=None):
     elif width % 4 == 0 and vld_mask == (1 << width) - 1:
         # hex full valid
         base = 16
-        bit_string = ("%0" + str(width // 4) + 'x') % (width)
+        bit_string = ("%0" + str(width // 4) + 'x') % (v)
     else:
         # binary
         base = 2
