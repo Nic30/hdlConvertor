@@ -120,7 +120,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
 
         w("IF ")
         self.visit_iHdlExpr(o.cond)
-        w(" THEN ")
+        w(" THEN")
         need_space = self.visit_HdlStmBlock(o.if_true, begin_end=False)
 
         for cond, stms in o.elifs:
@@ -128,7 +128,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                 w(" ")
             w("ELSIF ")
             self.visit_iHdlExpr(cond)
-            w(" THEN ")
+            w(" THEN")
             need_space = self.visit_HdlStmBlock(stms, begin_end=False)
 
         ifFalse = o.if_false
