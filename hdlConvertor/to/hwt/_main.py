@@ -1,7 +1,7 @@
 from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,\
     HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
     HdlEnumDef, HdlClassDef
-from hdlConvertor.to.hdlUtils import Indent
+from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.hwt.stm import ToHwtStm
 from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
 from hdlConvertor.to.common import ToHdlCommon
@@ -59,13 +59,16 @@ class ToHwt(ToHwtStm):
         w("class ")
         w(mod_dec.name)
         w("(Unit):\n")
+        port_params_comp_names = []
         with Indent(self.out):
             if mod_dec.params:
                 w('def _config(self):\n')
                 with Indent(self.out):
                     try:
                         self._is_param = True
-                        raise NotImplementedError()
+                        for p in mod_dec.params:
+                            self.visit_HdlVariableDef(p)
+                            port_params_comp_names.append(p.name)
                     finally:
                         self._is_param = False
 
@@ -77,8 +80,9 @@ class ToHwt(ToHwtStm):
                 w('# ports\n')
                 try:
                     self._is_port = True
-                    for port in mod_dec.ports:
-                        self.visit_HdlVariableDef(port)
+                    for p in mod_dec.ports:
+                        self.visit_HdlVariableDef(p)
+                        port_params_comp_names.append(p.name)
                 finally:
                     self._is_port = False
 
@@ -89,10 +93,24 @@ class ToHwt(ToHwtStm):
                     w(" = ")
                     w(c.module_name)
                     w('()\n')
+                    port_params_comp_names.append(c.name)
 
             w("def _impl(self):\n")
             with Indent(self.out):
                 w("# internal signals\n")
+                if port_params_comp_names:
+                    # ports and params to locals
+                    for last, name in iter_with_last(port_params_comp_names):
+                        w(name)
+                        if not last:
+                            w(", ")
+                    w(" = \\\n")
+                    for last, name in iter_with_last(port_params_comp_names):
+                        w("self.")
+                        w(name)
+                        if not last:
+                            w(", ")
+                    w("\n")
                 for v in variables:
                     self.visit_HdlVariableDef(v)
 
@@ -120,10 +138,10 @@ class ToHwt(ToHwtStm):
                         w(str(d == HdlDirection.IN))
                         w(')\n')
 
-            for p in processes:
-                self.visit_iHdlStatement(p)
-                # extra line to separate a process functions
-                w("\n")
+                for p in processes:
+                    self.visit_iHdlStatement(p)
+                    # extra line to separate a process functions
+                    w("\n")
 
     def visit_HdlVariableDef(self, var):
         """
@@ -131,7 +149,8 @@ class ToHwt(ToHwtStm):
         """
         self.visit_doc(var)
         w = self.out.write
-        w("self.")
+        if self._is_port or self._is_param:
+            w("self.")
         w(var.name)
         if self._is_port:
             w(" = Signal(")
@@ -145,6 +164,7 @@ class ToHwt(ToHwtStm):
         elif self._is_param:
             raise NotImplementedError()
         else:
+            # body signal
             w(' = self._sig(')
             with Indent(self.out):
                 w('"')
@@ -154,7 +174,7 @@ class ToHwt(ToHwtStm):
             if var.value is None:
                 w(")\n")
             else:
-                w("def_val=")
+                w(", def_val=")
                 self.visit_iHdlExpr(var.value)
                 w(")\n")
 
