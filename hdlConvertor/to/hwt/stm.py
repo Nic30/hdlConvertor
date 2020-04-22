@@ -1,5 +1,4 @@
 from hdlConvertor.hdlAst import HdlCall, HdlStmIf, HdlStmBlock, HdlStmAssign
-from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.hwt.expr import ToHwtExpr
 
@@ -15,7 +14,7 @@ class ToHwtStm(ToHwtExpr):
             w("# ")
             if o.labels:
                 w(o.labels[0])
-                w(", ")
+                # w(", ")
         #w("sens: ")
         #if o.sensitivity:
         #    for last, s in iter_with_last(o.sensitivity):
