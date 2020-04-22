@@ -30,7 +30,7 @@ class ToVhdl2008Expr(ToHdlCommon):
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
     NUM_BASES = {
-        2: "B",
+        2: "",
         8: "O",
         16: "X",
         256: "",
