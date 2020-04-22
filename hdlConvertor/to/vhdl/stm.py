@@ -173,13 +173,13 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             for k, stms in cases:
                 w("WHEN ")
                 self.visit_iHdlExpr(k)
-                w(" => ")
+                w(" =>")
                 is_block = self.visit_HdlStmBlock(stms, begin_end=False)
                 if is_block:
                     w("\n")
             defal = o.default
             if defal is not None:
-                is_block = w("WHEN OTHERS => ")
+                is_block = w("WHEN OTHERS =>")
                 self.visit_HdlStmBlock(defal, begin_end=False)
                 if is_block:
                     w("\n")
