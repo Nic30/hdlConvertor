@@ -93,7 +93,6 @@ class ToVhdl2008(ToVhdl2008Stm):
         """
         :type o: HdlModuleDec
         """
-        self.visit_doc(o)
         self.visit_HdlModuleDec(o, vhdl_obj_name="COMPONENT")
 
     def visit_type(self, t):
@@ -115,7 +114,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                 else:
                     w(",\n")
 
-    def visit_component_instance(self, c):
+    def visit_HdlComponentInst(self, c):
         """
         :type c: HdlComponentInst
         """
@@ -161,7 +160,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                     in_def_section = False
 
                 if isinstance(o, HdlComponentInst):
-                    self.visit_component_instance(o)
+                    self.visit_HdlComponentInst(o)
                     w("\n")
                 elif isinstance(o, iHdlStatement):
                     self.visit_iHdlStatement(o)
