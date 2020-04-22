@@ -242,7 +242,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         self.visit_doc(o)
         w = self.out.write
         w("#")
-        assert len(o.val) == 1
+        assert len(o.val) == 1, o.val
         self.visit_iHdlExpr(o.val[0])
         return True
 
