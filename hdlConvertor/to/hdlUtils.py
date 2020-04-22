@@ -97,13 +97,13 @@ def bit_string(v, width, vld_mask=None):
     if vld_mask is None:
         vld_mask = all_mask
 
-    if vld_mask == 0:
-        if width % 4 == 0:
-            base = 16
-            bit_string = "".join(["x" for _ in range(width//4)])
-        else:
-            base = 2
-            bit_string = "".join(["x" for _ in range(width)])
+    # if vld_mask == 0:
+    #     if width % 4 == 0:
+    #         base = 16
+    #         bit_string = "".join(["x" for _ in range(width//4)])
+    #     else:
+    #         base = 2
+    #         bit_string = "".join(["x" for _ in range(width)])
 
     elif width % 4 == 0 and vld_mask == (1 << width) - 1:
         # hex full valid
