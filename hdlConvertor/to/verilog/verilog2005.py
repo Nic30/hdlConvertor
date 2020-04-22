@@ -76,6 +76,8 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         if var.is_const:
             w("localparam ")
+            assert var.value is not None, var.name
+
         if t is HdlTypeAuto:
             is_array = False
         else:
@@ -84,6 +86,10 @@ class ToVerilog2005(ToVerilog2005Stm):
         w(name)
         if is_array:
             self.visit_type_array_part(t)
+
+        if var.value is not None:
+            w(" = ")
+            self.visit_iHdlExpr(var.value)
 
     def visit_map_item(self, item):
         if isinstance(item, HdlCall)\
@@ -109,7 +115,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                 else:
                     w(",\n")
 
-    def visit_component_instance(self, c):
+    def visit_HdlComponentInst(self, c):
         """
         :type c: HdlComponentInst
         """
@@ -229,7 +235,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                     self.visit_HdlVariableDef(o)
                     w(";\n")
                 elif isinstance(o, HdlComponentInst):
-                    self.visit_component_instance(o)
+                    self.visit_HdlComponentInst(o)
                     w(";\n\n")
                 elif isinstance(o, iHdlStatement):
                     need_semi = self.visit_iHdlStatement(o)
