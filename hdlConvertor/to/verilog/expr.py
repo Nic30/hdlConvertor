@@ -180,6 +180,8 @@ class ToVerilog2005Expr(ToHdlCommon):
             pass
         elif o is None:
             w("null")
+        elif isinstance(o, float):
+            w(str(o))
         else:
             raise NotImplementedError(o.__class__, o)
         return True
