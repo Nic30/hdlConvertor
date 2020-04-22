@@ -36,10 +36,10 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.MINUS_UNARY: 5,
         HdlBuiltinFn.POW: 4,
 
+        HdlBuiltinFn.INDEX: 3,
+
         HdlBuiltinFn.RISING: 2,
         HdlBuiltinFn.FALLING: 2,
-
-        HdlBuiltinFn.INDEX: 2,
 
         # concat/ternary become a call to _concat, _ternary__val function
         # HdlBuiltinFn.CONCAT: 2,
