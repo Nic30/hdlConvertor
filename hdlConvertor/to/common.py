@@ -8,6 +8,7 @@ from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 class ToHdlCommon(HdlAstVisitor):
     INDENT_STEP = "    "
     GENERIC_UNARY_OPS = {
+        HdlBuiltinFn.PLUS_UNARY: "+",
         HdlBuiltinFn.MINUS_UNARY: "-",
     }
     GENERIC_BIN_OPS = {
