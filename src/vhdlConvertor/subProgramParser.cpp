@@ -35,6 +35,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitSubprogram_body(
 		auto stm = VhdlStatementParser::visitSequential_statement(s);
 		f->body.push_back(move(stm));
 	}
+	f->is_declaration_only = false;
 
 	return f;
 }
