@@ -436,9 +436,12 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAggregate(
 		auto e = visitElement_association(elm);
 		elements.push_back(move(e));
 	}
-	std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
-
-	return arr;
+	if (elements.size() == 1) {
+		return move(elements[0]);
+	} else {
+		std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
+		return arr;
+	}
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitElement_association(
