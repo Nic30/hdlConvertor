@@ -437,11 +437,13 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAggregate(
 		elements.push_back(move(e));
 	}
 	if (elements.size() == 1) {
-		return move(elements[0]);
-	} else {
-		std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
-		return arr;
+		auto e = dynamic_cast<HdlCall*>(elements[0]->data);
+		if (!e || e->op != HdlOperatorType::MAP_ASSOCIATION)
+			return move(elements[0]);
 	}
+	std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
+	return arr;
+
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitElement_association(
