@@ -69,10 +69,16 @@ class VhdlConversionTC(HdlParseTC):
         self.assertIsInstance(res.objs[0], HdlLibrary)
         self.assertEqual(res.objs[0].name, 'ieee')
 
+    def test_example_record_pkg(self):
+        self.parseWithRef("example_record_pkg.vhd", Language.VHDL)
+
+    def test_operator_example(self):
+        self.parseWithRef("operator_example.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_with_select'))
+    # suite.addTest(VhdlConversionTC('test_example_record_pkg'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
