@@ -13,6 +13,8 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.OR_LOG: " OR ",
         HdlBuiltinFn.DIV: " / ",
         HdlBuiltinFn.MOD: " MOD ",
+        HdlBuiltinFn.REM: " REM ",
+        HdlBuiltinFn.POW: " ** ",
         HdlBuiltinFn.NAND: " NAND ",
         HdlBuiltinFn.NOR: " NOR ",
         HdlBuiltinFn.XOR: " XOR ",
@@ -33,13 +35,14 @@ class ToVhdl2008Expr(ToHdlCommon):
         2: "",
         8: "O",
         16: "X",
-        256: "",
+        256: "",  # 'X' literals
     }
     OP_PRECEDENCE = {
         HdlBuiltinFn.CALL: 1,
         HdlBuiltinFn.INDEX: 1,
         HdlBuiltinFn.RISING: 1,
         HdlBuiltinFn.FALLING: 1,
+        HdlBuiltinFn.APOSTROPHE: 1,
 
         HdlBuiltinFn.POW: 2,
         HdlBuiltinFn.ABS: 2,
@@ -84,6 +87,7 @@ class ToVhdl2008Expr(ToHdlCommon):
 
         HdlBuiltinFn.RANGE: 10,
         HdlBuiltinFn.RANGE_REVERSE: 10,
+        HdlBuiltinFn.ARROW: 11,
     }
 
     def visit_HdlIntValue(self, o):
@@ -137,17 +141,14 @@ class ToVhdl2008Expr(ToHdlCommon):
         if op == HdlBuiltinFn.NEG_LOG or op == HdlBuiltinFn.NEG:
             w("NOT ")
             self._visit_operand(o.ops[0], 0, o, False, False)
-            return
         elif op == HdlBuiltinFn.RISING:
             w("RISING_EDGE(")
             self._visit_operand(o.ops[0], 0, o, False, True)
             w(")")
-            return
         elif op == HdlBuiltinFn.FALLING:
             w("FALLING_EDGE(")
             self._visit_operand(o.ops[0], 0, o, False, True)
             w(")")
-            return
         elif op == HdlBuiltinFn.INDEX or op == HdlBuiltinFn.CALL:
             self._visit_operand(o.ops[0], 0, o, True, False)
             w("(")
@@ -156,15 +157,19 @@ class ToVhdl2008Expr(ToHdlCommon):
                 if not isLast:
                     w(", ")
             w(")")
-            return
         elif op == HdlBuiltinFn.TERNARY:
-            cond, o0, o1 = o.ops
+            has_3_ops = len(o.ops) == 3
+            if has_3_ops:
+                cond, o0, o1 = o.ops
+            else:
+                cond, o0 = o.ops
+
             self._visit_operand(o0, 1, o, True, False)
             w(" WHEN ")
             self._visit_operand(cond, 0, o, True, False)
-            w(" ELSE ")
-            self._visit_operand(o1, 2, o, True, False)
-            return
+            if has_3_ops:
+                w(" ELSE ")
+                self._visit_operand(o1, 2, o, True, False)
         elif op == HdlBuiltinFn.APOSTROPHE:
             self._visit_operand(o.ops[0], 0, o, True, False)
             w("'")
@@ -174,7 +179,10 @@ class ToVhdl2008Expr(ToHdlCommon):
             else:
                 # normal attribute
                 self._visit_operand(args, 0, o, True, False)
-            return
+        elif op == HdlBuiltinFn.ABS:
+            w("ABS(")
+            self.visit_iHdlExpr(o.ops[0])
+            w(")")
         else:
             return ToHdlCommon.visit_HdlCall(self, o)
 
