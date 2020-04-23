@@ -288,7 +288,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		if (ctx->KW_ABS()) {
 			op = HdlOperatorType::ABS;
 		} else if (ctx->KW_NOT()) {
-			op = HdlOperatorType::NEG_LOG;
+			op = HdlOperatorType::NEG;
 		} else {
 			auto lo = ctx->logical_operator();
 			if (lo) {
