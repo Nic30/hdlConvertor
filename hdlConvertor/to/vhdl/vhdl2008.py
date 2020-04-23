@@ -252,7 +252,7 @@ class ToVhdl2008(ToVhdl2008Stm):
             for is_last, par in iter_with_last(o.params):
                 self.visit_HdlVariableDef(par, end="")
                 if not is_last:
-                    w(",\n")
+                    w(";\n")
         w(")")
         if not is_procedure:
             w(" RETURN ")
@@ -263,7 +263,10 @@ class ToVhdl2008(ToVhdl2008Stm):
             w("\n")
             w("IS\n")
             self.visit_body_items(o.body)
-            w("END FUNCTION;\n")
+            if is_procedure:
+                w("END PROCEDURE;\n")
+            else:
+                w("END FUNCTION;\n")
 
     def visit_HdlLibrary(self, o):
         """
