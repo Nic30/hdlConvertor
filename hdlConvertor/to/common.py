@@ -3,10 +3,25 @@ from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
+from enum import Enum
+
+
+# https://www.geeksforgeeks.org/operator-precedence-and-associativity-in-c/
+# http://www.euroelectronica.ro/7-operators/
+# https://gist.github.com/kputnam/5625856
+# https://github.com/kaitai-io/kaitai_struct/issues/69
+class ASSOCIATIVITY(Enum):
+    L_TO_R = "L_TO_R"
+    R_TO_L = "R_TO_L"
+    NONE = "NONE"
 
 
 class ToHdlCommon(HdlAstVisitor):
     INDENT_STEP = "    "
+    ALL_UNARY_OPS = {
+        getattr(HdlBuiltinFn, name) for name in dir(HdlBuiltinFn)
+        if name.endswith("_UNARY")
+    }
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.PLUS_UNARY: "+",
         HdlBuiltinFn.MINUS_UNARY: "-",
@@ -51,8 +66,8 @@ class ToHdlCommon(HdlAstVisitor):
         """
         # not id or value
         if not isinstance(o, HdlCall):
-            return -1
-        return self.OP_PRECEDENCE[o.fn]
+            return (-1, ASSOCIATIVITY.NONE, None)
+        return self.OP_PRECEDENCE[o.fn] + (o.fn, )
 
     def visit_HdlCall(self, op):
         """
@@ -65,7 +80,7 @@ class ToHdlCommon(HdlAstVisitor):
             op_str = self.GENERIC_UNARY_OPS.get(o, None)
             if op_str is not None:
                 w(op_str)
-                self._visit_operand(op.ops[0], 0, op, False, False)
+                self._visit_operand(op.ops[0], 0, op, True, False)
                 return
         if argc == 2:
             op_str = self.GENERIC_BIN_OPS.get(o, None)
@@ -100,6 +115,15 @@ class ToHdlCommon(HdlAstVisitor):
             raise NotImplementedError(
                 "Do not know how to convert %r" % (o))
 
+    def _visit_operand_parentheses_extra_check(
+            self,
+            op_my, precedence_my, asoc_my,
+            op_parent, precedence_parent, asoc_parent,
+            left, right):
+        if op_my in self.ALL_UNARY_OPS and op_parent in self.ALL_UNARY_OPS:
+            return True
+        return False
+
     def _visit_operand(self, operand, i,
                        parent,
                        expr_requires_parenthesis,
@@ -114,12 +138,12 @@ class ToHdlCommon(HdlAstVisitor):
         use_parenthesis = False
         if not cancel_parenthesis:
             # resolve if the parenthesis are required
-            precedence_my = self._precedence_of_expr(operand)
+            precedence_my, asoc_my, op_my = self._precedence_of_expr(operand)
             if precedence_my >= 0:  # if this is an expression
-                if expr_requires_parenthesis:
+                if expr_requires_parenthesis or asoc_my is ASSOCIATIVITY.NONE:
                     use_parenthesis = True
                 else:
-                    precedence_parent = self.OP_PRECEDENCE[parent.fn]
+                    precedence_parent, asoc_parent = self.OP_PRECEDENCE[parent.fn]
                     right = None
                     left = None
                     argc = len(parent.ops)
@@ -132,29 +156,37 @@ class ToHdlCommon(HdlAstVisitor):
                         else:
                             left = parent.ops[i - 1]
 
-                    if left is not None:  # "operand" is right
-                        # same precedence -> parenthesis on right if it is expression
-                        # a + (b + c)
-                        # a + b + c = (a + b) + c
-                        # right with lower precedence -> parenthesis for right not required
-                        # a + b * c = a + (b * c)
-                        # right with higher precedence -> parenthesis for right
-                        # a * (b + c)
-                        if precedence_my >= precedence_parent:
-                            use_parenthesis = True
-                    if right is not None:
-                        # "operand" is left
-                        if precedence_my == precedence_parent:
-                            if self._precedence_of_expr(right) == precedence_my:
-                                # right and left with same precedence -> parenthesis on both sides
-                                # (a + b) + (c + d)
+                    if self._visit_operand_parentheses_extra_check(
+                            op_my, precedence_my, asoc_my, parent.fn,
+                            precedence_parent, asoc_parent, left, right):
+                        use_parenthesis = True
+                    else:
+                        # if argc > 1 and asoc_my is ASSOCIATIVITY.R_TO_L:
+                        #     right, left = left, right
+
+                        if left is not None:  # "operand" is right
+                            # same precedence -> parenthesis on right if it is expression
+                            # a + (b + c)
+                            # a + b + c = (a + b) + c
+                            # right with lower precedence -> parenthesis for right not required
+                            # a + b * c = a + (b * c)
+                            # right with higher precedence -> parenthesis for right
+                            # a * (b + c)
+                            if precedence_my >= precedence_parent:
                                 use_parenthesis = True
-                        elif precedence_my > precedence_parent:
-                            # left with higher precedence -> parenthesis for left
-                            # (a + b) * c
-                            # a + b + c + d = (a + b) + c + d = ((a + b) + c) +
-                            # d
-                            use_parenthesis = True
+                        if not use_parenthesis and right is not None:
+                            # "operand" is left
+                            if precedence_my == precedence_parent:
+                                if self._precedence_of_expr(right)[0] == precedence_my:
+                                    # right and left with same precedence -> parenthesis on both sides
+                                    # (a + b) + (c + d)
+                                    use_parenthesis = True
+                            elif precedence_my > precedence_parent:
+                                # left with higher precedence -> parenthesis for left
+                                # (a + b) * c
+                                # a + b + c + d = (a + b) + c + d = ((a + b) + c) +
+                                # d
+                                use_parenthesis = True
 
         w = self.out.write
         if use_parenthesis:

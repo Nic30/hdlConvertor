@@ -1,8 +1,12 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
     HdlCall
-from hdlConvertor.to.common import ToHdlCommon
-from hdlConvertor.to.hdlUtils import iter_with_last, Indent
 from hdlConvertor.py_ver_compatibility import is_str
+from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
+from hdlConvertor.to.hdlUtils import iter_with_last, Indent
+
+
+L = ASSOCIATIVITY.L_TO_R
+R = ASSOCIATIVITY.R_TO_L
 
 
 class ToBasicHdlSimModelExpr(ToHdlCommon):
@@ -13,44 +17,44 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
 
         # note that HdlExpressions in BasicHdlSimModel
         # do not use == but ._eq()
-        HdlBuiltinFn.EQ: 11,
-        HdlBuiltinFn.NEQ: 11,
-        HdlBuiltinFn.GT: 11,
-        HdlBuiltinFn.LT: 11,
-        HdlBuiltinFn.GE: 11,
-        HdlBuiltinFn.LE: 11,
+        HdlBuiltinFn.EQ: (11, L),
+        HdlBuiltinFn.NEQ: (11, L),
+        HdlBuiltinFn.GT:  (11, L),
+        HdlBuiltinFn.LT:  (11, L),
+        HdlBuiltinFn.GE:  (11, L),
+        HdlBuiltinFn.LE:  (11, L),
 
-        HdlBuiltinFn.OR: 10,
-        HdlBuiltinFn.XOR: 9,
-        HdlBuiltinFn.AND: 8,
+        HdlBuiltinFn.OR: (10, L),
+        HdlBuiltinFn.XOR: (9, L),
+        HdlBuiltinFn.AND: (8, L),
 
-        HdlBuiltinFn.ADD: 7,
-        HdlBuiltinFn.SUB: 7,
+        HdlBuiltinFn.ADD: (7, L),
+        HdlBuiltinFn.SUB: (7, L),
 
-        HdlBuiltinFn.DIV: 6,
-        HdlBuiltinFn.MUL: 6,
-        HdlBuiltinFn.MOD: 6,
+        HdlBuiltinFn.DIV: (6, L),
+        HdlBuiltinFn.MUL: (6, L),
+        HdlBuiltinFn.MOD: (6, L),
 
-        HdlBuiltinFn.NEG_LOG: 5,
-        HdlBuiltinFn.NEG: 5,
-        HdlBuiltinFn.MINUS_UNARY: 5,
-        HdlBuiltinFn.POW: 4,
+        HdlBuiltinFn.NEG_LOG: (5, L),
+        HdlBuiltinFn.NEG: (5, L),
+        HdlBuiltinFn.MINUS_UNARY: (5, L),
+        HdlBuiltinFn.POW: (4, R),
 
-        HdlBuiltinFn.INDEX: 3,
+        HdlBuiltinFn.INDEX: (3, L),
 
-        HdlBuiltinFn.RISING: 2,
-        HdlBuiltinFn.FALLING: 2,
+        HdlBuiltinFn.RISING: (2, L),
+        HdlBuiltinFn.FALLING: (2, L),
 
         # concat/ternary become a call to _concat, _ternary__val function
         # HdlBuiltinFn.CONCAT: 2,
         # HdlBuiltinFn.TERNARY: 2,
         # rising/faling as ._onRisingEdge(), ._onFallingEdge()
-        HdlBuiltinFn.CALL: 2,
+        HdlBuiltinFn.CALL: (2, L),
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: 2,
+        HdlBuiltinFn.PARAMETRIZATION: (2, L),
 
-        HdlBuiltinFn.DOT: 1,
+        HdlBuiltinFn.DOT: (1, L),
     }
     _unaryEventOps = {
         HdlBuiltinFn.RISING: "._onRisingEdge()",

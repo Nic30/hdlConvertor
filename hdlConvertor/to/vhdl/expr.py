@@ -1,11 +1,22 @@
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue,\
     HdlAll, HdlCall, HdlOthers
 from hdlConvertor.py_ver_compatibility import is_str
-from hdlConvertor.to.common import ToHdlCommon
+from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
 from hdlConvertor.to.hdlUtils import iter_with_last, Indent
 
+L = ASSOCIATIVITY.L_TO_R
+R = ASSOCIATIVITY.R_TO_L
 
+
+# https://www.csee.umbc.edu/portal/help/VHDL/operator.html
 class ToVhdl2008Expr(ToHdlCommon):
+    GENERIC_UNARY_OPS = ToHdlCommon.GENERIC_UNARY_OPS
+    GENERIC_UNARY_OPS.update({HdlBuiltinFn.NEG: "NOT ",
+                              HdlBuiltinFn.NEG_LOG: "NOT "})
+    BITWISE_BIN_OPS = {HdlBuiltinFn.AND, HdlBuiltinFn.AND_LOG,
+                       HdlBuiltinFn.OR, HdlBuiltinFn.OR_LOG,
+                       HdlBuiltinFn.XOR, HdlBuiltinFn.NAND,
+                       HdlBuiltinFn.NOR, HdlBuiltinFn.XNOR}
     GENERIC_BIN_OPS = {
         HdlBuiltinFn.AND: " AND ",
         HdlBuiltinFn.AND_LOG: " AND ",
@@ -21,14 +32,18 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.XNOR: " XNOR ",
         HdlBuiltinFn.EQ: ' = ',
         HdlBuiltinFn.NEQ: " /= ",
-        HdlBuiltinFn.SLL: " SLL ",
-        HdlBuiltinFn.SRL: " SRL ",
         HdlBuiltinFn.TO: " TO ",
         HdlBuiltinFn.DOWNTO: " DOWNTO ",
         HdlBuiltinFn.ARROW: " => ",
         HdlBuiltinFn.MAP_ASSOCIATION: " => ",
         HdlBuiltinFn.RANGE: " RANGE ",
         HdlBuiltinFn.CONCAT: " & ",
+        HdlBuiltinFn.ROL: " ROL ",
+        HdlBuiltinFn.ROR: " ROR ",
+        HdlBuiltinFn.SLA: " SLA ",
+        HdlBuiltinFn.SRA: " SRA ",
+        HdlBuiltinFn.SLL: " SLL ",
+        HdlBuiltinFn.SRL: " SRL ",
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
     NUM_BASES = {
@@ -38,56 +53,57 @@ class ToVhdl2008Expr(ToHdlCommon):
         256: "",  # 'X' literals
     }
     OP_PRECEDENCE = {
-        HdlBuiltinFn.CALL: 1,
-        HdlBuiltinFn.INDEX: 1,
-        HdlBuiltinFn.RISING: 1,
-        HdlBuiltinFn.FALLING: 1,
-        HdlBuiltinFn.APOSTROPHE: 1,
+        HdlBuiltinFn.DOT: (1, L),
+        HdlBuiltinFn.CALL: (1, L),
+        HdlBuiltinFn.INDEX: (1, L),
+        HdlBuiltinFn.RISING: (1, L),
+        HdlBuiltinFn.FALLING: (1, L),
+        HdlBuiltinFn.APOSTROPHE: (1, L),
 
-        HdlBuiltinFn.POW: 2,
-        HdlBuiltinFn.ABS: 2,
-        HdlBuiltinFn.NEG: 2,
+        HdlBuiltinFn.POW: (2, R),
+        HdlBuiltinFn.ABS: (2, L),
+        HdlBuiltinFn.NEG: (2, L),
 
-        HdlBuiltinFn.MUL: 3,
-        HdlBuiltinFn.DIV: 3,
-        HdlBuiltinFn.MOD: 3,
-        HdlBuiltinFn.REM: 3,
+        HdlBuiltinFn.MUL: (3, L),
+        HdlBuiltinFn.DIV: (3, L),
+        HdlBuiltinFn.MOD: (3, L),
+        HdlBuiltinFn.REM: (3, L),
 
-        HdlBuiltinFn.PLUS_UNARY: 4,
-        HdlBuiltinFn.MINUS_UNARY: 4,
+        HdlBuiltinFn.PLUS_UNARY: (4, R),
+        HdlBuiltinFn.MINUS_UNARY: (4, R),
 
-        HdlBuiltinFn.CONCAT: 5,
-        HdlBuiltinFn.ADD: 5,
-        HdlBuiltinFn.SUB: 5,
+        HdlBuiltinFn.CONCAT: (5, L),
+        HdlBuiltinFn.ADD: (5, L),
+        HdlBuiltinFn.SUB: (5, L),
 
-        HdlBuiltinFn.SLL: 6,
-        HdlBuiltinFn.SRL: 6,
-        HdlBuiltinFn.SLA: 6,
-        HdlBuiltinFn.SRA: 6,
-        HdlBuiltinFn.ROL: 6,
-        HdlBuiltinFn.ROR: 6,
+        HdlBuiltinFn.SLL: (6, L),
+        HdlBuiltinFn.SRL: (6, L),
+        HdlBuiltinFn.SLA: (6, L),
+        HdlBuiltinFn.SRA: (6, L),
+        HdlBuiltinFn.ROL: (6, L),
+        HdlBuiltinFn.ROR: (6, L),
 
-        HdlBuiltinFn.EQ: 7,
-        HdlBuiltinFn.NEQ: 7,
-        HdlBuiltinFn.GT: 7,
-        HdlBuiltinFn.LT: 7,
-        HdlBuiltinFn.GE: 7,
-        HdlBuiltinFn.LE: 7,
+        HdlBuiltinFn.EQ:  (7, L),
+        HdlBuiltinFn.NEQ: (7, L),
+        HdlBuiltinFn.GT:  (7, L),
+        HdlBuiltinFn.LT:  (7, L),
+        HdlBuiltinFn.GE:  (7, L),
+        HdlBuiltinFn.LE:  (7, L),
 
-        HdlBuiltinFn.AND: 8,
-        HdlBuiltinFn.OR: 8,
-        HdlBuiltinFn.NAND: 8,
-        HdlBuiltinFn.NOR: 8,
-        HdlBuiltinFn.XOR: 8,
-        HdlBuiltinFn.XNOR: 8,
+        HdlBuiltinFn.AND:  (8, L),
+        HdlBuiltinFn.OR:   (8, L),
+        HdlBuiltinFn.NAND: (8, ASSOCIATIVITY.NONE),
+        HdlBuiltinFn.NOR:  (8, ASSOCIATIVITY.NONE),
+        HdlBuiltinFn.XOR:  (8, L),
+        HdlBuiltinFn.XNOR: (8, ASSOCIATIVITY.NONE),
 
-        HdlBuiltinFn.DOWNTO: 9,
-        HdlBuiltinFn.TO: 9,
-        HdlBuiltinFn.TERNARY: 9,
+        HdlBuiltinFn.DOWNTO: (9, L),
+        HdlBuiltinFn.TO: (9, L),
+        HdlBuiltinFn.TERNARY: (9, R),
 
-        HdlBuiltinFn.RANGE: 10,
-        HdlBuiltinFn.RANGE_REVERSE: 10,
-        HdlBuiltinFn.ARROW: 11,
+        HdlBuiltinFn.RANGE: (10, L),
+        HdlBuiltinFn.RANGE_REVERSE: (10, L),
+        HdlBuiltinFn.ARROW: (11, L),
     }
 
     def visit_HdlIntValue(self, o):
@@ -124,6 +140,20 @@ class ToVhdl2008Expr(ToHdlCommon):
             f = '"{0:0%db}"' % (bits)
         w(f.format(v))
 
+    def _visit_operand_parentheses_extra_check(self, op_my, precedence_my, asoc_my,
+                                               op_parent, precedence_parent, asoc_parent,
+                                               left, right):
+        if super(ToVhdl2008Expr, self)._visit_operand_parentheses_extra_check(
+                op_my, precedence_my, asoc_my,
+                op_parent, precedence_parent, asoc_parent, left, right):
+            return True
+        elif op_my in self.BITWISE_BIN_OPS and\
+                op_parent in self.BITWISE_BIN_OPS and\
+                op_my != op_parent:
+            return True
+        else:
+            return False
+
     def visit_HdlCall(self, o):
         """
         :type o: HdlCall
@@ -138,19 +168,16 @@ class ToVhdl2008Expr(ToHdlCommon):
 
         w = self.out.write
         op = o.fn
-        if op == HdlBuiltinFn.NEG_LOG or op == HdlBuiltinFn.NEG:
-            w("NOT ")
-            self._visit_operand(o.ops[0], 0, o, False, False)
-        elif op == HdlBuiltinFn.RISING:
+        if op == HdlBuiltinFn.RISING:
             w("RISING_EDGE(")
-            self._visit_operand(o.ops[0], 0, o, False, True)
+            self.visit_iHdlExpr(o.ops[0])
             w(")")
         elif op == HdlBuiltinFn.FALLING:
             w("FALLING_EDGE(")
-            self._visit_operand(o.ops[0], 0, o, False, True)
+            self.visit_iHdlExpr(o.ops[0])
             w(")")
         elif op == HdlBuiltinFn.INDEX or op == HdlBuiltinFn.CALL:
-            self._visit_operand(o.ops[0], 0, o, True, False)
+            self._visit_operand(o.ops[0], 0, o, False, False)
             w("(")
             for isLast, (o_i, _o) in iter_with_last(enumerate(o.ops[1:])):
                 self._visit_operand(_o, o_i + 1, o, False, True)
@@ -168,17 +195,25 @@ class ToVhdl2008Expr(ToHdlCommon):
             w(" WHEN ")
             self._visit_operand(cond, 0, o, True, False)
             if has_3_ops:
-                w(" ELSE ")
-                self._visit_operand(o1, 2, o, True, False)
+                if isinstance(o1, HdlCall) and o1.fn == HdlBuiltinFn.TERNARY:
+                    w(" ELSE\n")
+                    self.visit_iHdlExpr(o1)  # must not have parenthesis
+                else:
+                    w(" ELSE ")
+                    self._visit_operand(o1, 2, o, False, False)
         elif op == HdlBuiltinFn.APOSTROPHE:
             self._visit_operand(o.ops[0], 0, o, True, False)
             w("'")
             args = o.ops[1]
             if isinstance(args, list):
                 self.visit_iHdlExpr(args)
-            else:
+            elif isinstance(args, HdlName):
                 # normal attribute
-                self._visit_operand(args, 0, o, True, False)
+                self.visit_iHdlExpr(args)
+            else:
+                w("(")
+                self._visit_operand(args, 0, o, False, True)
+                w(")")
         elif op == HdlBuiltinFn.ABS:
             w("ABS(")
             self.visit_iHdlExpr(o.ops[0])
@@ -243,7 +278,7 @@ class ToVhdl2008Expr(ToHdlCommon):
                         if with_nl:
                             w(",\n")
                         else:
-                            w(",")
+                            w(", ")
             w(")")
             return
         ToHdlCommon.visit_iHdlExpr(self, expr)

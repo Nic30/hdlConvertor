@@ -1,9 +1,13 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
     HdlCall, HdlTypeAuto
 from hdlConvertor.py_ver_compatibility import is_str
-from hdlConvertor.to.common import ToHdlCommon
+from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
 from hdlConvertor.to.hdlUtils import iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
+
+
+L = ASSOCIATIVITY.L_TO_R
+R = ASSOCIATIVITY.R_TO_L
 
 
 class ToVerilog2005Expr(ToHdlCommon):
@@ -47,54 +51,54 @@ class ToVerilog2005Expr(ToHdlCommon):
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
 
     OP_PRECEDENCE = {
-        HdlBuiltinFn.INDEX: 1,
+        HdlBuiltinFn.INDEX: (1, L),
 
-        HdlBuiltinFn.CALL: 2,
-        HdlBuiltinFn.TYPE_OF: 2,
-        HdlBuiltinFn.PARAMETRIZATION: 2,
+        HdlBuiltinFn.CALL: (2, L),
+        HdlBuiltinFn.TYPE_OF: (2, L),
+        HdlBuiltinFn.PARAMETRIZATION: (2, L),
 
-        HdlBuiltinFn.MINUS_UNARY: 4,
-        HdlBuiltinFn.PLUS_UNARY: 4,
+        HdlBuiltinFn.MINUS_UNARY: (4, R),
+        HdlBuiltinFn.PLUS_UNARY: (4, R),
 
-        HdlBuiltinFn.CONCAT: 5,
+        HdlBuiltinFn.CONCAT: (5, L),
 
-        HdlBuiltinFn.REPL_CONCAT: 6,
+        HdlBuiltinFn.REPL_CONCAT: (6, L),
 
-        HdlBuiltinFn.DIV: 7,
-        HdlBuiltinFn.MUL: 7,
-        HdlBuiltinFn.MOD: 7,
+        HdlBuiltinFn.DIV: (7, L),
+        HdlBuiltinFn.MUL: (7, L),
+        HdlBuiltinFn.MOD: (7, L),
 
-        HdlBuiltinFn.ADD: 8,
-        HdlBuiltinFn.SUB: 8,
+        HdlBuiltinFn.ADD: (8, L),
+        HdlBuiltinFn.SUB: (8, L),
 
-        HdlBuiltinFn.SLL: 9,
-        HdlBuiltinFn.SRL: 9,
+        HdlBuiltinFn.SLL: (9, L),
+        HdlBuiltinFn.SRL: (9, L),
 
-        HdlBuiltinFn.GT: 10,
-        HdlBuiltinFn.LT: 10,
-        HdlBuiltinFn.GE: 10,
-        HdlBuiltinFn.LE: 10,
+        HdlBuiltinFn.GT: (10, L),
+        HdlBuiltinFn.LT: (10, L),
+        HdlBuiltinFn.GE: (10, L),
+        HdlBuiltinFn.LE: (10, L),
 
-        HdlBuiltinFn.EQ: 11,
-        HdlBuiltinFn.NEQ: 11,
+        HdlBuiltinFn.EQ:  (11, L),
+        HdlBuiltinFn.NEQ: (11, L),
 
-        HdlBuiltinFn.AND: 12,
-        HdlBuiltinFn.XOR: 12,
-        HdlBuiltinFn.OR: 12,
-        HdlBuiltinFn.NAND: 12,
-        HdlBuiltinFn.XNOR: 12,
+        HdlBuiltinFn.AND:  (12, L),
+        HdlBuiltinFn.XOR:  (12, L),
+        HdlBuiltinFn.OR:   (12, L),
+        HdlBuiltinFn.NAND: (12, L),
+        HdlBuiltinFn.XNOR: (12, L),
 
-        HdlBuiltinFn.AND_LOG: 13,
-        HdlBuiltinFn.OR_LOG: 13,
+        HdlBuiltinFn.AND_LOG: (13, L),
+        HdlBuiltinFn.OR_LOG: (13, L),
 
-        HdlBuiltinFn.TERNARY: 14,
+        HdlBuiltinFn.TERNARY: (14, R),
 
-        HdlBuiltinFn.RISING: 15,
-        HdlBuiltinFn.FALLING: 15,
-        HdlBuiltinFn.DOWNTO: 16,
-        HdlBuiltinFn.TO: 16,
+        HdlBuiltinFn.RISING: (15, R),
+        HdlBuiltinFn.FALLING: (15, R),
+        HdlBuiltinFn.DOWNTO: (16, L),
+        HdlBuiltinFn.TO: (16, L),
     }
-    OP_PRECEDENCE.update({k: 3 for k in [
+    OP_PRECEDENCE.update({k: (3, R) for k in [
         HdlBuiltinFn.NEG,
         HdlBuiltinFn.NEG_LOG,
         HdlBuiltinFn.OR_UNARY,
@@ -104,7 +108,7 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.XOR_UNARY,
         HdlBuiltinFn.XNOR_UNARY
     ]})
-    OP_PRECEDENCE.update({k: 16 for k in [
+    OP_PRECEDENCE.update({k: (16, ASSOCIATIVITY.NONE) for k in [
         HdlBuiltinFn.ASSIGN,
         HdlBuiltinFn.PLUS_ASSIGN,
         HdlBuiltinFn.MINUS_ASSIGN,
