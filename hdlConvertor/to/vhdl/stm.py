@@ -156,7 +156,8 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             w(" := ")
         else:
             w(" <= ")
-        self.visit_iHdlExpr(o.src)
+        with Indent(self.out):
+            self.visit_iHdlExpr(o.src)
         w(";\n")
 
     def visit_HdlStmCase(self, o):
@@ -236,11 +237,16 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         w("WAIT")
         for e in o.val:
             if isinstance(e, HdlCall) and e.fn == HdlBuiltinFn.MUL:
+                # wait for time
                 w(" FOR ")
                 self.visit_iHdlExpr(e.ops[0])
                 w(" ")
                 self.visit_iHdlExpr(e.ops[1])
+            # elif :
+            #  wait until
             else:
+                # wait on event
                 w(" ON ")
                 self.visit_iHdlExpr(e)
+
         w(";\n")
