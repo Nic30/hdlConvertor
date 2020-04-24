@@ -12,7 +12,22 @@ class ToSystemcStm(ToSystemcExpr):
         return ToVerilog2005Stm.visit_iHdlStatement_in_statement(self, stm)
 
     def visit_HdlStmBlock(self, o):
-        return ToVerilog2005Stm.visit_HdlStmBlock(self, o)
+        """
+        :type o: HdlStmBlock
+        """
+        self.visit_doc(o)
+        w = self.out.write
+        w("{")
+        w("\n")
+        with Indent(self.out):
+            for s in o.body:
+                need_semi = self.visit_iHdlStatement(s)
+                if need_semi:
+                    w(";\n")
+                else:
+                    w("\n")
+        w("}")
+        return False
 
     def visit_HdlStmIf(self, o):
         return ToVerilog2005Stm.visit_HdlStmIf(self, o)
@@ -35,6 +50,8 @@ class ToSystemcStm(ToSystemcExpr):
                 req_semi = self.visit_iHdlStatement(o.body)
                 if req_semi:
                     w(";\n")
+                else:
+                    w("\n")
             w("}\n")
 
     def visit_HdlStmAssign(self, o):
@@ -48,3 +65,45 @@ class ToSystemcStm(ToSystemcExpr):
         w(" = ")
         self.visit_iHdlExpr(o.src)
         return True
+
+    def visit_HdlStmCase(self, o):
+        """
+        :type o: HdlStmCase
+
+        :return: True if requires ;\n after end
+        """
+        self.visit_doc(o)
+        w = self.out.write
+        w("switch(")
+        self.visit_iHdlExpr(o.switch_on)
+        w(") {\n")
+        with Indent(self.out):
+            cases = o.cases
+            for k, stms in cases:
+                self.visit_iHdlExpr(k)
+                w(":")
+                need_semi = self.visit_iHdlStatement_in_statement(stms)
+                if need_semi:
+                    w(";\n")
+                else:
+                    w("\n")
+            defal = o.default
+            if defal is not None:
+                w("default:")
+                need_semi = self.visit_iHdlStatement_in_statement(defal)
+                if need_semi:
+                    w(";\n")
+                else:
+                    w("\n")
+        w("}")
+        return False
+
+    def visit_HdlStmReturn(self, o):
+        return ToVerilog2005Stm.visit_HdlStmReturn(self, o)
+
+    def visit_HdlStmContinue(self, o):
+        return ToVerilog2005Stm.visit_HdlStmContinue(self, o)
+
+    def visit_HdlStmBreak(self, o):
+        return ToVerilog2005Stm.visit_HdlStmBreak(self, o)
+

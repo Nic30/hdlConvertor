@@ -23,9 +23,6 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
-    BLOCK_BEGIN_KW = "begin"
-    BLOCK_END_KW = "end"
-
     def __init__(self, out_stream):
         super(ToVerilog2005Stm, self).__init__(out_stream)
         self.top_stm = None
@@ -106,7 +103,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         """
         w = self.out.write
         if isinstance(stm, HdlStmBlock):
-            if len(stm.body) == 1:
+            if len(stm.body) == 1 and not stm.labels:
                 stm = stm.body[0]
             else:
                 w(" ")
@@ -122,8 +119,10 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         """
         self.visit_doc(o)
         w = self.out.write
-
-        w(self.BLOCK_BEGIN_KW)
+        w("begin")
+        if o.labels:
+            w(": ")
+            w(o.labels[0])
         w("\n")
         with Indent(self.out):
             for s in o.body:
@@ -132,7 +131,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                     w(";\n")
                 else:
                     w("\n")
-        w(self.BLOCK_END_KW)
+        w("end")
         return False
 
     def visit_HdlStmIf(self, o):
@@ -313,3 +312,31 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         self.visit_iHdlExpr(o.n)
         w(") ")
         return self.visit_iHdlStatement(o.body)
+
+    def visit_HdlStmReturn(self, o):
+        """
+        :type o: HdlStmReturn
+        """
+        self.visit_doc(o)
+        w = self.out.write
+        w("return")
+        if o.val is not None:
+            w(" ")
+            self.visit_iHdlExpr(o.val)
+        return True
+
+    def visit_HdlStmContinue(self, o):
+        """
+        :type o: HdlStmContinue
+        """
+        self.visit_doc(o)
+        self.out.write("continue")
+        return True
+
+    def visit_HdlStmBreak(self, o):
+        """
+        :type o: HdlStmBreak
+        """
+        self.visit_doc(o)
+        self.out.write("break")
+        return True
