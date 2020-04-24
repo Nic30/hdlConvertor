@@ -4,6 +4,7 @@ from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
 from hdlConvertor.to.hdlUtils import iter_with_last, Indent
 
+
 L = ASSOCIATIVITY.L_TO_R
 R = ASSOCIATIVITY.R_TO_L
 

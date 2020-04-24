@@ -1,9 +1,10 @@
+from enum import Enum
+
 from hdlConvertor.hdlAst import HdlCall
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from enum import Enum
 
 
 # https://www.geeksforgeeks.org/operator-precedence-and-associativity-in-c/

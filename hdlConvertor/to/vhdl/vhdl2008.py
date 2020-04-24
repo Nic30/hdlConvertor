@@ -1,10 +1,10 @@
 from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst
+from hdlConvertor.hdlAst._expr import HdlTypeType, HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst._structural import HdlNamespace
+from hdlConvertor.hdlAst._typeDefs import HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
-from hdlConvertor.hdlAst._structural import HdlNamespace
-from hdlConvertor.hdlAst._expr import HdlTypeType, HdlCall, HdlBuiltinFn
-from hdlConvertor.hdlAst._typeDefs import HdlEnumDef
 
 
 class ToVhdl2008(ToVhdl2008Stm):
