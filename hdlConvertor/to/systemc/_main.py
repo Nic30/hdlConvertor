@@ -75,6 +75,11 @@ class ToSystemc(ToSystemcStm):
             for v in variables:
                 self.visit_HdlVariableDef(v)
 
+            for p in processes:
+                self.visit_iHdlStatement(p)
+                # extra line to separate a process functions
+                w("\n")
+
             w("SC_CTOR(")
             w(mod_dec.name)
             w(")")
@@ -99,7 +104,7 @@ class ToSystemc(ToSystemcStm):
                         for s in p.sensitivity:
                             w(" << ")
                             self.visit_iHdlExpr(s)
-                            w(";\n")
+                        w(";\n")
 
             for c in components:
                 for pm in c.port_map:
@@ -117,10 +122,7 @@ class ToSystemc(ToSystemcStm):
                     w(")")
 
             w("}\n")
-            for p in processes:
-                self.visit_iHdlStatement(p)
-                # extra line to separate a process functions
-                w("\n")
+        w("};\n")
 
     def visit_HdlVariableDef(self, var):
         """
