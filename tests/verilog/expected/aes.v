@@ -165,13 +165,11 @@ module aes_cipher_top (
             dcnt <= #1 4'hb;
         else if (|dcnt)
             dcnt <= #1 dcnt - 4'h1;
-
     always @(posedge clk)
         done <= #1 !(|(dcnt[3:1])) & dcnt[0] & !ld;
     always @(posedge clk)
         if (ld)
             text_in_r <= #1 text_in;
-
     always @(posedge clk)
         ld_r <= #1 ld;
     ////////////////////////////////////////////////////////////////////
@@ -307,11 +305,13 @@ module aes_cipher_top (
             mix_col[07:00] = xtime(s0) ^ s0 ^ s1 ^ s2 ^ xtime(s3);
         end
     endfunction
+
     function wire[7:0] xtime (
         input wire[7:0] b
     );
         xtime = {b[6:0], 1'b0} ^ (8'h1b & {8{b[7]}});
     endfunction
+
     aes_key_expand_128 u0 (
         .clk(clk),
         .kld(ld),

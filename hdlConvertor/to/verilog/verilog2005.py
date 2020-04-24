@@ -245,7 +245,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                         w("\n\n")
                 elif isinstance(o, HdlFunctionDef):
                     self.visit_HdlFunctionDef(o)
-                    w("\n")
+                    w("\n\n")
                 else:
                     raise NotImplementedError(o)
 

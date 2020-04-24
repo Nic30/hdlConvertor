@@ -20,6 +20,7 @@ module parity_using_function2 (
                 parity = parity ^ data[i];
         end
     endfunction
+
     always @(data_in)
         parity_out = parity(data_in);
 endmodule

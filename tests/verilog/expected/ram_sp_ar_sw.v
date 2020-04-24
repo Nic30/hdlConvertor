@@ -36,11 +36,9 @@ module ram_sp_ar_sw #(
     always @(posedge clk)
         if (cs && we)
             mem[address] = data;
-
     // Memory Read Block
     // Read Operation : When we = 0, oe = 1, cs = 1
     always @(address, cs, we, oe)
         if (cs && !we && oe)
             data_out = mem[address];
-
 endmodule

@@ -23,6 +23,9 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
+    BLOCK_BEGIN_KW = "begin"
+    BLOCK_END_KW = "end"
+
     def __init__(self, out_stream):
         super(ToVerilog2005Stm, self).__init__(out_stream)
         self.top_stm = None
@@ -120,7 +123,8 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         self.visit_doc(o)
         w = self.out.write
 
-        w("begin\n")
+        w(self.BLOCK_BEGIN_KW)
+        w("\n")
         with Indent(self.out):
             for s in o.body:
                 need_semi = self.visit_iHdlStatement(s)
@@ -128,7 +132,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                     w(";\n")
                 else:
                     w("\n")
-        w("end")
+        w(self.BLOCK_END_KW)
         return False
 
     def visit_HdlStmIf(self, o):
@@ -161,8 +165,7 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
                 w(" ")
             w("else")
             need_semi = self.visit_iHdlStatement_in_statement(ifFalse)
-        if need_semi:
-            w(";")
+        return need_semi
 
     def visit_HdlStmAssign(self, o):
         """

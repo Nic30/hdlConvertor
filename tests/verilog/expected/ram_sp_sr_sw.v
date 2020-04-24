@@ -37,7 +37,6 @@ module ram_sp_sr_sw #(
     always @(posedge clk)
         if (cs && we)
             mem[address] = data;
-
     // Memory Read Block
     // Read Operation : When we = 0, oe = 1, cs = 1
     always @(posedge clk)
@@ -46,5 +45,4 @@ module ram_sp_sr_sw #(
             oe_r = 1;
         end else
             oe_r = 0;
-
 endmodule

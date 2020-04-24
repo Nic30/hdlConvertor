@@ -23,5 +23,4 @@ module dff_async_reset (
             q <= 1'b0;
         else
             q <= data;
-
 endmodule

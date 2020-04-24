@@ -61,7 +61,7 @@ class AutoIndentingStream():
 
     def write(self, s):
         w = self.stream.write
-        if self.requires_indent:
+        if self.requires_indent and s != "\n":
             w(self.indent_str)
         w(s)
         self.requires_indent = s.endswith("\n")
