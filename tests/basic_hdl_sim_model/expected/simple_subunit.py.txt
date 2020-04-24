@@ -38,7 +38,7 @@ class subunit0(BasicRtlSimModel):
     # sensitivity: a
     def assig_process_b(self):
         self.io.b.val_next = (self.io.a.val, 0, )
-    
+
 class SimpleSubunit(BasicRtlSimModel):
     def __init__(self, sim: "BasicRtlSimulator", name="SimpleSubunit"):
         BasicRtlSimModel.__init__(self, sim, name=name)
@@ -87,8 +87,8 @@ class SimpleSubunit(BasicRtlSimModel):
     # sensitivity: sig_subunit0_b
     def assig_process_b(self):
         self.io.b.val_next = (self.io.sig_subunit0_b.val, 0, )
-    
+
     # sensitivity: a
     def assig_process_sig_subunit0_a(self):
         self.io.sig_subunit0_a.val_next = (self.io.a.val, 0, )
-    
+
