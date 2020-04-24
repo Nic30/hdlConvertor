@@ -178,12 +178,6 @@ class ToHwt(ToHwtStm):
                 self.visit_iHdlExpr(var.value)
                 w(")\n")
 
-    def visit_HdlContext(self, context):
-        """
-        :type context: HdlContext
-        """
-        return super(ToHwt, self).visit_HdlContext(context)
-
 
 if __name__ == "__main__":
     import os
