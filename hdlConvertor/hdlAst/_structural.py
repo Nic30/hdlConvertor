@@ -2,6 +2,8 @@ from typing import List, Union
 
 from hdlConvertor.hdlAst._bases import iHdlObjWithName, iHdlObjInModule, iHdlObj
 from hdlConvertor.hdlAst._defs import HdlVariableDef
+
+
 try:
     # python2
     from StringIO import StringIO
