@@ -91,14 +91,21 @@ class ToSystemcExpr(ToHdlCommon):
             self.visit_HdlIntValue(o)
         elif isinstance(o, (list, tuple)):
             with_nl = len(o) > 3
-            w("[")
+            if isinstance(o, list):
+                begin = "{"
+                end = "}"
+            else:
+                begin = "("
+                end = ")"
+
+            w(begin)
             for elem in o:
                 self.visit_iHdlExpr(elem)
                 if with_nl:
                     w(", \n")
                 else:
                     w(", ")
-            w("]")
+            w(end)
         elif isinstance(o, HdlCall):
             self.visit_HdlCall(o)
         elif o is None:
@@ -115,13 +122,13 @@ class ToSystemcExpr(ToHdlCommon):
         w = self.out.write
         o = op.fn
         if o == HdlBuiltinFn.RISING:
-            self._visit_operand(op.ops[0], 0, op, True, False)
+            self._visit_operand(op.ops[0], 0, op, False, False)
             w(".pos()")
         elif o == HdlBuiltinFn.FALLING:
-            self._visit_operand(op.ops[0], 0, op, True, False)
+            self._visit_operand(op.ops[0], 0, op, False, False)
             w(".neg()")
         elif o == HdlBuiltinFn.PARAMETRIZATION:
-            self._visit_operand(op.ops[0], 0, op, True, False)
+            self._visit_operand(op.ops[0], 0, op, False, False)
             w("<")
             for last, _o in iter_with_last(op.ops[1:]):
                 self.visit_iHdlExpr(_o)

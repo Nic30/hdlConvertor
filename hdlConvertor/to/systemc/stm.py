@@ -1,15 +1,24 @@
+from hdlConvertor.hdlAst._defs import HdlVariableDef
+from hdlConvertor.hdlAst._statements import HdlStmBlock
+from hdlConvertor.to.hdlUtils import Indent
 from hdlConvertor.to.systemc.expr import ToSystemcExpr
 from hdlConvertor.to.verilog.stm import ToVerilog2005Stm
-from hdlConvertor.to.hdlUtils import Indent
-from hdlConvertor.hdlAst._statements import HdlStmBlock
+from hdlConvertor.hdlAst._bases import iHdlStatement
 
 
 class ToSystemcStm(ToSystemcExpr):
-    BLOCK_BEGIN_KW = "{"
-    BLOCK_END_KW = "}"
 
     def visit_iHdlStatement_in_statement(self, stm):
         return ToVerilog2005Stm.visit_iHdlStatement_in_statement(self, stm)
+
+    def visit_iHdlStatement(self, o):
+        """
+        :type o: iHdlStatement
+        """
+        if isinstance(o, HdlVariableDef):
+            return self.visit_HdlVariableDef(o)
+        else:
+            return super(ToSystemcStm, self).visit_iHdlStatement(o)
 
     def visit_HdlStmBlock(self, o):
         """
@@ -42,7 +51,7 @@ class ToSystemcStm(ToSystemcExpr):
         w(o.labels[0])
         if isinstance(o.body, HdlStmBlock):
             w("() ")
-            self.visit_HdlStmBlock(o)
+            self.visit_HdlStmBlock(o.body)
             w("\n")
         else:
             w("() {\n")
@@ -77,19 +86,21 @@ class ToSystemcStm(ToSystemcExpr):
         w("switch(")
         self.visit_iHdlExpr(o.switch_on)
         w(") {\n")
-        with Indent(self.out):
-            cases = o.cases
-            for k, stms in cases:
-                self.visit_iHdlExpr(k)
-                w(":")
+        cases = o.cases
+        for k, stms in cases:
+            w("case ")
+            self.visit_iHdlExpr(k)
+            w(":")
+            with Indent(self.out):
                 need_semi = self.visit_iHdlStatement_in_statement(stms)
                 if need_semi:
                     w(";\n")
                 else:
                     w("\n")
-            defal = o.default
-            if defal is not None:
-                w("default:")
+        defal = o.default
+        if defal is not None:
+            w("default:")
+            with Indent(self.out):
                 need_semi = self.visit_iHdlStatement_in_statement(defal)
                 if need_semi:
                     w(";\n")
