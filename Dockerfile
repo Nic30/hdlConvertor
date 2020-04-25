@@ -26,5 +26,5 @@ COPY . ${HOME}
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
-RUN ls
-RUN cd hdlConvertor/ && python3 setup.py install -j $(nproc)
+WORKDIR ${HOME}
+RUN python3 setup.py install -j $(nproc)
