@@ -1,3 +1,4 @@
+# note that this Dockerfile is meant for notebooks and you can install this package directly
 FROM ubuntu:19.10
 # https://github.com/binder-examples/minimal-dockerfile
 ARG NB_USER=defaultruser
@@ -17,7 +18,7 @@ RUN apt update && apt upgrade -yq &&\
                 python3 python3-dev python3-pip libantlr4-runtime-dev\
                 antlr4 libssl-dev -yq
 RUN pip3 install scikit-build Cython notebook
-RUN pip3 install hdlConvertor
+# RUN pip3 install hdlConvertor
 
 # [mybinder specific]
 # Make sure the contents of our repo are in ${HOME}
@@ -25,5 +26,4 @@ COPY . ${HOME}
 USER root
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
-
-
+RUN python3 setup.py install -j $(nproc)
