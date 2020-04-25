@@ -6,6 +6,8 @@ from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
 from hdlConvertor.to.common import ToHdlCommon
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.systemc.stm import ToSystemcStm
+from hdlConvertor.hdlAst._expr import HdlTypeType
+from hdlConvertor.to.verilog.utils import collect_array_dims
 
 
 DEFAULT_IMPORTS = """\
@@ -56,12 +58,14 @@ class ToSystemc(ToSystemcStm):
 
             for t in types:
                 self.visit_type_declr(t)
+                w(";\n")
 
             w('// ports\n')
             try:
                 self._is_port = True
                 for p in mod_dec.ports:
                     self.visit_HdlVariableDef(p)
+                    w(";\n")
             finally:
                 self._is_port = False
 
@@ -74,6 +78,7 @@ class ToSystemc(ToSystemcStm):
             w("// internal signals\n")
             for v in variables:
                 self.visit_HdlVariableDef(v)
+                w(";\n")
 
             for p in processes:
                 self.visit_iHdlStatement(p)
@@ -124,6 +129,26 @@ class ToSystemc(ToSystemcStm):
             w("}\n")
         w("};\n")
 
+    def visit_type_declr(self, var):
+        """
+        :type var: HdlVariableDef
+        """
+        assert var.type == HdlTypeType
+        self.visit_doc(var)
+        w = self.out.write
+        w("typedef ")
+        t, arr_dims = collect_array_dims(var.value)
+        with Indent(self.out):
+            self.visit_iHdlExpr(t)
+        w(" ")
+        w(var.name)
+        for d in arr_dims:
+            w("[")
+            self.visit_iHdlExpr(d)
+            w("]")
+
+        return True
+
     def visit_HdlVariableDef(self, var):
         """
         :type var: HdlVariableDef
@@ -133,10 +158,9 @@ class ToSystemc(ToSystemcStm):
         self.visit_type(var.type)
         w(" ")
         w(var.name)
-        if var.value is None:
-            w(";\n")
-        else:
+        if var.value is not None:
             w("(")
             with Indent(self.out):
                 self.visit_iHdlExpr(var.value)
-            w(");\n")
+            w(")")
+        return True
