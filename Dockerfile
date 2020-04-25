@@ -1,7 +1,7 @@
 # note that this Dockerfile is meant for notebooks and you can install this package directly
 FROM ubuntu:19.10
 # https://github.com/binder-examples/minimal-dockerfile
-ARG NB_USER=defaultruser
+ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
