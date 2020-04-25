@@ -19,12 +19,14 @@ RUN apt update && apt upgrade -yq &&\
                 antlr4 libssl-dev -yq
 RUN pip3 install scikit-build Cython notebook
 # RUN pip3 install hdlConvertor
-WORKDIR ${HOME}
-RUN python3 setup.py install -j $(nproc)
 
 # [mybinder specific]
 # Make sure the contents of our repo are in ${HOME}
 COPY . ${HOME}
 USER root
+
+WORKDIR ${HOME}
+RUN python3 setup.py install -j $(nproc)
+
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
