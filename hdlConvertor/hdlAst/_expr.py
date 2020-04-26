@@ -111,6 +111,7 @@ class HdlBuiltinFn(Enum):
         ACROSS,
         THROUGH,
         REFERENCE,
+        DEREFERENCE,
         TOLERANCE,
         TYPE_OF,  # SV type operator
         INDEX,  # array index
@@ -191,7 +192,7 @@ class HdlBuiltinFn(Enum):
         SHIFT_RIGHT_ASSIGN,  # >>=
         ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
         ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
-    ) = range(83)
+    ) = range(84)
     # note that in verilog bitewise operators can have only one argument
 
 

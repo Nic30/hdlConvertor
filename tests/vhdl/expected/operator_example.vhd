@@ -80,7 +80,7 @@ ARCHITECTURE maxpld OF proc IS
     SIGNAL X0 : std_logic_vector(0 TO 7);
     SIGNAL X1 : std_logic_vector(0 TO 7);
 BEGIN
-    X <= (A AND NOT (B OR C)) AND (D(1) XOR D(2));
+    X <= A AND NOT (B OR C) AND (D(1) XOR D(2));
     Tri_out <= A WHEN (B = '0') ELSE 'Z';
     o1 <= "00" WHEN (D = "1000") ELSE
         "01" WHEN (D = "0100") ELSE

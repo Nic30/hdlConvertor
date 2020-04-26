@@ -17,6 +17,21 @@ class ASSOCIATIVITY(Enum):
     NONE = "NONE"
 
 
+ASSIGN_OPERATORS_SYMBOLS_C = {
+    HdlBuiltinFn.ASSIGN: ' = ',
+    HdlBuiltinFn.PLUS_ASSIGN: ' += ',
+    HdlBuiltinFn.MINUS_ASSIGN: ' -= ',
+    HdlBuiltinFn.MUL_ASSIGN: ' *= ',
+    HdlBuiltinFn.DIV_ASSIGN: ' /= ',
+    HdlBuiltinFn.MOD_ASSIGN: ' %= ',
+    HdlBuiltinFn.AND_ASSIGN: ' &= ',
+    HdlBuiltinFn.OR_ASSIGN: ' |= ',
+    HdlBuiltinFn.XOR_ASSIGN: ' ^= ',
+    HdlBuiltinFn.SHIFT_LEFT_ASSIGN: ' <<= ',
+    HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: ' >>= ',
+}
+
+
 class ToHdlCommon(HdlAstVisitor):
     INDENT_STEP = "    "
     ALL_UNARY_OPS = {
@@ -166,7 +181,7 @@ class ToHdlCommon(HdlAstVisitor):
                         #     right, left = left, right
 
                         if left is not None:  # "operand" is right
-                            # same precedence -> parenthesis on right if it is expression
+                            # same precedence -> parenthesis on right (this) if it is expression
                             # a + (b + c)
                             # a + b + c = (a + b) + c
                             # right with lower precedence -> parenthesis for right not required
@@ -177,16 +192,17 @@ class ToHdlCommon(HdlAstVisitor):
                                 use_parenthesis = True
                         if not use_parenthesis and right is not None:
                             # "operand" is left
-                            if precedence_my == precedence_parent:
-                                if self._precedence_of_expr(right)[0] == precedence_my:
-                                    # right and left with same precedence -> parenthesis on both sides
-                                    # (a + b) + (c + d)
-                                    use_parenthesis = True
-                            elif precedence_my > precedence_parent:
+                            #if op_my == parent.fn:
+                            #    right_prec, _, right_op = self._precedence_of_expr(right)
+                            #    if right_op == op_my:
+                            #        # right and left with same precedence -> parenthesis on both sides
+                            #        # (a + b) + (c + d)
+                            #        use_parenthesis = True
+                            if precedence_my > precedence_parent:
                                 # left with higher precedence -> parenthesis for left
                                 # (a + b) * c
-                                # a + b + c + d = (a + b) + c + d = ((a + b) + c) +
-                                # d
+                                # a + b + c + d = (a + b) + c + d
+                                # = ((a + b) + c) + d
                                 use_parenthesis = True
 
         w = self.out.write
