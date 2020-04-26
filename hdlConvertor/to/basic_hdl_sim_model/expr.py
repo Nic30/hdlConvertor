@@ -40,19 +40,19 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         HdlBuiltinFn.MINUS_UNARY: (5, L),
         HdlBuiltinFn.POW: (4, R),
 
-        HdlBuiltinFn.INDEX: (3, L),
+        HdlBuiltinFn.INDEX: (1, L),
 
-        HdlBuiltinFn.RISING: (2, L),
-        HdlBuiltinFn.FALLING: (2, L),
+        HdlBuiltinFn.RISING: (1, L),
+        HdlBuiltinFn.FALLING: (1, L),
 
         # concat/ternary become a call to _concat, _ternary__val function
         # HdlBuiltinFn.CONCAT: 2,
         # HdlBuiltinFn.TERNARY: 2,
         # rising/faling as ._onRisingEdge(), ._onFallingEdge()
-        HdlBuiltinFn.CALL: (2, L),
+        HdlBuiltinFn.CALL: (1, L),
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: (2, L),
+        HdlBuiltinFn.PARAMETRIZATION: (1, L),
 
         HdlBuiltinFn.DOT: (1, L),
     }

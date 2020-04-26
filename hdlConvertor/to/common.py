@@ -215,7 +215,7 @@ class ToHdlCommon(HdlAstVisitor):
         :type operator: HdlCall
         """
         op0, op1 = operator.ops
-        self._visit_operand(op0, 0, operator, True, False)
+        self._visit_operand(op0, 0, operator, False, False)
         w = self.out.write
         w("[")
         self._visit_operand(op1, 1, operator, False, True)
