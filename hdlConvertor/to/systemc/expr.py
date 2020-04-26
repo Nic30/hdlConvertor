@@ -1,9 +1,11 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
     HdlCall
 from hdlConvertor.py_ver_compatibility import is_str
-from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
+from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY,\
+    ASSIGN_OPERATORS_SYMBOLS_C
 from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from hdlConvertor.to.hdlUtils import iter_with_last
+from hdlConvertor.to.verilog.expr import ASSIGN_OPERATORS
 
 
 L = ASSOCIATIVITY.L_TO_R
@@ -11,43 +13,56 @@ R = ASSOCIATIVITY.R_TO_L
 
 
 class ToSystemcExpr(ToHdlCommon):
+    # https://en.cppreference.com/w/cpp/language/operator_precedence
     OP_PRECEDENCE = {
-        HdlBuiltinFn.EQ: (11, L),
-        HdlBuiltinFn.NEQ: (11, L),
-        HdlBuiltinFn.GT:  (11, L),
-        HdlBuiltinFn.LT:  (11, L),
-        HdlBuiltinFn.GE:  (11, L),
-        HdlBuiltinFn.LE:  (11, L),
-
-        HdlBuiltinFn.OR: (10, L),
-        HdlBuiltinFn.XOR: (9, L),
-        HdlBuiltinFn.AND: (8, L),
-
-        HdlBuiltinFn.ADD: (7, L),
-        HdlBuiltinFn.SUB: (7, L),
-
-        HdlBuiltinFn.DIV: (6, L),
-        HdlBuiltinFn.MUL: (6, L),
-        HdlBuiltinFn.MOD: (6, L),
-
-        HdlBuiltinFn.NEG_LOG: (5, L),
-        HdlBuiltinFn.NEG: (5, L),
-        HdlBuiltinFn.MINUS_UNARY: (5, L),
-        HdlBuiltinFn.POW: (4, R),
-
-        HdlBuiltinFn.INDEX: (3, L),
-
-        # concat/ternary become a call to _concat, _ternary__val function
-        # HdlBuiltinFn.CONCAT: 2,
-        # HdlBuiltinFn.TERNARY: 2,
-        # rising/faling as ._onRisingEdge(), ._onFallingEdge()
+        HdlBuiltinFn.INCR_POST: (2, L),
+        HdlBuiltinFn.DECR_POST: (2, L),
+        HdlBuiltinFn.TYPE_OF: (2, L),
         HdlBuiltinFn.CALL: (2, L),
-        # parametrization values are parameters of component class
-        # constructor
+        HdlBuiltinFn.INDEX: (3, L),
+        HdlBuiltinFn.DOT: (2, L),
+        HdlBuiltinFn.ARROW: (2, L),
         HdlBuiltinFn.PARAMETRIZATION: (2, L),
 
-        HdlBuiltinFn.DOT: (1, L),
+
+        HdlBuiltinFn.INCR_PRE: (3, L),
+        HdlBuiltinFn.DECR_PRE: (3, L),
+        HdlBuiltinFn.MINUS_UNARY: (3, L),
+        HdlBuiltinFn.NEG_LOG: (3, L),
+        HdlBuiltinFn.NEG: (3, L),
+        HdlBuiltinFn.REFERENCE: (3, L),
+
+        HdlBuiltinFn.DIV: (5, L),
+        HdlBuiltinFn.MUL: (5, L),
+        HdlBuiltinFn.MOD: (5, L),
+
+        HdlBuiltinFn.ADD: (6, L),
+        HdlBuiltinFn.SUB: (6, L),
+
+        HdlBuiltinFn.SLL: (7, L),
+        HdlBuiltinFn.SRL: (7, L),
+
+        HdlBuiltinFn.GT:  (9, L),
+        HdlBuiltinFn.LT:  (9, L),
+        HdlBuiltinFn.GE:  (9, L),
+        HdlBuiltinFn.LE:  (9, L),
+
+        HdlBuiltinFn.NEQ: (10, L),
+        HdlBuiltinFn.EQ: (10, L),
+
+        HdlBuiltinFn.AND: (11, L),
+        HdlBuiltinFn.XOR: (12, L),
+        HdlBuiltinFn.OR: (13, L),
+
+        HdlBuiltinFn.AND_LOG: (14, L),
+        HdlBuiltinFn.OR_LOG: (15, L),
+
+        HdlBuiltinFn.TERNARY: (16, R),
     }
+    OP_PRECEDENCE.update({
+        k: (16, R) for k in ASSIGN_OPERATORS
+    })
+
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NEG_LOG: "!",
         HdlBuiltinFn.NEG: "~",
@@ -71,6 +86,7 @@ class ToSystemcExpr(ToHdlCommon):
         HdlBuiltinFn.SRL: " >> ",
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
+    GENERIC_BIN_OPS.update(ASSIGN_OPERATORS_SYMBOLS_C)
 
     def visit_HdlIntValue(self, o):
         """

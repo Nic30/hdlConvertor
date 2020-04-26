@@ -1,13 +1,30 @@
 from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
     HdlCall, HdlTypeAuto
 from hdlConvertor.py_ver_compatibility import is_str
-from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
+from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY,\
+    ASSIGN_OPERATORS_SYMBOLS_C
 from hdlConvertor.to.hdlUtils import iter_with_last
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
 
 
 L = ASSOCIATIVITY.L_TO_R
 R = ASSOCIATIVITY.R_TO_L
+
+ASSIGN_OPERATORS = [
+    HdlBuiltinFn.ASSIGN,
+    HdlBuiltinFn.PLUS_ASSIGN,
+    HdlBuiltinFn.MINUS_ASSIGN,
+    HdlBuiltinFn.MUL_ASSIGN,
+    HdlBuiltinFn.DIV_ASSIGN,
+    HdlBuiltinFn.MOD_ASSIGN,
+    HdlBuiltinFn.AND_ASSIGN,
+    HdlBuiltinFn.OR_ASSIGN,
+    HdlBuiltinFn.XOR_ASSIGN,
+    HdlBuiltinFn.SHIFT_LEFT_ASSIGN,
+    HdlBuiltinFn.SHIFT_RIGHT_ASSIGN,
+    HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
+    HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
+]
 
 
 class ToVerilog2005Expr(ToHdlCommon):
@@ -34,21 +51,11 @@ class ToVerilog2005Expr(ToHdlCommon):
 
         HdlBuiltinFn.DOWNTO: ":",
 
-        HdlBuiltinFn.ASSIGN: ' = ',
-        HdlBuiltinFn.PLUS_ASSIGN: ' += ',
-        HdlBuiltinFn.MINUS_ASSIGN: ' -= ',
-        HdlBuiltinFn.MUL_ASSIGN: ' *= ',
-        HdlBuiltinFn.DIV_ASSIGN: ' /= ',
-        HdlBuiltinFn.MOD_ASSIGN: ' %= ',
-        HdlBuiltinFn.AND_ASSIGN: ' &= ',
-        HdlBuiltinFn.OR_ASSIGN: ' |= ',
-        HdlBuiltinFn.XOR_ASSIGN: ' ^= ',
-        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: ' <<= ',
-        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: ' >>= ',
         HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
         HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: ' >>>= ',
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
+    GENERIC_BIN_OPS.update(ASSIGN_OPERATORS_SYMBOLS_C)
 
     OP_PRECEDENCE = {
         HdlBuiltinFn.INDEX: (1, L),
@@ -108,21 +115,8 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlBuiltinFn.XOR_UNARY,
         HdlBuiltinFn.XNOR_UNARY
     ]})
-    OP_PRECEDENCE.update({k: (16, ASSOCIATIVITY.NONE) for k in [
-        HdlBuiltinFn.ASSIGN,
-        HdlBuiltinFn.PLUS_ASSIGN,
-        HdlBuiltinFn.MINUS_ASSIGN,
-        HdlBuiltinFn.MUL_ASSIGN,
-        HdlBuiltinFn.DIV_ASSIGN,
-        HdlBuiltinFn.MOD_ASSIGN,
-        HdlBuiltinFn.AND_ASSIGN,
-        HdlBuiltinFn.OR_ASSIGN,
-        HdlBuiltinFn.XOR_ASSIGN,
-        HdlBuiltinFn.SHIFT_LEFT_ASSIGN,
-        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN,
-        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
-        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
-    ]})
+    OP_PRECEDENCE.update({k: (16, ASSOCIATIVITY.NONE)
+                          for k in ASSIGN_OPERATORS})
 
     GENERIC_UNARY_OPS = {
         HdlBuiltinFn.NEG_LOG: "!",

@@ -11,6 +11,7 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 		"ACROSS",
 		"THROUGH",
 		"REFERENCE",
+		"DEREFERENCE",
 		"TOLERANCE",
 		"TYPE_OF",
 		"INDEX",

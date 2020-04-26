@@ -9,6 +9,7 @@ enum HdlOperatorType {
 	ACROSS,
 	THROUGH,
 	REFERENCE,
+	DEREFERENCE,
 	TOLERANCE,
 	TYPE_OF, // SV type operator
 	INDEX, // array index
