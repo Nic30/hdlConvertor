@@ -41,12 +41,12 @@ sudo pip3 install hdlConvertor
 
 # or download repository and run
 sudo pip3 install -r requirements.txt
-sudo python3 setup.py install -j $(nproc)
+sudo python3 setup.py install -j$(nproc)
 ```
 
 Installer also supports other options which may be usefull
 ```
-python setup.py install --prefix /tmp/python_install/ -j $(nproc) --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
+python setup.py install --prefix /tmp/python_install/ -j$(nproc) --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
 ```
 
 You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-based library)
