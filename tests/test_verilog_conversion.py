@@ -5,7 +5,8 @@ from hdlConvertor import HdlConvertor
 from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 from hdlConvertor.language import Language
 
-from tests.hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile
+from tests.hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile, _default_to_hdl
+from _io import StringIO
 
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
@@ -127,6 +128,9 @@ class VerilogConversionTC(HdlParseTC):
 
     def test_operator_type(self):
         self.parseWithRef("operator_type.sv", SV)
+
+    def test_dff_async_reset_json(self):
+        self.translateWithRef("dff_async_reset.json", Language.HDLCONVERTOR_JSON, VERILOG)
 
 
 if __name__ == "__main__":

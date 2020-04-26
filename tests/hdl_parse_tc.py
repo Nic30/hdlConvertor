@@ -24,6 +24,13 @@ VHDL = Language.VHDL
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
 
+LANG_SUFFIX = {
+    VHDL: ".vhd",
+    VERILOG: ".v",
+    SV: ".sv",
+    Language.HDLCONVERTOR_JSON: ".json"
+}
+
 
 def get_language_path(lang_dir, language):
     if lang_dir is None:
@@ -33,6 +40,8 @@ def get_language_path(lang_dir, language):
             lang_dir = "verilog"
         elif language.is_vhdl():
             lang_dir = "vhdl"
+        elif language == Language.HDLCONVERTOR_JSON:
+            lang_dir = "json"
         else:
             raise ValueError(language)
     return lang_dir
@@ -66,6 +75,34 @@ class HdlParseTC(unittest.TestCase):
     """
     A base class for HDL parser tests
     """
+    def translateWithRef(self, fname, src_lang, dst_lang, ref_fname=None,
+                         src_lang_dir=None,
+                         dst_lang_dir=None, to_hdl=_default_to_hdl):
+        if ref_fname is None:
+            ref_fname, _ = os.path.splitext(fname)
+            ref_fname += LANG_SUFFIX[dst_lang]
+
+        src_lang_dir = get_language_path(src_lang_dir, src_lang)
+        _, res = parseFile(fname, src_lang, lang_dir=src_lang_dir)
+
+        buff = StringIO()
+        # import sys
+        # buff = sys.stdout
+        # serialize a HDL code to a buff
+        to_hdl(res, dst_lang, buff)
+
+        dst_lang_dir = get_language_path(dst_lang_dir, dst_lang)
+        ref_file = path.join(TEST_DIR, dst_lang_dir,
+                             "expected", ref_fname)
+        res_str = buff.getvalue()
+        # if fname == "aes.v":
+        #     with open(ref_file, "w") as f:
+        #         f.write(res_str)
+
+        with open(ref_file, encoding="utf-8") as f:
+            ref = f.read()
+
+        self.assertEqual(ref, res_str)
 
     def parseWithRef(self, fname, language, lang_dir=None,
                      ref_fname=None, to_hdl=_default_to_hdl):

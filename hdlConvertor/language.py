@@ -22,14 +22,25 @@ class Language(Enum):
     SYSTEM_VERILOG_2017 = "sv2017"  # ieee1800_2017
     SYSTEM_VERILOG = SYSTEM_VERILOG_2017  # default verilog version
 
+    # json produced by hdlConvertor.to.json.ToJson
+    HDLCONVERTOR_JSON = "hdlConvertor_JSON"
+
     def is_vhdl(self):
         return self in [Language.VHDL_2002,
                         Language.VHDL_2008]
 
     def is_verilog(self):
-        return self in [Language.VERILOG_2001,
-                        Language.VERILOG_2005]
+        return self in (
+            Language.VERILOG_1995,
+            Language.VERILOG_2001,
+            Language.VERILOG_2001_NOCONFIG,
+            Language.VERILOG_2005
+        )
 
     def is_system_verilog(self):
-        return self in [Language.SYSTEM_VERILOG_2012,
-                        Language.SYSTEM_VERILOG_2017]
+        return self in (
+            Language.SYSTEM_VERILOG_2005,
+            Language.SYSTEM_VERILOG_2009,
+            Language.SYSTEM_VERILOG_2012,
+            Language.SYSTEM_VERILOG_2017
+        )

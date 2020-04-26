@@ -167,6 +167,7 @@ class ToJson(HdlAstVisitor):
         :type o: HdlStmIf
         """
         d = self._visit_iHdlStatement(o)
+        d["cond"] = self.visit_iHdlExpr(o.cond)
         d["if_true"] = self.visit_iHdlStatement(o.if_true)
         d["elifs"] = [
             [self.visit_iHdlExpr(c), self.visit_iHdlStatement(stm)]
