@@ -3,6 +3,7 @@ import json
 from hdlConvertor import hdlAst
 from hdlConvertor.hdlAst import HdlContext, CodePosition, HdlBuiltinFn,\
     HdlDirection, HdlStmBlockJoinType
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 KNOWN_NODES = {
@@ -15,7 +16,7 @@ def _parse_hdlConvertor_json(j):
     # handle primitive types
     if j is None:
         return j
-    elif isinstance(j, (str, int, float)):
+    elif isinstance(j, (int, float)) or is_str(j):
         return j
     elif isinstance(j, list):
         return [_parse_hdlConvertor_json(_j) for _j in j]
