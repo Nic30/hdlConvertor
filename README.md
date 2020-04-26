@@ -40,7 +40,7 @@ sudo python3 setup.py install
 
 Installer also supports other options which may be usefull
 ```
-python setup.py install --prefix /tmp/python_install/ -j 8 --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
+python setup.py install --prefix /tmp/python_install/ -j $(nproc) --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
 ```
 
 You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-based library)
@@ -60,7 +60,7 @@ Take a look at appveyor.yml. It is required to download antlr4 first and have vi
 The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`.
 There are classes for objects in HDL langues and there is also type specified for every property in anotations. This allows IDEs to advise and it is also a part of doc.
 
-Example of usage:
+Example of usage [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Nic30/hdlConvertor/master?filepath=notebooks%2F01_parse_and_dump.ipynb):
 ```python
 import sys
 from hdlConvertor.language import Language
@@ -73,7 +73,7 @@ c = HdlConvertor()
 d = c.parse(filenames, Language.VERILOG, include_dirs, hierarchyOnly=False, debug=True)
 
 tv = ToVerilog2005(sys.stdout)
-tv.print_HdlContext(d)
+tv.visit_HdlContext(d)
 
 for o in d.objs:
     print(o)
