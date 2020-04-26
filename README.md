@@ -6,7 +6,7 @@
 [ROADMAP](https://drive.google.com/file/d/1zyegLIf7VaBRyb-ED5vgOMmHzW4SRZLp/view?usp=sharing) [![Gitter](https://badges.gitter.im/hdlConvertor/community.svg)](https://gitter.im/hdlConvertor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Coverage Status](https://coveralls.io/repos/github/Nic30/hdlConvertor/badge.svg?branch=master)](https://coveralls.io/github/Nic30/hdlConvertor?branch=master)(generated code)
 
-This library is a System Verilog and VHDL parser, preprocessor and code generator for Python/C++ written in C++.
+This library is a System Verilog and VHDL parser, preprocessor and code generator for Python/C++.
 It contains:
 
    * ANTLR4 generated VHDL/(System) Verilog parser with full language support.
