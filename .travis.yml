@@ -78,7 +78,7 @@ install:
  fi
 - sudo apt install libantlr4-runtime-dev antlr4 -y
 - pip install -r requirements.txt
-- python setup.py build $BUILD_ARGS
+- python setup.py build $BUILD_ARGS -j $(nproc)
 - python setup.py install $BUILD_ARGS
 
 script: 
