@@ -89,11 +89,11 @@ class ToHwt(ToHwtStm):
                 w("# component instances\n")
                 for c in components:
                     w("self.")
-                    w(c.name)
+                    w(c.name.val)
                     w(" = ")
                     w(c.module_name.val)
                     w('()\n')
-                    port_params_comp_names.append(c.name)
+                    port_params_comp_names.append(c.name.val)
 
             w("def _impl(self):\n")
             with Indent(self.out):
@@ -117,7 +117,7 @@ class ToHwt(ToHwtStm):
                 for c in components:
                     for pm in c.port_map:
                         w("connectSimPort(self, self.")
-                        w(c.name)
+                        w(c.name.val)
                         w(', "')
                         assert isinstance(pm, HdlCall) and\
                             pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm

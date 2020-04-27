@@ -73,7 +73,7 @@ class ToSystemc(ToSystemcStm):
             for c in components:
                 w(c.module_name.val)
                 w(" ")
-                w(c.name)
+                w(c.name.val)
                 w('();\n')
             w("// internal signals\n")
             for v in variables:
@@ -91,9 +91,9 @@ class ToSystemc(ToSystemcStm):
             if components:
                 w(": ")
             for last, c in iter_with_last(components):
-                w(c.name)
+                w(c.name.val)
                 w('("')
-                w(c.name)
+                w(c.name.val)
                 if last:
                     w('")')
                 else:
@@ -116,7 +116,7 @@ class ToSystemc(ToSystemcStm):
                 w("// connect ports\n")
                 for c in components:
                     for pm in c.port_map:
-                        w(c.name)
+                        w(c.name.val)
                         w('.')
                         assert isinstance(pm, HdlCall) and\
                             pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm

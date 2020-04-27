@@ -120,7 +120,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         """
         self.visit_doc(c)
         w = self.out.write
-        w(c.name)
+        w(c.name.val)
         w(": ")
         self.visit_iHdlExpr(c.module_name)
         gms = c.param_map

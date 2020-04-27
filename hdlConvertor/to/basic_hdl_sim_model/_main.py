@@ -119,11 +119,11 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 w("# component instances\n")
                 for c in components:
                     w("self.")
-                    w(c.name)
+                    w(c.name.val)
                     w(" = ")
                     w(c.module_name.val)
                     w('(sim, "')
-                    w(c.name)
+                    w(c.name.val)
                     w('")\n')
 
             w("def _init_body(self):\n")
@@ -131,7 +131,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 for c in components:
                     for pm in c.port_map:
                         w("connectSimPort(self, self.")
-                        w(c.name)
+                        w(c.name.val)
                         w(', "')
                         assert isinstance(pm, HdlCall) and\
                             pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
@@ -166,7 +166,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 with Indent(self.out):
                     for c in components:
                         w("self.")
-                        w(c.name)
+                        w(c.name.val)
                         w(",\n")
                 w(")\n")
 

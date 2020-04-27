@@ -129,7 +129,7 @@ class ToVerilog2005(ToVerilog2005Stm):
             self.visit_map(gms)
             w(")")
         w(" ")
-        w(c.name)
+        w(c.name.val)
         pms = c.port_map
         if pms:
             w(" (\n")
