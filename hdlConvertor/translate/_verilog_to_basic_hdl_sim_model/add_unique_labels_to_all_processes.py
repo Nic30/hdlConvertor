@@ -25,7 +25,7 @@ class AddUniqueLabelsToAllProcesses():
                     else:
                         suggested_name = "proc"
 
-                    o.labels.append(self.name_scope.checkedName(suggested_name, o))
+                    o.labels.append(self.name_scope.checked_name(suggested_name, o))
 
     def context(self, context):
         """

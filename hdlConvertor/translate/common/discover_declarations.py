@@ -1,27 +1,9 @@
-from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef,\
-    HdlComponentInst
 from itertools import chain
-from hdlConvertor.hdlAst._defs import HdlVariableDef
-from hdlConvertor.hdlAst._bases import iHdlStatement
+
+from hdlConvertor.hdlAst import iHdlStatement, HdlVariableDef,\
+    HdlModuleDec, HdlModuleDef, HdlComponentInst
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-
-
-class WithNameScope():
-
-    def __init__(self, discover_declarations, name_scope):
-        """
-        :type discover_declarations: DiscoverDeclarations
-        :type name_scope: NameScope
-        """
-        self.discover_declarations = discover_declarations
-        self.name_scope = name_scope
-
-    def __enter__(self):
-        self.original_name_scope = self.discover_declarations.name_scope
-        self.discover_declarations.name_scope = self.name_scope
-
-    def __exit__(self, type, value, traceback):
-        self.discover_declarations.name_scope = self.original_name_scope
+from hdlConvertor.translate.common.name_scope import WithNameScope
 
 
 class DiscoverDeclarations(HdlAstVisitor):
