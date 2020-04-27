@@ -96,24 +96,14 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
                 w(str(o.val))
             else:
                 b = o.base
-                if isinstance(o.val, int):
-                    if b == 2:
-                        f = "0b{0:b}"
-                    elif b == 8:
-                        f = "0o{0:o}"
-                    elif b == 16:
-                        f = "0x{0:x}"
-                    else:
-                        raise NotImplementedError(b)
+                if b == 2:
+                    f = "0b{0:b}"
+                elif b == 8:
+                    f = "0o{0:o}"
+                elif b == 16:
+                    f = "0x{0:x}"
                 else:
-                    if b == 2:
-                        f = "0b{0}"
-                    elif b == 8:
-                        f = "0o{0}"
-                    elif b == 16:
-                        f = "0x{0}"
-                    else:
-                        raise NotImplementedError(b)
+                    raise NotImplementedError(b)
 
                 w(f.format(o.val))
 
