@@ -15,6 +15,8 @@ R = ASSOCIATIVITY.R_TO_L
 class ToSystemcExpr(ToHdlCommon):
     # https://en.cppreference.com/w/cpp/language/operator_precedence
     OP_PRECEDENCE = {
+        HdlBuiltinFn.DOUBLE_COLON: (1, L),
+
         HdlBuiltinFn.INCR_POST: (2, L),
         HdlBuiltinFn.DECR_POST: (2, L),
         HdlBuiltinFn.TYPE_OF: (2, L),
@@ -70,6 +72,7 @@ class ToSystemcExpr(ToHdlCommon):
     }
 
     GENERIC_BIN_OPS = {
+        HdlBuiltinFn.DOUBLE_COLON: "::",
         HdlBuiltinFn.AND: " & ",
         HdlBuiltinFn.OR: " | ",
         HdlBuiltinFn.XOR: " ^ ",
@@ -92,7 +95,35 @@ class ToSystemcExpr(ToHdlCommon):
         """
         :type o: HdlIntValue
         """
-        return ToBasicHdlSimModelExpr.visit_HdlIntValue(self, o)
+        w = self.out.write
+        if o.bits is None:
+            w(str(o.val))
+        else:
+            if o.base is None:
+                w(str(o.val))
+            else:
+                b = o.base
+                if isinstance(o.val, int):
+                    if b == 2:
+                        f = "0b{0:b}"
+                    elif b == 8:
+                        f = "0o{0:o}"
+                    elif b == 16:
+                        f = "0x{0:x}"
+                    else:
+                        raise NotImplementedError(b)
+                    w(f.format(o.val))
+                else:
+                    if b == 2:
+                        f = '"0b{0}"'
+                    elif b == 8:
+                        f = '"0o{0}"'
+                    elif b == 16:
+                        f = '"0x{0}"'
+                    else:
+                        raise NotImplementedError(b)
+
+                    w(f.format(o.val.upper()))
 
     def visit_iHdlExpr(self, o):
         """

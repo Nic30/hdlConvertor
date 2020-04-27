@@ -104,4 +104,8 @@ SYSTEMC_KEYWORDS = [
     "sc_inout_resolve", "sc_out_rv",
     "sc_inout_rv", "sc_signal_resolved", "sc_signal_rv",
     "notify", "sc_module", "sc_inout_clk", "sc_out_clk",
-    "sc_create_vcd_trace_file", "sc_trace_file", "sc_trace"]
+    "sc_create_vcd_trace_file", "sc_trace_file", "sc_trace",
+    # others
+    "std",
+    
+]
