@@ -101,18 +101,13 @@ unique_ptr<HdlCompInstance> VerModuleInstanceParser::visitHierarchical_instance(
 	auto noi = ctx->name_of_instance();
 	// name_of_instance: identifier ( unpacked_dimension )*;
 
-	auto name = VerExprParser::getIdentifierStr(noi->identifier());
+	auto name = VerExprParser::visitIdentifier(noi->identifier());
 	auto uds = noi->unpacked_dimension();
-	if (uds.size()) {
-		NotImplementedLogger::print(
-				"VerModuleInstanceParser.visitHierarchical_instance unpacked_dimension",
-				ctx);
-	}
 	VerTypeParser tp(commentParser);
-	//name = tp.applyUnpacked_dimension(move(name), uds);
+	name = tp.applyUnpacked_dimension(move(name), uds);
 	auto portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
-	auto c = create_object<HdlCompInstance>(ctx, name, move(module_id));
+	auto c = create_object<HdlCompInstance>(ctx, move(name), move(module_id));
 	c->genericMap = move(genericMap);
 	c->portMap = move(portMap);
 	return c;

@@ -9,13 +9,14 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-class HdlCompInstance: public WithNameAndDoc, public iHdlObj {
+class HdlCompInstance: public WithDoc, public WithPos, public iHdlObj {
 public:
+	std::unique_ptr<iHdlExpr> name;
 	std::unique_ptr<iHdlExpr> module_name;
 	std::vector<std::unique_ptr<iHdlExpr>> genericMap;
 	std::vector<std::unique_ptr<iHdlExpr>> portMap;
 
-	HdlCompInstance(const std::string &name,
+	HdlCompInstance(std::unique_ptr<iHdlExpr> name,
 			std::unique_ptr<iHdlExpr> _module_name);
 	virtual ~HdlCompInstance() override;
 };

@@ -25,7 +25,6 @@ module adder_implicit (
     wire c1;
     wire c2;
     wire c3;
-    // Code Starts Here
     addbit u0 (
         r1[0],
         r2[0],

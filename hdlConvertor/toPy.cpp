@@ -214,7 +214,7 @@ PyObject* ToPy::toPy(const hdlObjects::HdlCompInstance *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlComponentInstCls, NULL);
 	if (py_inst == nullptr)
 		return nullptr;
-	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
+	if (toPy_property(py_inst, "name", o->name))
 		return nullptr;
 	if (toPy_property(py_inst, "module_name", o->module_name))
 		return nullptr;
