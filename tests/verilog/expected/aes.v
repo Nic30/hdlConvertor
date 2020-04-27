@@ -312,6 +312,10 @@ module aes_cipher_top (
         xtime = {b[6:0], 1'b0} ^ (8'h1b & {8{b[7]}});
     endfunction
 
+    ////////////////////////////////////////////////////////////////////
+    //
+    // Modules
+    //
     aes_key_expand_128 u0 (
         .clk(clk),
         .kld(ld),

@@ -525,6 +525,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		if (objs.size() != prev_size) {
 			iHdlObj *_last = objs[prev_size].get();
 			auto wd = dynamic_cast<WithDoc*>(_last);
+			assert(wd);
 			wd->__doc__ = doc + wd->__doc__;
 		}
 		return;

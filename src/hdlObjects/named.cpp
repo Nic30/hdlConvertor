@@ -7,19 +7,28 @@ namespace hdlObjects {
 Named::Named() {
 }
 
-Named::Named(const std::string & name) :
+Named::Named(const std::string &name) :
 		name(name) {
 }
 
 Named::~Named() {
 }
 
-WithNameAndDoc::WithNameAndDoc() :
-		Named() {
+WithDoc::~WithDoc() {
 }
 
-WithNameAndDoc::WithNameAndDoc(const std::string & name) :
-		Named(name) {
+WithPos::~WithPos() {
+}
+
+WithNameAndDoc::WithNameAndDoc() :
+		WithPos(), WithDoc(), Named() {
+}
+
+WithNameAndDoc::WithNameAndDoc(const std::string &name) :
+		WithPos(), WithDoc(), Named(name) {
+}
+
+WithNameAndDoc::~WithNameAndDoc() {
 }
 
 }

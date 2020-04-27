@@ -52,6 +52,7 @@ module aFifo #(
     //'Next Addresses' enable logic:
     assign NextWriteAddressEn = WriteEn_in & ~Full_out;
     assign NextReadAddressEn = ReadEn_in & ~Empty_out;
+    //Addreses (Gray counters) logic:
     GrayCounter GrayCounter_pWr (
         .GrayCount_out(pNextWordToWrite),
         .Enable_in(NextWriteAddressEn),

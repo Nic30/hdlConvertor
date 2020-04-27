@@ -16,7 +16,7 @@ public:
 
 	Named();
 	Named(const std::string &name);
-	virtual ~Named();
+	~Named();
 };
 
 /*
@@ -25,6 +25,7 @@ public:
 class WithDoc {
 public:
 	std::string __doc__;
+	~WithDoc();
 };
 
 /*
@@ -33,16 +34,17 @@ public:
 class WithPos {
 public:
 	CodePosition position;
+	~WithPos();
 };
 
 /*
  * Base class for HDL object with name and doc
  * */
-class WithNameAndDoc: public Named, public WithDoc, public WithPos {
+class WithNameAndDoc: public WithPos, public WithDoc, public Named {
 public:
 	WithNameAndDoc();
 	WithNameAndDoc(const std::string &name);
-
+	~WithNameAndDoc();
 };
 
 }

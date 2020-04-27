@@ -5,10 +5,9 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-HdlCompInstance::HdlCompInstance(std::unique_ptr<iHdlExpr> _name,
-		std::unique_ptr<iHdlExpr> _module_name) {
+HdlCompInstance::HdlCompInstance(const std::string & _name,
+		std::unique_ptr<iHdlExpr> _module_name): WithNameAndDoc(_name) {
 	module_name = move(_module_name);
-	name = move(_name);
 }
 
 HdlCompInstance::~HdlCompInstance() {
