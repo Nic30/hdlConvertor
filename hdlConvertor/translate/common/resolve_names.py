@@ -6,10 +6,9 @@ from itertools import chain
 
 from hdlConvertor.hdlAst import HdlCall, HdlBuiltinFn, HdlName, HdlAll,\
     HdlIntValue, HdlVariableDef, HdlStmAssign, HdlModuleDec, HdlModuleDef,\
-    HdlComponentInst
+    HdlComponentInst, iHdlStatement
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.translate.common.discover_declarations import WithNameScope
-from hdlConvertor.hdlAst._bases import iHdlStatement
 
 
 class ResolveNames(HdlAstVisitor):
