@@ -88,7 +88,6 @@ std::string ToPy::PyObject_repr(PyObject *o) {
 }
 
 PyObject* ToPy::toPy(const HdlContext *o) {
-	Py_INCREF(ContextCls);
 	PyObject *py_inst = PyObject_CallObject(ContextCls, NULL);
 	if (!py_inst)
 		return nullptr;
@@ -99,7 +98,9 @@ PyObject* ToPy::toPy(const HdlContext *o) {
 }
 
 PyObject* ToPy::toPy(const HdlLibrary *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlLibraryCls, NULL);
+	Py_INCREF(Py_None);
+	PyObject *py_inst = PyObject_CallFunctionObjArgs(HdlLibraryCls, Py_None,
+			NULL);
 	if (!py_inst)
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
@@ -108,15 +109,6 @@ PyObject* ToPy::toPy(const HdlLibrary *o) {
 }
 
 PyObject* ToPy::toPy(const iHdlObj *o) {
-	auto c = dynamic_cast<const HdlContext*>(o);
-	if (c)
-		return toPy(c);
-	auto lib = dynamic_cast<const HdlLibrary*>(o);
-	if (lib)
-		return toPy(lib);
-	auto md = dynamic_cast<const HdlModuleDec*>(o);
-	if (md)
-		return toPy(md);
 	auto ex = dynamic_cast<const iHdlExpr*>(o);
 	if (ex)
 		return toPy(ex);
@@ -126,6 +118,9 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto s = dynamic_cast<const iHdlStatement*>(o);
 	if (s)
 		return toPy(s);
+	auto md = dynamic_cast<const HdlModuleDec*>(o);
+	if (md)
+		return toPy(md);
 	auto mdef = dynamic_cast<const HdlModuleDef*>(o);
 	if (mdef)
 		return toPy(mdef);
@@ -141,6 +136,12 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto td = dynamic_cast<const HdlTypeDec*>(o);
 	if (td)
 		return toPy(td);
+	auto lib = dynamic_cast<const HdlLibrary*>(o);
+	if (lib)
+		return toPy(lib);
+	auto c = dynamic_cast<const HdlContext*>(o);
+	if (c)
+		return toPy(c);
 
 	std::string err_msg;
 	if (o)
@@ -166,10 +167,7 @@ int ToPy::toPy(const WithNameAndDoc *o, PyObject *py_inst) {
 	e = toPy(static_cast<const WithDoc*>(o), py_inst);
 	if (e < 0)
 		return e;
-	e = toPy(static_cast<const WithPos*>(o), py_inst);
-		if (e < 0)
-			return e;
-	return 0;
+	return toPy(static_cast<const WithPos*>(o), py_inst);
 }
 
 int ToPy::toPy(const WithDoc *o, PyObject *py_inst) {
@@ -206,8 +204,12 @@ PyObject* ToPy::toPy(const HdlModuleDef *o) {
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
-	if (o->entityName) {
-		if (toPy_property(py_inst, "module_name", o->entityName))
+	if (o->module_name) {
+		if (toPy_property(py_inst, "module_name", o->module_name))
+			return nullptr;
+	}
+	if (o->dec) {
+		if (toPy_property(py_inst, "dec", o->dec))
 			return nullptr;
 	}
 	if (toPy_arr(py_inst, "objs", o->objs))
@@ -222,7 +224,7 @@ PyObject* ToPy::toPy(const hdlObjects::HdlCompInstance *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "name", o->name))
 		return nullptr;
-	if (toPy_property(py_inst, "module_name", o->entityName))
+	if (toPy_property(py_inst, "module_name", o->module_name))
 		return nullptr;
 	if (toPy_arr(py_inst, "param_map", o->genericMap))
 		return nullptr;
@@ -383,13 +385,13 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	if (toPy_property(py_inst, "is_declaration_only", o->is_declaration_only))
 		return nullptr;
 	if (toPy_property(py_inst, "is_operator", o->is_operator))
-			return nullptr;
+		return nullptr;
 	if (toPy_property(py_inst, "is_static", o->is_static))
-			return nullptr;
+		return nullptr;
 	if (toPy_property(py_inst, "is_task", o->is_task))
-			return nullptr;
+		return nullptr;
 	if (toPy_property(py_inst, "is_virtual", o->is_virtual))
-			return nullptr;
+		return nullptr;
 	if (o->params) {
 		if (toPy_arr(py_inst, "params", *o->params))
 			return nullptr;

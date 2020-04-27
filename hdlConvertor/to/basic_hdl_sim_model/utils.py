@@ -1,7 +1,10 @@
 from hdlConvertor.hdlAst import HdlName, HdlBuiltinFn, HdlIntValue, HdlCall, iHdlExpr
+from hdlConvertor.translate.common.name_scope import LanguageKeyword
+
+NONE = HdlName("None")
 
 
-def BitsT(width, is_signed=False):
+def BitsT(width, is_signed=False, bits_cls_name="Bits3t"):
     """
     Create an AST expression of Bits type constructor
     (reg/std_logic_vector equivalent for BasicHdlSimModel)
@@ -15,13 +18,11 @@ def BitsT(width, is_signed=False):
             width = int(high) + 1
         else:
             raise NotImplementedError(width)
-    c = HdlCall()
-    c.fn = HdlBuiltinFn.CALL
-    c.ops = (
-        HdlName("Bits3t"),
+    c = HdlCall(HdlBuiltinFn.CALL, [
+        HdlName(bits_cls_name, obj=LanguageKeyword()),
         HdlIntValue(width, None, None),
-        HdlIntValue(int(is_signed), None, None)
-    )
+        NONE if is_signed is None else HdlIntValue(int(is_signed), None, None)
+    ])
     return c
 
 

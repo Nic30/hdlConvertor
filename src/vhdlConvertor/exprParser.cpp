@@ -327,7 +327,7 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitSimple_expression(
 		if (ctx->KW_ABS()) {
 			op = HdlOperatorType::ABS;
 		} else if (ctx->KW_NOT()) {
-			op = HdlOperatorType::NEG_LOG;
+			op = HdlOperatorType::NEG;
 		} else {
 			auto lo = ctx->logical_operator();
 			if (lo) {
@@ -482,9 +482,14 @@ std::unique_ptr<iHdlExpr> VhdlExprParser::visitAggregate(
 		auto e = visitElement_association(elm);
 		elements.push_back(move(e));
 	}
+	if (elements.size() == 1) {
+		auto e = dynamic_cast<HdlCall*>(elements[0]->data);
+		if (!e || e->op != HdlOperatorType::MAP_ASSOCIATION)
+			return move(elements[0]);
+	}
 	std::unique_ptr<iHdlExpr> arr = iHdlExpr::ARRAY(ctx, elements);
-
 	return arr;
+
 }
 
 std::unique_ptr<iHdlExpr> VhdlExprParser::visitElement_association(

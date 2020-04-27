@@ -1,5 +1,6 @@
 from typing import Union, List
 
+
 try:
     # python2
     from StringIO import StringIO
@@ -13,20 +14,23 @@ class iHdlObj(object):
     Object with direct representation in HDL
 
     :ivar ~.doc: doc from the HDL related probably to this object
+    :ivar ~.origin: an object which is responsible for this HdlObject
+        (not used by this library, used in user code)
     """
-    __slots__ = ["doc", "position"]
+    __slots__ = ["doc", "position", "origin"]
 
     def __init__(self):
         self.doc = ""  # type: str
         self.position = None  # type: Optional[CodePosition]
+        self.origin = None
 
     def __repr__(self):
-        from hdlConvertor.to.json import ToJson
+        from hdlConvertor.to.json_debug import ToJsonDebug
         from pprint import pprint
-        to = ToJson()
+        to = ToJsonDebug()
         d = getattr(to, "visit_" + self.__class__.__name__)(self)
         s = StringIO()
-        pprint(d, stream=s, depth=3)
+        pprint(d, stream=s, depth=None)
         return s.getvalue()
 
 
@@ -39,9 +43,6 @@ class iHdlObjWithName(iHdlObj):
     def __init__(self):
         super(iHdlObjWithName, self).__init__()
         self.name = None  # type: HdlName
-
-    def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, self.name)
 
 
 class iHdlObjInModule(iHdlObj):

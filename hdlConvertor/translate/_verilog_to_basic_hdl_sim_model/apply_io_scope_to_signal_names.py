@@ -1,7 +1,6 @@
+from hdlConvertor.hdlAst import HdlName, HdlIntValue, HdlCall, HdlBuiltinFn
+from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._expr import HdlName, HdlIntValue, HdlCall,\
-    HdlBuiltinFn
-from hdlConvertor.to.hdlUtils import is_str
 from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import hdl_getattr,\
     hdl_name_prefix
 
@@ -22,6 +21,7 @@ class ApplyIoScopeToSignalNames(HdlAstVisitor):
     """
 
     def __init__(self):
+        super(ApplyIoScopeToSignalNames, self).__init__()
         self._stm_dst = False
 
     def visit_HdlVariableDef(self, var):

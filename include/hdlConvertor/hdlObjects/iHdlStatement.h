@@ -6,7 +6,7 @@
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
-#include "codePosition.h"
+#include <hdlConvertor/hdlObjects/codePosition.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

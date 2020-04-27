@@ -3,6 +3,7 @@ from typing import Set, List, Dict
 from hdlConvertor.hdlAst import iHdlExpr, HdlName, \
     HdlContext, HdlModuleDec, HdlStmAssign, HdlStmProcess, \
     HdlStmIf, HdlStmBlock
+from hdlConvertor.hdlAst._structural import HdlModuleDef
 
 
 def get_output_ids(e, outputs):
@@ -78,10 +79,8 @@ def discover_stm_outputs_context(c):
     outputs = {}
     # :type _outputs: Dict[HdlStm, Set[HdlName]]
     for o0 in c.objs:
-        if isinstance(o0, HdlModuleDec):
-            assert o0.body, ("Is it expected that module def and dec are"
-                             " already linked trough this property")
-            for o1 in o0.body.objs:
+        if isinstance(o0, HdlModuleDef):
+            for o1 in o0.objs:
                 if isinstance(o1, HdlStmProcess):
                     _outputs = discover_stm_outputs(o1)
                     outputs.update(_outputs)

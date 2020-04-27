@@ -1,5 +1,6 @@
 from hdlConvertor.hdlAst._structural import HdlContext, HdlModuleDef,\
     HdlModuleDec
+from hdlConvertor.hdlAst._expr import HdlName
 
 
 def link_module_dec_def(context):
@@ -9,13 +10,18 @@ def link_module_dec_def(context):
     objs = []
     last = None
     for o in context.objs:
-        if isinstance(o, HdlModuleDef):
+        if isinstance(o, HdlModuleDef) and o.dec is None:
             assert isinstance(last, HdlModuleDec) \
-                and o.module_name == last.name, (
+                and o.module_name == HdlName(last.name), (
                 "Module body has to be behind the module header", last, o)
-            last.body = o
-        else:
+            o.dec = last
             objs.append(o)
-        last = o
+            last = None
+        else:
+            if last is not None:
+                objs.append(last)
+            last = o
+    if last is not None:
+        objs.append(last)
 
     context.objs = objs

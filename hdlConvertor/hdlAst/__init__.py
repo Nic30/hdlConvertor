@@ -14,8 +14,8 @@ Main container is HdlContext which can store all other objects.
 :attention: classes in his module are used from C++
 """
 
-from hdlConvertor.hdlAst._bases import (iHdlObj, iHdlObjInModule,
-    iHdlObjWithName, iHdlStatement)
+from hdlConvertor.hdlAst._bases import (
+    iHdlObj, iHdlObjInModule, iHdlObjWithName, iHdlStatement)
 from hdlConvertor.hdlAst._defs import HdlFunctionDef, HdlVariableDef
 from hdlConvertor.hdlAst._expr import (HdlAll, HdlBuiltinFn, HdlCall,
     HdlDirection, HdlIntValue, HdlName, HdlOthers, HdlTypeAuto, HdlTypeType,

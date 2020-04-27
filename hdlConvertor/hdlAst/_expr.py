@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Optional, Union, List
+
 from hdlConvertor.hdlAst._bases import iHdlObj
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 class HdlDirection(Enum):
@@ -18,22 +20,37 @@ class HdlDirection(Enum):
     ) = range(7)
 
 
-class HdlName(str):
+class HdlName(object):
     """
     String which is id in HDL
 
-    :ivar obj: an object which corresponds to this name
+    :type ~.val: str
+    :ivar ~.obj: an object which corresponds to this name
         (has to be explicitly discovered and is not available imediately
         after parsing)
     """
 
-    def __init__(self, *args, **kwargs):
-        obj = kwargs.pop("obj", None)
-        super(HdlName, self).__init__()
+    def __init__(self, val, obj=None):
+        assert is_str(val), val
+        self.val = val
         self.obj = obj
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.val == other.val
+
+    def __lt__(self, other):
+        if not isinstance(other, HdlName):
+            return False
+        return self.val < other.val
+
+    def __hash__(self):
+        return hash(self.val)
+
+    def __str__(self):
+        return self.val
+
     def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, self)
+        return "<%s %s>" % (self.__class__.__name__, self.val)
 
 
 class HdlAll(object):
@@ -92,6 +109,7 @@ class HdlBuiltinFn(Enum):
         ACROSS,
         THROUGH,
         REFERENCE,
+        DEREFERENCE,
         TOLERANCE,
         TYPE_OF,  # SV type operator
         INDEX,  # array index
@@ -115,7 +133,7 @@ class HdlBuiltinFn(Enum):
         POW,  # power of
         ABS,  # absolute value
         NEG_LOG,  # logical negation "not" in vhdl
-        NEG,  # negation
+        NEG,  # bitwise negation
         AND_LOG,  # "and" in vhdl
         OR_LOG,  # "or" in vhdl
         AND,  # & in vhdl
@@ -138,7 +156,7 @@ class HdlBuiltinFn(Enum):
         ROR,  # rotate right
         TERNARY,
         DOT,  # accessing of property
-        DOUBLE_COLON,  # SV accessing class/package static property/type
+        DOUBLE_COLON,  # ::, SV accessing class/package static property/type
         APOSTROPHE,  # vhdl attribute access
         CALL,  # call of HDL function
         PARAMETRIZATION,  # specification of template arguments
@@ -170,7 +188,7 @@ class HdlBuiltinFn(Enum):
         SHIFT_RIGHT_ASSIGN,  # >>=
         ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
         ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
-    ) = range(79)
+    ) = range(84)
     # note that in verilog bitewise operators can have only one argument
 
 
@@ -187,6 +205,12 @@ class HdlCall(iHdlObj):
         """
         self.fn = fn
         self.ops = ops
+
+    def __lt__(self, other):
+        if isinstance(other, HdlName):
+            return True
+        else:
+            return (self.fn.value, self.ops) < (other.fn.value, other.ops)
 
     def __eq__(self, other):
         if not isinstance(other, HdlCall):
@@ -217,6 +241,12 @@ class HdlIntValue(iHdlObj):
     def __bool__(self):
         return bool(self.val)
 
+    def __hash__(self):
+        return hash((self.val, self.bits, self.base))
+
+    def __lt__(self, other):
+        return (self.val, self.bits, self.base) < (other.val, other.bits, other.base)
+
     def __nonzero__(self):
         return self.__bool__()
 
@@ -228,7 +258,7 @@ class HdlIntValue(iHdlObj):
         else:
             try:
                 return self.val == other
-            except TypeError:
+            except Exception:
                 return False
             except ValueError:
                 return False

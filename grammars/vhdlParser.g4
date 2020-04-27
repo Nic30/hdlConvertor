@@ -762,8 +762,9 @@ expression:
 ;
 simple_expression:
       primary ( DOUBLESTAR primary )?
-      | ( KW_ABS | KW_NOT | logical_operator | sign) simple_expression
+      | ( KW_ABS | KW_NOT | logical_operator) simple_expression
       | simple_expression multiplying_operator simple_expression
+      | sign simple_expression
       | simple_expression adding_operator simple_expression
 ;
 primary:

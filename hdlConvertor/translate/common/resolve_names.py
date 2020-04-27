@@ -6,10 +6,9 @@ from itertools import chain
 
 from hdlConvertor.hdlAst import HdlCall, HdlBuiltinFn, HdlName, HdlAll,\
     HdlIntValue, HdlVariableDef, HdlStmAssign, HdlModuleDec, HdlModuleDef,\
-    HdlComponentInst
+    HdlComponentInst, iHdlStatement
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.translate.common.discover_declarations import WithNameScope
-from hdlConvertor.hdlAst._bases import iHdlStatement
 
 
 class ResolveNames(HdlAstVisitor):
@@ -18,6 +17,7 @@ class ResolveNames(HdlAstVisitor):
         """
         :type name_scope: NameScope
         """
+        super(ResolveNames, self).__init__()
         self.name_scope = name_scope
 
     def visit_HdlVariableDef(self, o):
@@ -37,15 +37,16 @@ class ResolveNames(HdlAstVisitor):
             for o2 in o.objs:
                 raise NotImplementedError(o2)
 
-        if o.body is not None:
-            self.visit_HdlModuleDef(o.body)
-
     def visit_HdlModuleDef(self, o):
         """
         :type o: HdlModuleDef
         """
-        with WithNameScope(self, self.name_scope.get_child(o.module_name)):
-            self.visit(o.objs)
+        if o.dec is not None:
+            self.visit_HdlModuleDec(o.dec)
+
+        with WithNameScope(self, self.name_scope.get_child(o.module_name.val)):
+            for o2 in o.objs:
+                self.visit_iHdlObj(o2)
 
     def visit_port_param_map(self, mod_name_scope, pmap):
         """
@@ -57,10 +58,10 @@ class ResolveNames(HdlAstVisitor):
             mod_port, connected_sig = pm.ops
             assert isinstance(mod_port, HdlName), mod_port
             _, mod_port.obj = mod_name_scope.get_object_and_scope_by_name(
-                mod_port)
+                mod_port.val)
             assert isinstance(connected_sig, HdlName), connected_sig
             _, connected_sig.obj = self.name_scope.get_object_and_scope_by_name(
-                mod_port)
+                mod_port.val)
 
     def visit_HdlComponentInst(self, o):
         """
@@ -70,8 +71,8 @@ class ResolveNames(HdlAstVisitor):
             o.name.obj = o
         ns = self.name_scope
         mod_name_scope, mod_def = ns.get_object_and_scope_by_name(
-            o.module_name)
-        mod_name_scope = mod_name_scope.get_child(o.module_name)
+            o.module_name.val)
+        mod_name_scope = mod_name_scope.get_child(o.module_name.val)
         o.module_name.obj = mod_def
         self.visit_port_param_map(mod_name_scope, o.param_map)
         self.visit_port_param_map(mod_name_scope, o.port_map)
@@ -84,7 +85,7 @@ class ResolveNames(HdlAstVisitor):
             for o2 in o.ops:
                 self.visit_iHdlExpr(o2)
         elif isinstance(o, HdlName):
-            _, o.obj = self.name_scope.get_object_and_scope_by_name(o)
+            _, o.obj = self.name_scope.get_object_and_scope_by_name(o.val)
         elif o is None or o is HdlAll or isinstance(
                 o,  (HdlIntValue, float, str)):
             pass
@@ -92,21 +93,3 @@ class ResolveNames(HdlAstVisitor):
             assert isinstance(o, list), o
             for o2 in o:
                 self.visit_iHdlExpr(o2)
-
-    def _visit(self, o):
-        if isinstance(o, HdlVariableDef):
-            self.visit_HdlVariableDef(o)
-        elif isinstance(o, HdlModuleDec):
-            self.visit_HdlModuleDec(o)
-        elif isinstance(o, HdlModuleDef):
-            self.visit_HdlModuleDef(o)
-        elif isinstance(o, iHdlStatement):
-            self.visit_iHdlStatement(o)
-        elif isinstance(o, HdlComponentInst):
-            self.visit_HdlComponentInst(o)
-        else:
-            raise NotImplementedError(o)
-
-    def visit(self, objs):
-        for o in objs:
-            self._visit(o)

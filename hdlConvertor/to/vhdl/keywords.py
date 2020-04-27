@@ -1,4 +1,4 @@
-VHLD_KEYWORDS = [
+VHLD2008_KEYWORDS = [
     "abs", "access", "across", "after", "alias", "all", "and", "architecture",
     "array", "assert", "attribute", "begin", "block", "body", "break",
     "bugger", "bus", "case", "component", "configuration", "constant",

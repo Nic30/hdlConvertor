@@ -1,6 +1,16 @@
 from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn, HdlName
 
 
+def to_property_call(o, prop_name):
+    """
+    :note: a * b -> a.prop_name(b)
+    :type o: HdlCall
+    """
+    o.fn = HdlBuiltinFn.CALL
+    o.ops[0] = hdl_getattr(o.ops[0], prop_name)
+    return o
+
+
 def hdl_name_prefix(prefix_name, o):
     """
     :type o: HdlName
@@ -8,10 +18,7 @@ def hdl_name_prefix(prefix_name, o):
     :return: HdlCall
     """
     assert isinstance(o, HdlName), o
-    res = HdlCall()
-    res.fn = HdlBuiltinFn.DOT
-    res.ops = [prefix_name, o]
-    return res
+    return HdlCall(HdlBuiltinFn.DOT, [prefix_name, o])
 
 
 def hdl_getattr(o, prop_name):
@@ -20,7 +27,35 @@ def hdl_getattr(o, prop_name):
     :type prop_name: str
     :return: HdlCall
     """
-    res = HdlCall()
-    res.fn = HdlBuiltinFn.DOT
-    res.ops = [o, HdlName(prop_name)]
-    return res
+    return HdlCall(HdlBuiltinFn.DOT, [o, HdlName(prop_name)])
+
+
+def hdl_call(o, args):
+    """
+    :type o: iHdlExpr
+    :type args: List[iHdlExpr]
+    :return: HdlCall
+    """
+    return HdlCall(HdlBuiltinFn.CALL, [o, ] + args)
+
+
+def hdl_index(o, i):
+    """
+    :type o: iHdlExpr
+    :type args: List[iHdlExpr]
+    :return: HdlCall
+    """
+    return HdlCall(HdlBuiltinFn.INDEX, [o, i])
+
+
+def hdl_downto(msb, lsb):
+    return HdlCall(HdlBuiltinFn.DOWNTO, [msb, lsb])
+
+
+def hdl_map_asoc(o1, o2):
+    """
+    :type o1: iHdlExpr
+    :type o2: iHdlExpr
+    :return: HdlCall
+    """
+    return HdlCall(HdlBuiltinFn.MAP_ASSOCIATION, [o1, o2])

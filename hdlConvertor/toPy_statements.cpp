@@ -220,12 +220,14 @@ PyObject* ToPy::toPy(const HdlStmProcess *o) {
 }
 
 PyObject* ToPy::toPy(const HdlStmImport *o) {
-	auto py_inst = PyObject_CallObject(HdlImportCls, NULL);
-	if (!py_inst) {
+	auto p = PyList_New(0);
+	if (toPy_arr(p, o->path)) {
 		return nullptr;
 	}
 
-	if (toPy_arr(py_inst, "path", o->path)) {
+	auto py_inst = PyObject_CallFunctionObjArgs(HdlImportCls, p, NULL);
+	if (!py_inst) {
+		Py_DECREF(p);
 		return nullptr;
 	}
 	return py_inst;

@@ -13,10 +13,10 @@ class subunit0(BasicRtlSimModel):
         # ports
         self.io.a = BasicRtlSimProxy(
             sim, self, "a",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         self.io.b = BasicRtlSimProxy(
             sim, self, "b",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         # internal signals
         # component instances
     def _init_body(self):
@@ -37,41 +37,30 @@ class subunit0(BasicRtlSimModel):
 
     # sensitivity: a
     def assig_process_b(self):
-        self.io.b.val_next = (self.io.a.val, 0)
-    
-from pyMathBitPrecise.array3t import Array3t, Array3val
-from pyMathBitPrecise.bits3t import Bits3t, Bits3val
-from pyMathBitPrecise.enum3t import define_Enum3t
+        self.io.b.val_next = (self.io.a.val, 0, )
 
-from pycocotb.basic_hdl_simulator.model import BasicRtlSimModel
-from pycocotb.basic_hdl_simulator.model_utils import sensitivity, connectSimPort
-from pycocotb.basic_hdl_simulator.proxy import BasicRtlSimProxy
-from pycocotb.basic_hdl_simulator.sim_utils import sim_eval_cond
-
-if "subunit0" not in locals(): # support for all models in single file
-    from .subunit0 import subunit0
 class SimpleSubunit(BasicRtlSimModel):
     def __init__(self, sim: "BasicRtlSimulator", name="SimpleSubunit"):
         BasicRtlSimModel.__init__(self, sim, name=name)
         # ports
         self.io.a = BasicRtlSimProxy(
             sim, self, "a",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         self.io.b = BasicRtlSimProxy(
             sim, self, "b",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         # internal signals
         self.io.sig_subunit0_a = BasicRtlSimProxy(
             sim, self, "sig_subunit0_a",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         self.io.sig_subunit0_b = BasicRtlSimProxy(
             sim, self, "sig_subunit0_b",
-            Bits3t(1, 0), None)
+            Bits3t(1, None), None)
         # component instances
         self.subunit0_inst = subunit0(sim, "subunit0_inst")
     def _init_body(self):
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_a", "a", True)
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_b", "b", False)
+        connectSimPort(self, self.subunit0_inst, "sig_subunit0_a", "a")
+        connectSimPort(self, self.subunit0_inst, "sig_subunit0_b", "b")
         self._interfaces = (
             self.io.a,
             self.io.b,
@@ -97,9 +86,9 @@ class SimpleSubunit(BasicRtlSimModel):
 
     # sensitivity: sig_subunit0_b
     def assig_process_b(self):
-        self.io.b.val_next = (self.io.sig_subunit0_b.val, 0)
-    
+        self.io.b.val_next = (self.io.sig_subunit0_b.val, 0, )
+
     # sensitivity: a
     def assig_process_sig_subunit0_a(self):
-        self.io.sig_subunit0_a.val_next = (self.io.a.val, 0)
-    
+        self.io.sig_subunit0_a.val_next = (self.io.a.val, 0, )
+

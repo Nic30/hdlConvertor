@@ -44,12 +44,10 @@ module aFifo #(
     always @(posedge RClk)
         if (ReadEn_in & !Empty_out)
             Data_out <= Mem[pNextWordToRead];
-
     //'Data_in' logic:
     always @(posedge WClk)
         if (WriteEn_in & !Full_out)
             Mem[pNextWordToWrite] <= Data_in;
-
     //Fifo addresses support logic:
     //'Next Addresses' enable logic:
     assign NextWriteAddressEn = WriteEn_in & ~Full_out;
@@ -71,8 +69,8 @@ module aFifo #(
     //'EqualAddresses' logic:
     assign EqualAddresses = pNextWordToWrite == pNextWordToRead;
     //'Quadrant selectors' logic:
-    assign Set_Status = (pNextWordToWrite[ADDRESS_WIDTH - 2] ~^ pNextWordToRead[ADDRESS_WIDTH - 1]) & (pNextWordToWrite[ADDRESS_WIDTH - 1] ^ pNextWordToRead[ADDRESS_WIDTH - 2]);
-    assign Rst_Status = (pNextWordToWrite[ADDRESS_WIDTH - 2] ^ pNextWordToRead[ADDRESS_WIDTH - 1]) & (pNextWordToWrite[ADDRESS_WIDTH - 1] ~^ pNextWordToRead[ADDRESS_WIDTH - 2]);
+    assign Set_Status = pNextWordToWrite[ADDRESS_WIDTH - 2] ~^ pNextWordToRead[ADDRESS_WIDTH - 1] & (pNextWordToWrite[ADDRESS_WIDTH - 1] ^ pNextWordToRead[ADDRESS_WIDTH - 2]);
+    assign Rst_Status = pNextWordToWrite[ADDRESS_WIDTH - 2] ^ pNextWordToRead[ADDRESS_WIDTH - 1] & (pNextWordToWrite[ADDRESS_WIDTH - 1] ~^ pNextWordToRead[ADDRESS_WIDTH - 2]);
     //'Status' latch logic:
     always @(Set_Status, Rst_Status, Clear_in)
         // Latch w/ Asynchronous Clear & Preset.
@@ -80,7 +78,6 @@ module aFifo #(
             Status = 0;
         else if (Set_Status)
             Status = 1;
-
     //Going 'Full'.
     //'Full_out' logic for the writing port:
     assign PresetFull = Status & EqualAddresses;
@@ -91,7 +88,6 @@ module aFifo #(
             Full_out <= 1;
         else
             Full_out <= 0;
-
     //'Empty_out' logic for the reading port:
     assign PresetEmpty = ~Status & EqualAddresses;
     //'Empty' Fifo.
@@ -101,5 +97,4 @@ module aFifo #(
             Empty_out <= 1;
         else
             Empty_out <= 0;
-
 endmodule

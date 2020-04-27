@@ -15,12 +15,15 @@ class HdlImport(iHdlStatement):
     """
     __slots__ = ["path", ]
 
-    def __init__(self):
+    def __init__(self, path):
+        """
+        :type path: List[Union[HdlName, HdlAll]]
+        """
         super(HdlImport, self).__init__()
-        self.path = []  # type: List[str]
+        self.path = path
 
 
-class HdlStmNop():
+class HdlStmNop(iHdlStatement):
     """
     Nop statement in HDL
     """
@@ -234,3 +237,20 @@ class HdlStmContinue(iHdlStatement):
     HDL continue statement
     """
     __slots__ = []
+
+ALL_STATEMENT_CLASSES = (
+    HdlStmNop,
+    HdlStmBlock,
+    HdlStmAssign,
+    HdlStmIf,
+    HdlStmProcess,
+    HdlStmCase,
+    HdlStmFor,
+    HdlStmForIn,
+    HdlStmWhile,
+    HdlStmRepeat,
+    HdlStmReturn,
+    HdlStmWait,
+    HdlStmBreak,
+    HdlStmContinue,
+)

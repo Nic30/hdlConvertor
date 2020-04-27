@@ -33,14 +33,16 @@ class ToVerilog2005(ToVerilog2005Stm):
         self.visit_doc(g)
         w = self.out.write
         w("parameter ")
-        is_array = self.visit_type_first_part(g.type)
-        if g.type is not HdlTypeAuto:
+        if g.type is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(g.type)
             w(" ")
         w(g.name)
-        v = g.value
         if is_array:
             self.visit_type_array_part(g.type)
-        if v:
+        v = g.value
+        if v is not None:
             w(" = ")
             self.visit_iHdlExpr(v)
 
@@ -54,45 +56,15 @@ class ToVerilog2005(ToVerilog2005Stm):
         w(" ")
 
         t = p.type
-        is_array = self.visit_type_first_part(t)
-        w(" ")
+        if t is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(t)
+            w(" ")
 
         w(p.name)
         if is_array:
             self.visit_type_array_part(t)
-
-    def visit_HdlModuleDec(self, e):
-        """
-        :type e: HdlModuleDef
-        """
-        self.visit_doc(e)
-        w = self.out.write
-        w("module ")
-        w(e.name)
-        gs = e.params
-        if gs:
-            w(" #(\n")
-            with Indent(self.out):
-                for last, g in iter_with_last(gs):
-                    self.visit_generic_declr(g)
-                    if last:
-                        w("\n")
-                    else:
-                        w(",\n")
-
-            w(")")
-        ps = e.ports
-        if ps:
-            w(" (\n")
-            with Indent(self.out):
-                for last, p in iter_with_last(ps):
-                    self.visit_port_declr(p)
-                    if last:
-                        w("\n")
-                    else:
-                        w(",\n")
-            w(")")
-        w(";\n")
 
     def visit_HdlVariableDef(self, var):
         """
@@ -104,11 +76,20 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         if var.is_const:
             w("localparam ")
-        is_array = self.visit_type_first_part(t)
-        w(" ")
+            assert var.value is not None, var.name
+
+        if t is HdlTypeAuto:
+            is_array = False
+        else:
+            is_array = self.visit_type_first_part(t)
+            w(" ")
         w(name)
         if is_array:
             self.visit_type_array_part(t)
+
+        if var.value is not None:
+            w(" = ")
+            self.visit_iHdlExpr(var.value)
 
     def visit_map_item(self, item):
         if isinstance(item, HdlCall)\
@@ -134,7 +115,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                 else:
                     w(",\n")
 
-    def visit_component_instance(self, c):
+    def visit_HdlComponentInst(self, c):
         """
         :type c: HdlComponentInst
         """
@@ -142,14 +123,13 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         assert c.module_name
         self.visit_iHdlExpr(c.module_name)
-        w(" ")
-        self.visit_iHdlExpr(c.name)
         gms = c.param_map
         if gms:
             w(" #(\n")
             self.visit_map(gms)
             w(")")
-
+        w(" ")
+        w(c.name.val)
         pms = c.port_map
         if pms:
             w(" (\n")
@@ -209,10 +189,44 @@ class ToVerilog2005(ToVerilog2005Stm):
         else:
             w("endfunction")
 
+    def visit_HdlModuleDec(self, e):
+        raise ValueError(self, "does not support a module headers without body")
+
     def visit_HdlModuleDef(self, a):
         """
         :type a: HdlModuleDef
         """
+        e = a.dec
+        assert e is not None, a
+        self.visit_doc(e)
+        w = self.out.write
+        w("module ")
+        w(e.name)
+        gs = e.params
+        if gs:
+            w(" #(\n")
+            with Indent(self.out):
+                for last, g in iter_with_last(gs):
+                    self.visit_generic_declr(g)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+
+            w(")")
+        ps = e.ports
+        if ps:
+            w(" (\n")
+            with Indent(self.out):
+                for last, p in iter_with_last(ps):
+                    self.visit_port_declr(p)
+                    if last:
+                        w("\n")
+                    else:
+                        w(",\n")
+            w(")")
+        w(";\n")
+
         w = self.out.write
         with Indent(self.out):
             for o in a.objs:
@@ -220,7 +234,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                     self.visit_HdlVariableDef(o)
                     w(";\n")
                 elif isinstance(o, HdlComponentInst):
-                    self.visit_component_instance(o)
+                    self.visit_HdlComponentInst(o)
                     w(";\n\n")
                 elif isinstance(o, iHdlStatement):
                     need_semi = self.visit_iHdlStatement(o)
@@ -230,7 +244,7 @@ class ToVerilog2005(ToVerilog2005Stm):
                         w("\n\n")
                 elif isinstance(o, HdlFunctionDef):
                     self.visit_HdlFunctionDef(o)
-                    w("\n")
+                    w("\n\n")
                 else:
                     raise NotImplementedError(o)
 

@@ -1,7 +1,8 @@
 from typing import Optional
+from hdlConvertor.py_ver_compatibility import is_str
 
 
-class LangueKeyword(object):
+class LanguageKeyword(object):
     """
     Base class for keywords of target language.
     Used to notify that the name represents a language keyword
@@ -11,12 +12,20 @@ class LangueKeyword(object):
 
 
 class NameOccupiedErr(Exception):
+    """
+    An exception which is rised if the symbol name is used by a different
+    object in current scope
+    """
+
     def __init__(self, usedOn):
         super(NameOccupiedErr, self).__init__()
         self.usedOn = usedOn
 
 
 class ObjectForNameNotFound(KeyError):
+    """
+    And exception which is rised if the name is not registered at all.
+    """
     pass
 
 
@@ -46,6 +55,12 @@ class NameScope(dict):
     """
     @classmethod
     def make_top(cls, ignorecase):
+        """
+        Syntax shugar, call constructor with argument prefilled for a top NameScope
+
+        :type ignorecase: bool
+        :return: NameScope
+        """
         return cls(None, None, ignorecase)
 
     def update(self, other):
@@ -61,7 +76,7 @@ class NameScope(dict):
         :param ignorecase: if True the name comparison does not
             care about lowercase/uppercase
         """
-        super().__init__()
+        super(NameScope, self).__init__()
         self.parent = parent
         self.ignorecase = ignorecase
 
@@ -75,8 +90,10 @@ class NameScope(dict):
         self.name = name
 
     # @internal
-    def __incrPrefixCntr(self, prefix,
-                         currentVal) -> str:
+    def __incrPrefixCntr(self, prefix, currentVal):
+        """
+        :return: str
+        """
         # [TODO] check if new name is not defined in any direction (parent-children)
         currentVal += 1
         self.cntrsForPrefixNames[prefix] = currentVal
@@ -113,11 +130,13 @@ class NameScope(dict):
             raise NameOccupiedErr(o)
 
     def get_child(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
         return self.children[name]
 
     def level_push(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
 
@@ -127,7 +146,7 @@ class NameScope(dict):
             return i
 
         assert name in self, (
-            name, "name has to be assigned to something in this scope")
+            name, "name not registered for any object in this scope")
         i = self.__class__(self, name, self.ignorecase)
         self.children[name] = i
         return i
@@ -135,18 +154,26 @@ class NameScope(dict):
     def level_pop(self):
         return self.parent
 
-    def checkedName(self, suggestedName, obj) -> str:
-        if not suggestedName.endswith("_"):
+    def checked_name(self, suggested_name, obj):
+        """
+        Get a non occupied name in current scope
+        if name is occupied or name ends with _ the new
+        name is generated.
+
+        :return: str
+        """
+        assert is_str(suggested_name), suggested_name
+        if not suggested_name.endswith("_"):
             try:
-                self.register_name(suggestedName, obj)
-                return suggestedName
+                self.register_name(suggested_name, obj)
+                return suggested_name
             except NameOccupiedErr:
-                suggestedName += "_"
+                suggested_name += "_"
 
         actual = self
         while actual is not None:
             try:
-                cntrVal = actual.cntrsForPrefixNames[suggestedName]
+                cntrVal = actual.cntrsForPrefixNames[suggested_name]
                 break
             except KeyError:
                 actual = actual.parent
@@ -154,14 +181,14 @@ class NameScope(dict):
         if actual is not None:
             # some parrent of self already have such a prefix counter
             usableName = actual.__incrPrefixCntr(
-                suggestedName, cntrVal)
+                suggested_name, cntrVal)
         else:
             # parrents and self does not have such a prefix counter
             # delete potentially existing prefix conterrs from children
             # and add prefix counter to self
-            cntrVal = self.__discard_prefix_cntrs_from_children(suggestedName)
+            cntrVal = self.__discard_prefix_cntrs_from_children(suggested_name)
             usableName = self.__incrPrefixCntr(
-                suggestedName, cntrVal)
+                suggested_name, cntrVal)
         # setup for me and propagate to children
         self.register_name(usableName, obj)
         return usableName
@@ -177,6 +204,7 @@ class NameScope(dict):
         return cntr_val
 
     def get_object_and_scope_by_name(self, name):
+        assert is_str(name), name
         if self.ignorecase:
             name = name.lower()
         actual = self
@@ -189,6 +217,9 @@ class NameScope(dict):
         raise KeyError(name)
 
     def get_object_name(self, obj):
+        """
+        :return: str
+        """
         assert obj is not None
         actual = self
         while actual is not None:
@@ -198,3 +229,24 @@ class NameScope(dict):
             actual = actual.parent
 
         raise ObjectForNameNotFound(obj)
+
+
+class WithNameScope():
+    """
+    A syntax shugar, context manager which temporarly swaps the name_scope property on object
+    """
+
+    def __init__(self, obj, name_scope):
+        """
+        :type obj: an object which does have a name_scope stored in name_scope property
+        :type name_scope: NameScope
+        """
+        self.obj = obj
+        self.name_scope = name_scope
+
+    def __enter__(self):
+        self.original_name_scope = self.obj.name_scope
+        self.obj.name_scope = self.name_scope
+
+    def __exit__(self, type, value, traceback):
+        self.obj.name_scope = self.original_name_scope

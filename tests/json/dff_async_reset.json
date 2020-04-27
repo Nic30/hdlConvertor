@@ -1,0 +1,189 @@
+[
+    {
+        "__class__": "HdlModuleDef",
+        "dec": {
+            "__class__": "HdlModuleDec",
+            "declaration_only": false,
+            "doc": " http://www.asic-world.com/code/hdl_models/dff_async_reset.v\n-----------------------------------------------------\n Design Name : dff_async_reset\n File Name   : dff_async_reset.v\n Function    : D flip-flop async reset\n Coder       : Deepak Kumar Tala\n-----------------------------------------------------\n",
+            "name": "dff_async_reset",
+            "objs": [],
+            "params": [],
+            "ports": [
+                {
+                    "__class__": "HdlVariableDef",
+                    "direction": "IN",
+                    "doc": "-----------Input Ports---------------\n",
+                    "name": "data",
+                    "position": [
+                        9,
+                        1,
+                        9,
+                        4
+                    ],
+                    "type": {
+                        "__class__": "HdlName",
+                        "val": "wire"
+                    }
+                },
+                {
+                    "__class__": "HdlVariableDef",
+                    "direction": "IN",
+                    "doc": " Data Input\n",
+                    "name": "clk",
+                    "position": [
+                        10,
+                        1,
+                        10,
+                        3
+                    ],
+                    "type": {
+                        "__class__": "HdlName",
+                        "val": "wire"
+                    }
+                },
+                {
+                    "__class__": "HdlVariableDef",
+                    "direction": "IN",
+                    "doc": " Clock Input\n",
+                    "name": "reset",
+                    "position": [
+                        11,
+                        1,
+                        11,
+                        5
+                    ],
+                    "type": {
+                        "__class__": "HdlName",
+                        "val": "wire"
+                    }
+                },
+                {
+                    "__class__": "HdlVariableDef",
+                    "direction": "OUT",
+                    "doc": " Reset input\n-----------Output Ports---------------\n------------Internal Variables--------\n",
+                    "is_static": true,
+                    "name": "q",
+                    "position": [
+                        12,
+                        1,
+                        12,
+                        1
+                    ],
+                    "type": {
+                        "__class__": "HdlCall",
+                        "fn": "PARAMETRIZATION",
+                        "ops": [
+                            {
+                                "__class__": "HdlName",
+                                "val": "reg"
+                            },
+                            null,
+                            null
+                        ]
+                    }
+                }
+            ],
+            "position": [
+                8,
+                1,
+                31,
+                9
+            ]
+        },
+        "module_name": {
+            "__class__": "HdlName",
+            "val": "dff_async_reset"
+        },
+        "name": null,
+        "objs": [
+            {
+                "__class__": "HdlStmProcess",
+                "body": {
+                    "__class__": "HdlStmIf",
+                    "cond": {
+                        "__class__": "HdlCall",
+                        "fn": "NEG",
+                        "ops": [
+                            {
+                                "__class__": "HdlName",
+                                "val": "reset"
+                            }
+                        ]
+                    },
+                    "elifs": [],
+                    "if_false": {
+                        "__class__": "HdlStmBlock",
+                        "body": [
+                            {
+                                "__class__": "HdlStmAssign",
+                                "dst": {
+                                    "__class__": "HdlName",
+                                    "val": "q"
+                                },
+                                "labels": [],
+                                "src": {
+                                    "__class__": "HdlName",
+                                    "val": "data"
+                                }
+                            }
+                        ],
+                        "join_t": "SEQ",
+                        "labels": []
+                    },
+                    "if_true": {
+                        "__class__": "HdlStmBlock",
+                        "body": [
+                            {
+                                "__class__": "HdlStmAssign",
+                                "dst": {
+                                    "__class__": "HdlName",
+                                    "val": "q"
+                                },
+                                "labels": [],
+                                "src": {
+                                    "__class__": "HdlIntValue",
+                                    "base": 2,
+                                    "bits": 1,
+                                    "val": "0"
+                                }
+                            }
+                        ],
+                        "join_t": "SEQ",
+                        "labels": []
+                    },
+                    "labels": []
+                },
+                "doc": "-------------Code Starts Here---------\n",
+                "labels": [],
+                "sensitivity": [
+                    {
+                        "__class__": "HdlCall",
+                        "fn": "RISING",
+                        "ops": [
+                            {
+                                "__class__": "HdlName",
+                                "val": "clk"
+                            }
+                        ]
+                    },
+                    {
+                        "__class__": "HdlCall",
+                        "fn": "FALLING",
+                        "ops": [
+                            {
+                                "__class__": "HdlName",
+                                "val": "reset"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "position": [
+            8,
+            1,
+            31,
+            9
+        ]
+    }
+]

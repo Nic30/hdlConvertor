@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "codePosition.h"
+#include <hdlConvertor/hdlObjects/codePosition.h>
 
 namespace hdlConvertor {
 namespace hdlObjects {

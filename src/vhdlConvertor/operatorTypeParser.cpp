@@ -94,7 +94,7 @@ hdlObjects::HdlOperatorType HdlOperatorType_from(
 	if (op->MINUS())
 		return HdlOperatorType::SUB;
 	assert(op->AMPERSAND());
-	return HdlOperatorType::AND;
+	return HdlOperatorType::CONCAT;
 }
 hdlObjects::HdlOperatorType HdlOperatorType_from(
 		vhdl_antlr::vhdlParser::Multiplying_operatorContext *op) {

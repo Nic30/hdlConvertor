@@ -38,6 +38,7 @@ class HdlStmWait: public iHdlStatement {
 public:
 	std::vector<std::unique_ptr<iHdlExpr>> val;
 
+	HdlStmWait();
 	HdlStmWait(std::unique_ptr<iHdlExpr> val);
 	HdlStmWait(std::vector<std::unique_ptr<iHdlExpr>> &val);
 	virtual ~HdlStmWait() override;

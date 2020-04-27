@@ -1,10 +1,9 @@
+from hdlConvertor.hdlAst import HdlDirection, HdlName, HdlIntValue,\
+    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType, HdlSubtype,\
+    HdlRange, HdlSimpleRange, HdlTypeDec
+from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._statements import HdlImport
-from hdlConvertor.hdlAst._structural import HdlLibrary
-from hdlConvertor.hdlAst._expr import HdlDirection, HdlName, HdlIntValue,\
-    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
-from hdlConvertor.hdlAst._typeDefs import HdlSubtype, HdlRange, HdlSimpleRange, HdlTypeDec
-from hdlConvertor.to.hdlUtils import is_str
+
 
 
 class ToJson(HdlAstVisitor):
@@ -15,12 +14,7 @@ class ToJson(HdlAstVisitor):
         """
         res = []
         for o in context.objs:
-            if isinstance(o, HdlImport):
-                d = self.visit_HdlImport(o)
-            elif isinstance(o, HdlLibrary):
-                d = self.visit_HdlLibrary(o)
-            else:
-                d = self.visit_main_obj(o)
+            d = self.visit_main_obj(o)
             res.append(d)
         return res
 
@@ -88,6 +82,7 @@ class ToJson(HdlAstVisitor):
         :type o: HdlVariableDef
         """
         d = self.visit_iHdlObjWithName(o)
+
         for flag_name in ["is_latched", "is_const", "is_static",
                           "is_virtual", ]:
             if getattr(o, flag_name):
@@ -105,8 +100,6 @@ class ToJson(HdlAstVisitor):
         d = self.visit_HdlNamespace(o)
         d["params"] = [self.visit_HdlVariableDef(p) for p in o.params]
         d["ports"] = [self.visit_HdlVariableDef(p) for p in o.ports]
-        if o.body:
-            d["body"] = self.visit_HdlModuleDef(o.body)
         return d
 
     def visit_HdlModuleDef(self, o):
@@ -114,6 +107,8 @@ class ToJson(HdlAstVisitor):
         :type o: HdlModuleDec
         """
         d = self.visit_iHdlObjWithName(o)
+        if o.dec is not None:
+            d["dec"] = self.visit_HdlModuleDec(o.dec)
         if o.module_name is not None:
             d["module_name"] = self.visit_iHdlExpr(o.module_name)
         d["objs"] = [self.visit_main_obj(o2) for o2 in o.objs]
@@ -174,6 +169,7 @@ class ToJson(HdlAstVisitor):
         :type o: HdlStmIf
         """
         d = self._visit_iHdlStatement(o)
+        d["cond"] = self.visit_iHdlExpr(o.cond)
         d["if_true"] = self.visit_iHdlStatement(o.if_true)
         d["elifs"] = [
             [self.visit_iHdlExpr(c), self.visit_iHdlStatement(stm)]
@@ -300,10 +296,6 @@ class ToJson(HdlAstVisitor):
         :type o: iHdlExpr
         :return: iHdlExpr
         """
-        """
-        :type o: iHdlExpr
-        :return: True, the flag used to mark that the ; should be added if this is a statement
-        """
         if isinstance(o, HdlName):
             d = {
                 "__class__": o.__class__.__name__,
@@ -328,7 +320,7 @@ class ToJson(HdlAstVisitor):
             d = {
                 "__class__": o.__class__.__name__,
             }
-        elif isinstance(o, list):
+        elif isinstance(o, (list, tuple)):
             return [self.visit_iHdlExpr(o2) for o2 in o]
         else:
             raise NotImplementedError("Unexpected object of type "+str(type(o)))
@@ -431,7 +423,6 @@ if __name__ == "__main__":
     #
     # filenames = [os.path.join(AES, f) for f in files]
     d = c.parse(filenames, Language.VERILOG, [], False, True)
-    print(repr(d))
-    #tv = ToJson()
-    #res = tv.visit_HdlContext(d)
-    #pprint(res)
+    tv = ToJson()
+    res = tv.visit_HdlContext(d)
+    pprint(res)

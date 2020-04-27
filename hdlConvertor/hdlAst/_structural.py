@@ -2,6 +2,8 @@ from typing import List, Union
 
 from hdlConvertor.hdlAst._bases import iHdlObjWithName, iHdlObjInModule, iHdlObj
 from hdlConvertor.hdlAst._defs import HdlVariableDef
+
+
 try:
     # python2
     from StringIO import StringIO
@@ -16,8 +18,9 @@ class HdlLibrary(iHdlObjWithName):
     """
     __slots__ = []
 
-    def __init__(self):
+    def __init__(self, name):
         super(HdlLibrary, self).__init__()
+        self.name = name
 
 
 class HdlNamespace(iHdlObjWithName):
@@ -39,13 +42,12 @@ class HdlModuleDec(HdlNamespace):
 
     Corresponds to VHDL entity and the first first part of the module with the ports and parameters
     """
-    __slots__ = ["params", "ports", "objs", "body"]
+    __slots__ = ["params", "ports", "objs"]
 
     def __init__(self):
         super(HdlModuleDec, self).__init__()
         self.params = []  # type: List[HdlVariableDef]
         self.ports = []  # type: List[HdlVariableDef]
-        self.body = None  # type: Optional[HdlModuleDef]
 
 
 class HdlModuleDef(iHdlObjWithName):
@@ -54,11 +56,13 @@ class HdlModuleDef(iHdlObjWithName):
 
     :ivar ~.name: name of the architecture in VHDL or name of module in Verilog
     :ivar ~.module_name: the name of entity in VHDL or same as name in Verilog
+    :ivar ~.dec: module header for verilog
     """
-    __slots__ = ["module_name", "objs"]
+    __slots__ = ["dec", "module_name", "objs"]
 
     def __init__(self):
         super(HdlModuleDef, self).__init__()
+        self.dec = None  # type: Optional[HdlModuleDec]
         self.module_name = None  # type: HdlName
         self.objs = []  # type: List[Union[iHdlObj, iHdlObjInModule]]
 
@@ -104,4 +108,4 @@ class HdlContext(object):
         d = getattr(to, "visit_" + self.__class__.__name__)(self)
         s = StringIO()
         pprint(d, stream=s, depth=3)
-        return s.getvalue() 
+        return s.getvalue()

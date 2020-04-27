@@ -69,7 +69,7 @@ addons:
 
 # command to install dependencies
 install:
-- sudo cp .travis/disco.list /etc/apt/sources.list.d/disco.list
+- sudo cp .travis/eoan.list /etc/apt/sources.list.d/eoan.list
 - sudo apt update
 - if [ "$CODE_COVERAGE" == "1" ];
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
@@ -78,7 +78,7 @@ install:
  fi
 - sudo apt install libantlr4-runtime-dev antlr4 -y
 - pip install -r requirements.txt
-- python setup.py build $BUILD_ARGS
+- python setup.py build -j$(nproc) $BUILD_ARGS
 - python setup.py install $BUILD_ARGS
 
 script: 

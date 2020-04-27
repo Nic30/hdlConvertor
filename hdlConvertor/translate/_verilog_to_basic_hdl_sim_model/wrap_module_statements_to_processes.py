@@ -1,6 +1,6 @@
 from hdlConvertor.hdlAst._expr import HdlCall, HdlName, HdlBuiltinFn
 from hdlConvertor.hdlAst._statements import HdlStmAssign, HdlStmProcess
-from hdlConvertor.hdlAst._structural import HdlModuleDec
+from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef
 
 
 def collect_hdl_ids(expr, res):
@@ -25,7 +25,8 @@ def collect_indexes(expr):
     """
     if isinstance(expr, HdlCall) and expr.fn == HdlBuiltinFn.INDEX:
         assert len(expr.ops) == 2, expr.ops
-        yield from collect_indexes(expr.ops[0])
+        for i in collect_indexes(expr.ops[0]):
+            yield i
         yield expr.ops[1]
 
 
@@ -36,8 +37,8 @@ def wrap_module_statements_to_processes(context):
     :type context: HdlContext
     """
     for o in context.objs:
-        if isinstance(o, HdlModuleDec):
-            objs = o.body.objs
+        if isinstance(o, HdlModuleDef):
+            objs = o.objs
             for i, obj in enumerate(objs):
                 if isinstance(obj, HdlStmAssign):
                     p = HdlStmProcess()

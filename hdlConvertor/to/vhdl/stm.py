@@ -1,7 +1,8 @@
 from hdlConvertor.hdlAst._bases import iHdlStatement
+from hdlConvertor.hdlAst._defs import HdlVariableDef
 from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn
 from hdlConvertor.hdlAst._statements import HdlStmBlock
-from hdlConvertor.to.hdlUtils import iter_with_last, Indent
+from hdlConvertor.to.hdlUtils import iter_with_last, Indent, UnIndent
 from hdlConvertor.to.vhdl.expr import ToVhdl2008Expr
 
 
@@ -33,14 +34,16 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
             if not is_last:
                 w(" ")
 
-    def visit_HdlStmProcess(self, proc):
+    def visit_HdlStmProcess(self, o):
         """
         :type proc: HdlStmProcess
         """
-        sens = proc.sensitivity
-        body = proc.body
+        self.visit_doc(o)
+        sens = o.sensitivity
         w = self.out.write
-
+        if o.labels:
+            w(o.labels[0])
+            w(": ")
         w("PROCESS")
         if sens:
             w("(")
@@ -50,25 +53,12 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                     w(", ")
             w(")")
         w("\n")
-        self.visit_HdlStmBlock(body, force_space_before=False)
+        self.visit_HdlStmBlock(o.body, force_space_before=False, force_begin_end=True)
         w(" PROCESS;\n")
 
-    def visit_HdlStmBlock(self, stms, force_space_before=True):
-        """
-        :type stms: Union[List[iHdlStatement], iHdlStatement, iHdlExpr]
-        :return: True if statements are wrapped in begin-end block
-        """
+    def _write_begin(self, begin_end, must_have_begin_end, force_space_before):
         w = self.out.write
-        if isinstance(stms, HdlStmBlock):
-            must_have_begin_end = True
-            stms = stms.body
-        elif isinstance(stms, list):
-            must_have_begin_end = len(stms) != 1
-        else:
-            must_have_begin_end = False
-            stms = [stms, ]
-
-        if must_have_begin_end:
+        if begin_end and must_have_begin_end:
             if force_space_before:
                 w(" BEGIN\n")
             else:
@@ -76,89 +66,122 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         else:
             w("\n")
 
+    def visit_HdlStmBlock(self, stms, force_space_before=True, begin_end=True, force_begin_end=False):
+        """
+        :type stms: Union[List[iHdlStatement], iHdlStatement, iHdlExpr]
+        :return: True if statements are wrapped in begin-end block
+        """
+        w = self.out.write
+        if isinstance(stms, HdlStmBlock):
+            self.visit_doc(stms)
+            must_have_begin_end = True
+            stms = stms.body
+        elif isinstance(stms, list):
+            must_have_begin_end = len(stms) != 1
+        else:
+            must_have_begin_end = False
+            stms = [stms, ]
+        must_have_begin_end |= force_begin_end
+
+        non_declarative_seen = False
         with Indent(self.out):
             for s in stms:
                 if isinstance(s, iHdlStatement):
+                    if not non_declarative_seen:
+                        non_declarative_seen = True
+                        with UnIndent(self.out):
+                            self._write_begin(begin_end, must_have_begin_end, force_space_before)
                     self.visit_iHdlStatement(s)
+                elif isinstance(s, HdlVariableDef):
+                    self.visit_HdlVariableDef(s)
                 else:
+                    if not non_declarative_seen:
+                        non_declarative_seen = True
+                        with UnIndent(self.out):
+                            self._write_begin(begin_end, must_have_begin_end, force_space_before)
                     self.visit_iHdlExpr(s)
                     w(";\n")
 
-        if must_have_begin_end:
+        if not non_declarative_seen:
+            self._write_begin(begin_end, must_have_begin_end, force_space_before)
+
+        if begin_end and must_have_begin_end:
             w("END")
             return True
 
         return False
 
-    def visit_HdlStmIf(self, stm):
+    def visit_HdlStmIf(self, o):
         """
-        :type stm: HdlStmIf
+        :type o: HdlStmIf
         """
+        self.visit_doc(o)
         w = self.out.write
-        c = stm.cond
-        ifTrue = stm.if_true
-        ifFalse = stm.if_false
 
         w("IF ")
-        self.visit_iHdlExpr(c)
-        w(" THEN ")
-        need_space = self.visit_HdlStmBlock(ifTrue)
+        self.visit_iHdlExpr(o.cond)
+        w(" THEN")
+        need_space = self.visit_HdlStmBlock(o.if_true, begin_end=False)
 
-        for cond, stms in stm.elifs:
+        for cond, stms in o.elifs:
             if need_space:
                 w(" ")
             w("ELSIF ")
             self.visit_iHdlExpr(cond)
-            w(" THEN ")
-            need_space = self.visit_HdlStmBlock(stms)
+            w(" THEN")
+            need_space = self.visit_HdlStmBlock(stms, begin_end=False)
 
+        ifFalse = o.if_false
         if ifFalse is not None:
             if need_space:
                 w(" ")
             w("ELSE")
-            self.visit_HdlStmBlock(ifFalse)
+            self.visit_HdlStmBlock(ifFalse, begin_end=False)
         if need_space:
             w("\n")
         w("END IF;\n")
 
-    def visit_HdlStmAssign(self, a):
+    def visit_HdlStmAssign(self, o):
         """
-        :type a: HdlStmAssign
+        :type o: HdlStmAssign
         """
-        s = a.src
-        d = a.dst
         w = self.out.write
-        if a.time_delay is not None:
+        if o.time_delay is not None:
             raise NotImplementedError()
-        if a.event_delay is not None:
+        if o.event_delay is not None:
             raise NotImplementedError()
 
-        self.visit_iHdlExpr(d)
-        w(" <= ")
-        self.visit_iHdlExpr(s)
+        self.visit_iHdlExpr(o.dst)
+        if o.is_blocking:
+            w(" := ")
+        else:
+            w(" <= ")
+        with Indent(self.out):
+            self.visit_iHdlExpr(o.src)
         w(";\n")
 
-    def visit_HdlStmCase(self, cstm):
+    def visit_HdlStmCase(self, o):
         """
-        :type cstm: HdlStmCase
+        :type o: HdlStmCase
         """
+        self.visit_doc(o)
         w = self.out.write
         w("CASE ")
-        self.visit_iHdlExpr(cstm.switch_on)
+        self.visit_iHdlExpr(o.switch_on)
         w(" IS\n")
         with Indent(self.out):
-            cases = cstm.cases
+            cases = o.cases
             for k, stms in cases:
                 w("WHEN ")
                 self.visit_iHdlExpr(k)
-                w(" => ")
-                is_block = self.visit_HdlStmBlock(stms)
+                w(" =>")
+                is_block = self.visit_HdlStmBlock(stms, begin_end=False)
                 if is_block:
                     w("\n")
-            defal = cstm.default
+            defal = o.default
             if defal is not None:
-                is_block = w("WHEN OTHERS => ")
-                self.visit_HdlStmBlock(defal)
+                is_block = w("WHEN OTHERS =>")
+                self.visit_HdlStmBlock(defal, begin_end=False)
                 if is_block:
                     w("\n")
         w("END CASE;\n")
@@ -167,6 +190,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmReturn
         """
+        self.visit_doc(o)
         w = self.out.write
         w("RETURN")
         if o.val is not None:
@@ -178,20 +202,21 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmContinue
         """
-        w = self.out.write
-        w("CONTINUE")
+        self.visit_doc(o)
+        self.out.write("CONTINUE")
 
     def visit_HdlStmBreak(self, o):
         """
         :type o: HdlStmBreak
         """
-        w = self.out.write
-        w("BREAK")
+        self.visit_doc(o)
+        self.out.write("BREAK")
 
     def visit_HdlStmFor(self, o):
         """
         :type o: HdlStmFor
         """
+        self.visit_doc(o)
         w = self.out.write
         w("FOR ")
         self.visit_iHdlExpr(o.params[0])
@@ -207,15 +232,21 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         """
         :type o: HdlStmWait
         """
+        self.visit_doc(o)
         w = self.out.write
         w("WAIT")
         for e in o.val:
             if isinstance(e, HdlCall) and e.fn == HdlBuiltinFn.MUL:
+                # wait for time
                 w(" FOR ")
                 self.visit_iHdlExpr(e.ops[0])
                 w(" ")
                 self.visit_iHdlExpr(e.ops[1])
+            # elif :
+            #  wait until
             else:
+                # wait on event
                 w(" ON ")
                 self.visit_iHdlExpr(e)
+
         w(";\n")

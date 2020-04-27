@@ -764,6 +764,16 @@ unique_ptr<HdlStmProcess> VerStatementParser::visitInitial_construct(
 	// initial_construct: KW_INITIAL statement_or_null;
 	auto _stm = ctx->statement_or_null();
 	auto body = visitStatement_or_null(_stm);
+
+	// we are adding the wait statement at the end to not that this is an initiall process (construct)
+	auto bl = dynamic_cast<HdlStmBlock*>(body.get());
+	if (bl == nullptr) {
+		body = create_object<HdlStmBlock>(ctx, move(body));
+		bl = static_cast<HdlStmBlock*>(body.get());
+	}
+	auto w = create_object<HdlStmWait>(ctx);
+	bl->statements.push_back(move(w));
+
 	return create_object<HdlStmProcess>(ctx, nullptr, move(body));
 }
 

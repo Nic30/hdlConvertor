@@ -33,14 +33,16 @@ module ram_sp_ar_sw #(
     assign data = (cs && oe && !we) ? data_out : 8'bz;
     // Memory Write Block
     // Write Operation : When we = 1, cs = 1
-    always @(posedge clk)
+    always @(posedge clk) begin: MEM_WRITE
         if (cs && we)
             mem[address] = data;
+    end
 
     // Memory Read Block
     // Read Operation : When we = 0, oe = 1, cs = 1
-    always @(address, cs, we, oe)
+    always @(address, cs, we, oe) begin: MEM_READ
         if (cs && !we && oe)
             data_out = mem[address];
+    end
 
 endmodule
