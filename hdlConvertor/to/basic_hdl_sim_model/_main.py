@@ -147,9 +147,10 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 w('self._interfaces = (\n')
                 with Indent(self.out):
                     for p in chain(mod_dec.ports, variables):
-                        w("self.io.")
-                        w(p.name)
-                        w(',\n')
+                        if not p.is_const:
+                            w("self.io.")
+                            w(p.name)
+                            w(',\n')
                 w(')\n')
 
                 w('self._processes = (\n')
@@ -236,20 +237,27 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
         """
         self.visit_doc(var)
         w = self.out.write
-        w("self.io.")
-        w(var.name)
-        w(' = BasicRtlSimProxy(\n')
-        with Indent(self.out):
-            w('sim, self, "')
+        if var.is_const:
+            w("self.")
             w(var.name)
-            w('",\n')
-            self.visit_type(var.type)
-            w(", ")
-        if var.value is None:
-            w("None)\n")
-        else:
+            w(" = ")
             self.visit_iHdlExpr(var.value)
-            w(")\n")
+            w("\n")
+        else:
+            w("self.io.")
+            w(var.name)
+            w(' = BasicRtlSimProxy(\n')
+            with Indent(self.out):
+                w('sim, self, "')
+                w(var.name)
+                w('",\n')
+                self.visit_type(var.type)
+                w(", ")
+            if var.value is None:
+                w("None)\n")
+            else:
+                self.visit_iHdlExpr(var.value)
+                w(")\n")
 
     def visit_HdlContext(self, context, stm_outputs):
         """
