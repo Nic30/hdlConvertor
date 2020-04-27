@@ -71,7 +71,7 @@ class ToSystemc(ToSystemcStm):
 
             w("// component instances\n")
             for c in components:
-                w(c.module_name)
+                w(c.module_name.val)
                 w(" ")
                 w(c.name)
                 w('();\n')
@@ -101,30 +101,33 @@ class ToSystemc(ToSystemcStm):
             w(" {\n")
             with Indent(self.out):
                 for p in processes:
-                    w("SC_METHOD(")
-                    w(p.labels[0])
-                    w(");\n")
                     if p.sensitivity:
+                        w("SC_METHOD(")
+                        w(p.labels[0])
+                        w(");\n")
                         w("sensitive")
                         for s in p.sensitivity:
                             w(" << ")
                             self.visit_iHdlExpr(s)
                         w(";\n")
-
-            for c in components:
-                for pm in c.port_map:
-                    w(c.name)
-                    w('.')
-                    assert isinstance(pm, HdlCall) and\
-                        pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
-                    mod_port, connected_sig = pm.ops
-                    assert isinstance(mod_port, HdlName), mod_port
-                    self.visit_iHdlExpr(mod_port)
-                    assert isinstance(
-                        connected_sig, HdlName), connected_sig
-                    w("(")
-                    self.visit_iHdlExpr(connected_sig)
-                    w(")")
+                    else:
+                        w(p.labels[0])
+                        w("();\n")
+                w("// connect ports\n")
+                for c in components:
+                    for pm in c.port_map:
+                        w(c.name)
+                        w('.')
+                        assert isinstance(pm, HdlCall) and\
+                            pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
+                        mod_port, connected_sig = pm.ops
+                        assert isinstance(mod_port, HdlName), mod_port
+                        self.visit_iHdlExpr(mod_port)
+                        assert isinstance(
+                            connected_sig, HdlName), connected_sig
+                        w("(")
+                        self.visit_iHdlExpr(connected_sig)
+                        w(");\n")
 
             w("}\n")
         w("};\n")
@@ -155,12 +158,16 @@ class ToSystemc(ToSystemcStm):
         """
         self.visit_doc(var)
         w = self.out.write
-        self.visit_type(var.type)
+        t, arr_dims = collect_array_dims(var.type)
+        self.visit_type(t)
         w(" ")
         w(var.name)
+        for d in arr_dims:
+            w("[")
+            self.visit_iHdlExpr(d)
+            w("]")
         if var.value is not None:
-            w("(")
+            w(" = ")
             with Indent(self.out):
                 self.visit_iHdlExpr(var.value)
-            w(")")
         return True
