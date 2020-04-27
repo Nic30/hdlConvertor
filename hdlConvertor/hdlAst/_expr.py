@@ -160,7 +160,7 @@ class HdlBuiltinFn(Enum):
         ROR,  # rotate right
         TERNARY,
         DOT,  # accessing of property
-        DOUBLE_COLON,  # SV accessing class/package static property/type
+        DOUBLE_COLON,  # ::, SV accessing class/package static property/type
         APOSTROPHE,  # vhdl attribute access
         CALL,  # call of HDL function
         PARAMETRIZATION,  # specification of template arguments
