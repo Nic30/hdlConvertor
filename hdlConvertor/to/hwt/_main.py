@@ -91,7 +91,7 @@ class ToHwt(ToHwtStm):
                     w("self.")
                     w(c.name)
                     w(" = ")
-                    w(c.module_name)
+                    w(c.module_name.val)
                     w('()\n')
                     port_params_comp_names.append(c.name)
 

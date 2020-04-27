@@ -39,10 +39,10 @@ class ToVerilog2005(ToVerilog2005Stm):
             is_array = self.visit_type_first_part(g.type)
             w(" ")
         w(g.name)
-        v = g.value
         if is_array:
             self.visit_type_array_part(g.type)
-        if v:
+        v = g.value
+        if v is not None:
             w(" = ")
             self.visit_iHdlExpr(v)
 
@@ -123,14 +123,13 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         assert c.module_name
         self.visit_iHdlExpr(c.module_name)
-        w(" ")
-        self.visit_iHdlExpr(c.name)
         gms = c.param_map
         if gms:
             w(" #(\n")
             self.visit_map(gms)
             w(")")
-
+        w(" ")
+        w(c.name)
         pms = c.port_map
         if pms:
             w(" (\n")
