@@ -237,7 +237,9 @@ def get_icarus_test_configs():
         # defined in icarus extensions with older std. with missing `__FILE__
         std = Language.SYSTEM_VERILOG_2009
         f = os.path.join(IVTEST_ROOT, "ivltests", fn + ".v")
-        tests.append(ExternTestSpec(f, std, copy(ICARUS_DEFAULT_PREPROC_DEFS), copy(ICARUS_DEFAULT_INC_DIRS), False))
+        tests.append(ExternTestSpec(f, std,
+                                    copy(ICARUS_DEFAULT_PREPROC_DEFS),
+                                    copy(ICARUS_DEFAULT_INC_DIRS), False))
 
     return tests
 
