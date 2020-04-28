@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <vector>
 
 #include <hdlConvertor/hdlObjects/bigInteger.h>
@@ -9,49 +8,117 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
-enum HdlValueType {
-	symb_ID,
-	symb_INT,
-	symb_FLOAT,
-	symb_STRING,
-	symb_ARRAY,
-	symb_NULL,
-	symb_OPEN, // the unconnected
+/*
+ * HDL AST node for value of arrays
+ * */
+class HdlValueArr: public virtual iHdlExprItem {
+public:
+	std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> _arr;
+
+	HdlValueArr(const HdlValueArr &other);
+	HdlValueArr(std::vector<std::unique_ptr<iHdlExprItem>> &arr);
+	HdlValueArr(
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> arr);
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlValueArr() override;
+};
+
+/*
+ * HDL AST node for HDL id
+ * */
+class HdlValueId: public virtual iHdlExprItem {
+public:
+	std::string _str;
+
+	//HdlValueId(const HdlValueId & rhs) = default;
+	HdlValueId(std::string __str);
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlValueId() override;
+};
+
+/*
+ * HDL AST node for integer/bitstring value
+ * */
+class HdlValueInt: public virtual iHdlExprItem {
+public:
+	int bits;
+	BigInteger _int;
+	//HdlValueInt(const HdlValueInt & rhs) = default;
+	HdlValueInt(BigInteger __int);
+	HdlValueInt(const BigInteger &value, int bits);
+	HdlValueInt(const std::string &value, int radix);
+	HdlValueInt(const std::string &value, int bits, int radix);
+
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlValueInt() override;
+};
+
+/*
+ * HDL AST node for float/real value
+ * */
+class HdlValueFloat: public virtual iHdlExprItem {
+public:
+	double _float;
+
+	//HdlValueFloat(const HdlValueFloat & rhs) = default;
+	HdlValueFloat(double __float);
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlValueFloat() override;
+};
+
+/*
+ * HDL AST node for string value
+ * */
+class HdlValueStr: public virtual iHdlExprItem {
+public:
+	std::string _str;
+
+	//HdlValueStr(const HdlValueStr & rhs) = default;
+	HdlValueStr(const std::string &__str);
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlValueStr() override;
+};
+
+enum HdlValueSymbol_t {
+	symb_NULL, symb_OPEN, // the unconnected
 	symb_ALL, // all items in destination
 	symb_OTHERS, // not explicitly specified items in destination
 	symb_T, // type of type
-	symb_AUTO // automatically derived type
+	symb_T_AUTO // automatically derived type
 };
-
-class iHdlExpr;
-
 /*
- * HDL AST node for value of any type
+ * HDL AST node for special hdl symbols
  * */
-class HdlValue: public virtual iHdlExprItem {
+class HdlValueSymbol: public virtual iHdlExprItem {
 public:
-	HdlValueType type;
-	int bits;
-	BigInteger _int;
-	double _float;
-	std::string _str;
-	std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _arr;
+	HdlValueSymbol_t symb;
 
-	HdlValue();
-	HdlValue(HdlValueType type);
-	HdlValue(const HdlValue &other);
-	HdlValue(BigInteger __int);
-	HdlValue(const BigInteger &value, int bits);
-	HdlValue(double __float);
-	HdlValue(std::string __str);
-	HdlValue(const std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> arr);
+	//HdlValueSymbol(const HdlValueSymbol & rhs) = default;
+	HdlValueSymbol(HdlValueSymbol_t symb);
+
+	const char* toString();
+	static const char* toString(HdlValueSymbol_t symb);
+
+	// syntax sugar, named constructors
+	static std::unique_ptr<HdlValueSymbol> null();
+	static std::unique_ptr<HdlValueSymbol> open();
+	static std::unique_ptr<HdlValueSymbol> all();
+	static std::unique_ptr<HdlValueSymbol> others();
+	static std::unique_ptr<HdlValueSymbol> type();
+	static std::unique_ptr<HdlValueSymbol> type_auto();
 
 	virtual iHdlExprItem* clone() const override;
-
-	virtual ~HdlValue() override;
+	virtual ~HdlValueSymbol() override;
 };
 
-const char* HdlValueType_toString(HdlValueType t);
+/*
+ * HDL AST node which purpose is used if conversion of original expression is not implemented
+ * */
+class HdlExprNotImplemented: public virtual iHdlExprItem {
+public:
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlExprNotImplemented() override;
+};
 
 template<typename T>
 void clone_unique_ptr_vector(const std::vector<std::unique_ptr<T>> &from,
@@ -59,7 +126,7 @@ void clone_unique_ptr_vector(const std::vector<std::unique_ptr<T>> &from,
 	to.reserve(from.size());
 
 	for (const auto &e : from)
-		to.push_back(std::make_unique<T>(*e));
+		to.push_back(e->clone_uniq());
 }
 
 template<typename T>

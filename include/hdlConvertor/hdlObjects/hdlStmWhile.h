@@ -11,10 +11,10 @@ namespace hdlObjects {
  * */
 class HdlStmWhile: public iHdlStatement {
 public:
-	std::unique_ptr<iHdlExpr> cond;
+	std::unique_ptr<iHdlExprItem> cond;
 	std::unique_ptr<iHdlStatement> body;
 
-	HdlStmWhile(std::unique_ptr<iHdlExpr> cond,
+	HdlStmWhile(std::unique_ptr<iHdlExprItem> cond,
 			std::unique_ptr<iHdlStatement> body);
 	virtual ~HdlStmWhile() override;
 };
@@ -25,10 +25,10 @@ public:
 class HdlStmDoWhile: public iHdlStatement {
 public:
 	std::unique_ptr<iHdlStatement> body;
-	std::unique_ptr<iHdlExpr> cond;
+	std::unique_ptr<iHdlExprItem> cond;
 
 	HdlStmDoWhile(std::unique_ptr<iHdlStatement> body,
-			std::unique_ptr<iHdlExpr> cond);
+			std::unique_ptr<iHdlExprItem> cond);
 	virtual ~HdlStmDoWhile() override;
 };
 }

@@ -20,7 +20,7 @@ public:
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &ports);
 	std::unique_ptr<hdlObjects::HdlFunctionDef> visitTask_and_function_declaration_common(
 			sv2017Parser::Task_and_function_declaration_commonContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> return_t, bool is_static,
+			std::unique_ptr<hdlObjects::iHdlExprItem> return_t, bool is_static,
 			bool is_task);
 	std::unique_ptr<hdlObjects::HdlFunctionDef> visitTask_declaration(
 			sv2017Parser::Task_declarationContext *ctx);

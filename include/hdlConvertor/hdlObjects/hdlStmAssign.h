@@ -13,17 +13,17 @@ namespace hdlObjects {
  * */
 class HdlStmAssign: public iHdlStatement {
 public:
-	std::unique_ptr<iHdlExpr> dst;
-	std::unique_ptr<iHdlExpr> src;
-	std::unique_ptr<iHdlExpr> time_delay;
-	std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> event_delay;
+	std::unique_ptr<iHdlExprItem> dst;
+	std::unique_ptr<iHdlExprItem> src;
+	std::unique_ptr<iHdlExprItem> time_delay;
+	std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> event_delay;
 	bool is_blocking;
 
-	HdlStmAssign(std::unique_ptr<iHdlExpr> dst, std::unique_ptr<iHdlExpr> src,
+	HdlStmAssign(std::unique_ptr<iHdlExprItem> dst, std::unique_ptr<iHdlExprItem> src,
 			bool _is_blocking);
-	HdlStmAssign(std::unique_ptr<iHdlExpr> dst, std::unique_ptr<iHdlExpr> src,
-			std::unique_ptr<iHdlExpr> time_delay,
-			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> event_delay,
+	HdlStmAssign(std::unique_ptr<iHdlExprItem> dst, std::unique_ptr<iHdlExprItem> src,
+			std::unique_ptr<iHdlExprItem> time_delay,
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> event_delay,
 			bool _is_blocking = false);
 
 	virtual ~HdlStmAssign() override;

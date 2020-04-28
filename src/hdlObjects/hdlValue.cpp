@@ -2,65 +2,123 @@
 #include <hdlConvertor/hdlObjects/iHdlExpr.h>
 
 #include <array>
+#include <assert.h>
 
 using namespace std;
 
 namespace hdlConvertor {
 namespace hdlObjects {
 
-HdlValue::HdlValue(const HdlValue &other) :
-		type(other.type), bits(other.bits), _int(other._int), _float(
-				other._float), _str(other._str) {
-	if (other._arr) {
-		_arr = make_unique<vector<unique_ptr<iHdlExpr>>>();
-		clone_unique_ptr_vector(*other._arr, *_arr);
-	} else {
-		_arr = nullptr;
-	}
+HdlValueArr::HdlValueArr(const HdlValueArr &other) :
+		iHdlExprItem() {
+	assert(other._arr);
+	_arr = make_unique<vector<unique_ptr<iHdlExprItem>>>();
+	clone_unique_ptr_vector(*other._arr, *_arr);
 }
 
-HdlValue::HdlValue(BigInteger __int) :
-		type(HdlValueType::symb_INT), bits(-1), _int(__int), _float(0.0), _str(
-				""), _arr(nullptr) {
+HdlValueArr::HdlValueArr(std::vector<std::unique_ptr<iHdlExprItem>> &arr) {
+	_arr = make_unique<vector<unique_ptr<iHdlExprItem>>>(move(arr));
+}
+HdlValueArr::HdlValueArr(unique_ptr<vector<unique_ptr<iHdlExprItem>>> arr) :
+		_arr(move(arr)) {
+}
+iHdlExprItem* HdlValueArr::clone() const {
+	return new HdlValueArr(*this);
+}
+HdlValueArr::~HdlValueArr() {
 }
 
-HdlValue::HdlValue(const BigInteger &__int, int _bits) :
-		type(HdlValueType::symb_INT), bits(_bits), _int(__int), _float(0.0), _str(
-				""), _arr(nullptr) {
+HdlValueId::HdlValueId(string __str) :
+		_str(__str) {
+}
+iHdlExprItem* HdlValueId::clone() const {
+	return new HdlValueId(*this);
+}
+HdlValueId::~HdlValueId() {
 }
 
-HdlValue::HdlValue(double __float) :
-		type(HdlValueType::symb_FLOAT), bits(-1), _int(0), _float(__float), _str(
-				""), _arr(nullptr) {
+HdlValueInt::HdlValueInt(BigInteger __int) :
+		bits(-1), _int(__int) {
 }
 
-HdlValue::HdlValue(string __str) :
-		type(HdlValueType::symb_ID), bits(-1), _int(0), _float(0.0), _str(
-				__str), _arr(nullptr) {
+HdlValueInt::HdlValueInt(const BigInteger &__int, int _bits) :
+		bits(_bits), _int(__int) {
+}
+HdlValueInt::HdlValueInt(const string &value, int radix) :
+		HdlValueInt(BigInteger(value, radix)) {
 }
 
-HdlValue::HdlValue(HdlValueType _type) :
-		type(_type), bits(-1), _int(0), _float(0.0), _str(""), _arr(nullptr) {
+HdlValueInt::HdlValueInt(const string &value, int bits, int radix) :
+		HdlValueInt(BigInteger(value, radix), bits) {
 }
 
-HdlValue::HdlValue(unique_ptr<vector<unique_ptr<iHdlExpr>>> arr) :
-		type(HdlValueType::symb_ARRAY), bits(-1), _int(0), _float(0.0), _str(
-				""), _arr(move(arr)) {
+iHdlExprItem* HdlValueInt::clone() const {
+	return new HdlValueInt(*this);
+}
+HdlValueInt::~HdlValueInt() {
 }
 
-iHdlExprItem* HdlValue::clone() const {
-	return new HdlValue(*this);
+HdlValueFloat::HdlValueFloat(double __float) :
+		_float(__float) {
+}
+iHdlExprItem* HdlValueFloat::clone() const {
+	return new HdlValueFloat(*this);
+}
+HdlValueFloat::~HdlValueFloat() {
 }
 
-HdlValue::~HdlValue() {
+HdlValueStr::HdlValueStr(const string &s) :
+		_str(s) {
+}
+iHdlExprItem* HdlValueStr::clone() const {
+	return new HdlValueStr(*this);
+}
+HdlValueStr::~HdlValueStr() {
 }
 
-const array<const string, HdlValueType::symb_AUTO + 1> HdlValueType_str = {
-		"ID", "INT", "FLOAT", "STRING", "ARRAY", "NULL", "OPEN", "ALL",
-		"OTHERS", "T", "AUTO" };
+HdlValueSymbol::HdlValueSymbol(HdlValueSymbol_t _type) :
+		symb(_type) {
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::null() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_NULL);
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::open() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_OPEN);
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::all() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_ALL);
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::others() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_OTHERS);
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::type() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T);
+}
+unique_ptr<HdlValueSymbol> HdlValueSymbol::type_auto() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T_AUTO);
+}
+iHdlExprItem* HdlValueSymbol::clone() const {
+	return new HdlValueSymbol(symb);
+}
+HdlValueSymbol::~HdlValueSymbol() {
+}
 
-const char* HdlValueType_toString(HdlValueType t) {
-	return HdlValueType_str.at(t).c_str();
+iHdlExprItem* HdlExprNotImplemented::clone() const {
+	return new HdlExprNotImplemented();
+}
+
+HdlExprNotImplemented::~HdlExprNotImplemented() {
+}
+
+const array<const string, HdlValueSymbol_t::symb_T_AUTO + 1> HdlValueSymbol_t_str =
+		{ "NULL", "OPEN", "ALL", "OTHERS", "T", "AUTO" };
+
+const char* HdlValueSymbol::toString() {
+	return HdlValueSymbol::toString(symb);
+}
+
+const char* HdlValueSymbol::toString(HdlValueSymbol_t t) {
+	return HdlValueSymbol_t_str.at(t).c_str();
 }
 
 }

@@ -18,17 +18,17 @@ namespace hdlObjects {
  **/
 class HdlVariableDef: public iHdlObj, public WithNameAndDoc {
 public:
-	std::unique_ptr<iHdlExpr> type;
-	std::unique_ptr<iHdlExpr> value;
+	std::unique_ptr<iHdlExprItem> type;
+	std::unique_ptr<iHdlExprItem> value;
 	bool is_latched;
 	bool is_const;
 	bool is_static;
 	HdlDirection direction;
 
-	HdlVariableDef(const std::string &id, std::unique_ptr<iHdlExpr> type,
-			std::unique_ptr<iHdlExpr> val);
-	HdlVariableDef(const std::string &id, std::unique_ptr<iHdlExpr> type,
-			std::unique_ptr<iHdlExpr> val, HdlDirection direction,
+	HdlVariableDef(const std::string &id, std::unique_ptr<iHdlExprItem> type,
+			std::unique_ptr<iHdlExprItem> val);
+	HdlVariableDef(const std::string &id, std::unique_ptr<iHdlExprItem> type,
+			std::unique_ptr<iHdlExprItem> val, HdlDirection direction,
 			bool is_latched);
 
 	virtual ~HdlVariableDef() override;

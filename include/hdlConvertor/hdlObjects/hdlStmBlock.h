@@ -9,8 +9,8 @@ namespace hdlObjects {
 
 enum HdlStmBlockJoinType {
     SEQ,  // sequential block
-    PAR_JOIN,  // parallel block where we are wainting on all threads
-    PAR_JOIN_ANY,  // parallel block where we are wainting on first finished thread
+    PAR_JOIN,  // parallel block where we are waiting on all threads
+    PAR_JOIN_ANY,  // parallel block where we are waiting on first finished thread
     PAR_JOIN_NONE,  // parallel block where we are are not waiting on any thread
 };
 

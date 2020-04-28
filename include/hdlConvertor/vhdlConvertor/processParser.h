@@ -19,9 +19,9 @@ public:
 			vhdlParser::Process_statementContext *ctx);
 	static void visitProcess_sensitivity_list(
 			vhdlParser::Process_sensitivity_listContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &sensitivity);
+			std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> &sensitivity);
 	static void visitSensitivity_list(vhdlParser::Sensitivity_listContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &sensitivity);
+			std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> &sensitivity);
 	static void visitProcess_declarative_item(
 			vhdlParser::Process_declarative_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &objs);

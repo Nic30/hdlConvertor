@@ -35,7 +35,7 @@ public:
 	static std::unique_ptr<
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitInterface_declaration(
 			vhdlParser::Interface_declarationContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitInterface_type_declaration(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitInterface_type_declaration(
 			vhdlParser::Interface_type_declarationContext *ctx);
 	static std::unique_ptr<
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitInterface_object_declaration(

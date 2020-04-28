@@ -38,6 +38,7 @@ class ToPy {
 	PyObject *HdlCallCls;
 	PyObject *HdlBuiltinFnEnum;
 	PyObject *HdlIntValueCls;
+	PyObject *HdlExprNotImplementedCls;
 	PyObject *HdlNameCls;
 	PyObject *HdlDirectionEnum;
 	PyObject *HdlAllCls;
@@ -152,13 +153,22 @@ public:
 	PyObject* toPy(const hdlObjects::HdlLibrary *o);
 	PyObject* toPy(const hdlObjects::HdlDirection o);
 	PyObject* toPy(const hdlObjects::HdlModuleDec *o);
-	PyObject* toPy(const hdlObjects::iHdlExpr *o);
+
+	PyObject* toPy(const hdlObjects::iHdlExprItem *o);
+	PyObject* toPy(const hdlObjects::HdlCall *o);
+	PyObject* toPy(const hdlObjects::HdlValueArr *o);
+	PyObject* toPy(const hdlObjects::HdlValueFloat *o);
+	PyObject* toPy(const hdlObjects::HdlValueId *o);
+	PyObject* toPy(const hdlObjects::HdlValueInt *o);
+	PyObject* toPy(const hdlObjects::HdlValueStr *o);
+	PyObject* toPy(const hdlObjects::HdlValueSymbol *o);
+	PyObject* toPy(const hdlObjects::HdlExprNotImplemented *o);
+
+
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);
-	PyObject* toPy(const hdlObjects::HdlCall *o);
 	PyObject* toPy(const hdlObjects::HdlOperatorType o);
 	PyObject* toPy(const hdlObjects::HdlNamespace *o);
-	PyObject* toPy(const hdlObjects::HdlValue *o);
 	PyObject* toPy(const hdlObjects::HdlVariableDef *o);
 	PyObject* toPy(const hdlObjects::HdlStmExpr *o);
 	PyObject* toPy(const hdlObjects::HdlStmIf *o);

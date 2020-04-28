@@ -20,7 +20,7 @@ public:
 			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &res);
 	void visitList_of_variable_decl_assignments(
 			sv2017Parser::List_of_variable_decl_assignmentsContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> base_type,
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_type,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	std::unique_ptr<hdlObjects::HdlVariableDef> visitType_declaration(
 			sv2017Parser::Type_declarationContext *ctx);

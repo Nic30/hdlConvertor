@@ -8,7 +8,7 @@ namespace hdlObjects {
 HdlExprAndStm::HdlExprAndStm() {
 }
 
-HdlExprAndStm::HdlExprAndStm(std::unique_ptr<iHdlExpr> _expr,
+HdlExprAndStm::HdlExprAndStm(std::unique_ptr<iHdlExprItem> _expr,
 		std::unique_ptr<iHdlStatement> _stm) :
 		expr(move(_expr)), stm(move(_stm)) {
 }

@@ -73,20 +73,20 @@ void VerParamDefParser::visitParameter_port_declaration(
 }
 
 void VerParamDefParser::visitTyped_list_of_param_assignments(
-		unique_ptr<iHdlExpr> data_type,
+		unique_ptr<iHdlExprItem> data_type,
 		sv2017Parser::List_of_param_assignmentsContext *lpa, const string &doc,
 		vector<unique_ptr<HdlVariableDef>> &res) {
 	vector<unique_ptr<HdlVariableDef>> res_tmp;
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
 	auto data_type_tmp = data_type.get();
-	for (auto & v : res_tmp) {
+	for (auto &v : res_tmp) {
 		if (first) {
 			v->type = move(data_type);
 			v->__doc__ = doc + v->__doc__;
 			first = false;
 		} else
-			v->type = make_unique<iHdlExpr>(*data_type_tmp);
+			v->type = data_type_tmp->clone_uniq();
 		res.push_back(move(v));
 	}
 }
@@ -98,12 +98,12 @@ void VerParamDefParser::visitList_of_param_assignments(
 	for (auto pa : ctx->param_assignment())
 		res.push_back(visitParam_assignment(pa));
 }
-unique_ptr<iHdlExpr> VerParamDefParser::visitConstant_param_expression(
+unique_ptr<iHdlExprItem> VerParamDefParser::visitConstant_param_expression(
 		sv2017Parser::Constant_param_expressionContext *ctx) {
 	// constant_param_expression: param_expression;
 	return visitParam_expression(ctx->param_expression());
 }
-unique_ptr<iHdlExpr> VerParamDefParser::visitParam_expression(
+unique_ptr<iHdlExprItem> VerParamDefParser::visitParam_expression(
 		sv2017Parser::Param_expressionContext *ctx) {
 	// param_expression:
 	//     mintypmax_expression
@@ -129,12 +129,12 @@ void VerParamDefParser::visitList_of_type_assignments(
 	VerTypeParser tp(commentParser);
 	for (auto _ta : ctx->type_assignment()) {
 		auto name = VerExprParser::getIdentifierStr(_ta->identifier());
-		unique_ptr<iHdlExpr> v = nullptr;
+		unique_ptr<iHdlExprItem> v = nullptr;
 		auto _v = _ta->data_type();
 		if (_v)
 			v = tp.visitData_type(_v);
-		auto ta = create_object<HdlVariableDef>(_ta, name, iHdlExpr::TYPE_T(),
-				move(v));
+		auto _t = update_code_position(HdlValueSymbol::type(), _ta);
+		auto ta = create_object<HdlVariableDef>(_ta, name, move(_t), move(v));
 		res.push_back(move(ta));
 	}
 }
@@ -144,12 +144,14 @@ unique_ptr<HdlVariableDef> VerParamDefParser::visitParam_assignment(
 	// param_assignment:
 	//     identifier ( unpacked_dimension )* ( ASSIGN constant_param_expression )?;
 	auto cpa = ctx->constant_param_expression();
-	unique_ptr<iHdlExpr> value = nullptr;
+	unique_ptr<iHdlExprItem> value = nullptr;
 	if (cpa) {
 		value = visitConstant_param_expression(cpa);
 	}
 	auto name = VerExprParser::getIdentifierStr(ctx->identifier());
-	auto p = create_object<HdlVariableDef>(ctx, name, iHdlExpr::AUTO_T(), move(value));
+	auto p = create_object<HdlVariableDef>(ctx, name,
+			update_code_position(HdlValueSymbol::type_auto(), ctx),
+			move(value));
 	p->__doc__ += commentParser.parse(ctx);
 	return p;
 }
@@ -168,11 +170,11 @@ void VerParamDefParser::visitParameter_declaration(
 	} else {
 		auto _t = ctx->data_type_or_implicit();
 		VerTypeParser tp(commentParser);
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		if (_t)
 			t = tp.visitData_type_or_implicit(_t, nullptr);
 		else
-			t = iHdlExpr::AUTO_T();
+			t = update_code_position(HdlValueSymbol::type_auto(), _t);
 
 		auto pds = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
@@ -191,13 +193,13 @@ void VerParamDefParser::visitLocal_parameter_declaration(
 		auto lta = ctx->list_of_type_assignments();
 		visitList_of_type_assignments(lta, res);
 	} else {
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		auto dti = ctx->data_type_or_implicit();
 		if (dti) {
 			VerTypeParser tp(commentParser);
 			t = tp.visitData_type_or_implicit(dti, nullptr);
 		} else
-			t = iHdlExpr::AUTO_T();
+			t = update_code_position(HdlValueSymbol::type_auto(), dti);
 		auto lpa = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
 		visitTyped_list_of_param_assignments(move(t), lpa, doc, res);

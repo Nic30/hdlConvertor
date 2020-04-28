@@ -47,7 +47,7 @@ public:
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	void visitList_of_net_decl_assignments(
 			sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> base_type, bool is_latched,
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_type, bool is_latched,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 
 };

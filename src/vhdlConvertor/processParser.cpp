@@ -30,7 +30,7 @@ std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_state
 	auto sl = ctx->process_sensitivity_list();
 	if (sl) {
 		p->sensitivity_list = std::make_unique<
-				std::vector<std::unique_ptr<iHdlExpr>>>();
+				std::vector<std::unique_ptr<iHdlExprItem>>>();
 		visitProcess_sensitivity_list(sl, *p->sensitivity_list);
 	}
 	for (auto pd : ctx->process_declarative_item()) {
@@ -44,10 +44,10 @@ std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_state
 }
 void VhdlProcessParser::visitProcess_sensitivity_list(
 		vhdlParser::Process_sensitivity_listContext *ctx,
-		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
+		std::vector<std::unique_ptr<iHdlExprItem>> &sensitivity) {
 	// process_sensitivity_list: ALL | sensitivity_list;
 	if (ctx->KW_ALL()) {
-		sensitivity.push_back(iHdlExpr::all());
+		sensitivity.push_back(HdlValueSymbol::all());
 	} else {
 		visitSensitivity_list(ctx->sensitivity_list(), sensitivity);
 	}
@@ -55,7 +55,7 @@ void VhdlProcessParser::visitProcess_sensitivity_list(
 
 void VhdlProcessParser::visitSensitivity_list(
 		vhdlParser::Sensitivity_listContext *ctx,
-		std::vector<std::unique_ptr<iHdlExpr>> &sensitivity) {
+		std::vector<std::unique_ptr<iHdlExprItem>> &sensitivity) {
 	// sensitivity_list: name ( COMMA name )*;
 	for (auto n : ctx->name()) {
 		sensitivity.push_back(VhdlReferenceParser::visitName(n));

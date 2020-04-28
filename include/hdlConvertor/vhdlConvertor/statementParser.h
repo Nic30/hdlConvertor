@@ -53,11 +53,11 @@ public:
 			vhdlParser::Return_statementContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlStatement> visitLoop_statement(
 			vhdlParser::Loop_statementContext *ctx);
-	static std::pair<std::unique_ptr<hdlObjects::iHdlExpr>, std::unique_ptr<hdlObjects::iHdlExpr>> visitParameter_specification(
+	static std::pair<std::unique_ptr<hdlObjects::iHdlExprItem>, std::unique_ptr<hdlObjects::iHdlExprItem>> visitParameter_specification(
 			vhdlParser::Parameter_specificationContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlStatement> visitSelected_waveforms(
 			vhdlParser::Selected_waveformsContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> sel, std::unique_ptr<hdlObjects::iHdlExpr> dst,
+			std::unique_ptr<hdlObjects::iHdlExprItem> sel, std::unique_ptr<hdlObjects::iHdlExprItem> dst,
 			bool is_blocking);
 	static std::unique_ptr<hdlObjects::iHdlStatement> visitConcurrent_selected_signal_assignment(
 			vhdlParser::Concurrent_selected_signal_assignmentContext *ctx);

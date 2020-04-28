@@ -268,6 +268,16 @@ class HdlIntValue(iHdlObj):
                 return False
 
 
+class HdlExprNotImplemented(iHdlObj):
+    """
+    An object which means that the orignal object was not converted
+    because such a functionality was not implemented.
+
+    Under normal circumstances should not appear in iHdlExpr.
+    """
+    pass
+
+
 # None is equivalent of HDL null
 iHdlExpr = Union[HdlName, HdlIntValue, float, str,
                  None, List["iHdlExpr"], HdlAll, HdlCall]

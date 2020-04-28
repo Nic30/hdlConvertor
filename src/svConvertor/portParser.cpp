@@ -26,15 +26,15 @@ VerPortParser::VerPortParser(SVCommentParser &commentParser,
 				_non_ansi_port_groups) {
 }
 
-std::pair<std::string, std::unique_ptr<iHdlExpr>> split_type_base_name_and_array_size(
-		std::unique_ptr<iHdlExpr> e, const char * typename_to_use) {
+std::pair<std::string, std::unique_ptr<iHdlExprItem>> split_type_base_name_and_array_size(
+		std::unique_ptr<iHdlExprItem> e, const char * typename_to_use) {
 	auto top = e.get();
 	while (true) {
-		auto c = dynamic_cast<HdlCall*>(top->data);
+		auto c = dynamic_cast<HdlCall*>(top);
 		if (c) {
 			top = c->operands.at(0).get();
 		} else {
-			auto literal = dynamic_cast<HdlValue*>(top->data);
+			auto literal = dynamic_cast<HdlValueId*>(top);
 			if (!literal)
 				throw std::runtime_error(
 						"Expr::extractStr called on expression which is not string or id");
@@ -59,7 +59,7 @@ unique_ptr<HdlVariableDef> VerPortParser::visitNonansi_port(
 	auto pi = ctx->identifier();
 	if (pi) {
 		auto name = VerExprParser::getIdentifierStr(ctx->identifier());
-		unique_ptr<iHdlExpr> val = nullptr;
+		unique_ptr<iHdlExprItem> val = nullptr;
 		if (_pe)
 			val = visitNonansi_port__expr_as_expr(_pe);
 		pe = create_object<HdlVariableDef>(ctx, name, nullptr, move(val));
@@ -84,7 +84,7 @@ unique_ptr<HdlVariableDef> VerPortParser::visitNonansi_port__expr_as_var(
 	return create_object<HdlVariableDef>(ctx, id_and_t.first, move(id_and_t.second),
 			nullptr);
 }
-unique_ptr<iHdlExpr> VerPortParser::visitNonansi_port__expr_as_expr(
+unique_ptr<iHdlExprItem> VerPortParser::visitNonansi_port__expr_as_expr(
 		sv2017Parser::Nonansi_port__exprContext *ctx) {
 	// nonansi_port__expr:
 	//     identifier_doted_index_at_end
@@ -92,7 +92,7 @@ unique_ptr<iHdlExpr> VerPortParser::visitNonansi_port__expr_as_expr(
 	// ;
 	VerExprParser ep(commentParser);
 	if (ctx->LBRACE()) {
-		vector<unique_ptr<iHdlExpr>> ops;
+		vector<unique_ptr<iHdlExprItem>> ops;
 		for (auto i : ctx->identifier_doted_index_at_end()) {
 			auto id = ep.visitIdentifier_doted_index_at_end(i);
 			ops.push_back(move(id));
@@ -118,7 +118,7 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitList_of_port_
 		auto pd = visitNonansi_port(_pd);
 		ports->push_back(move(pd));
 	}
-	pair<HdlVariableDef*, iHdlExpr*> prev = { nullptr, nullptr };
+	pair<HdlVariableDef*, iHdlExprItem*> prev = { nullptr, nullptr };
 	for (auto pdi : ctx->list_of_port_declarations_ansi_item()) {
 		// list_of_port_declarations_ansi_item:
 		// 	( attribute_instance )* ansi_port_declaration
@@ -133,10 +133,10 @@ unique_ptr<vector<unique_ptr<HdlVariableDef>>> VerPortParser::visitList_of_port_
 	return ports;
 }
 
-pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declaration(
+pair<unique_ptr<HdlVariableDef>, iHdlExprItem*> VerPortParser::visitAnsi_port_declaration(
 		sv2017Parser::Ansi_port_declarationContext *ctx,
 		hdlObjects::HdlVariableDef *prev_var,
-		hdlObjects::iHdlExpr *prev_var_base_t) {
+		hdlObjects::iHdlExprItem *prev_var_base_t) {
 	// ansi_port_declaration:
 	//   ( port_direction ( net_or_var_data_type )? // net_port_header
 	//     | net_or_var_data_type                   // net_port_header or variable_port_header
@@ -152,7 +152,7 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 	if (pd) {
 		d = visitPort_direction(pd);
 	}
-	unique_ptr<iHdlExpr> t = nullptr;
+	unique_ptr<iHdlExprItem> t = nullptr;
 	bool is_latched = false;
 	auto nvdt = ctx->net_or_var_data_type();
 	auto _pid = ctx->port_identifier()->identifier();
@@ -162,8 +162,9 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 	if (nvdt) {
 		tie(t, is_latched) = tp.visitNet_or_var_data_type(nvdt);
 	} else {
-		if (ctx->KW_INTERFACE()) {
-			t = iHdlExpr::ID("interface");
+		auto _i = ctx->KW_INTERFACE();
+		if (_i) {
+			t = create_object<HdlValueId>(_i, "interface");
 		}
 		for (auto _id : ctx->identifier()) {
 			auto id = VerExprParser::visitIdentifier(_id);
@@ -173,24 +174,24 @@ pair<unique_ptr<HdlVariableDef>, iHdlExpr*> VerPortParser::visitAnsi_port_declar
 	if (!t && ctx->LPAREN()) {
 		// | (port_direction)? DOT port_identifier LPAREN (expression)? RPAREN
 		auto _e = ctx->expression();
-		unique_ptr<iHdlExpr> def_val = nullptr;
+		unique_ptr<iHdlExprItem> def_val = nullptr;
 		if (_e)
 			def_val = ep.visitExpression(_e);
-		auto p = create_object<HdlVariableDef>(ctx, name, iHdlExpr::AUTO_T(),
+		auto p = create_object<HdlVariableDef>(ctx, name, HdlValueSymbol::type_auto(),
 				move(def_val), d, is_latched);
 		return {move(p), nullptr};
 	}
 
 	if (!t) {
 		if (prev_var_base_t)
-			t = make_unique<iHdlExpr>(*prev_var_base_t);
+			t = prev_var_base_t->clone_uniq();
 		else
 			t = Utils::mkWireT();
 	}
 	auto vds = ctx->variable_dimension();
 	auto base_type = t.get();
 	t = tp.applyVariable_dimension(move(t), vds);
-	unique_ptr<iHdlExpr> def_val = nullptr;
+	unique_ptr<iHdlExprItem> def_val = nullptr;
 	auto ce = ctx->constant_expression();
 	if (ce)
 		def_val = ep.visitConstant_expression(ce);
@@ -239,7 +240,7 @@ void VerPortParser::visitNonansi_port_declaration(
 			auto t = VerExprParser::visitIdentifier(ids[0]);
 			if (ids.size() > 1) {
 				assert(ids.size() == 2);
-				t = create_object<iHdlExpr>(ctx, move(t), HdlOperatorType::DOT,
+				t = create_object<HdlCall>(ctx, move(t), HdlOperatorType::DOT,
 						VerExprParser::visitIdentifier(ids[1]));
 			}
 			return visitList_of_variable_identifiers(lvi, move(t), false,
@@ -254,7 +255,7 @@ void VerPortParser::visitNonansi_port_declaration(
 }
 void VerPortParser::visitList_of_variable_port_identifiers(
 		sv2017Parser::List_of_variable_port_identifiersContext *ctx,
-		std::unique_ptr<iHdlExpr> base_type, bool is_latched,
+		std::unique_ptr<iHdlExprItem> base_type, bool is_latched,
 		HdlDirection direction, const std::string &doc,
 		std::vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_variable_port_identifiers: list_of_tf_variable_identifiers;
@@ -293,7 +294,7 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 	NotImplementedLogger::print("Conversion of non-ANSI ports not implemented", ctx_for_debug);
 	// size_t i = 0;
 	// for (auto &g : non_ansi_port_groups) {
-	// 	unique_ptr<iHdlExpr> lsb = iHdlExpr::INT(0), msb = nullptr;
+	// 	unique_ptr<iHdlExprItem> lsb = make_unique<HdlValueInt>(0), msb = nullptr;
 	// 	bool _signed = false;
 	// 	for (auto &p : g.second) {
 	// 		// [todo] resolve width of type
@@ -301,7 +302,7 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 	//
 	// 		}
 	// 	}
-	// 	auto range = make_unique<iHdlExpr>(move(msb), HdlOperatorType::DOWNTO,
+	// 	auto range = make_unique<HdlCall>(move(msb), HdlOperatorType::DOWNTO,
 	// 			move(lsb));
 	// 	auto nap_t = Utils::mkWireT(move(range), _signed);
 	// 	auto nap = make_unique<HdlVariableDef>(g.first, move(nap_t), nullptr);
@@ -310,12 +311,12 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 	// }
 	// auto nap = non_ansi_converted_ports.begin();
 	// for (auto &g : non_ansi_port_groups) {
-	// 	std::vector<unique_ptr<iHdlExpr>> ops;
+	// 	std::vector<unique_ptr<iHdlExprItem>> ops;
 	// 	for (auto &p : g.second) {
-	// 		ops.push_back(iHdlExpr::ID(p->name));
+	// 		ops.push_back(make_unique<HdlValueId>(p->name));
 	// 	}
 	// 	auto conc = reduce(ops, HdlOperatorType::CONCAT);
-	// 	auto this_port_id = iHdlExpr::ID(g.first);
+	// 	auto this_port_id = make_unique<HdlValueId>(g.first);
 	// 	unique_ptr<HdlStmAssign> drv;
 	// 	if ((*nap)->direction == HdlDirection::DIR_IN) {
 	// 		drv = make_unique<HdlStmAssign>(move(conc), move(this_port_id),
@@ -330,7 +331,7 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 }
 void VerPortParser::visitList_of_tf_variable_identifiers(
 		sv2017Parser::List_of_tf_variable_identifiersContext *ctx,
-		unique_ptr<iHdlExpr> base_type, bool is_latched, HdlDirection direction,
+		unique_ptr<iHdlExprItem> base_type, bool is_latched, HdlDirection direction,
 		const std::string &doc, std::vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_tf_variable_identifiers:
 	//     list_of_tf_variable_identifiers_item
@@ -342,18 +343,18 @@ void VerPortParser::visitList_of_tf_variable_identifiers(
 	bool first = true;
 	for (auto i : ctx->list_of_tf_variable_identifiers_item()) {
 		// list_of_tf_variable_identifiers_item: identifier ( variable_dimension )* ( ASSIGN expression )?;
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		if (first)
 			t = move(base_type);
 		else
-			t = make_unique<iHdlExpr>(*base_t_tmp);
+			t = base_t_tmp->clone_uniq();
 
 		auto vds = i->variable_dimension();
 		t = tp.applyVariable_dimension(move(t), vds);
 		auto _id = i->identifier();
 		auto id = VerExprParser::getIdentifierStr(_id);
 		auto _e = i->expression();
-		unique_ptr<iHdlExpr> def_val = nullptr;
+		unique_ptr<iHdlExprItem> def_val = nullptr;
 		if (_e)
 			def_val = ep.visitExpression(_e);
 
@@ -370,7 +371,7 @@ void VerPortParser::visitList_of_tf_variable_identifiers(
 
 void VerPortParser::visitList_of_variable_identifiers(
 		sv2017Parser::List_of_variable_identifiersContext *ctx,
-		unique_ptr<iHdlExpr> base_type, bool is_latched, HdlDirection direction,
+		unique_ptr<iHdlExprItem> base_type, bool is_latched, HdlDirection direction,
 		const std::string &doc, std::vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_variable_identifiers:
 	//     list_of_variable_identifiers_item ( COMMA list_of_variable_identifiers_item )*;
@@ -379,11 +380,11 @@ void VerPortParser::visitList_of_variable_identifiers(
 	bool first = true;
 	for (auto i : ctx->list_of_variable_identifiers_item()) {
 		// list_of_variable_identifiers_item: identifier ( variable_dimension )*;
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		if (first)
 			t = move(base_type);
 		else
-			t = make_unique<iHdlExpr>(*base_type_tmp);
+			t = base_type_tmp->clone_uniq();
 		auto vds = i->variable_dimension();
 		t = tp.applyVariable_dimension(move(t), vds);
 		auto _id = i->identifier();
@@ -425,7 +426,7 @@ unique_ptr<HdlVariableDef> VerPortParser::visitTf_port_item(
 	if (id) {
 		name = ep.getIdentifierStr(id);
 	}
-	unique_ptr<iHdlExpr> v = nullptr;
+	unique_ptr<iHdlExprItem> v = nullptr;
 	auto e = ctx->expression();
 	if (e) {
 		v = ep.visitExpression(e);

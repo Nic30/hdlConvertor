@@ -10,6 +10,7 @@
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/declrParser.h>
 #include <hdlConvertor/svConvertor/attributeParser.h>
+#include <hdlConvertor/createObject.h>
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
@@ -65,7 +66,7 @@ void VerProgramParser::visitTf_port_declaration(
 
 std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declaration_common(
 		sv2017Parser::Task_and_function_declaration_commonContext *ctx,
-		std::unique_ptr<iHdlExpr> return_t, bool is_static, bool is_task) {
+		std::unique_ptr<iHdlExprItem> return_t, bool is_static, bool is_task) {
 	// task_and_function_declaration_common:
 	//     ( identifier DOT | class_scope )? identifier
 	//     ( SEMI ( tf_item_declaration )*
@@ -130,7 +131,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_declaration(
 
 	VerTypeParser tp(commentParser);
 	bool is_static = tp.visitLifetime(ctx->lifetime());
-	auto return_t = iHdlExpr::ID("void");
+	auto return_t = create_object<HdlValueId>(ctx, "void");
 	auto tfcom = ctx->task_and_function_declaration_common();
 	return visitTask_and_function_declaration_common(tfcom, move(return_t),
 			is_static, true);

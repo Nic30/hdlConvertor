@@ -19,28 +19,28 @@ class HdlStmNop: public iHdlStatement {
 
 class HdlStmImport: public iHdlStatement {
 public:
-	std::vector<std::unique_ptr<iHdlExpr>> path;
+	std::vector<std::unique_ptr<iHdlExprItem>> path;
 
-	HdlStmImport(std::vector<std::unique_ptr<iHdlExpr>> &_path);
+	HdlStmImport(std::vector<std::unique_ptr<iHdlExprItem>> &_path);
 	virtual ~HdlStmImport() override;
 };
 
 class HdlStmReturn: public iHdlStatement {
 public:
-	std::unique_ptr<iHdlExpr> val;
+	std::unique_ptr<iHdlExprItem> val;
 
 	HdlStmReturn();
-	HdlStmReturn(std::unique_ptr<iHdlExpr> val);
+	HdlStmReturn(std::unique_ptr<iHdlExprItem> val);
 	virtual ~HdlStmReturn() override;
 };
 
 class HdlStmWait: public iHdlStatement {
 public:
-	std::vector<std::unique_ptr<iHdlExpr>> val;
+	std::vector<std::unique_ptr<iHdlExprItem>> val;
 
 	HdlStmWait();
-	HdlStmWait(std::unique_ptr<iHdlExpr> val);
-	HdlStmWait(std::vector<std::unique_ptr<iHdlExpr>> &val);
+	HdlStmWait(std::unique_ptr<iHdlExprItem> val);
+	HdlStmWait(std::vector<std::unique_ptr<iHdlExprItem>> &val);
 	virtual ~HdlStmWait() override;
 };
 

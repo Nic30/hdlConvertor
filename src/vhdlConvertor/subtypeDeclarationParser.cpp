@@ -18,7 +18,7 @@ std::unique_ptr<HdlVariableDef> VhdlSubtypeDeclarationParser::visitSubtype_decla
 	auto t = VhdlExprParser::visitSubtype_indication(ctx->subtype_indication());
 	auto v = create_object<HdlVariableDef>(ctx,
 			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
-			iHdlExpr::TYPE_T(), std::move(t));
+			HdlValueSymbol::type(), std::move(t));
 	return v;
 }
 

@@ -12,8 +12,8 @@ namespace hdlObjects {
  * */
 class HdlStmExpr: public iHdlStatement {
 public:
-	std::unique_ptr<iHdlExpr> expr;
-	HdlStmExpr(std::unique_ptr<iHdlExpr> expr);
+	std::unique_ptr<iHdlExprItem> expr;
+	HdlStmExpr(std::unique_ptr<iHdlExprItem> expr);
 };
 }
 }

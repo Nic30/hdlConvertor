@@ -19,7 +19,7 @@ from hdlConvertor.hdlAst._bases import (
 from hdlConvertor.hdlAst._defs import HdlFunctionDef, HdlVariableDef
 from hdlConvertor.hdlAst._expr import (
     HdlAll, HdlBuiltinFn, HdlCall, HdlDirection, HdlIntValue, HdlName,
-    HdlOthers, HdlTypeAuto, HdlTypeType, iHdlExpr)
+    HdlOthers, HdlTypeAuto, HdlTypeType, HdlExprNotImplemented, iHdlExpr)
 from hdlConvertor.hdlAst._statements import (
     HdlImport, HdlStmAssign, HdlStmBlockJoinType, HdlStmBlock, HdlStmBreak,
     HdlStmCase, HdlStmContinue, HdlStmFor, HdlStmForIn, HdlStmIf, HdlStmProcess,

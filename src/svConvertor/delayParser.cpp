@@ -3,6 +3,8 @@
 #include <hdlConvertor/svConvertor/literalParser.h>
 #include <hdlConvertor/svConvertor/eventExprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/createObject.h>
+
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
@@ -24,9 +26,9 @@ VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 	//         | MUL
 	//         | package_or_class_scoped_hier_id_with_select
 	//       );
-	auto res = make_unique<vector<unique_ptr<iHdlExpr>>>();
+	auto res = make_unique<vector<unique_ptr<iHdlExprItem>>>();
 	if (ctx->MUL()) {
-		res->push_back(iHdlExpr::all());
+		res->push_back(HdlValueSymbol::all());
 		return res;
 	}
 	auto pid = ctx->package_or_class_scoped_hier_id_with_select();
@@ -43,7 +45,7 @@ VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 	return res;
 }
 
-pair<unique_ptr<iHdlExpr>, unique_ptr<vector<unique_ptr<iHdlExpr>>>> VerDelayParser::visitProcedural_timing_control(
+pair<unique_ptr<iHdlExprItem>, unique_ptr<vector<unique_ptr<iHdlExprItem>>>> VerDelayParser::visitProcedural_timing_control(
 		sv2017Parser::Procedural_timing_controlContext *ctx) {
 	// procedural_timing_control:
 	//    delay_control
@@ -65,16 +67,16 @@ pair<unique_ptr<iHdlExpr>, unique_ptr<vector<unique_ptr<iHdlExpr>>>> VerDelayPar
 		NotImplementedLogger::print(
 				"VerDelayParser.visitProcedural_timing_control.cycle_delay",
 				ctx);
-		return {iHdlExpr::null(), nullptr};
+		return {create_object<HdlExprNotImplemented>(ctx), nullptr};
 	}
 	assert(ctx->cycle_delay_range());
 	NotImplementedLogger::print(
 			"VerDelayParser.visitProcedural_timing_control.cycle_delay_range",
 			ctx);
-	return {iHdlExpr::null(), nullptr};
+	return {create_object<HdlExprNotImplemented>(ctx), nullptr};
 }
 
-unique_ptr<iHdlExpr> VerDelayParser::visitDelay_control(
+unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_control(
 		sv2017Parser::Delay_controlContext *ctx) {
 	// delay_control:
 	//     HASH ( LPAREN mintypmax_expression RPAREN
@@ -90,7 +92,7 @@ unique_ptr<iHdlExpr> VerDelayParser::visitDelay_control(
 	}
 }
 
-unique_ptr<iHdlExpr> VerDelayParser::visitDelay_value(
+unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_value(
 		sv2017Parser::Delay_valueContext *ctx) {
 	// delay_value:
 	//     UNSIGNED_NUMBER
@@ -107,7 +109,7 @@ unique_ptr<iHdlExpr> VerDelayParser::visitDelay_value(
 		return VerLiteralParser::visitTIME_LITERAL(tl);
 	}
 	if (ctx->KW_1STEP())
-		return iHdlExpr::ID("1step");
+		return create_object<HdlValueId>(ctx, "1step");
 	auto r = ctx->real_number();
 	if (r) {
 		return VerLiteralParser::visitReal_number(r);
@@ -117,7 +119,7 @@ unique_ptr<iHdlExpr> VerDelayParser::visitDelay_value(
 	return VerExprParser(commentParser).visitPs_identifier(pi);
 }
 
-pair<unique_ptr<iHdlExpr>, VerDelayParser::HdlEventList> VerDelayParser::visitDelay_or_event_control(
+pair<unique_ptr<iHdlExprItem>, VerDelayParser::HdlEventList> VerDelayParser::visitDelay_or_event_control(
 		sv2017Parser::Delay_or_event_controlContext *ctx) {
 	// delay_or_event_control:
 	//     delay_control

@@ -17,14 +17,15 @@ namespace hdlObjects {
 class HdlStmProcess: public iHdlStatement {
 public:
 
-	std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> sensitivity_list;
+	std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> sensitivity_list;
 	std::unique_ptr<iHdlStatement> body;
 
 	HdlStmProcess();
 	HdlStmProcess(
-			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _sensitivity);
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> _sensitivity);
 	HdlStmProcess(
-			std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> _sensitivity, std::unique_ptr<iHdlStatement> body);
+			std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> _sensitivity,
+			std::unique_ptr<iHdlStatement> body);
 	virtual ~HdlStmProcess() override;
 };
 

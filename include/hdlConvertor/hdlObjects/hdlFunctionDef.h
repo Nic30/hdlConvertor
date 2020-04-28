@@ -14,7 +14,7 @@ namespace hdlObjects {
  * */
 class HdlFunctionDef: public WithNameAndDoc, public iHdlObj {
 public:
-	std::unique_ptr<iHdlExpr> returnT;
+	std::unique_ptr<iHdlExprItem> returnT;
 	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>> > params;
 	std::vector<std::unique_ptr<iHdlObj>> body;
 	const bool is_operator;
@@ -24,7 +24,7 @@ public:
 	bool is_declaration_only;
 
 	HdlFunctionDef(const std::string &name, bool is_operator,
-			std::unique_ptr<iHdlExpr> returnT,
+			std::unique_ptr<iHdlExprItem> returnT,
 			std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> params);
 	virtual ~HdlFunctionDef() override;
 };

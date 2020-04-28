@@ -18,13 +18,13 @@ public:
 	void visitModule_or_interface_or_program_or_udp_instantiation(
 			sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,
 			std::vector<std::unique_ptr<hdlObjects::HdlCompInstance>> &res);
-	std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> visitList_of_parameter_value_assignments(
+	std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> visitList_of_parameter_value_assignments(
 			sv2017Parser::List_of_parameter_value_assignmentsContext *ctx);
 	std::unique_ptr<hdlObjects::HdlCompInstance> visitHierarchical_instance(
 			sv2017Parser::Hierarchical_instanceContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> module_id,
-			std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> genericMap);
-	std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> visitList_of_port_connections(
+			std::unique_ptr<hdlObjects::iHdlExprItem> module_id,
+			std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> genericMap);
+	std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> visitList_of_port_connections(
 			sv2017Parser::List_of_port_connectionsContext *ctx);
 };
 
