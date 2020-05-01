@@ -78,8 +78,8 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			auto p = create_object<HdlVariableDef>(ctx, ".*", HdlValueSymbol::all(),
-					nullptr);
+			auto p = create_object<HdlVariableDef>(ctx, ".*",
+					HdlValueSymbol::all(), nullptr);
 			ent->ports.push_back(move(p));
 		}
 	}
@@ -114,7 +114,8 @@ void VerModuleParser::visitModule_declaration(
 
 	if (m_ctx.non_ANSI_port_groups.size()) {
 		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
-		pp.convert_non_ansi_ports_to_ansi(ctx, m_ctx.ent.ports, m_ctx.arch->objs);
+		pp.convert_non_ansi_ports_to_ansi(ctx, m_ctx.ent.ports,
+				m_ctx.arch->objs);
 	}
 	auto consume_nonansi_ports_vars = [this, &m_ctx](unique_ptr<iHdlObj> &o) {
 		auto v = dynamic_cast<HdlVariableDef*>(o.get());
@@ -144,9 +145,15 @@ void VerModuleParser::visitModule_declaration(
 			o->type = HdlValueSymbol::type_auto();
 		}
 	}
+	HdlDirection prev_d = HdlDirection::DIR_INOUT;
 	for (auto &o : m_ctx.ent.ports) {
 		if (!o->type) {
 			o->type = HdlValueSymbol::type_auto();
+		}
+		if (o->direction == HdlDirection::DIR_UNKNOWN) {
+			o->direction = prev_d;
+		} else {
+			prev_d = o->direction;
 		}
 	}
 	res.push_back(move(arch));
