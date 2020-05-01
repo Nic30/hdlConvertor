@@ -1,6 +1,7 @@
 from nbconvert.preprocessors import ExecutePreprocessor
 import nbformat
 import os
+import sys
 
 
 def run_notebook(notebook_path):
@@ -10,7 +11,9 @@ def run_notebook(notebook_path):
     with open(notebook_path) as f:
         nb = nbformat.read(f, as_version=4)
 
-    proc = ExecutePreprocessor(timeout=5000)
+    proc = ExecutePreprocessor(
+        timeout=5000,
+        kernel_name='python3' if sys.version_info.major == 3 else "python2.7")
     proc.allow_errors = True
 
     proc.preprocess(nb, {'metadata': {'path': os.path.join(
