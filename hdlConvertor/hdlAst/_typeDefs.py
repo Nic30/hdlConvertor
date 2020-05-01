@@ -169,4 +169,4 @@ class HdlEnumDef(iHdlTypeDef):
 
     def __init__(self):
         super(HdlEnumDef, self).__init__()
-        self.values = []  # type: List[Union[str, Tuple[str, int]]]
+        self.values = []  # type: List[Tuple[Optional[str], Optional[iHdlExpr]]]

@@ -4,7 +4,7 @@ from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
     HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
-from hdlConvertor.hdlAst._expr import HdlTypeSubtype
+from hdlConvertor.hdlAst._expr import HdlTypeSubtype, HdlIntValue
 from hdlConvertor.hdlAst._typeDefs import HdlClassDef, HdlClassType
 
 
@@ -211,7 +211,13 @@ class ToVhdl2008(ToVhdl2008Stm):
                 if isinstance(_t, HdlEnumDef):
                     w('(')
                     for last, ev in iter_with_last(_t.values):
-                        w(ev)
+                        k, v = ev
+                        if k is not None:
+                            w(k)
+                        else:
+                            assert isinstance(v, HdlIntValue) and v.base == 256, v
+                            self.visit_HdlIntValue(v)
+
                         if not last:
                             w(", ")
                     w(")")

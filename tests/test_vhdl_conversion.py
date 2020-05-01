@@ -69,14 +69,17 @@ class VhdlConversionTC(HdlParseTC):
         self.assertIsInstance(res.objs[0], HdlLibrary)
         self.assertEqual(res.objs[0].name, 'ieee')
 
-    def test_example_record_pkg(self):
-        self.parseWithRef("example_record_pkg.vhd", Language.VHDL)
+    def test_package_record(self):
+        self.parseWithRef("package_record.vhd", Language.VHDL)
 
     def test_operator_example(self):
         self.parseWithRef("operator_example.vhd", Language.VHDL)
 
     def test_record_in_record(self):
         self.parseWithRef("record_in_record.vhd", Language.VHDL)
+
+    def test_enum(self):
+        self.parseWithRef("enum.vhd", Language.VHDL)
 
 
 if __name__ == "__main__":

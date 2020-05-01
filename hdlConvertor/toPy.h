@@ -86,8 +86,8 @@ class ToPy {
 			return -1;
 		}
 		for (const auto &o : objs) {
-			const auto& key = o.first;
-			const auto& py_val = toPy(o.second);
+			const auto &key = o.first;
+			const auto &py_val = toPy(o.second);
 			if (py_val == nullptr) {
 				Py_DECREF(parent_dict);
 				return -1;
@@ -137,7 +137,7 @@ class ToPy {
 		return 0;
 	}
 
-	int toPy_property(PyObject *py_inst, const char *prop_name, 
+	int toPy_property(PyObject *py_inst, const char *prop_name,
 			PyObject *py_o) {
 		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
 		if (e < 0) {
@@ -198,6 +198,9 @@ public:
 	PyObject* toPy(const hdlObjects::HdlClassType o);
 	PyObject* toPy(const hdlObjects::HdlClassDef *o);
 	PyObject* toPy(const hdlObjects::HdlEnumDef *o);
+	PyObject* toPy(
+			const std::pair<std::unique_ptr<std::string>,
+					std::unique_ptr<hdlObjects::iHdlExprItem>> &o);
 	PyObject* toPy(const hdlObjects::HdlExprNotImplemented *o);
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);
