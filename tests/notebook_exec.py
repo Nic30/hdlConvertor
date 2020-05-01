@@ -13,7 +13,7 @@ def run_notebook(notebook_path):
 
     proc = ExecutePreprocessor(
         timeout=5000,
-        kernel_name='python3' if sys.version_info.major == 3 else "python2.7")
+        kernel_name='python%d' % sys.version_info.major)
     proc.allow_errors = True
 
     proc.preprocess(nb, {'metadata': {'path': os.path.join(
