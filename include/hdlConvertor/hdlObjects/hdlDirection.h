@@ -28,7 +28,7 @@ inline const char* HdlDirection_toString(HdlDirection d) {
 	case DIR_INTERNAL:
 		return "INTERNAL";
 	default:
-		throw "Invalid direction value";
+		throw std::runtime_error("Invalid direction value");
 	}
 }
 
