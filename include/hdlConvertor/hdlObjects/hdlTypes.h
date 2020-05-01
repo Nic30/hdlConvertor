@@ -2,6 +2,7 @@
 #include <vector>
 #include <utility>
 #include <memory>
+
 #include <hdlConvertor/hdlObjects/named.h>
 #include <hdlConvertor/hdlObjects/iHdlObj.h>
 #include <hdlConvertor/hdlObjects/hdlOperatorType.h>
@@ -27,10 +28,12 @@ public:
 };
 
 enum HdlClassType {
-	hdl_class, hdl_struct, // also vhdl record type
-	hdl_union,
-	hdl_interface,
+	CLASS, STRUCT, // also vhdl record type
+	UNION,
+	INTERFACE,
 };
+
+const char * HdlClassType_toString(HdlClassType ct);
 
 class HdlClassDef: public virtual iHdlTypeDec {
 public:

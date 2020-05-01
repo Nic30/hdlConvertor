@@ -25,6 +25,7 @@
 #include <hdlConvertor/hdlObjects/hdlStmIf.h>
 #include <hdlConvertor/hdlObjects/hdlStmProcess.h>
 #include <hdlConvertor/hdlObjects/hdlStmWhile.h>
+#include <hdlConvertor/hdlObjects/hdlTypes.h>
 
 namespace hdlConvertor {
 
@@ -43,8 +44,12 @@ class ToPy {
 	PyObject *HdlDirectionEnum;
 	PyObject *HdlAllCls;
 	PyObject *HdlOthersCls;
-	PyObject *HdlTypeTypeCls;
 	PyObject *HdlTypeAutoCls;
+	PyObject *HdlTypeTypeCls;
+	PyObject *HdlTypeSubtypeCls;
+	PyObject *HdlClassTypeEnum;
+	PyObject *HdlClassDefCls;
+	PyObject *HdlEnumDefCls;
 	PyObject *HdlStmIfCls;
 	PyObject *HdlStmAssignCls;
 	PyObject *HdlStmProcessCls;
@@ -190,6 +195,9 @@ public:
 	PyObject* toPy(const hdlObjects::HdlValueInt *o);
 	PyObject* toPy(const hdlObjects::HdlValueStr *o);
 	PyObject* toPy(const hdlObjects::HdlValueSymbol *o);
+	PyObject* toPy(const hdlObjects::HdlClassType o);
+	PyObject* toPy(const hdlObjects::HdlClassDef *o);
+	PyObject* toPy(const hdlObjects::HdlEnumDef *o);
 	PyObject* toPy(const hdlObjects::HdlExprNotImplemented *o);
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);

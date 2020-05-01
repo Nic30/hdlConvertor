@@ -21,6 +21,8 @@ public:
 			vhdlParser::Array_constraintContext *ctx);
 	static std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> visitIndex_constraint(
 			vhdlParser::Index_constraintContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitRecord_constraint(
+			vhdlParser::Record_constraintContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExprItem> visitArray_element_constraint(
 			vhdlParser::Array_element_constraintContext *ctx);
 
@@ -43,7 +45,7 @@ public:
 			vhdlParser::File_type_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExprItem> visitProtected_type_definition(
 			vhdlParser::Protected_type_definitionContext *ctx);
-	
+
 	static std::unique_ptr<hdlObjects::HdlEnumDef> visitEnumeration_type_definition(
 			vhdlParser::Enumeration_type_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExprItem> visitInteger_type_definition(
@@ -61,6 +63,8 @@ public:
 			vhdlParser::Constrained_array_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::HdlClassDef> visitRecord_type_definition(
 			vhdlParser::Record_type_definitionContext *ctx);
+	static std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitElement_declaration(
+			vhdlParser::Element_declarationContext *ctx);
 
 	static std::unique_ptr<hdlObjects::HdlVariableDef> visitSubtype_declaration(
 			vhdlParser::Subtype_declarationContext *ctx);

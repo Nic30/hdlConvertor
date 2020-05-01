@@ -84,7 +84,8 @@ enum HdlValueSymbol_t {
 	symb_ALL, // all items in destination
 	symb_OTHERS, // not explicitly specified items in destination
 	symb_T, // type of type
-	symb_T_AUTO // automatically derived type
+	symb_T_AUTO, // automatically derived type (implicit data type from Verilog)
+	symb_T_SUBTYPE, // used in subtype declaration as data type of symbol
 };
 /*
  * HDL AST node for special hdl symbols

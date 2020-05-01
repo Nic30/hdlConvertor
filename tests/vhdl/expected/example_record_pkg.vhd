@@ -1,6 +1,17 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 PACKAGE example_record_pkg IS
+    TYPE t_FROM_FIFO IS RECORD
+        wr_full : std_logic;
+        rd_empty : std_logic;
+        rd_dv : std_logic;
+        rd_data : std_logic_vector(7 DOWNTO 0);
+    END RECORD;
+    TYPE t_TO_FIFO IS RECORD
+        wr_en : std_logic;
+        wr_data : std_logic_vector(7 DOWNTO 0);
+        rd_en : std_logic;
+    END RECORD;
     CONSTANT c_FROM_FIFO_INIT : t_FROM_FIFO := (
         wr_full => '0',
         rd_empty => '1',

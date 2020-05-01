@@ -3,7 +3,9 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/createObject.h>
+
 #include <assert.h>
 
 namespace hdlConvertor {
@@ -30,9 +32,9 @@ unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_declaration(
 unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitIncomplete_type_declaration(
 		vhdlParser::Incomplete_type_declarationContext *ctx) {
 	//incomplete_type_declaration: KW_TYPE identifier SEMI;
-	return create_object<HdlVariableDef>(ctx,
-			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
-			HdlValueSymbol::type(), nullptr);
+	auto id = VhdlLiteralParser::getIdentifierStr(ctx->identifier());
+	return create_object<HdlVariableDef>(ctx, move(id), HdlValueSymbol::type(),
+			nullptr);
 }
 
 unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitFull_type_declaration(
@@ -235,10 +237,32 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstrained_array_defin
 
 unique_ptr<HdlClassDef> VhdlTypeDeclarationParser::visitRecord_type_definition(
 		vhdlParser::Record_type_definitionContext *ctx) {
-	NotImplementedLogger::print("TypeDeclarationParser.record_type_definition",
-			ctx);
+	//record_type_definition:
+	//      KW_RECORD
+	//          ( element_declaration )+
+	//      KW_END KW_RECORD ( identifier )?
+	//;
+	auto c = create_object<HdlClassDef>(ctx);
+	c->type = HdlClassType::STRUCT;
+	for (auto _ed : ctx->element_declaration()) {
+		auto vars = visitElement_declaration(_ed);
+		for (auto & v: *vars) {
+			c->members.push_back(move(v));
+		}
+	}
 
-	return create_object<HdlClassDef>(ctx);
+	return c;
+}
+std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlTypeDeclarationParser::visitElement_declaration(
+		vhdlParser::Element_declarationContext *ctx) {
+	// element_declaration:
+	//       identifier_list COLON element_subtype_definition SEMI
+	// ;
+	// element_subtype_definition: subtype_indication;
+	auto id_list = ctx->identifier_list();
+	auto st = ctx->element_subtype_definition()->subtype_indication();
+
+	return VhdlInterfaceParser::extractVariables(id_list, st, nullptr);
 }
 
 std::unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitSubtype_declaration(
@@ -264,7 +288,7 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 	if (_ri) {
 		ri = VhdlExprParser::visitResolution_indication(_ri);
 		NotImplementedLogger::print(
-				"ExprParser.visitResolution_indication - element_resolution",
+				"VhdlTypeDeclarationParser.visitResolution_indication - element_resolution",
 				_ri);
 	}
 
@@ -316,8 +340,8 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitArray_element_constrain
 	//       array_constraint
 	//       | record_constraint
 	// ;
-	NotImplementedLogger::print("ExprParser.visitArray_element_constraint",
-			ctx);
+	NotImplementedLogger::print(
+			"VhdlTypeDeclarationParser.visitArray_element_constraint", ctx);
 	return create_object<HdlExprNotImplemented>(ctx);
 }
 
@@ -331,7 +355,6 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 	// ;
 
 	auto r = ctx->range_constraint();
-	HdlOperatorType op;
 	if (r) {
 		// range_constraint
 		// : RANGE range
@@ -343,17 +366,22 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 		auto i = ctx->array_constraint();
 		if (i) {
 			auto ac = visitArray_constraint(i);
-		} else {
-#ifndef NDEBUG
-			auto r = ctx->record_constraint();
-			assert(r);
-#endif
 			NotImplementedLogger::print(
-					"ExprParser.visitConstraint - record_constraint", r);
-			op = DOT;
+					"VhdlTypeDeclarationParser.visitConstraint visitArray_constraint",
+					ctx);
+			return create_object<HdlExprNotImplemented>(ctx);
+		} else {
+			auto rc = ctx->record_constraint();
+			return visitRecord_constraint(rc);
 		}
 	}
+}
 
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitRecord_constraint(
+		vhdlParser::Record_constraintContext *ctx) {
+	NotImplementedLogger::print(
+			"VhdlTypeDeclarationParser.visitRecord_constraint", ctx);
+	return create_object<HdlExprNotImplemented>(ctx);
 }
 
 }

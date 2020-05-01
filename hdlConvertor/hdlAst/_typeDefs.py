@@ -97,10 +97,10 @@ class HdlTypeBitsDef(iHdlTypeDef):
 
 class HdlClassType(Enum):
     (
-        HDL_CLASS,
-        HDL_STRUCT,  # also vhdl record type
-        HDL_UNION,
-        HDL_INTERFACE,
+        CLASS,
+        STRUCT,  # also vhdl record type
+        UNION,
+        INTERFACE,
     ) = range(4)
 
 
@@ -139,7 +139,7 @@ class HdlClassDef(iHdlTypeDef):
 
     def __init__(self):
         super(HdlClassDef, self).__init__()
-        self.type = HdlClassType.HDL_CLASS
+        self.type = HdlClassType.CLASS
         self.is_virtual = False  # type: bool
         self.is_packed = True  # type: bool
         self.members = []  # type: List[HdlVariableDef]

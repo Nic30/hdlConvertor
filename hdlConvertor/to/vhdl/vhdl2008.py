@@ -4,6 +4,8 @@ from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
     HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
+from hdlConvertor.hdlAst._expr import HdlTypeSubtype
+from hdlConvertor.hdlAst._typeDefs import HdlClassDef, HdlClassType
 
 
 class ToVhdl2008(ToVhdl2008Stm):
@@ -15,6 +17,10 @@ class ToVhdl2008(ToVhdl2008Stm):
         HdlDirection.OUT: "OUT",
         HdlDirection.INOUT: "INOUT",
     }
+
+    def __init__(self, out_stream):
+        ToVhdl2008Stm.__init__(self, out_stream)
+        self.in_typedef = False
 
     def visit_doc(self, obj):
         return super(ToVhdl2008, self).visit_doc(obj, "--")
@@ -194,35 +200,50 @@ class ToVhdl2008(ToVhdl2008Stm):
         name = var.name
         t = var.type
         if t == HdlTypeType:
-            # typedef
-            w("TYPE ")
-            w(name)
-            w(" IS ")
-            _t = var.value
-            if isinstance(_t, HdlEnumDef):
-                w('(')
-                for last, ev in iter_with_last(_t.values):
-                    w(ev)
-                    if not last:
-                        w(", ")
-                w(")")
-            elif isinstance(_t, HdlCall) and _t.fn == HdlBuiltinFn.INDEX:
-                w("ARRAY (")
-                self.visit_iHdlExpr(_t.ops[1])
-                w(") OF ")
-                self.visit_iHdlExpr(_t.ops[0])
-            else:
-                raise NotImplementedError(_t)
+            orig_in_typedef = self.in_typedef
+            try:
+                self.in_typedef = True
+                # typedef
+                w("TYPE ")
+                w(name)
+                w(" IS ")
+                _t = var.value
+                if isinstance(_t, HdlEnumDef):
+                    w('(')
+                    for last, ev in iter_with_last(_t.values):
+                        w(ev)
+                        if not last:
+                            w(", ")
+                    w(")")
+                elif isinstance(_t, HdlCall) and _t.fn == HdlBuiltinFn.INDEX:
+                    w("ARRAY (")
+                    self.visit_iHdlExpr(_t.ops[1])
+                    w(") OF ")
+                    self.visit_iHdlExpr(_t.ops[0])
+                elif isinstance(_t, HdlClassDef):
+                    assert _t.type == HdlClassType.STRUCT, _t.type
+                    w("RECORD\n")
+                    with Indent(self.out):
+                        for m in _t.members:
+                            self.visit_HdlVariableDef(m)
+                    w("END RECORD")
+                else:
+                    raise NotImplementedError(type(_t))
+            finally:
+                self.in_typedef = orig_in_typedef
+        elif t == HdlTypeSubtype:
+            raise NotImplementedError()
         else:
             # signal/variable/port/generic
-            latch = var.is_latched
-            c = var.is_const
-            if c:
-                w("CONSTANT ")
-            elif latch:
-                w("VARIABLE ")
-            else:
-                w("SIGNAL ")
+            if not self.in_typedef:
+                latch = var.is_latched
+                c = var.is_const
+                if c:
+                    w("CONSTANT ")
+                elif latch:
+                    w("VARIABLE ")
+                else:
+                    w("SIGNAL ")
             w(name)
             w(" : ")
             self.visit_type(t)

@@ -5,8 +5,17 @@
 namespace hdlConvertor {
 namespace hdlObjects {
 
+static const char *const HdlClassType_toStr[HdlClassType::INTERFACE + 1] = {
+		"CLASS", "STRUCT", "UNION", "INTERFACE", };
+
+const char* HdlClassType_toString(HdlClassType ct) {
+	if (ct > HdlClassType::INTERFACE)
+		throw std::runtime_error("Invalid HdlClassType value");
+	return HdlClassType_toStr[ct];
+}
+
 HdlClassDef::HdlClassDef() :
-		type(HdlClassType::hdl_class), is_packed(false), is_virtual(false) {
+		type(HdlClassType::CLASS), is_packed(false), is_virtual(false) {
 }
 HdlClassDef::HdlClassDef(const HdlClassDef &other) :
 		type(other.type), is_packed(other.is_packed), is_virtual(
@@ -21,7 +30,7 @@ iHdlExprItem* HdlClassDef::clone() const {
 HdlEnumDef::HdlEnumDef() {
 }
 HdlEnumDef::HdlEnumDef(const HdlEnumDef &other) {
-	for (auto & member : other.values) {
+	for (auto &member : other.values) {
 		std::unique_ptr<std::string> k = nullptr;
 		std::unique_ptr<iHdlExprItem> v = nullptr;
 		if (member.first) {

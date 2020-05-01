@@ -1,7 +1,6 @@
 from enum import Enum
 
-from hdlConvertor.hdlAst import HdlModuleDec, HdlCall, HdlSubtype, HdlRange, \
-    HdlSimpleRange
+from hdlConvertor.hdlAst import HdlModuleDec, HdlCall
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
