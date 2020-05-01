@@ -41,7 +41,7 @@ class Vhdl2008StdExamplesParseTC(HdlParseTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    #suite.addTest(Vhdl2008StdExamplesParseTC('test_types'))
+    # suite.addTest(Vhdl2008StdExamplesParseTC('test_types'))
     suite.addTest(unittest.makeSuite(Vhdl2008StdExamplesParseTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
