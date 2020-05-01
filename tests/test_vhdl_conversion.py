@@ -81,10 +81,16 @@ class VhdlConversionTC(HdlParseTC):
     def test_enum(self):
         self.parseWithRef("enum.vhd", Language.VHDL)
 
+    def test_array(self):
+        self.parseWithRef("array.vhd", Language.VHDL)
+
+    def test_subtype(self):
+        self.parseWithRef("subtype.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_example_record_pkg'))
+    # suite.addTest(VhdlConversionTC('test_array'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
