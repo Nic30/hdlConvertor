@@ -10,6 +10,7 @@ static const char* const opTypeToStr[HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN +
 		"THROUGHOUT",
 		"REFERENCE",
 		"DEREFERENCE",
+		"DEFINE_RESOLVER",
 		"TYPE_OF",
 		"INDEX",
 		"DOWNTO",

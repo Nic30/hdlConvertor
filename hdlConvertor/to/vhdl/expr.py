@@ -218,6 +218,11 @@ class ToVhdl2008Expr(ToHdlCommon):
             w("ABS(")
             self.visit_iHdlExpr(o.ops[0])
             w(")")
+        elif op == HdlBuiltinFn.DEFINE_RESOLVER:
+            assert self.in_typedef
+            self.visit_iHdlExpr(o.ops[0])
+            w(" ")
+            self.visit_iHdlExpr(o.ops[1])
         else:
             return ToHdlCommon.visit_HdlCall(self, o)
 

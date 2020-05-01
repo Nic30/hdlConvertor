@@ -291,9 +291,6 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 	unique_ptr<iHdlExprItem> ri = nullptr;
 	if (_ri) {
 		ri = VhdlExprParser::visitResolution_indication(_ri);
-		NotImplementedLogger::print(
-				"VhdlTypeDeclarationParser.visitResolution_indication - element_resolution",
-				_ri);
 	}
 
 	// type_mark: name;
@@ -302,7 +299,12 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 	if (c) {
 		e = visitConstraint(move(e), c);
 	}
-	return e;
+	if (ri) {
+		return create_object<HdlCall>(ctx, move(ri),
+				HdlOperatorType::DEFINE_RESOLVER, move(e));
+	} else {
+		return e;
+	}
 }
 
 /*

@@ -242,10 +242,15 @@ class ToVhdl2008(ToVhdl2008Stm):
             finally:
                 self.in_typedef = orig_in_typedef
         elif t == HdlTypeSubtype:
-            w("SUBTYPE ")
-            w(name)
-            w(" IS ")
-            self.visit_iHdlExpr(var.value)
+            orig_in_typedef = self.in_typedef
+            try:
+                self.in_typedef = True
+                w("SUBTYPE ")
+                w(name)
+                w(" IS ")
+                self.visit_iHdlExpr(var.value)
+            finally:
+                self.in_typedef = orig_in_typedef
         else:
             # signal/variable/port/generic
             if not self.in_typedef:

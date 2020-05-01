@@ -8,6 +8,7 @@ enum HdlOperatorType {
 	THROUGHOUT, // sv throughout operator
 	REFERENCE,
 	DEREFERENCE,
+	DEFINE_RESOLVER, // used in resolver specification in vhdl subtype definition
 	TYPE_OF, // SV type operator
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification

@@ -121,6 +121,7 @@ class HdlBuiltinFn(Enum):
         THROUGHOUT,  # SV throughout operator 
         REFERENCE,
         DEREFERENCE,
+        DEFINE_RESOLVER,  # used in resolver specification in vhdl subtype definition
         TYPE_OF,  # SV type operator
         INDEX,  # array index
         DOWNTO,  # downto for the slice specification
@@ -183,11 +184,11 @@ class HdlBuiltinFn(Enum):
         LE_MATCH,
         GT_MATCH,
         GE_MATCH,
-        INCR_PRE,
-        DECR_PRE,
-        INCR_POST,
-        DECR_POST,
-        ASSIGN,
+        INCR_PRE,  # ++x
+        DECR_PRE,  # --x
+        INCR_POST,  # x--
+        DECR_POST,  # x++
+        ASSIGN,  # =
         PLUS_ASSIGN,  # +=
         MINUS_ASSIGN,  # -=
         MUL_ASSIGN,  # *=
@@ -200,7 +201,7 @@ class HdlBuiltinFn(Enum):
         SHIFT_RIGHT_ASSIGN,  # >>=
         ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
         ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
-    ) = range(81)
+    ) = range(82)
     # note that in verilog bitewise operators can have only one argument
 
 
