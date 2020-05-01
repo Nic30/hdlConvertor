@@ -24,7 +24,7 @@ install:
   - "msbuild LIBANTLR4.sln /p:configuration=Release" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
   - "cd ../../../../"
-  - "%PYTHON%\\python.exe -m pip install jupyter
+  - "%PYTHON%\\python.exe -m pip install jupyter"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\Program Files\LIBANTLR4"'
     
