@@ -23,7 +23,7 @@ hdlObjects::HdlDirection visitSignalMode(
 	}
 }
 
-hdlObjects::HdlRangeDirection visitDirection(
+hdlObjects::HdlOperatorType visitDirection(
 		vhdl_antlr::vhdlParser::DirectionContext *ctx) {
 	// direction: TO | DOWNTO;
 	if (ctx->KW_TO())

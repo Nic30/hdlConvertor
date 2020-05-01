@@ -27,11 +27,8 @@ ToPy::ToPy() {
 	}
 	auto import = [this](PyObject *&obj, const std::string &name) {
 		obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
-		if (nullptr == obj) {
-			std::cout << "Bug in this library hdlConvertor.hdlAst not as expected from C\n";
-			std::cout << "  missing Python class " << name << "\n";
-		}
-                assert(obj != NULL &&"Bug in this library hdlConvertor.hdlAst not as expected from C");
+		assert(
+				obj != NULL && "Bug in this library hdlConvertor.hdlAst not as expected from C");
 	};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");
@@ -41,15 +38,11 @@ ToPy::ToPy() {
 	import(HdlCallCls, "HdlCall");
 	import(HdlBuiltinFnEnum, "HdlBuiltinFn");
 	import(HdlIntValueCls, "HdlIntValue");
+	import(HdlExprNotImplementedCls, "HdlExprNotImplemented");
 	import(HdlNameCls, "HdlName");
 	import(HdlDirectionEnum, "HdlDirection");
 	import(HdlAllCls, "HdlAll");
 	import(HdlOthersCls, "HdlOthers");
-	import(HdlSimpleRangeCls, "HdlSimpleRange");
-	import(HdlRangeCls, "HdlRange");
-	import(HdlSubtypeCls, "HdlSubtype");
-	import(HdlConstraintCls, "HdlConstraint");
-	import(HdlTypeDecCls, "HdlTypeDec");
 	import(HdlTypeAutoCls, "HdlTypeAuto");
 	import(HdlTypeTypeCls, "HdlTypeType");
 	import(HdlStmIfCls, "HdlStmIf");
@@ -109,7 +102,7 @@ PyObject* ToPy::toPy(const HdlLibrary *o) {
 }
 
 PyObject* ToPy::toPy(const iHdlObj *o) {
-	auto ex = dynamic_cast<const iHdlExpr*>(o);
+	auto ex = dynamic_cast<const iHdlExprItem*>(o);
 	if (ex)
 		return toPy(ex);
 	auto v = dynamic_cast<const HdlVariableDef*>(o);
@@ -133,9 +126,6 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto fn = dynamic_cast<const HdlFunctionDef*>(o);
 	if (fn)
 		return toPy(fn);
-	auto td = dynamic_cast<const HdlTypeDec*>(o);
-	if (td)
-		return toPy(td);
 	auto lib = dynamic_cast<const HdlLibrary*>(o);
 	if (lib)
 		return toPy(lib);
@@ -251,131 +241,42 @@ PyObject* ToPy::toPy(const HdlModuleDec *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const iHdlExpr *o) {
-	HdlCall *op = dynamic_cast<HdlCall*>(o->data);
-	if (op) 
-		return toPy(op);
+PyObject* ToPy::toPy(const iHdlExprItem *o) {
+	auto c = dynamic_cast<const HdlCall*>(o);
+	if (c)
+		return toPy(c);
+	auto va = dynamic_cast<const HdlValueArr*>(o);
+	if (va)
+		return toPy(va);
+	auto vf = dynamic_cast<const HdlValueFloat*>(o);
+	if (vf)
+		return toPy(vf);
+	auto vi = dynamic_cast<const HdlValueId*>(o);
+	if (vi)
+		return toPy(vi);
+	auto vint = dynamic_cast<const HdlValueInt*>(o);
+	if (vint)
+		return toPy(vint);
+	auto vs = dynamic_cast<const HdlValueStr*>(o);
+	if (vs)
+		return toPy(vs);
+	auto vsymb = dynamic_cast<const HdlValueSymbol*>(o);
+	if (vsymb)
+		return toPy(vsymb);
+	auto vni = dynamic_cast<const HdlExprNotImplemented*>(o);
+	if (vni)
+		return toPy(vni);
 
-	HdlValue *literal = dynamic_cast<HdlValue*>(o->data);
-	if (literal) 
-		return toPy(literal);
-
-	HdlRange *range = dynamic_cast<HdlRange*>(o->data);
-	if (range) 
-		return toPy(range);
-
-	// all the known conversions failed
-	if (o->data)
-		PyErr_SetString(PyExc_ValueError,
-				"ToPy::toPy - Expr is improperly initialized");
+	std::string err_msg;
+	if (o)
+		err_msg = std::string("ToPy::toPy unknown type of iHdlExprItem:")
+				+ std::string(typeid(*o).name());
 	else
-		PyErr_SetString(PyExc_ValueError,
-				"ToPy::toPy - Expr has NULL data");
+		err_msg = "ToPy::toPy called for nullptr";
+	PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 	return nullptr;
 }
 
-PyObject* ToPy::toPy(const HdlSubtype *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlSubtypeCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy_property(py_inst, "parent_type", o->parent_type)) // required
-		return nullptr;
-	if (o->constraint) {
-		if (toPy_property(py_inst, "constraint", o->constraint))
-			return nullptr;
-	}
-	return py_inst;
-}
-PyObject* ToPy::toPy(const HdlRange *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlRangeCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (o->subtype) {
-		if (toPy_property(py_inst, "subtype", o->subtype))
-			return nullptr;
-	}
-	if (o->range) {
-		if (toPy_property(py_inst, "range", o->range))
-			return nullptr;
-	}
-	if (o->attribute) {
-		if (toPy_property(py_inst, "attribute", o->attribute))
-			return nullptr;
-	}
-	return py_inst;
-}
-PyObject* ToPy::toPy(const HdlSimpleRange *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlSimpleRangeCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy_property(py_inst, "left", o->left)) // required
-		return nullptr;
-	if (toPy_property(py_inst, "right", o->right)) // required
-		return nullptr;
-        using namespace std::string_literals;
-	if (HdlRangeDirection::DOWNTO == o->dir) {
-		if (toPy_property(py_inst, "dir", "downto"s)) //note std::string literal
-			return nullptr;
-	} else {
-		if (toPy_property(py_inst, "dir", "to"s)) //note std::string literal
-			return nullptr;
-	}
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlConstraint *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlConstraintCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (o->range) {
-		if (toPy_property(py_inst, "range", o->range))
-			return nullptr;
-	}
-	if (toPy_arr(py_inst, "indexes", o->indexes))
-		return nullptr;
-	if (o->element) {
-		if (toPy_property(py_inst, "element", o->element))
-			return nullptr;
-	}
-	if (toPy_dict(py_inst, "field_cons", o->field_cons)) 
-		return nullptr;
-	return py_inst;
-}
-PyObject* ToPy::toPy(const hdlObjects::HdlTypeDec *o) {
-	PyObject *py_inst = PyObject_CallObject(HdlTypeDecCls, NULL);
-	if (!py_inst)
-		return nullptr;
-	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
-		return nullptr;
-	//TODO:: convert the 'type' member into a string if it's wanted
-	if (o->subtype) {
-		if (toPy_property(py_inst, "subtype", o->subtype))
-			return nullptr;
-	}
-	if (toPy_dict(py_inst, "ids", o->ids))
-		return nullptr;
-	if (o->base_type) {
-		if (toPy_property(py_inst, "base_type", o->base_type))
-			return nullptr;
-	}
-	if (o->isUnion) {
-		if (toPy_property(py_inst, "isUnion", Py_True))
-			return nullptr;
-	} else {
-		if (toPy_property(py_inst, "isUnion", Py_False))
-			return nullptr;
-	}
-	if (o->indexes) {
-		if (toPy_property(py_inst, "indexes", o->indexes))
-			return nullptr;
-	}
-	if (o->elem_type) {
-		if (toPy_property(py_inst, "elem_type", o->elem_type))
-			return nullptr;
-	}
-	if (toPy_dict(py_inst, "fields", o->fields))
-		return nullptr;
-	return py_inst;
-}
 PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlFunctionDefCls, NULL);
 	if (py_inst == nullptr)
@@ -406,95 +307,112 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const HdlValue *o) {
-	auto t = o->type;
+PyObject* ToPy::toPy(const HdlValueId *o) {
+	assert(!o->_str.empty());
+	auto v = PyUnicode_FromString(o->_str.c_str());
+	if (!v)
+		return nullptr;
+	return PyObject_CallFunctionObjArgs(HdlNameCls, v, NULL);
+}
 
-	if (t == HdlValueType::symb_ID) {
-		assert(!o->_str.empty());
-		auto v = PyUnicode_FromString(o->_str.c_str());
-		if (!v)
+PyObject* ToPy::toPy(const HdlValueInt *o) {
+	auto &_v = o->_int;
+	PyObject *v, *bits, *base = nullptr;
+	if (_v.is_bitstring()) {
+		v = PyUnicode_FromString(_v.bitstring.c_str());
+	} else {
+		v = PyLong_FromLong(_v.val);
+	}
+	if (!v)
+		return nullptr;
+	if (_v.is_bitstring()) {
+		base = PyLong_FromLong(_v.bitstring_base);
+		if (!base) {
+			Py_DECREF(v);
 			return nullptr;
-		return PyObject_CallFunctionObjArgs(HdlNameCls, v, NULL);
-	} else if (t == HdlValueType::symb_INT) {
-		auto &_v = o->_int;
-		PyObject *v, *bits, *base = nullptr;
-		if (_v.is_bitstring()) {
-			v = PyUnicode_FromString(_v.bitstring.c_str());
-		} else {
-			v = PyLong_FromLong(_v.val);
 		}
-		if (!v)
+	} else {
+		Py_INCREF(Py_None);
+		base = Py_None;
+	}
+	if (o->bits > 0) {
+		bits = PyLong_FromLong(o->bits);
+		if (!bits) {
+			Py_XDECREF(base);
+			Py_DECREF(v);
 			return nullptr;
-		if (_v.is_bitstring()) {
-			base = PyLong_FromLong(_v.bitstring_base);
-			if (!base) {
-				Py_DECREF(v);
-				return nullptr;
-			}
-		} else {
-			Py_INCREF(Py_None);
-			base = Py_None;
 		}
-		if (o->bits > 0) {
-			bits = PyLong_FromLong(o->bits);
-			if (!bits) {
-				Py_XDECREF(base);
-				Py_DECREF(v);
-				return nullptr;
-			}
-		} else {
-			Py_INCREF(Py_None);
-			bits = Py_None;
-		}
+	} else {
+		Py_INCREF(Py_None);
+		bits = Py_None;
+	}
 
-		return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, bits, base, NULL);
-	} else if (t == HdlValueType::symb_FLOAT) {
-		return PyFloat_FromDouble(o->_float);
-	} else if (t == HdlValueType::symb_STRING) {
-		return PyUnicode_FromString(o->_str.c_str());
-	} else if (t == HdlValueType::symb_OPEN) {
+	return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, bits, base, NULL);
+}
+
+
+PyObject* ToPy::toPy(const HdlValueFloat *o) {
+	return PyFloat_FromDouble(o->_float);
+}
+
+PyObject* ToPy::toPy(const HdlValueStr *o) {
+	return PyUnicode_FromString(o->_str.c_str());
+}
+
+PyObject* ToPy::toPy(const HdlValueArr *o) {
+	assert(o->_arr);
+	auto val = PyList_New(o->_arr->size());
+	if (!val)
+		return nullptr;
+	size_t indx = 0;
+	for (auto &elem : *o->_arr) {
+		auto tmp = toPy(elem);
+		if (!tmp) {
+			Py_DECREF(val);
+			return nullptr;
+		}
+		int e = PyList_SetItem(val, indx, tmp);
+		if (e) {
+			Py_DECREF(val);
+			return nullptr;
+		}
+		indx++;
+	}
+	return val;
+}
+
+
+PyObject* ToPy::toPy(const HdlValueSymbol *o) {
+	switch (o->symb) {
+	case HdlValueSymbol_t::symb_OPEN:
 		Py_RETURN_NONE;
-	} else if (t == HdlValueType::symb_ARRAY) {
-		assert(o->_arr);
-		auto val = PyList_New(o->_arr->size());
-		if (!val)
-			return nullptr;
-		size_t indx = 0;
-		for (auto &elem : *o->_arr) {
-			auto tmp = toPy(elem);
-			if (!tmp) {
-				Py_DECREF(val);
-				return nullptr;
-			}
-			int e = PyList_SetItem(val, indx, tmp);
-			if (e) {
-				Py_DECREF(val);
-				return nullptr;
-			}
-			indx++;
-		}
-		return val;
-	} else if (t == HdlValueType::symb_ALL) {
+	case HdlValueSymbol_t::symb_ALL:
 		Py_INCREF(HdlAllCls);
 		return HdlAllCls;
-	} else if (t == HdlValueType::symb_NULL) {
+	case HdlValueSymbol_t::symb_NULL:
 		Py_RETURN_NONE;
-	} else if (t == HdlValueType::symb_T) {
+	case HdlValueSymbol_t::symb_T:
 		Py_INCREF(HdlTypeTypeCls);
 		return HdlTypeTypeCls;
-	} else if (t == HdlValueType::symb_AUTO) {
+	case HdlValueSymbol_t::symb_T_AUTO:
 		Py_INCREF(HdlTypeAutoCls);
 		return HdlTypeAutoCls;
-	} else if (t == HdlValueType::symb_ALL) {
-		Py_INCREF(HdlAllCls);
-		return HdlAllCls;
-	} else if (t == HdlValueType::symb_OTHERS) {
+	case HdlValueSymbol_t::symb_OTHERS:
 		Py_INCREF(HdlOthersCls);
 		return HdlOthersCls;
-	} else {
+	default:
 		PyErr_SetString(PyExc_AssertionError, "invalid type of the HdlValue");
 		return nullptr;
 	}
+}
+
+PyObject* ToPy::toPy(const HdlExprNotImplemented *o) {
+	PyObject *py_inst = PyObject_CallObject(HdlExprNotImplementedCls, NULL);
+	if (py_inst == nullptr)
+		return nullptr;
+	if (toPy(static_cast<const WithPos*>(o), py_inst))
+		return nullptr;
+	return py_inst;
 }
 
 PyObject* ToPy::toPy(const HdlOperatorType o) {
@@ -567,7 +485,7 @@ PyObject* ToPy::toPy(const HdlVariableDef *o) {
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
 
-	if (toPy_property(py_inst, "type", o->type)) // required
+	if (toPy_property(py_inst, "type", o->type))
 		return nullptr;
 	if (o->value) {
 		if (toPy_property(py_inst, "value", o->value))
@@ -620,17 +538,13 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmProcessCls);
 	Py_XDECREF(HdlStmAssignCls);
 	Py_XDECREF(HdlStmIfCls);
-	Py_XDECREF(HdlTypeTypeCls);
-	Py_XDECREF(HdlTypeAutoCls);
-	Py_XDECREF(HdlTypeDecCls);
-	Py_XDECREF(HdlConstraintCls);
-	Py_XDECREF(HdlSubtypeCls);
-	Py_XDECREF(HdlRangeCls);
-	Py_XDECREF(HdlSimpleRangeCls);
 	Py_XDECREF(HdlOthersCls);
 	Py_XDECREF(HdlAllCls);
+	Py_XDECREF(HdlTypeAutoCls);
+	Py_XDECREF(HdlTypeTypeCls);
 	Py_XDECREF(HdlDirectionEnum);
 	Py_XDECREF(HdlNameCls);
+	Py_XDECREF(HdlExprNotImplementedCls);
 	Py_XDECREF(HdlIntValueCls);
 	Py_XDECREF(HdlBuiltinFnEnum);
 	Py_XDECREF(HdlCallCls);
@@ -639,7 +553,6 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlModuleDefCls);
 	Py_XDECREF(CodePositionCls);
 	Py_XDECREF(ContextCls);
-
 	Py_XDECREF(hdlAst_module);
 }
 

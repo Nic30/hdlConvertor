@@ -1,4 +1,5 @@
 #include <hdlConvertor/hdlObjects/hdlCall.h>
+#include <hdlConvertor/createObject.h>
 
 using namespace std;
 
@@ -10,22 +11,22 @@ HdlCall::HdlCall() {
 	operands.reserve(2);
 }
 
-HdlCall::HdlCall(const HdlCall &o) {
+HdlCall::HdlCall(const HdlCall &o): iHdlExprItem() {
 	operands.reserve(o.operands.size());
 	for (auto &op : o.operands) {
-		operands.push_back(make_unique<iHdlExpr>(*op));
+		operands.push_back(op->clone_uniq());
 	}
 	op = o.op;
 }
 
-HdlCall::HdlCall(HdlOperatorType operatorType, unique_ptr<iHdlExpr> op0) {
+HdlCall::HdlCall(HdlOperatorType operatorType, unique_ptr<iHdlExprItem> op0) {
 	operands.push_back(move(op0));
 	this->op = operatorType;
 
 }
 
-HdlCall::HdlCall(unique_ptr<iHdlExpr> op0, HdlOperatorType operatorType,
-		unique_ptr<iHdlExpr> op1) {
+HdlCall::HdlCall(unique_ptr<iHdlExprItem> op0, HdlOperatorType operatorType,
+		unique_ptr<iHdlExprItem> op1) {
 	if (op0) {
 		operands.push_back(move(op0));
 		//assert(!op1);
@@ -35,9 +36,11 @@ HdlCall::HdlCall(unique_ptr<iHdlExpr> op0, HdlOperatorType operatorType,
 	this->op = operatorType;
 }
 
-HdlCall* HdlCall::call(unique_ptr<iHdlExpr> fn,
-		std::vector<unique_ptr<iHdlExpr>> &operands) {
-	auto o = new HdlCall();
+
+unique_ptr<HdlCall> HdlCall::call(unique_ptr<iHdlExprItem> fn,
+		vector<unique_ptr<iHdlExprItem>> &operands) {
+	auto o = unique_ptr<HdlCall>(new HdlCall());
+
 	o->op = HdlOperatorType::CALL;
 	o->operands.reserve(operands.size() + 1);
 	o->operands.push_back(move(fn));
@@ -46,9 +49,10 @@ HdlCall* HdlCall::call(unique_ptr<iHdlExpr> fn,
 	return o;
 }
 
-HdlCall* HdlCall::parametrization(unique_ptr<iHdlExpr> fn,
-		std::vector<unique_ptr<iHdlExpr>> &operands) {
-	auto o = new HdlCall();
+unique_ptr<HdlCall> HdlCall::parametrization(unique_ptr<iHdlExprItem> fn,
+		vector<unique_ptr<iHdlExprItem>> &operands) {
+	auto o = unique_ptr<HdlCall>(new HdlCall());
+
 	o->op = HdlOperatorType::PARAMETRIZATION;
 	o->operands.reserve(operands.size() + 1);
 	o->operands.push_back(move(fn));
@@ -57,28 +61,36 @@ HdlCall* HdlCall::parametrization(unique_ptr<iHdlExpr> fn,
 	return o;
 }
 
-HdlCall* HdlCall::slice(unique_ptr<iHdlExpr> fn,
-		std::vector<unique_ptr<iHdlExpr>> &operands) {
-	auto o = new HdlCall();
-	o->op = HdlOperatorType::INDEX;
-	o->operands.reserve(operands.size() + 1);
-	o->operands.push_back(move(fn));
-	for (auto &op : operands)
-		o->operands.push_back(move(op));
+unique_ptr<HdlCall> HdlCall::ternary(unique_ptr<iHdlExprItem> cond,
+		unique_ptr<iHdlExprItem> ifTrue, unique_ptr<iHdlExprItem> ifFalse) {
+	auto o = unique_ptr<HdlCall>(new HdlCall());
+
+	o->op = HdlOperatorType::TERNARY;
+	o->operands.push_back(move(cond));
+	o->operands.push_back(move(ifTrue));
+
+	if (ifFalse)
+		o->operands.push_back(move(ifFalse));
+
 	return o;
 }
 
-HdlCall* HdlCall::ternary(unique_ptr<iHdlExpr> cond,
-		unique_ptr<iHdlExpr> ifTrue, unique_ptr<iHdlExpr> ifFalse) {
-	HdlCall *op = new HdlCall();
-	op->op = HdlOperatorType::TERNARY;
-	op->operands.push_back(move(cond));
-	op->operands.push_back(move(ifTrue));
-
-	if (ifFalse)
-		op->operands.push_back(move(ifFalse));
-
-	return op;
+unique_ptr<HdlCall> HdlCall::ternary(ParserRuleContext *ctx,
+		unique_ptr<iHdlExprItem> cond,
+		unique_ptr<iHdlExprItem> ifTrue,
+		unique_ptr<iHdlExprItem> ifFalse) {
+	return update_code_position(HdlCall::ternary(move(cond), move(ifTrue), move(ifFalse)), ctx);
+}
+unique_ptr<HdlCall> HdlCall::call(ParserRuleContext *ctx,
+		unique_ptr<iHdlExprItem> fnId,
+		vector<unique_ptr<iHdlExprItem>> &args) {
+	return update_code_position(HdlCall::call(move(fnId), args), ctx);
+}
+unique_ptr<HdlCall> HdlCall::parametrization(
+		ParserRuleContext *ctx,
+		unique_ptr<iHdlExprItem> fnId,
+		vector<unique_ptr<iHdlExprItem>> &args) {
+	return update_code_position(HdlCall::parametrization(move(fnId), args), ctx);
 }
 
 HdlCall::~HdlCall() {

@@ -31,10 +31,10 @@ public:
 
 class HdlExprAndStm {
 public:
-	std::unique_ptr<iHdlExpr> expr;
+	std::unique_ptr<iHdlExprItem> expr;
 	std::unique_ptr<iHdlStatement> stm;
 	HdlExprAndStm();
-	HdlExprAndStm(std::unique_ptr<iHdlExpr> expr,
+	HdlExprAndStm(std::unique_ptr<iHdlExprItem> expr,
 			std::unique_ptr<iHdlStatement> stm);
 
 };

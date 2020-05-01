@@ -11,20 +11,20 @@ public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	using TerminalNode = antlr4::tree::TerminalNode;
 
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitIntegral_number(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitIntegral_number(
 			sv2017Parser::Integral_numberContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitUNSIGNED_NUMBER(TerminalNode *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitUNSIGNED_NUMBER(TerminalNode *ctx);
 	static size_t parseSize_UNSIGNED_NUMBER(std::string str);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitANY_BASED_NUMBER(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitANY_BASED_NUMBER(
 			sv2017Parser::Integral_numberContext *ctx, std::string str, size_t size);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitNumber(sv2017Parser::NumberContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSIMPLE_IDENTIFIER(TerminalNode *n);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitC_IDENTIFIER(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitNumber(sv2017Parser::NumberContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitSIMPLE_IDENTIFIER(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitC_IDENTIFIER(TerminalNode *n);
 	static std::string visitESCAPED_IDENTIFIER(TerminalNode *n);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitReal_number(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitReal_number(
 			sv2017Parser::Real_numberContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitTIME_LITERAL(TerminalNode *n);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSTRING(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitTIME_LITERAL(TerminalNode *n);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitSTRING(TerminalNode *n);
 	static hdlObjects::HdlOperatorType visitUnary_module_path_operator(
 			sv2017Parser::Unary_module_path_operatorContext *ctx);
 	static hdlObjects::HdlOperatorType visitUnary_operator(
@@ -45,9 +45,9 @@ public:
 			sv2017Parser::Operator_implContext *ctx);
 	static hdlObjects::HdlOperatorType visitAssignment_operator(
 			sv2017Parser::Assignment_operatorContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitPrimary_literal(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitPrimary_literal(
 			sv2017Parser::Primary_literalContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitAny_system_tf_identifier(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitAny_system_tf_identifier(
 			sv2017Parser::Any_system_tf_identifierContext *ctx);
 };
 

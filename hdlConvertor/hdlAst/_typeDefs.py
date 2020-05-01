@@ -2,15 +2,15 @@ from enum import Enum
 from typing import Dict, Union, Tuple, List
 from hdlConvertor.hdlAst._bases import iHdlObj,iHdlObjWithName
 
-HdlTypeInt = int
 HdlTypeStr = str
 # Verilog real
 HdlTypeFloat = float
-HdlTypeEnum = Enum
+
 
 class iHdlTypeDef(iHdlObjWithName):
     """
     Base class for definitions of HDL types.
+
     :note: note that this is not a c-like typedef but the definition of a type itself.
         c-like typedef is described as shown in examples below.
         Equivalent of SystemVerilog/vhdl:
@@ -27,7 +27,7 @@ class iHdlTypeDef(iHdlObjWithName):
 
             HdlVariableDef(name="octet", type=HdlTypeType, value=iHdlExpr(wire[7:0]))
 
-    :note: arrays are described as
+    :note: vhdl arrays types are described as
 
         .. code-block:: python
 
@@ -36,75 +36,6 @@ class iHdlTypeDef(iHdlObjWithName):
     """
 
 
-class HdlSimpleRange(iHdlObj):
-    """Simple range A:B, A to B, A DOWNTO B.
-    """
-    __slots__ = ["left", "dir", "right"]
-    def __init__(self):
-        super(HdlSimpleRange, self).__init__()
-        self.left = None
-        self.dir = None
-        self.right = None
-
-class HdlRange(iHdlObj):
-    """Combined concept of an HDL range.
-
-    The range may be defined as a subtype, (simple) range, or attribute with
-    corresponding attributes.
-    """
-    __slots__ = ["subtype", "range", "attribute"]
-    def __init__(self, subtype=None, rng=None, attribute=None):
-        super(HdlRange, self).__init__()
-        self.subtype = subtype
-        self.range = rng
-        self.attribute = attribute
-
-class HdlSubtype(iHdlObj):
-    """HDL subtype indication concept.
-
-    A subtype indication is used pretty much any time an object is declared:
-    generic/port/parameter declaration lists, variable and signal declarations,
-    etc.
-
-    """
-    __slots__ = ["parent_type", "constraint"]
-    def __init__(self, parent_type=None, constraint=None):
-        super(HdlSubtype, self).__init__()
-        self.parent_type = parent_type
-        self.constraint = constraint
-
-class HdlConstraint(iHdlObj):
-    """HDL subtype constraint
-
-    Represents any kind of constraint applied in an object declaration, port
-    declaration, etc.
-    """
-    __slots__ = ["range", "indexes", "element", "field_cons"]
-    def __init__(self):
-        super(HdlConstraint, self).__init__()
-        self.range = None
-        self.indexes = []
-        self.element = None
-        self.field_cons = {}
-
-class HdlTypeDec(iHdlObjWithName):
-    """HDL type declaration
-
-    HDL type declarations including array, record, struct, union, subtype,
-    physical, access, file, etc.
-    """
-    __slots__ = ["subtype", "ids", "base_type", "isUnion", "indexes", "elem_type", "fields"]
-    def __init__(self):
-        super(HdlTypeDec, self).__init__()
-        self.subtype = None
-        self.ids = {}
-        self.base_type = None
-        self.isUnion = False
-        self.indexes = None
-        self.elem_type = None
-        self.fields = {}
-
-# arrays are described as HdlCall(HdlBuiltinFn.INDEX, (type, array size))
 class HdlTypeBitsDef(iHdlTypeDef):
     """
     The type which represents bit or bit vector in HDL (std_logic/_vector
@@ -112,9 +43,10 @@ class HdlTypeBitsDef(iHdlTypeDef):
 
     :ivar ~.msb: index of most significant bit
     :ivar ~.lsb: index of least significant bit
-    :ivar ~.signed: True for SV/VDHL signed type, False for unsigned, None if not specified
-        (std_logic_vector, wire, reg)
-    :ivar ~.bit_order_bigendian: if True in VHDL std_logic_vector(msb downto lsb) becomes (msb to lsb)
+    :ivar ~.signed: True for SV/VDHL signed type, False for unsigned,
+        None if not specified (std_logic_vector, wire, reg)
+    :ivar ~.bit_order_bigendian: if True in VHDL std_logic_vector(msb downto lsb)
+        becomes (msb to lsb)
     :ivar ~.force_vector: if msb==lsb==0 in VHDL this became std_logic
         instead of std_logic_vector(0 downto 0)
     :ivar ~.states: 2 means that each bit can be 0 or 1
@@ -163,52 +95,54 @@ class HdlTypeBitsDef(iHdlTypeDef):
             and self.is_bigendian == other.is_bigendian)
 
 
+class HdlClassType(Enum):
+    (
+        HDL_CLASS,
+        HDL_STRUCT,  # also vhdl record type
+        HDL_UNION,
+        HDL_INTERFACE,
+    ) = range(4)
+
+
 class HdlClassDef(iHdlTypeDef):
     """
     Definition of SystemVerilog class/struct/interface or VHDL record
 
-    :ivar ~.parents: parent classes for inheritance
+    :ivar ~.base_types: parent classes for inheritance
+    :type ~.base_types: List[iHdlExpr]
+    :type type: HdlClassType
     :ivar ~.is_virtual: True for for SV abstract (virtual) classes
-    :ivar ~.is_struct: True for SV struct or vhdl record
-    :ivar ~.is_union: True for SV union
-    :ivar ~.private: list of private members
-    :ivar ~.public: list of public members
-    :ivar ~.protected: list of protected members
+    :ivar ~.members: list of members
+    :type ~.members: List[HdlVariableDef]
 
-    :note: name may be None
     :note: equivalent of SystemVerilog/vhdl:
 
         .. code-block:: systemverilog
 
             typedef struct packed {
-              int a;
+                int a;
             } s_name;
 
         .. code-block:: vhdl
 
             type s_name is record
-              a    : integer;
+                a: integer;
             end record;
 
         .. code-block:: python
 
-            HdlVariableDef(name="s_name", type=HdlTypeType, value=HdlClassDef(...))
+            HdlVariableDef(name="s_name", type=HdlTypeType,
+                           value=HdlClassDef(...))
 
     """
-    __slots__ = ["name", "parents", "is_virtual",
-                 "is_struct", "is_union", "is_interface",
-                 "private", "public", "protected"]
+    __slots__ = ["base_types", "is_virtual", "is_packed", "members"]
 
     def __init__(self):
         super(HdlClassDef, self).__init__()
-        self.parents = []  # type: List[iHdlExpr]
+        self.type = HdlClassType.HDL_CLASS
         self.is_virtual = False  # type: bool
-        self.is_struct = False  # type: bool
-        self.is_union = False  # type: bool
         self.is_packed = True  # type: bool
-        self.private = []  # type: List[iHdlObj]
-        self.public = []  # type: List[iHdlObj]
-        self.protected = []  # type: List[iHdlObj]
+        self.members = []  # type: List[HdlVariableDef]
 
 
 class HdlEnumDef(iHdlTypeDef):
@@ -217,8 +151,19 @@ class HdlEnumDef(iHdlTypeDef):
 
     :note: name may be None
     :note: equivalent of SystemVerilog/vhdl:
-        enum { a, b } e_name; / type e_name is (a, b); is
-        HdlVariableDef(name="e_name", type=HdlTypeType, value=HdlEnumDef("e_name", ["a", "b"]))
+
+        .. code-block:: systemverilog
+
+            enum { a, b } e_name;
+
+        .. code-block:: vhdl
+
+           type e_name is (a, b);
+
+        .. code-block:: python
+
+            HdlVariableDef(name="e_name", type=HdlTypeType,
+                           value=HdlEnumDef("e_name", ["a", "b"]))
     """
     __slots__ = ["name", "values"]
 

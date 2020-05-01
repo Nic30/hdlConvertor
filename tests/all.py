@@ -1,5 +1,7 @@
 import unittest
 
+from tests.notebook_test import NotebookTC
+from tests.test_basic_hdl_sim_model_from_verilog import BasicHdlSimModelFromVerilogTC
 from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
 from tests.test_sv2017_std_examples_parse import Sv2017StdExamplesParseTC
 from tests.test_verilator_testsuite import VerilatorTestsuiteTC
@@ -9,10 +11,9 @@ from tests.test_verilog_preproc_grammar import VerilogPreprocGrammarTC
 from tests.test_verilog_preproc_include import VerilogPreprocIncludeTC
 from tests.test_verilog_preproc_macro_db_api import VerilogPreprocMacroDbApiTC
 from tests.test_vhdl_conversion import VhdlConversionTC
-from tests.time_logging_test_runner import TimeLoggingTestRunner
-from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
-from tests.test_basic_hdl_sim_model_from_verilog import BasicHdlSimModelFromVerilogTC
+from tests.test_yosys_testsuite import YosysTestsuiteTC
+from tests.time_logging_test_runner import TimeLoggingTestRunner
 
 
 def main_test_suite():
@@ -30,6 +31,7 @@ def main_test_suite():
         YosysTestsuiteTC,
         VUnitTestsuiteTC,
         BasicHdlSimModelFromVerilogTC,
+        NotebookTC,
     ]
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))

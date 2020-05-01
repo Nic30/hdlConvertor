@@ -41,7 +41,7 @@ class NameScope(dict):
     Contains mapping {name: obj}
 
     if name is discovered in scope it is converted to name_id
-    where id is sequential number for prefix name_
+    where id is sequential number for prefix name\_
 
     :ivar ~.level: describes how deeply nested is this NameScopeItem in 
         name hierarchy

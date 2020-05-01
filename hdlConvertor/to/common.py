@@ -128,12 +128,6 @@ class ToHdlCommon(HdlAstVisitor):
         elif isinstance(o, HdlCall):
             self.visit_HdlCall(o)
             return
-        elif isinstance(o, HdlSubtype):
-            self.visit_HdlSubtype(o)
-        elif isinstance(o, HdlRange):
-            self.visit_HdlRange(o)
-        elif isinstance(o, HdlSimpleRange):
-            self.visit_HdlSimpleRange(o)
         else:
             raise NotImplementedError(
                 "Do not know how to convert %r" % (o))
@@ -146,36 +140,6 @@ class ToHdlCommon(HdlAstVisitor):
         if op_my in self.ALL_UNARY_OPS and op_parent in self.ALL_UNARY_OPS:
             return True
         return False
-
-    def visit_HdlSubtype(self, o):
-        """
-        :type o: HdlSubtype
-        """
-        self.visit_iHdlExpr(o.parent_type)
-        if o.constraint is not None:
-            self.visit_HdlConstraint(o.constraint)
-
-    def visit_HdlRange(self, o):
-        """
-        :type o: HdlRange
-        """
-        if o.range:
-            self.visit_HdlSimpleRange(o.range)
-        if o.subtype:
-            self.visit_HdlSubtype(o.subtype)
-        if o.attribute:
-            self.visit_iHdlExpr(o.attribute)
-        
-    def visit_HdlSimpleRange(self, o):
-        """
-        :type o: HdlSimpleRange
-        """
-        w = self.out.write
-        self.visit_iHdlExpr(o.left)
-        w(" ")
-        w(o.dir.upper()) # currently just a string, may need to be HDL-specific
-        w(" ")
-        self.visit_iHdlExpr(o.right)
 
     def _visit_operand(self, operand, i,
                        parent,
@@ -370,5 +334,4 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: HdlStmBreak
         """
         raise TypeError("does not support HdlStmBreak", self, o)
-
 

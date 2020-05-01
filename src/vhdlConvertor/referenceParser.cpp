@@ -13,21 +13,21 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitSelected_name(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitSelected_name(
 		vhdlParser::Selected_nameContext *ctx) {
 	// selected_name
 	// : identifier (DOT suffix)*
 	// ;
-	std::unique_ptr<iHdlExpr> top = VhdlLiteralParser::visitIdentifier(
+	std::unique_ptr<iHdlExprItem> top = VhdlLiteralParser::visitIdentifier(
 			ctx->identifier());
 	for (auto s : ctx->suffix()) {
-		top = create_object<iHdlExpr>(ctx, move(top), DOT, visitSuffix(s));
+		top = create_object<HdlCall>(ctx, move(top), DOT, visitSuffix(s));
 	}
 	assert(top);
 	return top;
 }
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitSuffix(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitSuffix(
 		vhdlParser::SuffixContext *ctx) {
 	//suffix:
 	//      name_literal
@@ -38,9 +38,9 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitSuffix(
 		return visitName_literal(nl);
 	}
 	assert(ctx->KW_ALL());
-	return iHdlExpr::all();
+	return HdlValueSymbol::all();
 }
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_literal(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_literal(
 		vhdlParser::Name_literalContext *ctx) {
 	// name_literal:
 	//         identifier     #nameSel1
@@ -61,18 +61,17 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_literal(
 	return VhdlLiteralParser::visitSTRING_LITERAL(sl, sl->getText());
 }
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_slice_part(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_slice_part(
 		vhdlParser::Name_slice_partContext *ctx,
-		std::unique_ptr<iHdlExpr> selected_name) {
+		std::unique_ptr<iHdlExprItem> selected_name) {
 	// name_slice_part:
 	//     LPAREN explicit_range RPAREN
 	// ;
 	auto _er = ctx->explicit_range();
 	auto er = VhdlExprParser::visitExplicit_range(_er);
-	auto er_expr = std::make_unique<iHdlExpr>(std::move(er));
-	return create_object<iHdlExpr>(ctx, move(selected_name), HdlOperatorType::INDEX, move(er_expr));
+	return create_object<HdlCall>(ctx, move(selected_name), HdlOperatorType::INDEX, move(er));
 }
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName(
 		vhdlParser::NameContext *ctx) {
 	// name:
 	//     name_literal
@@ -88,7 +87,7 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName(
 	auto en = ctx->external_name();
 	if (en) {
 		NotImplementedLogger::print("ExprParser.visitName - external_name", en);
-		return iHdlExpr::null();
+		return create_object<HdlExprNotImplemented>(ctx);
 	}
 	auto nl = ctx->name_literal();
 	if (nl) {
@@ -108,18 +107,18 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName(
 	auto _s = ctx->suffix();
 	if (_s) {
 		auto s = visitSuffix(_s);
-		return create_object<iHdlExpr>(ctx, move(n), HdlOperatorType::DOT, move(s));
+		return create_object<HdlCall>(ctx, move(n), HdlOperatorType::DOT, move(s));
 	}
 	auto _al = ctx->association_list();
 	assert(_al);
 	auto al = VhdlExprParser::visitAssociation_list(_al);
 	assert(al);
-	return iHdlExpr::call(_al, move(n), *al);
+	return HdlCall::call(_al, move(n), *al);
 }
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_attribute_part(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_attribute_part(
 		vhdlParser::Name_attribute_partContext *ctx,
-		std::unique_ptr<iHdlExpr> selected_name) {
+		std::unique_ptr<iHdlExprItem> selected_name) {
 	// name_attribute_part:
 	//     ( signature )? APOSTROPHE attribute_designator
 	// ;
@@ -128,11 +127,11 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitName_attribute_part(
 		NotImplementedLogger::print(
 				"ExprParser.visitAttribute_name - signature", s);
 	auto ad = ctx->attribute_designator();
-	return create_object<iHdlExpr>(ctx, move(selected_name),
+	return create_object<HdlCall>(ctx, move(selected_name),
 			HdlOperatorType::APOSTROPHE, visitAttribute_designator(ad));
 }
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitAttribute_name(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitAttribute_name(
 		vhdlParser::Attribute_nameContext *ctx) {
 	// attribute_name:
 	//  name name_attribute_part
@@ -143,15 +142,16 @@ std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitAttribute_name(
 	return visitName_attribute_part(np, move(prefix_expr));
 }
 
-std::unique_ptr<iHdlExpr> VhdlReferenceParser::visitAttribute_designator(
+std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitAttribute_designator(
 		vhdlParser::Attribute_designatorContext *ctx) {
 	// attribute_designator: identifier | any_keyword;
 	auto sn = ctx->identifier();
 	if (sn)
 		return VhdlLiteralParser::visitIdentifier(sn);
 	else {
-		std::string s = ctx->any_keyword()->getText();
-		return iHdlExpr::ID(s);
+		auto ak = ctx->any_keyword();
+		std::string s = ak->getText();
+		return create_object<HdlValueId>(ak, s);
 	}
 }
 

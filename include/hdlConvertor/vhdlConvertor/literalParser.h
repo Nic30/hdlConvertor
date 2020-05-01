@@ -22,23 +22,23 @@ public:
   using TerminalNode = antlr4::tree::TerminalNode;
   using ParserRuleContext = antlr4::ParserRuleContext;
 
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitNumeric_literal(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitNumeric_literal(
 			vhdlParser::Numeric_literalContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitPhysical_literal(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitPhysical_literal(
 			vhdlParser::Physical_literalContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitEnumeration_literal(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitEnumeration_literal(
 			vhdlParser::Enumeration_literalContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSTRING_LITERAL(
+	static std::unique_ptr<hdlObjects::HdlValueStr> visitSTRING_LITERAL(
 			TerminalNode *n, const std::string &ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitCHARACTER_LITERAL(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitCHARACTER_LITERAL(
 			TerminalNode *n, const std::string &ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitBIT_STRING_LITERAL(
+	static std::unique_ptr<hdlObjects::HdlValueInt> visitBIT_STRING_LITERAL(
 			TerminalNode *ctx, const std::string &s);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitDECIMAL_LITERAL(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitDECIMAL_LITERAL(
 			TerminalNode *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitBASED_LITERAL(
+	static std::unique_ptr<hdlObjects::HdlValueInt> visitBASED_LITERAL(
 			TerminalNode *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitIdentifier(
+	static std::unique_ptr<hdlObjects::HdlValueId> visitIdentifier(
 			vhdlParser::IdentifierContext *ctx);
 	static std::string getIdentifierStr(vhdlParser::IdentifierContext *ctx);
 	static bool isStrDesignator(vhdlParser::DesignatorContext *ctx);

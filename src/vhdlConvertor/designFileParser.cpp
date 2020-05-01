@@ -149,9 +149,9 @@ void VhdlDesignFileParser::visitLibrary_clause(
 	}
 }
 
-void flatten_doted_expr(std::unique_ptr<iHdlExpr> e,
-		std::vector<std::unique_ptr<iHdlExpr>> &arr) {
-	auto o = dynamic_cast<HdlCall*>(e->data);
+void flatten_doted_expr(std::unique_ptr<iHdlExprItem> e,
+		std::vector<std::unique_ptr<iHdlExprItem>> &arr) {
+	auto o = dynamic_cast<HdlCall*>(e.get());
 	if (o) {
 		if (o->op == HdlOperatorType::DOT) {
 			for (auto &_o : o->operands) {
@@ -172,7 +172,7 @@ void VhdlDesignFileParser::visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 	auto sns = ctx->selected_name();
 	for (auto sn : sns) {
 		auto r = VhdlReferenceParser::visitSelected_name(sn);
-		std::vector<std::unique_ptr<iHdlExpr>> ref;
+		std::vector<std::unique_ptr<iHdlExprItem>> ref;
 		flatten_doted_expr(move(r), ref);
 		auto imp = create_object<HdlStmImport>(sn, ref);
 		res.push_back(std::move(imp));

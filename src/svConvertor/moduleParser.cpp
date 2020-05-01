@@ -78,24 +78,20 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			//TODO::auto p = create_object<HdlVariableDef>(ctx, ".*", iHdlExpr::all(),
-			//TODO::		nullptr);
-			//TODO::ent->ports.push_back(move(p));
+			auto p = create_object<HdlVariableDef>(ctx, ".*", HdlValueSymbol::all(),
+					nullptr);
+			ent->ports.push_back(move(p));
 		}
 	}
 	if (ctx->KW_EXTERN()) {
 		for (auto &o : m_ctx.ent.generics) {
 			if (!o->type) {
-				//TODO::o->type = iHdlExpr::AUTO_T();
-				//
-				//rhiton: It looks like (System)Verilog has a default "type"?
+				o->type = HdlValueSymbol::type_auto();
 			}
 		}
 		for (auto &o : m_ctx.ent.ports) {
 			if (!o->type) {
-				//TODO::o->type = iHdlExpr::AUTO_T();
-				//
-				//rhiton: It looks like (System)Verilog has a default "type"?
+				o->type = HdlValueSymbol::type_auto();
 			}
 		}
 		res.push_back(move(ent));
@@ -113,7 +109,7 @@ void VerModuleParser::visitModule_declaration(
 	for (auto mi : ctx->module_item())
 		visitModule_item(mi, arch->objs, m_ctx);
 
-	arch->module_name = iHdlExpr::ID(m_ctx.ent.name);
+	arch->module_name = make_unique<HdlValueId>(m_ctx.ent.name);
 	arch->dec = move(ent);
 
 	if (m_ctx.non_ANSI_port_groups.size()) {
@@ -145,16 +141,12 @@ void VerModuleParser::visitModule_declaration(
 					consume_nonansi_ports_vars), m_ctx.arch->objs.end());
 	for (auto &o : m_ctx.ent.generics) {
 		if (!o->type) {
-			//TODO::o->type = iHdlExpr::AUTO_T();
-			//
-			// rhinton: SystemVerilog auto type
+			o->type = HdlValueSymbol::type_auto();
 		}
 	}
 	for (auto &o : m_ctx.ent.ports) {
 		if (!o->type) {
-			//TODO::o->type = iHdlExpr::AUTO_T();
-			//
-			// rhinton: SystemVerilog auto type
+			o->type = HdlValueSymbol::type_auto();
 		}
 	}
 	res.push_back(move(arch));
@@ -629,7 +621,7 @@ void VerModuleParser::visitNet_declaration(
 		return;
 	}
 	VerTypeParser tp(commentParser);
-	unique_ptr<iHdlExpr> net_type = nullptr;
+	unique_ptr<iHdlExprItem> net_type = nullptr;
 	auto nt = ctx->net_type();
 	if (nt) {
 		net_type = tp.visitNet_type(nt);
@@ -682,7 +674,7 @@ void VerModuleParser::visitNet_declaration(
 // @note same as visitList_of_net_identifiers but without the dimensions and with the default value
 void VerModuleParser::visitList_of_net_decl_assignments(
 		sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
-		unique_ptr<iHdlExpr> base_type, bool is_latched,
+		unique_ptr<iHdlExprItem> base_type, bool is_latched,
 		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 
@@ -694,25 +686,25 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		//  identifier ( unpacked_dimension )* ( ASSIGN expression )?;
 		auto _id = nd->identifier();
 		auto id = VerExprParser::getIdentifierStr(_id);
-		unique_ptr<iHdlExpr> def_val = nullptr;
+		unique_ptr<iHdlExprItem> def_val = nullptr;
 		auto e = nd->expression();
 		if (e)
 			def_val = VerExprParser(commentParser).visitExpression(e);
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		if (first) {
 			t = move(base_type);
 		} else {
-			t = make_unique<iHdlExpr>(*base_type_tmp);
+			t = base_type_tmp->clone_uniq();
 		}
 		auto uds = nd->unpacked_dimension();
 		t = tp.applyUnpacked_dimension(move(t), uds);
-		//TODO::auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
-		//TODO::if (first) {
-		//TODO::	first = false;
-		//TODO::}
-                //TODO::
-		//TODO::v->is_latched = is_latched;
-		//TODO::res.push_back(move(v));
+		auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
+		if (first) {
+			first = false;
+		}
+
+		v->is_latched = is_latched;
+		res.push_back(move(v));
 	}
 }
 

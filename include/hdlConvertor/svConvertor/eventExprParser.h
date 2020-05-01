@@ -16,10 +16,10 @@ public:
 	VerEventExprParser(SVCommentParser &commentParser);
 
 	void visitEvent_expression(sv2017Parser::Event_expressionContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &items);
+			std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> &items);
 	void visitEvent_expression_item(
 			sv2017Parser::Event_expression_itemContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &items);
+			std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> &items);
 	// @return edge operator, edge operator specified flag
 	// @note SystemVerilog "edge" returns {rising, false}
 	static std::pair<hdlObjects::HdlOperatorType, bool> visitEvent_identifier(

@@ -88,6 +88,17 @@ class HdlTypeType(object):
                          % self.__class__)
 
 
+class HdlTypeSubtype(object):
+    """
+    Type which is used in VHDL subtype definitions as a type of symbol in typedef
+    """
+    __slots__ = []
+
+    def __init__(self):
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
+
+
 class HdlTypeAuto(object):
     """
     Type which means that the type is automatically resolved
@@ -106,6 +117,8 @@ class HdlBuiltinFn(Enum):
     (Python equivalent of c++ hdlConvertor::hdlObjects::HdlOperatorType)
     """
     (
+        RANGE,  # range used in VHDL type specifications
+        RANGE_REVERSE,  # reverse range used in VHDL type specifications
         ACROSS,
         THROUGH,
         REFERENCE,
@@ -113,6 +126,8 @@ class HdlBuiltinFn(Enum):
         TOLERANCE,
         TYPE_OF,  # SV type operator
         INDEX,  # array index
+        DOWNTO,  # downto for the slice specification
+        TO,  # to for the slice specification
         MINUS_UNARY,
         PLUS_UNARY,
         OR_UNARY,  # SV or reduction (|a)
@@ -262,6 +277,16 @@ class HdlIntValue(iHdlObj):
                 return False
             except ValueError:
                 return False
+
+
+class HdlExprNotImplemented(iHdlObj):
+    """
+    An object which means that the orignal object was not converted
+    because such a functionality was not implemented.
+
+    Under normal circumstances should not appear in iHdlExpr.
+    """
+    pass
 
 
 # None is equivalent of HDL null

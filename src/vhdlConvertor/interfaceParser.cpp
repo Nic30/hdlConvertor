@@ -4,6 +4,8 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
+
 
 using std::vector;
 using vhdlParser = vhdl_antlr::vhdlParser;
@@ -17,8 +19,8 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		vhdlParser::Subtype_indicationContext *subType,
 		vhdlParser::ExpressionContext *_expr) {
 	auto vl = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
-	auto _type = VhdlExprParser::visitSubtype_indication(subType);
-	std::unique_ptr<iHdlExpr> expr = nullptr;
+	auto _type = VhdlTypeDeclarationParser::visitSubtype_indication(subType);
+	std::unique_ptr<iHdlExprItem> expr = nullptr;
 	if (_expr)
 		expr = VhdlExprParser::visitExpression(_expr);
 
@@ -29,8 +31,8 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		// : identifier ( COMMA identifier )*
 		// ;
 		if (!firstIt)
-			_type = std::make_unique<HdlSubtype>(*_type_tmp);
-		std::unique_ptr<iHdlExpr> __expr;
+			_type = _type_tmp->clone_uniq();
+		std::unique_ptr<iHdlExprItem> __expr;
 		if (!expr) {
 			firstIt = false;
 			__expr = nullptr;
@@ -38,7 +40,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 			firstIt = false;
 			__expr = move(expr);
 		} else {
-			__expr = std::make_unique<iHdlExpr>(*expr);
+			__expr = expr->clone_uniq();
 		}
 		auto v = create_object<HdlVariableDef>(i, i->getText(),
 				std::move(_type), std::move(__expr));
@@ -136,7 +138,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 
 	return std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
 }
-std::unique_ptr<iHdlExpr> VhdlInterfaceParser::visitInterface_type_declaration(
+std::unique_ptr<iHdlExprItem> VhdlInterfaceParser::visitInterface_type_declaration(
 		vhdlParser::Interface_type_declarationContext *ctx) {
 	// interface_type_declaration:
 	//       interface_incomplete_type_declaration

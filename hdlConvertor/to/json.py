@@ -1,9 +1,7 @@
 from hdlConvertor.hdlAst import HdlDirection, HdlName, HdlIntValue,\
-    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType, HdlSubtype,\
-    HdlRange, HdlSimpleRange, HdlTypeDec
+    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-
 
 
 class ToJson(HdlAstVisitor):
@@ -307,12 +305,6 @@ class ToJson(HdlAstVisitor):
             d = self.visit_HdlIntValue(o)
         elif isinstance(o, HdlCall):
             d = self.visit_HdlCall(o)
-        elif isinstance(o, HdlSubtype):
-            d = self.visit_HdlSubtype(o)
-        elif isinstance(o, HdlRange):
-            d = self.visit_HdlRange(o)
-        elif isinstance(o, HdlTypeDec):
-            d = self.visit_HdlTypeDec(o)
         elif o is HdlAll or\
                 o is HdlTypeAuto or\
                 o is HdlOthers or\
@@ -338,56 +330,6 @@ class ToJson(HdlAstVisitor):
             d["bits"] = o.bits
         if o.base is not None:
             d["base"] = o.base
-        return d
-
-    def visit_HdlSubtype(self, o):
-        """
-        :type o: HdlSubtype
-        """
-        d = {
-            "__class__": o.__class__.__name__,
-            "parent_type": o.parent_type,
-        }
-        if o.constraint is not None:
-            d['constraint'] = o.constraint
-        return d
-
-    def visit_HdlRange(self, o):
-        """
-        :type o: HdlRange
-        """
-        d = {
-            "__class__": o.__class__.__name__,
-        }
-        if o.subtype is not None:
-            d['subtype'] = o.subtype
-        if o.range is not None:
-            d['range'] = o.range
-        if o.attribute is not None:
-            d['attribute'] = o.attribute
-        return d
-
-    def visit_HdlTypeDec(self, o):
-        """
-        :type o: HdlTypeDec
-        """
-        d = {
-            "__class__": o.__class__.__name__,
-        }
-        #TODO:: add 'type' if we decide to translate this to the Python object
-        if o.subtype is not None:
-            d['subtype'] = o.subtype
-        if o.ids is not None:
-            d['ids'] = o.ids
-        if o.base_type is not None:
-            d['base_type'] = o.base_type
-        if o.indexes is not None:
-            d['indexes'] = o.indexes
-        if o.elem_type is not None:
-            d['elem_type'] = o.elem_type
-        d['isUnion'] = o.isUnion
-        if o.fields is not None:
-            d['fields'] = o.fields
         return d
 
     def visit_HdlCall(self, o):

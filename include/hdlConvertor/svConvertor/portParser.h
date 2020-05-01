@@ -22,7 +22,7 @@ public:
 			std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups);
 	std::unique_ptr<hdlObjects::HdlVariableDef> visitNonansi_port(
 			sv2017Parser::Nonansi_portContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitNonansi_port__expr_as_expr(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitNonansi_port__expr_as_expr(
 			sv2017Parser::Nonansi_port__exprContext *ctx);
 	std::unique_ptr<hdlObjects::HdlVariableDef> visitNonansi_port__expr_as_var(
 			sv2017Parser::Nonansi_port__exprContext *ctx);
@@ -33,21 +33,21 @@ public:
 	 * @note the ansi port can have chain of ports without direction and base type specified
 	 * 		in this case type/dir of previous port should be used
 	 * */
-	std::pair<std::unique_ptr<hdlObjects::HdlVariableDef>, hdlObjects::iHdlExpr*> visitAnsi_port_declaration(
+	std::pair<std::unique_ptr<hdlObjects::HdlVariableDef>, hdlObjects::iHdlExprItem*> visitAnsi_port_declaration(
 			sv2017Parser::Ansi_port_declarationContext *ctx,
 			hdlObjects::HdlVariableDef *prev_var,
-			hdlObjects::iHdlExpr *prev_var_base_t);
+			hdlObjects::iHdlExprItem *prev_var_base_t);
 	void visitNonansi_port_declaration(
 			sv2017Parser::Nonansi_port_declarationContext *ctx,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	void visitList_of_variable_port_identifiers(
 			sv2017Parser::List_of_variable_port_identifiersContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> base_type, bool latched,
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_type, bool latched,
 			hdlObjects::HdlDirection direction, const std::string &doc,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	void visitList_of_tf_variable_identifiers(
 			sv2017Parser::List_of_tf_variable_identifiersContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> base_type, bool latched,
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_type, bool latched,
 			hdlObjects::HdlDirection direction, const std::string &doc,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	/*
@@ -57,7 +57,7 @@ public:
 	 * */
 	void visitList_of_variable_identifiers(
 			sv2017Parser::List_of_variable_identifiersContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> base_type, bool latched,
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_type, bool latched,
 			hdlObjects::HdlDirection direction, const std::string &doc,
 			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &res);
 	// wrap children on non_ansi ports to new ANSI port with name of parent port

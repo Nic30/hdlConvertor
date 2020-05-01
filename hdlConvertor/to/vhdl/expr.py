@@ -37,6 +37,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.DOWNTO: " DOWNTO ",
         HdlBuiltinFn.ARROW: " => ",
         HdlBuiltinFn.MAP_ASSOCIATION: " => ",
+        HdlBuiltinFn.RANGE: " RANGE ",
         HdlBuiltinFn.CONCAT: " & ",
         HdlBuiltinFn.ROL: " ROL ",
         HdlBuiltinFn.ROR: " ROR ",
@@ -231,7 +232,7 @@ class ToVhdl2008Expr(ToHdlCommon):
         else:
             ESCAPES = {
                 '\n': 'LF\n',
-                '\r': 'CR'
+                '\c': 'CR'
             }
             CONC = self.GENERIC_BIN_OPS[HdlBuiltinFn.CONCAT]
             first = True

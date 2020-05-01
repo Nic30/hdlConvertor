@@ -11,7 +11,6 @@
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
@@ -59,8 +58,8 @@ void VhdlPackageHeaderParser::visitPackage_header(
 	auto gc = ctx->generic_clause();
 	if (gc)
 		//visitGeneric_clause(gc);
-		NotImplementedLogger::print(
-				"PackageHeaderParser.visitGeneric_clause", gc);
+		NotImplementedLogger::print("PackageHeaderParser.visitGeneric_clause",
+				gc);
 	auto gma = ctx->generic_map_aspect();
 	if (gma)
 		//visitGeneric_map_aspect(gma);
@@ -103,7 +102,9 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	// ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
-		ph->objs.push_back(VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp));
+		ph->objs.push_back(
+				VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
+						sp));
 		return;
 	}
 	auto sid = ctx->subprogram_instantiation_declaration();
@@ -130,19 +131,19 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	auto td = ctx->type_declaration();
 	if (td) {
 		auto t = VhdlTypeDeclarationParser::visitType_declaration(td);
-                ph->objs.push_back(std::move(t));
-                return;
+		ph->objs.push_back(std::move(t));
+		return;
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
-		ph->objs.push_back(move(_st));
+		auto _st = VhdlTypeDeclarationParser::visitSubtype_declaration(st);
+		ph->objs.push_back(std::move(_st));
 		return;
 	}
 	auto constd = ctx->constant_declaration();
 	if (constd) {
 		auto constants = VhdlConstantParser::visitConstant_declaration(constd);
-		for (auto & c : *constants) {
+		for (auto &c : *constants) {
 			ph->objs.push_back(move(c));
 		}
 		return;
@@ -150,7 +151,7 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	auto sd = ctx->signal_declaration();
 	if (sd) {
 		auto signals = VhdlSignalParser::visitSignal_declaration(sd);
-		for (auto & s : *signals) {
+		for (auto &s : *signals) {
 			ph->objs.push_back(move(s));
 		}
 		return;
@@ -158,7 +159,7 @@ void VhdlPackageHeaderParser::visitPackage_declarative_item(
 	auto vd = ctx->variable_declaration();
 	if (vd) {
 		auto variables = VhdlVariableParser::visitVariable_declaration(vd);
-		for (auto & v : *variables) {
+		for (auto &v : *variables) {
 			ph->objs.push_back(move(v));
 		}
 		return;

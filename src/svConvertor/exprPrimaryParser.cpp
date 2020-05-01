@@ -19,7 +19,7 @@ VerExprPrimaryParser::VerExprPrimaryParser(SVCommentParser &_commentParser) :
 
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimary(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimary(
 		sv2017Parser::PrimaryContext *ctx) {
 	// primary:
 	//     primary_literal                               #primaryLit
@@ -149,7 +149,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimary(
 	return nullptr;
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCast(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCast(
 		sv2017Parser::PrimaryCastContext *ctx) {
 	//     | ( KW_STRING
 	//         | KW_CONST
@@ -159,10 +159,10 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCast(
 	//         ) APOSTROPHE LPAREN expression RPAREN     #PrimaryCast
 
 	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryCast", ctx);
-	return iHdlExpr::null();
+	return create_object<HdlExprNotImplemented>(ctx);
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCast2(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCast2(
 		sv2017Parser::PrimaryCast2Context *ctx) {
 	//     | primary APOSTROPHE LPAREN expression RPAREN #PrimaryCast2
 	auto _p = ctx->primary();
@@ -170,10 +170,10 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCast2(
 	auto _e = ctx->expression();
 	VerExprParser ep(commentParser);
 	auto e = ep.visitExpression(_e);
-	return create_object<iHdlExpr>(ctx, move(p), HdlOperatorType::CALL, move(e));
+	return create_object<HdlCall>(ctx, move(p), HdlOperatorType::CALL, move(e));
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryBitSelect(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryBitSelect(
 		sv2017Parser::PrimaryBitSelectContext *ctx) {
 	//     | primary bit_select                          #PrimaryBitSelect
 	auto _p = ctx->primary();
@@ -183,7 +183,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryBitSelect(
 	return ep.visitBit_select(_bs, move(p));
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryDot(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryDot(
 		sv2017Parser::PrimaryDotContext *ctx) {
 	//     | primary DOT identifier                      #PrimaryDot
 	auto _p = ctx->primary();
@@ -193,7 +193,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryDot(
 	return append_expr(_p, move(p), HdlOperatorType::DOT, move(id));
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryIndex(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryIndex(
 		sv2017Parser::PrimaryIndexContext *ctx) {
 	//     | primary LSQUARE_BR array_range_expression RSQUARE_BR #PrimaryIndex
 	auto _p = ctx->primary();
@@ -205,7 +205,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryIndex(
 	return p;
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryConcat(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryConcat(
 		sv2017Parser::PrimaryConcatContext *ctx) {
 	//     | concatenation                                        #PrimaryConcat
 	auto c = ctx->concatenation();
@@ -213,16 +213,16 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryConcat(
 	return ep.visitConcatenation(c);
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryStreaming_concatenation(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryStreaming_concatenation(
 		sv2017Parser::PrimaryStreaming_concatenationContext *ctx) {
 	//     | streaming_concatenation                              #PrimaryStreaming_concatenation
 
 	NotImplementedLogger::print(
 			"VerExprPrimaryParser.visitPrimaryStreaming_concatenation", ctx);
-	return iHdlExpr::null();
+	return create_object<HdlExprNotImplemented>(ctx);
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryTfCall(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryTfCall(
 		sv2017Parser::PrimaryTfCallContext *ctx) {
 	//     | any_system_tf_identifier ( LPAREN data_type COMMA list_of_arguments
 	//          ( COMMA clocking_event )? RPAREN
@@ -233,7 +233,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryTfCall(
 
 	VerExprParser ep(commentParser);
 	VerTypeParser tp(commentParser);
-	vector<unique_ptr<iHdlExpr>> args;
+	vector<unique_ptr<iHdlExprItem>> args;
 	auto _dt = ctx->data_type();
 	if (_dt)
 		args.push_back(tp.visitData_type(_dt));
@@ -247,40 +247,40 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryTfCall(
 				"VerExprPrimaryParser.visitPrimaryTfCall.clocking_event", ctx);
 		// args.push_back(ep.visitClocking_event(ce));
 	}
-	return iHdlExpr::call(ctx, move(id), args);
+	return HdlCall::call(ctx, move(id), args);
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryRandomize(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryRandomize(
 		sv2017Parser::PrimaryRandomizeContext *ctx) {
 	//     | ( KW_STD DOUBLE_COLON )?  randomize_call    #PrimaryRandomize
 
 	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryRandomize",
 			ctx);
-	return iHdlExpr::null();
+	return create_object<HdlExprNotImplemented>(ctx);
 }
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryRandomize2(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryRandomize2(
 		sv2017Parser::PrimaryRandomize2Context *ctx) {
 	//     | primary DOT randomize_call                  #PrimaryRandomize2
 
 	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryRandomize2",
 			ctx);
-	return iHdlExpr::null();
+	return create_object<HdlExprNotImplemented>(ctx);
 }
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryAssig(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryAssig(
 		sv2017Parser::PrimaryAssigContext *ctx) {
 	//     | assignment_pattern_expression               #PrimaryAssig
 
 	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryAssig", ctx);
-	return iHdlExpr::null();
+	return create_object<HdlExprNotImplemented>(ctx);
 }
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryTypeRef(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryTypeRef(
 		sv2017Parser::PrimaryTypeRefContext *ctx) {
 	//     | type_reference                              #PrimaryTypeRef
 	auto t = ctx->type_reference();
 	VerTypeParser tp(commentParser);
 	return tp.visitType_reference(t);
 }
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCall(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCall(
 		sv2017Parser::PrimaryCallContext *ctx) {
 	//     | primary ( DOT array_method_name )? ( attribute_instance )*
 	//                   LPAREN ( list_of_arguments )? RPAREN
@@ -293,7 +293,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCall(
 				"VerExprPrimaryParser.visitPrimaryCall.array_method_name",
 				_amn);
 		// auto amn = visitArray_method_name(_amn);
-		// p = make_unique<iHdlExpr>(p, HdlOperatorType::DOT, amn);
+		// p = make_unique<HdlCall>(p, HdlOperatorType::DOT, amn);
 	}
 	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	if (ctx->KW_WITH())
@@ -301,17 +301,17 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCall(
 				"VerExprPrimaryParser.visitPrimaryCall.with", ctx);
 
 	VerExprParser ep(commentParser);
-	vector<unique_ptr<iHdlExpr>> args;
+	vector<unique_ptr<iHdlExprItem>> args;
 	auto loa = ctx->list_of_arguments();
 	if (loa) {
 		ep.visitList_of_arguments(loa, args);
-		return iHdlExpr::call(ctx, move(p), args);
+		return HdlCall::call(ctx, move(p), args);
 	} else {
 		return p;
 	}
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
 		sv2017Parser::PrimaryCallArrayMethodNoArgsContext *ctx) {
 	//     | primary DOT array_method_name               #PrimaryCallArrayMethodNoArgs
 
@@ -322,14 +322,14 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
 			"VerExprPrimaryParser.visitPrimaryCallArrayMethodNoArgs.array_method_name",
 			_amn);
 	// auto amn = visitArray_method_name(_amn);
-	// p = make_unique<iHdlExpr>(move(p), HdlOperatorType::DOT, move(amn));
+	// p = make_unique<HdlCall>(move(p), HdlOperatorType::DOT, move(amn));
 
 	VerExprParser ep(commentParser);
-	vector<unique_ptr<iHdlExpr>> args;
-	return iHdlExpr::call(ctx, move(p), args);
+	vector<unique_ptr<iHdlExprItem>> args;
+	return HdlCall::call(ctx, move(p), args);
 }
 
-unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallWith(
+unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallWith(
 		sv2017Parser::PrimaryCallWithContext *ctx) {
 	//     | primary ( DOT array_method_name )? ( attribute_instance )*
 	//              KW_WITH LPAREN expression RPAREN     #PrimaryCallWith
@@ -342,7 +342,7 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallWith(
 				"VerExprPrimaryParser.visitPrimaryCallWith.array_method_name",
 				_amn);
 		// auto amn = visitArray_method_name(_amn);
-		// p = make_unique<iHdlExpr>(p, HdlOperatorType::DOT, amn);
+		// p = make_unique<HdlCall>(p, HdlOperatorType::DOT, amn);
 	}
 	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	if (ctx->KW_WITH())
@@ -350,8 +350,8 @@ unique_ptr<iHdlExpr> VerExprPrimaryParser::visitPrimaryCallWith(
 				"VerExprPrimaryParser.visitPrimaryCallWith.with", ctx);
 
 	VerExprParser ep(commentParser);
-	vector<unique_ptr<iHdlExpr>> args;
-	return iHdlExpr::call(ctx, move(p), args);
+	vector<unique_ptr<iHdlExprItem>> args;
+	return HdlCall::call(ctx, move(p), args);
 }
 
 }

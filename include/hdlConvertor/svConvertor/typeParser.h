@@ -15,67 +15,67 @@ public:
 
 	VerTypeParser(SVCommentParser &commentParser);
 
-	std::unique_ptr<hdlObjects::iHdlExpr> visitType_reference(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitType_reference(
 			sv2017Parser::Type_referenceContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitInteger_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitInteger_type(
 			sv2017Parser::Integer_typeContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitNon_integer_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitNon_integer_type(
 			sv2017Parser::Non_integer_typeContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitData_type_primitive(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitData_type_primitive(
 			sv2017Parser::Data_type_primitiveContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitInteger_atom_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitInteger_atom_type(
 			sv2017Parser::Integer_atom_typeContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitInteger_vector_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitInteger_vector_type(
 			sv2017Parser::Integer_vector_typeContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitData_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitData_type(
 			sv2017Parser::Data_typeContext *ctx);
 	/*
 	 * @note ctx can be nullptr
 	 * @note net_type can be nullptr, if specified it is used as base type
 	 * */
-	std::unique_ptr<hdlObjects::iHdlExpr> visitData_type_or_implicit(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitData_type_or_implicit(
 			sv2017Parser::Data_type_or_implicitContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> net_type);
+			std::unique_ptr<hdlObjects::iHdlExprItem> net_type);
 	static SIGNING_VAL visitSigning(sv2017Parser::SigningContext *ctx);
 	/*
 	 * @note net_type can be nullptr, if specified it is used as base type
 	 * */
-	std::unique_ptr<hdlObjects::iHdlExpr> visitImplicit_data_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitImplicit_data_type(
 			sv2017Parser::Implicit_data_typeContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> net_type);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitUnpacked_dimension(
+			std::unique_ptr<hdlObjects::iHdlExprItem> net_type);
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitUnpacked_dimension(
 			sv2017Parser::Unpacked_dimensionContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> applyUnpacked_dimension(
-			std::unique_ptr<hdlObjects::iHdlExpr> base_expr,
+	std::unique_ptr<hdlObjects::iHdlExprItem> applyUnpacked_dimension(
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_expr,
 			std::vector<sv2017Parser::Unpacked_dimensionContext*> &uds);
-	std::unique_ptr<hdlObjects::iHdlExpr> applyVariable_dimension(
-			std::unique_ptr<hdlObjects::iHdlExpr> base_expr,
+	std::unique_ptr<hdlObjects::iHdlExprItem> applyVariable_dimension(
+			std::unique_ptr<hdlObjects::iHdlExprItem> base_expr,
 			std::vector<sv2017Parser::Variable_dimensionContext*> &vds);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitPacked_dimension(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitPacked_dimension(
 			sv2017Parser::Packed_dimensionContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> _visitVariable_dimension(
+	std::unique_ptr<hdlObjects::iHdlExprItem> _visitVariable_dimension(
 			sv2017Parser::Variable_dimensionContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitVariable_dimension(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitVariable_dimension(
 			sv2017Parser::Variable_dimensionContext *ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> selected_name);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitNet_type(
+			std::unique_ptr<hdlObjects::iHdlExprItem> selected_name);
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitNet_type(
 			sv2017Parser::Net_typeContext *ctx);
 	// @note ctx can be nullptr
-	std::unique_ptr<hdlObjects::iHdlExpr> visitNet_port_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitNet_port_type(
 			sv2017Parser::Net_port_typeContext *ctx);
 	// @return type expr, is_latched flag
-	std::pair<std::unique_ptr<hdlObjects::iHdlExpr>, bool> visitNet_or_var_data_type(
+	std::pair<std::unique_ptr<hdlObjects::iHdlExprItem>, bool> visitNet_or_var_data_type(
 			sv2017Parser::Net_or_var_data_typeContext *ctx);
 	/* @return true if static
 	 * @attention static is default if lifetime is not specified
 	 * @note ctx can be nullptr
 	 */
 	bool visitLifetime(sv2017Parser::LifetimeContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitFunction_data_type_or_implicit(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitFunction_data_type_or_implicit(
 			sv2017Parser::Function_data_type_or_implicitContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitData_type_or_void(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitData_type_or_void(
 			sv2017Parser::Data_type_or_voidContext *ctx);
-	std::unique_ptr<hdlObjects::iHdlExpr> visitVar_data_type(
+	std::unique_ptr<hdlObjects::iHdlExprItem> visitVar_data_type(
 			sv2017Parser::Var_data_typeContext *ctx);
 };
 

@@ -11,17 +11,17 @@ namespace hdlObjects {
  * */
 class HdlStmIf: public iHdlStatement {
 public:
-	std::unique_ptr<iHdlExpr> cond;
+	std::unique_ptr<iHdlExprItem> cond;
 	std::unique_ptr<iHdlStatement> ifTrue;
 	std::vector<HdlExprAndStm> elseIfs;
 	std::unique_ptr<iHdlStatement> ifFalse;
 
-	HdlStmIf(std::unique_ptr<iHdlExpr> cond,
+	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
 			std::unique_ptr<iHdlStatement> ifTrue);
-	HdlStmIf(std::unique_ptr<iHdlExpr> cond,
+	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
 			std::unique_ptr<iHdlStatement> ifTrue,
 			std::unique_ptr<iHdlStatement> ifFalse);
-	HdlStmIf(std::unique_ptr<iHdlExpr> cond,
+	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
 			std::unique_ptr<iHdlStatement> ifTrue,
 			std::vector<HdlExprAndStm> &elseIfs,
 			std::unique_ptr<iHdlStatement> ifFalse);

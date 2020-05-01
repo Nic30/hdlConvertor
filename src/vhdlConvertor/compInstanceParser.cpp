@@ -6,6 +6,7 @@
 
 #include <hdlConvertor/createObject.h>
 
+
 namespace hdlConvertor {
 namespace vhdl {
 
@@ -21,7 +22,7 @@ std::unique_ptr<HdlCompInstance> VhdlCompInstanceParser::visitComponent_instanti
 	//           ( port_map_aspect )? SEMI
 	// ;
 	auto ci = visitInstantiated_unit(ctx->instantiated_unit());
-	ci->name = iHdlExpr::ID(name);
+	ci->name = std::make_unique<HdlValueId>(name);
 
 	auto gma = ctx->generic_map_aspect();
 	if (gma) {
@@ -57,7 +58,7 @@ std::unique_ptr<HdlCompInstance> VhdlCompInstanceParser::visitInstantiated_unit(
 	return create_object<HdlCompInstance>(ctx, nullptr, std::move(ent_name));
 }
 
-std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> VhdlCompInstanceParser::visitGeneric_map_aspect(
+std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> VhdlCompInstanceParser::visitGeneric_map_aspect(
 		vhdlParser::Generic_map_aspectContext *ctx) {
 	//generic_map_aspect
 	//  : GENERIC MAP LPAREN association_list RPAREN
@@ -65,7 +66,7 @@ std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> VhdlCompInstanceParser::
 	return VhdlExprParser::visitAssociation_list(ctx->association_list());
 }
 
-std::unique_ptr<std::vector<std::unique_ptr<iHdlExpr>>> VhdlCompInstanceParser::visitPort_map_aspect(
+std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> VhdlCompInstanceParser::visitPort_map_aspect(
 		vhdlParser::Port_map_aspectContext *ctx) {
 	//port_map_aspect
 	//  : PORT MAP LPAREN association_list RPAREN

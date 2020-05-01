@@ -20,28 +20,28 @@ enum SIGNING_VAL {
 
 class Utils {
 public:
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkStringT();
+	static std::unique_ptr<hdlObjects::iHdlExprItem> mkStringT();
 
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkIntT();
+	static std::unique_ptr<hdlObjects::iHdlExprItem> mkIntT();
 	// wire type is represented by wire id or call wire(range, signed)
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT();
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
+	static std::unique_ptr<hdlObjects::iHdlExprItem> mkWireT();
+	static std::unique_ptr<hdlObjects::iHdlExprItem> mkWireT(
 			antlr4::ParserRuleContext *const ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, SIGNING_VAL signed_);
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
+			std::unique_ptr<hdlObjects::iHdlExprItem> range, SIGNING_VAL signed_);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> mkWireT(
 			antlr4::ParserRuleContext *const ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> net_type,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, SIGNING_VAL signed_);
-	static std::unique_ptr<hdlObjects::iHdlExpr> signing(SIGNING_VAL signing);
+			std::unique_ptr<hdlObjects::iHdlExprItem> net_type,
+			std::unique_ptr<hdlObjects::iHdlExprItem> range, SIGNING_VAL signed_);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> signing(SIGNING_VAL signing);
 };
 
-std::unique_ptr<hdlObjects::iHdlExpr> append_expr(
+std::unique_ptr<hdlObjects::iHdlExprItem> append_expr(
 		antlr4::ParserRuleContext *const ctx,
-		std::unique_ptr<hdlObjects::iHdlExpr> selected_name,
+		std::unique_ptr<hdlObjects::iHdlExprItem> selected_name,
 		hdlObjects::HdlOperatorType operator_to_join_with,
-		std::unique_ptr<hdlObjects::iHdlExpr> new_part);
-std::unique_ptr<hdlObjects::iHdlExpr> reduce(
-		std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &ops,
+		std::unique_ptr<hdlObjects::iHdlExprItem> new_part);
+std::unique_ptr<hdlObjects::iHdlExprItem> reduce(
+		std::vector<std::unique_ptr<hdlObjects::iHdlExprItem>> &ops,
 		hdlObjects::HdlOperatorType op);
 
 }

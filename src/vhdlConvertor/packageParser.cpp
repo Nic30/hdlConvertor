@@ -4,20 +4,14 @@
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
-#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
-#include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
-
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 #include <hdlConvertor/createObject.h>
@@ -108,7 +102,7 @@ void VhdlPackageParser::visitPackage_body_declarative_item(
 	}
     auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
+		auto _st = VhdlTypeDeclarationParser::visitSubtype_declaration(st);
 		p->objs.push_back(std::move(_st));
 		return;
 	}

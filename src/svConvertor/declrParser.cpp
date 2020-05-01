@@ -6,6 +6,8 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
+#include <assert.h>
+
 using namespace std;
 using namespace sv2017_antlr;
 using namespace hdlConvertor::hdlObjects;
@@ -68,7 +70,7 @@ void VerDeclrParser::visitData_declaration(
 
 void VerDeclrParser::visitList_of_variable_decl_assignments(
 		sv2017Parser::List_of_variable_decl_assignmentsContext *ctx,
-		unique_ptr<iHdlExpr> base_type,
+		unique_ptr<iHdlExprItem> base_type,
 		vector<unique_ptr<HdlVariableDef>> &res) {
 	// list_of_variable_decl_assignments:
 	//     variable_decl_assignment ( COMMA variable_decl_assignment )*;
@@ -85,14 +87,14 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 		// ;
 		auto _id = vda->identifier();
 		auto name = ep.getIdentifierStr(_id);
-		unique_ptr<iHdlExpr> t;
+		unique_ptr<iHdlExprItem> t;
 		if (first)
 			t = move(base_type);
 		else
-			t = make_unique<iHdlExpr>(*base_type_tmp);
+			t = base_type_tmp->clone_uniq();
 		auto vds = vda->variable_dimension();
 		t = tp.applyVariable_dimension(move(t), vds);
-		unique_ptr<iHdlExpr> v = nullptr;
+		unique_ptr<iHdlExprItem> v = nullptr;
 		auto e = vda->expression();
 		if (e) {
 			v = ep.visitExpression(e);
@@ -112,8 +114,8 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 				}
 			}
 		}
-		//TODO::auto var = create_object<HdlVariableDef>(vda, name, move(t), move(v));
-		//TODO::res.push_back(move(var));
+		auto var = create_object<HdlVariableDef>(vda, name, move(t), move(v));
+		res.push_back(move(var));
 	}
 
 }
@@ -133,30 +135,30 @@ unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
 	VerTypeParser tp(commentParser);
 	auto id0 = ctx->identifier(0);
 	auto _dt = ctx->data_type();
+	auto t = make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T);
+	string name;
+	unique_ptr<iHdlExprItem> val;
 	if (_dt) {
 		auto dt = tp.visitData_type(_dt);
 		auto vds = ctx->variable_dimension();
 		dt = tp.applyVariable_dimension(move(dt), vds);
-		auto name = ep.getIdentifierStr(id0);
-		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(dt));
-		return nullptr;
+		name = ep.getIdentifierStr(id0);
+		val = move(dt);
 	} else if (ctx->KW_ENUM() || ctx->KW_STRUCT() || ctx->KW_UNION()
 			|| ctx->KW_CLASS()) {
 		// forward typedef without actual type specified
-		auto name = ep.getIdentifierStr(id0);
-		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), iHdlExpr::null());
-		return nullptr;
+		name = ep.getIdentifierStr(id0);
+		val = HdlValueSymbol::null();
 	} else {
 		auto iwbs = ctx->identifier_with_bit_select();
-		auto val = ep.visitIdentifier_with_bit_select(iwbs, nullptr);
+		val = ep.visitIdentifier_with_bit_select(iwbs, nullptr);
 		auto ids = ctx->identifier();
 		assert(ids.size() == 2);
 		auto id = ep.visitIdentifier(ids[0]);
-		val = create_object<iHdlExpr>(iwbs, move(val), HdlOperatorType::DOT, move(id));
-		auto name = ep.getIdentifierStr(ids[1]);
-		//TODO::return create_object<HdlVariableDef>(ctx, name, iHdlExpr::TYPE_T(), move(val));
-		return nullptr;
+		val = create_object<HdlCall>(iwbs, move(val), HdlOperatorType::DOT, move(id));
+		name = ep.getIdentifierStr(ids[1]);
 	}
+	return create_object<HdlVariableDef>(ctx, name, move(t), move(val));
 }
 void VerDeclrParser::visitNet_type_declaration(
 		sv2017Parser::Net_type_declarationContext *ctx,

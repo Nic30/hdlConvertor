@@ -1,6 +1,6 @@
 from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
     HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, \
-    HdlConstraint, HdlTypeType, HdlCall, HdlBuiltinFn, HdlNamespace, \
+    HdlTypeType, HdlCall, HdlBuiltinFn, HdlNamespace, \
     HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
@@ -305,32 +305,6 @@ class ToVhdl2008(ToVhdl2008Stm):
                 self.visit_main_obj(_o)
 
         w("END PACKAGE;\n")
-
-    def visit_HdlConstraint(self, o):
-        """
-        :type o: HdlConstraint
-        """
-        w = self.out.write
-        if o.range:
-            self.visit_HdlRange(o.range)
-        if o.field_cons:  # if dict not empty
-            w("(")
-            for field_name,constraint in o.field_cons:
-                w(field_name)
-                self.visit_HdlConstraint(constraint)
-            w(")")
-        if o.indexes:
-            w("(")
-            first = True
-            for idx_range in o.indexes:
-                if not first:
-                    w(",")
-                first = False
-                self.visit_HdlRange(idx_range)
-            w(")")
-        if o.element:
-            self.visit_HdlConstraint(o.element)
-        
 
 
 if __name__ == "__main__":

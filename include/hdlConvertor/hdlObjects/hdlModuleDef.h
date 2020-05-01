@@ -12,7 +12,7 @@ namespace hdlObjects {
  * */
 class HdlModuleDef: public WithNameAndDoc, public iHdlObj {
 public:
-	std::unique_ptr<iHdlExpr> module_name;
+	std::unique_ptr<iHdlExprItem> module_name;
 	std::unique_ptr<HdlModuleDec> dec;
 
 	std::vector<std::unique_ptr<iHdlObj>> objs;
