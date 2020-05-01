@@ -1,8 +1,7 @@
 from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
-    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst
-from hdlConvertor.hdlAst._expr import HdlTypeType, HdlCall, HdlBuiltinFn
-from hdlConvertor.hdlAst._structural import HdlNamespace
-from hdlConvertor.hdlAst._typeDefs import HdlEnumDef
+    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, \
+    HdlTypeType, HdlCall, HdlBuiltinFn, HdlNamespace, \
+    HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
 
@@ -297,7 +296,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         """
         self.visit_doc(o)
         w = self.out.write
-        # if o.declaration_only:
+        #TODO:: if o.declaration_only:
         w("PACKAGE ")
         w(o.name)
         w(" IS\n")

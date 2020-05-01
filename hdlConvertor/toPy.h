@@ -68,6 +68,36 @@ class ToPy {
 	std::string PyObject_repr(PyObject *o);
 
 	template<typename OBJ_T>
+	int toPy_dict(PyObject *parent, const std::string &prop_name,
+			const std::vector<std::pair<std::string, OBJ_T>> &objs) {
+		PyObject *parent_dict = PyObject_GetAttrString(parent,
+				prop_name.c_str());
+		if (parent_dict == nullptr) {
+			std::string err_msg = (std::string(
+					"ToPy::toPy_arr object does not have specified property:")
+					+ prop_name + std::string(" : ") + PyObject_repr(parent));
+			Py_DECREF(parent);
+			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
+			return -1;
+		}
+		for (const auto &o : objs) {
+			const auto& key = o.first;
+			const auto& py_val = toPy(o.second);
+			if (py_val == nullptr) {
+				Py_DECREF(parent_dict);
+				return -1;
+			}
+			auto e = PyDict_SetItemString(parent_dict, key.c_str(), py_val);
+			Py_DECREF(py_val); // needed? docs say SetItem doesn't steal a reference
+			if (e) {
+				Py_DECREF(parent_dict);
+				return e;
+			}
+		}
+		return 0;
+	}
+
+	template<typename OBJ_T>
 	int toPy_arr(PyObject *parent, const std::string &prop_name,
 			const std::vector<OBJ_T> &objs) {
 
@@ -102,14 +132,8 @@ class ToPy {
 		return 0;
 	}
 
-	template<typename OBJ_T>
-	int toPy_property(PyObject *py_inst, const char *prop_name,
-			const std::unique_ptr<OBJ_T> &o) {
-		auto py_o = toPy(o.get());
-		if (!py_o) {
-			Py_DECREF(py_inst);
-			return -1;
-		}
+	int toPy_property(PyObject *py_inst, const char *prop_name, 
+			PyObject *py_o) {
 		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
 		if (e < 0) {
 			Py_DECREF(py_inst);
@@ -119,18 +143,23 @@ class ToPy {
 	}
 	template<typename OBJ_T>
 	int toPy_property(PyObject *py_inst, const char *prop_name,
+			const std::unique_ptr<OBJ_T> &o) {
+		auto py_o = toPy(o.get());
+		if (!py_o) {
+			Py_DECREF(py_inst);
+			return -1;
+		}
+		return toPy_property(py_inst, prop_name, py_o);
+	}
+	template<typename OBJ_T>
+	int toPy_property(PyObject *py_inst, const char *prop_name,
 			const OBJ_T &o) {
 		auto py_o = toPy(o);
 		if (!py_o) {
 			Py_DECREF(py_inst);
 			return -1;
 		}
-		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
-		if (e < 0) {
-			Py_DECREF(py_inst);
-			return -1;
-		}
-		return 0;
+		return toPy_property(py_inst, prop_name, py_o);
 	}
 public:
 	ToPy();
@@ -153,7 +182,6 @@ public:
 	PyObject* toPy(const hdlObjects::HdlLibrary *o);
 	PyObject* toPy(const hdlObjects::HdlDirection o);
 	PyObject* toPy(const hdlObjects::HdlModuleDec *o);
-
 	PyObject* toPy(const hdlObjects::iHdlExprItem *o);
 	PyObject* toPy(const hdlObjects::HdlCall *o);
 	PyObject* toPy(const hdlObjects::HdlValueArr *o);
@@ -163,8 +191,6 @@ public:
 	PyObject* toPy(const hdlObjects::HdlValueStr *o);
 	PyObject* toPy(const hdlObjects::HdlValueSymbol *o);
 	PyObject* toPy(const hdlObjects::HdlExprNotImplemented *o);
-
-
 	PyObject* toPy(const hdlObjects::HdlFunctionDef *o);
 	PyObject* toPy(const hdlObjects::iHdlObj *o);
 	PyObject* toPy(const hdlObjects::HdlOperatorType o);

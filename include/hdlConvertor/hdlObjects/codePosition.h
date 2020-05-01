@@ -8,7 +8,7 @@ namespace hdlObjects {
 /*
  * Container for position in code.
  * NOTE: stopXX are inclusive coordinates and not one beyond i.e. [startXXX, stopXXX] and not [startXXX, stopXXX)
- * Also, corrdinates are 1-based indexing i.e. first line and column is indexed as 1 and not 0.
+ * Also, coordinates are 1-based indexing i.e. first line and column is indexed as 1 and not 0.
  * */
 class CodePosition {
 public:

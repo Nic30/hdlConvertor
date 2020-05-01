@@ -157,10 +157,7 @@ int ToPy::toPy(const WithNameAndDoc *o, PyObject *py_inst) {
 	e = toPy(static_cast<const WithDoc*>(o), py_inst);
 	if (e < 0)
 		return e;
-	e = toPy(static_cast<const WithPos*>(o), py_inst);
-	if (e < 0)
-		return e;
-	return 0;
+	return toPy(static_cast<const WithPos*>(o), py_inst);
 }
 
 int ToPy::toPy(const WithDoc *o, PyObject *py_inst) {

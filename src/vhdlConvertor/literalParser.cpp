@@ -14,7 +14,7 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlObjects;
 
-std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitBIT_STRING_LITERAL(
+std::unique_ptr<HdlValueInt> VhdlLiteralParser::visitBIT_STRING_LITERAL(
 		TerminalNode *ctx, const std::string &_s) {
 	std::string s = _s;
 	std::size_t fdRadix = s.find('"') - 1;
@@ -125,7 +125,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitDECIMAL_LITERAL(
 		return create_object<HdlValueInt>(ctx, _n);
 	}
 }
-std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitBASED_LITERAL(
+std::unique_ptr<HdlValueInt> VhdlLiteralParser::visitBASED_LITERAL(
 		TerminalNode *ctx) {
 	// BASED_LITERAL:
 	//       BASE HASHTAG BASED_INTEGER ( DOT BASED_INTEGER )? HASHTAG ( EXPONENT )?
@@ -165,12 +165,12 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitEnumeration_literal(
 	if (id)
 		return visitIdentifier(id);
 
-	auto _cl = ctx->CHARACTER_LITERAL()->getText();
-	auto cl = visitCHARACTER_LITERAL(ctx->CHARACTER_LITERAL(), _cl);
+	auto _cl = ctx->CHARACTER_LITERAL();
+	auto cl = visitCHARACTER_LITERAL(_cl, _cl->getText());
 	dynamic_cast<HdlValueInt*>(cl.get())->bits = 8;
 	return cl;
 }
-std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitSTRING_LITERAL(
+std::unique_ptr<HdlValueStr> VhdlLiteralParser::visitSTRING_LITERAL(
 		TerminalNode *n, const std::string &ctx) {
 	std::string str = ctx.substr(1, ctx.length() - 2);
 	auto replace_all = [](std::string &data, const std::string &to_search,
@@ -188,7 +188,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitCHARACTER_LITERAL(
 		TerminalNode *n, const std::string &ctx) {
 	return create_object<HdlValueInt>(n, ctx.substr(1, 1), BigInteger::CHAR_BASE);
 }
-std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitIdentifier(
+std::unique_ptr<HdlValueId> VhdlLiteralParser::visitIdentifier(
 		vhdlParser::IdentifierContext *ctx) {
 	return create_object<HdlValueId>(ctx, getIdentifierStr(ctx));
 }

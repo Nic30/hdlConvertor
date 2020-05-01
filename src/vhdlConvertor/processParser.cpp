@@ -7,8 +7,9 @@
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
+
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -95,12 +96,13 @@ void VhdlProcessParser::visitProcess_declarative_item(
 	}
 	auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print("ProcessParser.visitType_declaration", td);
+		auto t = VhdlTypeDeclarationParser::visitType_declaration(td);
+		objs.push_back(std::move(t));
 		return;
 	}
 	auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
+		auto _st = VhdlTypeDeclarationParser::visitSubtype_declaration(st);
 		objs.push_back(std::move(_st));
 		return;
 	}

@@ -177,6 +177,7 @@ pair<unique_ptr<HdlVariableDef>, iHdlExprItem*> VerPortParser::visitAnsi_port_de
 		unique_ptr<iHdlExprItem> def_val = nullptr;
 		if (_e)
 			def_val = ep.visitExpression(_e);
+
 		auto p = create_object<HdlVariableDef>(ctx, name, HdlValueSymbol::type_auto(),
 				move(def_val), d, is_latched);
 		return {move(p), nullptr};

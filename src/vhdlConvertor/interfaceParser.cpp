@@ -4,6 +4,8 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
+
 
 using std::vector;
 using vhdlParser = vhdl_antlr::vhdlParser;
@@ -17,7 +19,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		vhdlParser::Subtype_indicationContext *subType,
 		vhdlParser::ExpressionContext *_expr) {
 	auto vl = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
-	auto _type = VhdlExprParser::visitSubtype_indication(subType);
+	auto _type = VhdlTypeDeclarationParser::visitSubtype_indication(subType);
 	std::unique_ptr<iHdlExprItem> expr = nullptr;
 	if (_expr)
 		expr = VhdlExprParser::visitExpression(_expr);

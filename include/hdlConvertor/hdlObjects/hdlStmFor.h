@@ -62,5 +62,6 @@ public:
 			std::unique_ptr<iHdlStatement> body);
 	virtual ~HdlStmRepeat() override;
 };
+
 }
 }

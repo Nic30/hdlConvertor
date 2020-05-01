@@ -5,6 +5,9 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
+
+
 #include <assert.h>
 
 namespace hdlConvertor {
@@ -109,7 +112,7 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramDecl
 	// | group_template_declaration
 	// | group_declaration
 	// ;
-
+	auto objs = std::make_unique<std::vector<std::unique_ptr<HdlVariableDef>>>();
 	do {
 		auto sp = ctx->subprogram_declaration();
 		if (sp) {
@@ -127,8 +130,8 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramDecl
 		}
 		auto td = ctx->type_declaration();
 		if (td) {
-			NotImplementedLogger::print("PackageParser.visitType_declaration",
-					td);
+			auto t = VhdlTypeDeclarationParser::visitType_declaration(td);
+			objs->push_back(std::move(t));
 			break;
 		}
 		auto st = ctx->subtype_declaration();
@@ -193,9 +196,7 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramDecl
 
 	} while (0);
 
-	NotImplementedLogger::print(
-			"SubProgramParser.visitSubprogram_declarative_item", ctx);
-	return std::make_unique<std::vector<std::unique_ptr<HdlVariableDef>>>();
+	return objs;
 }
 
 }

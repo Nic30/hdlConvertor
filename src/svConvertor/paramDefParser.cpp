@@ -80,7 +80,7 @@ void VerParamDefParser::visitTyped_list_of_param_assignments(
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
 	auto data_type_tmp = data_type.get();
-	for (auto &v : res_tmp) {
+	for (auto & v : res_tmp) {
 		if (first) {
 			v->type = move(data_type);
 			v->__doc__ = doc + v->__doc__;
@@ -133,6 +133,7 @@ void VerParamDefParser::visitList_of_type_assignments(
 		auto _v = _ta->data_type();
 		if (_v)
 			v = tp.visitData_type(_v);
+
 		auto _t = update_code_position(HdlValueSymbol::type(), _ta);
 		auto ta = create_object<HdlVariableDef>(_ta, name, move(_t), move(v));
 		res.push_back(move(ta));
@@ -149,6 +150,7 @@ unique_ptr<HdlVariableDef> VerParamDefParser::visitParam_assignment(
 		value = visitConstant_param_expression(cpa);
 	}
 	auto name = VerExprParser::getIdentifierStr(ctx->identifier());
+
 	auto p = create_object<HdlVariableDef>(ctx, name,
 			update_code_position(HdlValueSymbol::type_auto(), ctx),
 			move(value));

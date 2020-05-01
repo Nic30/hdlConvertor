@@ -13,12 +13,10 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
-#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/signalParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {

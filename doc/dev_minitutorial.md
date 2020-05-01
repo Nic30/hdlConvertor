@@ -73,3 +73,18 @@
    ```
    * note that for composite grammars (*Lexer.g4 + *Parser.g4) bout grammars should be agument of antlr4
      and the name of grammar for org.antlr.v4.gui.TestRig is name without Parser/lexer.
+
+# Adding a new C++ HDL object class
+
+* Define the class in a header file with extension `.h` in the directory `include/hdlConvertor/hdlObjects`.
+* Define the implementation in a source file with extension `.cpp` in the directory `src/hdlObjects`.
+* Create a corresponding Python class in one of the files (pick the best match) in `hdlConvertor/hdlAst`.
+** Add the names of your Python object properties to the `__slots__` list.  Often this list will be the same as the list of your C++ object member variables.
+* Add the import for your class in `hdlConvertor/hdlAst/__init__.py`.
+* Add a pointer for your Python class in the Python C++ extension header file `hdlConvertor/toPy.h` in the `ToPy` class.  There's a big list just past the includes, you can't miss it.
+* Add an import for your Python class in the Python C++ extension source file `hdlConvertor/toPy.cpp` in the `ToPy::ToPy()` constructor.  It's the first method definition in the file.
+* Decrement the reference to your Python class in `hdlConvertor/toPy.cpp` in the `ToPy::~ToPy()` destructor.  Dereferences should be in the opposite order of imports.
+* Add code to `toPy.cpp` to convert your C++ data structure into the corresponding Python type.  This probably requires a new overload of the `toPy` function declared in `toPy.h`.
+** Use `toPy_property(py_inst, "py_property_name", cpp_obj)` to set the property `py_property_name` on the Python object `py_inst` to the value `cpp_obj` (which will also be converted to a Python object).  There are lots of examples of this.
+* Add conversion logic to 'hdlConveertor/to/json.py'.
+* Add conversion logic to other language converters.

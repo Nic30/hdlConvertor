@@ -88,6 +88,17 @@ class HdlTypeType(object):
                          % self.__class__)
 
 
+class HdlTypeSubtype(object):
+    """
+    Type which is used in VHDL subtype definitions as a type of symbol in typedef
+    """
+    __slots__ = []
+
+    def __init__(self):
+        raise ValueError("This class (%r) is not supposed to be instantiated"
+                         % self.__class__)
+
+
 class HdlTypeAuto(object):
     """
     Type which means that the type is automatically resolved

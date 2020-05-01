@@ -315,7 +315,7 @@ class ToJson(HdlAstVisitor):
         elif isinstance(o, (list, tuple)):
             return [self.visit_iHdlExpr(o2) for o2 in o]
         else:
-            raise NotImplementedError(o)
+            raise NotImplementedError("Unexpected object of type "+str(type(o)))
         return d
 
     def visit_HdlIntValue(self, o):

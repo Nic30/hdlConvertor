@@ -1,10 +1,11 @@
 from enum import Enum
 
-from hdlConvertor.hdlAst import HdlCall
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
-from hdlConvertor.py_ver_compatibility import is_str
+from hdlConvertor.hdlAst import HdlModuleDec, HdlCall, HdlSubtype, HdlRange, \
+    HdlSimpleRange
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
+from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
+from hdlConvertor.py_ver_compatibility import is_str
 
 
 # https://www.geeksforgeeks.org/operator-precedence-and-associativity-in-c/
@@ -333,3 +334,4 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: HdlStmBreak
         """
         raise TypeError("does not support HdlStmBreak", self, o)
+
