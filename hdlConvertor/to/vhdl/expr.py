@@ -103,7 +103,6 @@ class ToVhdl2008Expr(ToHdlCommon):
         HdlBuiltinFn.TERNARY: (9, R),
 
         HdlBuiltinFn.RANGE: (10, L),
-        HdlBuiltinFn.RANGE_REVERSE: (10, L),
         HdlBuiltinFn.ARROW: (11, L),
     }
 

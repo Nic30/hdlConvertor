@@ -5,12 +5,9 @@ namespace hdlObjects {
 
 enum HdlOperatorType {
 	RANGE, // range used in VHDL type specifications
-	RANGE_REVERSE, // reverse range used in VHDL type specifications
-	ACROSS,
-	THROUGH,
+	THROUGHOUT, // sv throughout operator
 	REFERENCE,
 	DEREFERENCE,
-	TOLERANCE,
 	TYPE_OF, // SV type operator
 	INDEX, // array index
 	DOWNTO, // downto for the slice specification
@@ -38,8 +35,8 @@ enum HdlOperatorType {
 	NEG, // bitwise negation
 	AND_LOG, // "and" in vhdl
 	OR_LOG,  // "or" in vhdl
-	AND, // & in vhdl
-	OR,  // | in vhdl
+	AND,
+	OR,
 	NAND,
 	NOR,
 	XOR,
@@ -72,11 +69,11 @@ enum HdlOperatorType {
 	LE_MATCH,
 	GT_MATCH,
 	GE_MATCH,
-	INCR_PRE,
-	DECR_PRE,
-	INCR_POST,
-	DECR_POST,
-    ASSIGN,
+	INCR_PRE,  // ++x
+	DECR_PRE,  // --x
+	INCR_POST, // x--
+	DECR_POST, // x++
+    ASSIGN, // =
     PLUS_ASSIGN, // +=
     MINUS_ASSIGN, // -=
     MUL_ASSIGN, // *=

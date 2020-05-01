@@ -118,12 +118,9 @@ class HdlBuiltinFn(Enum):
     """
     (
         RANGE,  # range used in VHDL type specifications
-        RANGE_REVERSE,  # reverse range used in VHDL type specifications
-        ACROSS,
-        THROUGH,
+        THROUGHOUT,  # SV throughout operator 
         REFERENCE,
         DEREFERENCE,
-        TOLERANCE,
         TYPE_OF,  # SV type operator
         INDEX,  # array index
         DOWNTO,  # downto for the slice specification
@@ -203,7 +200,7 @@ class HdlBuiltinFn(Enum):
         SHIFT_RIGHT_ASSIGN,  # >>=
         ARITH_SHIFT_LEFT_ASSIGN,  # <<<=
         ARITH_SHIFT_RIGHT_ASSIGN,  # >>>=
-    ) = range(84)
+    ) = range(81)
     # note that in verilog bitewise operators can have only one argument
 
 
