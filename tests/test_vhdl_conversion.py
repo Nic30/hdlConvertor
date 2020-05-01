@@ -75,6 +75,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_operator_example(self):
         self.parseWithRef("operator_example.vhd", Language.VHDL)
 
+    def test_record_in_record(self):
+        self.parseWithRef("record_in_record.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
