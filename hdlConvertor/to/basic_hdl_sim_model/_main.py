@@ -219,8 +219,9 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
             w('define_Enum3t("')
             w(t.name)
             w('", [')
-            for last, v in iter_with_last(val.values):
-                w('"%s"' % v)
+            for last, (k, v) in iter_with_last(val.values):
+                assert v is None, v
+                w('"%s"' % k)
                 if not last:
                     w(", ")
             w("])()\n")
