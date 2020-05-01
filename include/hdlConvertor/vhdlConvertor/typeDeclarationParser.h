@@ -59,11 +59,14 @@ public:
 			vhdlParser::Array_type_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExprItem> visitUnbounded_array_definition(
 			vhdlParser::Unbounded_array_definitionContext *ctx);
+	static std::unique_ptr<hdlObjects::iHdlExprItem> visitIndex_subtype_definition(
+			vhdlParser::Index_subtype_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::iHdlExprItem> visitConstrained_array_definition(
 			vhdlParser::Constrained_array_definitionContext *ctx);
 	static std::unique_ptr<hdlObjects::HdlClassDef> visitRecord_type_definition(
 			vhdlParser::Record_type_definitionContext *ctx);
-	static std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitElement_declaration(
+	static std::unique_ptr<
+			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitElement_declaration(
 			vhdlParser::Element_declarationContext *ctx);
 
 	static std::unique_ptr<hdlObjects::HdlVariableDef> visitSubtype_declaration(

@@ -221,9 +221,13 @@ class ToVhdl2008(ToVhdl2008Stm):
                         if not last:
                             w(", ")
                     w(")")
-                elif isinstance(_t, HdlCall) and _t.fn == HdlBuiltinFn.INDEX:
+                elif isinstance(_t, HdlCall):
+                    assert _t.fn == HdlBuiltinFn.INDEX, _t.fn
                     w("ARRAY (")
-                    self.visit_iHdlExpr(_t.ops[1])
+                    for last, i in iter_with_last(_t.ops[1:]):
+                        self.visit_iHdlExpr(i)
+                        if not last:
+                            w(", ")
                     w(") OF ")
                     self.visit_iHdlExpr(_t.ops[0])
                 elif isinstance(_t, HdlClassDef):
@@ -238,7 +242,10 @@ class ToVhdl2008(ToVhdl2008Stm):
             finally:
                 self.in_typedef = orig_in_typedef
         elif t == HdlTypeSubtype:
-            raise NotImplementedError()
+            w("SUBTYPE ")
+            w(name)
+            w(" IS ")
+            self.visit_iHdlExpr(var.value)
         else:
             # signal/variable/port/generic
             if not self.in_typedef:

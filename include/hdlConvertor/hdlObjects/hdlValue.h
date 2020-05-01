@@ -107,6 +107,7 @@ public:
 	static std::unique_ptr<HdlValueSymbol> others();
 	static std::unique_ptr<HdlValueSymbol> type();
 	static std::unique_ptr<HdlValueSymbol> type_auto();
+	static std::unique_ptr<HdlValueSymbol> type_subtype();
 
 	virtual iHdlExprItem* clone() const override;
 	virtual ~HdlValueSymbol() override;

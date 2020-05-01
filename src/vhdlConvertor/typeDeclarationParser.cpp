@@ -42,9 +42,9 @@ unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitFull_type_declaration
 	//full_type_declaration:
 	//      KW_TYPE identifier KW_IS type_definition SEMI
 	//;
-	return visitType_definition(
-			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
-			ctx->type_definition());
+	auto td = ctx->type_definition();
+	auto id = VhdlLiteralParser::getIdentifierStr(ctx->identifier());
+	return visitType_definition(move(id), td);
 }
 
 unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_definition(
@@ -207,18 +207,22 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitUnbounded_array_definit
 	//      KW_ARRAY LPAREN index_subtype_definition ( COMMA index_subtype_definition )* RPAREN
 	//          KW_OF subtype_indication
 	//;
-	//auto element_t = VhdlExprParser::visitSubtype_indication(
-	//		ctx->subtype_indication());
-	//auto tdef = make_unique<HdlCall>(HdlOperatorType::INDEX, move(element_t));
-	//for (auto isd : ctx->index_subtype_definition()) {
-	//	auto i = VhdlExprParser::visitIndex_subtype_definition(isd);
-	//	tdef->operands.push_back(move(i));
-	//}
-	//return tdef;
+	auto element_t = visitSubtype_indication(ctx->subtype_indication());
+	auto tdef = make_unique<HdlCall>(HdlOperatorType::INDEX, move(element_t));
+	for (auto isd : ctx->index_subtype_definition()) {
+		auto i = visitIndex_subtype_definition(isd);
+		tdef->operands.push_back(move(i));
+	}
+	return tdef;
+}
 
-	NotImplementedLogger::print(
-			"TypeDeclarationParser.visitUnbounded_array_definition", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitIndex_subtype_definition(
+		vhdlParser::Index_subtype_definitionContext *ctx) {
+	// index_subtype_definition: type_mark KW_RANGE BOX;
+	auto _tm = ctx->type_mark();
+	auto tm = VhdlExprParser::visitType_mark(_tm);
+	return create_object<HdlCall>(ctx, move(tm), HdlOperatorType::RANGE,
+			HdlValueSymbol::open());
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstrained_array_definition(
@@ -246,7 +250,7 @@ unique_ptr<HdlClassDef> VhdlTypeDeclarationParser::visitRecord_type_definition(
 	c->type = HdlClassType::STRUCT;
 	for (auto _ed : ctx->element_declaration()) {
 		auto vars = visitElement_declaration(_ed);
-		for (auto & v: *vars) {
+		for (auto &v : *vars) {
 			c->members.push_back(move(v));
 		}
 	}
@@ -273,7 +277,7 @@ std::unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitSubtype_declarat
 	auto t = visitSubtype_indication(ctx->subtype_indication());
 	auto v = create_object<HdlVariableDef>(ctx,
 			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
-			HdlValueSymbol::type(), std::move(t));
+			HdlValueSymbol::type_subtype(), std::move(t));
 	return v;
 }
 
@@ -366,10 +370,19 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 		auto i = ctx->array_constraint();
 		if (i) {
 			auto ac = visitArray_constraint(i);
-			NotImplementedLogger::print(
-					"VhdlTypeDeclarationParser.visitConstraint visitArray_constraint",
-					ctx);
-			return create_object<HdlExprNotImplemented>(ctx);
+			if (ac.first == nullptr) {
+				auto res = create_object<HdlCall>(ctx, HdlOperatorType::INDEX,
+						move(selectedName));
+				for (auto &i : ac.second) {
+					res->operands.push_back(move(i));
+				}
+				return res;
+			} else {
+				NotImplementedLogger::print(
+						"VhdlTypeDeclarationParser.visitConstraint visitArray_constraint",
+						ctx);
+				return create_object<HdlExprNotImplemented>(ctx);
+			}
 		} else {
 			auto rc = ctx->record_constraint();
 			return visitRecord_constraint(rc);

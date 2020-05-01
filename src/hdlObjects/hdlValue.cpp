@@ -97,6 +97,9 @@ unique_ptr<HdlValueSymbol> HdlValueSymbol::type() {
 unique_ptr<HdlValueSymbol> HdlValueSymbol::type_auto() {
 	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T_AUTO);
 }
+unique_ptr<HdlValueSymbol> HdlValueSymbol::type_subtype() {
+	return make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T_SUBTYPE);
+}
 iHdlExprItem* HdlValueSymbol::clone() const {
 	return new HdlValueSymbol(symb);
 }

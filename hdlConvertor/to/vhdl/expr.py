@@ -260,12 +260,12 @@ class ToVhdl2008Expr(ToHdlCommon):
         w = self.out.write
         if expr is HdlAll:
             w("ALL")
-            return
         elif expr is HdlOthers:
             w("OTHERS")
-            return
+        elif self.in_typedef and expr is None:
+            w("<>")
         elif is_str(expr):
-            return self.visit_str(expr)
+            self.visit_str(expr)
         elif isinstance(expr, list):
             with_nl = len(expr) > 3
             if with_nl:
@@ -281,5 +281,5 @@ class ToVhdl2008Expr(ToHdlCommon):
                         else:
                             w(", ")
             w(")")
-            return
-        ToHdlCommon.visit_iHdlExpr(self, expr)
+        else:
+            ToHdlCommon.visit_iHdlExpr(self, expr)
