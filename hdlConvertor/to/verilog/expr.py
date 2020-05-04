@@ -49,6 +49,9 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlOpType.SLL: " << ",
         HdlOpType.SRL: " >> ",
 
+        HdlOpType.SLA: " <<< ",
+        HdlOpType.SRA: " >>> ",
+
         HdlOpType.DOWNTO: ":",
 
         HdlOpType.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
@@ -80,6 +83,8 @@ class ToVerilog2005Expr(ToHdlCommon):
 
         HdlOpType.SLL: (9, L),
         HdlOpType.SRL: (9, L),
+        HdlOpType.SLA: (9, L),
+        HdlOpType.SRA: (9, L),
 
         HdlOpType.GT: (10, L),
         HdlOpType.LT: (10, L),
