@@ -1,6 +1,6 @@
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.to.verilog.utils import collect_array_dims
-from hdlConvertor.hdlAst._expr import HdlIntValue
+from hdlConvertor.hdlAst._expr import HdlValueInt
 from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import hdl_getattr
 
 
@@ -34,7 +34,7 @@ class AssignmentToUpdateAssignment(HdlAstVisitor):
         """
         :type o: HdlStmAssign
         """
-        return HdlIntValue(0, 1, None)
+        return HdlValueInt(0, 1, None)
 
     def visit_HdlStmAssign(self, o):
         """

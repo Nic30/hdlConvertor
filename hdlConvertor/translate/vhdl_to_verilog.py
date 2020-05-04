@@ -1,6 +1,6 @@
 from hdlConvertor.hdlAst._structural import HdlContext, HdlModuleDef,\
     HdlModuleDec
-from hdlConvertor.hdlAst._expr import HdlName
+from hdlConvertor.hdlAst._expr import HdlValueId
 
 
 def link_module_dec_def(context):
@@ -12,7 +12,7 @@ def link_module_dec_def(context):
     for o in context.objs:
         if isinstance(o, HdlModuleDef) and o.dec is None:
             assert isinstance(last, HdlModuleDec) \
-                and o.module_name == HdlName(last.name), (
+                and o.module_name == HdlValueId(last.name), (
                 "Module body has to be behind the module header", last, o)
             o.dec = last
             objs.append(o)

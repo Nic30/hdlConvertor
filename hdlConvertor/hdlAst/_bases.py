@@ -42,7 +42,7 @@ class iHdlObjWithName(iHdlObj):
 
     def __init__(self):
         super(iHdlObjWithName, self).__init__()
-        self.name = None  # type: HdlName
+        self.name = None  # type: HdlValueId
 
 
 class iHdlObjInModule(iHdlObj):
@@ -67,5 +67,5 @@ class iHdlStatement(iHdlObjInModule):
 
     def __init__(self):
         iHdlObjInModule.__init__(self)
-        self.labels = []  # type: List[HdlName]
+        self.labels = []  # type: List[HdlValueId]
         self.in_prepoc = False  # type: bool

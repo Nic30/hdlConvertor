@@ -35,7 +35,7 @@ _INVALID = object()
 class NameScope(dict):
     """
     Scope of used names in hdl (node of hierarchical symbol table).
-    Used to find an object for a HdlName or HdlName for an object and
+    Used to find an object for a HdlValueId or HdlValueId for an object and
     to resolve collision between different object of a same name if required.
 
     Contains mapping {name: obj}

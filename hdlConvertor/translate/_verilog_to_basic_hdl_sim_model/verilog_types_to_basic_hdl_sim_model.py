@@ -1,5 +1,5 @@
 
-from hdlConvertor.hdlAst._defs import HdlVariableDef
+from hdlConvertor.hdlAst._defs import HdlIdDef
 from hdlConvertor.hdlAst._expr import HdlTypeAuto
 from hdlConvertor.to.basic_hdl_sim_model.utils import BitsT
 from hdlConvertor.to.verilog.utils import collect_array_dims, get_wire_t_params
@@ -10,9 +10,9 @@ class VerilogTypesToBasicHdlSimModel(HdlAstVisitor):
     """
     Translate Verilog HDL types to BasicHdlSimModel HDL types
     """
-    def visit_HdlVariableDef(self, o):
+    def visit_HdlIdDef(self, o):
         """
-        :type o: HdlVariableDef
+        :type o: HdlIdDef
         """
         o.type = self.visit_type(o.type)
         if o.value is not None:

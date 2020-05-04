@@ -1,10 +1,10 @@
 from hdlConvertor.hdlAst import HdlDirection, iHdlStatement, \
-    HdlVariableDef, HdlModuleDec, HdlFunctionDef, HdlComponentInst, \
-    HdlTypeType, HdlCall, HdlBuiltinFn, HdlNamespace, \
+    HdlIdDef, HdlModuleDec, HdlFunctionDef, HdlCompInst, \
+    HdlTypeType, HdlOp, HdlOpType, HdlValueIdspace, \
     HdlEnumDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last, UnIndent
 from hdlConvertor.to.vhdl.stm import ToVhdl2008Stm
-from hdlConvertor.hdlAst._expr import HdlTypeSubtype, HdlIntValue
+from hdlConvertor.hdlAst._expr import HdlTypeSubtype, HdlValueInt
 from hdlConvertor.hdlAst._typeDefs import HdlClassDef, HdlClassType
 
 
@@ -31,13 +31,13 @@ class ToVhdl2008(ToVhdl2008Stm):
 
     def visit_main_obj(self, o):
         ToVhdl2008Stm.visit_main_obj(self, o)
-        add_nl = isinstance(o, (HdlModuleDec, HdlModuleDec, HdlNamespace))
+        add_nl = isinstance(o, (HdlModuleDec, HdlModuleDec, HdlValueIdspace))
         if add_nl:
             self.out.write("\n")
 
     def visit_param_or_port_declr(self, o, is_param):
         """
-        :type p: HdlVariableDef
+        :type p: HdlIdDef
         """
         self.visit_doc(o)
         w = self.out.write
@@ -119,9 +119,9 @@ class ToVhdl2008(ToVhdl2008Stm):
                 else:
                     w(",\n")
 
-    def visit_HdlComponentInst(self, c):
+    def visit_HdlCompInst(self, c):
         """
-        :type c: HdlComponentInst
+        :type c: HdlCompInst
         """
         self.visit_doc(c)
         w = self.out.write
@@ -146,9 +146,9 @@ class ToVhdl2008(ToVhdl2008Stm):
         in_def_section = True
         with Indent(self.out):
             for o in objs:
-                if isinstance(o, HdlVariableDef):
+                if isinstance(o, HdlIdDef):
                     assert in_def_section, o
-                    self.visit_HdlVariableDef(o)
+                    self.visit_HdlIdDef(o)
                     continue
                 elif isinstance(o, HdlModuleDec):
                     assert in_def_section, o
@@ -164,8 +164,8 @@ class ToVhdl2008(ToVhdl2008Stm):
                         w("BEGIN\n")
                     in_def_section = False
 
-                if isinstance(o, HdlComponentInst):
-                    self.visit_HdlComponentInst(o)
+                if isinstance(o, HdlCompInst):
+                    self.visit_HdlCompInst(o)
                     w("\n")
                 elif isinstance(o, iHdlStatement):
                     self.visit_iHdlStatement(o)
@@ -191,9 +191,9 @@ class ToVhdl2008(ToVhdl2008Stm):
         self.visit_body_items(o.objs)
         self.out.write("END ARCHITECTURE;\n")
 
-    def visit_HdlVariableDef(self, var, end=";\n"):
+    def visit_HdlIdDef(self, var, end=";\n"):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         self.visit_doc(var)
         w = self.out.write
@@ -215,14 +215,14 @@ class ToVhdl2008(ToVhdl2008Stm):
                         if k is not None:
                             w(k)
                         else:
-                            assert isinstance(v, HdlIntValue) and v.base == 256, v
-                            self.visit_HdlIntValue(v)
+                            assert isinstance(v, HdlValueInt) and v.base == 256, v
+                            self.visit_HdlValueInt(v)
 
                         if not last:
                             w(", ")
                     w(")")
-                elif isinstance(_t, HdlCall):
-                    assert _t.fn == HdlBuiltinFn.INDEX, _t.fn
+                elif isinstance(_t, HdlOp):
+                    assert _t.fn == HdlOpType.INDEX, _t.fn
                     w("ARRAY (")
                     for last, i in iter_with_last(_t.ops[1:]):
                         self.visit_iHdlExpr(i)
@@ -235,7 +235,7 @@ class ToVhdl2008(ToVhdl2008Stm):
                     w("RECORD\n")
                     with Indent(self.out):
                         for m in _t.members:
-                            self.visit_HdlVariableDef(m)
+                            self.visit_HdlIdDef(m)
                     w("END RECORD")
                 else:
                     raise NotImplementedError(type(_t))
@@ -288,7 +288,7 @@ class ToVhdl2008(ToVhdl2008Stm):
         w(" (")
         with Indent(self.out):
             for is_last, par in iter_with_last(o.params):
-                self.visit_HdlVariableDef(par, end="")
+                self.visit_HdlIdDef(par, end="")
                 if not is_last:
                     w(";\n")
         w(")")
@@ -329,9 +329,9 @@ class ToVhdl2008(ToVhdl2008Stm):
                 w(".")
         w(";\n")
 
-    def visit_HdlNamespace(self, o):
+    def visit_HdlValueIdspace(self, o):
         """
-        :type o: HdlNamespace
+        :type o: HdlValueIdspace
         """
         self.visit_doc(o)
         w = self.out.write

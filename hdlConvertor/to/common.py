@@ -1,9 +1,9 @@
 from enum import Enum
 
-from hdlConvertor.hdlAst import HdlModuleDec, HdlCall
+from hdlConvertor.hdlAst import HdlModuleDec, HdlOp
 from hdlConvertor.to.hdlUtils import AutoIndentingStream, iter_with_last
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlName, HdlIntValue
+from hdlConvertor.hdlAst._expr import HdlOpType, HdlValueId, HdlValueInt
 from hdlConvertor.py_ver_compatibility import is_str
 
 
@@ -18,41 +18,41 @@ class ASSOCIATIVITY(Enum):
 
 
 ASSIGN_OPERATORS_SYMBOLS_C = {
-    HdlBuiltinFn.ASSIGN: ' = ',
-    HdlBuiltinFn.PLUS_ASSIGN: ' += ',
-    HdlBuiltinFn.MINUS_ASSIGN: ' -= ',
-    HdlBuiltinFn.MUL_ASSIGN: ' *= ',
-    HdlBuiltinFn.DIV_ASSIGN: ' /= ',
-    HdlBuiltinFn.MOD_ASSIGN: ' %= ',
-    HdlBuiltinFn.AND_ASSIGN: ' &= ',
-    HdlBuiltinFn.OR_ASSIGN: ' |= ',
-    HdlBuiltinFn.XOR_ASSIGN: ' ^= ',
-    HdlBuiltinFn.SHIFT_LEFT_ASSIGN: ' <<= ',
-    HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: ' >>= ',
+    HdlOpType.ASSIGN: ' = ',
+    HdlOpType.PLUS_ASSIGN: ' += ',
+    HdlOpType.MINUS_ASSIGN: ' -= ',
+    HdlOpType.MUL_ASSIGN: ' *= ',
+    HdlOpType.DIV_ASSIGN: ' /= ',
+    HdlOpType.MOD_ASSIGN: ' %= ',
+    HdlOpType.AND_ASSIGN: ' &= ',
+    HdlOpType.OR_ASSIGN: ' |= ',
+    HdlOpType.XOR_ASSIGN: ' ^= ',
+    HdlOpType.SHIFT_LEFT_ASSIGN: ' <<= ',
+    HdlOpType.SHIFT_RIGHT_ASSIGN: ' >>= ',
 }
 
 
 class ToHdlCommon(HdlAstVisitor):
     INDENT_STEP = "    "
     ALL_UNARY_OPS = {
-        getattr(HdlBuiltinFn, name) for name in dir(HdlBuiltinFn)
+        getattr(HdlOpType, name) for name in dir(HdlOpType)
         if name.endswith("_UNARY")
     }
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.PLUS_UNARY: "+",
-        HdlBuiltinFn.MINUS_UNARY: "-",
+        HdlOpType.PLUS_UNARY: "+",
+        HdlOpType.MINUS_UNARY: "-",
     }
     GENERIC_BIN_OPS = {
-        HdlBuiltinFn.ADD: " + ",
-        HdlBuiltinFn.SUB: " - ",
-        HdlBuiltinFn.MUL: " * ",
+        HdlOpType.ADD: " + ",
+        HdlOpType.SUB: " - ",
+        HdlOpType.MUL: " * ",
 
-        HdlBuiltinFn.LT: " < ",
-        HdlBuiltinFn.LE: " <= ",
-        HdlBuiltinFn.GT: " > ",
-        HdlBuiltinFn.GE: " >= ",
+        HdlOpType.LT: " < ",
+        HdlOpType.LE: " <= ",
+        HdlOpType.GT: " > ",
+        HdlOpType.GE: " >= ",
 
-        HdlBuiltinFn.DOT: ".",
+        HdlOpType.DOT: ".",
     }
 
     def __init__(self, out_stream):
@@ -81,13 +81,13 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: iHdlExpr
         """
         # not id or value
-        if not isinstance(o, HdlCall):
+        if not isinstance(o, HdlOp):
             return (-1, ASSOCIATIVITY.NONE, None)
         return self.OP_PRECEDENCE[o.fn] + (o.fn, )
 
-    def visit_HdlCall(self, op):
+    def visit_HdlOp(self, op):
         """
-        :type op: HdlCall
+        :type op: HdlOp
         """
         o = op.fn
         w = self.out.write
@@ -102,9 +102,9 @@ class ToHdlCommon(HdlAstVisitor):
             op_str = self.GENERIC_BIN_OPS.get(o, None)
             if op_str is not None:
                 return self._visit_bin_op(op, op_str)
-        if o == HdlBuiltinFn.INDEX:
+        if o == HdlOpType.INDEX:
             return self._visit_operator_index(op)
-        elif o == HdlBuiltinFn.CALL or o == HdlBuiltinFn.PARAMETRIZATION:
+        elif o == HdlOpType.CALL or o == HdlOpType.PARAMETRIZATION:
             return self.visit_operator_call(op)
         else:
             raise NotImplementedError(
@@ -115,17 +115,17 @@ class ToHdlCommon(HdlAstVisitor):
         :type o: iHdlExpr
         """
         w = self.out.write
-        if isinstance(o, HdlName):
+        if isinstance(o, HdlValueId):
             w(o.val)
             return
         elif is_str(o):
             w('"%s"' % o)
             return
-        elif isinstance(o, HdlIntValue):
-            self.visit_HdlIntValue(o)
+        elif isinstance(o, HdlValueInt):
+            self.visit_HdlValueInt(o)
             return
-        elif isinstance(o, HdlCall):
-            self.visit_HdlCall(o)
+        elif isinstance(o, HdlOp):
+            self.visit_HdlOp(o)
             return
         else:
             raise NotImplementedError(
@@ -147,7 +147,7 @@ class ToHdlCommon(HdlAstVisitor):
         """
         :type operand: iHdlExpr
         :type i: int
-        :type parent: HdlCall
+        :type parent: HdlOp
         :type expr_requires_parenthesis: bool
         :type cancel_parenthesis: bool
         """
@@ -216,7 +216,7 @@ class ToHdlCommon(HdlAstVisitor):
                       expr_requires_parenthesis=False,
                       cancel_parenthesis=False):
         """
-        :type operator: HdlCall
+        :type operator: HdlOp
         :type op_str: str
         """
         op0, op1 = operator.ops
@@ -228,7 +228,7 @@ class ToHdlCommon(HdlAstVisitor):
 
     def _visit_operator_index(self, operator):
         """
-        :type operator: HdlCall
+        :type operator: HdlOp
         """
         op0, op1 = operator.ops
         self._visit_operand(op0, 0, operator, False, False)
@@ -239,7 +239,7 @@ class ToHdlCommon(HdlAstVisitor):
 
     def visit_operator_call(self, o):
         """
-        :type operator: HdlCall
+        :type operator: HdlOp
         """
         self._visit_operand(o.ops[0], 0, o, False, False)
         w = self.out.write

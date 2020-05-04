@@ -5,9 +5,9 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
-std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlVariableParser::visitVariable_declaration(
+std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlVariableParser::visitVariable_declaration(
 		vhdlParser::Variable_declarationContext *ctx) {
 	// variable_declaration :
 	// ( SHARED )? VARIABLE identifier_list COLON

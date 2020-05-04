@@ -10,7 +10,7 @@
             "params": [],
             "ports": [
                 {
-                    "__class__": "HdlVariableDef",
+                    "__class__": "HdlIdDef",
                     "direction": "IN",
                     "doc": "-----------Input Ports---------------\n",
                     "name": "data",
@@ -21,12 +21,12 @@
                         4
                     ],
                     "type": {
-                        "__class__": "HdlName",
+                        "__class__": "HdlValueId",
                         "val": "wire"
                     }
                 },
                 {
-                    "__class__": "HdlVariableDef",
+                    "__class__": "HdlIdDef",
                     "direction": "IN",
                     "doc": " Data Input\n",
                     "name": "clk",
@@ -37,12 +37,12 @@
                         3
                     ],
                     "type": {
-                        "__class__": "HdlName",
+                        "__class__": "HdlValueId",
                         "val": "wire"
                     }
                 },
                 {
-                    "__class__": "HdlVariableDef",
+                    "__class__": "HdlIdDef",
                     "direction": "IN",
                     "doc": " Clock Input\n",
                     "name": "reset",
@@ -53,12 +53,12 @@
                         5
                     ],
                     "type": {
-                        "__class__": "HdlName",
+                        "__class__": "HdlValueId",
                         "val": "wire"
                     }
                 },
                 {
-                    "__class__": "HdlVariableDef",
+                    "__class__": "HdlIdDef",
                     "direction": "OUT",
                     "doc": " Reset input\n-----------Output Ports---------------\n------------Internal Variables--------\n",
                     "is_static": true,
@@ -70,11 +70,11 @@
                         1
                     ],
                     "type": {
-                        "__class__": "HdlCall",
+                        "__class__": "HdlOp",
                         "fn": "PARAMETRIZATION",
                         "ops": [
                             {
-                                "__class__": "HdlName",
+                                "__class__": "HdlValueId",
                                 "val": "reg"
                             },
                             null,
@@ -91,7 +91,7 @@
             ]
         },
         "module_name": {
-            "__class__": "HdlName",
+            "__class__": "HdlValueId",
             "val": "dff_async_reset"
         },
         "name": null,
@@ -101,11 +101,11 @@
                 "body": {
                     "__class__": "HdlStmIf",
                     "cond": {
-                        "__class__": "HdlCall",
+                        "__class__": "HdlOp",
                         "fn": "NEG",
                         "ops": [
                             {
-                                "__class__": "HdlName",
+                                "__class__": "HdlValueId",
                                 "val": "reset"
                             }
                         ]
@@ -117,12 +117,12 @@
                             {
                                 "__class__": "HdlStmAssign",
                                 "dst": {
-                                    "__class__": "HdlName",
+                                    "__class__": "HdlValueId",
                                     "val": "q"
                                 },
                                 "labels": [],
                                 "src": {
-                                    "__class__": "HdlName",
+                                    "__class__": "HdlValueId",
                                     "val": "data"
                                 }
                             }
@@ -136,12 +136,12 @@
                             {
                                 "__class__": "HdlStmAssign",
                                 "dst": {
-                                    "__class__": "HdlName",
+                                    "__class__": "HdlValueId",
                                     "val": "q"
                                 },
                                 "labels": [],
                                 "src": {
-                                    "__class__": "HdlIntValue",
+                                    "__class__": "HdlValueInt",
                                     "base": 2,
                                     "bits": 1,
                                     "val": "0"
@@ -157,21 +157,21 @@
                 "labels": [],
                 "sensitivity": [
                     {
-                        "__class__": "HdlCall",
+                        "__class__": "HdlOp",
                         "fn": "RISING",
                         "ops": [
                             {
-                                "__class__": "HdlName",
+                                "__class__": "HdlValueId",
                                 "val": "clk"
                             }
                         ]
                     },
                     {
-                        "__class__": "HdlCall",
+                        "__class__": "HdlOp",
                         "fn": "FALLING",
                         "ops": [
                             {
-                                "__class__": "HdlName",
+                                "__class__": "HdlValueId",
                                 "val": "reset"
                             }
                         ]

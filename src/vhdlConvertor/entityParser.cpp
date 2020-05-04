@@ -1,6 +1,6 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
+#include <hdlConvertor/hdlAst/iHdlExpr.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 
@@ -8,7 +8,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlObjects;
+using namespace hdlAst;
 
 VhdlEntityParser::VhdlEntityParser(VhdlCommentParser &_commentParser,
 		bool _hierarchyOnly) :
@@ -74,7 +74,7 @@ void VhdlEntityParser::visitEntity_declarative_item(
 }
 void VhdlEntityParser::visitGeneric_clause(
 		vhdlParser::Generic_clauseContext *ctx,
-		std::vector<std::unique_ptr<HdlVariableDef>> &generics) {
+		std::vector<std::unique_ptr<HdlIdDef>> &generics) {
 	// generic_clause:
 	//       GENERIC LPAREN generic_list RPAREN SEMI
 	// ;
@@ -87,7 +87,7 @@ void VhdlEntityParser::visitGeneric_clause(
 	}
 }
 void VhdlEntityParser::visitPort_clause(vhdlParser::Port_clauseContext *ctx,
-		std::vector<std::unique_ptr<HdlVariableDef>> &ports) {
+		std::vector<std::unique_ptr<HdlIdDef>> &ports) {
 	// port_clause:
 	//       PORT LPAREN port_list RPAREN SEMI
 	// ;

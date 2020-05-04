@@ -1,7 +1,7 @@
 from itertools import chain
 
-from hdlConvertor.hdlAst import HdlVariableDef, HdlCall, HdlBuiltinFn,\
-    HdlDirection, HdlName, HdlComponentInst, HdlEnumDef, HdlClassDef
+from hdlConvertor.hdlAst import HdlIdDef, HdlOp, HdlOpType,\
+    HdlDirection, HdlValueId, HdlCompInst, HdlEnumDef, HdlClassDef
 from hdlConvertor.to.basic_hdl_sim_model.stm import ToBasicHdlSimModelStm
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.basic_hdl_sim_model.utils import sensitivityByOp
@@ -66,13 +66,13 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
         obj_type_containers = {
             HdlClassDef: types,
             HdlEnumDef: types,
-            HdlVariableDef: variables,
-            HdlComponentInst: components,
+            HdlIdDef: variables,
+            HdlCompInst: components,
         }
         for stmCls in self.ALL_STATEMENT_CLASSES:
             obj_type_containers[stmCls] = processes
         for o in objs:
-            if o.__class__ is HdlVariableDef and o.type == HdlTypeType:
+            if o.__class__ is HdlIdDef and o.type == HdlTypeType:
                 types.append(o)
             else:
                 obj_type_containers[o.__class__].append(o)
@@ -112,10 +112,10 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 w('BasicRtlSimModel.__init__(self, sim, name=name)\n')
                 w('# ports\n')
                 for port in mod_dec.ports:
-                    self.visit_HdlVariableDef(port)
+                    self.visit_HdlIdDef(port)
                 w("# internal signals\n")
                 for v in variables:
-                    self.visit_HdlVariableDef(v)
+                    self.visit_HdlIdDef(v)
                 w("# component instances\n")
                 for c in components:
                     w("self.")
@@ -133,14 +133,14 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                         w("connectSimPort(self, self.")
                         w(c.name.val)
                         w(', "')
-                        assert isinstance(pm, HdlCall) and\
-                            pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
+                        assert isinstance(pm, HdlOp) and\
+                            pm.fn == HdlOpType.MAP_ASSOCIATION, pm
                         mod_port, connected_sig = pm.ops
                         assert isinstance(
-                            connected_sig, HdlName), connected_sig
+                            connected_sig, HdlValueId), connected_sig
                         self.visit_iHdlExpr(connected_sig)
                         w('", "')
-                        assert isinstance(mod_port, HdlName), mod_port
+                        assert isinstance(mod_port, HdlValueId), mod_port
                         self.visit_iHdlExpr(mod_port)
                         w('")\n')
 
@@ -176,7 +176,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                     w(proc.labels[0])
                     w(', ')
                     for last, s in iter_with_last(proc.sensitivity):
-                        if isinstance(s, HdlCall):
+                        if isinstance(s, HdlOp):
                             w("(")
                             w(str(sensitivityByOp(s.fn)))
                             w(", self.io.")
@@ -195,7 +195,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                     with Indent(self.out):
                         for outp in outputs:
                             w("self.io.")
-                            assert isinstance(outp, HdlName)
+                            assert isinstance(outp, HdlValueId)
                             w(outp.val)
                             w(",\n")
                     w(")\n")
@@ -208,7 +208,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
 
     def visit_type_declr(self, t):
         """
-        :type t: HdlVariableDef
+        :type t: HdlIdDef
         """
         self.visit_doc(t)
         w = self.out.write
@@ -225,16 +225,16 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
                 if not last:
                     w(", ")
             w("])()\n")
-        elif isinstance(val, HdlCall) and val.fn == HdlBuiltinFn.INDEX:
+        elif isinstance(val, HdlOp) and val.fn == HdlOpType.INDEX:
             # array type def.
             self.visit_iHdlExpr(val)
             w("\n")
         else:
             raise NotImplementedError()
 
-    def visit_HdlVariableDef(self, var):
+    def visit_HdlIdDef(self, var):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         self.visit_doc(var)
         w = self.out.write
@@ -263,7 +263,7 @@ class ToBasicHdlSimModel(ToBasicHdlSimModelStm):
     def visit_HdlContext(self, context, stm_outputs):
         """
         :type context: HdlContext
-        :type stm_outputs: Dict[HdlStm, List[HdlName]]
+        :type stm_outputs: Dict[HdlStm, List[HdlValueId]]
         """
         self.stm_outputs = stm_outputs
         return super(ToBasicHdlSimModel, self).visit_HdlContext(context)

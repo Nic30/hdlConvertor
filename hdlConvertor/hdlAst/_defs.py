@@ -5,9 +5,9 @@ from hdlConvertor.hdlAst._bases import iHdlObj, iHdlObjInModule, \
 from hdlConvertor.hdlAst._expr import iHdlExpr
 
 
-class HdlVariableDef(iHdlObjWithName, iHdlObjInModule):
+class HdlIdDef(iHdlObjWithName, iHdlObjInModule):
     """
-    Definition of port/param/type etc in HDL
+    Definition of port/param/type/varialbe etc in HDL
 
     :ivar ~.name: name of newly defined object
     :ivar ~.type: type of the defined variable (or type etc.)
@@ -61,6 +61,6 @@ class HdlFunctionDef(iHdlObjWithName, iHdlObjInModule):
         self.is_task = False  # type: bool
         self.is_virtual = False  # type: bool
         self.return_t = None  # type: Optional[iHdlExpr]
-        self.params = []  # type: List[HdlVariableDef]
-        self.body = []  # type: List[Union[HdlVariableDef, iHdlStatement, iHdlExpr]]
+        self.params = []  # type: List[HdlIdDef]
+        self.body = []  # type: List[Union[HdlIdDef, iHdlStatement, iHdlExpr]]
 

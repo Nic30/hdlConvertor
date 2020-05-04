@@ -1,23 +1,23 @@
-from hdlConvertor.hdlAst import HdlName, HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst import HdlValueId, HdlOp, HdlOpType
 from hdlConvertor.hdlAst._expr import HdlTypeAuto
 
 
 PRIMITIVE_TYPES = (
-    HdlName("reg"),
-    HdlName("wire"),
-    HdlName("bit"),
-    HdlName("logic"),
-    HdlName("signed"),
-    HdlName("unsigned"),
+    HdlValueId("reg"),
+    HdlValueId("wire"),
+    HdlValueId("bit"),
+    HdlValueId("logic"),
+    HdlValueId("signed"),
+    HdlValueId("unsigned"),
     HdlTypeAuto,
 )
 
-NULL = HdlName("null")
+NULL = HdlValueId("null")
 
 
 def collect_array_dims(t):
     array_dim = []
-    while isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.INDEX:
+    while isinstance(t, HdlOp) and t.fn == HdlOpType.INDEX:
         array_dim.append(t.ops[1])
         t = t.ops[0]
     array_dim.reverse()
@@ -34,14 +34,14 @@ def get_wire_t_params(t):
 
     if t in PRIMITIVE_TYPES:
         is_signed = None
-        if t == HdlName("signed"):
+        if t == HdlValueId("signed"):
             is_signed = True
-        elif t == HdlName("unsigned"):
+        elif t == HdlValueId("unsigned"):
             is_signed = False
         return t, None, is_signed, array_dim
 
     # 1b scala
-    if not isinstance(t, HdlCall) or t.fn != HdlBuiltinFn.PARAMETRIZATION or len(t.ops) != 3:
+    if not isinstance(t, HdlOp) or t.fn != HdlOpType.PARAMETRIZATION or len(t.ops) != 3:
         return None
 
     if t.ops[0] not in PRIMITIVE_TYPES:

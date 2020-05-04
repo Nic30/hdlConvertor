@@ -5,9 +5,9 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-hdlObjects::HdlDirection visitSignalMode(
+hdlAst::HdlDirection visitSignalMode(
 		vhdl_antlr::vhdlParser::Signal_modeContext *ctx) {
-	using hdlObjects::HdlDirection;
+	using hdlAst::HdlDirection;
 
 	if (ctx == nullptr || ctx->KW_IN())
 		return HdlDirection::DIR_IN;
@@ -23,14 +23,14 @@ hdlObjects::HdlDirection visitSignalMode(
 	}
 }
 
-hdlObjects::HdlOperatorType visitDirection(
+hdlAst::HdlOpType visitDirection(
 		vhdl_antlr::vhdlParser::DirectionContext *ctx) {
 	// direction: TO | DOWNTO;
 	if (ctx->KW_TO())
-		return hdlObjects::TO;
+		return hdlAst::TO;
 	else {
 		assert(ctx->KW_DOWNTO());
-		return hdlObjects::DOWNTO;
+		return hdlAst::DOWNTO;
 	}
 }
 

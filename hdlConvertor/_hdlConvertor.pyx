@@ -19,7 +19,7 @@ from hdlConvertor.parse_hdlConvertor_json import \
 
 include "verilogPreproc.pyx"
 
-cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
+cdef extern from "hdlConvertor/hdlAst/hdlContext.h" namespace "hdlConvertor::hdlAst":
     cdef cppclass HdlContext:
         HdlContext()
 

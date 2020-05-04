@@ -1,5 +1,5 @@
-from hdlConvertor.hdlAst import HdlVariableDef, iHdlExpr, HdlCall, HdlBuiltinFn,\
-    HdlDirection, HdlName, HdlStmProcess, HdlComponentInst, HdlModuleDec,\
+from hdlConvertor.hdlAst import HdlIdDef, iHdlExpr, HdlOp, HdlOpType,\
+    HdlDirection, HdlValueId, HdlStmProcess, HdlCompInst, HdlModuleDec,\
     HdlEnumDef, HdlClassDef
 from hdlConvertor.hdlAst._statements import ALL_STATEMENT_CLASSES
 from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
@@ -20,8 +20,8 @@ class ToSystemc(ToSystemcStm):
     Convert hdlObject AST to BasicHdlSimModel
     (Python simulation model used by pycocotb simulator)
 
-    :ivar _is_param: flag which specifies if the current HdlVariableDef is a param/generic
-    :ivar _is_port: flag which specifies if the current HdlVariableDef is a port
+    :ivar _is_param: flag which specifies if the current HdlIdDef is a param/generic
+    :ivar _is_port: flag which specifies if the current HdlIdDef is a port
     """
     ALL_STATEMENT_CLASSES = ALL_STATEMENT_CLASSES
 
@@ -64,7 +64,7 @@ class ToSystemc(ToSystemcStm):
             try:
                 self._is_port = True
                 for p in mod_dec.ports:
-                    self.visit_HdlVariableDef(p)
+                    self.visit_HdlIdDef(p)
                     w(";\n")
             finally:
                 self._is_port = False
@@ -77,7 +77,7 @@ class ToSystemc(ToSystemcStm):
                 w('();\n')
             w("// internal signals\n")
             for v in variables:
-                self.visit_HdlVariableDef(v)
+                self.visit_HdlIdDef(v)
                 w(";\n")
 
             for p in processes:
@@ -118,13 +118,13 @@ class ToSystemc(ToSystemcStm):
                     for pm in c.port_map:
                         w(c.name.val)
                         w('.')
-                        assert isinstance(pm, HdlCall) and\
-                            pm.fn == HdlBuiltinFn.MAP_ASSOCIATION, pm
+                        assert isinstance(pm, HdlOp) and\
+                            pm.fn == HdlOpType.MAP_ASSOCIATION, pm
                         mod_port, connected_sig = pm.ops
-                        assert isinstance(mod_port, HdlName), mod_port
+                        assert isinstance(mod_port, HdlValueId), mod_port
                         self.visit_iHdlExpr(mod_port)
                         assert isinstance(
-                            connected_sig, HdlName), connected_sig
+                            connected_sig, HdlValueId), connected_sig
                         w("(")
                         self.visit_iHdlExpr(connected_sig)
                         w(");\n")
@@ -134,7 +134,7 @@ class ToSystemc(ToSystemcStm):
 
     def visit_type_declr(self, var):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         assert var.type == HdlTypeType
         self.visit_doc(var)
@@ -152,9 +152,9 @@ class ToSystemc(ToSystemcStm):
 
         return True
 
-    def visit_HdlVariableDef(self, var):
+    def visit_HdlIdDef(self, var):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         self.visit_doc(var)
         w = self.out.write

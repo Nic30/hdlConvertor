@@ -1,5 +1,5 @@
-from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, \
-    HdlCall
+from hdlConvertor.hdlAst import HdlOpType, HdlValueId, HdlValueInt, \
+    HdlOp
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY
 from hdlConvertor.to.hdlUtils import iter_with_last, Indent
@@ -12,81 +12,81 @@ R = ASSOCIATIVITY.R_TO_L
 class ToBasicHdlSimModelExpr(ToHdlCommon):
     OP_PRECEDENCE = {
         # TO/DOWNTO becomes a call to slice
-        # HdlBuiltinFn.DOWNTO: 1,
-        # HdlBuiltinFn.TO: 1,
+        # HdlOpType.DOWNTO: 1,
+        # HdlOpType.TO: 1,
 
         # note that HdlExpressions in BasicHdlSimModel
         # do not use == but ._eq()
-        HdlBuiltinFn.EQ: (11, L),
-        HdlBuiltinFn.NEQ: (11, L),
-        HdlBuiltinFn.GT:  (11, L),
-        HdlBuiltinFn.LT:  (11, L),
-        HdlBuiltinFn.GE:  (11, L),
-        HdlBuiltinFn.LE:  (11, L),
+        HdlOpType.EQ: (11, L),
+        HdlOpType.NEQ: (11, L),
+        HdlOpType.GT:  (11, L),
+        HdlOpType.LT:  (11, L),
+        HdlOpType.GE:  (11, L),
+        HdlOpType.LE:  (11, L),
 
-        HdlBuiltinFn.OR: (10, L),
-        HdlBuiltinFn.XOR: (9, L),
-        HdlBuiltinFn.AND: (8, L),
+        HdlOpType.OR: (10, L),
+        HdlOpType.XOR: (9, L),
+        HdlOpType.AND: (8, L),
 
-        HdlBuiltinFn.ADD: (7, L),
-        HdlBuiltinFn.SUB: (7, L),
+        HdlOpType.ADD: (7, L),
+        HdlOpType.SUB: (7, L),
 
-        HdlBuiltinFn.DIV: (6, L),
-        HdlBuiltinFn.MUL: (6, L),
-        HdlBuiltinFn.MOD: (6, L),
+        HdlOpType.DIV: (6, L),
+        HdlOpType.MUL: (6, L),
+        HdlOpType.MOD: (6, L),
 
-        HdlBuiltinFn.NEG_LOG: (5, L),
-        HdlBuiltinFn.NEG: (5, L),
-        HdlBuiltinFn.MINUS_UNARY: (5, L),
-        HdlBuiltinFn.POW: (4, R),
+        HdlOpType.NEG_LOG: (5, L),
+        HdlOpType.NEG: (5, L),
+        HdlOpType.MINUS_UNARY: (5, L),
+        HdlOpType.POW: (4, R),
 
-        HdlBuiltinFn.INDEX: (1, L),
+        HdlOpType.INDEX: (1, L),
 
-        HdlBuiltinFn.RISING: (1, L),
-        HdlBuiltinFn.FALLING: (1, L),
+        HdlOpType.RISING: (1, L),
+        HdlOpType.FALLING: (1, L),
 
         # concat/ternary become a call to _concat, _ternary__val function
-        # HdlBuiltinFn.CONCAT: 2,
-        # HdlBuiltinFn.TERNARY: 2,
+        # HdlOpType.CONCAT: 2,
+        # HdlOpType.TERNARY: 2,
         # rising/faling as ._onRisingEdge(), ._onFallingEdge()
-        HdlBuiltinFn.CALL: (1, L),
+        HdlOpType.CALL: (1, L),
         # parametrization values are parameters of component class
         # constructor
-        HdlBuiltinFn.PARAMETRIZATION: (1, L),
+        HdlOpType.PARAMETRIZATION: (1, L),
 
-        HdlBuiltinFn.DOT: (1, L),
+        HdlOpType.DOT: (1, L),
     }
     _unaryEventOps = {
-        HdlBuiltinFn.RISING: "._onRisingEdge()",
-        HdlBuiltinFn.FALLING: "._onFallingEdge()",
+        HdlOpType.RISING: "._onRisingEdge()",
+        HdlOpType.FALLING: "._onFallingEdge()",
     }
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.NEG_LOG: "not ",
-        HdlBuiltinFn.NEG: "~",
-        HdlBuiltinFn.MINUS_UNARY: "-",
+        HdlOpType.NEG_LOG: "not ",
+        HdlOpType.NEG: "~",
+        HdlOpType.MINUS_UNARY: "-",
     }
 
     GENERIC_BIN_OPS = {
-        HdlBuiltinFn.AND: " & ",
-        HdlBuiltinFn.OR: " | ",
-        HdlBuiltinFn.XOR: " ^ ",
+        HdlOpType.AND: " & ",
+        HdlOpType.OR: " | ",
+        HdlOpType.XOR: " ^ ",
 
-        HdlBuiltinFn.EQ: ' == ',
-        HdlBuiltinFn.NEQ: " != ",
+        HdlOpType.EQ: ' == ',
+        HdlOpType.NEQ: " != ",
 
-        HdlBuiltinFn.MUL: " * ",
-        HdlBuiltinFn.DIV: " // ",
-        HdlBuiltinFn.POW: " ** ",
-        HdlBuiltinFn.MOD: " % ",
+        HdlOpType.MUL: " * ",
+        HdlOpType.DIV: " // ",
+        HdlOpType.POW: " ** ",
+        HdlOpType.MOD: " % ",
 
-        HdlBuiltinFn.SLL: " << ",
-        HdlBuiltinFn.SRL: " >> ",
+        HdlOpType.SLL: " << ",
+        HdlOpType.SRL: " >> ",
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
 
-    def visit_HdlIntValue(self, o):
+    def visit_HdlValueInt(self, o):
         """
-        :type o: HdlIntValue
+        :type o: HdlValueInt
         """
         w = self.out.write
         if o.bits is None:
@@ -112,14 +112,14 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
         :type o: iHdlExpr
         """
         w = self.out.write
-        if isinstance(o, HdlName):
+        if isinstance(o, HdlValueId):
             w(o.val)
             return
         elif is_str(o):
             w('"%s"' % o)
             return
-        elif isinstance(o, HdlIntValue):
-            self.visit_HdlIntValue(o)
+        elif isinstance(o, HdlValueInt):
+            self.visit_HdlValueInt(o)
             return
         elif isinstance(o, (list, tuple)):
             with_nl = len(o) > 3
@@ -132,8 +132,8 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
                     w(", ")
             w(")")
             return
-        elif isinstance(o, HdlCall):
-            self.visit_HdlCall(o)
+        elif isinstance(o, HdlOp):
+            self.visit_HdlOp(o)
             return
         elif o is None:
             w("None")
@@ -153,9 +153,9 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
             return
         raise NotImplementedError(o.__class__, o)
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type op: HdlCall
+        :type op: HdlOp
         """
         ops = o.ops
         op = o.fn
@@ -166,10 +166,10 @@ class ToBasicHdlSimModelExpr(ToHdlCommon):
             op0 = ops[0]
             w(op0.val)
             w(op_str)
-        elif op == HdlBuiltinFn.MAP_ASSOCIATION:
+        elif op == HdlOpType.MAP_ASSOCIATION:
             # kwargs, [todo]: dict constructor
             self._visit_operand(o.ops[0], 0, o, False, False)
             w("=")
             self._visit_operand(o.ops[1], 1, o, False, False)
         else:
-            return super(ToBasicHdlSimModelExpr, self).visit_HdlCall(o)
+            return super(ToBasicHdlSimModelExpr, self).visit_HdlOp(o)

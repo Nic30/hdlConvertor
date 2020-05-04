@@ -1,4 +1,4 @@
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn, HdlCall, HdlName
+from hdlConvertor.hdlAst._expr import HdlOpType, HdlOp, HdlValueId
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import \
     to_property_call
@@ -9,26 +9,26 @@ class BasicHdlSimModelTranslateVerilogOperands(HdlAstVisitor):
         """
         :type o: iHdlExpr
         """
-        if isinstance(o, HdlCall):
-            return self.visit_HdlCall(o)
+        if isinstance(o, HdlOp):
+            return self.visit_HdlOp(o)
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type o: HdlCall
+        :type o: HdlOp
         """
         op = o.fn
-        if op == HdlBuiltinFn.EQ:
-            # HdlBuiltinFn.EQ: '%s._eq(%s)',
+        if op == HdlOpType.EQ:
+            # HdlOpType.EQ: '%s._eq(%s)',
             to_property_call(o, "_eq")
-        elif op == HdlBuiltinFn.CONCAT:
+        elif op == HdlOpType.CONCAT:
             to_property_call(o, "_concat")
-        elif op == HdlBuiltinFn.TERNARY:
+        elif op == HdlOpType.TERNARY:
             to_property_call(o, "_ternary__val")
-        elif op == HdlBuiltinFn.DOWNTO:
-            # HdlBuiltinFn.DOWNTO: "slice(%s, %s)",
-            o.fn = HdlBuiltinFn.CALL
-            o.ops = [HdlName("slice"), ] + o.ops
-        elif op == HdlBuiltinFn.TO:
+        elif op == HdlOpType.DOWNTO:
+            # HdlOpType.DOWNTO: "slice(%s, %s)",
+            o.fn = HdlOpType.CALL
+            o.ops = [HdlValueId("slice"), ] + o.ops
+        elif op == HdlOpType.TO:
             raise NotImplementedError(o)
-        elif op == HdlBuiltinFn.CALL:
+        elif op == HdlOpType.CALL:
             raise NotImplementedError("inline", o)

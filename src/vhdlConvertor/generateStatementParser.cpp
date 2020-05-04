@@ -1,7 +1,7 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-#include <hdlConvertor/hdlObjects/hdlStmFor.h>
+#include <hdlConvertor/hdlAst/hdlStmFor.h>
 
 #include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
@@ -22,7 +22,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
@@ -107,7 +107,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 		++sIt;
 	}
 	std::unique_ptr<HdlStmIf> ifStm = nullptr;
-	std::unique_ptr<hdlObjects::HdlStmBlock> ifFalse = nullptr;
+	std::unique_ptr<hdlAst::HdlStmBlock> ifFalse = nullptr;
 	if (sIt != s.end()) {
 		ifFalse = visitGenerate_statement_body(*sIt);
 	}
@@ -165,7 +165,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 	return cstm;
 }
 
-std::unique_ptr<hdlObjects::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_statement_body(
+std::unique_ptr<hdlAst::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_statement_body(
 		vhdlParser::Generate_statement_bodyContext *ctx) {
 	// generate_statement_body:
 	//     ( block_declarative_item*

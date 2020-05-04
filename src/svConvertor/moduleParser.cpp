@@ -5,7 +5,7 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/conversion_exception.h>
-#include <hdlConvertor/hdlObjects/hdlStm_others.h>
+#include <hdlConvertor/hdlAst/hdlStm_others.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
@@ -23,7 +23,7 @@ namespace sv {
 
 using namespace std;
 using namespace sv2017_antlr;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VerModuleParser::VerModuleParser(SVCommentParser &commentParser,
 		bool _hierarchyOnly) :
@@ -78,7 +78,7 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			auto p = create_object<HdlVariableDef>(ctx, ".*",
+			auto p = create_object<HdlIdDef>(ctx, ".*",
 					HdlValueSymbol::all(), nullptr);
 			ent->ports.push_back(move(p));
 		}
@@ -118,7 +118,7 @@ void VerModuleParser::visitModule_declaration(
 				m_ctx.arch->objs);
 	}
 	auto consume_nonansi_ports_vars = [this, &m_ctx](unique_ptr<iHdlObj> &o) {
-		auto v = dynamic_cast<HdlVariableDef*>(o.get());
+		auto v = dynamic_cast<HdlIdDef*>(o.get());
 		if (!v)
 			return false;
 
@@ -198,7 +198,7 @@ void VerModuleParser::visitModule_item_item(
 	//     | specparam_declaration
 	// ;
 	auto &res_stm = reinterpret_cast<vector<unique_ptr<iHdlStatement>>&>(res);
-	auto &res_vars = reinterpret_cast<vector<unique_ptr<HdlVariableDef>>&>(res);
+	auto &res_vars = reinterpret_cast<vector<unique_ptr<HdlIdDef>>&>(res);
 	{
 		auto o = ctx->parameter_override();
 		if (o) {
@@ -231,7 +231,7 @@ void VerModuleParser::visitModule_item_item(
 		if (o) {
 
 			auto &res_comp =
-					reinterpret_cast<vector<unique_ptr<HdlCompInstance>>&>(res);
+					reinterpret_cast<vector<unique_ptr<HdlCompInst>>&>(res);
 			VerModuleInstanceParser mp(commentParser);
 			mp.visitModule_or_interface_or_program_or_udp_instantiation(o,
 					res_comp);
@@ -571,12 +571,12 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	// update port in module header to an ansi port
 	bool first = true;
 	VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
-	vector<unique_ptr<HdlVariableDef>> portsDeclr;
+	vector<unique_ptr<HdlIdDef>> portsDeclr;
 	pp.visitNonansi_port_declaration(npd, portsDeclr);
 
 	// convert non-ansi ports to ansi ports
 	for (auto &declr : portsDeclr) {
-		HdlVariableDef *p = m_ctx.ent.getPortByName(declr->name);
+		HdlIdDef *p = m_ctx.ent.getPortByName(declr->name);
 		if (p) {
 			p->direction = declr->direction;
 			p->type = move(declr->type);
@@ -610,7 +610,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 
 void VerModuleParser::visitNet_declaration(
 		sv2017Parser::Net_declarationContext *ctx,
-		vector<unique_ptr<HdlVariableDef>> &res) {
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// net_declaration:
 	//  ( KW_INTERCONNECT ( implicit_data_type )? ( HASH delay_value )? identifier ( unpacked_dimension )* (
 	//   COMMA identifier ( unpacked_dimension )* )?
@@ -682,7 +682,7 @@ void VerModuleParser::visitNet_declaration(
 void VerModuleParser::visitList_of_net_decl_assignments(
 		sv2017Parser::List_of_net_decl_assignmentsContext *ctx,
 		unique_ptr<iHdlExprItem> base_type, bool is_latched,
-		vector<unique_ptr<HdlVariableDef>> &res) {
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 
 	VerTypeParser tp(commentParser);
@@ -705,7 +705,7 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		}
 		auto uds = nd->unpacked_dimension();
 		t = tp.applyUnpacked_dimension(move(t), uds);
-		auto v = create_object<HdlVariableDef>(nd, id, move(t), move(def_val));
+		auto v = create_object<HdlIdDef>(nd, id, move(t), move(def_val));
 		if (first) {
 			first = false;
 		}

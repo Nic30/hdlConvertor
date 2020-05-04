@@ -16,9 +16,9 @@ Main container is HdlContext which can store all other objects.
 
 from hdlConvertor.hdlAst._bases import (
     iHdlObj, iHdlObjInModule, iHdlObjWithName, iHdlStatement)
-from hdlConvertor.hdlAst._defs import HdlFunctionDef, HdlVariableDef
+from hdlConvertor.hdlAst._defs import HdlFunctionDef, HdlIdDef
 from hdlConvertor.hdlAst._expr import (
-    HdlAll, HdlBuiltinFn, HdlCall, HdlDirection, HdlIntValue, HdlName,
+    HdlAll, HdlOpType, HdlOp, HdlDirection, HdlValueInt, HdlValueId,
     HdlOthers, HdlTypeAuto, HdlTypeType, HdlTypeSubtype, HdlExprNotImplemented,
     iHdlExpr)
 from hdlConvertor.hdlAst._statements import (
@@ -26,7 +26,7 @@ from hdlConvertor.hdlAst._statements import (
     HdlStmCase, HdlStmContinue, HdlStmFor, HdlStmForIn, HdlStmIf, HdlStmProcess,
     HdlStmRepeat, HdlStmReturn, HdlStmWait, HdlStmWhile)
 from hdlConvertor.hdlAst._structural import (
-    HdlComponentInst, HdlContext, HdlModuleDec, HdlModuleDef, HdlNamespace,
+    HdlCompInst, HdlContext, HdlModuleDec, HdlModuleDef, HdlValueIdspace,
     HdlLibrary)
 from hdlConvertor.hdlAst._typeDefs import (
     iHdlTypeDef, HdlClassType, HdlClassDef, HdlEnumDef, HdlTypeBitsDef)

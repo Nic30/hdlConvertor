@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/hdlModuleDef.h>
+#include <hdlConvertor/hdlAst/hdlModuleDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -12,7 +12,7 @@ public:
 
 	bool hierarchyOnly;
 	VhdlArchParser(bool _hierarchyOnly);
-	std::unique_ptr<hdlObjects::HdlModuleDef> visitArchitecture_body(
+	std::unique_ptr<hdlAst::HdlModuleDef> visitArchitecture_body(
 			vhdlParser::Architecture_bodyContext *ctx);
 
 };

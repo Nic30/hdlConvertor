@@ -1,7 +1,7 @@
 from itertools import chain
 
-from hdlConvertor.hdlAst import iHdlStatement, HdlVariableDef,\
-    HdlModuleDec, HdlModuleDef, HdlComponentInst
+from hdlConvertor.hdlAst import iHdlStatement, HdlIdDef,\
+    HdlModuleDec, HdlModuleDef, HdlCompInst
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.translate.common.name_scope import WithNameScope
 
@@ -15,10 +15,10 @@ class DiscoverDeclarations(HdlAstVisitor):
         super(DiscoverDeclarations, self).__init__()
         self.name_scope = name_scope
 
-    def visit_HdlVariableDef(self, o):
+    def visit_HdlIdDef(self, o):
         """
         :type name_scope: NameScope
-        :type o: HdlVariableDef
+        :type o: HdlIdDef
         """
         self.name_scope.register_name(o.name, o)
 
@@ -31,7 +31,7 @@ class DiscoverDeclarations(HdlAstVisitor):
         ns.register_name(o.name, o)
         with WithNameScope(self, ns.level_push(o.name)):
             for p in chain(o.params, o.ports):
-                self.visit_HdlVariableDef(p)
+                self.visit_HdlIdDef(p)
 
             for o2 in o.objs:
                 raise NotImplementedError(o2)
@@ -46,25 +46,25 @@ class DiscoverDeclarations(HdlAstVisitor):
         with WithNameScope(self, self.name_scope.get_child(o.module_name.val)):
             self.discover_declarations(o.objs)
 
-    def visit_HdlComponentInst(self, o):
+    def visit_HdlCompInst(self, o):
         """
-        :type o: HdlComponentInst
+        :type o: HdlCompInst
         """
         if o.name is not None:
             self.name_scope.register_name(o.name, o)
         # name_scope = name_scope.get_object_by_name(o.module_name)
 
     def _discover_declarations(self, o):
-        if isinstance(o, HdlVariableDef):
-            self.visit_HdlVariableDef(o)
+        if isinstance(o, HdlIdDef):
+            self.visit_HdlIdDef(o)
         elif isinstance(o, HdlModuleDec):
             self.visit_HdlModuleDec(o)
         elif isinstance(o, HdlModuleDef):
             self.visit_HdlModuleDef(o)
         elif isinstance(o, iHdlStatement):
             pass
-        elif isinstance(o, HdlComponentInst):
-            self.visit_HdlComponentInst(o)
+        elif isinstance(o, HdlCompInst):
+            self.visit_HdlCompInst(o)
         else:
             raise NotImplementedError(o)
 

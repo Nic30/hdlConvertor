@@ -1,5 +1,5 @@
-from hdlConvertor.hdlAst import HdlDirection, HdlName, HdlIntValue,\
-    HdlCall, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
+from hdlConvertor.hdlAst import HdlDirection, HdlValueId, HdlValueInt,\
+    HdlOp, HdlAll, HdlTypeAuto, HdlOthers, HdlTypeType
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 
@@ -57,9 +57,9 @@ class ToJson(HdlAstVisitor):
         d["path"] = self.visit_iHdlExpr(o.path)
         return d
 
-    def visit_HdlNamespace(self, o):
+    def visit_HdlValueIdspace(self, o):
         """
-        :type o: HdlNamespace
+        :type o: HdlValueIdspace
         """
         d = self.visit_iHdlObjWithName(o)
         d["objs"] = [self.visit_main_obj(o2) for o2 in o.objs]
@@ -75,9 +75,9 @@ class ToJson(HdlAstVisitor):
         else:
             return o.name
 
-    def visit_HdlVariableDef(self, o):
+    def visit_HdlIdDef(self, o):
         """
-        :type o: HdlVariableDef
+        :type o: HdlIdDef
         """
         d = self.visit_iHdlObjWithName(o)
 
@@ -95,9 +95,9 @@ class ToJson(HdlAstVisitor):
         """
         :type o: HdlModuleDec
         """
-        d = self.visit_HdlNamespace(o)
-        d["params"] = [self.visit_HdlVariableDef(p) for p in o.params]
-        d["ports"] = [self.visit_HdlVariableDef(p) for p in o.ports]
+        d = self.visit_HdlValueIdspace(o)
+        d["params"] = [self.visit_HdlIdDef(p) for p in o.params]
+        d["ports"] = [self.visit_HdlIdDef(p) for p in o.ports]
         return d
 
     def visit_HdlModuleDef(self, o):
@@ -122,9 +122,9 @@ class ToJson(HdlAstVisitor):
             d["in_prepoc"] = True
         return d
 
-    def visit_HdlComponentInst(self, o):
+    def visit_HdlCompInst(self, o):
         """
-        :type o: HdlComponentInst
+        :type o: HdlCompInst
         """
         d = self.visit_iHdlObjWithName(o)
         if o.module_name is not None:
@@ -148,7 +148,7 @@ class ToJson(HdlAstVisitor):
                 d[f] = True
         if o.return_t is not None:
             d["return_t"] = self.visit_iHdlExpr(o.return_t)
-        d["params"] = [self.visit_HdlVariableDef(v) for v in o.params]
+        d["params"] = [self.visit_HdlIdDef(v) for v in o.params]
         d["body"] = [self.visit_main_obj(o2) for o2 in o.body]
         return d
 
@@ -294,17 +294,17 @@ class ToJson(HdlAstVisitor):
         :type o: iHdlExpr
         :return: iHdlExpr
         """
-        if isinstance(o, HdlName):
+        if isinstance(o, HdlValueId):
             d = {
                 "__class__": o.__class__.__name__,
                 "val": str(o),
             }
         elif is_str(o) or o is None:
             d = o
-        elif isinstance(o, HdlIntValue):
-            d = self.visit_HdlIntValue(o)
-        elif isinstance(o, HdlCall):
-            d = self.visit_HdlCall(o)
+        elif isinstance(o, HdlValueInt):
+            d = self.visit_HdlValueInt(o)
+        elif isinstance(o, HdlOp):
+            d = self.visit_HdlOp(o)
         elif o is HdlAll or\
                 o is HdlTypeAuto or\
                 o is HdlOthers or\
@@ -318,9 +318,9 @@ class ToJson(HdlAstVisitor):
             raise NotImplementedError("Unexpected object of type "+str(type(o)))
         return d
 
-    def visit_HdlIntValue(self, o):
+    def visit_HdlValueInt(self, o):
         """
-        :type o: HdlIntValue
+        :type o: HdlValueInt
         """
         d = {
             "__class__": o.__class__.__name__,
@@ -332,9 +332,9 @@ class ToJson(HdlAstVisitor):
             d["base"] = o.base
         return d
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type o: HdlCall
+        :type o: HdlOp
         :return: iHdlExpr
         """
         d = {

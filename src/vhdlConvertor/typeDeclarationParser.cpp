@@ -11,11 +11,11 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
-unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_declaration(
+unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitType_declaration(
 		vhdlParser::Type_declarationContext *ctx) {
 	//type_declaration:
 	//      full_type_declaration
@@ -29,15 +29,15 @@ unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_declaration(
 				ctx->incomplete_type_declaration());
 }
 
-unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitIncomplete_type_declaration(
+unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitIncomplete_type_declaration(
 		vhdlParser::Incomplete_type_declarationContext *ctx) {
 	//incomplete_type_declaration: KW_TYPE identifier SEMI;
 	auto id = VhdlLiteralParser::getIdentifierStr(ctx->identifier());
-	return create_object<HdlVariableDef>(ctx, move(id), HdlValueSymbol::type(),
+	return create_object<HdlIdDef>(ctx, move(id), HdlValueSymbol::type(),
 			nullptr);
 }
 
-unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitFull_type_declaration(
+unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitFull_type_declaration(
 		vhdlParser::Full_type_declarationContext *ctx) {
 	//full_type_declaration:
 	//      KW_TYPE identifier KW_IS type_definition SEMI
@@ -47,7 +47,7 @@ unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitFull_type_declaration
 	return visitType_definition(move(id), td);
 }
 
-unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_definition(
+unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitType_definition(
 		string &&name, vhdlParser::Type_definitionContext *ctx) {
 	//type_definition:
 	//      scalar_type_definition
@@ -80,7 +80,7 @@ unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitType_definition(
 			}
 		}
 	}
-	return create_object<HdlVariableDef>(ctx, move(name),
+	return create_object<HdlIdDef>(ctx, move(name),
 			HdlValueSymbol::type(), move(t));
 }
 
@@ -208,7 +208,7 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitUnbounded_array_definit
 	//          KW_OF subtype_indication
 	//;
 	auto element_t = visitSubtype_indication(ctx->subtype_indication());
-	auto tdef = make_unique<HdlCall>(HdlOperatorType::INDEX, move(element_t));
+	auto tdef = make_unique<HdlOp>(HdlOpType::INDEX, move(element_t));
 	for (auto isd : ctx->index_subtype_definition()) {
 		auto i = visitIndex_subtype_definition(isd);
 		tdef->operands.push_back(move(i));
@@ -221,7 +221,7 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitIndex_subtype_definitio
 	// index_subtype_definition: type_mark KW_RANGE BOX;
 	auto _tm = ctx->type_mark();
 	auto tm = VhdlExprParser::visitType_mark(_tm);
-	return create_object<HdlCall>(ctx, move(tm), HdlOperatorType::RANGE,
+	return create_object<HdlOp>(ctx, move(tm), HdlOpType::RANGE,
 			HdlValueSymbol::open());
 }
 
@@ -231,7 +231,7 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstrained_array_defin
 	//      KW_ARRAY index_constraint KW_OF subtype_indication
 	//;
 	auto element_t = visitSubtype_indication(ctx->subtype_indication());
-	auto tdef = make_unique<HdlCall>(HdlOperatorType::INDEX, move(element_t));
+	auto tdef = make_unique<HdlOp>(HdlOpType::INDEX, move(element_t));
 	auto indexes = visitIndex_constraint(ctx->index_constraint());
 	for (auto &i : indexes) {
 		tdef->operands.push_back(move(i));
@@ -257,7 +257,7 @@ unique_ptr<HdlClassDef> VhdlTypeDeclarationParser::visitRecord_type_definition(
 
 	return c;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlTypeDeclarationParser::visitElement_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlTypeDeclarationParser::visitElement_declaration(
 		vhdlParser::Element_declarationContext *ctx) {
 	// element_declaration:
 	//       identifier_list COLON element_subtype_definition SEMI
@@ -269,13 +269,13 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlTypeDeclarationPars
 	return VhdlInterfaceParser::extractVariables(id_list, st, nullptr);
 }
 
-std::unique_ptr<HdlVariableDef> VhdlTypeDeclarationParser::visitSubtype_declaration(
+std::unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitSubtype_declaration(
 		vhdlParser::Subtype_declarationContext *ctx) {
 	//subtype_declaration
 	//  : SUBTYPE identifier IS subtype_indication SEMI
 	//  ;
 	auto t = visitSubtype_indication(ctx->subtype_indication());
-	auto v = create_object<HdlVariableDef>(ctx,
+	auto v = create_object<HdlIdDef>(ctx,
 			VhdlLiteralParser::getIdentifierStr(ctx->identifier()),
 			HdlValueSymbol::type_subtype(), std::move(t));
 	return v;
@@ -300,8 +300,8 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 		e = visitConstraint(move(e), c);
 	}
 	if (ri) {
-		return create_object<HdlCall>(ctx, move(ri),
-				HdlOperatorType::DEFINE_RESOLVER, move(e));
+		return create_object<HdlOp>(ctx, move(ri),
+				HdlOpType::DEFINE_RESOLVER, move(e));
 	} else {
 		return e;
 	}
@@ -366,14 +366,14 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 		// : RANGE range
 		// ;
 		auto op1 = VhdlExprParser::visitRange(r->range());
-		return create_object<HdlCall>(ctx, move(selectedName),
-				HdlOperatorType::RANGE, move(op1));
+		return create_object<HdlOp>(ctx, move(selectedName),
+				HdlOpType::RANGE, move(op1));
 	} else {
 		auto i = ctx->array_constraint();
 		if (i) {
 			auto ac = visitArray_constraint(i);
 			if (ac.first == nullptr) {
-				auto res = create_object<HdlCall>(ctx, HdlOperatorType::INDEX,
+				auto res = create_object<HdlOp>(ctx, HdlOpType::INDEX,
 						move(selectedName));
 				for (auto &i : ac.second) {
 					res->operands.push_back(move(i));

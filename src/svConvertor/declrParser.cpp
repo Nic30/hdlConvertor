@@ -10,7 +10,7 @@
 
 using namespace std;
 using namespace sv2017_antlr;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
@@ -35,7 +35,7 @@ void VerDeclrParser::visitData_declaration(
 		VerTypeParser tp(commentParser);
 		auto is_const = ctx->KW_CONST() != nullptr;
 		auto is_static = tp.visitLifetime(ctx->lifetime());
-		vector<unique_ptr<HdlVariableDef>> res_tmp;
+		vector<unique_ptr<HdlIdDef>> res_tmp;
 		auto dti = ctx->data_type_or_implicit();
 		auto t = tp.visitData_type_or_implicit(dti, nullptr);
 		visitList_of_variable_decl_assignments(lvda, move(t), res_tmp);
@@ -71,7 +71,7 @@ void VerDeclrParser::visitData_declaration(
 void VerDeclrParser::visitList_of_variable_decl_assignments(
 		sv2017Parser::List_of_variable_decl_assignmentsContext *ctx,
 		unique_ptr<iHdlExprItem> base_type,
-		vector<unique_ptr<HdlVariableDef>> &res) {
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_variable_decl_assignments:
 	//     variable_decl_assignment ( COMMA variable_decl_assignment )*;
 	VerExprParser ep(commentParser);
@@ -114,12 +114,12 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 				}
 			}
 		}
-		auto var = create_object<HdlVariableDef>(vda, name, move(t), move(v));
+		auto var = create_object<HdlIdDef>(vda, name, move(t), move(v));
 		res.push_back(move(var));
 	}
 
 }
-unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
+unique_ptr<HdlIdDef> VerDeclrParser::visitType_declaration(
 		sv2017Parser::Type_declarationContext *ctx) {
 	// type_declaration:
 	//     KW_TYPEDEF (
@@ -155,10 +155,10 @@ unique_ptr<HdlVariableDef> VerDeclrParser::visitType_declaration(
 		auto ids = ctx->identifier();
 		assert(ids.size() == 2);
 		auto id = ep.visitIdentifier(ids[0]);
-		val = create_object<HdlCall>(iwbs, move(val), HdlOperatorType::DOT, move(id));
+		val = create_object<HdlOp>(iwbs, move(val), HdlOpType::DOT, move(id));
 		name = ep.getIdentifierStr(ids[1]);
 	}
-	return create_object<HdlVariableDef>(ctx, name, move(t), move(val));
+	return create_object<HdlIdDef>(ctx, name, move(t), move(val));
 }
 void VerDeclrParser::visitNet_type_declaration(
 		sv2017Parser::Net_type_declarationContext *ctx,

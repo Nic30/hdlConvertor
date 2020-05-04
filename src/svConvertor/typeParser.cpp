@@ -2,13 +2,13 @@
 
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlAst/hdlOpType.h>
 #include <hdlConvertor/svConvertor/utils.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
-#include <hdlConvertor/hdlObjects/hdlCall.h>
+#include <hdlConvertor/hdlAst/hdlOp.h>
 
 using namespace std;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
@@ -35,7 +35,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitType_reference(
 		assert(dt);
 		res = visitData_type(dt);
 	}
-	return create_object<HdlCall>(ctx, HdlOperatorType::TYPE_OF, move(res));
+	return create_object<HdlOp>(ctx, HdlOpType::TYPE_OF, move(res));
 }
 
 unique_ptr<iHdlExprItem> VerTypeParser::visitInteger_type(
@@ -98,8 +98,8 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type_primitive(
 		if (sig) {
 			auto _sig = visitSigning(sig);
 			if (_sig != SIGNING_VAL::NO_SIGN) {
-				auto c = dynamic_cast<HdlCall*>(t.get());
-				if (c && c->op == HdlOperatorType::PARAMETRIZATION
+				auto c = dynamic_cast<HdlOp*>(t.get());
+				if (c && c->op == HdlOpType::PARAMETRIZATION
 						&& c->operands.size() == 3) {
 					// fill up sign flag for wire/reg types
 					c->operands[2] = Utils::signing(_sig);
@@ -107,11 +107,11 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type_primitive(
 					// specify sign for rest of the types
 					vector<unique_ptr<iHdlExprItem>> args;
 					args.push_back(
-							create_object<HdlCall>(ctx,
+							create_object<HdlOp>(ctx,
 									make_unique<HdlValueId>("signed"),
-									HdlOperatorType::MAP_ASSOCIATION,
+									HdlOpType::MAP_ASSOCIATION,
 									make_unique<HdlValueInt>(1)));
-					t = HdlCall::parametrization(ctx, move(t), args);
+					t = HdlOp::parametrization(ctx, move(t), args);
 				}
 			}
 		}
@@ -156,11 +156,11 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type(
 		auto pva = ctx->parameter_value_assignment();
 		if (pva) {
 			auto p = ep.visitParameter_value_assignment(pva);
-			t = HdlCall::parametrization(ctx, move(t), p);
+			t = HdlOp::parametrization(ctx, move(t), p);
 		}
 		if (ids.size() == 2) {
 			auto id = ep.visitIdentifier(ids[1]);
-			t = create_object<HdlCall>(ids[1], move(t), HdlOperatorType::DOT,
+			t = create_object<HdlOp>(ids[1], move(t), HdlOpType::DOT,
 					move(id));
 		} else {
 			assert(ids.size() == 1);
@@ -229,8 +229,8 @@ unique_ptr<iHdlExprItem> VerTypeParser::applyUnpacked_dimension(
 		vector<sv2017Parser::Unpacked_dimensionContext*> &uds) {
 	for (auto _ud : uds) {
 		auto ud = visitUnpacked_dimension(_ud);
-		base_expr = create_object<HdlCall>(_ud, move(base_expr),
-				HdlOperatorType::INDEX, move(ud));
+		base_expr = create_object<HdlOp>(_ud, move(base_expr),
+				HdlOpType::INDEX, move(ud));
 	}
 	return base_expr;
 }
@@ -239,9 +239,9 @@ unique_ptr<iHdlExprItem> VerTypeParser::applyVariable_dimension(
 		unique_ptr<iHdlExprItem> base_expr,
 		vector<sv2017Parser::Variable_dimensionContext*> &vds) {
 	// optionally fill up width of wire/reg datatypes
-	auto wire_reg_parametrization = dynamic_cast<HdlCall*>(base_expr.get());
+	auto wire_reg_parametrization = dynamic_cast<HdlOp*>(base_expr.get());
 	if (wire_reg_parametrization) {
-		if (wire_reg_parametrization->op != HdlOperatorType::PARAMETRIZATION) {
+		if (wire_reg_parametrization->op != HdlOpType::PARAMETRIZATION) {
 			wire_reg_parametrization = nullptr;
 		} else if (wire_reg_parametrization->operands.size() != 3) {
 			wire_reg_parametrization = nullptr;
@@ -322,7 +322,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitImplicit_data_type(
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = create_object<HdlCall>(*it, move(e), HdlOperatorType::INDEX,
+		e = create_object<HdlOp>(*it, move(e), HdlOpType::INDEX,
 				move(pd));
 	}
 	return e;
@@ -362,8 +362,8 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitVariable_dimension(
 	if (index == nullptr) {
 		return selected_name;
 	} else {
-		return create_object<HdlCall>(ctx, move(selected_name),
-				HdlOperatorType::INDEX, move(index));
+		return create_object<HdlOp>(ctx, move(selected_name),
+				HdlOpType::INDEX, move(index));
 	}
 }
 unique_ptr<iHdlExprItem> VerTypeParser::visitNet_type(

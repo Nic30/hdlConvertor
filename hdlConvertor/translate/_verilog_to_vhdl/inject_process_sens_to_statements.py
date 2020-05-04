@@ -57,7 +57,7 @@
              latch_data <= new_data;
 """
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
-from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst._expr import HdlOp, HdlOpType
 from hdlConvertor.hdlAst._statements import HdlStmIf
 
 class InjectProcessSensToStatements(HdlAstVisitor):
@@ -70,8 +70,8 @@ class InjectProcessSensToStatements(HdlAstVisitor):
         if sens:
             if len(sens) == 1:
                 s = sens[0]
-                if isinstance(s, HdlCall):
-                    assert s.fn in [HdlBuiltinFn.RISING, HdlBuiltinFn.FALLING], s
+                if isinstance(s, HdlOp):
+                    assert s.fn in [HdlOpType.RISING, HdlOpType.FALLING], s
                     i = HdlStmIf()
                     i.cond = s
                     i.if_true = o.body

@@ -22,11 +22,11 @@ VhdlBlockDeclarationParser::VhdlBlockDeclarationParser(bool hierarchyOnly) :
 
 /*
  * @note Some declarations can spot multiple objects
- * 		 that is why this function just does not return hdlObjects::iHdlObj*
+ * 		 that is why this function just does not return hdlAst::iHdlObj*
  * */
 void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 		vhdlParser::Block_declarative_itemContext *ctx,
-		std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &objs) {
+		std::vector<std::unique_ptr<hdlAst::iHdlObj>> &objs) {
 	// block_declarative_item:
 	//       subprogram_declaration
 	//       | subprogram_body
@@ -182,7 +182,7 @@ void VhdlBlockDeclarationParser::visitBlock_declarative_item(
 	NotImplementedLogger::print("ArchParser.visitGroup_declaration", gd);
 }
 
-std::unique_ptr<hdlObjects::HdlModuleDec> VhdlBlockDeclarationParser::visitComponent_declaration(
+std::unique_ptr<hdlAst::HdlModuleDec> VhdlBlockDeclarationParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext *ctx) {
 	// component_declaration:
 	//       COMPONENT identifier ( IS )?
@@ -190,7 +190,7 @@ std::unique_ptr<hdlObjects::HdlModuleDec> VhdlBlockDeclarationParser::visitCompo
 	//           ( port_clause )?
 	//       END COMPONENT ( identifier )? SEMI
 	// ;
-	auto e = create_object<hdlObjects::HdlModuleDec>(ctx);
+	auto e = create_object<hdlAst::HdlModuleDec>(ctx);
 	e->name = ctx->identifier(0)->getText();
 	if (!hierarchyOnly) {
 		auto gc = ctx->generic_clause();

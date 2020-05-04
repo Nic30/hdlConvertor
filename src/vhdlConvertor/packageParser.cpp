@@ -20,19 +20,19 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VhdlPackageParser::VhdlPackageParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
-std::unique_ptr<HdlNamespace> VhdlPackageParser::visitPackage_body(
+std::unique_ptr<HdlValueIdspace> VhdlPackageParser::visitPackage_body(
 		vhdlParser::Package_bodyContext* ctx) {
 	// package_body:
 	//       PACKAGE BODY identifier IS
 	//           ( package_body_declarative_item )*
 	//       END ( PACKAGE BODY )? ( identifier )? SEMI
 	// ;
-	p = create_object<HdlNamespace>(ctx);
+	p = create_object<HdlValueIdspace>(ctx);
 	p->name = VhdlLiteralParser::getIdentifierStr(ctx->identifier(0));
         p->defs_only = false;
 

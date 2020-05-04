@@ -1,4 +1,4 @@
-from hdlConvertor.hdlAst._defs import HdlVariableDef
+from hdlConvertor.hdlAst._defs import HdlIdDef
 from hdlConvertor.hdlAst._statements import HdlStmBlock
 from hdlConvertor.to.hdlUtils import Indent
 from hdlConvertor.to.systemc.expr import ToSystemcExpr
@@ -15,8 +15,8 @@ class ToSystemcStm(ToSystemcExpr):
         """
         :type o: iHdlStatement
         """
-        if isinstance(o, HdlVariableDef):
-            return self.visit_HdlVariableDef(o)
+        if isinstance(o, HdlIdDef):
+            return self.visit_HdlIdDef(o)
         else:
             return super(ToSystemcStm, self).visit_iHdlStatement(o)
 

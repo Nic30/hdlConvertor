@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from hdlConvertor.hdlAst._bases import iHdlObjWithName, iHdlObjInModule, iHdlObj
-from hdlConvertor.hdlAst._defs import HdlVariableDef
+from hdlConvertor.hdlAst._defs import HdlIdDef
 
 
 try:
@@ -23,19 +23,19 @@ class HdlLibrary(iHdlObjWithName):
         self.name = name
 
 
-class HdlNamespace(iHdlObjWithName):
+class HdlValueIdspace(iHdlObjWithName):
     """
     Corresponds to VHDL package/package body or SystemVerilog namespace
     """
     __slots__ = ["objs", "declaration_only"]
 
     def __init__(self):
-        super(HdlNamespace, self).__init__()
+        super(HdlValueIdspace, self).__init__()
         self.declaration_only = False  # type: bool
         self.objs = []  # type: List[iHdlObj]
 
 
-class HdlModuleDec(HdlNamespace):
+class HdlModuleDec(HdlValueIdspace):
     """
     HDL Module declaration
     (ports, params header of module in Verilog/ VHDL Entity)
@@ -46,8 +46,8 @@ class HdlModuleDec(HdlNamespace):
 
     def __init__(self):
         super(HdlModuleDec, self).__init__()
-        self.params = []  # type: List[HdlVariableDef]
-        self.ports = []  # type: List[HdlVariableDef]
+        self.params = []  # type: List[HdlIdDef]
+        self.ports = []  # type: List[HdlIdDef]
 
 
 class HdlModuleDef(iHdlObjWithName):
@@ -63,16 +63,16 @@ class HdlModuleDef(iHdlObjWithName):
     def __init__(self):
         super(HdlModuleDef, self).__init__()
         self.dec = None  # type: Optional[HdlModuleDec]
-        self.module_name = None  # type: HdlName
+        self.module_name = None  # type: HdlValueId
         self.objs = []  # type: List[Union[iHdlObj, iHdlObjInModule]]
 
 
-class HdlComponentInst(iHdlObjWithName, iHdlObjInModule):
+class HdlCompInst(iHdlObjWithName, iHdlObjInModule):
     """
     HDL Component instance
 
     :ivar ~.name: name of this component instance in this module
-    :ivar ~.module_name: iHdlExpr made from HdlNames and dot operators (optionally)
+    :ivar ~.module_name: iHdlExpr made from HdlValueIds and dot operators (optionally)
     :attention: module has to be find explicitly and is not present in default
         AST after parsing
     :ivar ~.param_map: same as port_map just port parameters of the component

@@ -2,7 +2,7 @@
 
 #include <assert.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlAst/hdlOpType.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/createObject.h>
@@ -11,7 +11,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitSelected_name(
 		vhdlParser::Selected_nameContext *ctx) {
@@ -21,7 +21,7 @@ std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitSelected_name(
 	std::unique_ptr<iHdlExprItem> top = VhdlLiteralParser::visitIdentifier(
 			ctx->identifier());
 	for (auto s : ctx->suffix()) {
-		top = create_object<HdlCall>(ctx, move(top), DOT, visitSuffix(s));
+		top = create_object<HdlOp>(ctx, move(top), DOT, visitSuffix(s));
 	}
 	assert(top);
 	return top;
@@ -69,7 +69,7 @@ std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_slice_part(
 	// ;
 	auto _er = ctx->explicit_range();
 	auto er = VhdlExprParser::visitExplicit_range(_er);
-	return create_object<HdlCall>(ctx, move(selected_name), HdlOperatorType::INDEX, move(er));
+	return create_object<HdlOp>(ctx, move(selected_name), HdlOpType::INDEX, move(er));
 }
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName(
 		vhdlParser::NameContext *ctx) {
@@ -107,13 +107,13 @@ std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName(
 	auto _s = ctx->suffix();
 	if (_s) {
 		auto s = visitSuffix(_s);
-		return create_object<HdlCall>(ctx, move(n), HdlOperatorType::DOT, move(s));
+		return create_object<HdlOp>(ctx, move(n), HdlOpType::DOT, move(s));
 	}
 	auto _al = ctx->association_list();
 	assert(_al);
 	auto al = VhdlExprParser::visitAssociation_list(_al);
 	assert(al);
-	return HdlCall::call(_al, move(n), *al);
+	return HdlOp::call(_al, move(n), *al);
 }
 
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_attribute_part(
@@ -127,8 +127,8 @@ std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_attribute_part(
 		NotImplementedLogger::print(
 				"ExprParser.visitAttribute_name - signature", s);
 	auto ad = ctx->attribute_designator();
-	return create_object<HdlCall>(ctx, move(selected_name),
-			HdlOperatorType::APOSTROPHE, visitAttribute_designator(ad));
+	return create_object<HdlOp>(ctx, move(selected_name),
+			HdlOpType::APOSTROPHE, visitAttribute_designator(ad));
 }
 
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitAttribute_name(

@@ -12,7 +12,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<HdlValueInt> VhdlLiteralParser::visitBIT_STRING_LITERAL(
 		TerminalNode *ctx, const std::string &_s) {
@@ -71,7 +71,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitNumeric_literal(
 	if (_dl) {
 		auto dl = visitDECIMAL_LITERAL(_dl);
 		if (name) {
-			return create_object<HdlCall>(ctx, move(dl), HdlOperatorType::MUL,
+			return create_object<HdlOp>(ctx, move(dl), HdlOpType::MUL,
 					move(name));
 		} else {
 			return dl;
@@ -81,7 +81,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitNumeric_literal(
 	if (_bl) {
 		auto bl = visitBASED_LITERAL(_bl);
 		if (name) {
-			return create_object<HdlCall>(_bl, move(bl), HdlOperatorType::MUL,
+			return create_object<HdlOp>(_bl, move(bl), HdlOpType::MUL,
 					move(name));
 		} else {
 			return bl;
@@ -98,12 +98,12 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitPhysical_literal(
 	auto _dl = ctx->DECIMAL_LITERAL();
 	if (_dl) {
 		auto dl = visitDECIMAL_LITERAL(_dl);
-		return create_object<HdlCall>(_dl, std::move(dl), HdlOperatorType::MUL, std::move(name));
+		return create_object<HdlOp>(_dl, std::move(dl), HdlOpType::MUL, std::move(name));
 	}
 	auto _bl = ctx->BASED_LITERAL();
 	if (_bl) {
 		auto bl = visitBASED_LITERAL(_bl);
-		return create_object<HdlCall>(_bl, std::move(bl), HdlOperatorType::MUL, std::move(name));
+		return create_object<HdlOp>(_bl, std::move(bl), HdlOpType::MUL, std::move(name));
 	}
 	return name;
 }

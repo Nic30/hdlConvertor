@@ -1,8 +1,8 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/hdlCall.h>
-#include <hdlConvertor/hdlObjects/hdlStm_others.h>
-#include <hdlConvertor/hdlObjects/hdlLibrary.h>
+#include <hdlConvertor/hdlAst/hdlOp.h>
+#include <hdlConvertor/hdlAst/hdlStm_others.h>
+#include <hdlConvertor/hdlAst/hdlLibrary.h>
 #include <hdlConvertor/vhdlConvertor/archParser.h>
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <hdlConvertor/vhdlConvertor/entityParser.h>
@@ -14,7 +14,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VhdlDesignFileParser::VhdlDesignFileParser(antlr4::TokenStream &tokens,
 		HdlContext &ctx, bool _hierarchyOnly) :
@@ -151,9 +151,9 @@ void VhdlDesignFileParser::visitLibrary_clause(
 
 void flatten_doted_expr(std::unique_ptr<iHdlExprItem> e,
 		std::vector<std::unique_ptr<iHdlExprItem>> &arr) {
-	auto o = dynamic_cast<HdlCall*>(e.get());
+	auto o = dynamic_cast<HdlOp*>(e.get());
 	if (o) {
-		if (o->op == HdlOperatorType::DOT) {
+		if (o->op == HdlOpType::DOT) {
 			for (auto &_o : o->operands) {
 				flatten_doted_expr(std::move(_o), arr);
 			}

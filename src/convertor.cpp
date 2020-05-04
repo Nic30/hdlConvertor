@@ -19,7 +19,7 @@ namespace hdlConvertor {
 using namespace std;
 using namespace antlr4;
 using namespace antlr4::tree;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 bool Convertor::debug = false;
 
@@ -43,7 +43,7 @@ public:
 	void parse_str(std::string &input_str, bool hierarchyOnly) = delete;
 	void parse_file(const filesystem::path &file_name, bool hierarchyOnly) = delete;
 
-	SVParserContainer(hdlObjects::HdlContext &context, Language _lang,
+	SVParserContainer(hdlAst::HdlContext &context, Language _lang,
 			verilog_pp::MacroDB &_defineDB) :
 			iParserContainer(context, _lang, _defineDB), preproc(_lang,
 					this->syntaxErrLogger, _defineDB) {
@@ -84,7 +84,7 @@ public:
 	}
 };
 
-Convertor::Convertor(hdlObjects::HdlContext &_c) :
+Convertor::Convertor(hdlAst::HdlContext &_c) :
 		hierarchyOnly(false), c(_c) {
 }
 

@@ -7,17 +7,17 @@
 #include <tuple>
 #include <utility>
 
-#include <hdlConvertor/hdlObjects/bigInteger.h>
-#include <hdlConvertor/hdlObjects/hdlDirection.h>
-#include <hdlConvertor/hdlObjects/hdlValue.h>
+#include <hdlConvertor/hdlAst/bigInteger.h>
+#include <hdlConvertor/hdlAst/hdlDirection.h>
+#include <hdlConvertor/hdlAst/hdlValue.h>
 #include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
 
-using namespace hdlObjects;
+using namespace hdlAst;
 
 PyObject* ToPy::toPy(const iHdlExprItem *o) {
-	auto c = dynamic_cast<const HdlCall*>(o);
+	auto c = dynamic_cast<const HdlOp*>(o);
 	if (c)
 		return toPy(c);
 	auto va = dynamic_cast<const HdlValueArr*>(o);
@@ -63,7 +63,7 @@ PyObject* ToPy::toPy(const HdlValueId *o) {
 	auto v = PyUnicode_FromString(o->_str.c_str());
 	if (!v)
 		return nullptr;
-	return PyObject_CallFunctionObjArgs(HdlNameCls, v, NULL);
+	return PyObject_CallFunctionObjArgs(HdlValueIdCls, v, NULL);
 }
 
 PyObject* ToPy::toPy(const HdlValueInt *o) {
@@ -98,7 +98,7 @@ PyObject* ToPy::toPy(const HdlValueInt *o) {
 		bits = Py_None;
 	}
 
-	return PyObject_CallFunctionObjArgs(HdlIntValueCls, v, bits, base, NULL);
+	return PyObject_CallFunctionObjArgs(HdlValueIntCls, v, bits, base, NULL);
 }
 
 PyObject* ToPy::toPy(const HdlValueFloat *o) {
@@ -167,15 +167,15 @@ PyObject* ToPy::toPy(const HdlExprNotImplemented *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const HdlOperatorType o) {
+PyObject* ToPy::toPy(const HdlOpType o) {
 	const char *name;
 	try {
-		name = HdlOperatorType_toString(o);
+		name = HdlOpType_toString(o);
 	} catch (const std::runtime_error &e) {
 		PyErr_SetString(PyExc_ValueError, e.what());
 		return nullptr;
 	}
-	return PyObject_GetAttrString(HdlBuiltinFnEnum, name);
+	return PyObject_GetAttrString(HdlOpTypeEnum, name);
 }
 
 }

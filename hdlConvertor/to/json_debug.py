@@ -1,6 +1,6 @@
 from hdlConvertor.to.json import ToJson
 from hdlConvertor.hdlAst._bases import iHdlObj
-from hdlConvertor.hdlAst._defs import HdlVariableDef
+from hdlConvertor.hdlAst._defs import HdlIdDef
 from hdlConvertor.hdlAst._expr import HdlDirection
 
 
@@ -9,11 +9,11 @@ class ToJsonDebug(ToJson):
     HdlConverto AST -> json (dict/list/str/int/None composed object)
     An ivalid object are converted to str using its __repr__()
     """
-    def visit_HdlVariableDef(self, o):
+    def visit_HdlIdDef(self, o):
         try:
-            return ToJson.visit_HdlVariableDef(self, o)
+            return ToJson.visit_HdlIdDef(self, o)
         except Exception:
-            if isinstance(o, HdlVariableDef):
+            if isinstance(o, HdlIdDef):
                 raise
             return repr(o)
 

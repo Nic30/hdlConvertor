@@ -1,5 +1,5 @@
-from hdlConvertor.hdlAst import HdlDirection, HdlBuiltinFn,\
-    HdlCall, HdlComponentInst, HdlVariableDef, iHdlStatement,\
+from hdlConvertor.hdlAst import HdlDirection, HdlOpType,\
+    HdlOp, HdlCompInst, HdlIdDef, iHdlStatement,\
     HdlTypeAuto
 from hdlConvertor.hdlAst._defs import HdlFunctionDef
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
@@ -28,7 +28,7 @@ class ToVerilog2005(ToVerilog2005Stm):
 
     def visit_generic_declr(self, g):
         """
-        :type g: HdlVariableDef
+        :type g: HdlIdDef
         """
         self.visit_doc(g)
         w = self.out.write
@@ -48,7 +48,7 @@ class ToVerilog2005(ToVerilog2005Stm):
 
     def visit_port_declr(self, p):
         """
-        :type p: HdlVariableDef
+        :type p: HdlIdDef
         """
         w = self.out.write
         self.visit_doc(p)
@@ -66,9 +66,9 @@ class ToVerilog2005(ToVerilog2005Stm):
         if is_array:
             self.visit_type_array_part(t)
 
-    def visit_HdlVariableDef(self, var):
+    def visit_HdlIdDef(self, var):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         self.visit_doc(var)
         name = var.name
@@ -92,8 +92,8 @@ class ToVerilog2005(ToVerilog2005Stm):
             self.visit_iHdlExpr(var.value)
 
     def visit_map_item(self, item):
-        if isinstance(item, HdlCall)\
-                and item.fn == HdlBuiltinFn.MAP_ASSOCIATION:
+        if isinstance(item, HdlOp)\
+                and item.fn == HdlOpType.MAP_ASSOCIATION:
             w = self.out.write
             # k, v pair
             k, v = item.ops
@@ -115,9 +115,9 @@ class ToVerilog2005(ToVerilog2005Stm):
                 else:
                     w(",\n")
 
-    def visit_HdlComponentInst(self, c):
+    def visit_HdlCompInst(self, c):
         """
-        :type c: HdlComponentInst
+        :type c: HdlCompInst
         """
         self.visit_doc(c)
         w = self.out.write
@@ -171,8 +171,8 @@ class ToVerilog2005(ToVerilog2005Stm):
         w(";\n")
         with Indent(self.out):
             for s in o.body:
-                if isinstance(s, HdlVariableDef):
-                    self.visit_HdlVariableDef(s)
+                if isinstance(s, HdlIdDef):
+                    self.visit_HdlIdDef(s)
                     w(";\n")
                 elif isinstance(s, iHdlStatement):
                     need_semi = self.visit_iHdlStatement(s)
@@ -230,11 +230,11 @@ class ToVerilog2005(ToVerilog2005Stm):
         w = self.out.write
         with Indent(self.out):
             for o in a.objs:
-                if isinstance(o, HdlVariableDef):
-                    self.visit_HdlVariableDef(o)
+                if isinstance(o, HdlIdDef):
+                    self.visit_HdlIdDef(o)
                     w(";\n")
-                elif isinstance(o, HdlComponentInst):
-                    self.visit_HdlComponentInst(o)
+                elif isinstance(o, HdlCompInst):
+                    self.visit_HdlCompInst(o)
                     w(";\n\n")
                 elif isinstance(o, iHdlStatement):
                     need_semi = self.visit_iHdlStatement(o)

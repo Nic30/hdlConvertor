@@ -14,10 +14,10 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-std::unique_ptr<hdlObjects::HdlStmProcess> VhdlProcessParser::visitProcess_statement(
+std::unique_ptr<hdlAst::HdlStmProcess> VhdlProcessParser::visitProcess_statement(
 		vhdlParser::Process_statementContext *ctx) {
 	// process_statement:
 	//           ( KW_POSTPONED )? KW_PROCESS ( LPAREN process_sensitivity_list RPAREN )? ( KW_IS )?

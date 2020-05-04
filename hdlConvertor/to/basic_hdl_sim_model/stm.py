@@ -1,4 +1,4 @@
-from hdlConvertor.hdlAst import HdlCall, HdlStmIf, HdlStmBlock, HdlStmAssign
+from hdlConvertor.hdlAst import HdlOp, HdlStmIf, HdlStmBlock, HdlStmAssign
 from hdlConvertor.to.basic_hdl_sim_model.expr import ToBasicHdlSimModelExpr
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 
@@ -12,7 +12,7 @@ class ToBasicHdlSimModelStm(ToBasicHdlSimModelExpr):
         w = self.out.write
         w("# sensitivity: ")
         for last, s in iter_with_last(proc.sensitivity):
-            if isinstance(s, HdlCall):
+            if isinstance(s, HdlOp):
                 w(str(s.fn))
                 w(" ")
                 self.visit_iHdlExpr(s.ops[0])

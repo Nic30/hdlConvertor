@@ -1,6 +1,6 @@
 from typing import Set, List, Dict
 
-from hdlConvertor.hdlAst import iHdlExpr, HdlName, \
+from hdlConvertor.hdlAst import iHdlExpr, HdlValueId, \
     HdlContext, HdlModuleDec, HdlStmAssign, HdlStmProcess, \
     HdlStmIf, HdlStmBlock
 from hdlConvertor.hdlAst._structural import HdlModuleDef
@@ -9,9 +9,9 @@ from hdlConvertor.hdlAst._structural import HdlModuleDef
 def get_output_ids(e, outputs):
     """
     :type e: iHdlExpr
-    :type outputs: Set[HdlName]
+    :type outputs: Set[HdlValueId]
     """
-    if isinstance(e, HdlName):
+    if isinstance(e, HdlValueId):
         outputs.add(e)
     else:
         raise NotImplementedError(e)
@@ -20,7 +20,7 @@ def get_output_ids(e, outputs):
 def discover_outputs(stm, outputs):
     """
     :type stm: iHdlStm
-    :type outputs: Dict["HdlStm", Set[HdlName]]
+    :type outputs: Dict["HdlStm", Set[HdlValueId]]
     """
     _outputs = None
     if isinstance(stm, HdlStmAssign):
@@ -49,7 +49,7 @@ def discover_outputs(stm, outputs):
         o = set()
         for os in _outputs.values():
             for _o in os:
-                assert isinstance(_o, HdlName), _o
+                assert isinstance(_o, HdlValueId), _o
                 o.add(_o)
         outputs.update(_outputs)
 
@@ -60,10 +60,10 @@ def discover_outputs(stm, outputs):
 def discover_stm_outputs(stm):
     """
     :type stm: iHdlStm
-    :return: Dict["HdlStm", List[HdlName]]
+    :return: Dict["HdlStm", List[HdlValueId]]
     """
     _outputs = {}
-    # :type _outputs: Dict[HdlStm, Set[HdlName]]
+    # :type _outputs: Dict[HdlStm, Set[HdlValueId]]
     discover_outputs(stm, _outputs)
     _outputs = {
         k: list(sorted(outputs))
@@ -77,7 +77,7 @@ def discover_stm_outputs_context(c):
     :type c: HdlContext
     """
     outputs = {}
-    # :type _outputs: Dict[HdlStm, Set[HdlName]]
+    # :type _outputs: Dict[HdlStm, Set[HdlValueId]]
     for o0 in c.objs:
         if isinstance(o0, HdlModuleDef):
             for o1 in o0.objs:

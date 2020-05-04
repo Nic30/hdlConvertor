@@ -4,10 +4,10 @@
 
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
-#include <hdlConvertor/hdlObjects/hdlStmExpr.h>
-#include <hdlConvertor/hdlObjects/hdlStm_others.h>
-#include <hdlConvertor/hdlObjects/hdlStmFor.h>
-#include <hdlConvertor/hdlObjects/hdlStmWhile.h>
+#include <hdlConvertor/hdlAst/hdlStmExpr.h>
+#include <hdlConvertor/hdlAst/hdlStm_others.h>
+#include <hdlConvertor/hdlAst/hdlStmFor.h>
+#include <hdlConvertor/hdlAst/hdlStmWhile.h>
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/generateStatementParser.h>
@@ -17,7 +17,7 @@
 
 using namespace std;
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -149,7 +149,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
 		auto e = VhdlExprParser::visitExpression(_e);
 		args.push_back(move(e));
 	}
-	auto call = HdlCall::call(ctx, move(fn_name), args);
+	auto call = HdlOp::call(ctx, move(fn_name), args);
 	return create_object<HdlStmExpr>(ctx, move(call));
 }
 
@@ -167,7 +167,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
 		auto e = VhdlExprParser::visitExpression(_e);
 		args.push_back(move(e));
 	}
-	auto c = HdlCall::call(ctx, move(fn_name), args);
+	auto c = HdlOp::call(ctx, move(fn_name), args);
 	return create_object<HdlStmExpr>(ctx, move(c));
 }
 
@@ -190,7 +190,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
 	if (cc) {
 		// condition_clause: UNTIL condition;
 		auto e = VhdlExprParser::visitCondition(cc->condition());
-		e = create_object<HdlCall>(cc, HdlOperatorType::NEG, move(e));
+		e = create_object<HdlOp>(cc, HdlOpType::NEG, move(e));
 		sens.push_back(move(e));
 	}
 
@@ -749,7 +749,7 @@ void VhdlStatementParser::visitConcurrent_statement(
 		auto ci = ctx->component_instantiation_statement();
 		if (ci) {
 			auto _ci =
-					VhdlCompInstanceParser::visitComponent_instantiation_statement(
+					VhdlCompInstParser::visitComponent_instantiation_statement(
 							ci, label);
 			stms.push_back(move(_ci));
 			return;

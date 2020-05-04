@@ -1,7 +1,7 @@
 #pragma once
 
-#include <hdlConvertor/hdlObjects/iHdlObj.h>
-#include <hdlConvertor/hdlObjects/named.h>
+#include <hdlConvertor/hdlAst/iHdlObj.h>
+#include <hdlConvertor/hdlAst/named.h>
 
 #include <antlr4-runtime.h>
 
@@ -23,7 +23,7 @@ std::unique_ptr<T> update_code_position(std::unique_ptr<T> object,
 		}
 
 		if (ctx) {
-			auto wp = dynamic_cast<hdlObjects::WithPos*>(object.get());
+			auto wp = dynamic_cast<hdlAst::WithPos*>(object.get());
 			if (wp) {
 				wp->position.update_from_elem(ctx);
 			}

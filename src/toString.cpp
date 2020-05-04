@@ -3,9 +3,9 @@
 
 namespace hdlConvertor {
 
-using namespace hdlObjects;
+using namespace hdlAst;
 
-void ToString::dump(const HdlNamespace * p, int indent) {
+void ToString::dump(const HdlValueIdspace * p, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(p), indent);
 	indent += INDENT_INCR;
 	dumpArrP("objs", indent, p->objs) << ",\n";
@@ -13,7 +13,7 @@ void ToString::dump(const HdlNamespace * p, int indent) {
 	mkIndent(indent) << "}";
 }
 
-void ToString::dump(const hdlObjects::HdlContext * c, int indent) {
+void ToString::dump(const hdlAst::HdlContext * c, int indent) {
 	mkIndent(indent) << "{\n";
 	indent += INDENT_INCR;
 	dumpArrP("objs", indent, c->objs) << ",\n";
@@ -28,7 +28,7 @@ void ToString::dump(const HdlModuleDec * e, int indent) {
 	mkIndent(indent - INDENT_INCR) << "}";
 }
 void ToString::dump(const iHdlExpr * e, int indent) {
-	HdlCall * op = dynamic_cast<HdlCall*>(e->data);
+	HdlOp * op = dynamic_cast<HdlOp*>(e->data);
 	std::cout << "{\n";
 	if (op) {
 		dumpItemP("binOperator", indent + INDENT_INCR, op) << "\n";
@@ -41,7 +41,7 @@ void ToString::dump(const iHdlExpr * e, int indent) {
 	}
 	mkIndent(indent) << "}";
 }
-void ToString::dump(const hdlObjects::iHdlObj * o, int indent) {
+void ToString::dump(const hdlAst::iHdlObj * o, int indent) {
 	auto c = dynamic_cast<const HdlContext*>(o);
 	if (c)
 		dump(c, indent);
@@ -51,7 +51,7 @@ void ToString::dump(const hdlObjects::iHdlObj * o, int indent) {
 	auto ex = dynamic_cast<const iHdlExpr*>(o);
 	if (ex)
 		dump(ex, indent);
-	auto v = dynamic_cast<const HdlVariableDef*>(o);
+	auto v = dynamic_cast<const HdlIdDef*>(o);
 	if (v)
 		dump(v, indent);
 	auto s = dynamic_cast<const iHdlStatement*>(o);
@@ -60,9 +60,9 @@ void ToString::dump(const hdlObjects::iHdlObj * o, int indent) {
 
 	assert(false);
 }
-void ToString::dump(const hdlObjects::iHdlStatement * o, int indent) {
+void ToString::dump(const hdlAst::iHdlStatement * o, int indent) {
 	std::cout
-			<< "\"[TODO] void ToString::dump(const hdlObjects::Statement * o, int indent)\""
+			<< "\"[TODO] void ToString::dump(const hdlAst::Statement * o, int indent)\""
 			<< std::endl;
 }
 void ToString::dump(const Named * n, int indent) {
@@ -120,7 +120,7 @@ void ToString::dump(const HdlValue * s, int indent) {
 	mkIndent(indent - INDENT_INCR) << "}";
 }
 
-void ToString::dump(const HdlVariableDef * v, int indent) {
+void ToString::dump(const HdlIdDef * v, int indent) {
 	dump(static_cast<const WithNameAndDoc*>(v), indent);
 	indent += INDENT_INCR;
 	dumpKey("type", indent);
@@ -135,10 +135,10 @@ void ToString::dump(const HdlVariableDef * v, int indent) {
 	}
 	mkIndent(indent - INDENT_INCR) << "}";
 }
-void ToString::dump(const HdlCall * o, int indent) {
+void ToString::dump(const HdlOp * o, int indent) {
 	std::cout << "{\n";
 	indent += INDENT_INCR;
-	dumpVal("operator", indent, HdlOperatorType_toString(o->op)) << ",\n";
+	dumpVal("operator", indent, HdlOpType_toString(o->op)) << ",\n";
 	dumpArrP("operands", indent, o->operands) << "\n";
 	mkIndent(indent - INDENT_INCR) << "}";
 }

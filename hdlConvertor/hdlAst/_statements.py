@@ -17,7 +17,7 @@ class HdlImport(iHdlStatement):
 
     def __init__(self, path):
         """
-        :type path: List[Union[HdlName, HdlAll]]
+        :type path: List[Union[HdlValueId, HdlAll]]
         """
         super(HdlImport, self).__init__()
         self.path = path
@@ -32,7 +32,7 @@ class HdlStmNop(iHdlStatement):
 
 class HdlStmBlockJoinType(Enum):
     """
-    Python equivalent of C++ hdlConvertor::hdlObjects::HdlStmBlockJoinType
+    Python equivalent of C++ hdlConvertor::hdlAst::HdlStmBlockJoinType
     """
     (
         SEQ,  # sequential block

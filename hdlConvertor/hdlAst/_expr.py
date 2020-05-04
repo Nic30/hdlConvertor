@@ -20,7 +20,7 @@ class HdlDirection(Enum):
     ) = range(7)
 
 
-class HdlName(object):
+class HdlValueId(object):
     """
     String which is id in HDL
 
@@ -39,7 +39,7 @@ class HdlName(object):
         return isinstance(other, self.__class__) and self.val == other.val
 
     def __lt__(self, other):
-        if not isinstance(other, HdlName):
+        if not isinstance(other, HdlValueId):
             return False
         return self.val < other.val
 
@@ -111,10 +111,10 @@ class HdlTypeAuto(object):
                          % self.__class__)
 
 
-class HdlBuiltinFn(Enum):
+class HdlOpType(Enum):
     """
     The build in functions and operators in HDL languages.
-    (Python equivalent of c++ hdlConvertor::hdlObjects::HdlOperatorType)
+    (Python equivalent of c++ hdlConvertor::hdlAst::HdlOpType)
     """
     (
         RANGE,  # range used in VHDL type specifications
@@ -205,7 +205,7 @@ class HdlBuiltinFn(Enum):
     # note that in verilog bitewise operators can have only one argument
 
 
-class HdlCall(iHdlObj):
+class HdlOp(iHdlObj):
     """
     Container for call of the HDL function in HDL code
     """
@@ -213,26 +213,26 @@ class HdlCall(iHdlObj):
 
     def __init__(self, fn, ops):
         """
-        :type fn: Union[HdlBuiltinFn, iHdlExpr]
+        :type fn: Union[HdlOpType, iHdlExpr]
         :type ops: List[iHdlExpr]
         """
         self.fn = fn
         self.ops = ops
 
     def __lt__(self, other):
-        if isinstance(other, HdlName):
+        if isinstance(other, HdlValueId):
             return True
         else:
             return (self.fn.value, self.ops) < (other.fn.value, other.ops)
 
     def __eq__(self, other):
-        if not isinstance(other, HdlCall):
+        if not isinstance(other, HdlOp):
             return False
         else:
             return self.fn == other.fn and self.ops == other.ops
 
 
-class HdlIntValue(iHdlObj):
+class HdlValueInt(iHdlObj):
     """
     Object for representation of int value in in HDL
     (= also for the bitstrings)
@@ -264,7 +264,7 @@ class HdlIntValue(iHdlObj):
         return self.__bool__()
 
     def __eq__(self, other):
-        if isinstance(other, HdlIntValue):
+        if isinstance(other, HdlValueInt):
             return (self.val == other.val
                     and self.bits == other.bits
                     and self.base == other.base)
@@ -288,5 +288,5 @@ class HdlExprNotImplemented(iHdlObj):
 
 
 # None is equivalent of HDL null
-iHdlExpr = Union[HdlName, HdlIntValue, float, str,
-                 None, List["iHdlExpr"], HdlAll, HdlCall]
+iHdlExpr = Union[HdlValueId, HdlValueInt, float, str,
+                 None, List["iHdlExpr"], HdlAll, HdlOp]

@@ -3,8 +3,8 @@ from itertools import chain
 from hdlConvertor.hdlAst import HdlImport, HdlStmProcess, HdlStmIf,\
     HdlStmAssign, HdlStmCase, HdlStmWait, HdlStmReturn, HdlStmFor, HdlStmForIn,\
     HdlStmWhile, HdlStmBlock, iHdlStatement, HdlModuleDec, HdlModuleDef,\
-    HdlNamespace, HdlVariableDef, HdlFunctionDef, HdlCall, HdlComponentInst, \
-    HdlIntValue, HdlStmBreak, HdlStmContinue, HdlStmRepeat, HdlLibrary, HdlContext
+    HdlValueIdspace, HdlIdDef, HdlFunctionDef, HdlOp, HdlCompInst, \
+    HdlValueInt, HdlStmBreak, HdlStmContinue, HdlStmRepeat, HdlLibrary, HdlContext
 
 
 class HdlAstVisitor(object):
@@ -13,11 +13,11 @@ class HdlAstVisitor(object):
             cls: getattr(self, "visit_" + cls.__name__)
             for cls in [
                 HdlContext, HdlImport, HdlLibrary, HdlModuleDec, HdlModuleDef,
-                HdlNamespace, HdlVariableDef, HdlFunctionDef,
-                HdlComponentInst, HdlStmProcess, HdlStmIf, HdlStmAssign,
+                HdlValueIdspace, HdlIdDef, HdlFunctionDef,
+                HdlCompInst, HdlStmProcess, HdlStmIf, HdlStmAssign,
                 HdlStmCase, HdlStmWait, HdlStmRepeat, HdlStmReturn,
                 HdlStmBreak, HdlStmContinue, HdlStmFor, HdlStmForIn,
-                HdlStmWhile, HdlStmBlock, HdlCall, HdlIntValue
+                HdlStmWhile, HdlStmBlock, HdlOp, HdlValueInt
             ]
         }
 
@@ -50,9 +50,9 @@ class HdlAstVisitor(object):
         """
         pass
 
-    def visit_HdlNamespace(self, o):
+    def visit_HdlValueIdspace(self, o):
         """
-        :type o: HdlNamespace
+        :type o: HdlValueIdspace
         """
         self.visit_doc(o)
         for o2 in o.objs:
@@ -88,9 +88,9 @@ class HdlAstVisitor(object):
         for o in o.objs:
             raise NotImplementedError()
 
-    def visit_HdlVariableDef(self, o):
+    def visit_HdlIdDef(self, o):
         """
-        :type o: HdlVariableDef
+        :type o: HdlIdDef
         """
         self.visit_doc(o)
         self.visit_type(o.type)
@@ -104,26 +104,26 @@ class HdlAstVisitor(object):
         """
         return o
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type o: HdlCall
+        :type o: HdlOp
         :return: iHdlExpr
         """
         for op in o.ops:
             self.visit_iHdlExpr(op)
         return o
 
-    def visit_HdlIntValue(self, o):
+    def visit_HdlValueInt(self, o):
         """
-        :type o: HdlIntValue
+        :type o: HdlValueInt
         """
         pass
 
     def visit_port(self, o):
-        return self.visit_HdlVariableDef(o)
+        return self.visit_HdlIdDef(o)
 
     def visit_param(self, o):
-        return self.visit_HdlVariableDef(o)
+        return self.visit_HdlIdDef(o)
 
     def visit_HdlModuleDef(self, o):
         """
@@ -136,16 +136,16 @@ class HdlAstVisitor(object):
         for _o in o.objs:
             if isinstance(_o, iHdlStatement):
                 self.visit_iHdlStatement(_o)
-            elif isinstance(_o, HdlVariableDef):
-                self.visit_HdlVariableDef(_o)
-            elif isinstance(_o, HdlComponentInst):
-                self.visit_HdlComponentInst(_o)
+            elif isinstance(_o, HdlIdDef):
+                self.visit_HdlIdDef(_o)
+            elif isinstance(_o, HdlCompInst):
+                self.visit_HdlCompInst(_o)
             else:
                 raise NotImplementedError(_o)
 
-    def visit_HdlComponentInst(self, o):
+    def visit_HdlCompInst(self, o):
         """
-        :type o: HdlComponentInst
+        :type o: HdlCompInst
         """
         self.visit_doc(o)
         for pm in chain(o.param_map, o.port_map):
@@ -157,7 +157,7 @@ class HdlAstVisitor(object):
         """
         self.visit_doc(o)
         for p in o.params:
-            self.visit_HdlVariableDef(p)
+            self.visit_HdlIdDef(p)
         if o.return_t is not None:
             self.visit_iHdlExpr(o.return_t)
         for o2 in o.body:

@@ -1,5 +1,5 @@
-from hdlConvertor.hdlAst import HdlBuiltinFn, HdlName, HdlIntValue, HdlAll,\
-    HdlCall, HdlTypeAuto
+from hdlConvertor.hdlAst import HdlOpType, HdlValueId, HdlValueInt, HdlAll,\
+    HdlOp, HdlTypeAuto
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.common import ToHdlCommon, ASSOCIATIVITY,\
     ASSIGN_OPERATORS_SYMBOLS_C
@@ -11,131 +11,131 @@ L = ASSOCIATIVITY.L_TO_R
 R = ASSOCIATIVITY.R_TO_L
 
 ASSIGN_OPERATORS = [
-    HdlBuiltinFn.ASSIGN,
-    HdlBuiltinFn.PLUS_ASSIGN,
-    HdlBuiltinFn.MINUS_ASSIGN,
-    HdlBuiltinFn.MUL_ASSIGN,
-    HdlBuiltinFn.DIV_ASSIGN,
-    HdlBuiltinFn.MOD_ASSIGN,
-    HdlBuiltinFn.AND_ASSIGN,
-    HdlBuiltinFn.OR_ASSIGN,
-    HdlBuiltinFn.XOR_ASSIGN,
-    HdlBuiltinFn.SHIFT_LEFT_ASSIGN,
-    HdlBuiltinFn.SHIFT_RIGHT_ASSIGN,
-    HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN,
-    HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN,
+    HdlOpType.ASSIGN,
+    HdlOpType.PLUS_ASSIGN,
+    HdlOpType.MINUS_ASSIGN,
+    HdlOpType.MUL_ASSIGN,
+    HdlOpType.DIV_ASSIGN,
+    HdlOpType.MOD_ASSIGN,
+    HdlOpType.AND_ASSIGN,
+    HdlOpType.OR_ASSIGN,
+    HdlOpType.XOR_ASSIGN,
+    HdlOpType.SHIFT_LEFT_ASSIGN,
+    HdlOpType.SHIFT_RIGHT_ASSIGN,
+    HdlOpType.ARITH_SHIFT_LEFT_ASSIGN,
+    HdlOpType.ARITH_SHIFT_RIGHT_ASSIGN,
 ]
 
 
 class ToVerilog2005Expr(ToHdlCommon):
 
     GENERIC_BIN_OPS = {
-        HdlBuiltinFn.AND: " & ",
-        HdlBuiltinFn.AND_LOG: " && ",
-        HdlBuiltinFn.OR: " | ",
-        HdlBuiltinFn.OR_LOG: " || ",
-        HdlBuiltinFn.NAND: " ~& ",
-        HdlBuiltinFn.NOR: " ~| ",
-        HdlBuiltinFn.XOR: " ^ ",
-        HdlBuiltinFn.XNOR: " ~^ ",
+        HdlOpType.AND: " & ",
+        HdlOpType.AND_LOG: " && ",
+        HdlOpType.OR: " | ",
+        HdlOpType.OR_LOG: " || ",
+        HdlOpType.NAND: " ~& ",
+        HdlOpType.NOR: " ~| ",
+        HdlOpType.XOR: " ^ ",
+        HdlOpType.XNOR: " ~^ ",
 
-        HdlBuiltinFn.DIV: " / ",
-        HdlBuiltinFn.POW: " ** ",
-        HdlBuiltinFn.MOD: " % ",
+        HdlOpType.DIV: " / ",
+        HdlOpType.POW: " ** ",
+        HdlOpType.MOD: " % ",
 
-        HdlBuiltinFn.EQ: ' == ',
-        HdlBuiltinFn.NEQ: " != ",
+        HdlOpType.EQ: ' == ',
+        HdlOpType.NEQ: " != ",
 
-        HdlBuiltinFn.SLL: " << ",
-        HdlBuiltinFn.SRL: " >> ",
+        HdlOpType.SLL: " << ",
+        HdlOpType.SRL: " >> ",
 
-        HdlBuiltinFn.DOWNTO: ":",
+        HdlOpType.DOWNTO: ":",
 
-        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
-        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: ' >>>= ',
+        HdlOpType.ARITH_SHIFT_LEFT_ASSIGN: ' <<<= ',
+        HdlOpType.ARITH_SHIFT_RIGHT_ASSIGN: ' >>>= ',
     }
     GENERIC_BIN_OPS.update(ToHdlCommon.GENERIC_BIN_OPS)
     GENERIC_BIN_OPS.update(ASSIGN_OPERATORS_SYMBOLS_C)
 
     OP_PRECEDENCE = {
-        HdlBuiltinFn.INDEX: (1, L),
+        HdlOpType.INDEX: (1, L),
 
-        HdlBuiltinFn.CALL: (2, L),
-        HdlBuiltinFn.TYPE_OF: (2, L),
-        HdlBuiltinFn.PARAMETRIZATION: (2, L),
+        HdlOpType.CALL: (2, L),
+        HdlOpType.TYPE_OF: (2, L),
+        HdlOpType.PARAMETRIZATION: (2, L),
 
-        HdlBuiltinFn.MINUS_UNARY: (4, R),
-        HdlBuiltinFn.PLUS_UNARY: (4, R),
+        HdlOpType.MINUS_UNARY: (4, R),
+        HdlOpType.PLUS_UNARY: (4, R),
 
-        HdlBuiltinFn.CONCAT: (5, L),
+        HdlOpType.CONCAT: (5, L),
 
-        HdlBuiltinFn.REPL_CONCAT: (6, L),
+        HdlOpType.REPL_CONCAT: (6, L),
 
-        HdlBuiltinFn.DIV: (7, L),
-        HdlBuiltinFn.MUL: (7, L),
-        HdlBuiltinFn.MOD: (7, L),
+        HdlOpType.DIV: (7, L),
+        HdlOpType.MUL: (7, L),
+        HdlOpType.MOD: (7, L),
 
-        HdlBuiltinFn.ADD: (8, L),
-        HdlBuiltinFn.SUB: (8, L),
+        HdlOpType.ADD: (8, L),
+        HdlOpType.SUB: (8, L),
 
-        HdlBuiltinFn.SLL: (9, L),
-        HdlBuiltinFn.SRL: (9, L),
+        HdlOpType.SLL: (9, L),
+        HdlOpType.SRL: (9, L),
 
-        HdlBuiltinFn.GT: (10, L),
-        HdlBuiltinFn.LT: (10, L),
-        HdlBuiltinFn.GE: (10, L),
-        HdlBuiltinFn.LE: (10, L),
+        HdlOpType.GT: (10, L),
+        HdlOpType.LT: (10, L),
+        HdlOpType.GE: (10, L),
+        HdlOpType.LE: (10, L),
 
-        HdlBuiltinFn.EQ:  (11, L),
-        HdlBuiltinFn.NEQ: (11, L),
+        HdlOpType.EQ:  (11, L),
+        HdlOpType.NEQ: (11, L),
 
-        HdlBuiltinFn.AND:  (12, L),
-        HdlBuiltinFn.XOR:  (12, L),
-        HdlBuiltinFn.OR:   (12, L),
-        HdlBuiltinFn.NAND: (12, L),
-        HdlBuiltinFn.XNOR: (12, L),
+        HdlOpType.AND:  (12, L),
+        HdlOpType.XOR:  (12, L),
+        HdlOpType.OR:   (12, L),
+        HdlOpType.NAND: (12, L),
+        HdlOpType.XNOR: (12, L),
 
-        HdlBuiltinFn.AND_LOG: (13, L),
-        HdlBuiltinFn.OR_LOG: (13, L),
+        HdlOpType.AND_LOG: (13, L),
+        HdlOpType.OR_LOG: (13, L),
 
-        HdlBuiltinFn.TERNARY: (14, R),
+        HdlOpType.TERNARY: (14, R),
 
-        HdlBuiltinFn.RISING: (15, R),
-        HdlBuiltinFn.FALLING: (15, R),
-        HdlBuiltinFn.DOWNTO: (16, L),
-        HdlBuiltinFn.TO: (16, L),
+        HdlOpType.RISING: (15, R),
+        HdlOpType.FALLING: (15, R),
+        HdlOpType.DOWNTO: (16, L),
+        HdlOpType.TO: (16, L),
     }
     OP_PRECEDENCE.update({k: (3, R) for k in [
-        HdlBuiltinFn.NEG,
-        HdlBuiltinFn.NEG_LOG,
-        HdlBuiltinFn.OR_UNARY,
-        HdlBuiltinFn.AND_UNARY,
-        HdlBuiltinFn.NAND_UNARY,
-        HdlBuiltinFn.NOR_UNARY,
-        HdlBuiltinFn.XOR_UNARY,
-        HdlBuiltinFn.XNOR_UNARY
+        HdlOpType.NEG,
+        HdlOpType.NEG_LOG,
+        HdlOpType.OR_UNARY,
+        HdlOpType.AND_UNARY,
+        HdlOpType.NAND_UNARY,
+        HdlOpType.NOR_UNARY,
+        HdlOpType.XOR_UNARY,
+        HdlOpType.XNOR_UNARY
     ]})
     OP_PRECEDENCE.update({k: (16, ASSOCIATIVITY.NONE)
                           for k in ASSIGN_OPERATORS})
 
     GENERIC_UNARY_OPS = {
-        HdlBuiltinFn.NEG_LOG: "!",
-        HdlBuiltinFn.NEG: "~",
-        HdlBuiltinFn.MINUS_UNARY: "-",
-        HdlBuiltinFn.PLUS_UNARY: "+",
-        HdlBuiltinFn.OR_UNARY: "|",
-        HdlBuiltinFn.AND_UNARY: "&",
-        HdlBuiltinFn.NAND_UNARY: "~&",
-        HdlBuiltinFn.NOR_UNARY: "~|",
-        HdlBuiltinFn.XOR_UNARY: "^",
-        HdlBuiltinFn.XNOR_UNARY: "~^",
-        HdlBuiltinFn.RISING: "posedge ",
-        HdlBuiltinFn.FALLING: "negedge ",
+        HdlOpType.NEG_LOG: "!",
+        HdlOpType.NEG: "~",
+        HdlOpType.MINUS_UNARY: "-",
+        HdlOpType.PLUS_UNARY: "+",
+        HdlOpType.OR_UNARY: "|",
+        HdlOpType.AND_UNARY: "&",
+        HdlOpType.NAND_UNARY: "~&",
+        HdlOpType.NOR_UNARY: "~|",
+        HdlOpType.XOR_UNARY: "^",
+        HdlOpType.XNOR_UNARY: "~^",
+        HdlOpType.RISING: "posedge ",
+        HdlOpType.FALLING: "negedge ",
     }
 
-    def visit_HdlIntValue(self, o):
+    def visit_HdlValueInt(self, o):
         """
-        :type o: HdlIntValue
+        :type o: HdlValueInt
         """
         w = self.out.write
         if o.bits is None:
@@ -164,14 +164,14 @@ class ToVerilog2005Expr(ToHdlCommon):
         :return: True, the flag used to mark that the ; should be added if this is a statement
         """
         w = self.out.write
-        if isinstance(o, HdlName):
+        if isinstance(o, HdlValueId):
             w(o.val)
         elif is_str(o):
             w('"%s"' % o)
-        elif isinstance(o, HdlIntValue):
-            self.visit_HdlIntValue(o)
-        elif isinstance(o, HdlCall):
-            self.visit_HdlCall(o)
+        elif isinstance(o, HdlValueInt):
+            self.visit_HdlValueInt(o)
+        elif isinstance(o, HdlOp):
+            self.visit_HdlOp(o)
         elif o is HdlAll:
             w("*")
         elif o is HdlTypeAuto:
@@ -184,13 +184,13 @@ class ToVerilog2005Expr(ToHdlCommon):
             raise NotImplementedError(o.__class__, o)
         return True
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type o: HdlCall
+        :type o: HdlOp
         """
         w = self.out.write
         op = o.fn
-        if op == HdlBuiltinFn.CONCAT:
+        if op == HdlOpType.CONCAT:
             w = self.out.write
             w("{")
             for is_last, (o_i, _o) in iter_with_last(enumerate(o.ops)):
@@ -199,7 +199,7 @@ class ToVerilog2005Expr(ToHdlCommon):
                     w(", ")
             w("}")
             return
-        elif op == HdlBuiltinFn.REPL_CONCAT:
+        elif op == HdlOpType.REPL_CONCAT:
             w = self.out.write
             w("{")
             self._visit_operand(o.ops[0], 0, o, True, False)
@@ -210,7 +210,7 @@ class ToVerilog2005Expr(ToHdlCommon):
                     w(", ")
             w("}}")
             return
-        elif op == HdlBuiltinFn.TERNARY:
+        elif op == HdlOpType.TERNARY:
             cond, v0, v1 = o.ops
             self._visit_operand(cond, 0, o, True, False)
             w(" ? ")
@@ -218,13 +218,13 @@ class ToVerilog2005Expr(ToHdlCommon):
             w(" : ")
             self._visit_operand(v1, 2, o, False, False)
             return
-        elif op == HdlBuiltinFn.TYPE_OF:
+        elif op == HdlOpType.TYPE_OF:
             w("type(")
             self._visit_operand(o.ops[0], 0, o, False, True)
             w(")")
             return
         else:
-            super(ToVerilog2005Expr, self).visit_HdlCall(o)
+            super(ToVerilog2005Expr, self).visit_HdlOp(o)
         return True
 
     def visit_type_first_part(self, t):
@@ -237,7 +237,7 @@ class ToVerilog2005Expr(ToHdlCommon):
         wire_params = get_wire_t_params(t)
         if wire_params is None:
             if t != HdlTypeAuto:
-                if isinstance(t, HdlCall) and t.fn == HdlBuiltinFn.TYPE_OF:
+                if isinstance(t, HdlOp) and t.fn == HdlOpType.TYPE_OF:
                     w("var ")
                 self.visit_iHdlExpr(t)
         else:

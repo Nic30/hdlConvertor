@@ -9,7 +9,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;

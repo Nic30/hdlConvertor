@@ -1,5 +1,5 @@
 import sys
-from hdlConvertor.hdlAst._expr import HdlIntValue
+from hdlConvertor.hdlAst._expr import HdlValueInt
 
 
 class Indent(object):
@@ -91,7 +91,7 @@ def bit_string(v, width, vld_mask=None):
     :param v: integer value of bitstring
     :param widht: number of bits in value
     :param vld_mask: mask which has 1 for every valid bit in value
-    :return: HdlIntValue
+    :return: HdlValueInt
     """
     all_mask = (1 << width) - 1
     if vld_mask is None:
@@ -123,4 +123,4 @@ def bit_string(v, width, vld_mask=None):
                 s = "x"
             buff.append(s)
         bit_string = "".join(buff)
-    return HdlIntValue(bit_string, width, base)
+    return HdlValueInt(bit_string, width, base)

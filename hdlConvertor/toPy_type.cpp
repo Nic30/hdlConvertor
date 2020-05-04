@@ -2,7 +2,7 @@
 
 namespace hdlConvertor {
 
-using namespace hdlObjects;
+using namespace hdlAst;
 
 PyObject* ToPy::toPy(const HdlClassType o) {
 	const char *name;

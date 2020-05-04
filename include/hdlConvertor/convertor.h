@@ -10,7 +10,7 @@
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/language.h>
 #include <hdlConvertor/parserContainer.h>
-#include <hdlConvertor/hdlObjects/hdlContext.h>
+#include <hdlConvertor/hdlAst/hdlContext.h>
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
 
 namespace hdlConvertor {
@@ -20,10 +20,10 @@ class Convertor {
 public:
 	bool hierarchyOnly;
 	static bool debug;
-	hdlObjects::HdlContext& c;
+	hdlAst::HdlContext& c;
 	verilog_pp::MacroDB defineDB;
 
-	Convertor(hdlObjects::HdlContext& c);
+	Convertor(hdlAst::HdlContext& c);
 
 	void parse(const std::vector<std::string> &fileNames, Language lang,
 			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);

@@ -1,6 +1,6 @@
 from hdlConvertor.hdlAst._bases import iHdlStatement
-from hdlConvertor.hdlAst._defs import HdlVariableDef
-from hdlConvertor.hdlAst._expr import HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst._defs import HdlIdDef
+from hdlConvertor.hdlAst._expr import HdlOp, HdlOpType
 from hdlConvertor.hdlAst._statements import HdlStmBlock
 from hdlConvertor.to.hdlUtils import iter_with_last, Indent, UnIndent
 from hdlConvertor.to.vhdl.expr import ToVhdl2008Expr
@@ -92,8 +92,8 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
                         with UnIndent(self.out):
                             self._write_begin(begin_end, must_have_begin_end, force_space_before)
                     self.visit_iHdlStatement(s)
-                elif isinstance(s, HdlVariableDef):
-                    self.visit_HdlVariableDef(s)
+                elif isinstance(s, HdlIdDef):
+                    self.visit_HdlIdDef(s)
                 else:
                     if not non_declarative_seen:
                         non_declarative_seen = True
@@ -236,7 +236,7 @@ class ToVhdl2008Stm(ToVhdl2008Expr):
         w = self.out.write
         w("WAIT")
         for e in o.val:
-            if isinstance(e, HdlCall) and e.fn == HdlBuiltinFn.MUL:
+            if isinstance(e, HdlOp) and e.fn == HdlOpType.MUL:
                 # wait for time
                 w(" FOR ")
                 self.visit_iHdlExpr(e.ops[0])

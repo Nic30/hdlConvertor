@@ -3,7 +3,7 @@
 
 namespace hdlConvertor {
 
-using namespace hdlObjects;
+using namespace hdlAst;
 
 PyObject* ToPy::toPy(const HdlStmExpr *o) {
 	return toPy(o->expr);
@@ -359,7 +359,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o) {
+PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndStm &o) {
 	// build tuple representing the elif item
 	auto py_inst = PyTuple_New(2);
 	if (!py_inst) {

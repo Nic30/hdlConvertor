@@ -2,17 +2,17 @@
 
 #include <antlr4-runtime.h>
 
-#include <hdlConvertor/hdlObjects/hdlContext.h>
+#include <hdlConvertor/hdlAst/hdlContext.h>
 
 namespace hdlConvertor {
 
 class BaseHdlParser {
 public:
 	antlr4::TokenStream &tokens;
-	hdlObjects::HdlContext &context;
+	hdlAst::HdlContext &context;
 	bool hierarchyOnly;
 
-	BaseHdlParser(antlr4::TokenStream &tokens, hdlObjects::HdlContext &ctx,
+	BaseHdlParser(antlr4::TokenStream &tokens, hdlAst::HdlContext &ctx,
 			bool _hierarchyOnly);
 };
 

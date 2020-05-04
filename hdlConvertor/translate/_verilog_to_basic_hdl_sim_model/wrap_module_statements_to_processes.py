@@ -1,4 +1,4 @@
-from hdlConvertor.hdlAst._expr import HdlCall, HdlName, HdlBuiltinFn
+from hdlConvertor.hdlAst._expr import HdlOp, HdlValueId, HdlOpType
 from hdlConvertor.hdlAst._statements import HdlStmAssign, HdlStmProcess
 from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef
 
@@ -6,12 +6,12 @@ from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef
 def collect_hdl_ids(expr, res):
     """
     :type expr: iHdlExpr
-    :type res: Set[HdlName]
+    :type res: Set[HdlValueId]
     """
-    if isinstance(expr, HdlCall):
+    if isinstance(expr, HdlOp):
         for o in expr.ops:
             collect_hdl_ids(o, res)
-    elif isinstance(expr, HdlName):
+    elif isinstance(expr, HdlValueId):
         res.add(expr)
     else:
         raise NotImplementedError(expr)
@@ -23,7 +23,7 @@ def collect_indexes(expr):
 
     :type expr: iHdlExpr
     """
-    if isinstance(expr, HdlCall) and expr.fn == HdlBuiltinFn.INDEX:
+    if isinstance(expr, HdlOp) and expr.fn == HdlOpType.INDEX:
         assert len(expr.ops) == 2, expr.ops
         for i in collect_indexes(expr.ops[0]):
             yield i

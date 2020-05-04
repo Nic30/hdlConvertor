@@ -1,4 +1,4 @@
-from hdlConvertor.hdlAst import HdlName, HdlIntValue, HdlCall, HdlBuiltinFn
+from hdlConvertor.hdlAst import HdlValueId, HdlValueInt, HdlOp, HdlOpType
 from hdlConvertor.py_ver_compatibility import is_str
 from hdlConvertor.to.hdl_ast_visitor import HdlAstVisitor
 from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import hdl_getattr,\
@@ -6,7 +6,7 @@ from hdlConvertor.translate._verilog_to_basic_hdl_sim_model.utils import hdl_get
 
 
 def add_io_prefix(o):
-    s = HdlName("self")
+    s = HdlValueId("self")
     s = hdl_getattr(s, "io")
     return hdl_name_prefix(s, o)
 
@@ -24,9 +24,9 @@ class ApplyIoScopeToSignalNames(HdlAstVisitor):
         super(ApplyIoScopeToSignalNames, self).__init__()
         self._stm_dst = False
 
-    def visit_HdlVariableDef(self, var):
+    def visit_HdlIdDef(self, var):
         """
-        :type var: HdlVariableDef
+        :type var: HdlIdDef
         """
         pass
 
@@ -36,15 +36,15 @@ class ApplyIoScopeToSignalNames(HdlAstVisitor):
     def visit_param(self, o):
         pass
 
-    def visit_HdlComponentInst(self, o):
+    def visit_HdlCompInst(self, o):
         pass
 
-    def visit_HdlCall(self, o):
+    def visit_HdlOp(self, o):
         """
-        :type o: HdlCall
+        :type o: HdlOp
         :return: iHdlExpr
         """
-        if o.fn == HdlBuiltinFn.DOT:
+        if o.fn == HdlOpType.DOT:
             # update only left most name
             o.ops[0] = self.visit_iHdlExpr(o.ops[0])
             if not self._stm_dst:
@@ -59,17 +59,17 @@ class ApplyIoScopeToSignalNames(HdlAstVisitor):
         :type o: iHdlExpr
         :return: iHdlExpr
         """
-        if isinstance(o, HdlName):
+        if isinstance(o, HdlValueId):
             o = add_io_prefix(o)
             if not self._stm_dst:
                 return hdl_getattr(o, "val")
             return o
-        elif o is None or isinstance(o, HdlIntValue) or is_str(o):
+        elif o is None or isinstance(o, HdlValueInt) or is_str(o):
             return o
         elif isinstance(o, list):
             return [self.visit_iHdlExpr(_o) for _o in o]
-        elif isinstance(o, HdlCall):
-            return self.visit_HdlCall(o)
+        elif isinstance(o, HdlOp):
+            return self.visit_HdlOp(o)
         else:
             raise NotImplementedError(
                 "Do not know how to convert %s" % (o))

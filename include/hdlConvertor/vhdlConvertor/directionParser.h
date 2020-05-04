@@ -2,15 +2,15 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlObjects/hdlDirection.h>
-#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlAst/hdlDirection.h>
+#include <hdlConvertor/hdlAst/hdlOpType.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-hdlObjects::HdlDirection visitSignalMode(
+hdlAst::HdlDirection visitSignalMode(
 		vhdl_antlr::vhdlParser::Signal_modeContext *ctx);
-hdlObjects::HdlOperatorType visitDirection(
+hdlAst::HdlOpType visitDirection(
 		vhdl_antlr::vhdlParser::DirectionContext *ctx);
 
 }

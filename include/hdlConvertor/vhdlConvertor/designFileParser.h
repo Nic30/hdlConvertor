@@ -2,10 +2,10 @@
 #include <vector>
 
 #include <hdlConvertor/baseHdlParser/baseHdlParser.h>
-#include <hdlConvertor/hdlObjects/hdlContext.h>
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/iHdlStatement.h>
-#include <hdlConvertor/hdlObjects/iHdlStatement.h>
+#include <hdlConvertor/hdlAst/hdlContext.h>
+#include <hdlConvertor/hdlAst/iHdlExpr.h>
+#include <hdlConvertor/hdlAst/iHdlStatement.h>
+#include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/vhdlConvertor/commentParser.h>
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
@@ -18,7 +18,7 @@ public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	VhdlDesignFileParser(antlr4::TokenStream &tokens,
-			hdlObjects::HdlContext &ctx, bool _hierarchyOnly);
+			hdlAst::HdlContext &ctx, bool _hierarchyOnly);
 	void visitDesign_file(vhdlParser::Design_fileContext *ctx);
 	void visitDesign_unit(vhdlParser::Design_unitContext *ctx);
 	void visitLibrary_unit(vhdlParser::Library_unitContext *ctx);
@@ -28,7 +28,7 @@ public:
 	void visitContext_item(vhdlParser::Context_itemContext *ctx);
         void visitLibrary_clause(vhdlParser::Library_clauseContext *ctx);
 	void visitUse_clause(vhdlParser::Use_clauseContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::iHdlObj>> &res);
+			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 };
 
 }

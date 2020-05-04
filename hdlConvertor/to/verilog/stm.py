@@ -1,6 +1,6 @@
 from copy import copy
 
-from hdlConvertor.hdlAst._expr import HdlBuiltinFn
+from hdlConvertor.hdlAst._expr import HdlOpType
 from hdlConvertor.hdlAst._statements import HdlStmWait, HdlStmBlock
 from hdlConvertor.to.hdlUtils import Indent, iter_with_last
 from hdlConvertor.to.verilog.expr import ToVerilog2005Expr
@@ -8,19 +8,19 @@ from hdlConvertor.to.verilog.expr import ToVerilog2005Expr
 
 class ToVerilog2005Stm(ToVerilog2005Expr):
     ASSIGN_OPS = {
-        HdlBuiltinFn.ASSIGN: '=',
-        HdlBuiltinFn.PLUS_ASSIGN: '+=',
-        HdlBuiltinFn.MINUS_ASSIGN: '-=',
-        HdlBuiltinFn.MUL_ASSIGN: '*=',
-        HdlBuiltinFn.DIV_ASSIGN: '/=',
-        HdlBuiltinFn.MOD_ASSIGN: '%=',
-        HdlBuiltinFn.AND_ASSIGN: '&=',
-        HdlBuiltinFn.OR_ASSIGN: '|=',
-        HdlBuiltinFn.XOR_ASSIGN: '^=',
-        HdlBuiltinFn.SHIFT_LEFT_ASSIGN: '<<=',
-        HdlBuiltinFn.SHIFT_RIGHT_ASSIGN: '>>=',
-        HdlBuiltinFn.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
-        HdlBuiltinFn.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
+        HdlOpType.ASSIGN: '=',
+        HdlOpType.PLUS_ASSIGN: '+=',
+        HdlOpType.MINUS_ASSIGN: '-=',
+        HdlOpType.MUL_ASSIGN: '*=',
+        HdlOpType.DIV_ASSIGN: '/=',
+        HdlOpType.MOD_ASSIGN: '%=',
+        HdlOpType.AND_ASSIGN: '&=',
+        HdlOpType.OR_ASSIGN: '|=',
+        HdlOpType.XOR_ASSIGN: '^=',
+        HdlOpType.SHIFT_LEFT_ASSIGN: '<<=',
+        HdlOpType.SHIFT_RIGHT_ASSIGN: '>>=',
+        HdlOpType.ARITH_SHIFT_LEFT_ASSIGN: '<<<=',
+        HdlOpType.ARITH_SHIFT_RIGHT_ASSIGN: '>>>=',
     }
 
     def __init__(self, out_stream):

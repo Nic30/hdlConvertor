@@ -1,7 +1,7 @@
 import json
 
 from hdlConvertor import hdlAst
-from hdlConvertor.hdlAst import HdlContext, CodePosition, HdlBuiltinFn,\
+from hdlConvertor.hdlAst import HdlContext, CodePosition, HdlOpType,\
     HdlDirection, HdlStmBlockJoinType
 from hdlConvertor.py_ver_compatibility import is_str
 
@@ -36,7 +36,7 @@ def _parse_hdlConvertor_json(j):
         for a in arg_names:
             v = j.get(a, None)
             if a == "fn":
-                v = getattr(HdlBuiltinFn, v)
+                v = getattr(HdlOpType, v)
             else:
                 v = _parse_hdlConvertor_json(v)
             argv.append(v)

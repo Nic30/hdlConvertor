@@ -57,8 +57,8 @@
 # Utils
 * c++filt - progam which translates ugly cpp compiled names back to readable form
   ```
-  $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlObjects7iHdlObjEi
-  hdlConvertor::ToString::dump(hdlConvertor::hdlObjects::iHdlObj const*, int)
+  $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlAst7iHdlObjEi
+  hdlConvertor::ToString::dump(hdlConvertor::hdlAst::iHdlObj const*, int)
   ```
 * to forece regeneration of generated files delete cmake file which
   tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
@@ -76,8 +76,8 @@
 
 # Adding a new C++ HDL object class
 
-* Define the class in a header file with extension `.h` in the directory `include/hdlConvertor/hdlObjects`.
-* Define the implementation in a source file with extension `.cpp` in the directory `src/hdlObjects`.
+* Define the class in a header file with extension `.h` in the directory `include/hdlConvertor/hdlAst`.
+* Define the implementation in a source file with extension `.cpp` in the directory `src/hdlAst`.
 * Create a corresponding Python class in one of the files (pick the best match) in `hdlConvertor/hdlAst`.
 ** Add the names of your Python object properties to the `__slots__` list.  Often this list will be the same as the list of your C++ object member variables.
 * Add the import for your class in `hdlConvertor/hdlAst/__init__.py`.

@@ -1,11 +1,11 @@
 #include <hdlConvertor/svConvertor/statementParser.h>
-#include <hdlConvertor/hdlObjects/hdlStmCase.h>
-#include <hdlConvertor/hdlObjects/hdlStmExpr.h>
-#include <hdlConvertor/hdlObjects/hdlStmIf.h>
-#include <hdlConvertor/hdlObjects/hdlStmFor.h>
-#include <hdlConvertor/hdlObjects/hdlStmWhile.h>
-#include <hdlConvertor/hdlObjects/hdlStm_others.h>
-#include <hdlConvertor/hdlObjects/hdlDirection.h>
+#include <hdlConvertor/hdlAst/hdlStmCase.h>
+#include <hdlConvertor/hdlAst/hdlStmExpr.h>
+#include <hdlConvertor/hdlAst/hdlStmIf.h>
+#include <hdlConvertor/hdlAst/hdlStmFor.h>
+#include <hdlConvertor/hdlAst/hdlStmWhile.h>
+#include <hdlConvertor/hdlAst/hdlStm_others.h>
+#include <hdlConvertor/hdlAst/hdlDirection.h>
 
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
@@ -21,7 +21,7 @@
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
@@ -76,9 +76,9 @@ unique_ptr<iHdlStatement> VerStatementParser::visitSubroutine_call_statement(
 	//     ( KW_VOID APOSTROPHE LPAREN expression RPAREN ) SEMI;
 	auto _e = ctx->expression();
 	auto e0 = VerExprParser(commentParser).visitExpression(_e);
-	auto e1 = create_object<HdlCall>(_e,
+	auto e1 = create_object<HdlOp>(_e,
 			create_object<HdlValueId>(ctx->KW_VOID(), "void"),
-			HdlOperatorType::CALL, move(e0));
+			HdlOpType::CALL, move(e0));
 	return create_object<HdlStmExpr>(ctx, move(e1));
 }
 
@@ -486,7 +486,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitLoop_statement(
 
 void VerStatementParser::visitFor_variable_declaration(
 		sv2017Parser::For_variable_declarationContext *ctx,
-		vector<unique_ptr<HdlVariableDef>> &res) {
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// for_variable_declaration:
 	//     ( KW_VAR )? data_type for_variable_declaration_var_assign
 	//     ( COMMA for_variable_declaration_var_assign )*
@@ -508,7 +508,7 @@ void VerStatementParser::visitFor_variable_declaration(
 			dt = dt_tmp->clone_uniq();
 		auto _def_val = _fvdas->expression();
 		auto def_val = ep.visitExpression(_def_val);
-		auto vd = create_object<HdlVariableDef>(_fvdas, name, move(dt),
+		auto vd = create_object<HdlIdDef>(_fvdas, name, move(dt),
 				move(def_val), HdlDirection::DIR_INTERNAL, is_latched);
 		res.push_back(move(vd));
 	}
@@ -533,7 +533,7 @@ void VerStatementParser::visitFor_initialization(
 		assert(fvds.size());
 		for (auto _fvd : fvds) {
 			visitFor_variable_declaration(_fvd,
-					reinterpret_cast<vector<unique_ptr<HdlVariableDef>>&>(res));
+					reinterpret_cast<vector<unique_ptr<HdlIdDef>>&>(res));
 		}
 	}
 
@@ -638,7 +638,7 @@ void VerStatementParser::visitBlock_item_declaration(
 		return;
 	}
 	VerParamDefParser pdp(commentParser);
-	auto &res_var = reinterpret_cast<vector<unique_ptr<HdlVariableDef>>&>(res);
+	auto &res_var = reinterpret_cast<vector<unique_ptr<HdlIdDef>>&>(res);
 	auto lpd = ctx->local_parameter_declaration();
 	if (lpd) {
 		pdp.visitLocal_parameter_declaration(lpd, res_var);
@@ -829,7 +829,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitElaboration_system_task(
 	if (la)
 		VerExprParser(commentParser).visitList_of_arguments(la, args);
 
-	auto e = HdlCall::call(ctx, create_object<HdlValueId>(ctx, name), args);
+	auto e = HdlOp::call(ctx, create_object<HdlValueId>(ctx, name), args);
 	return create_object<HdlStmExpr>(ctx, move(e));
 }
 

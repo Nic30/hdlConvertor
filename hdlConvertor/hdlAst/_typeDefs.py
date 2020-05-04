@@ -25,14 +25,14 @@ class iHdlTypeDef(iHdlObjWithName):
 
         .. code-block:: python
 
-            HdlVariableDef(name="octet", type=HdlTypeType, value=iHdlExpr(wire[7:0]))
+            HdlIdDef(name="octet", type=HdlTypeType, value=iHdlExpr(wire[7:0]))
 
     :note: vhdl arrays types are described as
 
         .. code-block:: python
 
-            HdlVariableDef("name", HdlTypeType,
-               HdlCall(HdlBuiltinFn.INDEX, [type, array size])
+            HdlIdDef("name", HdlTypeType,
+               HdlOp(HdlOpType.INDEX, [type, array size])
     """
 
 
@@ -113,7 +113,7 @@ class HdlClassDef(iHdlTypeDef):
     :type type: HdlClassType
     :ivar ~.is_virtual: True for for SV abstract (virtual) classes
     :ivar ~.members: list of members
-    :type ~.members: List[HdlVariableDef]
+    :type ~.members: List[HdlIdDef]
 
     :note: equivalent of SystemVerilog/vhdl:
 
@@ -131,7 +131,7 @@ class HdlClassDef(iHdlTypeDef):
 
         .. code-block:: python
 
-            HdlVariableDef(name="s_name", type=HdlTypeType,
+            HdlIdDef(name="s_name", type=HdlTypeType,
                            value=HdlClassDef(...))
 
     """
@@ -142,7 +142,7 @@ class HdlClassDef(iHdlTypeDef):
         self.type = HdlClassType.CLASS
         self.is_virtual = False  # type: bool
         self.is_packed = True  # type: bool
-        self.members = []  # type: List[HdlVariableDef]
+        self.members = []  # type: List[HdlIdDef]
 
 
 class HdlEnumDef(iHdlTypeDef):
@@ -162,7 +162,7 @@ class HdlEnumDef(iHdlTypeDef):
 
         .. code-block:: python
 
-            HdlVariableDef(name="e_name", type=HdlTypeType,
+            HdlIdDef(name="e_name", type=HdlTypeType,
                            value=HdlEnumDef("e_name", ["a", "b"]))
     """
     __slots__ = ["name", "values"]

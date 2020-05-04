@@ -3,7 +3,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Shift_operatorContext *op) {
 	// shift_operator
 	// : SLL
@@ -13,101 +13,101 @@ hdlObjects::HdlOperatorType HdlOperatorType_from(
 	// | ROL
 	// | ROR
 	// ;
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->KW_SLL())
-		return HdlOperatorType::SLL;
+		return HdlOpType::SLL;
 	if (op->KW_SRL())
-		return HdlOperatorType::SRL;
+		return HdlOpType::SRL;
 	if (op->KW_SLA())
-		return HdlOperatorType::SLA;
+		return HdlOpType::SLA;
 	if (op->KW_SRA())
-		return HdlOperatorType::SRA;
+		return HdlOpType::SRA;
 	if (op->KW_ROL())
-		return HdlOperatorType::ROL;
+		return HdlOpType::ROL;
 	//assert(op->ROR());
-	return HdlOperatorType::ROR;
+	return HdlOpType::ROR;
 
 }
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Relational_operatorContext *op) {
 	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | EQ_MATCH | NEQ_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->EQ())
-		return HdlOperatorType::EQ;
+		return HdlOpType::EQ;
 	if (op->NEQ())
-		return HdlOperatorType::NEQ;
+		return HdlOpType::NEQ;
 
 	if (op->CONASGN())
-		return HdlOperatorType::LE;
+		return HdlOpType::LE;
 	if (op->LT())
-		return HdlOperatorType::LT;
+		return HdlOpType::LT;
 	if (op->GT())
-		return HdlOperatorType::GT;
+		return HdlOpType::GT;
 	if (op->GE())
-		return HdlOperatorType::GE;
+		return HdlOpType::GE;
 	if (op->EQ_MATCH())
-		return HdlOperatorType::EQ_MATCH;
+		return HdlOpType::EQ_MATCH;
 	if (op->NEQ_MATCH())
-		return HdlOperatorType::NEQ_MATCH;
+		return HdlOpType::NEQ_MATCH;
 	if (op->LT_MATCH())
-		return HdlOperatorType::LT_MATCH;
+		return HdlOpType::LT_MATCH;
 	if (op->LE_MATCH())
-		return HdlOperatorType::LE_MATCH;
+		return HdlOpType::LE_MATCH;
 	if (op->GT_MATCH())
-		return HdlOperatorType::GT_MATCH;
+		return HdlOpType::GT_MATCH;
 	assert(op->GE_MATCH());
-	return HdlOperatorType::GE_MATCH;
+	return HdlOpType::GE_MATCH;
 }
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Logical_operatorContext *op) {
 	// logical_operator: AND | OR | NAND | NOR | XOR | XNOR;
 
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->KW_AND())
-		return HdlOperatorType::AND;
+		return HdlOpType::AND;
 	if (op->KW_OR())
-		return HdlOperatorType::OR;
+		return HdlOpType::OR;
 	if (op->KW_NAND())
-		return HdlOperatorType::NAND;
+		return HdlOpType::NAND;
 	if (op->KW_NOR())
-		return HdlOperatorType::NOR;
+		return HdlOpType::NOR;
 	if (op->KW_XOR())
-		return HdlOperatorType::XOR;
+		return HdlOpType::XOR;
 	assert(op->KW_XNOR());
-	return HdlOperatorType::XNOR;
+	return HdlOpType::XNOR;
 }
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::SignContext *op) {
 	// sign: PLUS | MINUS;
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->PLUS())
-		return HdlOperatorType::ADD;
+		return HdlOpType::ADD;
 	assert(op->MINUS());
-	return HdlOperatorType::SUB;
+	return HdlOpType::SUB;
 }
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Adding_operatorContext *op) {
 	// adding_operator: PLUS | MINUS | AMPERSAND;
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->PLUS())
-		return HdlOperatorType::ADD;
+		return HdlOpType::ADD;
 	if (op->MINUS())
-		return HdlOperatorType::SUB;
+		return HdlOpType::SUB;
 	assert(op->AMPERSAND());
-	return HdlOperatorType::CONCAT;
+	return HdlOpType::CONCAT;
 }
-hdlObjects::HdlOperatorType HdlOperatorType_from(
+hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Multiplying_operatorContext *op) {
 	// multiplying_operator: MUL | DIV | KW_MOD | KW_REM;
-	using hdlObjects::HdlOperatorType;
+	using hdlAst::HdlOpType;
 	if (op->MUL())
-		return HdlOperatorType::MUL;
+		return HdlOpType::MUL;
 	if (op->DIV())
-		return HdlOperatorType::DIV;
+		return HdlOpType::DIV;
 	if (op->KW_MOD())
-		return HdlOperatorType::MOD;
+		return HdlOpType::MOD;
 	assert(op->KW_REM());
-	return HdlOperatorType::REM;
+	return HdlOpType::REM;
 }
 
 }

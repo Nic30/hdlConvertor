@@ -8,7 +8,7 @@
 
 
 using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using TerminalNode = antlr4::tree::TerminalNode;
 using namespace std;
 
@@ -136,7 +136,7 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitSTRING(TerminalNode *n) {
 	std::string s = n->getText();
 	return create_object<HdlValueStr>(n, s.substr(1, s.length() - 2)); // skipping " at the end
 }
-HdlOperatorType VerLiteralParser::visitUnary_module_path_operator(
+HdlOpType VerLiteralParser::visitUnary_module_path_operator(
 		sv2017Parser::Unary_module_path_operatorContext *ctx) {
 	// unary_module_path_operator:
 	//     NOT
@@ -150,27 +150,27 @@ HdlOperatorType VerLiteralParser::visitUnary_module_path_operator(
 	//     | XORN
 	// ;
 	if (ctx->NOT()) {
-		return HdlOperatorType::NEG_LOG;
+		return HdlOpType::NEG_LOG;
 	} else if (ctx->NEG()) {
-		return HdlOperatorType::NEG;
+		return HdlOpType::NEG;
 	} else if (ctx->AMPERSAND()) {
-		return HdlOperatorType::AND_UNARY;
+		return HdlOpType::AND_UNARY;
 	} else if (ctx->NAND()) {
-		return HdlOperatorType::NAND_UNARY;
+		return HdlOpType::NAND_UNARY;
 	} else if (ctx->BAR()) {
-		return HdlOperatorType::OR_UNARY;
+		return HdlOpType::OR_UNARY;
 	} else if (ctx->NOR()) {
-		return HdlOperatorType::NOR_UNARY;
+		return HdlOpType::NOR_UNARY;
 	} else if (ctx->XOR()) {
-		return HdlOperatorType::XOR_UNARY;
+		return HdlOpType::XOR_UNARY;
 	} else if (ctx->NXOR()) {
-		return HdlOperatorType::XNOR_UNARY;
+		return HdlOpType::XNOR_UNARY;
 	} else {
 		assert(ctx->XORN());
-		return HdlOperatorType::XNOR_UNARY;
+		return HdlOpType::XNOR_UNARY;
 	}
 }
-HdlOperatorType VerLiteralParser::visitUnary_operator(
+HdlOpType VerLiteralParser::visitUnary_operator(
 		sv2017Parser::Unary_operatorContext *ctx) {
 	// unary_operator:
 	//     PLUS
@@ -178,16 +178,16 @@ HdlOperatorType VerLiteralParser::visitUnary_operator(
 	//     | unary_module_path_operator
 	// ;
 	if (ctx->PLUS()) {
-		return HdlOperatorType::PLUS_UNARY;
+		return HdlOpType::PLUS_UNARY;
 	} else if (ctx->MINUS()) {
-		return HdlOperatorType::MINUS_UNARY;
+		return HdlOpType::MINUS_UNARY;
 	} else {
 		auto umpo = ctx->unary_module_path_operator();
 		assert(umpo);
 		return visitUnary_module_path_operator(umpo);
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_mul_div_mod(
+HdlOpType VerLiteralParser::visitOperator_mul_div_mod(
 		sv2017Parser::Operator_mul_div_modContext *ctx) {
 	// operator_mul_div_mod:
 	// 	   MUL
@@ -195,28 +195,28 @@ HdlOperatorType VerLiteralParser::visitOperator_mul_div_mod(
 	//     | MOD
 	// ;
 	if (ctx->MUL())
-		return HdlOperatorType::MUL;
+		return HdlOpType::MUL;
 	else if (ctx->DIV())
-		return HdlOperatorType::DIV;
+		return HdlOpType::DIV;
 	else {
 		assert(ctx->MOD());
-		return HdlOperatorType::MOD;
+		return HdlOpType::MOD;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_plus_minus(
+HdlOpType VerLiteralParser::visitOperator_plus_minus(
 		sv2017Parser::Operator_plus_minusContext *ctx) {
 	// operator_plus_minus:
 	// 	   PLUS
 	//     | MINUS
 	// ;
 	if (ctx->PLUS())
-		return HdlOperatorType::ADD;
+		return HdlOpType::ADD;
 	else {
 		assert(ctx->MINUS());
-		return HdlOperatorType::SUB;
+		return HdlOpType::SUB;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_shift(
+HdlOpType VerLiteralParser::visitOperator_shift(
 		sv2017Parser::Operator_shiftContext *ctx) {
 	// operator_shift:
 	// 	SHIFT_LEFT
@@ -225,17 +225,17 @@ HdlOperatorType VerLiteralParser::visitOperator_shift(
 	//    | ARITH_SHIFT_RIGHT
 	// ;
 	if (ctx->SHIFT_LEFT())
-		return HdlOperatorType::SLL;
+		return HdlOpType::SLL;
 	else if (ctx->SHIFT_RIGHT())
-		return HdlOperatorType::SRL;
+		return HdlOpType::SRL;
 	else if (ctx->ARITH_SHIFT_LEFT())
-		return HdlOperatorType::SLA;
+		return HdlOpType::SLA;
 	else {
 		assert(ctx->ARITH_SHIFT_RIGHT());
-		return HdlOperatorType::SRA;
+		return HdlOpType::SRA;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_cmp(
+HdlOpType VerLiteralParser::visitOperator_cmp(
 		sv2017Parser::Operator_cmpContext *ctx) {
 	// operator_cmp:
 	// 	 LT
@@ -244,17 +244,17 @@ HdlOperatorType VerLiteralParser::visitOperator_cmp(
 	//    | GE
 	// ;
 	if (ctx->LT())
-		return HdlOperatorType::LT;
+		return HdlOpType::LT;
 	else if (ctx->LE())
-		return HdlOperatorType::LE;
+		return HdlOpType::LE;
 	else if (ctx->GT())
-		return HdlOperatorType::GT;
+		return HdlOpType::GT;
 	else {
 		assert(ctx->GE());
-		return HdlOperatorType::GE;
+		return HdlOpType::GE;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_eq_neq(
+HdlOpType VerLiteralParser::visitOperator_eq_neq(
 		sv2017Parser::Operator_eq_neqContext *ctx) {
 	// operator_eq_neq:
 	// 	    EQ
@@ -265,33 +265,33 @@ HdlOperatorType VerLiteralParser::visitOperator_eq_neq(
 	//    | WILDCARD_NEQ
 	// ;
 	if (ctx->EQ())
-		return HdlOperatorType::EQ;
+		return HdlOpType::EQ;
 	else if (ctx->NEQ())
-		return HdlOperatorType::NEQ;
+		return HdlOpType::NEQ;
 	else if (ctx->CASE_EQ()) {
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq CASE_EQ", ctx);
-		return HdlOperatorType::EQ;
+		return HdlOpType::EQ;
 	} else if (ctx->CASE_NEQ()) {
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq CASE_NEQ", ctx);
-		return HdlOperatorType::NEQ;
+		return HdlOpType::NEQ;
 	} else if (ctx->WILDCARD_EQ()) {
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
-		return HdlOperatorType::EQ;
+		return HdlOpType::EQ;
 	} else if (ctx->WILDCARD_EQ()) {
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
-		return HdlOperatorType::EQ;
+		return HdlOpType::EQ;
 	} else {
 		assert(ctx->WILDCARD_NEQ());
 		NotImplementedLogger::print(
 				"VerLiteralParser::visitOperator_eq_neq WILDCARD_NEQ", ctx);
-		return HdlOperatorType::NEQ;
+		return HdlOpType::NEQ;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_xor(
+HdlOpType VerLiteralParser::visitOperator_xor(
 		sv2017Parser::Operator_xorContext *ctx) {
 	// operator_xor:
 	// 	  XOR
@@ -299,29 +299,29 @@ HdlOperatorType VerLiteralParser::visitOperator_xor(
 	// 	| XORN
 	// ;
 	if (ctx->XOR())
-		return HdlOperatorType::XOR;
+		return HdlOpType::XOR;
 	else {
 		assert(ctx->NXOR() || ctx->XORN());
-		return HdlOperatorType::XNOR;
+		return HdlOpType::XNOR;
 	}
 }
-HdlOperatorType VerLiteralParser::visitOperator_impl(
+HdlOpType VerLiteralParser::visitOperator_impl(
 		sv2017Parser::Operator_implContext *ctx) {
 	// operator_impl:
 	// 	  ARROW
 	// 	| BI_DIR_ARROW
 	// ;
 	if (ctx->ARROW()) {
-		return HdlOperatorType::ARROW;
+		return HdlOpType::ARROW;
 	} else {
 		assert(ctx->BI_DIR_ARROW());
 		NotImplementedLogger::print(
 				"VerLiteralParser.visitOperator_impl - BI_DIR_ARROW", ctx);
-		return HdlOperatorType::ARROW;
+		return HdlOpType::ARROW;
 	}
 }
 
-HdlOperatorType VerLiteralParser::visitAssignment_operator(
+HdlOpType VerLiteralParser::visitAssignment_operator(
 		sv2017Parser::Assignment_operatorContext *ctx) {
 	// assignment_operator:
 	//    ASSIGN
@@ -340,34 +340,34 @@ HdlOperatorType VerLiteralParser::visitAssignment_operator(
 	// ;
 	switch (ctx->start->getType()) {
 	case sv2017Parser::ASSIGN:
-		return HdlOperatorType::ASSIGN;
+		return HdlOpType::ASSIGN;
 	case sv2017Parser::PLUS_ASSIGN:
-		return HdlOperatorType::PLUS_ASSIGN;
+		return HdlOpType::PLUS_ASSIGN;
 	case sv2017Parser::MINUS_ASSIGN:
-		return HdlOperatorType::MINUS_ASSIGN;
+		return HdlOpType::MINUS_ASSIGN;
 	case sv2017Parser::MUL_ASSIGN:
-		return HdlOperatorType::MUL_ASSIGN;
+		return HdlOpType::MUL_ASSIGN;
 	case sv2017Parser::DIV_ASSIGN:
-		return HdlOperatorType::DIV_ASSIGN;
+		return HdlOpType::DIV_ASSIGN;
 	case sv2017Parser::MOD_ASSIGN:
-		return HdlOperatorType::MOD_ASSIGN;
+		return HdlOpType::MOD_ASSIGN;
 	case sv2017Parser::AND_ASSIGN:
-		return HdlOperatorType::AND_ASSIGN;
+		return HdlOpType::AND_ASSIGN;
 	case sv2017Parser::OR_ASSIGN:
-		return HdlOperatorType::OR_ASSIGN;
+		return HdlOpType::OR_ASSIGN;
 	case sv2017Parser::XOR_ASSIGN:
-		return HdlOperatorType::XOR_ASSIGN;
+		return HdlOpType::XOR_ASSIGN;
 	case sv2017Parser::SHIFT_LEFT_ASSIGN:
-		return HdlOperatorType::SHIFT_LEFT_ASSIGN;
+		return HdlOpType::SHIFT_LEFT_ASSIGN;
 	case sv2017Parser::SHIFT_RIGHT_ASSIGN:
-		return HdlOperatorType::SHIFT_RIGHT_ASSIGN;
+		return HdlOpType::SHIFT_RIGHT_ASSIGN;
 	case sv2017Parser::ARITH_SHIFT_LEFT_ASSIGN:
-		return HdlOperatorType::ARITH_SHIFT_LEFT_ASSIGN;
+		return HdlOpType::ARITH_SHIFT_LEFT_ASSIGN;
 	case sv2017Parser::ARITH_SHIFT_RIGHT_ASSIGN:
-		return HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN;
+		return HdlOpType::ARITH_SHIFT_RIGHT_ASSIGN;
 	default:
 		assert(false);
-		return HdlOperatorType::ARITH_SHIFT_RIGHT_ASSIGN;
+		return HdlOpType::ARITH_SHIFT_RIGHT_ASSIGN;
 	};
 }
 

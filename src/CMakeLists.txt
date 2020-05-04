@@ -12,7 +12,7 @@ add_subdirectory(verilogPreproc)
 add_subdirectory(vhdlConvertor)
 
 file(GLOB hdlConvertor_core_SRC
-	"${CMAKE_CURRENT_SOURCE_DIR}/hdlObjects/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/hdlAst/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/baseHdlParser/*.cpp"
 )
 
