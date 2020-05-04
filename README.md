@@ -42,6 +42,10 @@ sudo pip3 install hdlConvertor
 # or download repository and run
 sudo pip3 install -r requirements.txt
 sudo python3 setup.py install -j$(nproc)
+
+# if you are using version from git rather uninstall
+# old library first if required
+# sudo pip3 uninstall hdlConvertor 
 ```
 
 Installer also supports other options which may be usefull
