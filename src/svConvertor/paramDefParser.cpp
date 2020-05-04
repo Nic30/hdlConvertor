@@ -80,7 +80,7 @@ void VerParamDefParser::visitTyped_list_of_param_assignments(
 	visitList_of_param_assignments(lpa, res_tmp);
 	bool first = true;
 	auto data_type_tmp = data_type.get();
-	for (auto & v : res_tmp) {
+	for (auto &v : res_tmp) {
 		if (first) {
 			v->type = move(data_type);
 			v->__doc__ = doc + v->__doc__;
@@ -191,6 +191,8 @@ void VerParamDefParser::visitLocal_parameter_declaration(
 	//                   | ( data_type_or_implicit )? list_of_param_assignments
 	//                   );
 	auto &res = *reinterpret_cast<vector<unique_ptr<HdlIdDef>>*>(&_res);
+	auto orig_size = res.size();
+
 	if (ctx->KW_TYPE()) {
 		auto lta = ctx->list_of_type_assignments();
 		visitList_of_type_assignments(lta, res);
@@ -205,6 +207,11 @@ void VerParamDefParser::visitLocal_parameter_declaration(
 		auto lpa = ctx->list_of_param_assignments();
 		auto doc = commentParser.parse(ctx);
 		visitTyped_list_of_param_assignments(move(t), lpa, doc, res);
+	}
+	if (orig_size < res.size()) {
+		for (size_t i = orig_size; i < res.size(); i++) {
+			res[i]->is_const = true;
+		}
 	}
 }
 

@@ -179,7 +179,7 @@ public:
 	int toPy(const hdlAst::WithDoc *o, PyObject *py_inst);
 	int toPy(const hdlAst::WithPos *o, PyObject *py_inst);
 
-	PyObject* toPy(const hdlConvertor::hdlAst::HdlExprAndStm &o);
+	PyObject* toPy(const hdlConvertor::hdlAst::HdlExprAndiHdlObj &o);
 	PyObject* toPy(const hdlAst::iHdlStatement *o);
 	PyObject* toPy(const hdlAst::HdlModuleDef *o);
 	PyObject* toPy(const hdlAst::HdlCompInst *o);

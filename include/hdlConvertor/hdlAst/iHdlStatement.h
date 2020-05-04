@@ -29,13 +29,13 @@ public:
 	virtual ~iHdlStatement() override;
 };
 
-class HdlExprAndStm {
+class HdlExprAndiHdlObj {
 public:
 	std::unique_ptr<iHdlExprItem> expr;
-	std::unique_ptr<iHdlStatement> stm;
-	HdlExprAndStm();
-	HdlExprAndStm(std::unique_ptr<iHdlExprItem> expr,
-			std::unique_ptr<iHdlStatement> stm);
+	std::unique_ptr<iHdlObj> obj;
+	HdlExprAndiHdlObj();
+	HdlExprAndiHdlObj(std::unique_ptr<iHdlExprItem> expr,
+			std::unique_ptr<iHdlObj> stm);
 
 };
 

@@ -226,7 +226,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 
 	auto _e = ctx->expression();
 	auto e = VhdlExprParser::visitExpression(_e);
-	vector<HdlExprAndStm> alternatives;
+	vector<HdlExprAndiHdlObj> alternatives;
 	unique_ptr<iHdlStatement> _default = nullptr;
 	for (auto a : ctx->case_statement_alternative()) {
 		// case_statement_alternative
@@ -239,7 +239,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 				assert(_default == nullptr);
 				_default = move(stms);
 			} else {
-				alternatives.push_back(HdlExprAndStm(move(ch), move(stms)));
+				alternatives.push_back(HdlExprAndiHdlObj(move(ch), move(stms)));
 			}
 		}
 	}
@@ -494,11 +494,11 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitIf_statement(
 	auto ifTrue = visitSequence_of_statements(*sIt);
 	++cIt;
 	++sIt;
-	vector<HdlExprAndStm> elseIfs;
+	vector<HdlExprAndiHdlObj> elseIfs;
 	while (cIt != c.end()) {
 		auto c = VhdlExprParser::visitCondition(*cIt);
 		auto stms = visitSequence_of_statements(*sIt);
-		elseIfs.push_back(HdlExprAndStm(move(c), move(stms)));
+		elseIfs.push_back(HdlExprAndiHdlObj(move(c), move(stms)));
 		++cIt;
 		++sIt;
 	}
@@ -590,7 +590,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSelected_waveforms(
 	// ;
 	auto waveforms = ctx->waveform();
 	auto choices_vec = ctx->choices();
-	vector<HdlExprAndStm> cases;
+	vector<HdlExprAndiHdlObj> cases;
 	unique_ptr<iHdlStatement> default_ = nullptr;
 	auto dst_tmp = dst.get();
 

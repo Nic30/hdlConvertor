@@ -74,6 +74,7 @@ class ToVerilog2005(ToVerilog2005Stm):
         name = var.name
         t = var.type
         w = self.out.write
+
         if var.is_const:
             w("localparam ")
             assert var.value is not None, var.name
@@ -135,6 +136,7 @@ class ToVerilog2005(ToVerilog2005Stm):
             w(" (\n")
             self.visit_map(pms)
             w(")")
+        return True
 
     def visit_HdlFunctionDef(self, o):
         """
@@ -245,7 +247,9 @@ class ToVerilog2005(ToVerilog2005Stm):
                 elif isinstance(o, HdlFunctionDef):
                     self.visit_HdlFunctionDef(o)
                     w("\n\n")
-                else:
+                elif o is None:
+                    w(";\n")
+                else:    
                     raise NotImplementedError(o)
 
         self.out.write("endmodule\n")

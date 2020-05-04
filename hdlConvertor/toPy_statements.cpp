@@ -359,7 +359,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndStm &o) {
+PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndiHdlObj &o) {
 	// build tuple representing the elif item
 	auto py_inst = PyTuple_New(2);
 	if (!py_inst) {
@@ -378,7 +378,7 @@ PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndStm &o) {
 	}
 
 	// fill statements in elif/case
-	auto stms = toPy(o.stm);
+	auto stms = toPy(o.obj);
 	if (!stms) {
 		Py_DECREF(py_inst);
 		return nullptr;

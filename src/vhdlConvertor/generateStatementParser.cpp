@@ -98,7 +98,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 	auto ifTrue = visitGenerate_statement_body(*sIt);
 	++cIt;
 	++sIt;
-	std::vector<HdlExprAndStm> elseIfs;
+	std::vector<HdlExprAndiHdlObj> elseIfs;
 	while (cIt != c.end()) {
 		auto c = VhdlExprParser::visitCondition(*cIt);
 		auto stms = visitGenerate_statement_body(*sIt);
@@ -132,7 +132,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 
 	auto _e = ctx->expression();
 	auto e = VhdlExprParser::visitExpression(_e);
-	vector<HdlExprAndStm> alternatives;
+	vector<HdlExprAndiHdlObj> alternatives;
 	unique_ptr<iHdlStatement> _default = nullptr;
 	vector<std::string> labels;
 	auto label = ctx->label();

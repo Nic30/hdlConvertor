@@ -17,6 +17,7 @@
 #include <hdlConvertor/svConvertor/typeParser.h>
 #include <hdlConvertor/svConvertor/declrParser.h>
 #include <hdlConvertor/svConvertor/programParser.h>
+#include <hdlConvertor/svConvertor/generateParser.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -78,8 +79,8 @@ void VerModuleParser::visitModule_declaration(
 		}
 	} else {
 		if (ctx->MUL()) {
-			auto p = create_object<HdlIdDef>(ctx, ".*",
-					HdlValueSymbol::all(), nullptr);
+			auto p = create_object<HdlIdDef>(ctx, ".*", HdlValueSymbol::all(),
+					nullptr);
 			ent->ports.push_back(move(p));
 		}
 	}
@@ -160,339 +161,19 @@ void VerModuleParser::visitModule_declaration(
 }
 void VerModuleParser::visitModule_item_item(
 		sv2017Parser::Module_item_itemContext *ctx,
-		vector<unique_ptr<iHdlObj>> &res, ModuleCtx &m_ctx) {
+		vector<unique_ptr<iHdlObj>> &res,
+		std::vector<std::unique_ptr<HdlIdDef>> &params) {
 	// module_item_item:
-	//     parameter_override
-	//     | gate_instantiation
-	//     | udp_instantiation
-	//     | module_or_interface_or_program_or_udp_instantiation
-	//     | ( default_clocking_or_dissable_construct
-	//         | local_parameter_declaration
-	//         | parameter_declaration )? SEMI
-	//     | net_declaration
-	//     | data_declaration
-	//     | task_declaration
-	//     | function_declaration
-	//     | checker_declaration
-	//     | dpi_import_export
-	//     | extern_constraint_declaration
-	//     | class_declaration
-	//     | interface_class_declaration
-	//     | class_constructor_declaration
-	//     | covergroup_declaration
-	//     | property_declaration
-	//     | sequence_declaration
-	//     | let_declaration
-	//     | genvar_declaration
-	//     | clocking_declaration
-	//     | assertion_item
-	//     | bind_directive
-	//     | continuous_assign
-	//     | net_alias
-	//     | initial_construct
-	//     | final_construct
-	//     | always_construct
-	//     | loop_generate_construct
-	//     | conditional_generate_construct
-	//     | elaboration_system_task
+	//     module_or_generate_item
 	//     | specparam_declaration
 	// ;
-	auto &res_stm = reinterpret_cast<vector<unique_ptr<iHdlStatement>>&>(res);
-	auto &res_vars = reinterpret_cast<vector<unique_ptr<HdlIdDef>>&>(res);
 	{
-		auto o = ctx->parameter_override();
+		auto o = ctx->module_or_generate_item();
 		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.parameter_override",
-					o);
+			VerGenerateParser gp(commentParser, hierarchyOnly);
+			gp.visitModule_or_generate_item(o, res, params);
 			return;
-		}
-	}
-	{
-		auto o = ctx->gate_instantiation();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.gate_instantiation",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->udp_instantiation();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.udp_instantiation",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->module_or_interface_or_program_or_udp_instantiation();
-		if (o) {
 
-			auto &res_comp =
-					reinterpret_cast<vector<unique_ptr<HdlCompInst>>&>(res);
-			VerModuleInstanceParser mp(commentParser);
-			mp.visitModule_or_interface_or_program_or_udp_instantiation(o,
-					res_comp);
-			return;
-		}
-	}
-	{
-		auto o = ctx->default_clocking_or_dissable_construct();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.default_clocking_or_dissable_construct",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->local_parameter_declaration();
-		if (o) {
-			VerParamDefParser pdp(commentParser);
-			pdp.visitLocal_parameter_declaration(o, res_vars);
-		}
-	}
-	{
-		auto o = ctx->parameter_declaration();
-		if (o) {
-			VerParamDefParser pdp(commentParser);
-			pdp.visitParameter_declaration(o, m_ctx.ent.generics);
-			return;
-		}
-	}
-	{
-		if (ctx->SEMI()) {
-			res_stm.push_back(create_object<HdlStmNop>(ctx));
-			return;
-		}
-	}
-	{
-		auto o = ctx->net_declaration();
-		if (o) {
-			visitNet_declaration(o, res_vars);
-			return;
-		}
-	}
-	{
-		auto o = ctx->data_declaration();
-		if (o) {
-			VerDeclrParser dp(commentParser);
-			return dp.visitData_declaration(o, res);
-		}
-	}
-	{
-		auto o = ctx->task_declaration();
-		if (o) {
-			VerProgramParser pp(commentParser);
-			auto f = pp.visitTask_declaration(o);
-			res.push_back(move(f));
-			return;
-		}
-	}
-	{
-		auto o = ctx->function_declaration();
-		if (o) {
-			VerProgramParser pp(commentParser);
-			auto f = pp.visitFunction_declaration(o);
-			res.push_back(move(f));
-			return;
-		}
-	}
-	{
-		auto o = ctx->checker_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.checker_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->dpi_import_export();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.dpi_import_export",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->extern_constraint_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.extern_constraint_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->class_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.class_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->interface_class_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.interface_class_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->class_constructor_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.class_constructor_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->covergroup_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.covergroup_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->property_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.property_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->sequence_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.sequence_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->let_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.let_declaration", o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->genvar_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.genvar_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->clocking_declaration();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.clocking_declaration",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->assertion_item();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.assertion_item", o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->bind_directive();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.bind_directive", o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->continuous_assign();
-		if (o) {
-			VerStatementParser sp(commentParser);
-			sp.visitContinuous_assign(o, res_stm);
-			return;
-		}
-	}
-	{
-		auto o = ctx->net_alias();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.net_alias", o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->initial_construct();
-		if (o) {
-			VerStatementParser sp(commentParser);
-			auto ic = sp.visitInitial_construct(o);
-			res.push_back(move(ic));
-			return;
-		}
-	}
-	{
-		auto o = ctx->final_construct();
-		if (o) {
-			//VerStatementParser sp(commentParser);
-			//auto fc =  sp.visitFinal_construct(o);
-			//res.push_back(fc);
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.final_construct", o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->always_construct();
-		if (o) {
-			VerStatementParser sp(commentParser);
-			auto ac = sp.visitAlways_construct(o);
-			res.push_back(move(ac));
-			return;
-		}
-	}
-	{
-		auto o = ctx->loop_generate_construct();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.loop_generate_construct",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->conditional_generate_construct();
-		if (o) {
-			NotImplementedLogger::print(
-					"VerModuleParser.visitModule_item_item.conditional_generate_construct",
-					o);
-			return;
-		}
-	}
-	{
-		auto o = ctx->elaboration_system_task();
-		if (o) {
-			VerStatementParser sp(commentParser);
-			auto est = sp.visitElaboration_system_task(o);
-			res.push_back(move(est));
-			return;
 		}
 	}
 	{
@@ -502,8 +183,8 @@ void VerModuleParser::visitModule_item_item(
 				"VerModuleParser.visitModule_item_item.specparam_declaration",
 				o);
 	}
-
 }
+
 void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		vector<unique_ptr<iHdlObj>> &objs, ModuleCtx &m_ctx) {
 	// module_item:
@@ -519,8 +200,8 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	auto doc = commentParser.parse(ctx);
 	auto gr = ctx->generate_region();
 	if (gr) {
-		NotImplementedLogger::print("ModuleParser.module_item.generate_region",
-				gr);
+		VerGenerateParser gp(commentParser, hierarchyOnly);
+		gp.visitGenerate_region(gr, objs);
 		return;
 	}
 	auto mii = ctx->module_item_item();
@@ -528,7 +209,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 		auto ai = ctx->attribute_instance();
 		VerAttributeParser::visitAttribute_instance(ai);
 		auto prev_size = objs.size();
-		visitModule_item_item(mii, objs, m_ctx);
+		visitModule_item_item(mii, objs, m_ctx.ent.generics);
 		if (objs.size() != prev_size) {
 			iHdlObj *_last = objs[prev_size].get();
 			auto wd = dynamic_cast<WithDoc*>(_last);

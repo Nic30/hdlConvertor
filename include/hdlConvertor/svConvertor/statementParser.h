@@ -6,6 +6,7 @@
 #include <hdlConvertor/hdlAst/hdlStmAssign.h>
 #include <hdlConvertor/hdlAst/hdlStmProcess.h>
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
+#include <hdlConvertor/hdlAst/hdlStmIf.h>
 #include <hdlConvertor/hdlAst/hdlVariableDef.h>
 #include <hdlConvertor/svConvertor/commentParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
@@ -39,7 +40,7 @@ public:
 			sv2017Parser::Blocking_assignmentContext *ctx);
 	std::unique_ptr<hdlAst::iHdlStatement> visitCase_statement(
 			sv2017Parser::Case_statementContext *ctx);
-	std::vector<hdlAst::HdlExprAndStm> visitCase_item(
+	std::vector<hdlAst::HdlExprAndiHdlObj> visitCase_item(
 			sv2017Parser::Case_itemContext *ctx);
 	std::unique_ptr<hdlAst::HdlStmAssign> visitVariable_assignment(
 			sv2017Parser::Variable_assignmentContext *ctx);
@@ -98,6 +99,8 @@ public:
 			sv2017Parser::Elaboration_system_taskContext *ctx);
 
 };
+
+void HdlStmIf_collapse_elifs(hdlAst::HdlStmIf &ifStm);
 
 }
 }

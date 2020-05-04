@@ -35,7 +35,7 @@ void HdlStmIf_collapse_elifs(HdlStmIf &ifStm) {
 			// add if-then branch as if else
 			auto c = move(as_if->cond);
 			auto s = move(as_if->ifTrue);
-			ifStm.elseIfs.push_back(HdlExprAndStm(move(c), move(s)));
+			ifStm.elseIfs.push_back(HdlExprAndiHdlObj(move(c), move(s)));
 
 			for (auto &elif : as_if->elseIfs) {
 				ifStm.elseIfs.push_back(move(elif));
@@ -325,8 +325,8 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 	}
 	VerExprParser ep(commentParser);
 	auto switchOn = ep.visitExpression(ctx->expression());
-	std::vector<HdlExprAndStm> cases;
-	unique_ptr<iHdlStatement> default_ = nullptr;
+	std::vector<HdlExprAndiHdlObj> cases;
+	unique_ptr<iHdlObj> default_ = nullptr;
 	if (ctx->KW_INSIDE()) {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitCase_statement.inside", ctx);
@@ -347,7 +347,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 							throw std::runtime_error(
 									"VerStatementParser.visitCase_statement case with multiple default");
 						}
-						default_ = move(c.stm);
+						default_ = move(c.obj);
 					}
 				}
 			}
@@ -366,13 +366,13 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 	return cs;
 
 }
-std::vector<HdlExprAndStm> VerStatementParser::visitCase_item(
+std::vector<HdlExprAndiHdlObj> VerStatementParser::visitCase_item(
 		sv2017Parser::Case_itemContext *ctx) {
 	// case_item
 	//    : expression (',' expression)* ':' statement_or_null
 	//    | 'default' (':')? statement_or_null
 	//    ;
-	std::vector<HdlExprAndStm> res;
+	std::vector<HdlExprAndiHdlObj> res;
 	auto conds = ctx->expression();
 	auto stms = ctx->statement_or_null();
 	if (conds.size()) {
@@ -380,7 +380,7 @@ std::vector<HdlExprAndStm> VerStatementParser::visitCase_item(
 			auto ce = VerExprParser(commentParser).visitExpression(c);
 			// [TODO] it would be better to copy the statements instead of parsing again
 			auto _stms = visitStatement_or_null(stms);
-			auto o = HdlExprAndStm(move(ce), move(_stms));
+			auto o = HdlExprAndiHdlObj(move(ce), move(_stms));
 			res.push_back(move(o));
 		}
 	} else {

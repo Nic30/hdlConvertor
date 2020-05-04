@@ -12,19 +12,19 @@ namespace hdlAst {
 class HdlStmIf: public iHdlStatement {
 public:
 	std::unique_ptr<iHdlExprItem> cond;
-	std::unique_ptr<iHdlStatement> ifTrue;
-	std::vector<HdlExprAndStm> elseIfs;
-	std::unique_ptr<iHdlStatement> ifFalse;
+	std::unique_ptr<iHdlObj> ifTrue;
+	std::vector<HdlExprAndiHdlObj> elseIfs;
+	std::unique_ptr<iHdlObj> ifFalse;
 
 	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
-			std::unique_ptr<iHdlStatement> ifTrue);
+			std::unique_ptr<iHdlObj> ifTrue);
 	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
-			std::unique_ptr<iHdlStatement> ifTrue,
-			std::unique_ptr<iHdlStatement> ifFalse);
+			std::unique_ptr<iHdlObj> ifTrue,
+			std::unique_ptr<iHdlObj> ifFalse);
 	HdlStmIf(std::unique_ptr<iHdlExprItem> cond,
-			std::unique_ptr<iHdlStatement> ifTrue,
-			std::vector<HdlExprAndStm> &elseIfs,
-			std::unique_ptr<iHdlStatement> ifFalse);
+			std::unique_ptr<iHdlObj> ifTrue,
+			std::vector<HdlExprAndiHdlObj> &elseIfs,
+			std::unique_ptr<iHdlObj> ifFalse);
 	virtual ~HdlStmIf() override;
 };
 

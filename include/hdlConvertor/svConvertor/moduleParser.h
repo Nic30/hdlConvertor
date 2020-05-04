@@ -39,7 +39,7 @@ public:
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 	void visitModule_item_item(sv2017Parser::Module_item_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res,
-			ModuleCtx &m_ctx);
+			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &param);
 	void visitModule_item(sv2017Parser::Module_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &objs,
 			ModuleCtx &m_ctx);

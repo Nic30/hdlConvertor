@@ -140,7 +140,8 @@ class ToVerilog2005Stm(ToVerilog2005Expr):
         """
         self.visit_doc(o)
         w = self.out.write
-
+        if o.in_prepoc:
+            w("generate ")
         w("if (")
         self.visit_iHdlExpr(o.cond)
         w(")")

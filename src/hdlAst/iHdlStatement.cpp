@@ -5,12 +5,12 @@ using namespace std;
 namespace hdlConvertor {
 namespace hdlAst {
 
-HdlExprAndStm::HdlExprAndStm() {
+HdlExprAndiHdlObj::HdlExprAndiHdlObj() {
 }
 
-HdlExprAndStm::HdlExprAndStm(std::unique_ptr<iHdlExprItem> _expr,
-		std::unique_ptr<iHdlStatement> _stm) :
-		expr(move(_expr)), stm(move(_stm)) {
+HdlExprAndiHdlObj::HdlExprAndiHdlObj(std::unique_ptr<iHdlExprItem> _expr,
+		std::unique_ptr<iHdlObj> _stm) :
+		expr(move(_expr)), obj(move(_stm)) {
 }
 
 iHdlStatement::iHdlStatement() :
