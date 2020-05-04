@@ -47,12 +47,12 @@ cdef int raise_cpp_py_error() except *:
 
     raise ParseException(msg)
 
-cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
-    cdef cppclass Convertor:
+cdef extern from "hdlConvertor/hdlConvertor.h" namespace "hdlConvertor":
+    cdef cppclass HdlConvertor:
         unique_ptr[HdlContext] c
         MacroDB defineDB
 
-        Convertor(HdlContext & _c)
+        HdlConvertor(HdlContext & _c)
 
         void parse(
             const vector[string] & hdl_file_names,
@@ -78,21 +78,22 @@ cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
             vector[string] incdirs,
             Language mode) except +raise_cpp_py_error
 
-cdef class HdlConvertor:
-    """
-    The container of the Convertor which parses HDL code to universal AST
 
-    :ivar ~.thisptr: pointer on Convertor instance which is a wrapper around the parsers
+cdef class HdlConvertorPy:
+    """
+    The container of the HdlConvertor which parses HDL code to universal AST
+
+    :ivar ~.thisptr: pointer on HdlConvertor instance which is a wrapper around the parsers
     :ivar ~.proproc_macro_db: dictinary of symbols defined in preprocessor
     """
 
-    cdef unique_ptr[Convertor] thisptr
+    cdef unique_ptr[HdlConvertor] thisptr
     cdef HdlContext context
     cdef public CppStdMapProxy preproc_macro_db
 
     # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
-        self.thisptr.reset(new Convertor(self.context))
+        self.thisptr.reset(new HdlConvertor(self.context))
         self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.get().defineDB)
 
     @staticmethod
@@ -100,7 +101,7 @@ cdef class HdlConvertor:
         if language == PyHdlLanguageEnum.VHDL:
             return VHDL
         else:
-            return HdlConvertor._translate_verilog_enum(language)
+            return HdlConvertorPy._translate_verilog_enum(language)
 
     @staticmethod
     def _translate_verilog_enum(lang):

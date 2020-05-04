@@ -1,1 +1,1 @@
-from ._hdlConvertor import HdlConvertor, ParseException
+from ._hdlConvertor import HdlConvertorPy as HdlConvertor, ParseException

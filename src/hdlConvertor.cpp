@@ -1,4 +1,4 @@
-#include <hdlConvertor/convertor.h>
+#include <hdlConvertor/hdlConvertor.h>
 
 #include <hdlConvertor/notImplementedLogger.h>
 
@@ -21,7 +21,7 @@ using namespace antlr4;
 using namespace antlr4::tree;
 using namespace hdlConvertor::hdlAst;
 
-bool Convertor::debug = false;
+bool HdlConvertor::debug = false;
 
 class VHDLParserContainer: public iParserContainer<vhdl_antlr::vhdlLexer,
 		vhdl_antlr::vhdlParser, vhdl::VhdlDesignFileParser> {
@@ -84,11 +84,11 @@ public:
 	}
 };
 
-Convertor::Convertor(hdlAst::HdlContext &_c) :
+HdlConvertor::HdlConvertor(hdlAst::HdlContext &_c) :
 		hierarchyOnly(false), c(_c) {
 }
 
-void Convertor::parse(const vector<string> &_fileNames, Language lang,
+void HdlConvertor::parse(const vector<string> &_fileNames, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 
 	hierarchyOnly = _hierarchyOnly;
@@ -114,7 +114,7 @@ void Convertor::parse(const vector<string> &_fileNames, Language lang,
 	}
 }
 
-void Convertor::parse_str(const string &hdl_str, Language lang,
+void HdlConvertor::parse_str(const string &hdl_str, Language lang,
 		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
@@ -131,7 +131,7 @@ void Convertor::parse_str(const string &hdl_str, Language lang,
 	}
 }
 
-string Convertor::verilog_pp(const string &fileName,
+string HdlConvertor::verilog_pp(const string &fileName,
 		const vector<string> _incdirs, Language lang) {
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
@@ -141,7 +141,7 @@ string Convertor::verilog_pp(const string &fileName,
 	return res.str();
 }
 
-string Convertor::verilog_pp_str(const string &verilog_str,
+string HdlConvertor::verilog_pp_str(const string &verilog_str,
 		const vector<string> _incdirs, Language lang) {
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
@@ -151,7 +151,7 @@ string Convertor::verilog_pp_str(const string &verilog_str,
 	return res.str();
 }
 
-Convertor::~Convertor() {
+HdlConvertor::~HdlConvertor() {
 	for (auto o : defineDB) {
 		delete o.second;
 	}

@@ -15,7 +15,7 @@
 
 namespace hdlConvertor {
 
-class Convertor {
+class HdlConvertor {
 
 public:
 	bool hierarchyOnly;
@@ -23,7 +23,7 @@ public:
 	hdlAst::HdlContext& c;
 	verilog_pp::MacroDB defineDB;
 
-	Convertor(hdlAst::HdlContext& c);
+	HdlConvertor(hdlAst::HdlContext& c);
 
 	void parse(const std::vector<std::string> &fileNames, Language lang,
 			std::vector<std::string> incdirs, bool hierarchyOnly, bool debug);
@@ -35,7 +35,7 @@ public:
 	std::string verilog_pp_str(const std::string &verilog_str,
 			const std::vector<std::string> incdirs, Language lang);
 
-	virtual ~Convertor();
+	virtual ~HdlConvertor();
 };
 
 }
