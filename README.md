@@ -15,7 +15,7 @@ It contains:
    * Compiler focused [utils](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/translate) for manipulation with HDL AST.
        * HdlAstVisitor, id resolution, sensitivity detection, vhdl <-> verilog type conversion, ...
 
-![overview](https://raw.githubusercontent.com/nic30/hdlConvertor/master/doc/hdlConvertor_overview.png)
+![overview](https://raw.githubusercontent.com/Nic30/hdlConvertor/master/doc/hdlConvertor_overview.png)
 
 
 ### Supported languages:
