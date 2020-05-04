@@ -13,7 +13,7 @@
 #include <hdlConvertor/hdlAst/hdlNamespace.h>
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/hdlAst/hdlModuleDef.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/hdlAst/hdlStm_others.h>

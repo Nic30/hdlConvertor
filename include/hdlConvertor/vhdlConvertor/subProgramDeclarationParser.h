@@ -4,7 +4,7 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
 
 namespace hdlConvertor {

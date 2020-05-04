@@ -1,4 +1,4 @@
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 using namespace std;
 

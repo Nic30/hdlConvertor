@@ -2,7 +2,7 @@
 
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace hdlAst {

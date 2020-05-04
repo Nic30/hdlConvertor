@@ -2,7 +2,7 @@
 
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/hdlAst/hdlTypes.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {

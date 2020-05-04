@@ -3,7 +3,7 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {

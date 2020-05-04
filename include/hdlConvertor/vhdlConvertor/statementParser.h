@@ -7,7 +7,7 @@
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/hdlAst/hdlStmAssign.h>
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {

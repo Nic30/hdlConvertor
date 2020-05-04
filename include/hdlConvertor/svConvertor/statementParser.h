@@ -7,7 +7,7 @@
 #include <hdlConvertor/hdlAst/hdlStmProcess.h>
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
 #include <hdlConvertor/hdlAst/hdlStmIf.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/svConvertor/commentParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/createObject.h>

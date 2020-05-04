@@ -3,7 +3,7 @@
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 
 #include <hdlConvertor/svConvertor/commentParser.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace sv {

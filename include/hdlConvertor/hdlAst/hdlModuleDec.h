@@ -1,7 +1,7 @@
 #pragma once
 #include <hdlConvertor/hdlAst/named.h>
 #include <hdlConvertor/hdlAst/iHdlObj.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/codePosition.h>
 
 

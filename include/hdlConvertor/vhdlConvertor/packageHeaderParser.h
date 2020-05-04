@@ -10,7 +10,7 @@
 #include <hdlConvertor/hdlAst/hdlNamespace.h>
 #include <hdlConvertor/hdlAst/hdlStmProcess.h>
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
 
 namespace hdlConvertor {

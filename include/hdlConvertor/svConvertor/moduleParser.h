@@ -2,7 +2,7 @@
 
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/hdlAst/hdlModuleDef.h>
-#include <hdlConvertor/hdlAst/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlCompInst.h>
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
