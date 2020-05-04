@@ -67,29 +67,8 @@ Take a look at appveyor.yml. It is required to download antlr4 first and have vi
 
 ## Usage
 
-The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`.
-There are classes for objects in HDL languages and there is also type specified for every property in anotations. This allows IDEs to advise and it is also a part of doc.
+The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`. Parsing and code modification is straightforward, as you can see in following example [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Nic30/hdlConvertor/master?filepath=notebooks%2F01_parse_and_dump.ipynb)
 
-Example of usage: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Nic30/hdlConvertor/master?filepath=notebooks%2F01_parse_and_dump.ipynb)
-```python
-import sys
-from hdlConvertor.language import Language
-from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
-from hdlConvertor import HdlConvertor
-
-filenames = ["your.v", ]
-include_dirs = []
-c = HdlConvertor()
-d = c.parse(filenames, Language.VERILOG, include_dirs, hierarchyOnly=False, debug=True)
-
-tv = ToVerilog2005(sys.stdout)
-tv.visit_HdlContext(d)
-
-for o in d.objs:
-    print(o)
-```
-
-![overview](https://raw.githubusercontent.com/nic30/hdlConvertor/master/doc/hdlConvertor_typical_usage.png)
 
 
 ### Similar projects:
