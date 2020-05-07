@@ -25,6 +25,9 @@ def get_vunit_test_configs():
         should_fail = False
         lang = Language.VHDL_2008
         if fn in ["tb_deprecated",
+
+                  # ? broken assert always  statement?
+                  "fifo",
                   ]:
             should_fail = True
 

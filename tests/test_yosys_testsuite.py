@@ -98,6 +98,7 @@ def get_yosys_test_configs():
                 "opt_share_cat",
                 "opt_share_cat_multiuser",
                 "design",
+                "dsp_map",
 
                 # non std ID'd1
                 "mulshift_map",
@@ -112,6 +113,7 @@ def get_yosys_test_configs():
                 # non std $ id
                 "abc9_map",
                 "abc9_unmap",
+                "abc9_model",
                 "cmp2lcu",
 
                 # non std, hierarchical name for component instance
@@ -136,6 +138,7 @@ def get_yosys_test_configs():
             defs["LCELL"] = "LCELL"
         if fn in ["lut_map", "cmp2lcu", "arith_map"]:
             defs["LUT_WIDTH"] = "32"
+            defs["LUT_SIZE"] = "64"
         # if fn == "mul2dsp":
         #    defs["DSP_A_MAXWIDTH"] = "32"
         #    defs["DSP_B_MAXWIDTH"] = "64"
