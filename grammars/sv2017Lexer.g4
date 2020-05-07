@@ -632,7 +632,7 @@ fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
   | '\\\n' 
   | '\\\r\n'
-  | '\\' [nrt\\"vfa%] 
+  | '\\' [abefnrtv$@luLEQU\\"%] 
   | '\\' [0-9] [0-9]? [0-9]? 
   | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
  ;
