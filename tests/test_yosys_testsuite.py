@@ -88,6 +88,7 @@ def get_yosys_test_configs():
 
                 # non std? extra , in module port list
                 "arith_alm_map",
+                "arith_map",
                 "bram_m10k_map",
                 "bram_m20k_map",
                 "dffs",
@@ -125,13 +126,16 @@ def get_yosys_test_configs():
                   "test_dsp48_model",
                   "macc_tb",
                   "lutrams_map",
+                  "arith_map",
                   ]:
             lang = Language.VERILOG_2005
         if fn == "mux_map":
             defs["MIN_MUX_INPUTS"] = "32"
         if fn in ["gate2lut", "cmp2lut"]:
             defs["LUT_WIDTH"] = "8"
-        if fn in ["code_verilog_tutorial_fsm_full_tb", "code_verilog_tutorial_first_counter_tb", "code_verilog_tutorial_counter_tb",
+        if fn in ["code_verilog_tutorial_fsm_full_tb",
+                  "code_verilog_tutorial_first_counter_tb",
+                  "code_verilog_tutorial_counter_tb",
                   "code_hdl_models_arbiter_tb", ]:
             defs["outfile"] = "tmp/outfile"
         if fn == "quartus_rename":
