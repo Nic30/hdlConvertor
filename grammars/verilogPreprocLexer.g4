@@ -102,7 +102,7 @@ MACRO_ENTER: '`' -> pushMode(DIRECTIVE_MODE),skip;
 mode DIRECTIVE_MODE;
     D_STR: STR -> type(STR);
     D_LINE_COMMENT : LINE_COMMENT -> popMode,type(LINE_COMMENT),channel(CH_LINE_COMMENT);
-    D_COMMENT : '/*' .*? '*/' -> type(COMMENT),channel(CH_COMMENT);
+    D_COMMENT : COMMENT -> type(COMMENT),channel(CH_COMMENT);
     INCLUDE: 'include' F_WS+ -> popMode,pushMode(INCLUDE_MODE);
     DEFINE:  'define'  F_WS+ F_LINE_ESCAPE*
             ( ( LINE_COMMENT | COMMENT ) F_WS* F_LINE_ESCAPE*)?
@@ -332,6 +332,8 @@ mode LINE_MODE;
     LINE_MODE_STR: STR ->type(STR);
     LINE_MODE_WS: F_WS ->skip;
     LINE_MODE_NEW_LINE: CRLF ->type(NEW_LINE),popMode;
+    LINE_MODE_LINE_COMMENT: LINE_COMMENT -> type(LINE_COMMENT),channel(CH_LINE_COMMENT),popMode;
+    LINE_MODE_COMMENT: COMMENT -> type(CODE);
 
 mode TIMING_SPEC_MODE;
     Time_Identifier:
@@ -340,6 +342,8 @@ mode TIMING_SPEC_MODE;
     TIMING_SPEC_MODE_SLASH : '/';
     TIMING_SPEC_MODE_WS : WS->skip;
     TIMING_SPEC_MODE_NEW_LINE : CRLF ->type(NEW_LINE),popMode;
+    TIMING_SPEC_MODE_LINE_COMMENT: LINE_COMMENT -> type(LINE_COMMENT),channel(CH_LINE_COMMENT),popMode;
+    TIMING_SPEC_MODE_COMMENT: COMMENT -> type(CODE);
 
 mode KEYWOORDS_MODE;
     KEYWOORDS_MODE_STR: STR -> type(STR),popMode;
