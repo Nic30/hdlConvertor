@@ -275,9 +275,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->genvar_declaration();
 		if (o) {
-			NotImplementedLogger::print(
-					"VerGenerateParser.visitModule_or_generate_item.genvar_declaration",
-					o);
+			visitGenvar_declaration(o, res_vars);
 			return;
 		}
 	}
@@ -375,6 +373,20 @@ void VerGenerateParser::visitModule_or_generate_item(
 			res.push_back(move(est));
 			return;
 		}
+	}
+}
+void VerGenerateParser::visitGenvar_declaration(
+		sv2017Parser::Genvar_declarationContext *ctx, vector<unique_ptr<HdlIdDef>> & res) {
+	// genvar_declaration:
+	//  KW_GENVAR identifier_list SEMI;
+	// identifier_list: identifier ( COMMA identifier )*;
+	auto il = ctx->identifier_list();
+	for (auto id: il->identifier()) {
+		VerExprParser ep(commentParser);
+		auto name = ep.getIdentifierStr(id);
+		auto t = create_object<HdlValueId>(id, "genvar");
+		auto v = create_object<HdlIdDef>(id, name, move(t), nullptr);
+		res.push_back(move(v));
 	}
 }
 unique_ptr<HdlIdDef> VerGenerateParser::visitGenvar_initialization(
