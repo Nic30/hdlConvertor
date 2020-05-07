@@ -6,7 +6,6 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/createObject.h>
 
-
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 using TerminalNode = antlr4::tree::TerminalNode;
@@ -49,7 +48,8 @@ size_t VerLiteralParser::parseSize_UNSIGNED_NUMBER(std::string str) {
 	str.erase(std::remove(str.begin(), str.end(), '_'), str.end());
 	return atoi(str.c_str());
 }
-unique_ptr<iHdlExprItem> VerLiteralParser::visitUNSIGNED_NUMBER(TerminalNode *ctx) {
+unique_ptr<iHdlExprItem> VerLiteralParser::visitUNSIGNED_NUMBER(
+		TerminalNode *ctx) {
 	std::string str = ctx->getText();
 	str.erase(std::remove(str.begin(), str.end(), '_'), str.end());
 	return create_object<HdlValueInt>(ctx, str, 10);
@@ -87,7 +87,7 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitANY_BASED_NUMBER(
 	}
 
 	std::string strVal = s.substr(valuePartStart, s.length()); // cut off prefix
-  TerminalNode *const n = dynamic_cast<TerminalNode *>(ctx);
+	TerminalNode *const n = dynamic_cast<TerminalNode*>(ctx);
 	if (size != std::string::npos)
 		return create_object<HdlValueInt>(n, strVal, size, radix);
 	return create_object<HdlValueInt>(n, strVal, radix);
@@ -107,7 +107,8 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitNumber(
 	assert(r);
 	return visitReal_number(r);
 }
-unique_ptr<iHdlExprItem> VerLiteralParser::visitSIMPLE_IDENTIFIER(TerminalNode *n) {
+unique_ptr<iHdlExprItem> VerLiteralParser::visitSIMPLE_IDENTIFIER(
+		TerminalNode *n) {
 	return create_object<HdlValueId>(n, n->getText());
 }
 unique_ptr<iHdlExprItem> VerLiteralParser::visitC_IDENTIFIER(TerminalNode *n) {
@@ -130,7 +131,7 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitReal_number(
 	// ;
 	std::string s = ctx->getText();
 	double val = stod(s);
-	return create_object<HdlValueFloat>(dynamic_cast<TerminalNode *>(ctx), val);
+	return create_object<HdlValueFloat>(dynamic_cast<TerminalNode*>(ctx), val);
 }
 unique_ptr<iHdlExprItem> VerLiteralParser::visitSTRING(TerminalNode *n) {
 	std::string s = n->getText();
@@ -396,7 +397,8 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitPrimary_literal(
 		// ;
 		auto t = uul->getText();
 		assert(t.size() == 2);
-		return create_object<HdlValueInt>(dynamic_cast<TerminalNode *>(ctx), t.substr(1), 10);
+		return create_object<HdlValueInt>(dynamic_cast<TerminalNode*>(ctx),
+				t.substr(1), 10);
 	}
 	auto sl = ctx->STRING_LITERAL();
 	if (sl) {
@@ -438,6 +440,25 @@ unique_ptr<iHdlExprItem> VerLiteralParser::visitAny_system_tf_identifier(
 	//     | KW_DOLAR_NOCHANGE
 	// ;
 	return create_object<HdlValueId>(ctx, ctx->getText());
+}
+
+HdlOpType VerLiteralParser::visitInc_or_dec_operator(
+		sv2017Parser::Inc_or_dec_operatorContext *ctx, bool prefix) {
+	if (prefix) {
+		if (ctx->INCR()) {
+			return HdlOpType::INCR_PRE;
+		} else {
+			assert(ctx->DECR());
+			return HdlOpType::DECR_PRE;
+		}
+	} else {
+		if (ctx->INCR()) {
+			return HdlOpType::INCR_POST;
+		} else {
+			assert(ctx->DECR());
+			return HdlOpType::DECR_POST;
+		}
+	}
 }
 
 }

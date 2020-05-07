@@ -6,12 +6,16 @@
 #include <hdlConvertor/svConvertor/moduleInstanceParser.h>
 #include <hdlConvertor/svConvertor/paramDefParser.h>
 #include <hdlConvertor/svConvertor/attributeParser.h>
-#include <assert.h>
+#include <hdlConvertor/svConvertor/literalParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlAst/hdlStm_others.h>
 #include <hdlConvertor/hdlAst/hdlStmIf.h>
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
+#include <hdlConvertor/hdlAst/hdlValue.h>
+#include <hdlConvertor/hdlAst/hdlDirection.h>
+#include <hdlConvertor/createObject.h>
 
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace sv {
@@ -141,7 +145,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	}
 	{
 		if (ctx->SEMI()) {
-			res_stm.push_back(create_object < HdlStmNop > (ctx));
+			res_stm.push_back(create_object<HdlStmNop>(ctx));
 			return;
 		}
 	}
@@ -333,9 +337,6 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->final_construct();
 		if (o) {
-			//VerStatementParser sp(commentParser);
-			//auto fc =  sp.visitFinal_construct(o);
-			//res.push_back(fc);
 			NotImplementedLogger::print(
 					"VerGenerateParser.visitModule_or_generate_item.final_construct",
 					o);
@@ -354,9 +355,8 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->loop_generate_construct();
 		if (o) {
-			NotImplementedLogger::print(
-					"VerGenerateParser.visitModule_or_generate_item.loop_generate_construct",
-					o);
+			auto _stm = visitLoop_generate_construct(o);
+			res.push_back(move(_stm));
 			return;
 		}
 	}
@@ -377,6 +377,84 @@ void VerGenerateParser::visitModule_or_generate_item(
 		}
 	}
 }
+unique_ptr<HdlIdDef> VerGenerateParser::visitGenvar_initialization(
+		sv2017Parser::Genvar_initializationContext *ctx) {
+	// genvar_initialization:
+	//     ( KW_GENVAR )? identifier ASSIGN constant_expression;
+	VerExprParser ep(commentParser);
+	auto name = ep.getIdentifierStr(ctx->identifier());
+	auto _def_val = ctx->constant_expression();
+	auto def_val = ep.visitConstant_expression(_def_val);
+	auto dt = HdlValueSymbol::type_auto();
+	return create_object<HdlIdDef>(ctx, name, move(dt), move(def_val),
+			HdlDirection::DIR_INTERNAL, true);
+}
+
+unique_ptr<HdlStmExpr> VerGenerateParser::visitGenvar_iteration(
+		sv2017Parser::Genvar_iterationContext *ctx) {
+	// genvar_iteration:
+	//     identifier ( assignment_operator genvar_expression
+	//                  | inc_or_dec_operator
+	//                  )
+	//     | inc_or_dec_operator identifier
+	// ;
+	auto _id = ctx->identifier();
+	VerExprParser ep(commentParser);
+	auto id = ep.visitIdentifier(_id);
+	auto iod = ctx->inc_or_dec_operator();
+	unique_ptr<iHdlExprItem> e;
+	if (iod) {
+		bool is_prefix = ctx->children[0] == iod;
+		auto op = VerLiteralParser::visitInc_or_dec_operator(iod, is_prefix);
+		e = create_object<HdlOp>(ctx, op, move(id));
+	} else {
+		auto ao = ctx->assignment_operator();
+		auto op = VerLiteralParser::visitAssignment_operator(ao);
+		auto _val = ctx->genvar_expression();
+		auto val = visitGenvar_expression(_val);
+		e = create_object<HdlOp>(ctx, move(id), op, move(val));
+	}
+	return create_object<HdlStmExpr>(ctx, move(e));
+}
+
+unique_ptr<iHdlExprItem> VerGenerateParser::visitGenvar_expression(
+		sv2017Parser::Genvar_expressionContext *ctx) {
+	// genvar_expression: constant_expression;
+	auto ce = ctx->constant_expression();
+	return VerExprParser(commentParser).visitConstant_expression(ce);
+}
+
+unique_ptr<HdlStmFor> VerGenerateParser::visitLoop_generate_construct(
+		sv2017Parser::Loop_generate_constructContext *ctx) {
+	// loop_generate_construct:
+	//     KW_FOR LPAREN genvar_initialization SEMI genvar_expression SEMI genvar_iteration RPAREN
+	//       generate_item;
+
+	auto _init = ctx->genvar_initialization();
+	auto _cond = ctx->genvar_expression();
+	auto _step = ctx->genvar_iteration();
+
+	auto init_stm = visitGenvar_initialization(_init);
+	auto init = create_object<HdlStmBlock>(_init);
+	init->statements.push_back(move(init_stm));
+	auto cond = visitGenvar_expression(_cond);
+	auto step = visitGenvar_iteration(_step);
+
+	auto gi = ctx->generate_item();
+	auto bl = create_object<HdlStmBlock>(gi);
+	visitGenerate_item(gi, bl->statements);
+	std::unique_ptr<iHdlObj> stm;
+	if (bl->statements.size() == 1)
+		stm = move(bl->statements[0]);
+	else {
+		stm = move(bl);
+	}
+
+	auto res = create_object<HdlStmFor>(ctx, move(init), move(cond), move(step),
+			move(stm));
+	res->in_preproc = true;
+	return res;
+}
 
 void VerGenerateParser::visitGenerate_begin_end_block(
 		sv2017Parser::Generate_begin_end_blockContext *ctx,
@@ -395,7 +473,7 @@ void VerGenerateParser::visitGenerate_begin_end_block(
 	}
 	auto b = create_object<HdlStmBlock>(ctx, items);
 
-	for (auto _label: ctx->identifier()) {
+	for (auto _label : ctx->identifier()) {
 		VerExprParser ep(commentParser);
 		b->labels.push_back(ep.getIdentifierStr(_label));
 	}
@@ -432,6 +510,14 @@ void VerGenerateParser::visitCase_generate_construct(
 			"VerGenerateParser.visitCase_generate_construct", ctx);
 }
 
+
+unique_ptr<iHdlObj> pop_block_if_possible(unique_ptr<HdlStmBlock> stm) {
+	if (stm->statements.size() == 1) {
+		return move(stm->statements[0]);
+	} else {
+		return move(stm);
+	}
+}
 void VerGenerateParser::visitIf_generate_construct(
 		sv2017Parser::If_generate_constructContext *ctx,
 		vector<unique_ptr<iHdlStatement>> &res) {
@@ -447,25 +533,20 @@ void VerGenerateParser::visitIf_generate_construct(
 	VerExprParser ep(commentParser);
 	auto cond = ep.visitConstant_expression(c);
 
-	vector<unique_ptr<iHdlObj>> ifTrue;
-	visitGenerate_item(s[0], ifTrue);
-	if (ifTrue.size() == 0) {
-		ifTrue.push_back(create_object < HdlStmNop > (s[0]));
-	}
-	assert(ifTrue.size() == 1);
+	auto ifTrue_bl = create_object<HdlStmBlock>(s[0]);
+	visitGenerate_item(s[0], ifTrue_bl->statements);
+	auto ifTrue = pop_block_if_possible(move(ifTrue_bl));
+
+
 
 	unique_ptr<iHdlObj> ifFalse = nullptr;
 	if (s.size() == 2) {
-		vector<unique_ptr<iHdlObj>> _ifFalse;
-		visitGenerate_item(s[1], _ifFalse);
-		if (_ifFalse.size() == 0) {
-			_ifFalse.push_back(create_object < HdlStmNop > (s[0]));
-		}
-		assert(_ifFalse.size() == 1);
-		ifFalse = move(_ifFalse[0]);
+		auto ifFalse_bl = create_object<HdlStmBlock>(s[1]);
+		visitGenerate_item(s[1], ifFalse_bl->statements);
+		ifFalse = pop_block_if_possible(move(ifFalse_bl));
 	}
-	auto ifStm = create_object < HdlStmIf
-			> (ctx, move(cond), move(ifTrue[0]), move(ifFalse));
+	auto ifStm = create_object<HdlStmIf>(ctx, move(cond), move(ifTrue),
+			move(ifFalse));
 	ifStm->in_preproc = true;
 	ifStm->__doc__ = commentParser.parse(ctx);
 	HdlStmIf_collapse_elifs(*ifStm);
@@ -496,7 +577,7 @@ void VerGenerateParser::visitGenerate_item(
 	{
 		auto o = ctx->module_or_generate_item();
 		if (o) {
-			vector<unique_ptr<HdlIdDef>> params;
+			vector < unique_ptr < HdlIdDef >> params;
 			visitModule_or_generate_item(o, res, params);
 			if (params.size()) {
 				NotImplementedLogger::print(

@@ -4,6 +4,8 @@
 #include <hdlConvertor/svConvertor/commentParser.h>
 
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
+#include <hdlConvertor/hdlAst/hdlStmFor.h>
+#include <hdlConvertor/hdlAst/hdlStmExpr.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
@@ -24,6 +26,14 @@ public:
 			sv2017Parser::Module_or_generate_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res,
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &params);
+	std::unique_ptr<hdlAst::HdlIdDef> visitGenvar_initialization(
+			sv2017Parser::Genvar_initializationContext *ctx);
+	std::unique_ptr<hdlAst::iHdlExprItem> visitGenvar_expression(
+			sv2017Parser::Genvar_expressionContext *ctx);
+	std::unique_ptr<hdlAst::HdlStmExpr> visitGenvar_iteration(
+			sv2017Parser::Genvar_iterationContext *ctx);
+	std::unique_ptr<hdlAst::HdlStmFor> visitLoop_generate_construct(
+			sv2017Parser::Loop_generate_constructContext *ctx);
 	void visitGenerate_begin_end_block(
 			sv2017Parser::Generate_begin_end_blockContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
