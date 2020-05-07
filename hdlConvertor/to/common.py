@@ -73,7 +73,7 @@ class ToHdlCommon(HdlAstVisitor):
                 if last and d == "":
                     break
                 w(line_comment_prefix)
-                w(d)
+                w(d.replace('\r', ''))
                 w("\n")
 
     def _precedence_of_expr(self, o):
