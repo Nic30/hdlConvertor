@@ -54,7 +54,8 @@ def get_verilator_test_configs():
                 if os.path.exists(verilog_file):
                     main_file = os.path.basename(verilog_file)
                 else:
-                    raise NotImplementedError(test_script_name)
+                    continue
+                    # raise NotImplementedError(test_script_name)
 
         lang = Language.SYSTEM_VERILOG_2009
         fn = get_file_name(main_file)
@@ -107,13 +108,30 @@ def get_verilator_test_configs():
                 "t_case_wild",
                 # /dev/null is not present under windows
                 "t_lint_incabspath",
+                # non std bind syntax
+                "t_func_dotted",
+                # `uselib
+                "t_mod_uselib",
+
+                # should fail but not directly noted in .pl
+                "t_timescale_parse_bad",
+
+                # non-std macro expansion in `timescale
+                "t_time_vpi",
+                "t_timescale_parse",
         }:
             should_fail = True
         if fn == "t_var_rsvd":
             lang = Language.SYSTEM_VERILOG_2005
         preproc_defs = {
             "TEST_OBJ_DIR": "obj/",
-            "PREDEF_COMMAND_LINE": '$display("PREDEF_COMMAND_LINE");'
+            "PREDEF_COMMAND_LINE": '$display("PREDEF_COMMAND_LINE");',
+            "T_ASSERT_INSIDE_COND": "1",
+            "SIM_CYCLES": "100",
+            "TEST_EXPECT": "100ns",
+            "time_scale_units": "1fs",
+            "define time_scale_prec": "1fs",
+
         }
         incdirs = [VERILATOR_TEST_ROOT,
                    os.path.join(VERILATOR_ROOT, "include")]

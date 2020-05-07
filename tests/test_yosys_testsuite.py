@@ -35,6 +35,7 @@ def get_yosys_test_configs():
                 "abc_map",
                 "cells_latch",
                 "cells_map",
+                "cells_xtra",
 
                 # not a verilog file
                 "xcu_cells_xtra",
@@ -59,9 +60,16 @@ def get_yosys_test_configs():
                 "flow",
                 "constmsk_testmap",
 
+                # non std generate if syntax
+                "gen_if_null",
+                # non std var type in parenthesis
+                "enum_simple",
+
                 # depends on generated file
+                "xc2v_brams_map",
                 "xc7_brams_map",
                 "xc6s_brams_map",
+                "xcu_brams_map",
                 "brams_map",
                 # (2**i)'b0
                 "techmap",
@@ -79,12 +87,17 @@ def get_yosys_test_configs():
                 "specify",
 
                 # non std? extra , in module port list
+                "arith_alm_map",
+                "bram_m10k_map",
+                "bram_m20k_map",
+                "dffs",
+                "lutram_mlab_map",
+                "mul",
+                "memory",
                 "opt_share_add_sub",
                 "opt_share_cat",
                 "opt_share_cat_multiuser",
-                "mul",
-                "dffs",
-                "memory",
+                "design",
 
                 # non std ID'd1
                 "mulshift_map",
@@ -95,9 +108,22 @@ def get_yosys_test_configs():
                 # non std based digit starting with _
                 "gate2lut",
                 "cmp2lut",
+
+                # non std $ id
+                "abc9_map",
+                "abc9_unmap",
+                "cmp2lcu",
+
+                # non std, hierarchical name for component instance
+                "mul2dsp",
         ]:
             should_fail = True
-        if fn in ["test_dsp_model", "eagle_bb", "drams_map"]:
+        if fn in ["test_dsp_model", "eagle_bb", "drams_map",
+                  "test_dsp48a1_model",
+                  "test_dsp48_model",
+                  "macc_tb",
+                  "lutrams_map",
+                  ]:
             lang = Language.VERILOG_2005
         if fn == "mux_map":
             defs["MIN_MUX_INPUTS"] = "32"
@@ -106,7 +132,14 @@ def get_yosys_test_configs():
         if fn in ["code_verilog_tutorial_fsm_full_tb", "code_verilog_tutorial_first_counter_tb", "code_verilog_tutorial_counter_tb",
                   "code_hdl_models_arbiter_tb", ]:
             defs["outfile"] = "tmp/outfile"
-
+        if fn == "quartus_rename":
+            defs["LCELL"] = "LCELL"
+        if fn in ["lut_map", "cmp2lcu", "arith_map"]:
+            defs["LUT_WIDTH"] = "32"
+        # if fn == "mul2dsp":
+        #    defs["DSP_A_MAXWIDTH"] = "32"
+        #    defs["DSP_B_MAXWIDTH"] = "64"
+        #    defs["DSP_NAME"] = "dsp_name"
         inc_dirs = []
         yield ExternTestSpec(verilog_file, lang, defs, inc_dirs, should_fail)
 

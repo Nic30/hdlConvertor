@@ -41,10 +41,6 @@ def parse_verilator_record(line, dir_name):
 
     name = columns[0]
     name_fix = {
-        "br_ml201801012a": "br_ml20181012a",
-        "br_ml201801012b": "br_ml20181012b",
-        "br_ml201801012c": "br_ml20181012c",
-        "br_ml201801012d": "br_ml20181012d",
         "struct_packe_write_read": "struct_packed_write_read",
         "struct_packe_write_read2": "struct_packed_write_read2",
         "sv_string_index": "string_index",
@@ -188,6 +184,10 @@ def parse_verilator_record(line, dir_name):
             "enum_ports",
             # # non-std combination of unsigned, wire and bit vector size spec
             # "vhdl_xor104_stdlogic",
+
+            # class scope in event trigger
+            "sv_wildcard_import2",
+            "sv_wildcard_import3",
             ]:
         should_fail = True
 
