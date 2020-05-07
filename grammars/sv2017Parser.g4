@@ -950,8 +950,8 @@ hierarchical_identifier:
    ( KW_DOLAR_ROOT DOT )? ( identifier_with_bit_select DOT )* identifier;
 package_or_class_scoped_id:
   ( KW_DOLAR_UNIT
-    | identifier ( parameter_value_assignment )?
-  ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
+    | package_or_class_scoped_path_item
+  ) ( DOUBLE_COLON package_or_class_scoped_path_item )*;
 select:
     ( DOT identifier
       | bit_select
@@ -1203,7 +1203,7 @@ struct_union:
 enum_base_type:
     integer_atom_type ( signing )?
     | ( integer_vector_type ( signing )?
-        | identifier
+        | package_or_class_scoped_id
       ) ( variable_dimension )?
     | packed_dimension
 ;
