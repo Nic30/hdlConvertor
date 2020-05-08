@@ -158,7 +158,7 @@ unique_ptr<HdlIdDef> VerDeclrParser::visitType_declaration(
 		val = create_object<HdlOp>(iwbs, move(val), HdlOpType::DOT, move(id));
 		name = ep.getIdentifierStr(ids[1]);
 	}
-	return create_object<HdlIdDef>(ctx, name, move(t), move(val));
+	return create_object_with_doc<HdlIdDef>(ctx, commentParser, name, move(t), move(val));
 }
 void VerDeclrParser::visitNet_type_declaration(
 		sv2017Parser::Net_type_declarationContext *ctx,

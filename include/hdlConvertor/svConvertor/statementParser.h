@@ -71,7 +71,7 @@ public:
 			auto i = visitStatement_or_null(stm);
 			items.push_back(move(i));
 		}
-		auto b = create_object<hdlAst::HdlStmBlock>(ctx, items);
+		auto b = create_object_with_doc<hdlAst::HdlStmBlock>(ctx, commentParser, items);
 		if (_label) {
 			VerExprParser ep(commentParser);
 			b->labels.push_back(ep.getIdentifierStr(_label));

@@ -24,9 +24,8 @@ std::unique_ptr<HdlModuleDec> VhdlEntityParser::visitEntity_declaration(
 	//       ( KW_BEGIN ( entity_statement )* )?
 	//       KW_END ( KW_ENTITY )? ( identifier )? SEMI
 	// ;
-	auto e = create_object<HdlModuleDec>(ctx);
+	auto e = create_object_with_doc<HdlModuleDec>(ctx, commentParser);
 	e->name = ctx->identifier(0)->getText();
-	e->__doc__ = commentParser.parse(ctx);
 
 	if (!hierarchyOnly) {
 		auto g = ctx->generic_clause();

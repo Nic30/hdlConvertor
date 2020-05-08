@@ -42,5 +42,18 @@ std::unique_ptr<T> create_object(antlr4::tree::ParseTree *const node,
 	auto object = std::make_unique<T>(std::forward<Args>(args)...);
 	return update_code_position(std::move(object), node);
 }
+/*
+ * Call an object constructor and set code position
+ * (info about where the object is in parsed source code)
+ * */
+template<typename T, typename DOC_PARSER_T, typename ANTLR_NODE_T, typename ... Args>
+std::unique_ptr<T> create_object_with_doc(ANTLR_NODE_T *const node, DOC_PARSER_T doc_parser,
+		Args &&... args) {
+	// call a constructor with arguments specified and create a unique_ptr
+	auto object = std::make_unique<T>(std::forward<Args>(args)...);
+	object = update_code_position(std::move(object), node);
+	object->__doc__ = doc_parser.parse(node);
+	return object;
+}
 
 }

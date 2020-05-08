@@ -183,6 +183,7 @@ void VerParamDefParser::visitParameter_declaration(
 		visitTyped_list_of_param_assignments(move(t), pds, doc, res);
 	}
 }
+
 void VerParamDefParser::visitLocal_parameter_declaration(
 		sv2017Parser::Local_parameter_declarationContext *ctx,
 		vector<unique_ptr<HdlIdDef>> &_res) {
