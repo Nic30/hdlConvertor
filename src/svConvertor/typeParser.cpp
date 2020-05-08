@@ -99,18 +99,18 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type_primitive(
 			auto _sig = visitSigning(sig);
 			if (_sig != SIGNING_VAL::NO_SIGN) {
 				auto c = dynamic_cast<HdlOp*>(t.get());
+				auto sign = Utils::signing(_sig);
 				if (c && c->op == HdlOpType::PARAMETRIZATION
 						&& c->operands.size() == 3) {
 					// fill up sign flag for wire/reg types
-					c->operands[2] = Utils::signing(_sig);
+					c->operands[2] = move(sign);
 				} else {
 					// specify sign for rest of the types
 					vector<unique_ptr<iHdlExprItem>> args;
 					args.push_back(
 							create_object<HdlOp>(ctx,
 									make_unique<HdlValueId>("signed"),
-									HdlOpType::MAP_ASSOCIATION,
-									make_unique<HdlValueInt>(1)));
+									HdlOpType::MAP_ASSOCIATION, move(sign)));
 					t = HdlOp::parametrization(ctx, move(t), args);
 				}
 			}
@@ -160,8 +160,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type(
 		}
 		if (ids.size() == 2) {
 			auto id = ep.visitIdentifier(ids[1]);
-			t = create_object<HdlOp>(ids[1], move(t), HdlOpType::DOT,
-					move(id));
+			t = create_object<HdlOp>(ids[1], move(t), HdlOpType::DOT, move(id));
 		} else {
 			assert(ids.size() == 1);
 		}
@@ -229,8 +228,8 @@ unique_ptr<iHdlExprItem> VerTypeParser::applyUnpacked_dimension(
 		vector<sv2017Parser::Unpacked_dimensionContext*> &uds) {
 	for (auto _ud : uds) {
 		auto ud = visitUnpacked_dimension(_ud);
-		base_expr = create_object<HdlOp>(_ud, move(base_expr),
-				HdlOpType::INDEX, move(ud));
+		base_expr = create_object<HdlOp>(_ud, move(base_expr), HdlOpType::INDEX,
+				move(ud));
 	}
 	return base_expr;
 }
@@ -322,8 +321,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitImplicit_data_type(
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = create_object<HdlOp>(*it, move(e), HdlOpType::INDEX,
-				move(pd));
+		e = create_object<HdlOp>(*it, move(e), HdlOpType::INDEX, move(pd));
 	}
 	return e;
 }
@@ -349,8 +347,6 @@ unique_ptr<iHdlExprItem> VerTypeParser::_visitVariable_dimension(
 		if (are) {
 			index = VerExprParser(commentParser).visitArray_range_expression(
 					are);
-		} else {
-			index = HdlValueSymbol::null();
 		}
 	}
 	return index;
@@ -360,10 +356,10 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitVariable_dimension(
 		unique_ptr<iHdlExprItem> selected_name) {
 	auto index = _visitVariable_dimension(ctx);
 	if (index == nullptr) {
-		return selected_name;
+		return create_object<HdlOp>(ctx, HdlOpType::INDEX, move(selected_name));
 	} else {
-		return create_object<HdlOp>(ctx, move(selected_name),
-				HdlOpType::INDEX, move(index));
+		return create_object<HdlOp>(ctx, move(selected_name), HdlOpType::INDEX,
+				move(index));
 	}
 }
 unique_ptr<iHdlExprItem> VerTypeParser::visitNet_type(

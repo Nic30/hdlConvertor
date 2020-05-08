@@ -26,6 +26,28 @@ ASSIGN_OPERATORS = [
     HdlOpType.ARITH_SHIFT_RIGHT_ASSIGN,
 ]
 
+SIGNED = HdlValueId("signed")
+
+
+def pop_signed_flag(o):
+    """
+    :type op: HdlOp
+
+    pop signed/unsigned flag from type expr
+    """
+    base_expr = o
+    is_signed = None
+
+    if o.fn == HdlOpType.PARAMETRIZATION and len(o.ops) == 2:
+        op1 = o.ops[1]
+        if isinstance(op1, HdlOp) and\
+                op1.fn == HdlOpType.MAP_ASSOCIATION and\
+                op1.ops[0] == SIGNED:
+            base_expr = o.ops[0]
+            is_signed = bool(int(op1.ops[1]))
+
+    return base_expr, is_signed
+
 
 class ToVerilog2005Expr(ToHdlCommon):
 
@@ -61,6 +83,7 @@ class ToVerilog2005Expr(ToHdlCommon):
     GENERIC_BIN_OPS.update(ASSIGN_OPERATORS_SYMBOLS_C)
 
     OP_PRECEDENCE = {
+        HdlOpType.DOT: (1, L),
         HdlOpType.INDEX: (1, L),
 
         HdlOpType.CALL: (2, L),
@@ -136,6 +159,12 @@ class ToVerilog2005Expr(ToHdlCommon):
         HdlOpType.XNOR_UNARY: "~^",
         HdlOpType.RISING: "posedge ",
         HdlOpType.FALLING: "negedge ",
+        HdlOpType.INCR_PRE: "++",
+        HdlOpType.DECR_PRE: "--",
+    }
+    GENERIC_UNARY_OPS_POSTFIX = {
+        HdlOpType.INCR_POST: "++",
+        HdlOpType.DECR_POST: "--",
     }
 
     def visit_HdlValueInt(self, o):
@@ -176,7 +205,16 @@ class ToVerilog2005Expr(ToHdlCommon):
         elif isinstance(o, HdlValueInt):
             self.visit_HdlValueInt(o)
         elif isinstance(o, HdlOp):
-            self.visit_HdlOp(o)
+            _o, is_signed = pop_signed_flag(o)
+            if o is not _o:
+                self.visit_iHdlExpr(_o)
+            else:
+                self.visit_HdlOp(_o)
+
+            if is_signed is True:
+                w(" signed")
+            elif is_signed is False:
+                w(" unsigned")
         elif o is HdlAll:
             w("*")
         elif o is HdlTypeAuto:
@@ -271,5 +309,6 @@ class ToVerilog2005Expr(ToHdlCommon):
         _, array_dim = collect_array_dims(t)
         for ad in array_dim:
             w("[")
-            self.visit_iHdlExpr(ad)
+            if ad is not None:
+                self.visit_iHdlExpr(ad)
             w("]")

@@ -33,7 +33,7 @@ std::unique_ptr<hdlAst::iHdlExprItem> Utils::signing(SIGNING_VAL signed_) {
 	if (signed_ == SIGNING_VAL::NO_SIGN) {
 		return HdlValueSymbol::null();
 	} else {
-		return make_unique<HdlValueInt>(signed_ ? 1 : 0);
+		return make_unique<HdlValueInt>(signed_ == SIGNING_VAL::SIGNED ? 1 : 0);
 	}
 }
 unique_ptr<iHdlExprItem> Utils::mkWireT(antlr4::ParserRuleContext *const ctx,
