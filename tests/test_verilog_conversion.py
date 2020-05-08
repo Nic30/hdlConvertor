@@ -122,8 +122,7 @@ class VerilogConversionTC(HdlParseTC):
         str(res)
 
     def test_crc_functions(self):
-        f, res = parseFile("crc_functions.sv", SV)
-        str(res)
+        self.parseWithRef("crc_functions.sv", SV)
 
     def test_operator_type(self):
         self.parseWithRef("operator_type.sv", SV)
@@ -137,7 +136,7 @@ class VerilogConversionTC(HdlParseTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogConversionTC('test_arbiter_tb'))
+    # suite.addTest(VerilogConversionTC('test_crc_functions'))
     suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
