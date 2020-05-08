@@ -259,8 +259,11 @@ unique_ptr<iHdlExprItem> VerTypeParser::applyVariable_dimension(
 
 	for (auto _vd : vds) {
 		if (wire_reg_parametrization) {
-			wire_reg_parametrization->operands[1] = _visitVariable_dimension(
-					_vd);
+			auto d = _visitVariable_dimension(_vd);
+			if (d == nullptr)
+				d = HdlValueSymbol::null();
+			wire_reg_parametrization->operands[1] = move(d);
+
 			wire_reg_parametrization = nullptr;
 			continue;
 		}
@@ -275,7 +278,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitPacked_dimension(
 	auto ra = ctx->range_expression();
 	if (ra)
 		return VerExprParser(commentParser).visitRange_expression(ra);
-	return HdlValueSymbol::null();
+	return nullptr;
 }
 
 SIGNING_VAL VerTypeParser::visitSigning(sv2017Parser::SigningContext *ctx) {
@@ -314,6 +317,8 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitImplicit_data_type(
 	auto it = pds.begin();
 	if (it != pds.end()) {
 		auto r0 = visitPacked_dimension(*it);
+		if (r0 == nullptr)
+			r0 = HdlValueSymbol::null();
 		e = Utils::mkWireT(*it, move(net_type), move(r0), is_signed);
 		++it;
 	} else {
@@ -321,7 +326,12 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitImplicit_data_type(
 	}
 	for (; it != pds.end(); ++it) {
 		auto pd = visitPacked_dimension(*it);
-		e = create_object<HdlOp>(*it, move(e), HdlOpType::INDEX, move(pd));
+		if (pd) {
+			e = create_object<HdlOp>(*it, move(e), HdlOpType::INDEX, move(pd));
+		} else {
+			e = create_object<HdlOp>(*it, HdlOpType::INDEX, move(e));
+
+		}
 	}
 	return e;
 }
