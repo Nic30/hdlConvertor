@@ -42,6 +42,7 @@ class ToHdlCommon(HdlAstVisitor):
         HdlOpType.PLUS_UNARY: "+",
         HdlOpType.MINUS_UNARY: "-",
     }
+    GENERIC_UNARY_OPS_POSTFIX = {}
     GENERIC_BIN_OPS = {
         HdlOpType.ADD: " + ",
         HdlOpType.SUB: " - ",
@@ -98,6 +99,12 @@ class ToHdlCommon(HdlAstVisitor):
                 w(op_str)
                 self._visit_operand(op.ops[0], 0, op, True, False)
                 return
+            op_str = self.GENERIC_UNARY_OPS_POSTFIX.get(o, None)
+            if op_str is not None:
+                self._visit_operand(op.ops[0], 0, op, True, False)
+                w(op_str)
+                return
+
         if argc == 2:
             op_str = self.GENERIC_BIN_OPS.get(o, None)
             if op_str is not None:
