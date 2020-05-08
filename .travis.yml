@@ -13,7 +13,7 @@ cache:
 matrix:
   include:
     - name: "Python 2.7 gcc-8"
-      python: 2.7           
+      python: 2.7
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
@@ -24,7 +24,7 @@ matrix:
             - gcc-8
 
     - name: "Python 3.5 gcc-8"
-      python: 3.5           
+      python: 3.5
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
@@ -35,7 +35,7 @@ matrix:
             - gcc-8
 
     - name: "Python 3.7 gcc-8 Debug+Coverage"
-      python: 3.7           
+      python: 3.7
       env: CC=gcc-8 CXX=g++-8 BUILD_ARGS="--build-type Debug -- -DCODE_COVERAGE=ON" CODE_COVERAGE=1
       addons:
         apt:
@@ -46,7 +46,7 @@ matrix:
             - gcc-8
 
     - name: "Python 3.7 gcc-7 (deploy on tag)"
-      python: 3.7           
+      python: 3.7
       env: CC=gcc-7 CXX=g++-7 DO_DELPLOY=1
       addons:
         apt:
@@ -72,7 +72,7 @@ install:
 - sudo apt update
 - if [ "$CODE_COVERAGE" == "1" ]; then
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
-    then sudo apt install -y lcov;
+    sudo apt install -y lcov;
     gem install coveralls-lcov;
   fi
 
