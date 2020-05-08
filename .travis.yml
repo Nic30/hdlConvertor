@@ -74,7 +74,8 @@ install:
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
     then sudo apt install -y lcov;
     gem install coveralls-lcov;
- fi
+  fi
+
 - sudo apt install libantlr4-runtime-dev antlr4 -y
 - pip install jupyter
 - pip install -r requirements.txt
