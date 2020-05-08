@@ -18,7 +18,12 @@ NULL = HdlValueId("null")
 def collect_array_dims(t):
     array_dim = []
     while isinstance(t, HdlOp) and t.fn == HdlOpType.INDEX:
-        array_dim.append(t.ops[1])
+        assert len(t.ops) <= 2
+        if len(t.ops) == 2:
+            d = t.ops[1]
+        else:
+            d = None
+        array_dim.append(d)
         t = t.ops[0]
     array_dim.reverse()
     return t, array_dim
