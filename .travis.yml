@@ -44,7 +44,6 @@ matrix:
           packages:
             - g++-8
             - gcc-8
-            -
 
     - name: "Python 3.7 gcc-7 (deploy on tag)"
       python: 3.7           
@@ -71,7 +70,7 @@ addons:
 install:
 - sudo cp .travis/eoan.list /etc/apt/sources.list.d/eoan.list
 - sudo apt update
-- if [ "$CODE_COVERAGE" == "1" ];
+- if [ "$CODE_COVERAGE" == "1" ]; then
     sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
     then sudo apt install -y lcov;
     gem install coveralls-lcov;
