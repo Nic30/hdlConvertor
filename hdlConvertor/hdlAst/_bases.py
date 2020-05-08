@@ -57,10 +57,11 @@ class iHdlStatement(iHdlObjInModule):
     :ivar ~.labels: list of labels, the first label is for this statement
         the others are for it's branches
     :ivar ~.in_preproc: if True the statement is VHDL generate
-            or other different of type of statement which should be evaluated
-            compile time (note that this correspond s to VHDL generate statements
-            and not to Verilog preprocessor ifdefs as they are processed before
-            Verilog code parsing and are not present in code read by parser
+            or other statement which should be evaluated
+            compile time (note that this corresponds to VHDL generate statements
+            and verilog generate not to a Verilog preprocessor ifdefs
+            as they are processed before Verilog code parsing
+            and are evaluated by preprocessor
             in the first place)
     """
     __slots__ = ["labels", "in_prepoc"]
