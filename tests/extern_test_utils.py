@@ -1,7 +1,7 @@
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.file_utils import generate_test_method_name, TestFilter, \
     get_file_name
 

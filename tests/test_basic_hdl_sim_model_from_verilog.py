@@ -2,8 +2,8 @@
 
 import unittest
 from tests.hdl_parse_tc import HdlParseTC, VERILOG
-from hdlConvertor.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
-from hdlConvertor.translate.verilog_to_basic_hdl_sim_model import\
+from hdlConvertorAst.to.basic_hdl_sim_model._main import ToBasicHdlSimModel
+from hdlConvertorAst.translate.verilog_to_basic_hdl_sim_model import\
     verilog_to_basic_hdl_sim_model
 
 

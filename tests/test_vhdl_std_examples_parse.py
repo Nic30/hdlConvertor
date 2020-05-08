@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.hdl_parse_tc import HdlParseTC, parseFile as _parseFile
 
 

@@ -3,7 +3,7 @@ from itertools import chain
 import os
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.file_utils import find_files, get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 from tests.extern_test_utils import generate_external_testcase_class, \

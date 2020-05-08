@@ -2,8 +2,8 @@ from os import path
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
-from hdlConvertor.language import Language
+from hdlConvertorAst.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
+from hdlConvertorAst.language import Language
 
 from tests.hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile
 

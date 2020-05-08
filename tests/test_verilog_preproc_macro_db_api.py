@@ -1,7 +1,7 @@
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 
 
 class VerilogPreprocMacroDbApiTC(unittest.TestCase):

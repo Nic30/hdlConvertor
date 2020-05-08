@@ -2,7 +2,7 @@ from os import path
 import unittest
 
 from hdlConvertor import HdlConvertor, ParseException
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 
 
 class VerilogPreprocGrammarTC(unittest.TestCase):

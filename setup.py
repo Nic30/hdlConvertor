@@ -2,9 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 import os
+from setuptools import find_packages
 from skbuild import setup
 import sys
-from setuptools import find_packages
+
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, "README.md")) as f:
@@ -36,6 +37,9 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
+    ],
+    install_requires=[
+        'hdlConvertorAst>=0.1',
     ],
     license="MIT",
     packages=[p for p in find_packages() if p != "tests"],

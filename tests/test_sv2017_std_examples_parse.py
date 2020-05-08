@@ -4,7 +4,7 @@ import os
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.file_utils import get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 

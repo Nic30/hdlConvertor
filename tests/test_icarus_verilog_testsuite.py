@@ -4,7 +4,7 @@ from itertools import chain
 import os
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.extern_test_utils import ExternTestSpec, \
     generate_external_testcase_class
 from tests.file_utils import find_files

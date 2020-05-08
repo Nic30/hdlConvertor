@@ -1,8 +1,8 @@
 import unittest
 
 from hdlConvertor import ParseException
-from hdlConvertor.language import Language
-from hdlConvertor.hdlAst import HdlLibrary, HdlValueIdspace
+from hdlConvertorAst.language import Language
+from hdlConvertorAst.hdlAst import HdlLibrary, HdlValueIdspace
 from tests.hdl_parse_tc import HdlParseTC, parseFile as _parseFile
 
 

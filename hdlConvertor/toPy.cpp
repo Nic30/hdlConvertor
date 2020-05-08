@@ -17,7 +17,7 @@ namespace hdlConvertor {
 using namespace hdlAst;
 
 ToPy::ToPy() {
-	hdlAst_module = PyImport_ImportModule("hdlConvertor.hdlAst");
+	hdlAst_module = PyImport_ImportModule("hdlConvertorAst.hdlAst");
 	if (hdlAst_module == nullptr) {
 		// this could happen only if there are missing files in library
 		PyErr_Print();

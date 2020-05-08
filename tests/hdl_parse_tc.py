@@ -3,10 +3,10 @@ import os
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.hdlAst._structural import HdlModuleDec, HdlModuleDef
-from hdlConvertor.language import Language
-from hdlConvertor.to.verilog.verilog2005 import ToVerilog2005
-from hdlConvertor.to.vhdl.vhdl2008 import ToVhdl2008
+from hdlConvertorAst.hdlAst._structural import HdlModuleDec, HdlModuleDef
+from hdlConvertorAst.language import Language
+from hdlConvertorAst.to.verilog.verilog2005 import ToVerilog2005
+from hdlConvertorAst.to.vhdl.vhdl2008 import ToVhdl2008
 
 
 try:

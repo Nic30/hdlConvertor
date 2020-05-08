@@ -3,7 +3,7 @@ import os
 import unittest
 
 from hdlConvertor import ParseException, HdlConvertor
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.file_utils import cd
 from tests.hdl_parse_tc import TEST_DIR
 

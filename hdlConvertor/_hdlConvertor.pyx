@@ -11,9 +11,9 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 
-from hdlConvertor.hdlAst import HdlContext as PyHdlContext
-from hdlConvertor.language import Language as PyHdlLanguageEnum
-from hdlConvertor.parse_hdlConvertor_json import \
+from hdlConvertorAst.hdlAst import HdlContext as PyHdlContext
+from hdlConvertorAst.language import Language as PyHdlLanguageEnum
+from hdlConvertorAst.parse_hdlConvertor_json import \
     parse_hdlConvertor_json_file, parse_hdlConvertor_json_str
 
 

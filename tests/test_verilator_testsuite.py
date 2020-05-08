@@ -3,7 +3,7 @@ import os
 import re
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.extern_test_utils import generate_external_testcase_class, \
     ExternTestSpec
 from tests.file_utils import find_files, get_file_name
