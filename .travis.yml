@@ -7,8 +7,8 @@ git:
   submodules: true
 
 cache:
-  - apt: true
-  - pip : true
+  apt: true
+  pip: true
 
 matrix:
   include:
