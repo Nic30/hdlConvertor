@@ -137,8 +137,8 @@ class VerilogConversionTC(HdlParseTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(VerilogConversionTC('test_arbiter_tb'))
-    # suite.addTest(unittest.makeSuite(VerilogConversionTC))
+    # suite.addTest(VerilogConversionTC('test_arbiter_tb'))
+    suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

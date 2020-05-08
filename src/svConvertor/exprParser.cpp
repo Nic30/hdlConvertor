@@ -203,17 +203,17 @@ unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
 	}
 	auto exprs = ctx->expression();
 	//   | expression (operator_impl        ( attribute_instance )* expression)+ // right associative
-	auto oi = ctx->operator_impl();
-	if (oi.size()) {
-		std::unique_ptr<iHdlExprItem> res = visitExpression(exprs[oi.size()]);
-		for (size_t i = oi.size(); i != 0; i--) {
-			// construct a implication operators by walking from backwards
-			auto op = VerLiteralParser::visitOperator_impl(oi[i - 1]);
-			auto e0 = visitExpression(exprs[i - 1]);
-			res = create_object<HdlOp>(ctx, move(e0), op, move(res));
-		}
-		return res;
-	}
+	//auto oi = ctx->operator_impl();
+	//if (oi.size()) {
+	//	std::unique_ptr<iHdlExprItem> res = visitExpression(exprs[oi.size()]);
+	//	for (size_t i = oi.size(); i != 0; i--) {
+	//		// construct a implication operators by walking from backwards
+	//		auto op = VerLiteralParser::visitOperator_impl(oi[i - 1]);
+	//		auto e0 = visitExpression(exprs[i - 1]);
+	//		res = create_object<HdlOp>(ctx, move(e0), op, move(res));
+	//	}
+	//	return res;
+	//}
 
 	if (exprs.size() == 2) {
 		//   | expression DOUBLESTAR           ( attribute_instance )* expression
@@ -283,6 +283,11 @@ unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
 				op = HdlOpType::OR_LOG;
 				break;
 			}
+			auto imp = ctx->operator_impl();
+			if (imp) {
+				op = VerLiteralParser::visitOperator_impl(imp);
+				break;
+			}
 
 			assert(false && "unknown binary");
 		} while (0);
@@ -309,17 +314,14 @@ unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
 		return create_object<HdlExprNotImplemented>(ctx);
 	}
 	//   | expression (( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression)+
-	assert(exprs.size() >= 3);
+	assert(exprs.size() == 3);
 	auto qm = ctx->QUESTIONMARK();
-	std::unique_ptr<iHdlExprItem> res = visitExpression(
-			exprs.at(qm.size() * 2));
-	for (size_t i = qm.size(); i > 0; i--) {
-		// construct a ternary operators by walking backwards
-		auto e0 = visitExpression(exprs.at(2 * i - 2));
-		auto e1 = visitExpression(exprs.at(2 * i - 1));
-		res = HdlOp::ternary(ctx, move(e0), move(e1), move(res));
-	}
-	return res;
+	assert(qm);
+	// construct a ternary operators by walking backwards
+	auto e0 = visitExpression(exprs[0]);
+	auto e1 = visitExpression(exprs[1]);
+	auto e2 = visitExpression(exprs[2]);
+	return HdlOp::ternary(ctx, move(e0), move(e1), move(e2));
 }
 
 unique_ptr<iHdlExprItem> VerExprParser::visitConcatenation(

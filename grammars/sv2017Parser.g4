@@ -1342,8 +1342,8 @@ expression:
     | expression AND_LOG              ( attribute_instance )* expression
     | expression OR_LOG               ( attribute_instance )* expression
     | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
-    | expression ( KW_MATCHES pattern )? (QUESTIONMARK ( attribute_instance )* expression COLON expression)+ // right associative
-    | expression (operator_impl        ( attribute_instance )* expression)+ // right associative
+    | <assoc=right> expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
+    | <assoc=right> expression operator_impl        ( attribute_instance )* expression
 ;
 
 concatenation:
