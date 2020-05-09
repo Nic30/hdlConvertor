@@ -127,9 +127,6 @@ class VerilogConversionTC(HdlParseTC):
     def test_operator_type(self):
         self.parseWithRef("operator_type.sv", SV)
 
-    def test_dff_async_reset_json(self):
-        self.translateWithRef("dff_async_reset.json", Language.HDLCONVERTOR_JSON, VERILOG)
-
     def test_generate_for(self):
         self.parseWithRef("generate_for.v", VERILOG)
 
