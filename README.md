@@ -10,9 +10,9 @@ This library is a System Verilog and VHDL parser, preprocessor and code generato
 It contains:
 
    * ANTLR4 generated VHDL/(System) Verilog parser with full language support.
-   * Convertors from raw VHDL/SV AST to universal HDL AST ([hdlConvertor::hdlAst](https://github.com/Nic30/hdlConvertor/tree/master/include/hdlConvertor/hdlAst) and it's [python equivalent](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/hdlAst).).
-   * Convertors from this HDL AST [to SV/VHDL/JSON](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/to) and other formats.
-   * Compiler focused [utils](https://github.com/Nic30/hdlConvertor/tree/master/hdlConvertor/translate) for manipulation with HDL AST.
+   * Convertors from raw VHDL/SV AST to universal HDL AST ([hdlConvertor::hdlAst](https://github.com/Nic30/hdlConvertor/tree/master/include/hdlConvertor/hdlAst) and it's [python equivalent](https://github.com/Nic30/hdlConvertorAst/tree/master/hdlConvertorAst/hdlAst).).
+   * Convertors from this HDL AST [to SV/VHDL/JSON](https://github.com/Nic30/hdlConvertorAst/tree/master/hdlConvertorAst/to) and other formats.
+   * Compiler focused [utils](https://github.com/Nic30/hdlConvertorAst/tree/master/hdlConvertorAst/translate) for manipulation with HDL AST.
        * HdlAstVisitor, id resolution, sensitivity detection, vhdl <-> verilog type conversion, ...
 
 ![overview](https://raw.githubusercontent.com/Nic30/hdlConvertor/master/doc/hdlConvertor_overview.png)
