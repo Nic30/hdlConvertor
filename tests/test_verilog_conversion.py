@@ -5,7 +5,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertorAst.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
 from hdlConvertorAst.language import Language
 
-from tests.hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile
+from hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile
 
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
