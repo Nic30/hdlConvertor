@@ -1,8 +1,33 @@
 # Tutorial for developing of C++ python extension with Cython and Scikit-build
 
+# Test execution
+
+In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
+If you downloaded the hdlConvertorAst git to same directory where you have a hdlConvertor you can append it to python path like this:
+```
+hdlConvertor.git$ export PYTHONPATH=PYTHONPATH:$PWD/../hdlConvertorAst
+```
+
+The tests are python module on it's own that means it needs to be executed as python module:
+```
+hdlConvertor.git$ python3 -m tests.all
+```
+Note that `python3 tests/all.py` would ended up with an import error as python would not know that the tests are supposed to be a module.
+
+Test-cases for external projects do support `SUCESSFULL_TEST_FILTER_FILE` this test-case configuration spots a file with passed test names
+and if test-case is executed again the tests mentioned in this file are not executed. This is very useful if something is broken and you are fixing it
+as this feature automatically runs only broken stuff in each run and you do need to wait for passing test over and over.
+
+Tests for external projects are handled by generate_external_testcase_class, this method generates `unittest.TestCase` class
+for files and configs specified.
+
+Rest of the test is usually based on [HdlParseTC](https://github.com/Nic30/hdlConvertor/blob/master/tests/hdl_parse_tc.py#L74).
+This class contains a methods which simplifies the parsing/conversion test scenario.
+
+
 # Basic project setup in Eclipse (eclipse + CDT -> C/C++ project)
 (Note that we will use python3-dbg, if you want to use python3/2 you have to recompile.
- Without -dbg you will mostly see only segfaults without explanation if there is some problem.)
+ Without -dbg you will mostly see only segfaults without explanation if there is some problem in c++ symbol definition after linking.)
 * in eclise.ini increase memory available for eclise or c++ indexing will be very slow (1min+)
    `-Xms1024 -Xmx4096m` or more depending on how many plugins in eclipse you have installed.
 
@@ -78,9 +103,9 @@
 
 * Define the class in a header file with extension `.h` in the directory `include/hdlConvertor/hdlAst`.
 * Define the implementation in a source file with extension `.cpp` in the directory `src/hdlAst`.
-* Create a corresponding Python class in one of the files (pick the best match) in `hdlConvertor/hdlAst`.
+* Create a corresponding Python class in one of the files (pick the best match) in `hdlConvertorAst/hdlAst`.
 ** Add the names of your Python object properties to the `__slots__` list.  Often this list will be the same as the list of your C++ object member variables.
-* Add the import for your class in `hdlConvertor/hdlAst/__init__.py`.
+* Add the import for your class in `hdlConvertorAst/hdlAst/__init__.py`.
 * Add a pointer for your Python class in the Python C++ extension header file `hdlConvertor/toPy.h` in the `ToPy` class.  There's a big list just past the includes, you can't miss it.
 * Add an import for your Python class in the Python C++ extension source file `hdlConvertor/toPy.cpp` in the `ToPy::ToPy()` constructor.  It's the first method definition in the file.
 * Decrement the reference to your Python class in `hdlConvertor/toPy.cpp` in the `ToPy::~ToPy()` destructor.  Dereferences should be in the opposite order of imports.
