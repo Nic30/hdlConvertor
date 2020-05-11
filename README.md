@@ -1,4 +1,5 @@
 # hdlConvertor
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7575f8443f074bb894330e81c9c8c8a3)](https://app.codacy.com/manual/Nic30/hdlConvertor?utm_source=github.com&utm_medium=referral&utm_content=Nic30/hdlConvertor&utm_campaign=Badge_Grade_Dashboard)
 [![Travis-ci Build Status](https://travis-ci.org/Nic30/hdlConvertor.png?branch=master)](https://travis-ci.org/Nic30/hdlConvertor)
 [![Win Build status](https://ci.appveyor.com/api/projects/status/e3cvi3ig5y4vni7e?svg=true)](https://ci.appveyor.com/project/nic30/hdlconvertor)
 [![PyPI version](https://badge.fury.io/py/hdlConvertor.svg)](http://badge.fury.io/py/hdlConvertor)
