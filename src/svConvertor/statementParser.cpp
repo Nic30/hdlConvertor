@@ -332,7 +332,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 	auto switchOn = ep.visitExpression(ctx->expression());
 	std::vector<HdlExprAndiHdlObj> cases;
 	unique_ptr<iHdlObj> default_ = nullptr;
-	HdlStmCaseType case_t;
+	HdlStmCaseType case_t = HdlStmCaseType::CASE;
 	if (ctx->KW_INSIDE()) {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitCase_statement.inside", ctx);
