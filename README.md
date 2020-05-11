@@ -29,8 +29,7 @@ It contains:
 Linux:
 Installing dependencies (Ubuntu 19.04)
 ```
-# use gcc>=7, Visual Studio 2017 or equivalent
-# on old systems without libantlr4-runtime-dev you have to add apt repo manually, see .travis.yml
+# we recommend to use gcc>=9, Visual Studio 2017 or equivalent
 sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4
 ```
 
