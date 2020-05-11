@@ -42,6 +42,7 @@ void VerGenerateParser::visitGenerate_region(
 				stm->in_preproc = true;
 			res.push_back(move(o));
 		}
+		tmp_res.clear();
 	}
 }
 
