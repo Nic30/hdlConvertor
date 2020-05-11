@@ -30,16 +30,6 @@ matrix:
             - g++-8
             - gcc-8
 
-    - name: "Python 3.5 gcc-7"
-      python: 3.5
-      env: CC=gcc-7 CXX=g++-7
-      addons:
-        apt:
-          packages:
-            - *base_deps
-            - g++-7
-            - gcc-7
-
     - name: "Python 3.7 gcc-9 Debug+Coverage"
       python: 3.7
       env: CC=gcc-9 CXX=g++-9 BUILD_ARGS="--build-type Debug -- -DCODE_COVERAGE=ON" CODE_COVERAGE=1
