@@ -332,6 +332,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 	auto switchOn = ep.visitExpression(ctx->expression());
 	std::vector<HdlExprAndiHdlObj> cases;
 	unique_ptr<iHdlObj> default_ = nullptr;
+	HdlStmCaseType case_t;
 	if (ctx->KW_INSIDE()) {
 		NotImplementedLogger::print(
 				"VerStatementParser.visitCase_statement.inside", ctx);
@@ -340,32 +341,32 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 		auto ck = ctx->case_keyword();
 		assert(ck);
 		if (ck->KW_CASE()) {
-			auto _cases = ctx->case_item();
-			cases.reserve(_cases.size());
-			for (auto _c : _cases) {
-				auto cs = visitCase_item(_c);
-				for (auto &c : cs) {
-					if (c.expr) {
-						cases.push_back(move(c));
-					} else {
-						if (default_) {
-							throw std::runtime_error(
-									"VerStatementParser.visitCase_statement case with multiple default");
-						}
-						default_ = move(c.obj);
-					}
-				}
-			}
+			case_t = HdlStmCaseType::CASE;
 		} else if (ck->KW_CASEX()) {
-			NotImplementedLogger::print(
-					"VerStatementParser.visitCase_statement.casex", ctx);
+			case_t = HdlStmCaseType::CASEX;
 		} else {
 			assert(ck->KW_CASEZ());
-			NotImplementedLogger::print(
-					"VerStatementParser.visitCase_statement.casez", ctx);
+			case_t = HdlStmCaseType::CASEZ;
 		}
+		auto _cases = ctx->case_item();
+		cases.reserve(_cases.size());
+		for (auto _c : _cases) {
+			auto cs = visitCase_item(_c);
+			for (auto &c : cs) {
+				if (c.expr) {
+					cases.push_back(move(c));
+				} else {
+					if (default_) {
+						throw std::runtime_error(
+								"VerStatementParser.visitCase_statement case with multiple default");
+					}
+					default_ = move(c.obj);
+				}
+			}
+		}
+
 	}
-	return create_object_with_doc<HdlStmCase>(ctx, commentParser,
+	return create_object_with_doc<HdlStmCase>(ctx, commentParser, case_t,
 			move(switchOn), cases, move(default_));
 
 }

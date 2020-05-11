@@ -21,12 +21,11 @@ ToPy::ToPy() {
 	if (hdlAst_module == nullptr) {
 		// this could happen only if there are missing files in library
 		PyErr_Print();
-		throw std::runtime_error("can not import hdlConvertor.hdlAst");
+		throw std::runtime_error("can not import hdlConvertorAst.hdlAst");
 	}
 	auto import = [this](PyObject *&obj, const std::string &name) {
 		obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
-		assert(
-				obj != NULL && "Bug in this library hdlConvertor.hdlAst not as expected from C");
+		assert(obj != NULL && "hdlConvertorAst.hdlAst not as expected from hdlConvertor");
 	};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");
@@ -50,6 +49,7 @@ ToPy::ToPy() {
 	import(HdlStmIfCls, "HdlStmIf");
 	import(HdlStmAssignCls, "HdlStmAssign");
 	import(HdlStmProcessCls, "HdlStmProcess");
+	import(HdlStmCaseTypeEnum, "HdlStmCaseType");
 	import(HdlStmCaseCls, "HdlStmCase");
 	import(HdlStmForCls, "HdlStmFor");
 	import(HdlStmForInCls, "HdlStmForIn");
@@ -95,7 +95,7 @@ PyObject* ToPy::toPy(const HdlContext *o) {
 PyObject* ToPy::toPy(const HdlLibrary *o) {
 	Py_INCREF(Py_None);
 	PyObject *py_inst = PyObject_CallFunctionObjArgs(HdlLibraryCls, Py_None,
-			NULL);
+	NULL);
 	if (!py_inst)
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
@@ -243,7 +243,6 @@ PyObject* ToPy::toPy(const HdlModuleDec *o) {
 	return py_inst;
 }
 
-
 PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlFunctionDefCls, NULL);
 	if (py_inst == nullptr)
@@ -385,6 +384,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmForCls);
 	Py_XDECREF(HdlStmForInCls);
 	Py_XDECREF(HdlStmCaseCls);
+	Py_XDECREF(HdlStmCaseTypeEnum);
 	Py_XDECREF(HdlStmProcessCls);
 	Py_XDECREF(HdlStmAssignCls);
 	Py_XDECREF(HdlStmIfCls);

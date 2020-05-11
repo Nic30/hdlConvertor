@@ -66,6 +66,8 @@ PyObject* ToPy::toPy(const HdlStmCase *o) {
 	if (!py_inst) {
 		return nullptr;
 	}
+	if (toPy_property(py_inst, "type", o->type))
+		return nullptr;
 	if (toPy_property(py_inst, "switch_on", o->select_on))
 		return nullptr;
 	if (toPy_arr(py_inst, "cases", o->cases))
@@ -78,6 +80,16 @@ PyObject* ToPy::toPy(const HdlStmCase *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlStmCaseType o) {
+	const char *name;
+	try {
+		name = HdlStmCaseType_toString(o);
+	} catch (const std::runtime_error &e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+		return nullptr;
+	}
+	return PyObject_GetAttrString(HdlStmCaseTypeEnum, name);
+}
 PyObject* ToPy::toPy(const HdlStmFor *o) {
 	auto py_inst = PyObject_CallObject(HdlStmForCls, NULL);
 	if (!py_inst) {

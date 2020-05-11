@@ -26,6 +26,8 @@
 #include <hdlConvertor/hdlAst/hdlStmProcess.h>
 #include <hdlConvertor/hdlAst/hdlStmWhile.h>
 #include <hdlConvertor/hdlAst/hdlTypes.h>
+#include <hdlConvertor/hdlAst/hdlValue.h>
+
 
 namespace hdlConvertor {
 
@@ -53,6 +55,7 @@ class ToPy {
 	PyObject *HdlStmIfCls;
 	PyObject *HdlStmAssignCls;
 	PyObject *HdlStmProcessCls;
+	PyObject *HdlStmCaseTypeEnum;
 	PyObject *HdlStmCaseCls;
 	PyObject *HdlStmForCls;
 	PyObject *HdlStmForInCls;
@@ -211,6 +214,7 @@ public:
 	PyObject* toPy(const hdlAst::HdlStmIf *o);
 	PyObject* toPy(const hdlAst::HdlStmBlockJoinType o);
 	PyObject* toPy(const hdlAst::HdlStmBlock *o);
+	PyObject* toPy(const hdlAst::HdlStmCaseType o);
 	PyObject* toPy(const hdlAst::HdlStmCase *o);
 	PyObject* toPy(const hdlAst::HdlStmFor *o);
 	PyObject* toPy(const hdlAst::HdlStmForIn *o);
