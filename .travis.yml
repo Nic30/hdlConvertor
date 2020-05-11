@@ -12,7 +12,7 @@ cache:
 
 addons:
   apt:
-    packages:
+    packages: &base_deps
     - build-essential 
     - cython
     - libantlr4-runtime-dev
@@ -26,6 +26,7 @@ matrix:
       addons:
         apt:
           packages:
+            - *base_deps
             - g++-8
             - gcc-8
 
@@ -35,6 +36,7 @@ matrix:
       addons:
         apt:
           packages:
+            - *base_deps
             - g++-7
             - gcc-7
 
@@ -44,6 +46,7 @@ matrix:
       addons:
         apt:
           packages:
+            - *base_deps
             - g++-9
             - gcc-9
 
@@ -53,6 +56,7 @@ matrix:
       addons:
         apt:
           packages:
+            - *base_deps
             - g++-9
             - gcc-9
 
