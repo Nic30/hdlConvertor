@@ -33,8 +33,15 @@ void VerGenerateParser::visitGenerate_region(
 		sv2017Parser::Generate_regionContext *ctx,
 		vector<unique_ptr<iHdlObj>> &res) {
 	// generate_region: KW_GENERATE ( generate_item )* KW_ENDGENERATE;
+	vector<unique_ptr<iHdlObj>> tmp_res;
 	for (auto gi : ctx->generate_item()) {
-		visitGenerate_item(gi, res);
+		visitGenerate_item(gi, tmp_res);
+		for (auto & o: tmp_res) {
+			auto stm = dynamic_cast<iHdlStatement*>(o.get());
+			if (stm)
+				stm->in_preproc = true;
+			res.push_back(move(o));
+		}
 	}
 }
 
@@ -464,7 +471,6 @@ unique_ptr<HdlStmFor> VerGenerateParser::visitLoop_generate_construct(
 
 	auto res = create_object<HdlStmFor>(ctx, move(init), move(cond), move(step),
 			move(stm));
-	res->in_preproc = true;
 	return res;
 }
 
@@ -489,7 +495,6 @@ void VerGenerateParser::visitGenerate_begin_end_block(
 		VerExprParser ep(commentParser);
 		b->labels.push_back(ep.getIdentifierStr(_label));
 	}
-	b->in_preproc = true;
 	res.push_back(move(b));
 }
 
@@ -549,18 +554,14 @@ void VerGenerateParser::visitIf_generate_construct(
 	visitGenerate_item(s[0], ifTrue_bl->statements);
 	auto ifTrue = pop_block_if_possible(move(ifTrue_bl));
 
-
-
 	unique_ptr<iHdlObj> ifFalse = nullptr;
 	if (s.size() == 2) {
 		auto ifFalse_bl = create_object<HdlStmBlock>(s[1]);
 		visitGenerate_item(s[1], ifFalse_bl->statements);
 		ifFalse = pop_block_if_possible(move(ifFalse_bl));
 	}
-	auto ifStm = create_object<HdlStmIf>(ctx, move(cond), move(ifTrue),
+	auto ifStm = create_object_with_doc<HdlStmIf>(ctx, commentParser, move(cond), move(ifTrue),
 			move(ifFalse));
-	ifStm->in_preproc = true;
-	ifStm->__doc__ = commentParser.parse(ctx);
 	HdlStmIf_collapse_elifs(*ifStm);
 
 	res.push_back(move(ifStm));
