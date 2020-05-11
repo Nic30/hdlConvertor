@@ -128,7 +128,6 @@ class VerilogConversionTC(HdlParseTC):
         self.parseWithRef("operator_type.sv", SV)
 
     def test_generate_for(self):
-        self.maxDiff = None
         self.parseWithRef("generate_for.v", VERILOG)
 
 
