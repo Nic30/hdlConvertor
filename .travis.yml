@@ -1,5 +1,5 @@
 sudo: required
-dist: bionic
+dist: focal
 language: python
 
 git:
@@ -17,66 +17,56 @@ matrix:
       env: CC=gcc-8 CXX=g++-8
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
             - g++-8
             - gcc-8
 
-    - name: "Python 3.5 gcc-8"
+    - name: "Python 3.5 gcc-7"
       python: 3.5
-      env: CC=gcc-8 CXX=g++-8
+      env: CC=gcc-7 CXX=g++-7
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-            - gcc-8
-
-    - name: "Python 3.7 gcc-8 Debug+Coverage"
-      python: 3.7
-      env: CC=gcc-8 CXX=g++-8 BUILD_ARGS="--build-type Debug -- -DCODE_COVERAGE=ON" CODE_COVERAGE=1
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-8
-            - gcc-8
-
-    - name: "Python 3.7 gcc-7 (deploy on tag)"
-      python: 3.7
-      env: CC=gcc-7 CXX=g++-7 DO_DELPLOY=1
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
             - g++-7
             - gcc-7
 
+    - name: "Python 3.7 gcc-9 Debug+Coverage"
+      python: 3.7
+      env: CC=gcc-9 CXX=g++-9 BUILD_ARGS="--build-type Debug -- -DCODE_COVERAGE=ON" CODE_COVERAGE=1
+      addons:
+        apt:
+          packages:
+            - g++-9
+            - gcc-9
+
+    - name: "Python 3.7 gcc-9 (deploy on tag)"
+      python: 3.7
+      env: CC=gcc-9 CXX=g++-9 DO_DELPLOY=1
+      addons:
+        apt:
+          packages:
+            - g++-9
+            - gcc-9
+
 addons:
    apt:
-      sources:
-         - ubuntu-toolchain-r-test
-         #- llvm-toolchain-precise-3.9
       packages:
          - build-essential 
          - cython
+         - libantlr4-runtime-dev
+         - antlr4
 
 
 # command to install dependencies
 install:
-- sudo cp .travis/eoan.list /etc/apt/sources.list.d/eoan.list
-- sudo apt update
+#- sudo cp .travis/eoan.list /etc/apt/sources.list.d/eoan.list
+#- sudo apt update
 - if [ "$CODE_COVERAGE" == "1" ]; then
-    sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-8 10;
+    sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-9 10;
     sudo apt install -y lcov;
     gem install coveralls-lcov;
   fi
 
-- sudo apt install libantlr4-runtime-dev antlr4 -y
 - pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git
 - pip install -r requirements.txt
 - python setup.py build -j$(nproc) $BUILD_ARGS
