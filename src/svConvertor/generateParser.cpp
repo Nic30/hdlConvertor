@@ -533,7 +533,7 @@ unique_ptr<iHdlObj> pop_block_if_possible(unique_ptr<HdlStmBlock> stm) {
 	if (stm->statements.size() == 1) {
 		return move(stm->statements[0]);
 	} else {
-		return move(stm);
+		return stm;
 	}
 }
 void VerGenerateParser::visitIf_generate_construct(
