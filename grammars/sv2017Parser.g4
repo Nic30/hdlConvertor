@@ -950,8 +950,8 @@ hierarchical_identifier:
    ( KW_DOLAR_ROOT DOT )? ( identifier_with_bit_select DOT )* identifier;
 package_or_class_scoped_id:
   ( KW_DOLAR_UNIT
-    | identifier ( parameter_value_assignment )?
-  ) ( DOUBLE_COLON identifier ( parameter_value_assignment )? )*;
+    | package_or_class_scoped_path_item
+  ) ( DOUBLE_COLON package_or_class_scoped_path_item )*;
 select:
     ( DOT identifier
       | bit_select
@@ -1085,8 +1085,8 @@ bins_selection:
 select_expression:
     LPAREN select_expression RPAREN
     | ( NOT )? select_condition
-    | select_expression ( LOG_AND
-                            | LOG_OR
+    | select_expression ( AND_LOG
+                            | OR_LOG
                         ) select_expression
     | select_expression KW_WITH LPAREN covergroup_expression RPAREN
                         ( KW_MATCHES covergroup_expression )?
@@ -1203,7 +1203,7 @@ struct_union:
 enum_base_type:
     integer_atom_type ( signing )?
     | ( integer_vector_type ( signing )?
-        | identifier
+        | package_or_class_scoped_id
       ) ( variable_dimension )?
     | packed_dimension
 ;
@@ -1339,12 +1339,13 @@ expression:
     | expression AMPERSAND            ( attribute_instance )* expression
     | expression operator_xor         ( attribute_instance )* expression
     | expression BAR                  ( attribute_instance )* expression
-    | expression LOG_AND              ( attribute_instance )* expression
-    | expression LOG_OR               ( attribute_instance )* expression
+    | expression AND_LOG              ( attribute_instance )* expression
+    | expression OR_LOG               ( attribute_instance )* expression
     | expression ( KW_MATCHES pattern )? TRIPLE_AND expression ( KW_MATCHES pattern )?
-    | expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
-    | expression operator_impl        ( attribute_instance )* expression
+    | <assoc=right> expression ( KW_MATCHES pattern )? QUESTIONMARK ( attribute_instance )* expression COLON expression
+    | <assoc=right> expression operator_impl        ( attribute_instance )* expression
 ;
+
 concatenation:
     LBRACE (expression ( concatenation | ( COMMA expression )+)?)? RBRACE;
 dynamic_array_new:
@@ -2207,39 +2208,7 @@ generate_begin_end_block:
 ;
 generate_item:
     ( attribute_instance )* 
-        ( parameter_override
-          | gate_instantiation
-          | udp_instantiation
-          | module_or_interface_or_program_or_udp_instantiation
-          | ( default_clocking_or_dissable_construct 
-              | local_parameter_declaration 
-              | parameter_declaration )? SEMI
-          | net_declaration
-          | data_declaration
-          | task_declaration
-          | function_declaration
-          | checker_declaration
-          | dpi_import_export
-          | extern_constraint_declaration
-          | class_declaration
-          | interface_class_declaration
-          | class_constructor_declaration
-          | covergroup_declaration
-          | property_declaration
-          | sequence_declaration
-          | let_declaration
-          | genvar_declaration
-          | clocking_declaration
-          | assertion_item
-          | bind_directive
-          | continuous_assign
-          | net_alias
-          | initial_construct
-          | final_construct
-          | always_construct
-          | loop_generate_construct
-          | conditional_generate_construct
-          | elaboration_system_task
+		( module_or_generate_item
           | extern_tf_declaration
         )
         | KW_RAND data_declaration
@@ -2252,17 +2221,7 @@ program_generate_item:
     | generate_region
     | elaboration_system_task
 ;
-/**********************************************************************************************************************/
-elaboration_system_task:
-    ( KW_DOLAR_FATAL ( LPAREN UNSIGNED_NUMBER ( COMMA ( list_of_arguments )? )? RPAREN )?
-     | ( KW_DOLAR_ERROR
-         | KW_DOLAR_WARNING
-         | KW_DOLAR_INFO
-         ) ( LPAREN ( list_of_arguments )? RPAREN )?
-    ) SEMI
-;
-/************************************************* module item  *******************************************************/
-module_item_item:
+module_or_generate_item:
     parameter_override
     | gate_instantiation
     | udp_instantiation
@@ -2296,6 +2255,19 @@ module_item_item:
     | loop_generate_construct
     | conditional_generate_construct
     | elaboration_system_task
+;
+/**********************************************************************************************************************/
+elaboration_system_task:
+    ( KW_DOLAR_FATAL ( LPAREN UNSIGNED_NUMBER ( COMMA ( list_of_arguments )? )? RPAREN )?
+     | ( KW_DOLAR_ERROR
+         | KW_DOLAR_WARNING
+         | KW_DOLAR_INFO
+         ) ( LPAREN ( list_of_arguments )? RPAREN )?
+    ) SEMI
+;
+/************************************************* module item  *******************************************************/
+module_item_item:
+    module_or_generate_item
     | specparam_declaration
 ;
 module_item:

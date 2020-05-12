@@ -3,7 +3,7 @@
 
 namespace hdlConvertor {
 
-using namespace hdlObjects;
+using namespace hdlAst;
 
 PyObject* ToPy::toPy(const HdlStmExpr *o) {
 	return toPy(o->expr);
@@ -27,11 +27,34 @@ PyObject* ToPy::toPy(const HdlStmIf *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlStmBlockJoinType o) {
+	const char *name;
+	try {
+		name = HdlStmBlockJoinType_toString(o);
+	} catch (const std::runtime_error &e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+		return nullptr;
+	}
+	return PyObject_GetAttrString(HdlStmBlockJoinTypeCls, name);
+}
+
 PyObject* ToPy::toPy(const HdlStmBlock *o) {
 	auto py_inst = PyObject_CallObject(HdlStmBlockCls, NULL);
 	if (!py_inst) {
 		return nullptr;
 	}
+	auto join_t = toPy(o->join_t);
+	if (!join_t) {
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+	int e = PyObject_SetAttrString(py_inst, "join_t", join_t);
+	if (e) {
+		Py_DECREF(join_t);
+		Py_DECREF(py_inst);
+		return nullptr;
+	}
+
 	if (toPy_arr(py_inst, "body", o->statements))
 		return nullptr;
 
@@ -43,6 +66,8 @@ PyObject* ToPy::toPy(const HdlStmCase *o) {
 	if (!py_inst) {
 		return nullptr;
 	}
+	if (toPy_property(py_inst, "type", o->type))
+		return nullptr;
 	if (toPy_property(py_inst, "switch_on", o->select_on))
 		return nullptr;
 	if (toPy_arr(py_inst, "cases", o->cases))
@@ -55,6 +80,16 @@ PyObject* ToPy::toPy(const HdlStmCase *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlStmCaseType o) {
+	const char *name;
+	try {
+		name = HdlStmCaseType_toString(o);
+	} catch (const std::runtime_error &e) {
+		PyErr_SetString(PyExc_ValueError, e.what());
+		return nullptr;
+	}
+	return PyObject_GetAttrString(HdlStmCaseTypeEnum, name);
+}
 PyObject* ToPy::toPy(const HdlStmFor *o) {
 	auto py_inst = PyObject_CallObject(HdlStmForCls, NULL);
 	if (!py_inst) {
@@ -197,12 +232,14 @@ PyObject* ToPy::toPy(const HdlStmProcess *o) {
 }
 
 PyObject* ToPy::toPy(const HdlStmImport *o) {
-	auto py_inst = PyObject_CallObject(HdlImportCls, NULL);
-	if (!py_inst) {
+	auto p = PyList_New(0);
+	if (toPy_arr(p, o->path)) {
 		return nullptr;
 	}
 
-	if (toPy_arr(py_inst, "path", o->path)) {
+	auto py_inst = PyObject_CallFunctionObjArgs(HdlImportCls, p, NULL);
+	if (!py_inst) {
+		Py_DECREF(p);
 		return nullptr;
 	}
 	return py_inst;
@@ -218,6 +255,19 @@ PyObject* ToPy::toPy(const HdlStmWait *o) {
 	}
 	return py_inst;
 }
+
+PyObject* ToPy::toPy(const HdlStmRepeat *o) {
+	auto py_inst = PyObject_CallObject(HdlStmRepeatCls, NULL);
+	if (!py_inst) {
+		return nullptr;
+	}
+	if (toPy_property(py_inst, "n", o->n))
+		return nullptr;
+	if (toPy_property(py_inst, "body", o->body))
+		return nullptr;
+	return py_inst;
+}
+
 PyObject* ToPy::toPy(const iHdlStatement *o) {
 	PyObject *py_inst = nullptr;
 	do {
@@ -256,9 +306,14 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 			py_inst = toPy(fi);
 			break;
 		}
-		auto r = dynamic_cast<const HdlStmReturn*>(o);
-		if (r) {
-			py_inst = toPy(r);
+		auto rep = dynamic_cast<const HdlStmRepeat*>(o);
+		if (rep) {
+			py_inst = toPy(rep);
+			break;
+		}
+		auto ret = dynamic_cast<const HdlStmReturn*>(o);
+		if (ret) {
+			py_inst = toPy(ret);
 			break;
 		}
 		auto br = dynamic_cast<const HdlStmBreak*>(o);
@@ -316,7 +371,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o) {
+PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndiHdlObj &o) {
 	// build tuple representing the elif item
 	auto py_inst = PyTuple_New(2);
 	if (!py_inst) {
@@ -335,7 +390,7 @@ PyObject* ToPy::toPy(const hdlConvertor::hdlObjects::HdlExprAndStm &o) {
 	}
 
 	// fill statements in elif/case
-	auto stms = toPy(o.stm);
+	auto stms = toPy(o.obj);
 	if (!stms) {
 		Py_DECREF(py_inst);
 		return nullptr;

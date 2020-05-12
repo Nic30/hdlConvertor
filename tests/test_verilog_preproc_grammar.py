@@ -2,7 +2,7 @@ from os import path
 import unittest
 
 from hdlConvertor import HdlConvertor, ParseException
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 
 
 class VerilogPreprocGrammarTC(unittest.TestCase):
@@ -17,7 +17,8 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
     def run_pp_by_methodname(self):
         test_name = self.getTestName()
         c = HdlConvertor()
-        f = path.join(path.dirname(__file__), 'sv_pp', 'raw', test_name + '.txt')
+        f = path.join(path.dirname(__file__), 'sv_pp',
+                      'raw', test_name + '.txt')
         incdirs = [path.join('sv_pp', 'raw'), ]
         res = c.verilog_pp(f, Language.SYSTEM_VERILOG, incdirs)
         return res

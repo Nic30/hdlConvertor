@@ -4,21 +4,23 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
+
 
 using std::vector;
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace vhdl {
 
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::extractVariables(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::extractVariables(
 		vhdlParser::Identifier_listContext *identifier_list,
 		vhdlParser::Subtype_indicationContext *subType,
 		vhdlParser::ExpressionContext *_expr) {
-	auto vl = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
-	auto _type = VhdlExprParser::visitSubtype_indication(subType);
-	std::unique_ptr<iHdlExpr> expr = nullptr;
+	auto vl = std::make_unique<vector<std::unique_ptr<HdlIdDef>>>();
+	auto _type = VhdlTypeDeclarationParser::visitSubtype_indication(subType);
+	std::unique_ptr<iHdlExprItem> expr = nullptr;
 	if (_expr)
 		expr = VhdlExprParser::visitExpression(_expr);
 
@@ -29,8 +31,8 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 		// : identifier ( COMMA identifier )*
 		// ;
 		if (!firstIt)
-			_type = std::make_unique<iHdlExpr>(*_type_tmp);
-		std::unique_ptr<iHdlExpr> __expr;
+			_type = _type_tmp->clone_uniq();
+		std::unique_ptr<iHdlExprItem> __expr;
 		if (!expr) {
 			firstIt = false;
 			__expr = nullptr;
@@ -38,15 +40,15 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::ex
 			firstIt = false;
 			__expr = move(expr);
 		} else {
-			__expr = std::make_unique<iHdlExpr>(*expr);
+			__expr = expr->clone_uniq();
 		}
-		auto v = create_object<HdlVariableDef>(i, i->getText(),
+		auto v = create_object<HdlIdDef>(i, i->getText(),
 				std::move(_type), std::move(__expr));
 		vl->push_back(std::move(v));
 	}
 	return vl;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_constant_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_constant_declaration(
 		vhdlParser::Interface_constant_declarationContext *ctx) {
 	// interface_constant_declaration:
 	//       ( CONSTANT )? identifier_list COLON ( IN )? subtype_indication ( VARASGN expression )?
@@ -57,7 +59,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 		c->is_const = true;
 	return consts;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_signal_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_signal_declaration(
 		vhdlParser::Interface_signal_declarationContext *ctx) {
 	// interface_signal_declaration:
 	//       ( SIGNAL )? identifier_list COLON ( signal_mode )? subtype_indication ( BUS )? ( VARASGN expression )?
@@ -73,7 +75,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 		s->direction = m;
 	return sigs;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_variable_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_variable_declaration(
 		vhdlParser::Interface_variable_declarationContext *ctx) {
 	// interface_variable_declaration:
 	//       ( VARIABLE )? identifier_list COLON ( signal_mode )? subtype_indication ( VARASGN expression )?
@@ -87,17 +89,17 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 	}
 	return vars;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_file_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_file_declaration(
 		vhdlParser::Interface_file_declarationContext *ctx) {
 	// interface_file_declaration:
 	//       FILE identifier_list COLON subtype_indication
 	// ;
 	NotImplementedLogger::print(
 			"InterfaceParser.visitInterface_file_declaration", ctx);
-	return std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
+	return std::make_unique<vector<std::unique_ptr<HdlIdDef>>>();
 }
 
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_declaration(
 		vhdlParser::Interface_declarationContext *ctx) {
 	// interface_declaration:
 	//       interface_object_declaration
@@ -134,9 +136,9 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 		}
 	} while (0);
 
-	return std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
+	return std::make_unique<vector<std::unique_ptr<HdlIdDef>>>();
 }
-std::unique_ptr<iHdlExpr> VhdlInterfaceParser::visitInterface_type_declaration(
+std::unique_ptr<iHdlExprItem> VhdlInterfaceParser::visitInterface_type_declaration(
 		vhdlParser::Interface_type_declarationContext *ctx) {
 	// interface_type_declaration:
 	//       interface_incomplete_type_declaration
@@ -145,7 +147,7 @@ std::unique_ptr<iHdlExpr> VhdlInterfaceParser::visitInterface_type_declaration(
 	return VhdlLiteralParser::visitIdentifier(
 			ctx->interface_incomplete_type_declaration()->identifier());
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_object_declaration(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_object_declaration(
 		vhdlParser::Interface_object_declarationContext *ctx) {
 	// interface_object_declaration:
 	//       interface_constant_declaration
@@ -169,12 +171,12 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 	assert(f);
 	return visitInterface_file_declaration(f);
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_list(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_list(
 		vhdlParser::Interface_listContext *ctx) {
 	// interface_list:
 	//       interface_element ( SEMI interface_element )*
 	// ;
-	auto elems = std::make_unique<vector<std::unique_ptr<HdlVariableDef>>>();
+	auto elems = std::make_unique<vector<std::unique_ptr<HdlIdDef>>>();
 	for (auto ie : ctx->interface_element()) {
 		auto _elements = visitInterface_element(ie);
 		for (auto &e : *_elements) {
@@ -183,7 +185,7 @@ std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::vi
 	}
 	return elems;
 }
-std::unique_ptr<vector<std::unique_ptr<HdlVariableDef>>> VhdlInterfaceParser::visitInterface_element(
+std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::visitInterface_element(
 		vhdlParser::Interface_elementContext *ctx) {
 	// interface_element: interface_declaration;
 	auto intfDec = ctx->interface_declaration();

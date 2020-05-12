@@ -4,19 +4,14 @@
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
-#include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/literalParser.h>
-#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
-#include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
-
+#include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 #include <hdlConvertor/createObject.h>
@@ -25,19 +20,19 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VhdlPackageParser::VhdlPackageParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
 }
-std::unique_ptr<HdlNamespace> VhdlPackageParser::visitPackage_body(
+std::unique_ptr<HdlValueIdspace> VhdlPackageParser::visitPackage_body(
 		vhdlParser::Package_bodyContext* ctx) {
 	// package_body:
 	//       PACKAGE BODY identifier IS
 	//           ( package_body_declarative_item )*
 	//       END ( PACKAGE BODY )? ( identifier )? SEMI
 	// ;
-	p = create_object<HdlNamespace>(ctx);
+	p = create_object<HdlValueIdspace>(ctx);
 	p->name = VhdlLiteralParser::getIdentifierStr(ctx->identifier(0));
         p->defs_only = false;
 
@@ -100,13 +95,14 @@ void VhdlPackageParser::visitPackage_body_declarative_item(
 	}
     auto td = ctx->type_declaration();
 	if (td) {
-		NotImplementedLogger::print(
-				"PackageParser.visitType_declaration", td);
+		auto t = VhdlTypeDeclarationParser::visitType_declaration(td);
+                p->objs.push_back(std::move(t));
+                return;
         return;
 	}
     auto st = ctx->subtype_declaration();
 	if (st) {
-		auto _st = VhdlSubtypeDeclarationParser::visitSubtype_declaration(st);
+		auto _st = VhdlTypeDeclarationParser::visitSubtype_declaration(st);
 		p->objs.push_back(std::move(_st));
 		return;
 	}

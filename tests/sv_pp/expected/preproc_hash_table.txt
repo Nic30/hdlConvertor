@@ -1,13 +1,20 @@
 // https://www.veripool.org/papers/Preproc_Good_Evil_SNUGBos10_paper.pdf
 
 // Read hash: hash[key]
+
 // Store hash: hash[key] = v 
+
+
 // Hash exists: defined(hash[key]) 
+
 
 // For wrapping defines
 // Note the backslash newline on the `define line 
 // and the newline following, required to form the end of a define 
+
+
 // If  defined(<d>) then 1 else 0 
+
 
 
      

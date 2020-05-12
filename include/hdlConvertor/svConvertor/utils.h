@@ -1,8 +1,8 @@
 #pragma once
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlAst/iHdlExpr.h>
+#include <hdlConvertor/hdlAst/hdlOpType.h>
 
 namespace antlr4
 {
@@ -12,30 +12,37 @@ namespace antlr4
 namespace hdlConvertor {
 namespace sv {
 
-class Utils {
-public:
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkStringT();
-
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkIntT();
-	// wire type is represented by wire id or call wire(range, signed)
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT();
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
-			antlr4::ParserRuleContext *const ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
-	static std::unique_ptr<hdlObjects::iHdlExpr> mkWireT(
-			antlr4::ParserRuleContext *const ctx,
-			std::unique_ptr<hdlObjects::iHdlExpr> net_type,
-			std::unique_ptr<hdlObjects::iHdlExpr> range, bool signed_);
+enum SIGNING_VAL {
+	UNSIGNED = 0,
+	SIGNED = 1,
+	NO_SIGN,
 };
 
-std::unique_ptr<hdlObjects::iHdlExpr> append_expr(
+class Utils {
+public:
+	static std::unique_ptr<hdlAst::iHdlExprItem> mkStringT();
+
+	static std::unique_ptr<hdlAst::iHdlExprItem> mkIntT();
+	// wire type is represented by wire id or call wire(range, signed)
+	static std::unique_ptr<hdlAst::iHdlExprItem> mkWireT();
+	static std::unique_ptr<hdlAst::iHdlExprItem> mkWireT(
+			antlr4::ParserRuleContext *const ctx,
+			std::unique_ptr<hdlAst::iHdlExprItem> range, SIGNING_VAL signed_);
+	static std::unique_ptr<hdlAst::iHdlExprItem> mkWireT(
+			antlr4::ParserRuleContext *const ctx,
+			std::unique_ptr<hdlAst::iHdlExprItem> net_type,
+			std::unique_ptr<hdlAst::iHdlExprItem> range, SIGNING_VAL signed_);
+	static std::unique_ptr<hdlAst::iHdlExprItem> signing(SIGNING_VAL signing);
+};
+
+std::unique_ptr<hdlAst::iHdlExprItem> append_expr(
 		antlr4::ParserRuleContext *const ctx,
-		std::unique_ptr<hdlObjects::iHdlExpr> selected_name,
-		hdlObjects::HdlOperatorType operator_to_join_with,
-		std::unique_ptr<hdlObjects::iHdlExpr> new_part);
-std::unique_ptr<hdlObjects::iHdlExpr> reduce(
-		std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> &ops,
-		hdlObjects::HdlOperatorType op);
+		std::unique_ptr<hdlAst::iHdlExprItem> selected_name,
+		hdlAst::HdlOpType operator_to_join_with,
+		std::unique_ptr<hdlAst::iHdlExprItem> new_part);
+std::unique_ptr<hdlAst::iHdlExprItem> reduce(
+		std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> &ops,
+		hdlAst::HdlOpType op);
 
 }
 }

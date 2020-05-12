@@ -5,11 +5,18 @@
 #include <sys/stat.h>
 #include <typeinfo>
 
+// antlr4-runtime/
+#include <CommonTokenStream.h>
+#include <TokenStream.h>
+#include <support/Any.h>
+
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocLexer.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParser.h>
 #include <hdlConvertor/verilogPreproc/verilogPreprocParser/verilogPreprocParserBaseVisitor.h>
 
 #include <hdlConvertor/verilogPreproc/verilogPreprocContainer.h>
+#include <hdlConvertor/verilogPreproc/out_buffer.h>
+#include <hdlConvertor/verilogPreproc/str_utils.h>
 #include <hdlConvertor/conversion_exception.h>
 
 namespace hdlConvertor {
@@ -18,36 +25,30 @@ namespace verilog_pp {
 /*
  * Verilog preprocessor
  *
- * :ivar _defineDB: database of defines
- * :ivar _incdir: directories where to search for included files
- * 		    (last will be searched first, unique items)
  * :ivar added_incdir: true if the new incdir was added exactly for this file
  * 			and last incdir should be removed before processing of new file
- * :ivar _stack_incfile: stack of include files which are
- * 			currently parsed (used for detection of cycle in includes)
- * :ivar did_added_incdir: the flag which tells if the directory of this folder
- * 			was added to include directories and thus should be removed after parser ends
+ * :ivar preproc_out: output stream where output should be put
  **/
 class VerilogPreproc: public verilogPreproc_antlr::verilogPreprocParserBaseVisitor {
 
 	void remove_comment(antlr4::Token *start, antlr4::Token *end,
 			std::string *str);
-	void replace_context_by_bank(antlr4::ParserRuleContext *ctx);
-
 public:
 	using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 	VerilogPreprocContainer &container;
 	antlr4::CommonTokenStream &_tokens;
 	bool added_incdir;
 	size_t include_depth_limit;
-	antlr4::TokenStreamRewriter _rewriter;
+	VerilogPreprocOutBuffer & preproc_out;
 
 	VerilogPreproc(VerilogPreprocContainer &container,
-			antlr4::TokenStream &tokens, bool added_incdir,
-			size_t include_depth_limit = 100);
+			VerilogPreprocOutBuffer &preproc_out, antlr4::TokenStream &tokens,
+			bool added_incdir, size_t include_depth_limit = 100);
 
 	virtual ~VerilogPreproc();
 
+	virtual antlrcpp::Any visitText(verilogPreprocParser::TextContext *ctx)
+			override;
 	virtual antlrcpp::Any visitResetall(
 			verilogPreprocParser::ResetallContext *ctx) override;
 	virtual antlrcpp::Any visitCelldefine(
@@ -81,6 +82,10 @@ public:
 
 	void parse_macro_args(verilogPreprocParser::Macro_callContext *ctx,
 			std::vector<std::string> &args);
+	// :param add_to_output: tells if result should be added to output stream
+	//        or only returned
+	virtual antlrcpp::Any visitMacro_call(
+			verilogPreprocParser::Macro_callContext *ctx, bool add_to_output);
 	virtual antlrcpp::Any visitMacro_call(
 			verilogPreprocParser::Macro_callContext *ctx) override;
 
@@ -104,10 +109,6 @@ public:
 	void throw_input_caused_error(antlr4::ParserRuleContext *ctx,
 			const std::string &msg);
 };
-
-std::string& rtrim(std::string &str, const std::string &chars = " \t\n\r");
-std::string& ltrim(std::string &str, const std::string &chars = " \t\n\r");
-std::string& trim(std::string &str, const std::string &chars = " \t\n\r");
 
 }
 }

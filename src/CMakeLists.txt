@@ -12,7 +12,7 @@ add_subdirectory(verilogPreproc)
 add_subdirectory(vhdlConvertor)
 
 file(GLOB hdlConvertor_core_SRC
-	"${CMAKE_CURRENT_SOURCE_DIR}/hdlObjects/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/hdlAst/*.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/baseHdlParser/*.cpp"
 )
 
@@ -23,7 +23,7 @@ list(APPEND hdlConvertor_core_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/universal_fs.cpp"
 )
 set(hdlConvertor_cpp_SRC
-	"${CMAKE_CURRENT_SOURCE_DIR}/convertor.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/hdlConvertor.cpp"
 )
 add_library(hdlConvertor_core_static STATIC ${hdlConvertor_core_SRC})
 target_include_directories(hdlConvertor_core_static

@@ -48,8 +48,8 @@ cdef class MacroDefVerilogProxy:
         from this reason this object can not accessed after the original object in preprocessor
         symbol database has been deleted
 
-    :ivar thisptr: C++ pointer on MacroDefVerilog object
-    :ivar is_reference_borrowed: flag which tells if the C++ object should be deallocated
+    :ivar ~.thisptr: C++ pointer on MacroDefVerilog object
+    :ivar ~.is_reference_borrowed: flag which tells if the C++ object should be deallocated
         after this python proxy is deallocated
     """
     cdef MacroDefVerilog * thisptr

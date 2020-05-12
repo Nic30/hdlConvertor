@@ -2,7 +2,7 @@
 
 namespace hdlConvertor {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 BaseHdlParser::BaseHdlParser(antlr4::TokenStream &_tokens, HdlContext &ctx,
 		bool _hierarchyOnly) :

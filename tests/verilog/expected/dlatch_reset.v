@@ -23,5 +23,4 @@ module dlatch_reset (
             q <= 1'b0;
         else if (en)
             q <= data;
-
 endmodule

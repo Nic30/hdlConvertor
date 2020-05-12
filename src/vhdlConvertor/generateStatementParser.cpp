@@ -1,7 +1,7 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-#include <hdlConvertor/hdlObjects/hdlStmFor.h>
+#include <hdlConvertor/hdlAst/hdlStmFor.h>
 
 #include <hdlConvertor/vhdlConvertor/blockDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
@@ -13,18 +13,16 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
-#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/vhdlConvertor/signalParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
-#include <hdlConvertor/vhdlConvertor/subtypeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
@@ -100,7 +98,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 	auto ifTrue = visitGenerate_statement_body(*sIt);
 	++cIt;
 	++sIt;
-	std::vector<HdlExprAndStm> elseIfs;
+	std::vector<HdlExprAndiHdlObj> elseIfs;
 	while (cIt != c.end()) {
 		auto c = VhdlExprParser::visitCondition(*cIt);
 		auto stms = visitGenerate_statement_body(*sIt);
@@ -109,7 +107,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 		++sIt;
 	}
 	std::unique_ptr<HdlStmIf> ifStm = nullptr;
-	std::unique_ptr<hdlObjects::HdlStmBlock> ifFalse = nullptr;
+	std::unique_ptr<hdlAst::HdlStmBlock> ifFalse = nullptr;
 	if (sIt != s.end()) {
 		ifFalse = visitGenerate_statement_body(*sIt);
 	}
@@ -134,7 +132,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 
 	auto _e = ctx->expression();
 	auto e = VhdlExprParser::visitExpression(_e);
-	vector<HdlExprAndStm> alternatives;
+	vector<HdlExprAndiHdlObj> alternatives;
 	unique_ptr<iHdlStatement> _default = nullptr;
 	vector<std::string> labels;
 	auto label = ctx->label();
@@ -167,7 +165,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 	return cstm;
 }
 
-std::unique_ptr<hdlObjects::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_statement_body(
+std::unique_ptr<hdlAst::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_statement_body(
 		vhdlParser::Generate_statement_bodyContext *ctx) {
 	// generate_statement_body:
 	//     ( block_declarative_item*

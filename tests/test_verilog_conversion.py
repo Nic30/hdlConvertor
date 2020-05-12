@@ -2,16 +2,16 @@ from os import path
 import unittest
 
 from hdlConvertor import HdlConvertor
-from hdlConvertor.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
-from hdlConvertor.language import Language
+from hdlConvertorAst.hdlAst import HdlModuleDec, HdlModuleDef, HdlDirection
+from hdlConvertorAst.language import Language
 
-from tests.basic_tc import TEST_DIR, BasicTC, parseFile
+from tests.hdl_parse_tc import TEST_DIR, HdlParseTC, parseFile
 
 VERILOG = Language.VERILOG
 SV = Language.SYSTEM_VERILOG
 
 
-class VerilogConversionTC(BasicTC):
+class VerilogConversionTC(HdlParseTC):
 
     def test_adder_implicit(self):
         self.parseWithRef("adder_implicit.v", VERILOG)
@@ -23,8 +23,8 @@ class VerilogConversionTC(BasicTC):
         self.parseWithRef("aFifo.v", VERILOG)
 
     # not implemented repeat construct
-    # def test_arbiter_tb(self):
-    #    self.parseWithRef("arbiter_tb.v", VERILOG)
+    def test_arbiter_tb(self):
+        self.parseWithRef("arbiter_tb.v", VERILOG)
 
     def test_arbiter(self):
         f, res = parseFile("arbiter.v", VERILOG)
@@ -113,7 +113,7 @@ class VerilogConversionTC(BasicTC):
         c = HdlConvertor()
         res = c.parse(f, language, [inc_dir], debug=True)
         e = [o for o in res.objs if isinstance(o, HdlModuleDef)]
-        self.assertSetEqual(set(_e.module_name for _e in e),
+        self.assertSetEqual(set(_e.module_name.val for _e in e),
                             {'fifo_rx', 'test', 'arbiter', 'uart'})
         str(res)
 
@@ -122,17 +122,19 @@ class VerilogConversionTC(BasicTC):
         str(res)
 
     def test_crc_functions(self):
-        f, res = parseFile("crc_functions.sv", SV)
-        str(res)
+        self.parseWithRef("crc_functions.sv", SV)
 
     def test_operator_type(self):
         self.parseWithRef("operator_type.sv", SV)
 
+    def test_generate_for(self):
+        self.parseWithRef("generate_for.v", VERILOG)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(VerilogConversionTC('test_operator_type'))
-    # suite.addTest(unittest.makeSuite(VerilogConversionTC))
+    # suite.addTest(VerilogConversionTC('test_crc_functions'))
+    suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

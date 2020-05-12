@@ -762,8 +762,9 @@ expression:
 ;
 simple_expression:
       primary ( DOUBLESTAR primary )?
-      | ( KW_ABS | KW_NOT | logical_operator | sign) simple_expression
+      | ( KW_ABS | KW_NOT | logical_operator) simple_expression
       | simple_expression multiplying_operator simple_expression
+      | sign simple_expression
       | simple_expression adding_operator simple_expression
 ;
 primary:
@@ -776,7 +777,7 @@ primary:
       | qualified_expression // 7
 ;
 logical_operator: KW_AND | KW_OR | KW_NAND | KW_NOR | KW_XOR | KW_XNOR;
-relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | MATCH_EQ | MATCH_NEQ | MATCH_LT | MATCH_LE | MATCH_GT | MATCH_GE;
+relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | EQ_MATCH | NEQ_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
 shift_operator: KW_SLL | KW_SRL | KW_SLA | KW_SRA | KW_ROL | KW_ROR;
 adding_operator: PLUS | MINUS | AMPERSAND;
 sign: PLUS | MINUS;

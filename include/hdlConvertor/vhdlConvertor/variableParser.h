@@ -4,7 +4,7 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlObjects/hdlVariableDef.h>
+#include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -14,7 +14,7 @@ public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	static std::unique_ptr<
-			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>>> visitVariable_declaration(
+			std::vector<std::unique_ptr<hdlAst::HdlIdDef>>> visitVariable_declaration(
 			vhdlParser::Variable_declarationContext *ctx);
 
 };

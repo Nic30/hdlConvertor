@@ -517,9 +517,9 @@ ARITH_SHIFT_RIGHT_ASSIGN: '>>>=';
 PLUS: '+';
 MINUS: '-';
 AMPERSAND: '&';
-LOG_AND: '&&';
+AND_LOG: '&&';
 BAR: '|';
-LOG_OR: '||';
+OR_LOG: '||';
 BACKSLASH: '\\';
 MUL: '*';
 DIV: '/';
@@ -632,7 +632,7 @@ fragment ANY_ASCII_CHARACTERS:
  ~["\\\r\n] 
   | '\\\n' 
   | '\\\r\n'
-  | '\\' [nrt\\"vfa%] 
+  | '\\' [abefnrtv$@luLEQU\\"%] 
   | '\\' [0-9] [0-9]? [0-9]? 
   | '\\' 'x' [0-9A-Fa-f] [0-9A-Fa-f]? 
  ;

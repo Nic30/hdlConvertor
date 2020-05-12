@@ -1,14 +1,40 @@
 # Tutorial for developing of C++ python extension with Cython and Scikit-build
 
+# Test execution
+
+In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
+If you downloaded the hdlConvertorAst git to same directory where you have a hdlConvertor you can append it to python path like this:
+```
+hdlConvertor.git$ export PYTHONPATH=PYTHONPATH:$PWD/../hdlConvertorAst
+```
+
+The tests are python module on it's own that means it needs to be executed as python module:
+```
+hdlConvertor.git$ python3 -m tests.all
+```
+Note that `python3 tests/all.py` would ended up with an import error as python would not know that the tests are supposed to be a module.
+
+Test-cases for external projects do support `SUCESSFULL_TEST_FILTER_FILE` this test-case configuration spots a file with passed test names
+and if test-case is executed again the tests mentioned in this file are not executed. This is very useful if something is broken and you are fixing it
+as this feature automatically runs only broken stuff in each run and you do need to wait for passing test over and over.
+
+Tests for external projects are handled by generate_external_testcase_class, this method generates `unittest.TestCase` class
+for files and configs specified.
+
+Rest of the test is usually based on [HdlParseTC](https://github.com/Nic30/hdlConvertor/blob/master/tests/hdl_parse_tc.py#L74).
+This class contains a methods which simplifies the parsing/conversion test scenario.
+
+
 # Basic project setup in Eclipse (eclipse + CDT -> C/C++ project)
 (Note that we will use python3-dbg, if you want to use python3/2 you have to recompile.
- Without -dbg you will mostly see only segfaults without explanation if there is some problem.)
+ Without -dbg you will mostly see only segfaults without explanation if there is some problem in c++ symbol definition after linking.)
 * in eclise.ini increase memory available for eclise or c++ indexing will be very slow (1min+)
    `-Xms1024 -Xmx4096m` or more depending on how many plugins in eclipse you have installed.
 
 (Note that there python3.7 is used you may have to change this version if required.)
 * `sudo apt install python3-dev python3-dbg`
 * create a C/C++ project from this repo (or add C++ nature to Python project)
+* or C/C++ makefile project, it odes not matter, we will override build command anyway
 * project properties ->
    * C/C++ General -> Paths and Symbols -> add Python and ANTLR include dir (for all lags)
   ```
@@ -17,11 +43,11 @@
 
   ```
    * C/C++ build ->
-       * Build command: `python3-dbg setup.py -j8` (-j8 for build with 8 concurrent process)
+       * Build command: `python3-dbg setup.py `
        * uncheck Generate makefile automatically
        * set build directory to project root
-       * in Behavior tab change target Build (increamental) from "all" to "build"
-
+       * in Behavior tab change target Build (increamental) from "all" to "build -j8 --build-type Debug"
+			(-j8 for build with 8 concurrent process)
    * in place debuggin (if you just run `python3 setup.py build` the library with c-extension is not accessible)
      you need to copy or link library to it's package folder
      ```
@@ -39,6 +65,8 @@
         include/hdlConvertor/verilogPreproc/verilogPreprocParser/ \
         include/hdlConvertor/vhdlConvertor/vhdlParser/ -r
      ```
+   * Now add a pydev nature to this project so we can use code navigation and autocomplete for python. Right-Click on project -> PyDev -> add project; Then add "." and "hdlConvertor" direcotories in to PYTHONPATH in project properties -> PyDev - PYTHONPATH 
+
 
 # Debuging in Eclipse
 * apt install python3-dbg # because normal python crashes on some errors without reporting (like undefined symbol in c library)
@@ -54,8 +82,8 @@
 # Utils
 * c++filt - progam which translates ugly cpp compiled names back to readable form
   ```
-  $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlObjects7iHdlObjEi
-  hdlConvertor::ToString::dump(hdlConvertor::hdlObjects::iHdlObj const*, int)
+  $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlAst7iHdlObjEi
+  hdlConvertor::ToString::dump(hdlConvertor::hdlAst::iHdlObj const*, int)
   ```
 * to forece regeneration of generated files delete cmake file which
   tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
@@ -70,3 +98,18 @@
    ```
    * note that for composite grammars (*Lexer.g4 + *Parser.g4) bout grammars should be agument of antlr4
      and the name of grammar for org.antlr.v4.gui.TestRig is name without Parser/lexer.
+
+# Adding a new C++ HDL object class
+
+* Define the class in a header file with extension `.h` in the directory `include/hdlConvertor/hdlAst`.
+* Define the implementation in a source file with extension `.cpp` in the directory `src/hdlAst`.
+* Create a corresponding Python class in one of the files (pick the best match) in `hdlConvertorAst/hdlAst`.
+** Add the names of your Python object properties to the `__slots__` list.  Often this list will be the same as the list of your C++ object member variables.
+* Add the import for your class in `hdlConvertorAst/hdlAst/__init__.py`.
+* Add a pointer for your Python class in the Python C++ extension header file `hdlConvertor/toPy.h` in the `ToPy` class.  There's a big list just past the includes, you can't miss it.
+* Add an import for your Python class in the Python C++ extension source file `hdlConvertor/toPy.cpp` in the `ToPy::ToPy()` constructor.  It's the first method definition in the file.
+* Decrement the reference to your Python class in `hdlConvertor/toPy.cpp` in the `ToPy::~ToPy()` destructor.  Dereferences should be in the opposite order of imports.
+* Add code to `toPy.cpp` to convert your C++ data structure into the corresponding Python type.  This probably requires a new overload of the `toPy` function declared in `toPy.h`.
+** Use `toPy_property(py_inst, "py_property_name", cpp_obj)` to set the property `py_property_name` on the Python object `py_inst` to the value `cpp_obj` (which will also be converted to a Python object).  There are lots of examples of this.
+* Add conversion logic to 'hdlConveertor/to/json.py'.
+* Add conversion logic to other language converters.

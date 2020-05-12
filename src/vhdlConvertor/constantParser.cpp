@@ -5,10 +5,10 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlConstantParser::visitConstant_declaration(
+std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlConstantParser::visitConstant_declaration(
 		vhdlParser::Constant_declarationContext *ctx) {
 	//constant_declaration :
 	//    CONSTANT identifier_list COLON subtype_indication

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
-#include <hdlConvertor/hdlObjects/hdlModuleDec.h>
+#include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/vhdlConvertor/commentParser.h>
 
 namespace hdlConvertor {
@@ -17,14 +17,14 @@ public:
 
 	VhdlEntityParser(VhdlCommentParser &commentParser, bool _hierarchyOnly);
 
-	std::unique_ptr<hdlObjects::HdlModuleDec> visitEntity_declaration(
+	std::unique_ptr<hdlAst::HdlModuleDec> visitEntity_declaration(
 			vhdlParser::Entity_declarationContext *ctx);
 	static void visitEntity_declarative_item(
 			vhdlParser::Entity_declarative_itemContext *ctx);
 	static void visitGeneric_clause(vhdlParser::Generic_clauseContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &generics);
+			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &generics);
 	static void visitPort_clause(vhdlParser::Port_clauseContext *ctx,
-			std::vector<std::unique_ptr<hdlObjects::HdlVariableDef>> &ports);
+			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &ports);
 
 };
 

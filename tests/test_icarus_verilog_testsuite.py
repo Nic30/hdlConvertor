@@ -4,7 +4,7 @@ from itertools import chain
 import os
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
 from tests.extern_test_utils import ExternTestSpec, \
     generate_external_testcase_class
 from tests.file_utils import find_files
@@ -41,10 +41,6 @@ def parse_verilator_record(line, dir_name):
 
     name = columns[0]
     name_fix = {
-        "br_ml201801012a": "br_ml20181012a",
-        "br_ml201801012b": "br_ml20181012b",
-        "br_ml201801012c": "br_ml20181012c",
-        "br_ml201801012d": "br_ml20181012d",
         "struct_packe_write_read": "struct_packed_write_read",
         "struct_packe_write_read2": "struct_packed_write_read2",
         "sv_string_index": "string_index",
@@ -188,6 +184,10 @@ def parse_verilator_record(line, dir_name):
             "enum_ports",
             # # non-std combination of unsigned, wire and bit vector size spec
             # "vhdl_xor104_stdlogic",
+
+            # class scope in event trigger
+            "sv_wildcard_import2",
+            "sv_wildcard_import3",
             ]:
         should_fail = True
 
@@ -205,7 +205,7 @@ def get_icarus_test_configs():
                                            "regress-ivl1.list",
                                            "regress-ivl2.list"]:
             continue
-        
+
         if file_name.endswith("vpi_regress.list"):
             dir_name = "vpi"
         else:
@@ -237,7 +237,9 @@ def get_icarus_test_configs():
         # defined in icarus extensions with older std. with missing `__FILE__
         std = Language.SYSTEM_VERILOG_2009
         f = os.path.join(IVTEST_ROOT, "ivltests", fn + ".v")
-        tests.append(ExternTestSpec(f, std, copy(ICARUS_DEFAULT_PREPROC_DEFS), copy(ICARUS_DEFAULT_INC_DIRS), False))
+        tests.append(ExternTestSpec(f, std,
+                                    copy(ICARUS_DEFAULT_PREPROC_DEFS),
+                                    copy(ICARUS_DEFAULT_INC_DIRS), False))
 
     return tests
 

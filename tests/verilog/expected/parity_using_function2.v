@@ -16,10 +16,11 @@ module parity_using_function2 (
         integer i;
         begin
             parity = 0;
-            for (i = 0; (i < 32); i = (i + 1))
-                parity = (parity ^ data[i]);
+            for (i = 0; i < 32; i = i + 1)
+                parity = parity ^ data[i];
         end
     endfunction
+
     always @(data_in)
         parity_out = parity(data_in);
 endmodule

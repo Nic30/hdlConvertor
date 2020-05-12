@@ -45,14 +45,20 @@ else()
 endif()
 include_directories(${ANTLR4CPP_INCLUDE_DIRS})
 
-find_library(ANTLR4CPP_LIBRARIES libantlr4-runtime.so libantlr4-runtime.dylib antlr4-runtime-static.lib
-    HINTS "${ANTLR4CPP_ROOT}/usr/lib"
-          "${ANTLR4CPP_ROOT}/lib")
+# [todo] rather explicitly specify static/dynamic antlr linking
+find_library(ANTLR4CPP_LIBRARIES 
+	libantlr4-runtime.dll libantlr4-runtime.so
+	libantlr4-runtime.a libantlr4-runtime.dylib
+	antlr4-runtime-static.lib
+	HINTS "${ANTLR4CPP_ROOT}/usr/lib"
+	      "${ANTLR4CPP_ROOT}/lib")
+
 if(NOT ANTLR4CPP_LIBRARIES)
 	MESSAGE(FATAL_ERROR "Can not find ANTLR4CPP_LIBRARIES")
 else()
 	MESSAGE(STATUS "ANTLR4CPP_LIBRARIES=${ANTLR4CPP_LIBRARIES}")
 endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	add_compile_definitions(ANTLR4CPP_STATIC)
 endif()

@@ -4,7 +4,8 @@
 #include <vector>
 #include <map>
 
-#include <antlr4-common.h>
+// antlr4-runtime/
+#include <ParserRuleContext.h>
 
 #include <hdlConvertor/conversion_exception.h>
 

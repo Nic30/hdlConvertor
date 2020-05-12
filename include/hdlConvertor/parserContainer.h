@@ -7,7 +7,7 @@
 
 #include <antlr4-runtime.h>
 
-#include <hdlConvertor/hdlObjects/hdlContext.h>
+#include <hdlConvertor/hdlAst/hdlContext.h>
 #include <hdlConvertor/syntaxErrorLogger.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/universal_fs.h>
@@ -43,13 +43,13 @@ public:
 		antlrParser->addErrorListener(&syntaxErrLogger);
 	}
 public:
-	hdlObjects::HdlContext &context;
+	hdlAst::HdlContext &context;
 
 	/*
 	 * :param context: if context is nullptr new context is generated
 	 *                 otherwise specified context is used
 	 * */
-	iParserContainer(hdlObjects::HdlContext &context, Language _lang,
+	iParserContainer(hdlAst::HdlContext &context, Language _lang,
 			verilog_pp::MacroDB &_defineDB) :
 			syntaxErrLogger(), lexer(nullptr), tokens(nullptr), antlrParser(
 					nullptr), hdlParser(nullptr), lang(_lang), defineDB(

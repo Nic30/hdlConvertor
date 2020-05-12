@@ -4,8 +4,10 @@
 
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 
-#include <hdlConvertor/hdlObjects/iHdlExpr.h>
-#include <hdlConvertor/hdlObjects/hdlOperatorType.h>
+#include <hdlConvertor/hdlAst/hdlValue.h>
+#include <hdlConvertor/hdlAst/hdlOp.h>
+
+#include <hdlConvertor/hdlAst/hdlOpType.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -14,70 +16,62 @@ class VhdlExprParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	static std::unique_ptr<std::vector<std::unique_ptr<hdlObjects::iHdlExpr>>> visitAssociation_list(
+	static std::unique_ptr<
+			std::vector<std::unique_ptr<hdlAst::iHdlExprItem>>> visitAssociation_list(
 			vhdlParser::Association_listContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitAssociation_element(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitAssociation_element(
 			vhdlParser::Association_elementContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitFormal_part(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitFormal_part(
 			vhdlParser::Formal_partContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitExplicit_range(
+	static std::unique_ptr<hdlAst::HdlOp> visitExplicit_range(
 			vhdlParser::Explicit_rangeContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitRange(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitRange(
 			vhdlParser::RangeContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitActual_part(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitActual_part(
 			vhdlParser::Actual_partContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitActual_designator(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitActual_designator(
 			vhdlParser::Actual_designatorContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSubtype_indication(
-			vhdlParser::Subtype_indicationContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitResolution_indication(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitResolution_indication(
 			vhdlParser::Resolution_indicationContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitConstraint(
-			std::unique_ptr<hdlObjects::iHdlExpr> selectedName,
-			vhdlParser::ConstraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitArray_constraint(
-			vhdlParser::Array_constraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitIndex_constraint(
-			vhdlParser::Index_constraintContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitDiscrete_range(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitDiscrete_range(
 			vhdlParser::Discrete_rangeContext *ctx);
-	static hdlObjects::HdlOperatorType visitSign(vhdlParser::SignContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitSimple_expression(
+	static hdlAst::HdlOpType visitSign(vhdlParser::SignContext *ctx);
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitSimple_expression(
 			vhdlParser::Simple_expressionContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitExpression(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitExpression(
 			vhdlParser::ExpressionContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitPrimary(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitPrimary(
 			vhdlParser::PrimaryContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitQualified_expression(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitQualified_expression(
 			vhdlParser::Qualified_expressionContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitAllocator(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitAllocator(
 			vhdlParser::AllocatorContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitAggregate(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitAggregate(
 			vhdlParser::AggregateContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitElement_association(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitElement_association(
 			vhdlParser::Element_associationContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitTarget(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitTarget(
 			vhdlParser::TargetContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitWaveform(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitWaveform(
 			vhdlParser::WaveformContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitCondition(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitCondition(
 			vhdlParser::ConditionContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitConditional_waveforms(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitConditional_waveforms(
 			vhdlParser::Conditional_waveformsContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitWaveform_element(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitWaveform_element(
 			vhdlParser::Waveform_elementContext *ctx);
 	/*
 	 * @return expression if specified else nullptr for "others" the vhdl keyword
 	 * */
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitChoice(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitChoice(
 			vhdlParser::ChoiceContext *ctx);
-	static std::vector<std::unique_ptr<hdlObjects::iHdlExpr>> visitChoices(
+	static std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> visitChoices(
 			vhdlParser::ChoicesContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitProcedure_call_statement(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitProcedure_call_statement(
 			vhdlParser::Procedure_call_statementContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitProcedure_call(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitProcedure_call(
 			vhdlParser::Procedure_callContext *ctx);
-	static std::unique_ptr<hdlObjects::iHdlExpr> visitType_mark(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitType_mark(
 			vhdlParser::Type_markContext *ctx);
 };
 

@@ -12,13 +12,16 @@ MacroDef__LINE__::MacroDef__LINE__() :
 		aMacroDef("__line__") {
 }
 std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
-		bool args_specified, VerilogPreproc*unused(pp),
+		bool args_specified, VerilogPreproc* pp,
 		antlr4::ParserRuleContext *ctx) {
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	string replacement = to_string(ctx->getStart()->getLine());
-	return replacement;
+	auto offset = pp->preproc_out.input_line_begin;
+	auto line = offset + ctx->getStart()->getLine();
+	assert(line > 0);
+	// numbering starts at 1
+	return to_string(line);
 }
 bool MacroDef__LINE__::requires_args() {
 	return false;
@@ -33,7 +36,7 @@ std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	string replacement = "\"" + pp->_tokens.getSourceName() + "\"";
+	string replacement = "\"" + pp->preproc_out.file_line_map.back().file_override + "\"";
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 	auto replace_all = [](std::string &data, const std::string &to_search,
 			const std::string &replace_str) {

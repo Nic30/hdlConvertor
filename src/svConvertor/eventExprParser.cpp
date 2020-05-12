@@ -7,7 +7,7 @@
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 
 namespace hdlConvertor {
@@ -19,7 +19,7 @@ VerEventExprParser::VerEventExprParser(SVCommentParser &_commentParser) :
 
 void VerEventExprParser::visitEvent_expression(
 		sv2017Parser::Event_expressionContext *ctx,
-		std::vector<std::unique_ptr<iHdlExpr>> &items) {
+		std::vector<std::unique_ptr<iHdlExprItem>> &items) {
 	// event_expression: event_expression_item ( ( KW_OR | COMMA ) event_expression_item )*;
 	// @note 'or' and ',' is a Verilog-1995/2001 difference, they work exactly the same
 
@@ -30,7 +30,7 @@ void VerEventExprParser::visitEvent_expression(
 
 void VerEventExprParser::visitEvent_expression_item(
 		sv2017Parser::Event_expression_itemContext *ctx,
-		std::vector<unique_ptr<iHdlExpr>> &items) {
+		std::vector<unique_ptr<iHdlExprItem>> &items) {
 	// event_expression_item:
 	//     LPAREN event_expression RPAREN
 	//     | ( edge_identifier )? expression ( KW_IFF expression )?
@@ -47,7 +47,7 @@ void VerEventExprParser::visitEvent_expression_item(
 			// [todo] must have
 			auto edge_type = visitEvent_identifier(ei);
 			if (edge_type.second)
-				e = create_object<iHdlExpr>(_e[0], edge_type.first, move(e));
+				e = create_object<HdlOp>(_e[0], edge_type.first, move(e));
 		}
 		if (_e.size() != 1) {
 			NotImplementedLogger::print(
@@ -57,7 +57,7 @@ void VerEventExprParser::visitEvent_expression_item(
 		items.push_back(move(e));
 	}
 }
-std::pair<HdlOperatorType, bool> VerEventExprParser::visitEvent_identifier(
+std::pair<HdlOpType, bool> VerEventExprParser::visitEvent_identifier(
 		sv2017Parser::Edge_identifierContext *ctx) {
 	// edge_identifier:
 	//    KW_POSEDGE
@@ -65,12 +65,12 @@ std::pair<HdlOperatorType, bool> VerEventExprParser::visitEvent_identifier(
 	//    | KW_EDGE
 	// ;
 	if (ctx->KW_POSEDGE()) {
-		return {HdlOperatorType::RISING, true};
+		return {HdlOpType::RISING, true};
 	} else if (ctx->KW_NEGEDGE()) {
-		return {HdlOperatorType::FALLING, true};
+		return {HdlOpType::FALLING, true};
 	} else {
 		assert(ctx->KW_EDGE());
-		return {HdlOperatorType::RISING, false};
+		return {HdlOpType::RISING, false};
 	}
 }
 

@@ -9,7 +9,7 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
 	hierarchyOnly = _hierarchyOnly;
@@ -26,7 +26,7 @@ std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 	// ;
 
 	a->name = ctx->identifier(0)->getText();
-	a->entityName = VhdlReferenceParser::visitName(ctx->name());
+	a->module_name = VhdlReferenceParser::visitName(ctx->name());
 
 	if (!hierarchyOnly) {
 		for (auto bi : ctx->block_declarative_item()) {

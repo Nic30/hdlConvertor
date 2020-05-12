@@ -1,30 +1,26 @@
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
-#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
-#include <antlr4-runtime.h>
 
-namespace hdlConvertor {
-namespace verilog_pp {
+// antlr4-runtime/
+#include <ParserRuleContext.h>
+#include <misc/Interval.h>
+
+#include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 
 using namespace antlr4;
 using namespace std;
 
+namespace hdlConvertor {
+namespace verilog_pp {
+
 using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 using verilogPreprocLexer = verilogPreproc_antlr::verilogPreprocLexer;
 
-void replaceStringInPlace(string &subject, const string &search,
-		const string &replace) {
-	size_t pos = 0;
-	while ((pos = subject.find(search, pos)) != string::npos) {
-		subject.replace(pos, search.length(), replace);
-		pos += replace.length();
-	}
-}
-
 VerilogPreproc::VerilogPreproc(VerilogPreprocContainer &_container,
-		TokenStream &tokens, bool _added_incdir, size_t include_depth_limit) :
+		VerilogPreprocOutBuffer &_preproc_out, TokenStream &tokens,
+		bool _added_incdir, size_t include_depth_limit) :
 		container(_container), _tokens(*(CommonTokenStream*) &tokens), added_incdir(
-				_added_incdir), include_depth_limit(include_depth_limit), _rewriter(
-				&tokens) {
+				_added_incdir), include_depth_limit(include_depth_limit), preproc_out(
+				_preproc_out) {
 	switch (container.lang) {
 	case Language::VERILOG1995:
 	case Language::VERILOG2001:
@@ -43,130 +39,96 @@ VerilogPreproc::VerilogPreproc(VerilogPreprocContainer &_container,
 VerilogPreproc::~VerilogPreproc() {
 }
 
-template<typename CTX_T>
-void processIfdef(VerilogPreproc &sefl, CTX_T *ctx, bool is_negated,
-		MacroDB &defineDB, antlr4::TokenStreamRewriter &rewriter) {
-	// printf("@%s\n", __PRETTY_FUNCTION__);
-	bool en_in = !is_negated;
-	auto cond_ids = ctx->cond_id();
-	auto group_of_lines = ctx->group_of_lines();
-	auto group_of_line = group_of_lines.begin();
-	bool matched = false;
-	misc::Interval token_to_keep;
-	for (auto cond_id : cond_ids) {
-		auto macro_name = cond_id->getText();
-		auto is_defined = defineDB.find(macro_name) != defineDB.end();
-		if (is_defined == en_in) {
-			auto gl = *group_of_line;
-			assert(gl);
-			sefl.visitGroup_of_lines(gl);
-			token_to_keep = gl->getSourceInterval();
-			matched = true;
-			break;
-		}
-		++group_of_line;
-	}
-	if (!matched && ctx->ELSE() != nullptr) {
-		auto eg = ctx->else_group_of_lines();
-		sefl.visitElse_group_of_lines(eg);
-		token_to_keep = eg->getSourceInterval();
-		matched = true;
-	}
-	auto token = ctx->getSourceInterval();
-	if (matched) {
-		rewriter.Delete(token.a, token_to_keep.a - 1);
-		rewriter.Delete(token_to_keep.b + 1, token.b);
+antlrcpp::Any VerilogPreproc::visitText(
+		verilogPreprocParser::TextContext *ctx) {
+	// text:
+	//    preprocess_directive
+	//   | LINE_COMMENT
+	//   | CODE
+	//   | NEW_LINE
+	//   | NUM
+	//   | ID
+	//   | STR
+	//   | NEW_LINE
+	//   | COMMENT
+	//   ;
+	auto c = ctx->children[0];
+	auto pd =
+			dynamic_cast<verilogPreprocParser::Preprocess_directiveContext*>(c);
+	if (pd) {
+		return visitPreprocess_directive(pd);
 	} else {
-		rewriter.Delete(token.a, token.b);
+		preproc_out.set_input_line(ctx->getStart()->getLine() - 1);
+		auto str = ctx->getText();
+		preproc_out << str;
+		return nullptr;
 	}
-}
 
-void VerilogPreproc::replace_context_by_bank(antlr4::ParserRuleContext *ctx) {
-	misc::Interval token = ctx->getSourceInterval();
-	_rewriter.Delete(token.a, token.b);
 }
 
 antlrcpp::Any VerilogPreproc::visitResetall(
-		verilogPreprocParser::ResetallContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::ResetallContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitCelldefine(
-		verilogPreprocParser::CelldefineContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::CelldefineContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitEndcelldefine(
-		verilogPreprocParser::EndcelldefineContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::EndcelldefineContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitTiming_spec(
-		verilogPreprocParser::Timing_specContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::Timing_specContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitDefault_nettype(
-		verilogPreprocParser::Default_nettypeContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::Default_nettypeContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitUnconnected_drive(
-		verilogPreprocParser::Unconnected_driveContext *ctx) {
-	//printf("@%s",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::Unconnected_driveContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitNounconnected_drive(
-		verilogPreprocParser::Nounconnected_driveContext *ctx) {
-	//printf("@%s",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+		verilogPreprocParser::Nounconnected_driveContext*) {
+	return nullptr;
+}
+
+antlrcpp::Any VerilogPreproc::visitKeywords_directive(
+		verilogPreprocParser::Keywords_directiveContext*) {
+	return nullptr;
+}
+
+antlrcpp::Any VerilogPreproc::visitEndkeywords_directive(
+		verilogPreprocParser::Endkeywords_directiveContext*) {
+	return nullptr;
+}
+
+antlrcpp::Any VerilogPreproc::visitPragma(
+		verilogPreprocParser::PragmaContext*) {
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitLine_directive(
 		verilogPreprocParser::Line_directiveContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
+	auto file = ctx->STR()->getText();
+	// [todo] process also level parameter (last)
+	std::istringstream line_no_str(ctx->NUM(0)->getText());
+	size_t line;
+	line_no_str >> line;
+	preproc_out.set_input_line(file, line);
+	return nullptr;
 }
 
-antlrcpp::Any VerilogPreproc::visitKeywords_directive(
-		verilogPreprocParser::Keywords_directiveContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
-}
-
-antlrcpp::Any VerilogPreproc::visitEndkeywords_directive(
-		verilogPreprocParser::Endkeywords_directiveContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
-}
-
-antlrcpp::Any VerilogPreproc::visitPragma(
-		verilogPreprocParser::PragmaContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
-	return NULL;
-}
-
-//method call when `undef macroID if found
 antlrcpp::Any VerilogPreproc::visitUndef(
 		verilogPreprocParser::UndefContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
 	// we simply remove the macro from the macroDB object. So it is not anymore
 	// defined
 	auto m = container.defineDB.find(ctx->ID()->getText());
@@ -175,16 +137,13 @@ antlrcpp::Any VerilogPreproc::visitUndef(
 		delete m->second;
 	}
 
-	replace_context_by_bank(ctx);
-	return NULL;
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitUndefineall(
-		verilogPreprocParser::UndefineallContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	replace_context_by_bank(ctx);
+		verilogPreprocParser::UndefineallContext*) {
 	container.delete_non_persystent_macro_defs();
-	return NULL;
+	return nullptr;
 }
 
 antlrcpp::Any VerilogPreproc::visitDefine_args_with_def_val(
@@ -229,12 +188,7 @@ antlrcpp::Any VerilogPreproc::visitDefine_args_basic(
 //method call when the definition of a macro is found
 antlrcpp::Any VerilogPreproc::visitDefine(
 		verilogPreprocParser::DefineContext *ctx) {
-	//printf("@%s - %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
 	// get the macro name
-	string def_name = ctx->macro_id()->getText();
-	//printf("%s\n", macroName.c_str());
-	string body;
-
 	auto da = ctx->define_args();
 	vector<MacroDefVerilog::param_info_t> *params;
 	vector<MacroDefVerilog::param_info_t> params_dummy;
@@ -243,6 +197,9 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 	else {
 		params = &params_dummy;
 	}
+
+	string def_name = ctx->macro_id()->getText();
+	string body;
 	// get the template
 	if (ctx->replacement() != nullptr) {
 		body = _tokens.getText(ctx->replacement()->getSourceInterval());
@@ -262,47 +219,7 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 
 	// the macro definition is replace by an empty string in the original
 	// source code
-	replace_context_by_bank(ctx);
-
-	return NULL;
-}
-
-void replace_substring(string &str, const string &s, const string &repl) {
-	size_t start_pos = 0;
-	while ((start_pos = str.find(s, start_pos)) != string::npos) {
-		str.replace(start_pos, s.size(), repl);
-		start_pos += repl.size();
-	}
-}
-
-void unescape_string_dblquotes(string &str) {
-	size_t start_pos = 0;
-	auto npos = string::npos;
-	size_t prev_start_pos = npos;
-	while ((start_pos = str.find("`\"", start_pos)) != npos) {
-		// if " is not part of `" or \"
-		bool is_escaped = (start_pos != 0 && str[start_pos - 1] == '\\');
-		if (!is_escaped) {
-			// delete '`' before '"'
-			str.erase(start_pos, 1);
-			if (prev_start_pos == npos) {
-				prev_start_pos = start_pos;
-			} else {
-				for (size_t in_str_i = prev_start_pos; in_str_i < start_pos;
-						in_str_i++) {
-					if (str[in_str_i] == '\n' && str[in_str_i - 1] != '\\') {
-						// escape every non escaped newline in new string
-						str.insert(in_str_i, 1, '\\');
-						start_pos++;
-					}
-				}
-				prev_start_pos = npos;
-			}
-		}
-		start_pos++;
-	}
-	if (prev_start_pos != npos)
-		throw ParseException("Unfinished `\" string");
+	return nullptr;
 }
 
 void VerilogPreproc::parse_macro_args(
@@ -332,26 +249,13 @@ void VerilogPreproc::parse_macro_args(
 		}
 	}
 }
-template<typename T>
-std::string vector_to_string(const std::vector<T> &vec) {
-	std::ostringstream oss;
-	oss << "[";
-	if (!vec.empty()) {
-		// Convert all but the last element to avoid a trailing ","
-		std::copy(vec.begin(), vec.end() - 1,
-				std::ostream_iterator<T>(oss, ","));
-
-		// Now add the last element with no delimiter
-		oss << vec.back();
-	}
-	oss << "]";
-	return oss.str();
-}
-
 //method call when `macro is found in the source code
 antlrcpp::Any VerilogPreproc::visitMacro_call(
 		verilogPreprocParser::Macro_callContext *ctx) {
-	// printf("@%s %s\n",__PRETTY_FUNCTION__,ctx->getText().c_str());
+	return visitMacro_call(ctx, true);
+}
+antlrcpp::Any VerilogPreproc::visitMacro_call(
+		verilogPreprocParser::Macro_callContext *ctx, bool add_to_output) {
 	// macro_call:
 	// 	OTHER_MACRO_CALL_NO_ARGS
 	// 	| OTHER_MACRO_CALL_WITH_ARGS value? (COMMA value? )* RP
@@ -422,49 +326,84 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 							+ ".");
 		}
 		container.macro_call_stack.push_back(macro_name);
-		replacement = container.run_preproc_str(replacement,
-				ctx->start->getLine() - 1);
+		auto input_line_no = preproc_out.input_line_begin + ctx->start->getLine() - 1;
+		VerilogPreprocOutBuffer _replacement(input_line_no);
+		container.run_preproc_str(replacement, _replacement);
+		// [todo] it is expected that the macro call won't cause any change in
+		//        file line map directly
+		//assert(_replacement.file_line_map.size() <= 1);
+		replacement = _replacement.str();
 		container.macro_call_stack.pop_back();
 	}
 
 	if (container.lang >= Language::SV2005) {
 		unescape_string_dblquotes(replacement);
 	}
-	// replace the original macro in the source code by the replacement string
-	// we just setup
-	misc::Interval token = ctx->getSourceInterval();
-	_rewriter.replace(token.a, token.b, replacement);
+
+	if (add_to_output) {
+		// replace the original macro in the source code by the replacement string
+		// we just setup
+		preproc_out.set_input_line(ctx->getStart()->getLine() - 1);
+		preproc_out << replacement;
+	}
 	return replacement;
 }
 
-// method call after `ifdef `elsif `else is found
+/*
+ * @param is_negated is used to reverse polarity of condition (ifdef/ifndef difference)
+ * */
+template<typename CTX_T>
+void processIfdef(VerilogPreproc &self, CTX_T *ctx, bool is_negated,
+		VerilogPreprocContainer &container, VerilogPreprocOutBuffer &out) {
+	bool en_in = !is_negated;
+	auto cond_ids = ctx->cond_id();
+	auto group_of_lines = ctx->group_of_lines();
+	auto group_of_line = group_of_lines.begin();
+	antlr4::ParserRuleContext *branch_to_keep = nullptr;
+	for (auto cond_id : cond_ids) {
+		auto macro_name = cond_id->getText();
+		auto is_defined = container.defineDB.find(macro_name)
+				!= container.defineDB.end();
+		if (is_defined == en_in) {
+			auto gl = *group_of_line;
+			assert(gl);
+			branch_to_keep = gl;
+			out.set_input_line(branch_to_keep->getStart()->getLine() - 1);
+			self.visitGroup_of_lines(gl);
+			break;
+		}
+		++group_of_line;
+	}
+	if (!branch_to_keep && ctx->ELSE() != nullptr) {
+		auto eg = ctx->else_group_of_lines();
+		branch_to_keep = eg;
+		out.set_input_line(branch_to_keep->getStart()->getLine() - 1);
+		self.visitElse_group_of_lines(eg);
+	}
+}
+
 antlrcpp::Any VerilogPreproc::visitIfdef_directive(
 		verilogPreprocParser::Ifdef_directiveContext *ctx) {
-	//  printf("@%s\n",__PRETTY_FUNCTION__);
-	processIfdef(*this, ctx, false, container.defineDB, _rewriter);
+	processIfdef(*this, ctx, false, container, preproc_out);
 	return nullptr;
 }
 
-// method call after `ifndef `elif `else tree is found
-// See vPreprocessor::exitIfdef_directive for code comment
 antlrcpp::Any VerilogPreproc::visitIfndef_directive(
 		verilogPreprocParser::Ifndef_directiveContext *ctx) {
-	//printf("@%s\n",__PRETTY_FUNCTION__);
-	processIfdef(*this, ctx, true, container.defineDB, _rewriter);
+	processIfdef(*this, ctx, true, container, preproc_out);
 	return nullptr;
 }
 
 //method call when `include is found
 antlrcpp::Any VerilogPreproc::visitInclude(
 		verilogPreprocParser::IncludeContext *ctx) {
-	// printf("@%s\n",__PRETTY_FUNCTION__);
 	//iterator on the list of inc. directory
 	auto incdir_iter = container.incdirs.begin();
 	bool found = false;
 	string inc_file_path;
 	auto mc = ctx->macro_call();
 	if (mc) {
-		inc_file_path = visitMacro_call(mc).as<string>();
+		inc_file_path = visitMacro_call(mc, false).as<string>();
 	} else {
 		inc_file_path = ctx->STR()->getText();
 	}
@@ -487,7 +426,7 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 	if (found == false) {
 		// The file was not found. We throw a exception
 		string msg = inc_file_path //.substr(1, inc_file_path.size() - 2)
-				+ " was not found in include directories\n";
+		+ " was not found in include directories\n";
 		throw_input_caused_error(ctx, msg);
 	} else if (container.incfile_stack.size() > include_depth_limit) {
 		// test the number of nested include.
@@ -501,21 +440,19 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 	} else {
 		// We are going to replace the content of the `include
 		// directive by the content of the processed file
-		misc::Interval token = ctx->getSourceInterval();
-		_rewriter.Delete(token.a, token.b);
 		filesystem::path my_incdir;
 		if (added_incdir) {
 			my_incdir = container.incdirs.back();
 			container.incdirs.pop_back();
 		}
 		// run the pre-processor on it
-		auto replacement = container.run_preproc_file(filename);
+		VerilogPreprocOutBuffer replacement(0);
+		container.run_preproc_file(filename, replacement);
 		if (added_incdir) {
 			container.incdirs.push_back(my_incdir);
 		}
 		//update the current source code
-		_rewriter.insertAfter(ctx->getStop(), replacement);
-
+		preproc_out << replacement;
 	}
 	return nullptr;
 }
@@ -524,28 +461,17 @@ void VerilogPreproc::throw_input_caused_error(antlr4::ParserRuleContext *ctx,
 		const std::string &_msg) {
 	auto ts = _tokens.getTokenSource();
 	auto s = ctx->start;
+	// [todo] use line offsets and file to reconstruct position in original code
 	stringstream msg;
 	msg << ts->getSourceName() << ":";
-	if (s)
+	if (s) {
+		// [TODO] use line offset from preproc_out
 		msg << ctx->start->getLine() << ":"
 				<< ctx->start->getCharPositionInLine() << ":";
+	}
 	msg << "Error: ";
 	msg << _msg;
 	throw ParseException(msg.str());
-}
-
-string& rtrim(string &str, const string &chars) {
-	str.erase(str.find_last_not_of(chars) + 1);
-	return str;
-}
-
-string& ltrim(string &str, const string &chars) {
-	str = str.erase(0, str.find_first_not_of(chars));
-	return str;
-}
-
-string& trim(string &str, const string &chars) {
-	return rtrim(ltrim(str, chars), chars);
 }
 
 /*
@@ -553,9 +479,8 @@ string& trim(string &str, const string &chars) {
  * Line escape and Line comment have to be removed
  */
 void VerilogPreproc::remove_comment(Token *start, Token *end, string *str) {
-	vector<Token*> cmtChannel;
 	//Get the list of token between the start and the end of replacement rule.
-	cmtChannel = _tokens.getTokens(start->getTokenIndex(),
+	vector<Token*> cmtChannel = _tokens.getTokens(start->getTokenIndex(),
 			end->getTokenIndex());
 	//For all those token we are going to their channel.
 	//If the channel is of the kind we search then we search and removed it from the string.

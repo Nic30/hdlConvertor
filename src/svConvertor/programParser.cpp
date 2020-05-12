@@ -10,10 +10,11 @@
 #include <hdlConvertor/svConvertor/portParser.h>
 #include <hdlConvertor/svConvertor/declrParser.h>
 #include <hdlConvertor/svConvertor/attributeParser.h>
+#include <hdlConvertor/createObject.h>
 
 using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
@@ -25,7 +26,7 @@ VerProgramParser::VerProgramParser(SVCommentParser &_commentParser) :
 void VerProgramParser::visitTf_item_declaration(
 		sv2017Parser::Tf_item_declarationContext *ctx,
 		vector<unique_ptr<iHdlObj>> &objs,
-		vector<unique_ptr<HdlVariableDef>> &ports) {
+		vector<unique_ptr<HdlIdDef>> &ports) {
 	// tf_item_declaration:
 	//     block_item_declaration
 	//     | tf_port_declaration
@@ -42,7 +43,7 @@ void VerProgramParser::visitTf_item_declaration(
 
 void VerProgramParser::visitTf_port_declaration(
 		sv2017Parser::Tf_port_declarationContext *ctx,
-		vector<unique_ptr<HdlVariableDef>> &res) {
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// tf_port_declaration:
 	//     ( attribute_instance )* tf_port_direction ( KW_VAR )? ( data_type_or_implicit )?
 	//     list_of_tf_variable_identifiers SEMI
@@ -65,7 +66,7 @@ void VerProgramParser::visitTf_port_declaration(
 
 std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declaration_common(
 		sv2017Parser::Task_and_function_declaration_commonContext *ctx,
-		std::unique_ptr<iHdlExpr> return_t, bool is_static, bool is_task) {
+		std::unique_ptr<iHdlExprItem> return_t, bool is_static, bool is_task) {
 	// task_and_function_declaration_common:
 	//     ( identifier DOT | class_scope )? identifier
 	//     ( SEMI ( tf_item_declaration )*
@@ -88,7 +89,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declara
 					cs);
 		name = VerExprParser::getIdentifierStr(ids[0]);
 	}
-	auto params = make_unique<std::vector<unique_ptr<HdlVariableDef>>>();
+	auto params = make_unique<std::vector<unique_ptr<HdlIdDef>>>();
 	auto f = create_object<HdlFunctionDef>(ctx, name, false, move(return_t),
 			move(params));
 	f->is_static = is_static;
@@ -130,7 +131,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_declaration(
 
 	VerTypeParser tp(commentParser);
 	bool is_static = tp.visitLifetime(ctx->lifetime());
-	auto return_t = iHdlExpr::ID("void");
+	auto return_t = create_object<HdlValueId>(ctx, "void");
 	auto tfcom = ctx->task_and_function_declaration_common();
 	return visitTask_and_function_declaration_common(tfcom, move(return_t),
 			is_static, true);

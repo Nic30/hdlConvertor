@@ -11,12 +11,15 @@ from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 
-from hdlConvertor.hdlAst import HdlContext as PyHdlContext
-from hdlConvertor.language import Language as PyHdlLanguageEnum
+from hdlConvertorAst.hdlAst import HdlContext as PyHdlContext
+from hdlConvertorAst.language import Language as PyHdlLanguageEnum
+from hdlConvertorAst.parse_hdlConvertor_json import \
+    parse_hdlConvertor_json_file, parse_hdlConvertor_json_str
+
 
 include "verilogPreproc.pyx"
 
-cdef extern from "hdlConvertor/hdlObjects/hdlContext.h" namespace "hdlConvertor::hdlObjects":
+cdef extern from "hdlConvertor/hdlAst/hdlContext.h" namespace "hdlConvertor::hdlAst":
     cdef cppclass HdlContext:
         HdlContext()
 
@@ -44,12 +47,12 @@ cdef int raise_cpp_py_error() except *:
 
     raise ParseException(msg)
 
-cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
-    cdef cppclass Convertor:
+cdef extern from "hdlConvertor/hdlConvertor.h" namespace "hdlConvertor":
+    cdef cppclass HdlConvertor:
         unique_ptr[HdlContext] c
         MacroDB defineDB
 
-        Convertor(HdlContext & _c)
+        HdlConvertor(HdlContext & _c)
 
         void parse(
             const vector[string] & hdl_file_names,
@@ -75,29 +78,30 @@ cdef extern from "hdlConvertor/convertor.h" namespace "hdlConvertor":
             vector[string] incdirs,
             Language mode) except +raise_cpp_py_error
 
-cdef class HdlConvertor:
-    """
-    The container of the Convertor which parses HDL code to universal AST
 
-    :ivar thisptr: pointer on Convertor instance which is a wrapper around the parsers
-    :ivar proproc_macro_db: dictinary of symbols defined in preprocessor
+cdef class HdlConvertorPy:
+    """
+    The container of the HdlConvertor which parses HDL code to universal AST
+
+    :ivar ~.thisptr: pointer on HdlConvertor instance which is a wrapper around the parsers
+    :ivar ~.proproc_macro_db: dictinary of symbols defined in preprocessor
     """
 
-    cdef unique_ptr[Convertor] thisptr
+    cdef unique_ptr[HdlConvertor] thisptr
     cdef HdlContext context
     cdef public CppStdMapProxy preproc_macro_db
 
     # cdef map[string, object] proproc_macro_db;
     def __cinit__(self):
-        self.thisptr.reset(new Convertor(self.context))
+        self.thisptr.reset(new HdlConvertor(self.context))
         self.preproc_macro_db = CppStdMapProxy.from_ptr(&self.thisptr.get().defineDB)
 
     @staticmethod
-    def _translate_Language_enum(langue):
-        if langue == PyHdlLanguageEnum.VHDL:
+    def _translate_Language_enum(language):
+        if language == PyHdlLanguageEnum.VHDL:
             return VHDL
         else:
-            return HdlConvertor._translate_verilog_enum(langue)
+            return HdlConvertorPy._translate_verilog_enum(language)
 
     @staticmethod
     def _translate_verilog_enum(lang):
@@ -122,17 +126,31 @@ cdef class HdlConvertor:
             raise ValueError(repr(lang) + " is not recognized"
                              " (expected hdlConvertor.language.Language value)")
 
-    def parse(self, filenames, langue, incdirs, hierarchyOnly=False, debug=True):
+    def parse(self, filenames, language, incdirs, hierarchyOnly=False, debug=True):
         """
         :param filenames: sequence of filenames or filename
         :type filename: Union[str, List[str]]
-        :param langue: hdlConvertor.language.Language enum value
+        :param language: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
         :return: HdlContext instance
         """
-        langue_value = self._translate_Language_enum(langue)
+        if language == PyHdlLanguageEnum.HDLCONVERTOR_JSON:
+            # merge object from all files to a single PyHdlContext
+            res = None
+            for f_name in filenames:
+                _res = parse_hdlConvertor_json_file(f_name)
+                if res is None:
+                    res = _res
+                else:
+                    res.objs.extend(_res.objs)
+            if res is None:
+                return PyHdlContext()
+            else:
+                return res
+
+        language_value = self._translate_Language_enum(language)
 
         if isinstance(filenames, string_type):
             filenames = [filenames, ]
@@ -145,7 +163,7 @@ cdef class HdlConvertor:
         cdef ToPy toPy
         if filenames:
             self.thisptr.get().parse(
-                filenames, langue_value, incdirs, hierarchyOnly, debug)
+                filenames, language_value, incdirs, hierarchyOnly, debug)
 
             toPy = ToPy()
             d = toPy.toPy(&self.context)
@@ -156,17 +174,20 @@ cdef class HdlConvertor:
         else:
             return PyHdlContext()
 
-    def parse_str(self, hdl_str, langue, incdirs, hierarchyOnly=False, debug=True):
+    def parse_str(self, hdl_str, language, incdirs, hierarchyOnly=False, debug=True):
         """
         :param hdl_str: HDL string to parse
         :type filename: str
-        :param langue: hdlConvertor.language.Language enum value
+        :param language: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
         :return: HdlContext instance
         """
-        langue_value = self._translate_Language_enum(langue)
+        if language == PyHdlLanguageEnum.HDLCONVERTOR_JSON:
+            return parse_hdlConvertor_json_str(hdl_str)
+
+        language_value = self._translate_Language_enum(language)
 
         hdl_str = str_encode(hdl_str)
         incdirs = [str_encode(item) for item in incdirs]
@@ -176,7 +197,7 @@ cdef class HdlConvertor:
         cdef ToPy toPy
         if hdl_str:
             self.thisptr.get().parse_str(
-                hdl_str, langue_value, incdirs, hierarchyOnly, debug)
+                hdl_str, language_value, incdirs, hierarchyOnly, debug)
 
             toPy = ToPy()
             d = toPy.toPy(&self.context)
@@ -194,12 +215,12 @@ cdef class HdlConvertor:
         :type filename: Union[str, List[str]]
         :return: string output from verilog preprocessor
         """
-        langue_value = self._translate_verilog_enum(lang)
+        language_value = self._translate_verilog_enum(lang)
 
         filename = str_encode(filename)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.get().verilog_pp(filename, incdirs, langue_value)
+        data = self.thisptr.get().verilog_pp(filename, incdirs, language_value)
         data = str_decode(data)
 
         return data
@@ -210,12 +231,12 @@ cdef class HdlConvertor:
 
         :return: string output from verilog preprocessor
         """
-        langue_value = self._translate_verilog_enum(lang)
+        language_value = self._translate_verilog_enum(lang)
 
         verilog_str = str_encode(verilog_str)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.get().verilog_pp_str(verilog_str, incdirs, langue_value)
+        data = self.thisptr.get().verilog_pp_str(verilog_str, incdirs, language_value)
         data = str_decode(data)
 
         return data

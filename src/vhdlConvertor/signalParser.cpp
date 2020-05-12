@@ -4,10 +4,10 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
-std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSignalParser::visitSignal_declaration(
+std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSignalParser::visitSignal_declaration(
 		vhdlParser::Signal_declarationContext *ctx) {
 	//signal_declaration
 	//	: SIGNAL identifier_list COLON

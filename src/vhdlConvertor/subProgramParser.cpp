@@ -7,7 +7,7 @@
 
 #include <hdlConvertor/createObject.h>
 
-using namespace hdlConvertor::hdlObjects;
+using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 
 namespace hdlConvertor {
@@ -35,6 +35,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitSubprogram_body(
 		auto stm = VhdlStatementParser::visitSequential_statement(s);
 		f->body.push_back(move(stm));
 	}
+	f->is_declaration_only = false;
 
 	return f;
 }
@@ -63,7 +64,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitProcedure_specificati
 	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> paramList;
+	std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> paramList;
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
@@ -85,7 +86,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specificatio
 	auto name = VhdlLiteralParser::visitDesignator(designator);
 
 	auto fpl = ctx->formal_parameter_list();
-	std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> paramList;
+	std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> paramList;
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
@@ -93,7 +94,7 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specificatio
 			std::move(paramList));
 }
 
-std::unique_ptr<std::vector<std::unique_ptr<HdlVariableDef>>> VhdlSubProgramParser::visitFormal_parameter_list(
+std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramParser::visitFormal_parameter_list(
 		vhdlParser::Formal_parameter_listContext *ctx) {
 	// formal_parameter_list
 	// : interface_list

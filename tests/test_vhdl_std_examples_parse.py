@@ -1,18 +1,18 @@
+import os
 import unittest
 
-from hdlConvertor.language import Language
+from hdlConvertorAst.language import Language
+from tests.hdl_parse_tc import HdlParseTC, parseFile as _parseFile
 
-from tests.basic_tc import BasicTC, parseFile as _parseFile
-import os
 
-VHDL_2008_ROOT = os.path.join(os.path.dirname(__file__), "vhdl", "2008")
+VHDL_2008_ROOT = os.path.join(os.path.dirname(__file__), "vhdl", "std2008")
 
 
 def parseFile(fname):
     return _parseFile(os.path.join(VHDL_2008_ROOT, fname), Language.VHDL_2008)
 
 
-class Vhdl2008StdExamplesParseTC(BasicTC):
+class Vhdl2008StdExamplesParseTC(HdlParseTC):
 
     def test_arch(self):
         parseFile("arch.vhd")
@@ -35,11 +35,14 @@ class Vhdl2008StdExamplesParseTC(BasicTC):
     def test_types(self):
         parseFile("types.vhd")
 
+    def test_units(self):
+        parseFile("units.vhd")
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    suite.addTest(Vhdl2008StdExamplesParseTC('test_types'))
-    # suite.addTest(unittest.makeSuite(Vhdl2008StdExamplesParseTC))
+    # suite.addTest(Vhdl2008StdExamplesParseTC('test_types'))
+    suite.addTest(unittest.makeSuite(Vhdl2008StdExamplesParseTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)
