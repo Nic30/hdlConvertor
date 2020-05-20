@@ -98,3 +98,6 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [verible](https://github.com/google/verible) - C++, System Verilog 2017 parser
 * [pyvsc](https://github.com/fvutils/pyvsc) - C++, library for Verification Stimulus and Coverage description
 * [UHDM](https://github.com/alainmarcel/UHDM) - rust, universal hardware data model
+* [istyle-verilog-formatter](https://github.com/thomasrussellmurphy/istyle-verilog-formatter) - c++, Verilog formatter
+
+
