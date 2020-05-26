@@ -80,7 +80,7 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
 * [Pyverilog](https://github.com/PyHDI/Pyverilog) - python verilog toolkit
 * [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
-* [rrgen](https://github.com/rggen/rggen) - rust code generator
+* [RgGen](https://github.com/rggen/rggen) - CSR (Configuration and Status Registers) generator
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [sv-parser](https://github.com/dalance/sv-parser) - Rust, SystemVerilog parser library fully complient with IEEE 1800-2017
