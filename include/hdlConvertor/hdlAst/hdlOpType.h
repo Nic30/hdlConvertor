@@ -11,6 +11,8 @@ enum HdlOpType {
 	DEFINE_RESOLVER, // used in resolver specification in vhdl subtype definition
 	TYPE_OF, // SV type operator
 	INDEX, // array index
+	PART_SELECT_POST, // logic [31: 0] a; logic [0 :31] b;  a[ 0 +: 8] == a[ 7 : 0]; b[ 0 +: 8] == b[0 : 7]
+	PART_SELECT_PRE, // a[15 -: 8] == a[15 : 8]; b[15 -: 8] == b[8 :15]
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification
 	MINUS_UNARY,

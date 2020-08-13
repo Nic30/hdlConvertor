@@ -13,6 +13,8 @@ static const char* const opTypeToStr[HdlOpType::ARITH_SHIFT_RIGHT_ASSIGN + 1] = 
 		"DEFINE_RESOLVER",
 		"TYPE_OF",
 		"INDEX",
+		"PART_SELECT_POST",
+		"PART_SELECT_PRE",
 		"DOWNTO",
 		"TO",
 		"MINUS_UNARY",
