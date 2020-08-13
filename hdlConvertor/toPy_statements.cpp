@@ -365,7 +365,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	if (toPy_arr(py_inst, "labels", o->labels)) {
 		return nullptr;
 	}
-	if (toPy_property(py_inst, "in_prepoc", o->in_preproc))
+	if (toPy_property(py_inst, "in_preproc", o->in_preproc))
 		return nullptr;
 
 	return py_inst;
