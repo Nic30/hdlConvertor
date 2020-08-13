@@ -30,13 +30,12 @@ hdlAst::HdlOpType HdlOpType_from(
 }
 hdlAst::HdlOpType HdlOpType_from(
 		vhdl_antlr::vhdlParser::Relational_operatorContext *op) {
-	// relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | EQ_MATCH | NEQ_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
+	// relational_operator: EQ | NE | LT | CONASGN | GT | GE | EQ_MATCH | NE_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
 	using hdlAst::HdlOpType;
 	if (op->EQ())
 		return HdlOpType::EQ;
-	if (op->NEQ())
-		return HdlOpType::NEQ;
-
+	if (op->NE())
+		return HdlOpType::NE;
 	if (op->CONASGN())
 		return HdlOpType::LE;
 	if (op->LT())
@@ -47,8 +46,8 @@ hdlAst::HdlOpType HdlOpType_from(
 		return HdlOpType::GE;
 	if (op->EQ_MATCH())
 		return HdlOpType::EQ_MATCH;
-	if (op->NEQ_MATCH())
-		return HdlOpType::NEQ_MATCH;
+	if (op->NE_MATCH())
+		return HdlOpType::NE_MATCH;
 	if (op->LT_MATCH())
 		return HdlOpType::LT_MATCH;
 	if (op->LE_MATCH())

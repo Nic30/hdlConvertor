@@ -329,11 +329,11 @@ operator_cmp:
 ;
 operator_eq_neq:
 	 EQ
-   | NEQ
+   | NE
    | CASE_EQ
-   | CASE_NEQ
+   | CASE_NE
    | WILDCARD_EQ
-   | WILDCARD_NEQ
+   | WILDCARD_NE
 ;
 operator_xor:
 	  XOR

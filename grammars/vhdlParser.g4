@@ -759,7 +759,7 @@ primary:
       | qualified_expression // 7
 ;
 logical_operator: KW_AND | KW_OR | KW_NAND | KW_NOR | KW_XOR | KW_XNOR;
-relational_operator: EQ | NEQ | LT | CONASGN | GT | GE | EQ_MATCH | NEQ_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
+relational_operator: EQ | NE | LT | CONASGN | GT | GE | EQ_MATCH | NE_MATCH | LT_MATCH | LE_MATCH | GT_MATCH | GE_MATCH;
 shift_operator: KW_SLL | KW_SRL | KW_SLA | KW_SRA | KW_ROL | KW_ROR;
 adding_operator: PLUS | MINUS | AMPERSAND;
 sign: PLUS | MINUS;
