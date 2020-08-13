@@ -90,6 +90,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_generate_for(self):
         self.parseWithRef("generate_for.vhd", Language.VHDL)
 
+    def test_generate_for_and_if(self):
+        self.parseWithRef("generate_for_and_if.vhd", Language.VHDL)
+
     def test_entity_declarative_item(self):
         self.parseWithRef("entity_declarative_item.vhd", Language.VHDL)
 

@@ -85,7 +85,7 @@ public:
 			vhdlParser::Concurrent_signal_assignment_statementContext *ctx);
 	void visitConcurrent_statement(vhdlParser::Concurrent_statementContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &stms);
-	static std::unique_ptr<hdlAst::iHdlStatement> visitConcurrent_statement_with_optional_label(
+	std::unique_ptr<hdlAst::iHdlStatement> visitConcurrent_statement_with_optional_label(
 			vhdlParser::Concurrent_statement_with_optional_labelContext *ctx);
 };
 

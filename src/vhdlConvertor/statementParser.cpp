@@ -726,14 +726,13 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_statement_with_op
 	auto cpc = ctx->concurrent_procedure_call_statement();
 	if (cpc) {
 		NotImplementedLogger::print(
-				"ArchParser.visitConcurrent_procedure_call_statement", cpc);
+				"VhdlStatementParser.visitConcurrent_procedure_call_statement", cpc);
 		return nullptr;
 	}
 	auto ca = ctx->concurrent_assertion_statement();
 	if (ca) {
-		NotImplementedLogger::print(
-				"ArchParser.visitConcurrent_assertion_statement", ca);
-		return nullptr;
+		VhdlStatementParser sp(commentParser, hierarchyOnly);
+		return sp.visitConcurrent_assertion_statement(ca);
 	}
 	auto csa = ctx->concurrent_signal_assignment_statement();
 	assert(csa);
