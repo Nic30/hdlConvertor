@@ -16,6 +16,8 @@ class HdlModuleDec: public WithNameAndDoc, public iHdlObj {
 public:
 	std::vector<std::unique_ptr<HdlIdDef>> generics;
 	std::vector<std::unique_ptr<HdlIdDef>> ports;
+	// vhdl entity declarative items
+	std::vector<std::unique_ptr<iHdlObj>> objs;
 
 	HdlModuleDec();
 	HdlIdDef * getPortByName(const std::string & name);

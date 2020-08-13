@@ -27,8 +27,8 @@ bool is_others(unique_ptr<iHdlExprItem> &e) {
 	return (_e && _e->symb == HdlValueSymbol_t::symb_OTHERS);
 }
 
-VhdlStatementParser::VhdlStatementParser(bool _hierarchyOnly) :
-		hierarchyOnly(_hierarchyOnly) {
+VhdlStatementParser::VhdlStatementParser(VhdlCommentParser & _commentParser, bool _hierarchyOnly) :
+		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 
 unique_ptr<HdlStmBlock> VhdlStatementParser::visitSequence_of_statements(
@@ -104,7 +104,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 	if (ns) {
 		// [todo] convert to wait statement
 		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - next_statement",
+				"VhdlStatementParser.visitSequential_statement - next_statement",
 				ns);
 		return create_object<HdlStmNop>(ctx);
 	}
@@ -113,7 +113,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 	if (es) {
 		// [todo] convert to regular call
 		NotImplementedLogger::print(
-				"StatementParser.visitSequential_statement - exit_statement",
+				"VhdlStatementParser.visitSequential_statement - exit_statement",
 				es);
 		return create_object<HdlStmNop>(ctx);
 	}
@@ -130,20 +130,22 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
 		vhdlParser::Assertion_statementContext *ctx) {
 	// assertion_statement: assertion SEMI;
+	return visitAssertion(ctx->assertion());
+}
+unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion(
+			vhdlParser::AssertionContext *ctx) {
 	// assertion:
 	//       ASSERT condition
 	//           ( REPORT expression )?
 	//           ( SEVERITY expression )?
 	// ;
 
-
 	vector<unique_ptr<iHdlExprItem>> args;
-	auto a = ctx->assertion();
-	auto fn_name = create_object<HdlValueId>(a->KW_ASSERT(), "assert");
+	auto fn_name = create_object<HdlValueId>(ctx->KW_ASSERT(), "assert");
 
-	auto c = VhdlExprParser::visitCondition(a->condition());
+	auto c = VhdlExprParser::visitCondition(ctx->condition());
 	args.push_back(move(c));
-	auto exprs = a->expression();
+	auto exprs = ctx->expression();
 	for (auto _e : exprs) {
 		// [FIXME] not correct it is not possible to distinguish between report and severity
 		auto e = VhdlExprParser::visitExpression(_e);
@@ -151,6 +153,18 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
 	}
 	auto call = HdlOp::call(ctx, move(fn_name), args);
 	return create_object<HdlStmExpr>(ctx, move(call));
+}
+unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_assertion_statement(
+		vhdlParser::Concurrent_assertion_statementContext *ctx) {
+	// concurrent_assertion_statement:
+	//       ( KW_POSTPONED )? assertion SEMI
+	// ;
+	if (ctx->KW_POSTPONED()) {
+		NotImplementedLogger::print(
+				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - KW_POSTPONED",
+				ctx);
+	}
+	return VhdlStatementParser::visitAssertion(ctx->assertion());
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
@@ -221,7 +235,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
 
 	if (ctx->QUESTIONMARK().size()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitCase_statement - QUESTIONMARK", ctx);
+				"VhdlStatementParser.visitCase_statement - QUESTIONMARK", ctx);
 	}
 
 	auto _e = ctx->expression();
@@ -302,7 +316,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_waveform_assignment(
 
 	if (ctx->delay_mechanism())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_waveform_assignment - delay_mechanism",
+				"VhdlStatementParser.visitSimple_waveform_assignment - delay_mechanism",
 				ctx);
 
 	auto dst = VhdlExprParser::visitTarget(ctx->target());
@@ -317,7 +331,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_force_assignment(
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_force_assignment - force_mode",
+				"VhdlStatementParser.visitSimple_force_assignment - force_mode",
 				ctx);
 
 	return create_object<HdlStmAssign>(ctx,
@@ -333,7 +347,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSimple_release_assignment(
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitSimple_release_assignment - force_mode",
+				"VhdlStatementParser.visitSimple_release_assignment - force_mode",
 				ctx);
 
 	return create_object<HdlStmAssign>(ctx,
@@ -367,7 +381,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConditional_waveform_assignm
 
 	if (ctx->delay_mechanism())
 		NotImplementedLogger::print(
-				"StatementParser.visitConditional_waveform_assignment - delay_mechanism",
+				"VhdlStatementParser.visitConditional_waveform_assignment - delay_mechanism",
 				ctx);
 
 	auto src = VhdlExprParser::visitTarget(ctx->target());
@@ -385,11 +399,11 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConditional_force_assignment
 
 	if (ctx->force_mode())
 		NotImplementedLogger::print(
-				"StatementParser.visitConditional_force_assignment - force_mode",
+				"VhdlStatementParser.visitConditional_force_assignment - force_mode",
 				ctx);
 
 	NotImplementedLogger::print(
-			"StatementParser.visitConditional_force_assignment - conditional_expression",
+			"VhdlStatementParser.visitConditional_force_assignment - conditional_expression",
 			ctx);
 
 	return create_object<HdlStmAssign>(ctx,
@@ -405,7 +419,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitSelected_signal_assignment(
 	//  ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitSelected_signal_assignment", ctx);
+			"VhdlStatementParser.visitSelected_signal_assignment", ctx);
 
 	return nullptr;
 }
@@ -451,7 +465,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitConditional_variable_assignme
 	//  ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitConditional_variable_assignment - conditional_expression",
+			"VhdlStatementParser.visitConditional_variable_assignment - conditional_expression",
 			ctx);
 
 	return create_object<HdlStmAssign>(ctx,
@@ -467,7 +481,7 @@ unique_ptr<HdlStmAssign> VhdlStatementParser::visitSelected_variable_assignment(
 	// ;
 
 	NotImplementedLogger::print(
-			"StatementParser.visitSelected_variable_assignments", ctx);
+			"VhdlStatementParser.visitSelected_variable_assignments", ctx);
 
 	return create_object<HdlStmAssign>(ctx,
 			VhdlExprParser::visitExpression(ctx->expression()),
@@ -627,17 +641,17 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_selected_signal_a
 
 	if (ctx->QUESTIONMARK()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - QUESTIONMARK",
+				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - QUESTIONMARK",
 				ctx);
 	}
 	if (ctx->KW_GUARDED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - GUARDED",
+				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - GUARDED",
 				ctx);
 	}
 	if (ctx->delay_mechanism()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_selected_signal_assignment - delay_mechanism",
+				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - delay_mechanism",
 				ctx);
 	}
 	auto sel = VhdlExprParser::visitExpression(ctx->expression());
@@ -658,7 +672,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_signal_assignment
 
 	if (ctx->KW_POSTPONED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - POSTPONED",
+				"VhdlStatementParser.visitConcurrent_signal_assignment_statement - POSTPONED",
 				ctx);
 	}
 
@@ -674,12 +688,12 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_signal_assignment
 	// ;
 	if (csaa->KW_GUARDED()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - GUARDED",
+				"VhdlStatementParser.visitConcurrent_signal_assignment_statement - GUARDED",
 				csaa);
 	}
 	if (csaa->delay_mechanism()) {
 		NotImplementedLogger::print(
-				"StatementParser.visitConcurrent_signal_assignment_statement - delay_mechanism",
+				"VhdlStatementParser.visitConcurrent_signal_assignment_statement - delay_mechanism",
 				csaa);
 	}
 
@@ -741,7 +755,7 @@ void VhdlStatementParser::visitConcurrent_statement(
 		auto label = VhdlLiteralParser::visitLabel(_label);
 		auto b = ctx->block_statement();
 		if (b) {
-			NotImplementedLogger::print("StatementParser.visitBlock_statement",
+			NotImplementedLogger::print("VhdlStatementParser.visitBlock_statement",
 					b);
 			return;
 		}
@@ -756,7 +770,7 @@ void VhdlStatementParser::visitConcurrent_statement(
 
 		auto gs = ctx->generate_statement();
 		if (gs) {
-			VhdlGenerateStatementParser gsp(hierarchyOnly);
+			VhdlGenerateStatementParser gsp(commentParser, hierarchyOnly);
 			auto _gs = gsp.visitGenerate_statement(gs);
 			_gs->labels.insert(_gs->labels.begin(), label);
 			stms.push_back(move(_gs));

@@ -240,6 +240,9 @@ PyObject* ToPy::toPy(const HdlModuleDec *o) {
 	if (toPy_arr(py_inst, "ports", o->ports))
 		return nullptr;
 
+	if (toPy_arr(py_inst, "objs", o->objs))
+		return nullptr;
+
 	return py_inst;
 }
 

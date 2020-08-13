@@ -26,8 +26,8 @@ using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
-VhdlGenerateStatementParser::VhdlGenerateStatementParser(bool _hierarchyOnly) :
-		hierarchyOnly(_hierarchyOnly) {
+VhdlGenerateStatementParser::VhdlGenerateStatementParser(VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
+		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 
 std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitGenerate_statement(
@@ -178,11 +178,11 @@ std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_stat
 	// ;
 	auto bdis = ctx->block_declarative_item();
 	auto cstms = ctx->concurrent_statement();
-	VhdlStatementParser sp(hierarchyOnly);
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
 	auto b = create_object<HdlStmBlock>(ctx);
 	b->in_preproc = true;
 	if (bdis.size()) {
-		VhdlBlockDeclarationParser _bdp(hierarchyOnly);
+		VhdlBlockDeclarationParser _bdp(commentParser, hierarchyOnly);
 		for (auto bdi : ctx->block_declarative_item()) {
 			_bdp.visitBlock_declarative_item(bdi, b->statements);
 		}

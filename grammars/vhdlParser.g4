@@ -196,27 +196,9 @@ architecture_body:
       KW_END ( KW_ARCHITECTURE )? ( identifier )? SEMI
 ;
 block_declarative_item:
-      subprogram_declaration
-      | subprogram_body
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_body
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
-      | signal_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
+      entity_declarative_item
       | component_declaration
-      | attribute_declaration
-      | attribute_specification
       | configuration_specification
-      | disconnection_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
 ;
 configuration_declaration:
     KW_CONFIGURATION identifier KW_OF name KW_IS

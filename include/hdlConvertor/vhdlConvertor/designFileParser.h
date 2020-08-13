@@ -17,8 +17,8 @@ class VhdlDesignFileParser: public BaseHdlParser {
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	VhdlDesignFileParser(antlr4::TokenStream &tokens,
-			hdlAst::HdlContext &ctx, bool _hierarchyOnly);
+	VhdlDesignFileParser(antlr4::TokenStream &tokens, hdlAst::HdlContext &ctx,
+			bool _hierarchyOnly);
 	void visitDesign_file(vhdlParser::Design_fileContext *ctx);
 	void visitDesign_unit(vhdlParser::Design_unitContext *ctx);
 	void visitLibrary_unit(vhdlParser::Library_unitContext *ctx);
@@ -26,7 +26,7 @@ public:
 	void visitContext_clause(vhdlParser::Context_clauseContext *ctx);
 	void visitPrimary_unit(vhdlParser::Primary_unitContext *ctx);
 	void visitContext_item(vhdlParser::Context_itemContext *ctx);
-        void visitLibrary_clause(vhdlParser::Library_clauseContext *ctx);
+	void visitLibrary_clause(vhdlParser::Library_clauseContext *ctx);
 	void visitUse_clause(vhdlParser::Use_clauseContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 };
