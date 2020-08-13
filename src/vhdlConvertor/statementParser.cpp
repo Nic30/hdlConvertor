@@ -565,8 +565,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitLoop_statement(
 
 	auto label = ctx->label();
 	if (label) {
-		NotImplementedLogger::print(
-				"StatementParser.visitLoop_statement - label after", ctx);
+		loop->labels.push_back(VhdlLiteralParser::visitLabel(label));
 	}
 	return loop;
 }
