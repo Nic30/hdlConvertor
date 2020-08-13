@@ -39,7 +39,7 @@ Installing this library
 sudo pip3 install hdlConvertor
 
 # or download repository and run
-sudo pip3 install git+https://github.com/Nic30/hdlConvertorAst.git
+sudo pip3 install --upgrade --force-reinstall --no-cache-dir git+https://github.com/Nic30/hdlConvertorAst.git
 sudo pip3 install -r requirements.txt
 sudo python3 setup.py install -j$(nproc)
 

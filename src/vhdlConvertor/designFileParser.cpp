@@ -64,7 +64,7 @@ void VhdlDesignFileParser::visitSecondary_unit(
 	// ;
 	auto arch = ctx->architecture_body();
 	if (arch) {
-		VhdlArchParser aparser(hierarchyOnly);
+		VhdlArchParser aparser(commentParser, hierarchyOnly);
 		auto a = aparser.visitArchitecture_body(arch);
 		context.objs.push_back(move(a));
 	}

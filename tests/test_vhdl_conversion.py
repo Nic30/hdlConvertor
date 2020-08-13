@@ -87,10 +87,16 @@ class VhdlConversionTC(HdlParseTC):
     def test_subtype(self):
         self.parseWithRef("subtype.vhd", Language.VHDL)
 
+    def test_generate_for(self):
+        self.parseWithRef("generate_for.vhd", Language.VHDL)
+
+    def test_entity_declarative_item(self):
+        self.parseWithRef("entity_declarative_item.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_array'))
+    # suite.addTest(VhdlConversionTC('test_entity_declarative_item'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

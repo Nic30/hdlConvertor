@@ -107,6 +107,9 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto ex = dynamic_cast<const iHdlExprItem*>(o);
 	if (ex)
 		return toPy(ex);
+	auto fn = dynamic_cast<const HdlFunctionDef*>(o);
+	if (fn)
+		return toPy(fn);
 	auto v = dynamic_cast<const HdlIdDef*>(o);
 	if (v)
 		return toPy(v);
@@ -125,9 +128,6 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto ns = dynamic_cast<const HdlValueIdspace*>(o);
 	if (ns)
 		return toPy(ns);
-	auto fn = dynamic_cast<const HdlFunctionDef*>(o);
-	if (fn)
-		return toPy(fn);
 	auto lib = dynamic_cast<const HdlLibrary*>(o);
 	if (lib)
 		return toPy(lib);
@@ -238,6 +238,9 @@ PyObject* ToPy::toPy(const HdlModuleDec *o) {
 		return nullptr;
 
 	if (toPy_arr(py_inst, "ports", o->ports))
+		return nullptr;
+
+	if (toPy_arr(py_inst, "objs", o->objs))
 		return nullptr;
 
 	return py_inst;

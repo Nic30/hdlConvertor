@@ -11,11 +11,12 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
-VhdlArchParser::VhdlArchParser(bool _hierarchyOnly) {
-	hierarchyOnly = _hierarchyOnly;
+VhdlArchParser::VhdlArchParser(VhdlCommentParser &_commentParser,
+		bool _hierarchyOnly) :
+		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
-		vhdlParser::Architecture_bodyContext * ctx) {
+		vhdlParser::Architecture_bodyContext *ctx) {
 	auto a = create_object<HdlModuleDef>(ctx);
 	// architecture_body:
 	//       ARCHITECTURE identifier OF name IS
@@ -30,11 +31,11 @@ std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 
 	if (!hierarchyOnly) {
 		for (auto bi : ctx->block_declarative_item()) {
-			VhdlBlockDeclarationParser bp(hierarchyOnly);
+			VhdlBlockDeclarationParser bp(commentParser, hierarchyOnly);
 			bp.visitBlock_declarative_item(bi, a->objs);
 		}
 	}
-	VhdlStatementParser sp(hierarchyOnly);
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
 	for (auto s : ctx->concurrent_statement()) {
 		sp.visitConcurrent_statement(s, a->objs);
 	}

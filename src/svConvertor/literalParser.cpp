@@ -259,37 +259,25 @@ HdlOpType VerLiteralParser::visitOperator_eq_neq(
 		sv2017Parser::Operator_eq_neqContext *ctx) {
 	// operator_eq_neq:
 	// 	    EQ
-	//    | NEQ
+	//    | NE
 	//    | CASE_EQ
-	//    | CASE_NEQ
+	//    | CASE_NE
 	//    | WILDCARD_EQ
-	//    | WILDCARD_NEQ
+	//    | WILDCARD_NE
 	// ;
 	if (ctx->EQ())
 		return HdlOpType::EQ;
-	else if (ctx->NEQ())
-		return HdlOpType::NEQ;
+	else if (ctx->NE())
+		return HdlOpType::NE;
 	else if (ctx->CASE_EQ()) {
-		NotImplementedLogger::print(
-				"VerLiteralParser::visitOperator_eq_neq CASE_EQ", ctx);
-		return HdlOpType::EQ;
-	} else if (ctx->CASE_NEQ()) {
-		NotImplementedLogger::print(
-				"VerLiteralParser::visitOperator_eq_neq CASE_NEQ", ctx);
-		return HdlOpType::NEQ;
+		return HdlOpType::IS;
+	} else if (ctx->CASE_NE()) {
+		return HdlOpType::IS_NOT;
 	} else if (ctx->WILDCARD_EQ()) {
-		NotImplementedLogger::print(
-				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
-		return HdlOpType::EQ;
-	} else if (ctx->WILDCARD_EQ()) {
-		NotImplementedLogger::print(
-				"VerLiteralParser::visitOperator_eq_neq WILDCARD_EQ", ctx);
-		return HdlOpType::EQ;
+		return HdlOpType::EQ_MATCH;
 	} else {
-		assert(ctx->WILDCARD_NEQ());
-		NotImplementedLogger::print(
-				"VerLiteralParser::visitOperator_eq_neq WILDCARD_NEQ", ctx);
-		return HdlOpType::NEQ;
+		assert(ctx->WILDCARD_NE());
+		return HdlOpType::NE_MATCH;
 	}
 }
 HdlOpType VerLiteralParser::visitOperator_xor(

@@ -26,8 +26,8 @@ using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
-VhdlGenerateStatementParser::VhdlGenerateStatementParser(bool _hierarchyOnly) :
-		hierarchyOnly(_hierarchyOnly) {
+VhdlGenerateStatementParser::VhdlGenerateStatementParser(VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
+		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 
 std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitGenerate_statement(
@@ -107,7 +107,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 		++sIt;
 	}
 	std::unique_ptr<HdlStmIf> ifStm = nullptr;
-	std::unique_ptr<hdlAst::HdlStmBlock> ifFalse = nullptr;
+	std::unique_ptr<hdlAst::iHdlObj> ifFalse = nullptr;
 	if (sIt != s.end()) {
 		ifFalse = visitGenerate_statement_body(*sIt);
 	}
@@ -133,7 +133,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 	auto _e = ctx->expression();
 	auto e = VhdlExprParser::visitExpression(_e);
 	vector<HdlExprAndiHdlObj> alternatives;
-	unique_ptr<iHdlStatement> _default = nullptr;
+	unique_ptr<iHdlObj> _default = nullptr;
 	vector<std::string> labels;
 	auto label = ctx->label();
 	if (label) {
@@ -149,7 +149,7 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 			auto l = VhdlLiteralParser::visitLabel(a->label());
 			labels.push_back(l);
 		}
-		for (auto & ch : VhdlExprParser::visitChoices(a->choices())) {
+		for (auto &ch : VhdlExprParser::visitChoices(a->choices())) {
 			auto s = a->generate_statement_body();
 			auto stms = visitGenerate_statement_body(s);
 			if (ch == nullptr) {
@@ -160,12 +160,13 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 			}
 		}
 	}
-	auto cstm = create_object<HdlStmCase>(ctx, move(e), alternatives, move(_default));
+	auto cstm = create_object<HdlStmCase>(ctx, move(e), alternatives,
+			move(_default));
 	cstm->in_preproc = true;
 	return cstm;
 }
 
-std::unique_ptr<hdlAst::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_statement_body(
+std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body(
 		vhdlParser::Generate_statement_bodyContext *ctx) {
 	// generate_statement_body:
 	//     ( block_declarative_item*
@@ -175,19 +176,27 @@ std::unique_ptr<hdlAst::HdlStmBlock> VhdlGenerateStatementParser::visitGenerate_
 	//      )
 	//      | ( concurrent_statement )*
 	// ;
-	auto b = create_object<HdlStmBlock>(ctx);
 	auto bdis = ctx->block_declarative_item();
+	auto cstms = ctx->concurrent_statement();
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
+	auto b = create_object<HdlStmBlock>(ctx);
+	b->in_preproc = true;
 	if (bdis.size()) {
-		VhdlBlockDeclarationParser _bdp(hierarchyOnly);
+		VhdlBlockDeclarationParser _bdp(commentParser, hierarchyOnly);
 		for (auto bdi : ctx->block_declarative_item()) {
 			_bdp.visitBlock_declarative_item(bdi, b->statements);
 		}
 	}
-	VhdlStatementParser sp(hierarchyOnly);
 	for (auto cs : ctx->concurrent_statement()) {
 		sp.visitConcurrent_statement(cs, b->statements);
 	}
-	return b;
+	if (bdis.size() == 0 && !ctx->KW_BEGIN() && b->statements.size() == 1) {
+		auto res = move(b->statements.back());
+		b->statements.pop_back();
+		return res;
+	} else {
+		return b;
+	}
 }
 
 HdlModuleDec* VhdlGenerateStatementParser::visitComponent_declaration(

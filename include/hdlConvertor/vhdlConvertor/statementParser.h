@@ -8,16 +8,18 @@
 #include <hdlConvertor/hdlAst/hdlStmAssign.h>
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
+#include <hdlConvertor/vhdlConvertor/commentParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
 // [TODO] make methods non static and parse code positions and comments
 class VhdlStatementParser {
+	VhdlCommentParser & commentParser;
 public:
 	using vhdlParser = vhdl_antlr::vhdlParser;
 	bool hierarchyOnly;
-	VhdlStatementParser(bool _hierarchyOnly);
+	VhdlStatementParser(VhdlCommentParser & _commentParser, bool _hierarchyOnly);
 
 	static std::unique_ptr<hdlAst::iHdlStatement> visitSequential_statement(
 			vhdlParser::Sequential_statementContext *ctx);
@@ -65,8 +67,12 @@ public:
 			vhdlParser::Iteration_schemeContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlStatement> visitNull_statement(
 			vhdlParser::Null_statementContext *ctx);
+	static std::unique_ptr<hdlAst::iHdlStatement> visitAssertion(
+			vhdlParser::AssertionContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlStatement> visitAssertion_statement(
 			vhdlParser::Assertion_statementContext *ctx);
+	static std::unique_ptr<hdlAst::iHdlStatement> visitConcurrent_assertion_statement(
+			vhdlParser::Concurrent_assertion_statementContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlStatement> visitReport_statement(
 			vhdlParser::Report_statementContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlStatement> visitWait_statement(

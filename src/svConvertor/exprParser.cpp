@@ -90,13 +90,21 @@ unique_ptr<iHdlExprItem> VerExprParser::visitArray_range_expression(
 		return e0;
 	}
 	assert(es.size() == 2);
-	if (ctx->operator_plus_minus()) {
-		NotImplementedLogger::print(
-				"VerExprParser::visitArray_range_expression - operator_plus_minus",
-				ctx);
-	}
 	auto e1 = visitExpression(es[1]);
-	return create_object<HdlOp>(ctx, move(e0), HdlOpType::DOWNTO, move(e1));
+	auto _pm = ctx->operator_plus_minus();
+	HdlOpType op = HdlOpType::DOWNTO;
+	if (_pm) {
+		// e0 is offset
+		// e1 is width
+		// pm specifies direction of slice from offset
+		auto pm = VerLiteralParser::visitOperator_plus_minus(_pm);
+		if (pm == HdlOpType::ADD) {
+			op = HdlOpType::PART_SELECT_POST;
+		} else {
+			op = HdlOpType::PART_SELECT_PRE;
+		}
+	}
+	return create_object<HdlOp>(ctx, move(e0), op, move(e1));
 }
 
 unique_ptr<iHdlExprItem> VerExprParser::visitIdentifier_doted_index_at_end(

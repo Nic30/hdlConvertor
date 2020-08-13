@@ -11,6 +11,8 @@ enum HdlOpType {
 	DEFINE_RESOLVER, // used in resolver specification in vhdl subtype definition
 	TYPE_OF, // SV type operator
 	INDEX, // array index
+	PART_SELECT_POST, // logic [31: 0] a; logic [0 :31] b;  a[ 0 +: 8] == a[ 7 : 0]; b[ 0 +: 8] == b[0 : 7]
+	PART_SELECT_PRE, // a[15 -: 8] == a[15 : 8]; b[15 -: 8] == b[8 :15]
 	DOWNTO, // downto for the slice specification
 	TO,  // to for the slice specification
 	MINUS_UNARY,
@@ -43,7 +45,9 @@ enum HdlOpType {
 	XOR,
 	XNOR,
 	EQ,  // ==
-	NEQ, // ~
+	NE, // !=
+	IS,  // ===
+	IS_NOT, // !==
 	LT, // <
 	LE,   // <=
 	GT, // >
@@ -64,8 +68,8 @@ enum HdlOpType {
 	RISING, // rising edge/posedge event operator
 	FALLING, // falling edge/negedge event operator
 	MAP_ASSOCIATION,
-	EQ_MATCH, // VHDL-2008 matching ops (the X values are ignored while match)
-	NEQ_MATCH,
+	EQ_MATCH, // SV ==? VHDL-2008 matching ops (the X values are ignored while match)
+	NE_MATCH, // SV !=?
 	LT_MATCH,
 	LE_MATCH,
 	GT_MATCH,

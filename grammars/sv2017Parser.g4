@@ -285,10 +285,6 @@ any_implication:
   | IMPLIES_P
   | IMPLIES_N
 ;
-polarity_operator:
- PLUS
-  | MINUS
-;
 timing_check_event_control:
  KW_POSEDGE
   | KW_NEGEDGE
@@ -329,11 +325,11 @@ operator_cmp:
 ;
 operator_eq_neq:
 	 EQ
-   | NEQ
+   | NE
    | CASE_EQ
-   | CASE_NEQ
+   | CASE_NE
    | WILDCARD_EQ
-   | WILDCARD_NEQ
+   | WILDCARD_NE
 ;
 operator_xor:
 	  XOR
@@ -1596,7 +1592,7 @@ tzx_path_delay_expression: constant_mintypmax_expression;
 parallel_path_description:
  LPAREN specify_input_terminal_descriptor any_implication specify_output_terminal_descriptor RPAREN;
 full_path_description:
- LPAREN list_of_path_inputs ( polarity_operator )? PATH_FULL list_of_path_outputs RPAREN;
+ LPAREN list_of_path_inputs ( operator_plus_minus )? PATH_FULL list_of_path_outputs RPAREN;
 identifier_list: identifier ( COMMA identifier )*;
 specparam_declaration:
  KW_SPECPARAM ( packed_dimension )? list_of_specparam_assignments SEMI;
@@ -1606,10 +1602,10 @@ edge_sensitive_path_declaration:
   ) ASSIGN path_delay_value;
 parallel_edge_sensitive_path_description:
  LPAREN ( edge_identifier )? specify_input_terminal_descriptor any_implication LPAREN
-      specify_output_terminal_descriptor ( polarity_operator )? COLON data_source_expression RPAREN RPAREN;
+      specify_output_terminal_descriptor ( operator_plus_minus )? COLON data_source_expression RPAREN RPAREN;
 full_edge_sensitive_path_description:
- LPAREN ( edge_identifier )? list_of_path_inputs ( polarity_operator )? PATH_FULL LPAREN
-      list_of_path_outputs ( polarity_operator )? COLON data_source_expression RPAREN RPAREN;
+ LPAREN ( edge_identifier )? list_of_path_inputs ( operator_plus_minus )? PATH_FULL LPAREN
+      list_of_path_outputs ( operator_plus_minus )? COLON data_source_expression RPAREN RPAREN;
 data_source_expression: expression;
 data_declaration:
  ( KW_CONST )? ( KW_VAR ( lifetime )? ( data_type_or_implicit )?
