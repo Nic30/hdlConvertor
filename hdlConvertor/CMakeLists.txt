@@ -17,20 +17,15 @@ add_library(_hdlConvertor MODULE ${_hdlConvertor}
 								 ${hdlConvertor_py_SRC})
 python_extension_module(_hdlConvertor)
 
-if(CODE_COVERAGE)
-	target_link_libraries(_hdlConvertor
-		hdlConvertor_cpp_static
-		gcov
-	)
-else()
-	target_link_libraries(_hdlConvertor
-		hdlConvertor_cpp_static
-	)
-endif()
-
 target_link_libraries(_hdlConvertor
 	hdlConvertor_cpp_static
 )
+if(CODE_COVERAGE)
+	target_link_libraries(_hdlConvertor
+		gcov
+	)
+endif()
+
 set_coverage_if_enabled(_hdlConvertor OFF)
 
 
