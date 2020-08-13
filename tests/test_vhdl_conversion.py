@@ -87,6 +87,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_subtype(self):
         self.parseWithRef("subtype.vhd", Language.VHDL)
 
+    def test_generate_for(self):
+        self.parseWithRef("generate_for.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
