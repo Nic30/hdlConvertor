@@ -12,7 +12,7 @@ namespace hdlAst {
 /*
  * HDL AST node for definition or declaration of HDL function/task etc.
  * */
-class HdlFunctionDef: public WithNameAndDoc, public iHdlObj {
+class HdlFunctionDef: public HdlIdDef {
 public:
 	std::unique_ptr<iHdlExprItem> returnT;
 	std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>> > params;

@@ -1,12 +1,13 @@
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
-#include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
-
+#include <hdlConvertor/vhdlConvertor/variableParser.h>
 
 #include <assert.h>
 
@@ -51,8 +52,7 @@ std::unique_ptr<hdlAst::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitPr
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 	else
-		paramList = std::make_unique<
-				std::vector<std::unique_ptr<HdlIdDef>>>();
+		paramList = std::make_unique<std::vector<std::unique_ptr<HdlIdDef>>>();
 	return create_object<HdlFunctionDef>(ctx, name, isOperator, nullptr,
 			move(paramList));
 }
@@ -81,8 +81,7 @@ std::unique_ptr<hdlAst::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitFu
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 	else
-		paramList = std::make_unique<
-				std::vector<std::unique_ptr<HdlIdDef>>>();
+		paramList = std::make_unique<std::vector<std::unique_ptr<HdlIdDef>>>();
 	return create_object<HdlFunctionDef>(ctx, name, isOperator,
 			std::move(returnT), std::move(paramList));
 }
@@ -93,6 +92,12 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramDeclaratio
 	// : interface_list
 	// ;
 	return VhdlInterfaceParser::visitInterface_list(ctx->interface_list());
+}
+
+template<typename TO, typename FROM>
+std::unique_ptr<TO> static_unique_pointer_cast (std::unique_ptr<FROM>&& old){
+    return std::unique_ptr<TO>{static_cast<TO*>(old.release())};
+    //conversion: unique_ptr<FROM>->FROM*->TO*->unique_ptr<TO>
 }
 
 std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramDeclarationParser::visitSubprogram_declarative_item(
@@ -116,16 +121,16 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramDeclaratio
 	do {
 		auto sp = ctx->subprogram_declaration();
 		if (sp) {
-			// SubProgramDeclarationParser::visitSubprogram_declaration(sp);
-			NotImplementedLogger::print("PackageParser.subprogram_declaration",
-					sp);
+			auto p = VhdlSubProgramDeclarationParser::visitSubprogram_declaration(sp);
+			auto _p = static_unique_pointer_cast<HdlIdDef>(move(p));
+			objs->push_back(std::move(_p));
 			break;
 		}
 		auto sb = ctx->subprogram_body();
 		if (sb) {
-			//SubProgramParser::visitSubprogram_body(sb);
-			NotImplementedLogger::print("PackageParser.visitSubprogram_body",
-					sb);
+			auto p = VhdlSubProgramParser::visitSubprogram_body(sb);
+			auto _p = static_unique_pointer_cast<HdlIdDef>(move(p));
+			objs->push_back(std::move(_p));
 			break;
 		}
 		auto td = ctx->type_declaration();
@@ -136,18 +141,13 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramDeclaratio
 		}
 		auto st = ctx->subtype_declaration();
 		if (st) {
-			//SubtypeDeclarationParser::visitSubtype_declaration(st);
-
-			NotImplementedLogger::print(
-					"PackageParser.visitSubtype_declaration", st);
+			auto t = VhdlTypeDeclarationParser::visitSubtype_declaration(st);
+			objs->push_back(std::move(t));
 			break;
 		}
 		auto constd = ctx->constant_declaration();
 		if (constd) {
-			// ConstantParser::visitConstant_declaration(constd);
-			NotImplementedLogger::print(
-					"PackageParser.visitConstant_declaration", constd);
-			break;
+			return VhdlConstantParser::visitConstant_declaration(constd);
 		}
 		auto vd = ctx->variable_declaration();
 		if (vd) {
@@ -157,6 +157,7 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramDeclaratio
 		if (fd) {
 			NotImplementedLogger::print("PackageParser.visitFile_declaration",
 					fd);
+			break;
 		}
 		auto aliasd = ctx->alias_declaration();
 		if (aliasd) {
