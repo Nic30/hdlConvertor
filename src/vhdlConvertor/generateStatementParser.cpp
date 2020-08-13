@@ -26,7 +26,8 @@ using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
-VhdlGenerateStatementParser::VhdlGenerateStatementParser(VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
+VhdlGenerateStatementParser::VhdlGenerateStatementParser(
+		VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
 		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
 }
 
@@ -143,14 +144,14 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 	for (auto a : ctx->case_generate_alternative()) {
 		// case_generate_alternative:
 		//       WHEN ( label COLON )? choices ARROW
-		//           generate_statement_body
+		//           generate_statement_body_with_begin_end
 		// ;
 		if (a->label()) {
 			auto l = VhdlLiteralParser::visitLabel(a->label());
 			labels.push_back(l);
 		}
 		for (auto &ch : VhdlExprParser::visitChoices(a->choices())) {
-			auto s = a->generate_statement_body();
+			auto s = a->generate_statement_body_with_begin_end();
 			auto stms = visitGenerate_statement_body(s);
 			if (ch == nullptr) {
 				assert(_default == nullptr);
@@ -166,13 +167,13 @@ std::unique_ptr<HdlStmCase> VhdlGenerateStatementParser::visitCase_generate_stat
 	return cstm;
 }
 
+template<typename CTX_T>
 std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body(
-		vhdlParser::Generate_statement_bodyContext *ctx) {
+		CTX_T *ctx) {
 	// generate_statement_body:
 	//     ( block_declarative_item*
 	//       KW_BEGIN
 	//         ( concurrent_statement )*
-	//       KW_END ( label )? SEMI
 	//      )
 	//      | ( concurrent_statement )*
 	// ;
@@ -198,6 +199,13 @@ std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_stat
 		return b;
 	}
 }
+
+template std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body<
+		vhdlParser::Generate_statement_bodyContext>(
+		vhdlParser::Generate_statement_bodyContext *ctx);
+template std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body<
+		vhdlParser::Generate_statement_body_with_begin_endContext>(
+		vhdlParser::Generate_statement_body_with_begin_endContext *ctx);
 
 HdlModuleDec* VhdlGenerateStatementParser::visitComponent_declaration(
 		vhdlParser::Component_declarationContext *ctx) {

@@ -21,7 +21,8 @@ public:
 
 	bool hierarchyOnly;
 
-	VhdlGenerateStatementParser(VhdlCommentParser &_commentParser, bool _hierarchyOnly);
+	VhdlGenerateStatementParser(VhdlCommentParser &_commentParser,
+			bool _hierarchyOnly);
 
 	std::unique_ptr<hdlAst::iHdlStatement> visitGenerate_statement(
 			vhdlParser::Generate_statementContext *ctx);
@@ -31,8 +32,8 @@ public:
 			vhdlParser::If_generate_statementContext *ctx);
 	std::unique_ptr<hdlAst::HdlStmCase> visitCase_generate_statement(
 			vhdlParser::Case_generate_statementContext *ctx);
-	std::unique_ptr<hdlAst::iHdlObj> visitGenerate_statement_body(
-			vhdlParser::Generate_statement_bodyContext *ctx);
+	template<typename CTX_T>
+	std::unique_ptr<hdlAst::iHdlObj> visitGenerate_statement_body(CTX_T *ctx);
 	static hdlAst::HdlModuleDec* visitComponent_declaration(
 			vhdlParser::Component_declarationContext *ctx);
 };

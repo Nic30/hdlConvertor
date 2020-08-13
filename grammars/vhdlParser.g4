@@ -1077,13 +1077,20 @@ case_generate_statement:
 ;
 case_generate_alternative:
     KW_WHEN ( label COLON )? choices ARROW
-        generate_statement_body
+        generate_statement_body_with_begin_end
+;
+generate_statement_body_with_begin_end:
+    ( block_declarative_item*
+      KW_BEGIN
+        ( concurrent_statement )*
+      KW_END ( label )? SEMI
+     )
+     | ( concurrent_statement )*
 ;
 generate_statement_body:
     ( block_declarative_item*
       KW_BEGIN
         ( concurrent_statement )*
-      KW_END ( label )? SEMI
      )
      | ( concurrent_statement )*
 ;
