@@ -201,6 +201,7 @@ BIT_STRING_LITERAL: ( INTEGER )? BASE_SPECIFIER DBLQUOTE (
 // [TODO] tool_directive removed
 
 COMMENT: '--' ( ~'\n' )* -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
 TAB: ( '\t' )+ -> skip;
 SPACE: ( SPACE_CHARACTER )+ -> skip;
 NEWLINE: '\n' -> skip;
