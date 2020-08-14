@@ -58,6 +58,7 @@ cdef extern from "hdlConvertor/hdlConvertor.h" namespace "hdlConvertor":
             const vector[string] & hdl_file_names,
             Language language,
             vector[string] include_dirs,
+            const string & encoding,
             bool hierarchy_only,
             bool debug) except +raise_cpp_py_error
 
@@ -65,18 +66,21 @@ cdef extern from "hdlConvertor/hdlConvertor.h" namespace "hdlConvertor":
             const string & hdl_str,
             Language language,
             vector[string] include_dirs,
+            const string & encoding,
             bool hierarchy_only,
             bool debug) except +raise_cpp_py_error
 
         string verilog_pp(
             const string & filename,
             vector[string] incdirs,
-            Language mode) except +raise_cpp_py_error
+            Language mode,
+            const string & encoding) except +raise_cpp_py_error
 
         string verilog_pp_str(
             const string & verilog_str,
             vector[string] incdirs,
-            Language mode) except +raise_cpp_py_error
+            Language mode,
+            const string & encoding) except +raise_cpp_py_error
 
 
 cdef class HdlConvertorPy:
@@ -126,12 +130,13 @@ cdef class HdlConvertorPy:
             raise ValueError(repr(lang) + " is not recognized"
                              " (expected hdlConvertor.language.Language value)")
 
-    def parse(self, filenames, language, incdirs, hierarchyOnly=False, debug=True):
+    def parse(self, filenames, language, incdirs, encoding="utf-8", hierarchyOnly=False, debug=True):
         """
         :param filenames: sequence of filenames or filename
         :type filename: Union[str, List[str]]
         :param language: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
+        :param encoding: character encoding of input data
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
         :return: HdlContext instance
@@ -163,7 +168,8 @@ cdef class HdlConvertorPy:
         cdef ToPy toPy
         if filenames:
             self.thisptr.get().parse(
-                filenames, language_value, incdirs, hierarchyOnly, debug)
+                filenames, language_value, incdirs, str_encode(encoding),
+                hierarchyOnly, debug)
 
             toPy = ToPy()
             d = toPy.toPy(&self.context)
@@ -174,12 +180,13 @@ cdef class HdlConvertorPy:
         else:
             return PyHdlContext()
 
-    def parse_str(self, hdl_str, language, incdirs, hierarchyOnly=False, debug=True):
+    def parse_str(self, hdl_str, language, incdirs, encoding="utf-8", hierarchyOnly=False, debug=True):
         """
         :param hdl_str: HDL string to parse
         :type filename: str
         :param language: hdlConvertor.language.Language enum value
         :param incdirs: list of include directories
+        :param encoding: character encoding of input data
         :param hierarchyOnly: if True only names of components and modules are parsed
         :param debug: if True the debug logging is enabled
         :return: HdlContext instance
@@ -197,7 +204,8 @@ cdef class HdlConvertorPy:
         cdef ToPy toPy
         if hdl_str:
             self.thisptr.get().parse_str(
-                hdl_str, language_value, incdirs, hierarchyOnly, debug)
+                hdl_str, language_value, incdirs, str_encode(encoding),
+                hierarchyOnly, debug)
 
             toPy = ToPy()
             d = toPy.toPy(&self.context)
@@ -208,11 +216,12 @@ cdef class HdlConvertorPy:
         else:
             return PyHdlContext()
 
-    def verilog_pp(self, filename, lang, incdirs=['.']):
+    def verilog_pp(self, filename, lang, incdirs=['.'], encoding="utf-8"):
         """
         Execute Verilog preprocessor
 
         :type filename: Union[str, List[str]]
+        :param encoding: character encoding of input data
         :return: string output from verilog preprocessor
         """
         language_value = self._translate_verilog_enum(lang)
@@ -220,15 +229,17 @@ cdef class HdlConvertorPy:
         filename = str_encode(filename)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.get().verilog_pp(filename, incdirs, language_value)
+        data = self.thisptr.get().verilog_pp(filename, incdirs,
+                                             language_value, str_encode(encoding))
         data = str_decode(data)
 
         return data
 
-    def verilog_pp_str(self, verilog_str, lang, incdirs=['.']):
+    def verilog_pp_str(self, verilog_str, lang, incdirs=['.'], encoding="utf-8"):
         """
         Execute Verilog preprocessor
 
+        :param encoding: character encoding of input data
         :return: string output from verilog preprocessor
         """
         language_value = self._translate_verilog_enum(lang)
@@ -236,7 +247,8 @@ cdef class HdlConvertorPy:
         verilog_str = str_encode(verilog_str)
         incdirs = [str_encode(item) for item in incdirs]
 
-        data = self.thisptr.get().verilog_pp_str(verilog_str, incdirs, language_value)
+        data = self.thisptr.get().verilog_pp_str(verilog_str, incdirs,
+                                                 language_value, str_encode(encoding))
         data = str_decode(data)
 
         return data

@@ -1,12 +1,12 @@
 #include <hdlConvertor/verilogPreproc/verilogPreprocContainer.h>
 #include <hdlConvertor/verilogPreproc/default_macro_defs.h>
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
+#include <hdlConvertor/encodingConversions.h>
 
 namespace hdlConvertor {
 namespace verilog_pp {
 
 using namespace std;
-using namespace antlr4;
 
 VerilogPreprocContainer::VerilogPreprocContainer(Language _lang,
 		SyntaxErrorLogger &_syntaxErrLogger, verilog_pp::MacroDB &_defineDB) :
@@ -25,20 +25,21 @@ void VerilogPreprocContainer::init(const vector<string> &_incdirs) {
 		incdirs.push_back(p);
 }
 
-void VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
-		bool added_incdir, VerilogPreprocOutBuffer &res) {
+void VerilogPreprocContainer::run_preproc(antlr4::ANTLRInputStream &input,
+		bool added_incdir, const std::string &encoding,
+		VerilogPreprocOutBuffer &res) {
 	verilogPreproc_antlr::verilogPreprocLexer pp_lexer(&input);
 	pp_lexer.removeErrorListeners();
 	pp_lexer.addErrorListener(&syntaxErrLogger);
 
-	CommonTokenStream tokens(&pp_lexer);
+	antlr4::CommonTokenStream tokens(&pp_lexer);
 
 	verilogPreproc_antlr::verilogPreprocParser parser(&tokens);
 	parser.removeErrorListeners();
 	parser.addErrorListener(&syntaxErrLogger);
 	parser.language_version = lang;
 
-	tree::ParseTree *tree = parser.file();
+	antlr4::tree::ParseTree *tree = parser.file();
 	if (debug_dump_tokens) {
 		auto rec = dynamic_cast<antlr4::Recognizer*>(&pp_lexer);
 		cout << "#tokens.size()=" << tokens.size() << endl;
@@ -60,7 +61,7 @@ void VerilogPreprocContainer::run_preproc(ANTLRInputStream &input,
 
 	auto prev_input = actual_input;
 	actual_input = &input;
-	verilog_pp::VerilogPreproc extractor(*this, res, tokens, added_incdir);
+	verilog_pp::VerilogPreproc extractor(*this, res, tokens, added_incdir, encoding);
 	extractor.visit(tree);
 	actual_input = prev_input;
 }
@@ -77,14 +78,15 @@ bool VerilogPreprocContainer::add_parent_dir_to_incldirs(
 }
 
 void VerilogPreprocContainer::run_preproc_file(
-		const filesystem::path &file_name, VerilogPreprocOutBuffer &res) {
+		const filesystem::path &file_name, const std::string &encoding,
+		VerilogPreprocOutBuffer &res) {
 	bool add_to_inc_dir = add_parent_dir_to_incldirs(file_name);
 	// register the include file on the include file stack
 	incfile_stack.push_back( { file_name, 0 });
 
-	ANTLRFileStream input(file_name.u8string());
+	auto input = ANTLRFileStream_with_encoding(file_name, encoding);
 	res.set_input_line(file_name.u8string(), 0);
-	run_preproc(input, add_to_inc_dir, res);
+	run_preproc(input, add_to_inc_dir, encoding, res);
 
 	incfile_stack.pop_back();
 	if (add_to_inc_dir)
@@ -92,7 +94,7 @@ void VerilogPreprocContainer::run_preproc_file(
 }
 
 void VerilogPreprocContainer::run_preproc_str(const std::string &input_str,
-		VerilogPreprocOutBuffer &res) {
+		const std::string &encoding, VerilogPreprocOutBuffer &res) {
 	// get filename which should be used in errors if something unpredicted happen
 	string formal_file_name;
 	if (incfile_stack.size()) {
@@ -103,9 +105,10 @@ void VerilogPreprocContainer::run_preproc_str(const std::string &input_str,
 	// map line 0 to line_offset-th line in formal_file_name
 	res.set_input_line(formal_file_name, 0);
 
-	ANTLRInputStream input_for_preprocessor(input_str);
+	antlr4::ANTLRInputStream input_for_preprocessor(
+			_to_utf8(input_str, encoding));
 	input_for_preprocessor.name = formal_file_name;
-	run_preproc(input_for_preprocessor, false, res);
+	run_preproc(input_for_preprocessor, false, encoding, res);
 }
 
 void VerilogPreprocContainer::delete_non_persystent_macro_defs() {

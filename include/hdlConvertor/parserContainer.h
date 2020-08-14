@@ -4,6 +4,7 @@
 #include <fstream>
 #include <functional>
 #include <memory>
+#include <locale>
 
 #include <antlr4-runtime.h>
 
@@ -12,6 +13,8 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/universal_fs.h>
 #include <hdlConvertor/verilogPreproc/macroDB.h>
+#include <hdlConvertor/encodingConversions.h>
+
 
 namespace hdlConvertor {
 
@@ -59,13 +62,24 @@ public:
 	virtual void parseFn() = 0;
 
 	void parse_file(const std::filesystem::path &file_name,
-			bool hierarchyOnly) {
-		antlr4::ANTLRFileStream input_stream(file_name.u8string());
+			const std::string &encoding, bool hierarchyOnly) {
+		std::ifstream ifs(file_name);
+		ifs.seekg(0, std::ios::end);
+		size_t size = ifs.tellg();
+		std::string str(size, ' ');
+		ifs.seekg(0);
+		ifs.read(&str[0], size);
+		str = _to_utf8(str, encoding);
+
+		auto input_stream = ANTLRFileStream_with_encoding(file_name, encoding);
+		input_stream.name = file_name.u8string();
+
 		_parse(input_stream, hierarchyOnly);
 	}
 
-	void parse_str(const std::string &input_str, bool hierarchyOnly) {
-		antlr4::ANTLRInputStream input_stream(input_str);
+	void parse_str(const std::string &input_str, const std::string &encoding,
+			bool hierarchyOnly) {
+		antlr4::ANTLRInputStream input_stream(_to_utf8(input_str, encoding));
 		input_stream.name = "<string>";
 		_parse(input_stream, hierarchyOnly);
 	}
