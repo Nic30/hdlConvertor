@@ -6,7 +6,7 @@ import unittest
 
 from hdlConvertorAst.language import Language
 from tests.extern_test_utils import ExternTestSpec, \
-    generate_external_testcase_class
+    generate_external_testcase_class, check_git_submodule
 from tests.file_utils import find_files
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
@@ -197,8 +197,8 @@ def parse_verilator_record(line, dir_name):
 
 
 def get_icarus_test_configs():
+    check_git_submodule(IVTEST_ROOT)
     tests = []
-
     for file_name in chain(find_files(IVTEST_ROOT, "regress-*.list"),
                            find_files(IVTEST_ROOT, "*_regress.list")):
         if os.path.basename(file_name) in ["regress-vams.list",

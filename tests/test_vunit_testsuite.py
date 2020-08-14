@@ -4,7 +4,7 @@ import unittest
 
 from hdlConvertorAst.language import Language
 from tests.extern_test_utils import generate_external_testcase_class, \
-    ExternTestSpec
+    ExternTestSpec, check_git_submodule
 from tests.file_utils import find_files, get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
@@ -18,14 +18,12 @@ SUCESSFULL_TEST_FILTER_FILE = None
 
 
 def get_vunit_test_configs():
-    assert os.path.exists(VUNIT_ROOT) and len(os.listdir(
-        VUNIT_ROOT)) > 0, "VUnit repo not downloaded correctly"
-    for verilog_file in find_files(VUNIT_ROOT, "*.vhd"):
-        fn = get_file_name(verilog_file)
+    check_git_submodule(VUNIT_ROOT)
+    for vhdl_file in find_files(VUNIT_ROOT, "*.vhd"):
+        fn = get_file_name(vhdl_file)
         should_fail = False
         lang = Language.VHDL_2008
         if fn in ["tb_deprecated",
-
                   # ? broken assert always  statement?
                   "fifo",
                   ]:
@@ -33,7 +31,7 @@ def get_vunit_test_configs():
 
         defs = {}
         inc_dirs = []
-        yield ExternTestSpec(verilog_file, lang, defs, inc_dirs, should_fail)
+        yield ExternTestSpec(vhdl_file, lang, defs, inc_dirs, should_fail)
 
 
 VUnitTestsuiteTC = generate_external_testcase_class(

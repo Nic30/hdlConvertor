@@ -5,7 +5,7 @@ import unittest
 
 from hdlConvertorAst.language import Language
 from tests.extern_test_utils import generate_external_testcase_class, \
-    ExternTestSpec
+    ExternTestSpec, check_git_submodule
 from tests.file_utils import find_files, get_file_name
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
@@ -20,6 +20,7 @@ SUCESSFULL_TEST_FILTER_FILE = None
 
 
 def get_verilator_test_configs():
+    check_git_submodule(VERILATOR_TEST_ROOT)
     RE_TOPFILENAME = re.compile(
         'top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
     for test_script_name in find_files(VERILATOR_TEST_ROOT, "*.pl"):

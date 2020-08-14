@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from hdlConvertor import HdlConvertor
@@ -12,7 +13,7 @@ class ExternTestSpec():
     """
 
     def __init__(self, main_file, language, preproc_defs,
-                 include_dirs, should_fail):
+                 include_dirs, should_fail, encoding="utf-8"):
         self.main_file = main_file
         self.language = language
         assert isinstance(language, Language), language
@@ -23,6 +24,7 @@ class ExternTestSpec():
         self.should_fail = should_fail
         assert isinstance(should_fail, bool), should_fail
         self.debug = False
+        self.encoding = encoding
 
     def generate_test_method_name(self, existing_prop_dict):
         fn = get_file_name(self.main_file)
@@ -45,7 +47,8 @@ def gen_test(test_spec, test_filter):
 
         try:
             c.parse([test_spec.main_file, ], test_spec.language,
-                    test_spec.include_dirs, debug=test_spec.debug)
+                    test_spec.include_dirs,
+                    encoding=test_spec.encoding, debug=test_spec.debug)
         except Exception:
             if test_spec.should_fail:
                 # [TODO] some expected erros in this test suite are not related to syntax
@@ -77,3 +80,8 @@ def generate_external_testcase_class(testcase_class_name, test_configs,
     # https://www.oipapio.com/question-219175 , python2/3 compatible
     # specification of metatype for class
     return TestsuiteMeta(testcase_class_name, (unittest.TestCase,), {})
+
+
+def check_git_submodule(path):
+    assert os.path.exists(path) and len(os.listdir(
+        path)) > 0, "git submodule not cloned correctly " + path
