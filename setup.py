@@ -19,7 +19,7 @@ setup(
         # '-DCMAKE_BUILD_TYPE=Debug'
     ],
     name='hdlConvertor',
-    version='1.6',
+    version='1.7',
     description='VHDL and System Verilog parser written in c++',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -42,7 +42,7 @@ setup(
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
     ],
     install_requires=[
-        'hdlConvertorAst>=0.2',
+        'hdlConvertorAst>=0.3',
     ] + deps,
     license="MIT",
     packages=[p for p in find_packages() if p != "tests"],
