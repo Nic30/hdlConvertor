@@ -40,6 +40,10 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_enum(self):
         self.parseWithRef("package_enum.vhd", Language.VHDL)
 
+    def test_json_package_enum(self):
+        _, res = parseFile("package_enum.vhd")
+        str(res)
+
     def test_package_record(self):
         self.parseWithRef("package_record.vhd", Language.VHDL)
 
