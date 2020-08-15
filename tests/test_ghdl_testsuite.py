@@ -34,64 +34,67 @@ def get_ghdl_test_configs(path):
                     should_fail = True
         except FileNotFoundError:
             pass
-        if vhdl_file.endswith("issue300/test_bench.vhdl") or \
-                vhdl_file.endswith("synth48/test.vhdl") or \
-                vhdl_file.endswith("issue626/repro.vhdl") or \
-                vhdl_file.endswith("issue626/top.vhdl") or \
-                vhdl_file.endswith("issue634/top.vhdl") or \
-                vhdl_file.endswith("issue983/test.vhdl") or \
-                vhdl_file.endswith("issue1367/issue.vhdl") or \
-                vhdl_file.endswith("issue1345/issue.vhdl") or \
-                vhdl_file.endswith("issue1322/issue.vhdl") or \
-                vhdl_file.endswith("issue1321/issue.vhdl") or \
-                vhdl_file.endswith("issue1314/issue.vhdl") or \
-                vhdl_file.endswith("issue1347/issue.vhdl") or \
-                vhdl_file.endswith("synth27/dff.vhdl") or \
-                vhdl_file.endswith("issue1295/issue.vhdl") or \
-                vhdl_file.endswith("issue1292/issue.vhdl") or \
-                vhdl_file.endswith("issue1288/issue.vhdl"):
+        
+        # because of windows
+        _vhdl_file = vhdl_file.replace("\\", "/")
+        if _vhdl_file.endswith("issue300/test_bench.vhdl") or \
+                _vhdl_file.endswith("synth48/test.vhdl") or \
+                _vhdl_file.endswith("issue626/repro.vhdl") or \
+                _vhdl_file.endswith("issue626/top.vhdl") or \
+                _vhdl_file.endswith("issue634/top.vhdl") or \
+                _vhdl_file.endswith("issue983/test.vhdl") or \
+                _vhdl_file.endswith("issue1367/issue.vhdl") or \
+                _vhdl_file.endswith("issue1345/issue.vhdl") or \
+                _vhdl_file.endswith("issue1322/issue.vhdl") or \
+                _vhdl_file.endswith("issue1321/issue.vhdl") or \
+                _vhdl_file.endswith("issue1314/issue.vhdl") or \
+                _vhdl_file.endswith("issue1347/issue.vhdl") or \
+                _vhdl_file.endswith("synth27/dff.vhdl") or \
+                _vhdl_file.endswith("issue1295/issue.vhdl") or \
+                _vhdl_file.endswith("issue1292/issue.vhdl") or \
+                _vhdl_file.endswith("issue1288/issue.vhdl"):
             # keyword as architecture name
             should_fail = True
-        elif "testsuite/gna/bug030" in vhdl_file:
+        elif "testsuite/gna/bug030" in _vhdl_file:
             # keyword as signal name
             should_fail = True
-        elif "testsuite/synth/psl" in vhdl_file or vhdl_file.endswith("issue1390/aes_enc.vhdl"):
+        elif "testsuite/synth/psl" in _vhdl_file or _vhdl_file.endswith("issue1390/aes_enc.vhdl"):
             # PSL default clock
             should_fail = True
-        elif vhdl_file.endswith("issue662/psl_stable.vhdl") or\
-                vhdl_file.endswith("issue662/psl_rose.vhdl") or \
-                vhdl_file.endswith("issue662/psl_prev.vhdl") or \
-                vhdl_file.endswith("issue1292/psl_next_event_e.vhdl") or \
-                vhdl_file.endswith("issue1295/psl_next_event_a.vhdl") or \
-                vhdl_file.endswith("issue662/psl_fell.vhdl") or \
-                vhdl_file.endswith("bug051/tb2.vhdl"):
+        elif _vhdl_file.endswith("issue662/psl_stable.vhdl") or\
+                _vhdl_file.endswith("issue662/psl_rose.vhdl") or \
+                _vhdl_file.endswith("issue662/psl_prev.vhdl") or \
+                _vhdl_file.endswith("issue1292/psl_next_event_e.vhdl") or \
+                _vhdl_file.endswith("issue1295/psl_next_event_a.vhdl") or \
+                _vhdl_file.endswith("issue662/psl_fell.vhdl") or \
+                _vhdl_file.endswith("bug051/tb2.vhdl"):
             # PSL
             should_fail = True
-        elif vhdl_file.endswith("gna/bug096/reader.vhdl"):
+        elif _vhdl_file.endswith("gna/bug096/reader.vhdl"):
             # error in file spec, in ghdl it is just discovered after
             should_fail = True
-        elif "gna/bug090/" in vhdl_file or "gna/bug0100/" in vhdl_file:
+        elif "gna/bug090/" in _vhdl_file or "gna/bug0100/" in _vhdl_file:
             # error, but it is described in testsuite.sh in format which can not be parsed
             should_fail = True
-        elif vhdl_file.endswith("gna/issue106/ent3.vhdl"):
+        elif _vhdl_file.endswith("gna/issue106/ent3.vhdl"):
             # missing case when value
             should_fail = True
-        elif vhdl_file.endswith("gna/issue520/lrm.vhdl"):
+        elif _vhdl_file.endswith("gna/issue520/lrm.vhdl"):
             # missing ; after last item in block stm
             should_fail = True
-        elif vhdl_file.endswith("bug0105/econcat2_87.vhdl") or \
-                vhdl_file.endswith("bug0105/econcat2.vhdl") or \
-                vhdl_file.endswith("bug0105/econcat1_87.vhdl") or \
-                vhdl_file.endswith("bug0105/econcat1.vhdl") or \
-                vhdl_file.endswith("std/textio-body.vhdl"):
+        elif _vhdl_file.endswith("bug0105/econcat2_87.vhdl") or \
+                _vhdl_file.endswith("bug0105/econcat2.vhdl") or \
+                _vhdl_file.endswith("bug0105/econcat1_87.vhdl") or \
+                _vhdl_file.endswith("bug0105/econcat1.vhdl") or \
+                _vhdl_file.endswith("std/textio-body.vhdl"):
             # std87 obscure relicts
             should_fail = True
         
-        elif vhdl_file.endswith("bug031/ams1.vhdl") or \
-                vhdl_file.endswith("004all08/ams08.vhdl"):
+        elif _vhdl_file.endswith("bug031/ams1.vhdl") or \
+                _vhdl_file.endswith("004all08/ams08.vhdl"):
             # AMS extension
             should_fail = True
-        elif vhdl_file.endswith("issue106/ent2.vhdl"):
+        elif _vhdl_file.endswith("issue106/ent2.vhdl"):
             # block in generate has to have label
             should_fail = True
         
