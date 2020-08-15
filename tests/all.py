@@ -31,10 +31,9 @@ def main_test_suite():
         VerilatorTestsuiteTC,
         YosysTestsuiteTC,
         VUnitTestsuiteTC,
-        *GhdlTestsuiteTCs,
         BasicHdlSimModelFromVerilogTC,
         NotebookTC,
-    ]
+    ] + GhdlTestsuiteTCs
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))
 
