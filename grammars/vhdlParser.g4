@@ -518,7 +518,9 @@ variable_declaration:
 file_declaration:
       KW_FILE identifier_list COLON subtype_indication ( file_open_information )? SEMI
 ;
-file_open_information: ( KW_OPEN expression )? KW_IS file_logical_name;
+file_open_information: ( KW_OPEN expression )? KW_IS 
+	(KW_IN | KW_OUT)? // v87 only
+    file_logical_name;
 file_logical_name: expression;
 interface_declaration:
       interface_object_declaration
