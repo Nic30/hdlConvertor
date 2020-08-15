@@ -14,3 +14,6 @@
 	path = tests/vunit
 	url = https://github.com/VUnit/vunit.git
 	branch = master
+[submodule "ghdl"]
+	path = tests/ghdl
+	url = https://github.com/ghdl/ghdl.git

@@ -14,6 +14,7 @@ from tests.test_vhdl_conversion import VhdlConversionTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
 
 
 def main_test_suite():
@@ -30,6 +31,7 @@ def main_test_suite():
         VerilatorTestsuiteTC,
         YosysTestsuiteTC,
         VUnitTestsuiteTC,
+        *GhdlTestsuiteTCs,
         BasicHdlSimModelFromVerilogTC,
         NotebookTC,
     ]
