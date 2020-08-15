@@ -117,12 +117,13 @@ GHDL_LIBS = [
     "ieee2008", "mentor", "synopsys", "vital2000",
 ]
 GhdlTestsuiteTCs = [
-    *[generate_external_testcase_class(
-        'Ghdl_%s_TestsuiteTC' % lib,
-        get_ghdl_test_configs("libraries/" + lib),
-        SUCESSFULL_TEST_FILTER_FILE)
-      for lib in GHDL_LIBS],
-    GhdlTestsuiteTestsuiteTC
+        generate_external_testcase_class(
+            'Ghdl_%s_TestsuiteTC' % lib,
+            get_ghdl_test_configs("libraries/" + lib),
+            SUCESSFULL_TEST_FILTER_FILE)
+          for lib in GHDL_LIBS
+    ] + [
+        GhdlTestsuiteTestsuiteTC
 ]
 
 if __name__ == '__main__':
@@ -132,7 +133,7 @@ if __name__ == '__main__':
     # suite.addTest(GhdlIEEETestsuiteTC('test_VHDL_2008_numeric_bit'))
     for tc in GhdlTestsuiteTCs:
         suite.addTest(unittest.makeSuite(tc))
-    #suite.addTest(unittest.makeSuite(GhdlTestsuiteTestsuiteTC))
+    # suite.addTest(unittest.makeSuite(GhdlTestsuiteTestsuiteTC))
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)
