@@ -17,3 +17,6 @@
 [submodule "ghdl"]
 	path = tests/ghdl
 	url = https://github.com/ghdl/ghdl.git
+[submodule "UVVM"]
+	path = tests/UVVM
+	url = https://github.com/UVVM/UVVM.git
