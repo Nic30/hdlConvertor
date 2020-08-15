@@ -44,12 +44,24 @@ std::string _to_utf8(const std::string &str, const std::string &encoding) {
 
 antlr4::ANTLRInputStream ANTLRFileStream_with_encoding(
 		const std::filesystem::path &file_name, const std::string &encoding) {
-	std::ifstream ifs(file_name);
+	std::ifstream ifs;
+	std::string str;
+	ifs.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+	ifs.open(file_name);
+
+	// Sets position to the end of the file.
 	ifs.seekg(0, std::ios::end);
-	size_t size = ifs.tellg();
-	std::string str(size, ' ');
-	ifs.seekg(0);
-	ifs.read(&str[0], size);
+
+	// Reserves memory for the file.
+	str.reserve(ifs.tellg());
+
+	// Sets position to the start of the file.
+	ifs.seekg(0, std::ios::beg);
+
+	// Sets contents of 'str' to all characters in the file.
+	str.assign(std::istreambuf_iterator<char>(ifs),
+	  std::istreambuf_iterator<char>());
+
 	str = _to_utf8(str, encoding);
 
 	try {
