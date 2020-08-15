@@ -1,5 +1,6 @@
 # import sys
 import os
+import sys
 import unittest
 
 from hdlConvertorAst.language import Language
@@ -7,6 +8,10 @@ from tests.extern_test_utils import generate_external_testcase_class, \
     ExternTestSpec, check_git_submodule
 from tests.file_utils import find_files
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+
+if sys.version_info.major == 2:
+    from io import open
+
 
 GHDL_ROOT = os.path.join(os.path.dirname(__file__), "ghdl")
 
