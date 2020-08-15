@@ -70,7 +70,7 @@ script:
 after_success:
 - if [ "$CODE_COVERAGE" == "1" ]; then
     lcov --compat-libtool --directory . --capture --output-file coverage.info.raw
-    lcov --remove coverage.info.raw -o coverage.info '/usr/*' './_skbuild/*'
+    lcov --remove coverage.info.raw -o coverage.info '/usr/*' '*_skbuild/*'
     coveralls-lcov coverage.info
   fi
 
