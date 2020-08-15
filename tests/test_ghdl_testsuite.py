@@ -10,6 +10,7 @@ from tests.file_utils import find_files
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 
 if sys.version_info.major == 2:
+    FileNotFoundError = IOError
     from io import open
 
 
