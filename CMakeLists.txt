@@ -46,7 +46,7 @@ else()
 	SET(CPACK_GENERATOR "DEB")
 	SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Michal Orsak <michal.o.socials@gmail.com>")
 	SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/Nic30/hdlConvertor")
-	SET(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, default-jre, libantlr4-runtime-dev, antlr4")
+	SET(CPACK_DEBIAN_PACKAGE_DEPENDS "uuid-dev, libantlr4-runtime-dev, antlr4")
 	INCLUDE(CPack)
 endif()
 
