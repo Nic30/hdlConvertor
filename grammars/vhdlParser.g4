@@ -160,25 +160,9 @@ entity_declaration:
       KW_END ( KW_ENTITY )? ( identifier )? SEMI
 ;
 entity_declarative_item:
-      subprogram_declaration
-      | subprogram_body
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_body
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
-      | signal_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
-      | attribute_declaration
-      | attribute_specification
+      signal_declaration
+      | process_declarative_item
       | disconnection_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
 ;
 entity_statement:
     ( label COLON )? (
@@ -263,29 +247,10 @@ operator_symbol: STRING_LITERAL;
 formal_parameter_list: interface_list;
 subprogram_body:
       subprogram_specification KW_IS
-          ( subprogram_declarative_item )*
+          ( process_declarative_item )*
       KW_BEGIN
           ( sequential_statement )*
       KW_END ( subprogram_kind )? ( designator )? SEMI
-;
-subprogram_declarative_item:
-      subprogram_declaration
-      | subprogram_body
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_body
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
-      | attribute_declaration
-      | attribute_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
 ;
 subprogram_kind: KW_PROCEDURE | KW_FUNCTION;
 subprogram_instantiation_declaration:
@@ -297,60 +262,22 @@ signature: LSQUARE_BR ( type_mark ( COMMA type_mark )* )? ( KW_RETURN type_mark 
 ;
 package_declaration:
       KW_PACKAGE identifier KW_IS
-          package_header
-          package_declarative_part
+          (
+             generic_clause  ( generic_map_aspect SEMI )?
+          )?
+          ( package_declarative_item )*
       KW_END ( KW_PACKAGE )? ( identifier )? SEMI
 ;
-package_header:
-      ( generic_clause
-      ( generic_map_aspect SEMI )? )?
-;
-package_declarative_part:
-      ( package_declarative_item )*
-;
 package_declarative_item:
-      subprogram_declaration
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
+      process_or_package_declarative_item
       | signal_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
       | component_declaration
-      | attribute_declaration
-      | attribute_specification
       | disconnection_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
-     ;
+;
 package_body:
       KW_PACKAGE KW_BODY identifier KW_IS
-          ( package_body_declarative_item )*
+          ( process_declarative_item )*
       KW_END ( KW_PACKAGE KW_BODY )? ( identifier )? SEMI
-;
-package_body_declarative_item:
-      subprogram_declaration
-      | subprogram_body
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_body
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
-      | attribute_declaration
-      | attribute_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
 ;
 package_instantiation_declaration:
       KW_PACKAGE identifier KW_IS KW_NEW name
@@ -439,27 +366,8 @@ protected_type_declarative_item:
 ;
 protected_type_body:
       KW_PROTECTED KW_BODY
-          ( protected_type_body_declarative_item )*
+          ( process_declarative_item )*
       KW_END KW_PROTECTED KW_BODY ( identifier )?
-;
-protected_type_body_declarative_item:
-      subprogram_declaration
-      | subprogram_body
-      | subprogram_instantiation_declaration
-      | package_declaration
-      | package_body
-      | package_instantiation_declaration
-      | type_declaration
-      | subtype_declaration
-      | constant_declaration
-      | variable_declaration
-      | file_declaration
-      | alias_declaration
-      | attribute_declaration
-      | attribute_specification
-      | use_clause
-      | group_template_declaration
-      | group_declaration
 ;
 type_declaration:
       full_type_declaration
@@ -999,12 +907,10 @@ process_statement:
           KW_END ( KW_POSTPONED )? KW_PROCESS ( label )? SEMI
 ;
 process_sensitivity_list: KW_ALL | sensitivity_list;
-process_declarative_item:
+process_or_package_declarative_item:
       subprogram_declaration
-      | subprogram_body
       | subprogram_instantiation_declaration
       | package_declaration
-      | package_body
       | package_instantiation_declaration
       | type_declaration
       | subtype_declaration
@@ -1018,7 +924,11 @@ process_declarative_item:
       | group_template_declaration
       | group_declaration
 ;
-
+process_declarative_item:
+      process_or_package_declarative_item
+      | subprogram_body
+      | package_body
+;
 concurrent_procedure_call_statement:
       ( KW_POSTPONED )? procedure_call SEMI
 ;

@@ -26,11 +26,6 @@ using namespace hdlConvertor::hdlAst;
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
-VhdlGenerateStatementParser::VhdlGenerateStatementParser(
-		VhdlCommentParser &_commentParser, bool _hierarchyOnly) :
-		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
-}
-
 std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitGenerate_statement(
 		vhdlParser::Generate_statementContext *ctx) {
 	//generate_statement
@@ -63,8 +58,8 @@ std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitFor_generate_st
 	//           END GENERATE ( label )? SEMI
 	// ;
 
-	auto args = VhdlStatementParser::visitParameter_specification(
-			ctx->parameter_specification());
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
+	auto args = sp.visitParameter_specification(ctx->parameter_specification());
 	auto objs = visitGenerate_statement_body(ctx->generate_statement_body());
 	auto fstm = create_object<HdlStmForIn>(ctx, move(args.first),
 			move(args.second), move(objs));

@@ -10,19 +10,15 @@
 #include <hdlConvertor/hdlAst/hdlStmCase.h>
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/vhdlConvertor/commentParser.h>
+#include <hdlConvertor/vhdlConvertor/baseVhdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlGenerateStatementParser {
-	VhdlCommentParser &commentParser;
+class VhdlGenerateStatementParser : public BaseVhdlParser {
 public:
+	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;
-
-	bool hierarchyOnly;
-
-	VhdlGenerateStatementParser(VhdlCommentParser &_commentParser,
-			bool _hierarchyOnly);
 
 	std::unique_ptr<hdlAst::iHdlStatement> visitGenerate_statement(
 			vhdlParser::Generate_statementContext *ctx);

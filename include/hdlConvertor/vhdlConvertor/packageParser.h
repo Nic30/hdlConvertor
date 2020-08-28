@@ -15,22 +15,20 @@
 #include <hdlConvertor/hdlAst/hdlValue.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
+#include <hdlConvertor/vhdlConvertor/baseVhdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlPackageParser {
+class VhdlPackageParser : public BaseVhdlParser {
 public:
+	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
 	std::unique_ptr<hdlAst::HdlValueIdspace> p;
-	bool hierarchyOnly;
 
-	VhdlPackageParser(bool _hierarchyOnly);
 	std::unique_ptr<hdlAst::HdlValueIdspace> visitPackage_body(
 			vhdlParser::Package_bodyContext *ctx);
-	void visitPackage_body_declarative_item(
-			vhdlParser::Package_body_declarative_itemContext *ctx);
 
 };
 

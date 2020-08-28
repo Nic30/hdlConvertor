@@ -7,17 +7,15 @@
 #include <hdlConvertor/hdlAst/iHdlObj.h>
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/vhdlConvertor/commentParser.h>
+#include <hdlConvertor/vhdlConvertor/baseVhdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlBlockDeclarationParser {
-	VhdlCommentParser &commentParser;
+class VhdlBlockDeclarationParser  : public BaseVhdlParser{
 public:
+	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;
-
-	bool hierarchyOnly;
-	VhdlBlockDeclarationParser(VhdlCommentParser &_commentParser, bool hierarchyOnly);
 
 	void visitBlock_declarative_item(
 			vhdlParser::Block_declarative_itemContext *ctx,

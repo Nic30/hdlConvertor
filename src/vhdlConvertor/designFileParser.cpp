@@ -51,8 +51,14 @@ void VhdlDesignFileParser::visitLibrary_unit(
 	// : secondary_unit | primary_unit
 	// ;
 
-	VhdlDesignFileParser::visitSecondary_unit(ctx->secondary_unit());
-	VhdlDesignFileParser::visitPrimary_unit(ctx->primary_unit());
+	auto su = ctx->secondary_unit();
+	if (su) {
+		visitSecondary_unit(su);
+		return;
+	}
+	auto pu = ctx->primary_unit();
+	assert(pu);
+	visitPrimary_unit(pu);
 }
 void VhdlDesignFileParser::visitSecondary_unit(
 		vhdlParser::Secondary_unitContext *ctx) {
@@ -70,7 +76,7 @@ void VhdlDesignFileParser::visitSecondary_unit(
 	}
 	auto pack = ctx->package_body();
 	if (pack) {
-		VhdlPackageParser pparser(hierarchyOnly);
+		VhdlPackageParser pparser(commentParser, hierarchyOnly);
 		auto p = pparser.visitPackage_body(pack);
 		context.objs.push_back(move(p));
 
@@ -89,12 +95,12 @@ void VhdlDesignFileParser::visitContext_clause(
 }
 void VhdlDesignFileParser::visitPrimary_unit(
 		vhdlParser::Primary_unitContext *ctx) {
-	if (!ctx)
-		return;
-	// primary_unit
-	// : entity_declaration
-	// | configuration_declaration
-	// | package_declaration
+	// primary_unit:
+	//     entity_declaration
+	//     | configuration_declaration
+	//     | package_declaration
+	//     | package_instantiation_declaration
+	//     | context_declaration
 	// ;
 	auto ed = ctx->entity_declaration();
 	if (ed) {
@@ -111,11 +117,25 @@ void VhdlDesignFileParser::visitPrimary_unit(
 	}
 	auto pd = ctx->package_declaration();
 	if (pd) {
-		VhdlPackageHeaderParser php(hierarchyOnly);
+		VhdlPackageHeaderParser php(commentParser, hierarchyOnly);
 		auto ph = php.visitPackage_declaration(pd);
 		context.objs.push_back(std::move(ph));
+		return;
+	}
+	auto pid = ctx->package_instantiation_declaration();
+	if (pid) {
+		NotImplementedLogger::print(
+				"DesignFileParser.visitPackage_instantiation_declaration", pid);
+		return;
+	}
+	auto cnd = ctx->context_declaration();
+	if (cnd) {
+		NotImplementedLogger::print("DesignFileParser.visitContext_declaration",
+				cnd);
+		return;
 	}
 
+	NotImplementedLogger::print("DesignFileParser.visitPrimary_unit", ctx);
 }
 void VhdlDesignFileParser::visitContext_item(
 		vhdlParser::Context_itemContext *ctx) {

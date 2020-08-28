@@ -4,6 +4,7 @@
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
+#include <hdlConvertor/vhdlConvertor/processParser.h>
 
 #include <hdlConvertor/createObject.h>
 
@@ -17,22 +18,20 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitSubprogram_body(
 		vhdlParser::Subprogram_bodyContext *ctx) {
 	// subprogram_body:
 	//       subprogram_specification KW_IS
-	//           ( subprogram_declarative_item )*
+	//           ( process_declarative_item )*
 	//       KW_BEGIN
 	//           ( sequential_statement )*
 	//       KW_END ( subprogram_kind )? ( designator )? SEMI
 	// ;
 	auto f = visitSubprogram_specification(ctx->subprogram_specification());
 
-	for (auto sd : ctx->subprogram_declarative_item()) {
-		auto spdis =
-				VhdlSubProgramDeclarationParser::visitSubprogram_declarative_item(
-						sd);
-		for (auto &spdi : *spdis)
-			f->body.push_back(std::move(spdi));
+	VhdlProcessParser pp(commentParser, hierarchyOnly);
+	for (auto sd : ctx->process_declarative_item()) {
+		pp.visitProcess_declarative_item(sd, f->body);
 	}
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
 	for (auto s : ctx->sequential_statement()) {
-		auto stm = VhdlStatementParser::visitSequential_statement(s);
+		auto stm = sp.visitSequential_statement(s);
 		f->body.push_back(move(stm));
 	}
 	f->is_declaration_only = false;
@@ -68,7 +67,8 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitProcedure_specificati
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return create_object<HdlFunctionDef>(ctx, name, isOperator, nullptr, std::move(paramList));
+	return create_object<HdlFunctionDef>(ctx, name, isOperator, nullptr,
+			std::move(paramList));
 }
 
 std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specification(
@@ -90,8 +90,8 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specificatio
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return create_object<HdlFunctionDef>(ctx, name, isOperator, std::move(returnT),
-			std::move(paramList));
+	return create_object<HdlFunctionDef>(ctx, name, isOperator,
+			std::move(returnT), std::move(paramList));
 }
 
 std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramParser::visitFormal_parameter_list(

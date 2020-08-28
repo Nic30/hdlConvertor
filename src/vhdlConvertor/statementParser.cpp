@@ -27,10 +27,6 @@ bool is_others(unique_ptr<iHdlExprItem> &e) {
 	return (_e && _e->symb == HdlValueSymbol_t::symb_OTHERS);
 }
 
-VhdlStatementParser::VhdlStatementParser(VhdlCommentParser & _commentParser, bool _hierarchyOnly) :
-		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
-}
-
 unique_ptr<HdlStmBlock> VhdlStatementParser::visitSequence_of_statements(
 		vhdlParser::Sequence_of_statementsContext *ctx) {
 	// sequence_of_statements
@@ -199,7 +195,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitWait_statement(
 	if (sc) {
 		// sensitivity_clause: ON sensitivity_list;
 		// sensitivity_list: name ( COMMA name )*;
-		VhdlProcessParser::visitSensitivity_list(sc->sensitivity_list(), sens);
+		VhdlProcessParser pp(commentParser, hierarchyOnly);
+		pp.visitSensitivity_list(sc->sensitivity_list(), sens);
 	}
 	if (cc) {
 		// condition_clause: UNTIL condition;
@@ -721,7 +718,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_statement_with_op
 
 	auto p = ctx->process_statement();
 	if (p) {
-		return VhdlProcessParser::visitProcess_statement(p);
+		VhdlProcessParser pp(commentParser, hierarchyOnly);
+		return pp.visitProcess_statement(p);
 	}
 	auto cpc = ctx->concurrent_procedure_call_statement();
 	if (cpc) {

@@ -11,10 +11,6 @@ namespace vhdl {
 using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
-VhdlArchParser::VhdlArchParser(VhdlCommentParser &_commentParser,
-		bool _hierarchyOnly) :
-		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
-}
 std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(
 		vhdlParser::Architecture_bodyContext *ctx) {
 	auto a = create_object<HdlModuleDef>(ctx);
