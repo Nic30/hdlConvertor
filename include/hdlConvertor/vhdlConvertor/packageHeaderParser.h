@@ -12,23 +12,19 @@
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
+#include <hdlConvertor/vhdlConvertor/baseVhdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlPackageHeaderParser {
+class VhdlPackageHeaderParser : public BaseVhdlParser {
 	std::unique_ptr<hdlAst::HdlValueIdspace> ph;
-	bool hierarchyOnly;
 public:
+	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;
 
-	VhdlPackageHeaderParser(bool _hierarchyOnly);
 	std::unique_ptr<hdlAst::HdlValueIdspace> visitPackage_declaration(
 			vhdlParser::Package_declarationContext *ctx);
-	void visitPackage_header(
-			vhdlParser::Package_headerContext *ctx);
-	void visitPackage_declarative_part(
-			vhdlParser::Package_declarative_partContext *ctx);
 	void visitPackage_declarative_item(
 			vhdlParser::Package_declarative_itemContext *ctx);
 	std::unique_ptr<hdlAst::HdlModuleDec> visitComponent_declaration(

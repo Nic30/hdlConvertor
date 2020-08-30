@@ -25,9 +25,6 @@ public:
 	static std::unique_ptr<
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>>> visitFormal_parameter_list(
 			vhdlParser::Formal_parameter_listContext *ctx);
-	static std::unique_ptr<
-			std::vector<std::unique_ptr<hdlAst::HdlIdDef>>> visitSubprogram_declarative_item(
-			vhdlParser::Subprogram_declarative_itemContext *ctx);
 };
 
 }

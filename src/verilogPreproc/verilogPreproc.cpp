@@ -17,10 +17,10 @@ using verilogPreprocLexer = verilogPreproc_antlr::verilogPreprocLexer;
 
 VerilogPreproc::VerilogPreproc(VerilogPreprocContainer &_container,
 		VerilogPreprocOutBuffer &_preproc_out, TokenStream &tokens,
-		bool _added_incdir, size_t include_depth_limit) :
+		bool _added_incdir, const std::string _encoding, size_t include_depth_limit) :
 		container(_container), _tokens(*(CommonTokenStream*) &tokens), added_incdir(
 				_added_incdir), include_depth_limit(include_depth_limit), preproc_out(
-				_preproc_out) {
+				_preproc_out), encoding(_encoding) {
 	switch (container.lang) {
 	case Language::VERILOG1995:
 	case Language::VERILOG2001:
@@ -328,7 +328,7 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 		container.macro_call_stack.push_back(macro_name);
 		auto input_line_no = preproc_out.input_line_begin + ctx->start->getLine() - 1;
 		VerilogPreprocOutBuffer _replacement(input_line_no);
-		container.run_preproc_str(replacement, _replacement);
+		container.run_preproc_str(replacement, "utf-8", _replacement);
 		// [todo] it is expected that the macro call won't cause any change in
 		//        file line map directly
 		//assert(_replacement.file_line_map.size() <= 1);
@@ -447,7 +447,7 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 		}
 		// run the pre-processor on it
 		VerilogPreprocOutBuffer replacement(0);
-		container.run_preproc_file(filename, replacement);
+		container.run_preproc_file(filename, encoding, replacement);
 		if (added_incdir) {
 			container.incdirs.push_back(my_incdir);
 		}

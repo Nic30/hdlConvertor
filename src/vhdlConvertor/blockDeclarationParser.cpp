@@ -16,10 +16,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-VhdlBlockDeclarationParser::VhdlBlockDeclarationParser(VhdlCommentParser &_commentParser, bool hierarchyOnly) :
-		commentParser(_commentParser), hierarchyOnly(hierarchyOnly) {
-}
-
 /*
  * @note Some declarations can spot multiple objects
  * 		 that is why this function just does not return hdlAst::iHdlObj*

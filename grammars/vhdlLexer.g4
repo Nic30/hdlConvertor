@@ -44,9 +44,9 @@ fragment SPECIAL_CHARACTER:
   | GT | QUESTIONMARK | AT | '[' | ']' | UNDERSCORE | GRAVE_ACCENT | BAR;
 
 fragment OTHER_SPECIAL_CHARACTER:
-    '!' | '$' | '%' | UP | '{' | '}' | '~'
-  | SPACE_CHARACTER | 'Ў' | 'ў' | 'Ј' | '¤' | 'Ґ' | '¦' | '§'
-  | 'Ё' | '©' | 'Є' | '«' | '¬' | '­' | '®' | 'Ї'
+    '!' | '$' | '%' | UP  | '{' | '}' | '~' | '´'
+  | SPACE_CHARACTER | 'Ў' | 'ў' | 'Ј' | '¤' | 'Ґ'
+  | 'Ё' | '©' | 'Є' | '«' | '¬' | '­' | '§' | 'Ї'
   | '°' | '±' | 'І' | 'і' | 'ґ' | 'µ' | '¶' | '·'
   | 'ё' | '№' | 'є' | '»' | 'ј' | 'Ѕ' | 'ѕ' | 'ї'
   | 'А' | 'Б' | 'В' | 'Г' | 'Д' | 'Е' | 'Ж' | 'З'
@@ -57,7 +57,17 @@ fragment OTHER_SPECIAL_CHARACTER:
   | 'и' | 'й' | 'к' | 'л' | 'м' | 'н' | 'о' | 'п'
   | 'р' | 'с' | 'т' | 'у' | 'ф' | 'х' | 'ц' | 'ч'
   | 'ш' | 'щ' | 'ъ' | 'ы' | 'ь' | 'э' | 'ю' | 'я'
-  ;
+  | ' ' | '¡' | '¢' | '£' | '¦' | '¥' | '®' | '¯'
+  | '¸' | '¹' | 'º' | '¼' | '½' | '¾' | '¿' | '²'
+  | '³' | 'À' | 'Á' | 'Â' | 'Ã' | 'Ä' | 'Æ' | 'Ç'
+  | 'È' | 'É' | 'Ê' | 'Ë' | 'Ì' | 'Í' | 'Î' | 'Ï'
+  | 'Ð' | 'Ñ' | 'Ò' | 'Ó' | 'Ô' | 'Õ' | 'Ö' | '×'
+  | 'Ø' | 'Ù' | 'Ú' | 'Û' | 'Ü' | 'Ý' | 'Þ' | 'ß'
+  | 'à' | 'á' | 'â' | 'ã' | 'ä' | 'å' | 'æ' | 'ç'
+  | 'è' | 'é' | 'ê' | 'ë' | 'ì' | 'í' | 'î' | 'ï'
+  | 'ð' | 'ñ' | 'ò' | 'ó' | 'ô' | 'õ' | 'ö' | '÷'
+  | 'ø' | 'ù' | 'ú' | 'û' | 'ü' | 'ý' | 'þ' | 'ÿ'
+  | '¨' | 'ª' ;
 
 fragment LETTER_OR_DIGIT: LETTER | DIGIT;
 fragment LETTER: 'A'..'Z' | 'a'..'z' | 'Å';
@@ -174,7 +184,7 @@ BASIC_IDENTIFIER:
       LETTER ( ( UNDERSCORE )? LETTER_OR_DIGIT )*
 ;
 EXTENDED_IDENTIFIER:
-      BACKSLASH (GRAPHIC_CHARACTER)+ BACKSLASH
+      BACKSLASH (GRAPHIC_CHARACTER | (BACKSLASH BACKSLASH))+ BACKSLASH
 ;
 DECIMAL_LITERAL: INTEGER ( DOT INTEGER )? ( EXPONENT )?;
 INTEGER: DIGIT ( ( UNDERSCORE )? DIGIT )*;
@@ -201,6 +211,7 @@ BIT_STRING_LITERAL: ( INTEGER )? BASE_SPECIFIER DBLQUOTE (
 // [TODO] tool_directive removed
 
 COMMENT: '--' ( ~'\n' )* -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
 TAB: ( '\t' )+ -> skip;
 SPACE: ( SPACE_CHARACTER )+ -> skip;
 NEWLINE: '\n' -> skip;

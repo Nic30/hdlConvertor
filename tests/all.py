@@ -14,6 +14,8 @@ from tests.test_vhdl_conversion import VhdlConversionTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
+from tests.test_uvvm_testsuite import UVVMTestsuite
 
 
 def main_test_suite():
@@ -30,9 +32,10 @@ def main_test_suite():
         VerilatorTestsuiteTC,
         YosysTestsuiteTC,
         VUnitTestsuiteTC,
+        UVVMTestsuite,
         BasicHdlSimModelFromVerilogTC,
         NotebookTC,
-    ]
+    ] + GhdlTestsuiteTCs
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))
 

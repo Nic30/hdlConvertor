@@ -23,6 +23,13 @@ class VhdlConversionTC(HdlParseTC):
         self.assertIsInstance(pkg, HdlValueIdspace)
         self.assertEqual(pkg.name, 'array_const_pkg')
 
+    def test_package_constants(self):
+        _, res = parseFile("package_constants.vhd")
+        str(res)
+        pkg = res.objs[4]  # first 4 objects are libraries and 'use' clauses
+        self.assertIsInstance(pkg, HdlValueIdspace)
+        self.assertEqual(pkg.name, 'constants_pkg')
+
     def test_package_component(self):
         _, res = parseFile("package_component.vhd")
         str(res)
@@ -30,12 +37,15 @@ class VhdlConversionTC(HdlParseTC):
         self.assertIsInstance(pkg, HdlValueIdspace)
         self.assertEqual(pkg.name, 'components_pkg')
 
-    def test_package_constants(self):
-        _, res = parseFile("package_constants.vhd")
+    def test_package_enum(self):
+        self.parseWithRef("package_enum.vhd", Language.VHDL)
+
+    def test_json_package_enum(self):
+        _, res = parseFile("package_enum.vhd")
         str(res)
-        pkg = res.objs[4]  # first 4 objects are libraries and 'use' clauses
-        self.assertIsInstance(pkg, HdlValueIdspace)
-        self.assertEqual(pkg.name, 'constants_pkg')
+
+    def test_package_record(self):
+        self.parseWithRef("package_record.vhd", Language.VHDL)
 
     def test_fourbit_adder(self):
         _, res = parseFile("fourbit_adder.vhd")
@@ -69,9 +79,6 @@ class VhdlConversionTC(HdlParseTC):
         self.assertIsInstance(res.objs[0], HdlLibrary)
         self.assertEqual(res.objs[0].name, 'ieee')
 
-    def test_package_record(self):
-        self.parseWithRef("package_record.vhd", Language.VHDL)
-
     def test_operator_example(self):
         self.parseWithRef("operator_example.vhd", Language.VHDL)
 
@@ -90,8 +97,14 @@ class VhdlConversionTC(HdlParseTC):
     def test_generate_for(self):
         self.parseWithRef("generate_for.vhd", Language.VHDL)
 
+    def test_generate_for_and_if(self):
+        self.parseWithRef("generate_for_and_if.vhd", Language.VHDL)
+
     def test_entity_declarative_item(self):
         self.parseWithRef("entity_declarative_item.vhd", Language.VHDL)
+
+    def test_carry_lookahead(self):
+        self.parseWithRef("carry_lookahead.vhd", Language.VHDL)
 
 
 if __name__ == "__main__":

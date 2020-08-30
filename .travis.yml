@@ -68,9 +68,11 @@ script:
   - python setup.py test $BUILD_ARGS # the scikit-build automatically executes setup.py develop which requires access to installation dir
 
 after_success:
-  - lcov --compat-libtool --directory . --capture --output-file coverage.info.raw
-  - lcov --remove coverage.info.raw -o coverage.info '/usr/*' './_skbuild/*'
-  - coveralls-lcov coverage.info
+- if [ "$CODE_COVERAGE" == "1" ]; then
+    lcov --compat-libtool --directory . --capture --output-file coverage.info.raw ;
+    lcov --remove coverage.info.raw -o coverage.info '/usr/*' '*_skbuild/*' ;
+    coveralls-lcov coverage.info ;
+  fi
 
 deploy:
   provider: pypi

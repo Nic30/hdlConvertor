@@ -5,17 +5,15 @@
 #include <hdlConvertor/vhdlConvertor/vhdlParser/vhdlParser.h>
 #include <hdlConvertor/hdlAst/hdlModuleDec.h>
 #include <hdlConvertor/vhdlConvertor/commentParser.h>
+#include <hdlConvertor/vhdlConvertor/baseVhdlParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlEntityParser {
-	VhdlCommentParser &commentParser;
+class VhdlEntityParser : public BaseVhdlParser {
 public:
+	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;
-	bool hierarchyOnly;
-
-	VhdlEntityParser(VhdlCommentParser &commentParser, bool _hierarchyOnly);
 
 	std::unique_ptr<hdlAst::HdlModuleDec> visitEntity_declaration(
 			vhdlParser::Entity_declarationContext *ctx);

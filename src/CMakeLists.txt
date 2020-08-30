@@ -21,6 +21,7 @@ list(APPEND hdlConvertor_core_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/syntaxErrorLogger.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/conversion_exception.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/universal_fs.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/encodingConversions.cpp"
 )
 set(hdlConvertor_cpp_SRC
 	"${CMAKE_CURRENT_SOURCE_DIR}/hdlConvertor.cpp"

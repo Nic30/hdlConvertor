@@ -35,17 +35,18 @@ public:
 
 	void init(const std::vector<std::string> &_incdirs);
 	void run_preproc(antlr4::ANTLRInputStream &input, bool added_incdir,
-			VerilogPreprocOutBuffer &res);
+			const std::string &encoding, VerilogPreprocOutBuffer &res);
 	bool add_parent_dir_to_incldirs(const std::filesystem::path &file_name);
 	void run_preproc_file(const std::filesystem::path &file_name,
-			VerilogPreprocOutBuffer &res);
+			const std::string &encoding, VerilogPreprocOutBuffer &res);
 	/*
 	 * @param input_str input for preprocessor
 	 * @note file_name for the error messages and for `__FILE__ directive
 	 *       is taken from incfile_stack or default is is used
 	 * @note line offset for debug and `__LINE__ is set in 'res'
 	 * */
-	void run_preproc_str(const std::string &input_str, VerilogPreprocOutBuffer &res);
+	void run_preproc_str(const std::string &input_str,
+			const std::string &encoding, VerilogPreprocOutBuffer &res);
 
 	void delete_non_persystent_macro_defs();
 	virtual ~VerilogPreprocContainer();

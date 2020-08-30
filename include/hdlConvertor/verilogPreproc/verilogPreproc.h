@@ -39,11 +39,13 @@ public:
 	antlr4::CommonTokenStream &_tokens;
 	bool added_incdir;
 	size_t include_depth_limit;
-	VerilogPreprocOutBuffer & preproc_out;
+	VerilogPreprocOutBuffer &preproc_out;
+	const std::string encoding;
 
 	VerilogPreproc(VerilogPreprocContainer &container,
 			VerilogPreprocOutBuffer &preproc_out, antlr4::TokenStream &tokens,
-			bool added_incdir, size_t include_depth_limit = 100);
+			bool added_incdir, const std::string encoding,
+			size_t include_depth_limit = 100);
 
 	virtual ~VerilogPreproc();
 

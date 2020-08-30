@@ -9,7 +9,9 @@
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
-
+#include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
+#include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/designFileParser.h>
 
 namespace hdlConvertor {
 namespace vhdl {
@@ -37,8 +39,9 @@ std::unique_ptr<hdlAst::HdlStmProcess> VhdlProcessParser::visitProcess_statement
 	for (auto pd : ctx->process_declarative_item()) {
 		visitProcess_declarative_item(pd, stms);
 	}
+	VhdlStatementParser sp(commentParser, hierarchyOnly);
 	for (auto s : ctx->sequential_statement()) {
-		stms.push_back(VhdlStatementParser::visitSequential_statement(s));
+		stms.push_back(sp.visitSequential_statement(s));
 	}
 
 	return p;
@@ -62,25 +65,53 @@ void VhdlProcessParser::visitSensitivity_list(
 		sensitivity.push_back(VhdlReferenceParser::visitName(n));
 	}
 }
-
 void VhdlProcessParser::visitProcess_declarative_item(
 		vhdlParser::Process_declarative_itemContext *ctx,
 		std::vector<std::unique_ptr<iHdlObj>> &objs) {
-	//process_declarative_item
-	//  : subprogram_declaration
-	//  | subprogram_body
-	//  | type_declaration
-	//  | subtype_declaration
-	//  | constant_declaration
-	//  | variable_declaration
-	//  | file_declaration
-	//  | alias_declaration
-	//  | attribute_declaration
-	//  | attribute_specification
-	//  | use_clause
-	//  | group_template_declaration
-	//  | group_declaration
-	//  ;
+	// process_declarative_item:
+	//       process_or_package_declarative_item
+	//       | subprogram_body
+	//       | package_body
+	// ;
+	auto ppdi = ctx->process_or_package_declarative_item();
+	if (ppdi) {
+		visitProcess_or_package_declarative_item(ppdi, objs);
+		return;
+	}
+	auto sb = ctx->subprogram_body();
+	if (sb) {
+		VhdlSubProgramParser spp(commentParser, hierarchyOnly);
+		auto f = spp.visitSubprogram_body(sb);
+		objs.push_back(std::move(f));
+		return;
+	}
+	auto pb = ctx->package_body();
+	assert(pb);
+	VhdlPackageParser pp(commentParser, hierarchyOnly);
+	auto p = pp.visitPackage_body(pb);
+	objs.push_back(std::move(p));
+}
+
+void VhdlProcessParser::visitProcess_or_package_declarative_item(
+		vhdlParser::Process_or_package_declarative_itemContext *ctx,
+		std::vector<std::unique_ptr<iHdlObj>> &objs) {
+	// process_or_package_declarative_item:
+	//       subprogram_declaration
+	//       | subprogram_instantiation_declaration
+	//       | package_declaration
+	//       | package_instantiation_declaration
+	//       | type_declaration
+	//       | subtype_declaration
+	//       | constant_declaration
+	//       | variable_declaration
+	//       | file_declaration
+	//       | alias_declaration
+	//       | attribute_declaration
+	//       | attribute_specification
+	//       | use_clause
+	//       | group_template_declaration
+	//       | group_declaration
+	// ;
 	auto sp = ctx->subprogram_declaration();
 	if (sp) {
 		objs.push_back(
@@ -88,10 +119,26 @@ void VhdlProcessParser::visitProcess_declarative_item(
 						sp));
 		return;
 	}
-	auto sb = ctx->subprogram_body();
-	if (sb) {
-		auto f = VhdlSubProgramParser::visitSubprogram_body(sb);
-		objs.push_back(std::move(f));
+	auto sid = ctx->subprogram_instantiation_declaration();
+	if (sid) {
+		NotImplementedLogger::print(
+				"VhdlProcessParser.visitSubprogram_instantiation_declaration",
+				sid);
+		return;
+	}
+	auto pd = ctx->package_declaration();
+	if (pd) {
+		VhdlPackageHeaderParser ph(commentParser, hierarchyOnly);
+		auto pac_header = ph.visitPackage_declaration(pd);
+		objs.push_back(std::move(pac_header));
+		return;
+	}
+
+	auto pid = ctx->package_instantiation_declaration();
+	if (pid) {
+		NotImplementedLogger::print(
+				"VhdlEntityParser.visitEntity_declarative_item - package_instantiation_declaration",
+				pid);
 		return;
 	}
 	auto td = ctx->type_declaration();
@@ -124,45 +171,45 @@ void VhdlProcessParser::visitProcess_declarative_item(
 	}
 	auto fd = ctx->file_declaration();
 	if (fd) {
-		NotImplementedLogger::print("ProcessParser.visitFile_declaration", fd);
+		NotImplementedLogger::print("VhdlProcessParser.visitFile_declaration",
+				fd);
 		return;
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("ProcessParser.visitAlias_declaration",
+		NotImplementedLogger::print("VhdlProcessParser.visitAlias_declaration",
 				aliasd);
 		return;
 	}
 	auto atrd = ctx->attribute_declaration();
 	if (atrd) {
-		NotImplementedLogger::print("ProcessParser.visitAttribute_declaration",
-				atrd);
+		NotImplementedLogger::print(
+				"VhdlProcessParser.visitAttribute_declaration", atrd);
 		return;
 	}
 	auto as = ctx->attribute_specification();
 	if (as) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitAttribute_specification", as);
+				"VhdlProcessParser.visitAttribute_specification", as);
 		return;
 	}
 	auto uc = ctx->use_clause();
 	if (uc) {
-		NotImplementedLogger::print("ProcessParser.visitUse_clause", uc);
+		HdlContext c;
+		VhdlDesignFileParser dfp(commentParser.tokens, c, hierarchyOnly);
+		dfp.visitUse_clause(uc, objs);
+		assert(c.objs.size() == 0);
 		return;
 	}
 	auto gtd = ctx->group_template_declaration();
 	if (gtd) {
 		NotImplementedLogger::print(
-				"ProcessParser.visitGroup_template_declaration", gtd);
+				"VhdlProcessParser.visitGroup_template_declaration", gtd);
 		return;
 	}
 	auto gd = ctx->group_declaration();
-	if (gd) {
-		NotImplementedLogger::print("ProcessParser.visitGroup_declaration", gd);
-		return;
-	}
-	NotImplementedLogger::print("ProcessParser.visitProcess_declarative_item",
-			ctx);
+	assert(gd);
+	NotImplementedLogger::print("VhdlProcessParser.visitGroup_declaration", gd);
 	return;
 }
 

@@ -49,11 +49,12 @@ public:
 					this->syntaxErrLogger, _defineDB) {
 	}
 
-	void parse_file(const filesystem::path &file_name, bool hierarchyOnly,
-			std::vector<std::string> &_incdirs) {
+	void parse_file(const filesystem::path &file_name,
+			std::vector<std::string> &_incdirs, const std::string &encoding,
+			bool hierarchyOnly) {
 		preproc.init(_incdirs);
 		verilog_pp::VerilogPreprocOutBuffer preprocess_res(0);
-		preproc.run_preproc_file(file_name, preprocess_res);
+		preproc.run_preproc_file(file_name, encoding, preprocess_res);
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
@@ -62,11 +63,12 @@ public:
 		this->_parse(input_for_parser, hierarchyOnly);
 	}
 
-	void parse_str(const std::string &input_str, bool hierarchyOnly,
-			const std::vector<string> &_incdirs) {
+	void parse_str(const std::string &input_str,
+			const std::vector<string> &_incdirs, const std::string &encoding,
+			bool hierarchyOnly) {
 		preproc.init(_incdirs);
 		verilog_pp::VerilogPreprocOutBuffer preprocess_res(0);
-		preproc.run_preproc_str(input_str, preprocess_res);
+		preproc.run_preproc_str(input_str, encoding, preprocess_res);
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
@@ -89,7 +91,8 @@ HdlConvertor::HdlConvertor(hdlAst::HdlContext &_c) :
 }
 
 void HdlConvertor::parse(const vector<string> &_fileNames, Language lang,
-		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
+		vector<string> incdir, const std::string &encoding, bool _hierarchyOnly,
+		bool _debug) {
 
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
@@ -104,10 +107,10 @@ void HdlConvertor::parse(const vector<string> &_fileNames, Language lang,
 
 		if (lang == Language::VHDL) {
 			VHDLParserContainer pc(c, lang, defineDB);
-			pc.parse_file(fileName, hierarchyOnly);
+			pc.parse_file(fileName, encoding, hierarchyOnly);
 		} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 			SVParserContainer pc(c, lang, defineDB);
-			pc.parse_file(fileName, hierarchyOnly, incdir);
+			pc.parse_file(fileName, incdir, encoding, hierarchyOnly);
 		} else {
 			throw runtime_error("Unsupported language.");
 		}
@@ -115,39 +118,42 @@ void HdlConvertor::parse(const vector<string> &_fileNames, Language lang,
 }
 
 void HdlConvertor::parse_str(const string &hdl_str, Language lang,
-		vector<string> incdir, bool _hierarchyOnly, bool _debug) {
+		vector<string> incdir, const std::string &encoding, bool _hierarchyOnly,
+		bool _debug) {
 	hierarchyOnly = _hierarchyOnly;
 	debug = _debug;
 	NotImplementedLogger::ENABLE = _debug;
 
 	if (lang == VHDL) {
 		VHDLParserContainer pc(c, lang, defineDB);
-		pc.parse_str(hdl_str, hierarchyOnly);
+		pc.parse_str(hdl_str, encoding, hierarchyOnly);
 	} else if (lang >= Language::VERILOG1995 && lang <= Language::SV2017) {
 		SVParserContainer pc(c, lang, defineDB);
-		pc.parse_str(hdl_str, hierarchyOnly, incdir);
+		pc.parse_str(hdl_str, incdir, encoding, hierarchyOnly);
 	} else {
 		throw runtime_error("Unsupported language.");
 	}
 }
 
 string HdlConvertor::verilog_pp(const string &fileName,
-		const vector<string> _incdirs, Language lang) {
+		const vector<string> _incdirs, Language lang,
+		const std::string &encoding) {
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	verilog_pp::VerilogPreprocOutBuffer res(0);
-	pc.preproc.run_preproc_file(fileName, res);
+	pc.preproc.run_preproc_file(fileName, encoding, res);
 	return res.str();
 }
 
 string HdlConvertor::verilog_pp_str(const string &verilog_str,
-		const vector<string> _incdirs, Language lang) {
+		const vector<string> _incdirs, Language lang,
+		const std::string &encoding) {
 	HdlContext c; // dummy context
 	SVParserContainer pc(c, lang, defineDB);
 	pc.preproc.init(_incdirs);
 	verilog_pp::VerilogPreprocOutBuffer res(0);
-	pc.preproc.run_preproc_str(verilog_str, res);
+	pc.preproc.run_preproc_str(verilog_str, encoding, res);
 	return res.str();
 }
 
