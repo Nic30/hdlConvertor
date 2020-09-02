@@ -165,28 +165,27 @@ unique_ptr<HdlEnumDef> VhdlTypeDeclarationParser::visitEnumeration_type_definiti
 	return tdecl;
 }
 
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitRange_constraint(
+			vhdlParser::Range_constraintContext *ctx) {
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto op = VhdlExprParser::visitRange(ctx->range());
+    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
+}
+
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitInteger_type_definition(
 		vhdlParser::Integer_type_definitionContext *ctx) {
     // integer_type_definition: range_constraint;
     auto r = ctx->range_constraint();
-    
-    // range_constraint
-    // : RANGE range
-    // ;
-    auto op = VhdlExprParser::visitRange(r->range());
-    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
+    return visitRange_constraint(r);
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitFloating_type_definition(
 		vhdlParser::Floating_type_definitionContext *ctx) {
     // floating_type_definition: range_constraint;
     auto r = ctx->range_constraint();
-    
-    // range_constraint
-    // : RANGE range
-    // ;
-    auto op = VhdlExprParser::visitRange(r->range());
-    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
+    return visitRange_constraint(r);
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitPhysical_type_definition(

@@ -48,6 +48,8 @@ public:
 
 	static std::unique_ptr<hdlAst::HdlEnumDef> visitEnumeration_type_definition(
 			vhdlParser::Enumeration_type_definitionContext *ctx);
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitRange_constraint(
+			vhdlParser::Range_constraintContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitInteger_type_definition(
 			vhdlParser::Integer_type_definitionContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitFloating_type_definition(
@@ -65,8 +67,7 @@ public:
 			vhdlParser::Constrained_array_definitionContext *ctx);
 	static std::unique_ptr<hdlAst::HdlClassDef> visitRecord_type_definition(
 			vhdlParser::Record_type_definitionContext *ctx);
-	static std::unique_ptr<
-			std::vector<std::unique_ptr<hdlAst::HdlIdDef>>> visitElement_declaration(
+	static std::unique_ptr<std::vector<std::unique_ptr<hdlAst::HdlIdDef>>> visitElement_declaration(
 			vhdlParser::Element_declarationContext *ctx);
 
 	static std::unique_ptr<hdlAst::HdlIdDef> visitSubtype_declaration(
