@@ -167,18 +167,26 @@ unique_ptr<HdlEnumDef> VhdlTypeDeclarationParser::visitEnumeration_type_definiti
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitInteger_type_definition(
 		vhdlParser::Integer_type_definitionContext *ctx) {
-	NotImplementedLogger::print("TypeDeclarationParser.integer_type_definition",
-			ctx);
-
-	return create_object<HdlExprNotImplemented>(ctx);
+    // integer_type_definition: range_constraint;
+    auto r = ctx->range_constraint();
+    
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto op = VhdlExprParser::visitRange(r->range());
+    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitFloating_type_definition(
 		vhdlParser::Floating_type_definitionContext *ctx) {
-
-	NotImplementedLogger::print(
-			"TypeDeclarationParser.floating_type_definition", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+    // floating_type_definition: range_constraint;
+    auto r = ctx->range_constraint();
+    
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto op = VhdlExprParser::visitRange(r->range());
+    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitPhysical_type_definition(
