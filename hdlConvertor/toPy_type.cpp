@@ -29,6 +29,17 @@ PyObject* ToPy::toPy(const HdlClassDef *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlPhysicalDef *o) {
+	PyObject *py_inst = PyObject_CallObject(HdlPhysicalDefCls, NULL);
+	if (!py_inst)
+		return nullptr;
+    if (toPy_property(py_inst, "range", o->range))
+		return nullptr;
+	if (toPy_arr(py_inst, "units", o->units))
+		return nullptr;
+	return py_inst;
+}
+
 PyObject* ToPy::toPy(const HdlEnumDef *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlEnumDefCls, NULL);
 	if (!py_inst)

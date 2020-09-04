@@ -52,6 +52,7 @@ class ToPy {
 	PyObject *HdlTypeSubtypeCls;
 	PyObject *HdlClassTypeEnum;
 	PyObject *HdlClassDefCls;
+	PyObject *HdlPhysicalDefCls;
 	PyObject *HdlEnumDefCls;
 	PyObject *HdlStmIfCls;
 	PyObject *HdlStmAssignCls;
@@ -201,6 +202,7 @@ public:
 	PyObject* toPy(const hdlAst::HdlValueSymbol *o);
 	PyObject* toPy(const hdlAst::HdlClassType o);
 	PyObject* toPy(const hdlAst::HdlClassDef *o);
+	PyObject* toPy(const hdlAst::HdlPhysicalDef *o);
 	PyObject* toPy(const hdlAst::HdlEnumDef *o);
 	PyObject* toPy(
 			const std::pair<std::unique_ptr<std::string>,
