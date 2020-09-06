@@ -19,7 +19,7 @@ setup(
         # '-DCMAKE_BUILD_TYPE=Debug'
     ],
     name='hdlConvertor',
-    version='2.0',
+    version='2.1',
     description='VHDL and System Verilog parser written in c++',
     long_description=long_description,
     long_description_content_type="text/markdown",
