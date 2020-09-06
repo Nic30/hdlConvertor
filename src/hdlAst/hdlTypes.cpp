@@ -32,16 +32,14 @@ HdlPhysicalDef::HdlPhysicalDef() {
 HdlPhysicalDef::HdlPhysicalDef(const HdlPhysicalDef &other) {
     std::unique_ptr<iHdlExprItem> r = other.range->clone_uniq();
     range = move(r);
-    for (auto &member: other.units) {
+    for (auto &member: other.members) {
         std::unique_ptr<std::string> u = nullptr;
         std::unique_ptr<iHdlExprItem> v = nullptr;
-        if (member.first) {
-            u = std::make_unique<std::string>(*member.first);
-        }
+        u = std::make_unique<std::string>(*member.first);
         if (member.second) {
             v = member.second->clone_uniq();
         }
-        units.push_back( { move(u), move(v) } );
+        members.push_back( { move(u), move(v) } );
     }
 }
 iHdlExprItem* HdlPhysicalDef::clone() const {

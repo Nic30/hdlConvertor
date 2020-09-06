@@ -56,8 +56,8 @@ class HdlPhysicalDef: public virtual iHdlTypeDec {
 public:
     std::unique_ptr<iHdlExprItem> range;
     std::vector<
-        std::pair<std::unique_ptr<std::string>, 
-                    std::unique_ptr<iHdlExprItem>>> units;
+			std::pair<std::unique_ptr<std::string>,
+					std::unique_ptr<iHdlExprItem>>> members;
     HdlPhysicalDef();
     HdlPhysicalDef(const HdlPhysicalDef &other);
 	virtual iHdlExprItem* clone() const override;

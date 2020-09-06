@@ -54,7 +54,7 @@ public:
 			vhdlParser::Integer_type_definitionContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitFloating_type_definition(
 			vhdlParser::Floating_type_definitionContext *ctx);
-	static std::unique_ptr<hdlAst::iHdlExprItem> visitPhysical_type_definition(
+	static std::unique_ptr<hdlAst::HdlPhysicalDef> visitPhysical_type_definition(
 			vhdlParser::Physical_type_definitionContext *ctx);
 
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitArray_type_definition(

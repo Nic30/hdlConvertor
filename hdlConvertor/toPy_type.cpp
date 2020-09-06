@@ -35,7 +35,7 @@ PyObject* ToPy::toPy(const HdlPhysicalDef *o) {
 		return nullptr;
     if (toPy_property(py_inst, "range", o->range))
 		return nullptr;
-	if (toPy_arr(py_inst, "units", o->units))
+	if (toPy_arr(py_inst, "members", o->members))
 		return nullptr;
 	return py_inst;
 }
