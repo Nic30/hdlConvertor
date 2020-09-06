@@ -124,6 +124,8 @@ class HdlParseTC(unittest.TestCase):
 
         lang_dir = get_language_path(lang_dir, language)
         _, res = parseFile(fname, language, lang_dir=lang_dir)
+        # check if repr works
+        repr(res)
 
         buff = StringIO()
         # import sys
