@@ -6,6 +6,7 @@
 #include <hdlConvertor/hdlAst/named.h>
 #include <hdlConvertor/hdlAst/iHdlObj.h>
 #include <hdlConvertor/hdlAst/hdlOpType.h>
+#include <hdlConvertor/hdlAst/hdlOp.h>
 #include <hdlConvertor/hdlAst/iHdlExprItem.h>
 
 namespace hdlConvertor {
@@ -33,7 +34,7 @@ enum HdlClassType {
 	INTERFACE,
 };
 
-const char * HdlClassType_toString(HdlClassType ct);
+const char* HdlClassType_toString(HdlClassType ct);
 
 class HdlClassDef: public virtual iHdlTypeDec {
 public:
@@ -48,6 +49,17 @@ public:
 	HdlClassDef(const HdlClassDef &other);
 	virtual iHdlExprItem* clone() const override;
 	virtual ~HdlClassDef() override {
+	}
+};
+
+class HdlPhysicalDef: public virtual iHdlTypeDec {
+public:
+	std::unique_ptr<iHdlExprItem> range;
+	std::vector<std::pair<std::string, std::unique_ptr<iHdlExprItem>>> members;
+	HdlPhysicalDef();
+	HdlPhysicalDef(const HdlPhysicalDef &other);
+	virtual iHdlExprItem* clone() const override;
+	virtual ~HdlPhysicalDef() override {
 	}
 };
 

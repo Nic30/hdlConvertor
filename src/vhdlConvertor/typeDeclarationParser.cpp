@@ -4,6 +4,7 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/createObject.h>
 
 #include <assert.h>
@@ -165,27 +166,58 @@ unique_ptr<HdlEnumDef> VhdlTypeDeclarationParser::visitEnumeration_type_definiti
 	return tdecl;
 }
 
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitRange_constraint(
+			vhdlParser::Range_constraintContext *ctx) {
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto op = VhdlExprParser::visitRange(ctx->range());
+    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
+}
+
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitInteger_type_definition(
 		vhdlParser::Integer_type_definitionContext *ctx) {
-	NotImplementedLogger::print("TypeDeclarationParser.integer_type_definition",
-			ctx);
-
-	return create_object<HdlExprNotImplemented>(ctx);
+    // integer_type_definition: range_constraint;
+    auto r = ctx->range_constraint();
+    return visitRange_constraint(r);
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitFloating_type_definition(
 		vhdlParser::Floating_type_definitionContext *ctx) {
-
-	NotImplementedLogger::print(
-			"TypeDeclarationParser.floating_type_definition", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+    // floating_type_definition: range_constraint;
+    auto r = ctx->range_constraint();
+    return visitRange_constraint(r);
 }
 
-unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitPhysical_type_definition(
+unique_ptr<HdlPhysicalDef> VhdlTypeDeclarationParser::visitPhysical_type_definition(
 		vhdlParser::Physical_type_definitionContext *ctx) {
-	NotImplementedLogger::print(
-			"TypeDeclarationParser.physical_type_definition", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+    // physical_type_definition:
+    //   range_constraint
+    //       KW_UNITS
+    //           primary_unit_declaration
+    //           ( secondary_unit_declaration )*
+    //       KW_END KW_UNITS ( identifier )?
+    // ;
+    auto r = ctx->range_constraint();
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto rop = VhdlExprParser::visitRange(r->range());
+
+    auto pdecl = make_unique<HdlPhysicalDef>();
+    pdecl->range = create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rop));
+    // primary_unit_declaration: identifier SEMI;
+    auto _pu = ctx->primary_unit_declaration()->identifier();
+    auto pu = VhdlLiteralParser::getIdentifierStr(_pu);
+    pdecl->members.push_back( { pu, nullptr });
+    // secondary_unit_declaration: identifier EQ physical_literal SEMI;
+	for (auto uit : ctx->secondary_unit_declaration()) {
+        auto _su = uit->identifier();
+        auto su = VhdlLiteralParser::getIdentifierStr(_su);
+        auto val = VhdlLiteralParser::visitPhysical_literal(uit->physical_literal());
+        pdecl->members.push_back( { su, move(val) });
+    }
+	return pdecl;
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitArray_type_definition(

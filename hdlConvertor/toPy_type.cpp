@@ -29,6 +29,17 @@ PyObject* ToPy::toPy(const HdlClassDef *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const HdlPhysicalDef *o) {
+	PyObject *py_inst = PyObject_CallObject(HdlPhysicalDefCls, NULL);
+	if (!py_inst)
+		return nullptr;
+    if (toPy_property(py_inst, "range", o->range))
+		return nullptr;
+	if (toPy_arr(py_inst, "members", o->members))
+		return nullptr;
+	return py_inst;
+}
+
 PyObject* ToPy::toPy(const HdlEnumDef *o) {
 	PyObject *py_inst = PyObject_CallObject(HdlEnumDefCls, NULL);
 	if (!py_inst)
@@ -38,12 +49,22 @@ PyObject* ToPy::toPy(const HdlEnumDef *o) {
 	return py_inst;
 }
 
+PyObject* ToPy::toPy(const std::pair<std::string, std::unique_ptr<iHdlExprItem>> & o) {
+	std::pair<const std::string*, const iHdlExprItem*>  _o(&o.first, o.second.get());
+	return toPy(_o);
+}
+
 PyObject* ToPy::toPy(
 		const std::pair<std::unique_ptr<std::string>,
 				std::unique_ptr<iHdlExprItem>> &o) {
+	std::pair<const std::string*, const iHdlExprItem*>  _o(o.first.get(), o.second.get());
+	return toPy(_o);
+}
+
+PyObject* ToPy::toPy(const std::pair<const std::string*, const iHdlExprItem*> &o) {
 	PyObject *n;
 	if (o.first) {
-		n = toPy(*o.first.get());
+		n = toPy(*o.first);
 		if (n == nullptr)
 			return nullptr;
 	} else {
@@ -52,7 +73,7 @@ PyObject* ToPy::toPy(
 	}
 	PyObject *v;
 	if (o.second) {
-		v = toPy(o.second.get());
+		v = toPy(o.second);
 		if (v == nullptr) {
 			Py_DECREF(v);
 			return nullptr;

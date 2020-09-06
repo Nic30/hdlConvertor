@@ -27,6 +27,23 @@ iHdlExprItem* HdlClassDef::clone() const {
 	return new HdlClassDef(*this);
 }
 
+HdlPhysicalDef::HdlPhysicalDef() {
+}
+HdlPhysicalDef::HdlPhysicalDef(const HdlPhysicalDef &other) {
+    std::unique_ptr<iHdlExprItem> r = other.range->clone_uniq();
+    range = move(r);
+    for (auto &member: other.members) {
+        std::unique_ptr<iHdlExprItem> v = nullptr;
+        if (member.second) {
+            v = member.second->clone_uniq();
+        }
+        members.push_back( { member.first, move(v) } );
+    }
+}
+iHdlExprItem* HdlPhysicalDef::clone() const {
+    return new HdlPhysicalDef(*this);
+}
+
 HdlEnumDef::HdlEnumDef() {
 }
 HdlEnumDef::HdlEnumDef(const HdlEnumDef &other) {

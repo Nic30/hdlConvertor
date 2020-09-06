@@ -71,7 +71,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitNumeric_literal(
 	if (_dl) {
 		auto dl = visitDECIMAL_LITERAL(_dl);
 		if (name) {
-			return create_object<HdlOp>(ctx, move(dl), HdlOpType::MUL,
+			return create_object<HdlOp>(ctx, move(dl), HdlOpType::UNIT_SPEC,
 					move(name));
 		} else {
 			return dl;
@@ -81,7 +81,7 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitNumeric_literal(
 	if (_bl) {
 		auto bl = visitBASED_LITERAL(_bl);
 		if (name) {
-			return create_object<HdlOp>(_bl, move(bl), HdlOpType::MUL,
+			return create_object<HdlOp>(_bl, move(bl), HdlOpType::UNIT_SPEC,
 					move(name));
 		} else {
 			return bl;
@@ -95,17 +95,22 @@ std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitPhysical_literal(
 	// physical_literal: ( DECIMAL_LITERAL |  BASED_LITERAL )? name;
 	auto _n = ctx->name();
 	auto name = VhdlReferenceParser::visitName(_n);
+	std::unique_ptr<iHdlExprItem> lit = nullptr;
 	auto _dl = ctx->DECIMAL_LITERAL();
 	if (_dl) {
-		auto dl = visitDECIMAL_LITERAL(_dl);
-		return create_object<HdlOp>(_dl, std::move(dl), HdlOpType::MUL, std::move(name));
+		lit = visitDECIMAL_LITERAL(_dl);
+	} else {
+		auto _bl = ctx->BASED_LITERAL();
+		if (_bl) {
+			lit = visitBASED_LITERAL(_bl);
+		}
 	}
-	auto _bl = ctx->BASED_LITERAL();
-	if (_bl) {
-		auto bl = visitBASED_LITERAL(_bl);
-		return create_object<HdlOp>(_bl, std::move(bl), HdlOpType::MUL, std::move(name));
+	if (lit) {
+		return create_object<HdlOp>(_dl, std::move(lit), HdlOpType::UNIT_SPEC,
+					std::move(name));
+	} else {
+		return name;
 	}
-	return name;
 }
 std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitDECIMAL_LITERAL(
 		TerminalNode *ctx) {
@@ -186,7 +191,8 @@ std::unique_ptr<HdlValueStr> VhdlLiteralParser::visitSTRING_LITERAL(
 }
 std::unique_ptr<iHdlExprItem> VhdlLiteralParser::visitCHARACTER_LITERAL(
 		TerminalNode *n, const std::string &ctx) {
-	return create_object<HdlValueInt>(n, ctx.substr(1, 1), BigInteger::CHAR_BASE);
+	return create_object<HdlValueInt>(n, ctx.substr(1, 1),
+			BigInteger::CHAR_BASE);
 }
 std::unique_ptr<HdlValueId> VhdlLiteralParser::visitIdentifier(
 		vhdlParser::IdentifierContext *ctx) {

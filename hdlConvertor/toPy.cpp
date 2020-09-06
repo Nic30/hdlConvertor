@@ -45,6 +45,7 @@ ToPy::ToPy() {
 	import(HdlTypeSubtypeCls, "HdlTypeSubtype");
 	import(HdlClassTypeEnum, "HdlClassType");
 	import(HdlClassDefCls, "HdlClassDef");
+	import(HdlPhysicalDefCls, "HdlPhysicalDef");
 	import(HdlEnumDefCls, "HdlEnumDef");
 	import(HdlStmIfCls, "HdlStmIf");
 	import(HdlStmAssignCls, "HdlStmAssign");
@@ -393,6 +394,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmIfCls);
 	Py_XDECREF(HdlOthersCls);
 	Py_XDECREF(HdlAllCls);
+	Py_XDECREF(HdlPhysicalDefCls);
 	Py_XDECREF(HdlEnumDefCls);
 	Py_XDECREF(HdlClassDefCls);
 	Py_XDECREF(HdlClassTypeEnum);

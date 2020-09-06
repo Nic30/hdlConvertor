@@ -38,7 +38,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
 * project properties ->
    * C/C++ General -> Paths and Symbols -> add Python and ANTLR include dir (for all lags)
   ```
-  /usr/include/python3.7m
+  /usr/include/python3.8m
   /usr/include/antlr4-runtime
 
   ```
@@ -58,7 +58,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
    	 (only if something is seriously broken)
      ```
      rm src/vhdlConvertor/vhdlParser/                             \
-        src/verilogConvertor/sv2017Parser/                   \
+        src/verilogConvertor/sv2017Parser/                        \
         src/verilogPreproc/verilogPreprocParser/                  \
         src/svConvertor/sv2012Parser/                             \
         include/hdlConvertor/svConvertor/sv2012Parser/            \
@@ -68,12 +68,12 @@ This class contains a methods which simplifies the parsing/conversion test scena
    * Now add a pydev nature to this project so we can use code navigation and autocomplete for python. Right-Click on project -> PyDev -> add project; Then add "." and "hdlConvertor" direcotories in to PYTHONPATH in project properties -> PyDev - PYTHONPATH 
 
 
-# Debuging in Eclipse
+# Debuging C++ part of module in Eclipse
 * apt install python3-dbg # because normal python crashes on some errors without reporting (like undefined symbol in c library)
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
 	* Arguments: $NAME_OF_YOUR_SCRIPT etc
-	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/_skbuild/linux-x86_64-3.7/setuptools/lib`
+	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/_skbuild/linux-x86_64-3.8/setuptools/lib`
 	* in CMakeLists.txt add  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	  to enable debuging build and disable optimisations
 	* now break points in c++ and all other debuging stuff should work as expected
