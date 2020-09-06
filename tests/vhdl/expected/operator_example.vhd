@@ -67,8 +67,8 @@ ARCHITECTURE maxpld OF proc IS
         res := A REM 4;
         res := ABS(A);
         res := 2 ** A;
-        temp := std_logic_vector(NOT (unsigned(X)) & unsigned(Y) XOR unsigned(Z) ROL 1);
-        temp := std_logic_vector(NOT (unsigned(X)) & unsigned(Y) XOR unsigned(Z) ROL 1);
+        temp := std_logic_vector(NOT unsigned(X) & unsigned(Y) XOR unsigned(Z) ROL 1);
+        temp := std_logic_vector(NOT unsigned(X) & unsigned(Y) XOR unsigned(Z) ROL 1);
     END PROCEDURE;
     FUNCTION FUNC (SIGNAL A : INTEGER;
         SIGNAL B : INTEGER;
@@ -99,11 +99,11 @@ BEGIN
     END PROCESS;
     PROCESS
     BEGIN
-        REPORT "-5 mod (-3) : " & integer'image(-(5 MOD (-3)));
-        REPORT "-(5 mod (-3)) : " & integer'image(-(5 MOD (-3)));
+        REPORT "-5 mod (-3) : " & integer'image(-5 MOD (-3));
+        REPORT "-(5 mod (-3)) : " & integer'image(-5 MOD (-3));
         REPORT "(-5) mod (-3) : " & integer'image((-5) MOD (-3));
-        REPORT "-16 ** 2 : " & integer'image(-(16 ** 2));
-        REPORT "-(16 ** 2) : " & integer'image(-(16 ** 2));
+        REPORT "-16 ** 2 : " & integer'image(-16 ** 2);
+        REPORT "-(16 ** 2) : " & integer'image(-16 ** 2);
         REPORT "(-16) ** 2 : " & integer'image((-16) ** 2);
         WAIT;
     END PROCESS;
