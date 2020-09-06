@@ -29,7 +29,6 @@
 #include <hdlConvertor/hdlAst/hdlTypes.h>
 #include <hdlConvertor/hdlAst/hdlValue.h>
 
-
 namespace hdlConvertor {
 
 class ToPy {
@@ -204,9 +203,6 @@ public:
 	PyObject* toPy(const hdlAst::HdlClassDef *o);
 	PyObject* toPy(const hdlAst::HdlPhysicalDef *o);
 	PyObject* toPy(const hdlAst::HdlEnumDef *o);
-	PyObject* toPy(
-			const std::pair<std::unique_ptr<std::string>,
-					std::unique_ptr<hdlAst::iHdlExprItem>> &o);
 	PyObject* toPy(const hdlAst::HdlExprNotImplemented *o);
 	PyObject* toPy(const hdlAst::HdlFunctionDef *o);
 	PyObject* toPy(const hdlAst::iHdlObj *o);
@@ -232,6 +228,14 @@ public:
 	PyObject* toPy(const std::string &o);
 	PyObject* toPy(size_t o);
 	PyObject* toPy(bool o);
+	PyObject* toPy(
+			const std::pair<const std::string*, const hdlAst::iHdlExprItem*> &o);
+	PyObject* toPy(
+			const std::pair<std::unique_ptr<std::string>,
+					std::unique_ptr<hdlAst::iHdlExprItem>> &o);
+	PyObject* toPy(
+			const std::pair<std::string, std::unique_ptr<hdlAst::iHdlExprItem>> &o);
+
 	~ToPy();
 };
 

@@ -34,7 +34,7 @@ enum HdlClassType {
 	INTERFACE,
 };
 
-const char * HdlClassType_toString(HdlClassType ct);
+const char* HdlClassType_toString(HdlClassType ct);
 
 class HdlClassDef: public virtual iHdlTypeDec {
 public:
@@ -54,15 +54,13 @@ public:
 
 class HdlPhysicalDef: public virtual iHdlTypeDec {
 public:
-    std::unique_ptr<iHdlExprItem> range;
-    std::vector<
-			std::pair<std::unique_ptr<std::string>,
-					std::unique_ptr<iHdlExprItem>>> members;
-    HdlPhysicalDef();
-    HdlPhysicalDef(const HdlPhysicalDef &other);
+	std::unique_ptr<iHdlExprItem> range;
+	std::vector<std::pair<std::string, std::unique_ptr<iHdlExprItem>>> members;
+	HdlPhysicalDef();
+	HdlPhysicalDef(const HdlPhysicalDef &other);
 	virtual iHdlExprItem* clone() const override;
 	virtual ~HdlPhysicalDef() override {
-    }
+	}
 };
 
 class HdlEnumDef: public virtual iHdlTypeDec {

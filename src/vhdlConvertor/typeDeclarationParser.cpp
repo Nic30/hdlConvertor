@@ -209,26 +209,13 @@ unique_ptr<HdlPhysicalDef> VhdlTypeDeclarationParser::visitPhysical_type_definit
     // primary_unit_declaration: identifier SEMI;
     auto _pu = ctx->primary_unit_declaration()->identifier();
     auto pu = VhdlLiteralParser::getIdentifierStr(_pu);
-    pdecl->members.push_back( { make_unique<string>(pu), nullptr });
+    pdecl->members.push_back( { pu, nullptr });
     // secondary_unit_declaration: identifier EQ physical_literal SEMI;
-    // physical_literal: ( DECIMAL_LITERAL |  BASED_LITERAL )? name;
 	for (auto uit : ctx->secondary_unit_declaration()) {
         auto _su = uit->identifier();
         auto su = VhdlLiteralParser::getIdentifierStr(_su);
-        auto _name = uit->physical_literal()->name();
-        auto name = VhdlReferenceParser::visitName(_name);
-        auto _dec = uit->physical_literal()->DECIMAL_LITERAL();
-        if (_dec) {
-            auto dec = VhdlLiteralParser::visitDECIMAL_LITERAL(_dec);
-            auto rel = create_object<HdlOp>(ctx, move(dec), HdlOpType::MUL, move(name));
-            pdecl->members.push_back( { make_unique<string>(su), move(rel) });
-        } else {
-            auto _base = uit->physical_literal()->BASED_LITERAL();
-            assert(_base);
-            auto base = VhdlLiteralParser::visitBASED_LITERAL(_base);
-            auto rel = create_object<HdlOp>(ctx, move(base), HdlOpType::MUL, move(name));
-            pdecl->members.push_back( { make_unique<string>(su), move(rel) });
-        }
+        auto val = VhdlLiteralParser::visitPhysical_literal(uit->physical_literal());
+        pdecl->members.push_back( { su, move(val) });
     }
 	return pdecl;
 }
