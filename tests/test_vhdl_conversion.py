@@ -106,6 +106,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_carry_lookahead(self):
         self.parseWithRef("carry_lookahead.vhd", Language.VHDL)
 
+    def test_package_typedefs(self):
+        self.parseWithRef("package_typedefs.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
