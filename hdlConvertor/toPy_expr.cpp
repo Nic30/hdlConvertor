@@ -41,6 +41,9 @@ PyObject* ToPy::toPy(const iHdlExprItem *o) {
 	auto cls = dynamic_cast<const HdlClassDef*>(o);
 	if (cls)
 		return toPy(cls);
+    auto pd = dynamic_cast<const HdlPhysicalDef*>(o);
+	if (pd)
+		return toPy(pd);
 	auto ed = dynamic_cast<const HdlEnumDef*>(o);
 	if (ed)
 		return toPy(ed);

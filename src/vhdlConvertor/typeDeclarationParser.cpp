@@ -4,6 +4,7 @@
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
+#include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/createObject.h>
 
 #include <assert.h>
@@ -188,11 +189,48 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitFloating_type_definitio
     return visitRange_constraint(r);
 }
 
-unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitPhysical_type_definition(
+unique_ptr<HdlPhysicalDef> VhdlTypeDeclarationParser::visitPhysical_type_definition(
 		vhdlParser::Physical_type_definitionContext *ctx) {
-	NotImplementedLogger::print(
-			"TypeDeclarationParser.physical_type_definition", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+    // physical_type_definition:
+    //   range_constraint
+    //       KW_UNITS
+    //           primary_unit_declaration
+    //           ( secondary_unit_declaration )*
+    //       KW_END KW_UNITS ( identifier )?
+    // ;
+    auto r = ctx->range_constraint();
+    // range_constraint
+    // : RANGE range
+    // ;
+    auto rop = VhdlExprParser::visitRange(r->range());
+
+    auto pdecl = make_unique<HdlPhysicalDef>();
+    pdecl->range = create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rop));
+    // primary_unit_declaration: identifier SEMI;
+    auto _pu = ctx->primary_unit_declaration()->identifier();
+    auto pu = VhdlLiteralParser::getIdentifierStr(_pu);
+    pdecl->members.push_back( { make_unique<string>(pu), nullptr });
+    // secondary_unit_declaration: identifier EQ physical_literal SEMI;
+    // physical_literal: ( DECIMAL_LITERAL |  BASED_LITERAL )? name;
+	for (auto uit : ctx->secondary_unit_declaration()) {
+        auto _su = uit->identifier();
+        auto su = VhdlLiteralParser::getIdentifierStr(_su);
+        auto _name = uit->physical_literal()->name();
+        auto name = VhdlReferenceParser::visitName(_name);
+        auto _dec = uit->physical_literal()->DECIMAL_LITERAL();
+        if (_dec) {
+            auto dec = VhdlLiteralParser::visitDECIMAL_LITERAL(_dec);
+            auto rel = create_object<HdlOp>(ctx, move(dec), HdlOpType::MUL, move(name));
+            pdecl->members.push_back( { make_unique<string>(su), move(rel) });
+        } else {
+            auto _base = uit->physical_literal()->BASED_LITERAL();
+            assert(_base);
+            auto base = VhdlLiteralParser::visitBASED_LITERAL(_base);
+            auto rel = create_object<HdlOp>(ctx, move(base), HdlOpType::MUL, move(name));
+            pdecl->members.push_back( { make_unique<string>(su), move(rel) });
+        }
+    }
+	return pdecl;
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitArray_type_definition(
