@@ -18,4 +18,15 @@ package types is
     type TestFloat is range 1.0E10 to 2.0E10;
     subtype TestInt2 is TestInt range 0 to TestInt'HIGH;
     subtype TestFloat2 is TestFloat range 0.0E100 to TestFloat'HIGH;
+    type TIME is range -2147483647 to 2147483647
+        units
+            fs;
+            ps = 1000 fs;
+            ns = 1000 ps;
+            us = 1000 ns;
+            ms = 1000 us;
+            sec = 1000 ms;
+            min = 60 sec;
+            hr = 60 min;
+        end units;
 end package;

@@ -14,5 +14,16 @@ PACKAGE types IS
     TYPE TestFloat IS RANGE 1.000000e+10 TO 2.000000e+10;
     SUBTYPE TestInt2 IS TestInt RANGE 0 TO TestInt'HIGH;
     SUBTYPE TestFloat2 IS TestFloat RANGE 0.000000e+00 TO TestFloat'HIGH;
+    TYPE TIME IS RANGE -2147483647 TO 2147483647
+        UNITS
+            fs;
+            ps = 1000 fs;
+            ns = 1000 ps;
+            us = 1000 ns;
+            ms = 1000 us;
+            sec = 1000 ms;
+            min = 60 sec;
+            hr = 60 min;
+        END UNITS;
 END PACKAGE;
 
