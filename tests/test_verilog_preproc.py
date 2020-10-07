@@ -8,9 +8,9 @@ from tests.file_utils import cd
 from tests.hdl_parse_tc import TEST_DIR
 
 
-def _test_run(test_file, golden_file, golden_str):
+def _test_run(test_file, golden_file, golden_str, macro_db={}):
     c = HdlConvertor()
-
+    c.preproc_macro_db.update(macro_db)
     incdirs = [path.join('sv_pp', 'src'), ]
 
     with cd(TEST_DIR):
@@ -34,22 +34,23 @@ def _test_run(test_file, golden_file, golden_str):
     return test_result, test_golden
 
 
-def _test_run_rel(test_file, golden_file=None, golden_str=None):
+def _test_run_rel(test_file, golden_file=None, golden_str=None, macro_db={}):
     if golden_file is not None:
         golden_file = path.join('sv_pp', 'expected', golden_file)
     return _test_run(
         path.join('sv_pp', 'src', test_file),
         golden_file,
-        golden_str
+        golden_str,
+        macro_db=macro_db,
     )
 
 
 class VerilogPreprocTC(unittest.TestCase):
 
-    def assertPPWorks(self, test_file):
+    def assertPPWorks(self, test_file, macro_db={}):
         golden_file = test_file  # same name but will get a diffent folder
 
-        result, ref = _test_run_rel(test_file, golden_file)
+        result, ref = _test_run_rel(test_file, golden_file, macro_db=macro_db)
         # print(result)
         self.assertEqual(result, ref)
 
@@ -165,6 +166,10 @@ class VerilogPreprocTC(unittest.TestCase):
 
     def test_debug_macro(self):
         self.assertPPWorks("debug_macro.txt")
+        
+    def test_protect(self):
+        self.assertPPWorks("protect.v", macro_db={"protect": "",
+                                                  "endprotect": ""})
 
     def test_def_in_def(self):
         self.assertPPWorks("def_in_def.txt")
