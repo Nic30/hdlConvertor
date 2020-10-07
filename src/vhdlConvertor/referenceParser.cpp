@@ -113,7 +113,7 @@ std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName(
 	assert(_al);
 	auto al = VhdlExprParser::visitAssociation_list(_al);
 	assert(al);
-	return HdlOp::call(_al, move(n), *al);
+	return HdlOp::index(_al, move(n), *al);
 }
 
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitName_attribute_part(

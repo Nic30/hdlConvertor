@@ -25,6 +25,8 @@ public:
 			std::unique_ptr<iHdlExprItem> op1);
 
 	// syntax sugar, named constructors
+	static std::unique_ptr<HdlOp> index(std::unique_ptr<iHdlExprItem> fn,
+			std::vector<std::unique_ptr<iHdlExprItem>> &operands);
 	static std::unique_ptr<HdlOp> call(std::unique_ptr<iHdlExprItem> fn,
 			std::vector<std::unique_ptr<iHdlExprItem>> &operands);
 	static std::unique_ptr<HdlOp> parametrization(
@@ -40,6 +42,9 @@ public:
 			std::unique_ptr<iHdlExprItem> ifTrue,
 			std::unique_ptr<iHdlExprItem> ifFalse);
 	static std::unique_ptr<HdlOp> call(ParserRuleContext *ctx,
+			std::unique_ptr<iHdlExprItem> fnId,
+			std::vector<std::unique_ptr<iHdlExprItem>> &args);
+	static std::unique_ptr<HdlOp> index(ParserRuleContext *ctx,
 			std::unique_ptr<iHdlExprItem> fnId,
 			std::vector<std::unique_ptr<iHdlExprItem>> &args);
 	static std::unique_ptr<HdlOp> parametrization(

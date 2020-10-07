@@ -36,6 +36,12 @@ HdlOp::HdlOp(unique_ptr<iHdlExprItem> op0, HdlOpType operatorType,
 	this->op = operatorType;
 }
 
+unique_ptr<HdlOp> HdlOp::index(unique_ptr<iHdlExprItem> fn,
+		vector<unique_ptr<iHdlExprItem>> &operands) {
+	auto res = HdlOp::call(move(fn), operands);
+	res->op = HdlOpType::INDEX;
+	return res;
+}
 
 unique_ptr<HdlOp> HdlOp::call(unique_ptr<iHdlExprItem> fn,
 		vector<unique_ptr<iHdlExprItem>> &operands) {
@@ -85,6 +91,11 @@ unique_ptr<HdlOp> HdlOp::call(ParserRuleContext *ctx,
 		unique_ptr<iHdlExprItem> fnId,
 		vector<unique_ptr<iHdlExprItem>> &args) {
 	return update_code_position(HdlOp::call(move(fnId), args), ctx);
+}
+unique_ptr<HdlOp> HdlOp::index(ParserRuleContext *ctx,
+		unique_ptr<iHdlExprItem> fnId,
+		vector<unique_ptr<iHdlExprItem>> &args) {
+	return update_code_position(HdlOp::index(move(fnId), args), ctx);
 }
 unique_ptr<HdlOp> HdlOp::parametrization(
 		ParserRuleContext *ctx,
