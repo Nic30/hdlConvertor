@@ -235,6 +235,7 @@ cdef class CppStdMapProxy:
         self = CppStdMapProxy()
         self.thisptr = thisptr
         return self
+
     def get(self, key, value=None):
         v = deref(self.thisptr).find(self.__keytransform__(key))
         if v == deref(self.thisptr).end():
