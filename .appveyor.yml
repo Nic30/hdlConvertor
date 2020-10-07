@@ -20,7 +20,7 @@ install:
   - "cd antlr4/runtime/Cpp"
   - "mkdir build"
   - "cd build"
-  - 'cmake  -G "Visual Studio 16 2019 Win64" -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=Release ..'
+  - 'cmake  -G "Visual Studio 16 2019" -A Win64 -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=Release ..'
   - "msbuild LIBANTLR4.sln /p:configuration=Release" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
   - "cd ../../../../"
