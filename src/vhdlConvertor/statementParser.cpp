@@ -153,14 +153,14 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion(
 unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_assertion_statement(
 		vhdlParser::Concurrent_assertion_statementContext *ctx) {
 	// concurrent_assertion_statement:
-	//       ( KW_POSTPONED )? assertion SEMI
+	//       ( KW_POSTPONED )? assertion_statement
 	// ;
 	if (ctx->KW_POSTPONED()) {
 		NotImplementedLogger::print(
 				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - KW_POSTPONED",
 				ctx);
 	}
-	return VhdlStatementParser::visitAssertion(ctx->assertion());
+	return VhdlStatementParser::visitAssertion_statement(ctx->assertion_statement());
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
@@ -725,7 +725,9 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_statement_with_op
 	if (cpc) {
 		NotImplementedLogger::print(
 				"VhdlStatementParser.visitConcurrent_procedure_call_statement", cpc);
-		return nullptr;
+		auto pcs = cpc->procedure_call_statement();
+		return create_object<HdlStmExpr>(pcs,
+				VhdlExprParser::visitProcedure_call_statement(pcs));
 	}
 	auto ca = ctx->concurrent_assertion_statement();
 	if (ca) {

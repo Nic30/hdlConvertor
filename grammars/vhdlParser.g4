@@ -829,8 +829,8 @@ selected_variable_assignment:
       KW_WITH expression KW_SELECT ( QUESTIONMARK )?
           target VARASGN selected_expressions SEMI
 ;
-procedure_call_statement: procedure_call  SEMI;
-procedure_call: name ( association_list )?;
+procedure_call_statement: procedure_call SEMI;
+procedure_call: name;
 if_statement:
           KW_IF condition KW_THEN
               sequence_of_statements
@@ -930,10 +930,10 @@ process_declarative_item:
       | package_body
 ;
 concurrent_procedure_call_statement:
-      ( KW_POSTPONED )? procedure_call SEMI
+      ( KW_POSTPONED )? procedure_call_statement
 ;
 concurrent_assertion_statement:
-      ( KW_POSTPONED )? assertion SEMI
+      ( KW_POSTPONED )? assertion_statement
 ;
 // simplified: concurrent_signal_assignment_statement,
 //             concurrent_simple_signal_assignment,
