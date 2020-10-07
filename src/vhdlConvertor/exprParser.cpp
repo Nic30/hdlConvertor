@@ -516,6 +516,10 @@ unique_ptr<iHdlExprItem> VhdlExprParser::visitProcedure_call(
 	auto c = dynamic_cast<HdlOp*>(fnCall.get());
 
 	if (c == nullptr || c->op != HdlOpType::CALL) {
+		if (c && c->op == HdlOpType::INDEX) {
+			c->op = HdlOpType::CALL;
+			return fnCall;
+		}
 		vector<unique_ptr<iHdlExprItem>> args;
 		return HdlOp::call(ctx, move(fnCall), args);
 	}
