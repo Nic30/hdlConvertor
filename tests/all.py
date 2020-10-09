@@ -16,6 +16,7 @@ from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
 from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
 from tests.test_uvvm_testsuite import UVVMTestsuite
+import sys
 
 
 def main_test_suite():
@@ -52,6 +53,7 @@ if __name__ == "__main__":
     except ImportError:
         # concurrencytest is not installed, use regular test runner
         useParallerlTest = False
+        sys.stderr.write("[Warning]: concurrencytest not installed running test in single thread\n")
     # useParallerlTest = False
 
     if useParallerlTest:
