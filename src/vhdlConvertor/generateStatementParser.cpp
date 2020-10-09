@@ -110,6 +110,7 @@ std::unique_ptr<HdlStmIf> VhdlGenerateStatementParser::visitIf_generate_statemen
 
 	ifStm = create_object<HdlStmIf>(ctx, move(cond), move(ifTrue), elseIfs,
 			move(ifFalse));
+	ifStm->in_preproc = true;
 	auto labels = ctx->label();
 	if (labels.size()) {
 		ifStm->labels.push_back(VhdlLiteralParser::visitLabel(labels[0]));

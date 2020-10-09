@@ -36,7 +36,7 @@ BEGIN
     ASSERT PIPELINED <= SHIFT_SIZE REPORT "Cannot pipeline more than the number of stages." SEVERITY FAILURE;
     Pipelining: FOR i IN SHIFT_SIZE - 1 DOWNTO 1 GENERATE
          BEGIN
-            IF (SHIFT_SIZE - i) MOD STAGE_STAGES = 0 THEN
+            PipelineRegs: IF (SHIFT_SIZE - i) MOD STAGE_STAGES = 0 GENERATE
                 Reg: PROCESS(Clk_in, Reset_in)
                 BEGIN
                     IF Reset_in = RESET_VALUE THEN
@@ -45,10 +45,10 @@ BEGIN
                         PipelinedStages(i) <= Stages(i);
                     END IF;
                 END PROCESS;
-            END IF;
-            IF (SHIFT_SIZE - i) MOD STAGE_STAGES /= 0 THEN
+            END GENERATE;
+            NoPipeline: IF (SHIFT_SIZE - i) MOD STAGE_STAGES /= 0 GENERATE
                 PipelinedStages(i) <= Stages(i);
-            END IF;
+            END GENERATE;
         END GENERATE;
     Stages(SHIFT_SIZE) <= Operand_in;
     PipelinedStages(SHIFT_SIZE) <= Stages(SHIFT_SIZE);
