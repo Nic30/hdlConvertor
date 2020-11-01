@@ -123,7 +123,7 @@ class HdlParseTC(unittest.TestCase):
             ref_fname = fname
 
         lang_dir = get_language_path(lang_dir, language)
-        _, res = parseFile(fname, language, lang_dir=lang_dir)
+        _f, res = parseFile(fname, language, lang_dir=lang_dir)
         # check if repr works
         repr(res)
 
@@ -145,6 +145,7 @@ class HdlParseTC(unittest.TestCase):
             ref = f.read()
 
         self.assertEqual(ref, res_str)
+        return _f, res
 
     def check_obj_names(self, context, obj_cls, names):
         if obj_cls == HdlModuleDec:
