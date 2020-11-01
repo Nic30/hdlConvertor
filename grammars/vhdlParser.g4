@@ -400,8 +400,7 @@ record_element_resolution: identifier resolution_indication;
 type_mark: name;
 constraint:
       range_constraint
-      | array_constraint
-      | record_constraint
+      | element_constraint
 ;
 element_constraint:
       array_constraint

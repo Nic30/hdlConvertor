@@ -25,5 +25,7 @@ package constants_pkg is
  CONSTANT CONST_32b_expr_0		: std_logic_vector(31 downto 0) := CONST_32b_0 + X"0000_0008";
  CONSTANT CONST_32b_expr_0		: std_logic_vector(31 downto 0) := CONST_32b_0_1 + X"0000_0070" ;
 
+ CONSTANT TestConst4 : TestArray2DUU(TestInt'range, 100 downto -100)(10 downto 0); 
+
 end constants_pkg;
 

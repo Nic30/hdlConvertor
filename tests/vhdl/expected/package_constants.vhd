@@ -1,0 +1,27 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.std_logic_arith.ALL;
+USE ieee.std_logic_unsigned.ALL;
+PACKAGE constants_pkg IS
+    FUNCTION fn1 (SIGNAL bits : integer) RETURN integer;
+    FUNCTION fn0 (SIGNAL n : integer;
+        SIGNAL diff : integer) RETURN integer;
+    FUNCTION eval_log2 (SIGNAL n : integer) RETURN integer;
+    CONSTANT MTR_MBIST_ARCHITECTURE : std_logic := '1';
+    CONSTANT CONST_NATURAL : natural := 24;
+    CONSTANT NATURAL_WITH_RANGE : natural RANGE 0 TO CONST_NATURAL := 256;
+    CONSTANT MAX_NCUTSEL : natural := NATURAL_WITH_RANGE + (2 * eval_log2(NATURAL_WITH_RANGE / 2) - 1);
+    CONSTANT NREGS : natural := 103 + CONST_NATURAL * CONST_NATURAL + 5 + CONST_NATURAL + 6 + 6;
+    TYPE lb_res_reg IS ARRAY (fn1(CONST_NATURAL) DOWNTO 0) OF std_logic_vector(31 DOWNTO 0);
+    TYPE prpg_size IS ARRAY (fn1(CONST_NATURAL) DOWNTO 0) OF natural;
+    CONSTANT CONST_32b_0 : std_logic_vector(31 DOWNTO 0) := "00000000000000000000000000000000";
+    CONSTANT CONST_32b_0_1 : std_logic_vector(31 DOWNTO 0) := X"00000000";
+    CONSTANT CONST_128b_0 : std_logic_vector(127 DOWNTO 0) := X"00000000000000000000000000000000";
+    CONSTANT CONST_512b_0 : std_logic_vector(511 DOWNTO 0) := X"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+    CONSTANT CONST_expr_b_0 : std_logic_vector(fn1(CONST_NATURAL) DOWNTO 0) := (OTHERS => '1');
+    CONSTANT CONST_expr_b_1 : std_logic_vector(fn1(CONST_NATURAL) DOWNTO 0) := "1000000000";
+    CONSTANT CONST_32b_expr_0 : std_logic_vector(31 DOWNTO 0) := CONST_32b_0 + X"00000008";
+    CONSTANT CONST_32b_expr_0 : std_logic_vector(31 DOWNTO 0) := CONST_32b_0_1 + X"00000070";
+    CONSTANT TestConst4 : TestArray2DUU(TestInt'range, 100 DOWNTO -100)(10 DOWNTO 0);
+END PACKAGE;
+

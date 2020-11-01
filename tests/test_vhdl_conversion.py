@@ -24,7 +24,7 @@ class VhdlConversionTC(HdlParseTC):
         self.assertEqual(pkg.name, 'array_const_pkg')
 
     def test_package_constants(self):
-        _, res = parseFile("package_constants.vhd")
+        _, res = self.parseWithRef("package_constants.vhd", Language.VHDL)
         str(res)
         pkg = res.objs[4]  # first 4 objects are libraries and 'use' clauses
         self.assertIsInstance(pkg, HdlValueIdspace)
@@ -112,7 +112,7 @@ class VhdlConversionTC(HdlParseTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_entity_declarative_item'))
+    #suite.addTest(VhdlConversionTC('test_package_constants'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

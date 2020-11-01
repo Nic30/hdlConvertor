@@ -16,15 +16,20 @@ public:
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitConstraint(
 			std::unique_ptr<hdlAst::iHdlExprItem> selectedName,
 			vhdlParser::ConstraintContext *ctx);
-	static std::pair<std::unique_ptr<hdlAst::iHdlExprItem>,
-			std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> > visitArray_constraint(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitArray_constraint(
+			std::unique_ptr<hdlAst::iHdlExprItem> selectedName,
 			vhdlParser::Array_constraintContext *ctx);
-	static std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> visitIndex_constraint(
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitIndex_constraint(
+			std::unique_ptr<hdlAst::iHdlExprItem> selectedName,
 			vhdlParser::Index_constraintContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitRecord_constraint(
 			vhdlParser::Record_constraintContext *ctx);
 	static std::unique_ptr<hdlAst::iHdlExprItem> visitArray_element_constraint(
+			std::unique_ptr<hdlAst::iHdlExprItem> selectedName,
 			vhdlParser::Array_element_constraintContext *ctx);
+	static std::unique_ptr<hdlAst::iHdlExprItem> visitElement_constraint(
+			std::unique_ptr<hdlAst::iHdlExprItem> selectedName,
+			vhdlParser::Element_constraintContext *ctx);
 
 	static std::unique_ptr<hdlAst::HdlIdDef> visitType_declaration(
 			vhdlParser::Type_declarationContext *ctx);

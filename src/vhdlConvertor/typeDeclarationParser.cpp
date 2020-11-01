@@ -81,8 +81,8 @@ unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitType_definition(
 			}
 		}
 	}
-	return create_object<HdlIdDef>(ctx, move(name),
-			HdlValueSymbol::type(), move(t));
+	return create_object<HdlIdDef>(ctx, move(name), HdlValueSymbol::type(),
+			move(t));
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitScalar_type_definition(
@@ -167,56 +167,55 @@ unique_ptr<HdlEnumDef> VhdlTypeDeclarationParser::visitEnumeration_type_definiti
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitRange_constraint(
-			vhdlParser::Range_constraintContext *ctx) {
-    // range_constraint
-    // : RANGE range
-    // ;
-    auto op = VhdlExprParser::visitRange(ctx->range());
-    return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(op));
+		vhdlParser::Range_constraintContext *ctx) {
+	// range_constraint
+	// : RANGE range
+	// ;
+	return VhdlExprParser::visitRange(ctx->range());
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitInteger_type_definition(
 		vhdlParser::Integer_type_definitionContext *ctx) {
-    // integer_type_definition: range_constraint;
-    auto r = ctx->range_constraint();
-    return visitRange_constraint(r);
+	// integer_type_definition: range_constraint;
+	auto r = ctx->range_constraint();
+	auto rc = visitRange_constraint(r);
+	return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rc));
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitFloating_type_definition(
 		vhdlParser::Floating_type_definitionContext *ctx) {
-    // floating_type_definition: range_constraint;
-    auto r = ctx->range_constraint();
-    return visitRange_constraint(r);
+	// floating_type_definition: range_constraint;
+	auto r = ctx->range_constraint();
+	auto rc = visitRange_constraint(r);
+	return create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rc));
 }
 
 unique_ptr<HdlPhysicalDef> VhdlTypeDeclarationParser::visitPhysical_type_definition(
 		vhdlParser::Physical_type_definitionContext *ctx) {
-    // physical_type_definition:
-    //   range_constraint
-    //       KW_UNITS
-    //           primary_unit_declaration
-    //           ( secondary_unit_declaration )*
-    //       KW_END KW_UNITS ( identifier )?
-    // ;
-    auto r = ctx->range_constraint();
-    // range_constraint
-    // : RANGE range
-    // ;
-    auto rop = VhdlExprParser::visitRange(r->range());
+	// physical_type_definition:
+	//   range_constraint
+	//       KW_UNITS
+	//           primary_unit_declaration
+	//           ( secondary_unit_declaration )*
+	//       KW_END KW_UNITS ( identifier )?
+	// ;
+	auto r = ctx->range_constraint();
+	auto rop = visitRange_constraint(r);
 
-    auto pdecl = make_unique<HdlPhysicalDef>();
-    pdecl->range = create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rop));
-    // primary_unit_declaration: identifier SEMI;
-    auto _pu = ctx->primary_unit_declaration()->identifier();
-    auto pu = VhdlLiteralParser::getIdentifierStr(_pu);
-    pdecl->members.push_back( { pu, nullptr });
-    // secondary_unit_declaration: identifier EQ physical_literal SEMI;
+	auto pdecl = make_unique<HdlPhysicalDef>();
+	pdecl->range = create_object<HdlOp>(ctx, HdlOpType::RANGE, move(rop));
+	// primary_unit_declaration: identifier SEMI;
+	auto _pu = ctx->primary_unit_declaration()->identifier();
+	auto pu = VhdlLiteralParser::getIdentifierStr(_pu);
+	pdecl->members.push_back( { pu, nullptr });
+	// secondary_unit_declaration: identifier EQ physical_literal SEMI;
 	for (auto uit : ctx->secondary_unit_declaration()) {
-        auto _su = uit->identifier();
-        auto su = VhdlLiteralParser::getIdentifierStr(_su);
-        auto val = VhdlLiteralParser::visitPhysical_literal(uit->physical_literal());
-        pdecl->members.push_back( { su, move(val) });
-    }
+		auto _su = uit->identifier();
+		auto su = VhdlLiteralParser::getIdentifierStr(_su);
+		auto val = VhdlLiteralParser::visitPhysical_literal(
+				uit->physical_literal());
+		pdecl->members.push_back( { su, move(val) });
+	}
 	return pdecl;
 }
 
@@ -263,12 +262,7 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstrained_array_defin
 	//      KW_ARRAY index_constraint KW_OF subtype_indication
 	//;
 	auto element_t = visitSubtype_indication(ctx->subtype_indication());
-	auto tdef = make_unique<HdlOp>(HdlOpType::INDEX, move(element_t));
-	auto indexes = visitIndex_constraint(ctx->index_constraint());
-	for (auto &i : indexes) {
-		tdef->operands.push_back(move(i));
-	}
-	return tdef;
+	return visitIndex_constraint(move(element_t), ctx->index_constraint());
 }
 
 unique_ptr<HdlClassDef> VhdlTypeDeclarationParser::visitRecord_type_definition(
@@ -332,8 +326,8 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 		e = visitConstraint(move(e), c);
 	}
 	if (ri) {
-		return create_object<HdlOp>(ctx, move(ri),
-				HdlOpType::DEFINE_RESOLVER, move(e));
+		return create_object<HdlOp>(ctx, move(ri), HdlOpType::DEFINE_RESOLVER,
+				move(e));
 	} else {
 		return e;
 	}
@@ -342,45 +336,66 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitSubtype_indication(
 /*
  * @return element_type, dimension indexes
  * */
-pair<unique_ptr<iHdlExprItem>, vector<unique_ptr<iHdlExprItem>>> VhdlTypeDeclarationParser::visitArray_constraint(
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitArray_constraint(
+		unique_ptr<iHdlExprItem> selectedName,
 		vhdlParser::Array_constraintContext *ctx) {
 	// array_constraint:
 	//       index_constraint ( array_element_constraint )?
 	//       | LPAREN OPEN RPAREN ( array_element_constraint )?
 	// ;
 	auto ic = ctx->index_constraint();
-	auto aec = ctx->array_element_constraint();
-	unique_ptr<iHdlExprItem> elem_t = nullptr;
-	if (aec) {
-		elem_t = visitArray_element_constraint(aec);
-	}
-	vector<unique_ptr<iHdlExprItem>> e;
+	unique_ptr<iHdlExprItem> res;
 	if (ic) {
-		e = visitIndex_constraint(ic);
+		res = visitIndex_constraint(move(selectedName), ic);
+	} else {
+		res = create_object<HdlOp>(ctx, move(selectedName), HdlOpType::INDEX,
+				HdlValueSymbol::all());
 	}
-	return {move(elem_t), move(e)};
+	auto aec = ctx->array_element_constraint();
+	if (aec) {
+		res = visitArray_element_constraint(move(res), aec);
+	}
+
+	return res;
 }
-vector<unique_ptr<iHdlExprItem>> VhdlTypeDeclarationParser::visitIndex_constraint(
+
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitIndex_constraint(
+		unique_ptr<iHdlExprItem> selectedName,
 		vhdlParser::Index_constraintContext *ctx) {
 	// index_constraint
 	// : LPAREN discrete_range ( COMMA discrete_range )* RPAREN
 	// ;
-	vector<unique_ptr<iHdlExprItem>> res;
+	unique_ptr<iHdlExprItem> res = move(selectedName);
+	vector<unique_ptr<iHdlExprItem>> indexes;
 	for (auto dr_ctx : ctx->discrete_range()) {
-		res.push_back(VhdlExprParser::visitDiscrete_range(dr_ctx));
+		indexes.push_back(VhdlExprParser::visitDiscrete_range(dr_ctx));
 	}
+	res = HdlOp::index(ctx, move(res), indexes);
 	return res;
 }
+
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitArray_element_constraint(
+		unique_ptr<iHdlExprItem> selectedName,
 		vhdlParser::Array_element_constraintContext *ctx) {
 	// array_element_constraint: element_constraint;
+	return visitElement_constraint(move(selectedName),
+			ctx->element_constraint());
+}
+
+unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitElement_constraint(
+		unique_ptr<iHdlExprItem> selectedName,
+		vhdlParser::Element_constraintContext *ctx) {
 	// element_constraint:
 	//       array_constraint
 	//       | record_constraint
 	// ;
-	NotImplementedLogger::print(
-			"VhdlTypeDeclarationParser.visitArray_element_constraint", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+	auto i = ctx->array_constraint();
+	if (i) {
+		return visitArray_constraint(move(selectedName), i);
+	} else {
+		auto rc = ctx->record_constraint();
+		return visitRecord_constraint(rc);
+	}
 }
 
 unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
@@ -388,39 +403,16 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 		vhdlParser::ConstraintContext *ctx) {
 	// constraint:
 	//       range_constraint
-	//       | array_constraint
-	//       | record_constraint
+	//       | element_constraint
 	// ;
 
 	auto r = ctx->range_constraint();
 	if (r) {
-		// range_constraint
-		// : RANGE range
-		// ;
-		auto op1 = VhdlExprParser::visitRange(r->range());
-		return create_object<HdlOp>(ctx, move(selectedName),
-				HdlOpType::RANGE, move(op1));
+		auto rc = visitRange_constraint(r);
+		return create_object<HdlOp>(r, move(selectedName), HdlOpType::RANGE, move(rc));
 	} else {
-		auto i = ctx->array_constraint();
-		if (i) {
-			auto ac = visitArray_constraint(i);
-			if (ac.first == nullptr) {
-				auto res = create_object<HdlOp>(ctx, HdlOpType::INDEX,
-						move(selectedName));
-				for (auto &i : ac.second) {
-					res->operands.push_back(move(i));
-				}
-				return res;
-			} else {
-				NotImplementedLogger::print(
-						"VhdlTypeDeclarationParser.visitConstraint visitArray_constraint",
-						ctx);
-				return create_object<HdlExprNotImplemented>(ctx);
-			}
-		} else {
-			auto rc = ctx->record_constraint();
-			return visitRecord_constraint(rc);
-		}
+		auto ec = ctx->element_constraint();
+		return visitElement_constraint(move(selectedName), ec);
 	}
 }
 
