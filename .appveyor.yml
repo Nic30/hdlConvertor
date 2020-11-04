@@ -21,7 +21,7 @@ install:
   - "mkdir build"
   - "cd build"
   - 'cmake  -G "Visual Studio 16 2019" -A x64 -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=Release  -Dgtest_force_shared_crt=ON ..'
-  - "msbuild LIBANTLR4.sln /p:configuration=Release" # for other configuration installation does not work currently
+  - "msbuild LIBANTLR4.sln /p:configuration=Release /p:Platform=x64" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
   - "cd ../../../../"
   - "%PYTHON%\\python.exe -m pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git"
