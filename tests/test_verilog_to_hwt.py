@@ -1,9 +1,10 @@
+import os
 import unittest
 
 from hdlConvertorAst.language import Language
-from tests.hdl_parse_tc import HdlParseTC, get_to_hdl_cls
 from hdlConvertorAst.to.hwt import ToHwt
 from hdlConvertorAst.translate.verilog_to_hwt import verilog_to_hwt
+from tests.hdl_parse_tc import HdlParseTC
 
 
 def _default_to_hdl(context, language, buff):
@@ -16,15 +17,23 @@ def _default_to_hdl(context, language, buff):
 
 class VerilogToHwtTC(HdlParseTC):
 
+    def parseWithRef(self, fname,
+                     language=Language.VERILOG,
+                     input_dir=None, output_dir="hwt",
+                     ref_fname=None, to_hdl=_default_to_hdl):
+        if ref_fname is None:
+            ref_fname = os.path.basename(fname).replace(".v", ".py.txt")
+        return HdlParseTC.parseWithRef(self, fname, language,
+                                       input_dir=input_dir, output_dir=output_dir,
+                                       ref_fname=ref_fname, to_hdl=to_hdl)
+
     def test_decoder_using_case(self):
-        self.parseWithRef("decoder_using_case.v", Language.VERILOG,
-                          ref_fname="decoder_using_case.py.txt",
-                          to_hdl=_default_to_hdl)
+        self.parseWithRef("decoder_using_case.v")
 
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    #suite.addTest(VhdlConversionTC('test_package_constants'))
+    # suite.addTest(VhdlConversionTC('test_package_constants'))
     suite.addTest(unittest.makeSuite(VerilogToHwtTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
