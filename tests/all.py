@@ -1,9 +1,12 @@
+import sys
 import unittest
 
 from tests.notebook_test import NotebookTC
 from tests.test_basic_hdl_sim_model_from_verilog import BasicHdlSimModelFromVerilogTC
+from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
 from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
 from tests.test_sv2017_std_examples_parse import Sv2017StdExamplesParseTC
+from tests.test_uvvm_testsuite import UVVMTestsuite
 from tests.test_verilator_testsuite import VerilatorTestsuiteTC
 from tests.test_verilog_conversion import VerilogConversionTC
 from tests.test_verilog_preproc import VerilogPreprocTC
@@ -14,9 +17,6 @@ from tests.test_vhdl_conversion import VhdlConversionTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
-from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
-from tests.test_uvvm_testsuite import UVVMTestsuite
-import sys
 
 
 def main_test_suite():
