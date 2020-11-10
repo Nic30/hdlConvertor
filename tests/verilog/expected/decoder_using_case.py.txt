@@ -1,0 +1,71 @@
+from hwt.code import power, If, Switch, Concat
+from hwt.hdl.types.array import HArray
+from hwt.hdl.types.bits import Bits
+from hwt.hdl.types.defs import INT, SLICE
+from hwt.hdl.types.enum import HEnum
+from hwt.interfaces.std import Signal
+from hwt.synthesizer.param import Param
+from hwt.synthesizer.unit import Unit
+
+class decoder_using_case(Unit):
+    """ http://www.asic-world.com/code/hdl_models/decoder_using_case.v
+    -----------------------------------------------------
+     Design Name : decoder_using_case
+     File Name   : decoder_using_case.v
+     Function    : decoder using case
+     Coder       : Deepak Kumar Tala
+    -----------------------------------------------------
+    
+    """
+    def _declr(self):
+        # ports
+        self.binary_in = Signal(dtype=Bits(4, 0))
+        # 4 bit binary input
+        self.decoder_out = Signal(dtype=Bits(16, 0))._m()
+        # 16-bit  out
+        self.enable = Signal(dtype=Bits(1, 0))
+        # component instances
+
+    def _impl(self):
+        # internal signals
+        binary_in, decoder_out, enable = \
+        self.binary_in, self.decoder_out, self.enable
+
+        If(enable | binary_in,
+            decoder_out(0),
+            If(enable,
+                Switch(binary_in)\
+                    .Case(0x0,
+                        decoder_out(0x1))\
+                    .Case(0x1,
+                        decoder_out(0x2))\
+                    .Case(0x2,
+                        decoder_out(0x4))\
+                    .Case(0x3,
+                        decoder_out(0x8))\
+                    .Case(0x4,
+                        decoder_out(0x10))\
+                    .Case(0x5,
+                        decoder_out(0x20))\
+                    .Case(0x6,
+                        decoder_out(0x40))\
+                    .Case(0x7,
+                        decoder_out(0x80))\
+                    .Case(0x8,
+                        decoder_out(0x100))\
+                    .Case(0x9,
+                        decoder_out(0x200))\
+                    .Case(0xa,
+                        decoder_out(0x400))\
+                    .Case(0xb,
+                        decoder_out(0x800))\
+                    .Case(0xc,
+                        decoder_out(0x1000))\
+                    .Case(0xd,
+                        decoder_out(0x2000))\
+                    .Case(0xe,
+                        decoder_out(0x4000))\
+                    .Case(0xf,
+                        decoder_out(0x8000))
+            )
+        )
