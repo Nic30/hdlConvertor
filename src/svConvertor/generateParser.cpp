@@ -7,6 +7,7 @@
 #include <hdlConvertor/svConvertor/paramDefParser.h>
 #include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
+#include <hdlConvertor/svConvertor/gateParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/hdlAst/hdlStm_others.h>
 #include <hdlConvertor/hdlAst/hdlStmIf.h>
@@ -94,9 +95,8 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->gate_instantiation();
 		if (o) {
-			NotImplementedLogger::print(
-					"VerGenerateParser.visitModule_or_generate_item.gate_instantiation",
-					o);
+			VerGateParser gp(this);
+			gp.visitGate_instantiation(o, res);
 			return;
 		}
 	}
