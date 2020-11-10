@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
@@ -10,9 +10,9 @@ namespace sv {
 /*
  * Parser of other SystemVerilog declarations
  * */
-class VerDeclrParser: public VerPositionAwareParser {
+class VerDeclrParser: public BaseSvParser {
 public:
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
 	void visitData_declaration(sv2017Parser::Data_declarationContext *ctx,

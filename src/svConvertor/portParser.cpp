@@ -20,9 +20,9 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlAst;
 
-VerPortParser::VerPortParser(VerPositionAwareParser *other,
+VerPortParser::VerPortParser(BaseSvParser *other,
 		vector<Non_ANSI_port_info_t> &_non_ansi_port_groups) :
-		VerPositionAwareParser(other), non_ansi_port_groups(
+		BaseSvParser(other), non_ansi_port_groups(
 				_non_ansi_port_groups) {
 }
 

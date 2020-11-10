@@ -436,7 +436,7 @@ unique_ptr<iHdlExprItem> VerGenerateParser::visitGenvar_expression(
 		sv2017Parser::Genvar_expressionContext *ctx) {
 	// genvar_expression: constant_expression;
 	auto ce = ctx->constant_expression();
-	return VerExprParser(static_cast<VerPositionAwareParser*>(this)).visitConstant_expression(ce);
+	return VerExprParser(static_cast<BaseSvParser*>(this)).visitConstant_expression(ce);
 }
 
 unique_ptr<HdlStmFor> VerGenerateParser::visitLoop_generate_construct(

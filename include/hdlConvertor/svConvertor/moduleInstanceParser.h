@@ -4,15 +4,15 @@
 
 #include <hdlConvertor/hdlAst/hdlCompInst.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerModuleInstanceParser: public VerPositionAwareParser {
+class VerModuleInstanceParser: public BaseSvParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 
 	void visitModule_or_interface_or_program_or_udp_instantiation(
 			sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,

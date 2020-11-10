@@ -2,15 +2,15 @@
 
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerProgramParser: public VerPositionAwareParser {
+class VerProgramParser: public BaseSvParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 
 	void visitTf_port_declaration(sv2017Parser::Tf_port_declarationContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &res);

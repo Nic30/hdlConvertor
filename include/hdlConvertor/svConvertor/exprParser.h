@@ -2,15 +2,15 @@
 
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerExprParser: public VerPositionAwareParser {
+class VerExprParser: public BaseSvParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 
 	std::unique_ptr<hdlAst::iHdlExprItem> visitExpression(
 			sv2017Parser::ExpressionContext *ctx);

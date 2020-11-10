@@ -12,7 +12,7 @@
 namespace hdlConvertor {
 namespace sv {
 
-class VerModuleParser: public VerPositionAwareParser{
+class VerModuleParser: public BaseSvParser{
 	// @note: non-ANSI ports are converted to ANSI ports after module body is parsed
 public:
 	class ModuleCtx {
@@ -26,7 +26,7 @@ public:
 	};
 
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 
 	void visitModule_header_common(
 			sv2017Parser::Module_header_commonContext *ctx,

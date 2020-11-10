@@ -3,14 +3,14 @@
 #include <hdlConvertor/hdlAst/hdlOpType.h>
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerEventExprParser: public VerPositionAwareParser {
+class VerEventExprParser: public BaseSvParser {
 public:
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
 	void visitEvent_expression(sv2017Parser::Event_expressionContext *ctx,

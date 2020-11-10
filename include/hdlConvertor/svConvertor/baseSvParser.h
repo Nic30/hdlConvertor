@@ -8,13 +8,13 @@
 namespace hdlConvertor {
 namespace sv {
 
-class VerPositionAwareParser {
+class BaseSvParser {
 public:
 	SVCommentParser &commentParser;
 	bool hierarchyOnly;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	VerPositionAwareParser(SVCommentParser &commentParser, bool hierarchyOnly);
-	VerPositionAwareParser(VerPositionAwareParser * other);
+	BaseSvParser(SVCommentParser &commentParser, bool hierarchyOnly);
+	BaseSvParser(BaseSvParser * other);
 };
 
 }

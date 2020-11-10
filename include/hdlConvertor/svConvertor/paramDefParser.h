@@ -2,15 +2,15 @@
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerParamDefParser: public VerPositionAwareParser {
+class VerParamDefParser: public BaseSvParser {
 public:
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 
 	void visitParameter_port_list(sv2017Parser::Parameter_port_listContext *ctx,

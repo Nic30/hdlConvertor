@@ -1,15 +1,15 @@
 #pragma once
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/positionAwareParser.h>
+#include <hdlConvertor/svConvertor/baseSvParser.h>
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerDelayParser: public VerPositionAwareParser {
+class VerDelayParser: public BaseSvParser {
 public:
-	using VerPositionAwareParser::VerPositionAwareParser;
+	using BaseSvParser::BaseSvParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	using HdlEventList = std::unique_ptr<std::vector<std::unique_ptr<hdlAst::iHdlExprItem>>>;
 
