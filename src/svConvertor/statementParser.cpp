@@ -368,10 +368,10 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 }
 std::vector<HdlExprAndiHdlObj> VerStatementParser::visitCase_item(
 		sv2017Parser::Case_itemContext *ctx) {
-	// case_item
-	//    : expression (',' expression)* ':' statement_or_null
-	//    | 'default' (':')? statement_or_null
-	//    ;
+	// case_item:
+	//     ( KW_DEFAULT ( COLON )?
+	//       | expression ( COMMA expression )* COLON
+	//     ) statement_or_null;
 	std::vector<HdlExprAndiHdlObj> res;
 	auto conds = ctx->expression();
 	auto stms = ctx->statement_or_null();

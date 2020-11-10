@@ -32,7 +32,7 @@ void VerGenerateParser::visitGenerate_region(
 	vector<unique_ptr<iHdlObj>> tmp_res;
 	for (auto gi : ctx->generate_item()) {
 		visitGenerate_item(gi, tmp_res);
-		for (auto & o: tmp_res) {
+		for (auto &o : tmp_res) {
 			auto stm = dynamic_cast<iHdlStatement*>(o.get());
 			if (stm)
 				stm->in_preproc = true;
@@ -364,7 +364,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->conditional_generate_construct();
 		if (o) {
-			visitConditional_generate_construct(o, res_stm);
+			res_stm.push_back(visitConditional_generate_construct(o));
 			return;
 		}
 	}
@@ -379,12 +379,13 @@ void VerGenerateParser::visitModule_or_generate_item(
 	}
 }
 void VerGenerateParser::visitGenvar_declaration(
-		sv2017Parser::Genvar_declarationContext *ctx, vector<unique_ptr<HdlIdDef>> & res) {
+		sv2017Parser::Genvar_declarationContext *ctx,
+		vector<unique_ptr<HdlIdDef>> &res) {
 	// genvar_declaration:
 	//  KW_GENVAR identifier_list SEMI;
 	// identifier_list: identifier ( COMMA identifier )*;
 	auto il = ctx->identifier_list();
-	for (auto id: il->identifier()) {
+	for (auto id : il->identifier()) {
 		VerExprParser ep(this);
 		auto name = ep.getIdentifierStr(id);
 		auto t = create_object<HdlValueId>(id, "genvar");
@@ -436,7 +437,8 @@ unique_ptr<iHdlExprItem> VerGenerateParser::visitGenvar_expression(
 		sv2017Parser::Genvar_expressionContext *ctx) {
 	// genvar_expression: constant_expression;
 	auto ce = ctx->constant_expression();
-	return VerExprParser(static_cast<BaseSvParser*>(this)).visitConstant_expression(ce);
+	return VerExprParser(static_cast<BaseSvParser*>(this)).visitConstant_expression(
+			ce);
 }
 
 unique_ptr<HdlStmFor> VerGenerateParser::visitLoop_generate_construct(
@@ -494,35 +496,79 @@ void VerGenerateParser::visitGenerate_begin_end_block(
 	res.push_back(move(b));
 }
 
-void VerGenerateParser::visitConditional_generate_construct(
-		sv2017Parser::Conditional_generate_constructContext *ctx,
-		vector<unique_ptr<iHdlStatement>> &res) {
+unique_ptr<iHdlStatement> VerGenerateParser::visitConditional_generate_construct(
+		sv2017Parser::Conditional_generate_constructContext *ctx) {
 	// conditional_generate_construct:
 	//     if_generate_construct
 	//     | case_generate_construct
 	// ;
 	auto igc = ctx->if_generate_construct();
+
 	if (igc) {
-		visitIf_generate_construct(igc, res);
+		return visitIf_generate_construct(igc);
 	} else {
 		auto cgc = ctx->case_generate_construct();
 		assert(cgc);
-		visitCase_generate_construct(cgc, res);
+		return visitCase_generate_construct(cgc);
 	}
 }
-void VerGenerateParser::visitCase_generate_construct(
-		sv2017Parser::Case_generate_constructContext *ctx,
-		vector<unique_ptr<iHdlStatement>> &res) {
-	// case_generate_construct:
-	//     KW_CASE LPAREN constant_expression RPAREN ( case_generate_item )+ KW_ENDCASE;
+vector<HdlExprAndiHdlObj> VerGenerateParser::visitCase_generate_item(
+		sv2017Parser::Case_generate_itemContext *ctx) {
 	// case_generate_item:
 	//     ( KW_DEFAULT ( COLON )?
 	//       | constant_expression ( COMMA constant_expression )* COLON
 	//     ) generate_item;
-	NotImplementedLogger::print(
-			"VerGenerateParser.visitCase_generate_construct", ctx);
-}
 
+	vector<HdlExprAndiHdlObj> res;
+	auto ce = ctx->constant_expression();
+	auto gi = ctx->generate_item();
+	if (ce.size()) {
+		for (auto c: ce) {
+			auto ce = VerExprParser(this).visitConstant_expression(c);
+			// [TODO] it would be better to copy the statements instead of parsing again
+			std::vector<std::unique_ptr<iHdlObj>> _gi;
+			visitGenerate_item(gi, _gi);
+			assert(_gi.size() == 1);
+			auto o = HdlExprAndiHdlObj(move(ce), move(_gi.at(0)));
+			res.push_back(move(o));
+		}
+	} else {
+		std::vector<std::unique_ptr<iHdlObj>> _gi;
+		visitGenerate_item(gi, _gi);
+		assert(_gi.size() == 1);
+		res.push_back( { nullptr, move(_gi.at(0)) });
+	}
+	return res;
+
+}
+unique_ptr<HdlStmCase> VerGenerateParser::visitCase_generate_construct(
+		sv2017Parser::Case_generate_constructContext *ctx) {
+	// case_generate_construct:
+	//     KW_CASE LPAREN constant_expression RPAREN ( case_generate_item )+ KW_ENDCASE;
+	VerExprParser ep(this);
+	auto switchOn = ep.visitConstant_expression(ctx->constant_expression());
+	std::vector<HdlExprAndiHdlObj> cases;
+	unique_ptr<iHdlObj> default_ = nullptr;
+	auto _cases = ctx->case_generate_item();
+	cases.reserve(_cases.size());
+	for (auto _c : _cases) {
+		auto cs = visitCase_generate_item(_c);
+		for (auto &c : cs) {
+			if (c.expr) {
+				cases.push_back(move(c));
+			} else {
+				if (default_) {
+					throw std::runtime_error(
+							"VerGenerateParser.visitCase_generate_construct case with multiple default");
+				}
+				default_ = move(c.obj);
+			}
+		}
+	}
+	return create_object_with_doc<HdlStmCase>(ctx, commentParser, HdlStmCaseType::CASE,
+			move(switchOn), cases, move(default_));
+
+}
 
 unique_ptr<iHdlObj> pop_block_if_possible(unique_ptr<HdlStmBlock> stm) {
 	if (stm->statements.size() == 1) {
@@ -531,9 +577,8 @@ unique_ptr<iHdlObj> pop_block_if_possible(unique_ptr<HdlStmBlock> stm) {
 		return stm;
 	}
 }
-void VerGenerateParser::visitIf_generate_construct(
-		sv2017Parser::If_generate_constructContext *ctx,
-		vector<unique_ptr<iHdlStatement>> &res) {
+unique_ptr<iHdlStatement> VerGenerateParser::visitIf_generate_construct(
+		sv2017Parser::If_generate_constructContext *ctx) {
 	// if_generate_construct:
 	//     KW_IF LPAREN constant_expression RPAREN generate_item
 	//     ( KW_ELSE generate_item | {_input->LA(1) != KW_ELSE}? );
@@ -556,11 +601,11 @@ void VerGenerateParser::visitIf_generate_construct(
 		visitGenerate_item(s[1], ifFalse_bl->statements);
 		ifFalse = pop_block_if_possible(move(ifFalse_bl));
 	}
-	auto ifStm = create_object_with_doc<HdlStmIf>(ctx, commentParser, move(cond), move(ifTrue),
-			move(ifFalse));
+	auto ifStm = create_object_with_doc<HdlStmIf>(ctx, commentParser,
+			move(cond), move(ifTrue), move(ifFalse));
 	HdlStmIf_collapse_elifs(*ifStm);
 
-	res.push_back(move(ifStm));
+	return ifStm;
 }
 
 void VerGenerateParser::visitGenerate_item(
@@ -586,7 +631,7 @@ void VerGenerateParser::visitGenerate_item(
 	{
 		auto o = ctx->module_or_generate_item();
 		if (o) {
-			vector < unique_ptr < HdlIdDef >> params;
+			vector<unique_ptr<HdlIdDef>> params;
 			visitModule_or_generate_item(o, res, params);
 			if (params.size()) {
 				NotImplementedLogger::print(
