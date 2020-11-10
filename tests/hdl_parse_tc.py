@@ -7,6 +7,7 @@ from hdlConvertorAst.hdlAst._structural import HdlModuleDec, HdlModuleDef
 from hdlConvertorAst.language import Language
 from hdlConvertorAst.to.verilog.verilog2005 import ToVerilog2005
 from hdlConvertorAst.to.vhdl.vhdl2008 import ToVhdl2008
+from hdlConvertorAst.to.hwt import ToHwt
 
 
 try:
@@ -28,7 +29,8 @@ LANG_SUFFIX = {
     VHDL: ".vhd",
     VERILOG: ".v",
     SV: ".sv",
-    Language.HDLCONVERTOR_JSON: ".json"
+    Language.HDLCONVERTOR_JSON: ".json",
+    Language.HWT: ".py",
 }
 
 
@@ -52,14 +54,16 @@ def get_to_hdl_cls(language):
         return ToVerilog2005
     elif language == VHDL:
         return ToVhdl2008
+    elif language == Language.HWT:
+        return ToHwt
     else:
         raise NotImplementedError(language)
 
 
-def parseFile(fname, language, lang_dir=None):
-    lang_dir = get_language_path(lang_dir, language)
-    inc_dir = path.join(TEST_DIR, lang_dir)
-    f = path.join(TEST_DIR, lang_dir, fname)
+def parseFile(fname, language, input_dir=None):
+    input_dir = get_language_path(input_dir, language)
+    inc_dir = path.join(TEST_DIR, input_dir)
+    f = path.join(TEST_DIR, input_dir, fname)
     c = HdlConvertor()
     res = c.parse([f, ], language, [inc_dir], debug=True)
     return f, res
@@ -75,36 +79,8 @@ class HdlParseTC(unittest.TestCase):
     """
     A base class for HDL parser tests
     """
-    def translateWithRef(self, fname, src_lang, dst_lang, ref_fname=None,
-                         src_lang_dir=None,
-                         dst_lang_dir=None, to_hdl=_default_to_hdl):
-        if ref_fname is None:
-            ref_fname, _ = os.path.splitext(fname)
-            ref_fname += LANG_SUFFIX[dst_lang]
 
-        src_lang_dir = get_language_path(src_lang_dir, src_lang)
-        _, res = parseFile(fname, src_lang, lang_dir=src_lang_dir)
-
-        buff = StringIO()
-        # import sys
-        # buff = sys.stdout
-        # serialize a HDL code to a buff
-        to_hdl(res, dst_lang, buff)
-
-        dst_lang_dir = get_language_path(dst_lang_dir, dst_lang)
-        ref_file = path.join(TEST_DIR, dst_lang_dir,
-                             "expected", ref_fname)
-        res_str = buff.getvalue()
-        # if fname == "aes.v":
-        #     with open(ref_file, "w") as f:
-        #         f.write(res_str)
-
-        with open(ref_file, encoding="utf-8") as f:
-            ref = f.read()
-
-        self.assertEqual(ref, res_str)
-
-    def parseWithRef(self, fname, language, lang_dir=None,
+    def parseWithRef(self, fname, language, input_dir=None, output_dir=None,
                      ref_fname=None, to_hdl=_default_to_hdl):
         """
         Parse file and compare it with a reference file.
@@ -114,7 +90,9 @@ class HdlParseTC(unittest.TestCase):
         :type language: Language
         :param ref_fname: name of reference file in the case it is not the same
             (relative to "expected/" )
-        :param lang_dir: path relative to a test directory where test file is stored
+        :param input_dir: path relative to a test directory where test input file is stored
+        :param output_dir: path relative to a test directory where $output_dir/expected/$fname is a reference
+            file with expected test output (suffix of file may change depending on output format)
         :param transform: a function which can be used to modify a HdlContext
             pefore transformation to a target language
         """
@@ -122,8 +100,8 @@ class HdlParseTC(unittest.TestCase):
         if ref_fname is None:
             ref_fname = fname
 
-        lang_dir = get_language_path(lang_dir, language)
-        _f, res = parseFile(fname, language, lang_dir=lang_dir)
+        input_dir = get_language_path(input_dir, language)
+        _f, res = parseFile(fname, language, input_dir=input_dir)
         # check if repr works
         repr(res)
 
@@ -133,9 +111,12 @@ class HdlParseTC(unittest.TestCase):
 
         # serialize a HDL code to a buff
         to_hdl(res, language, buff)
+        if output_dir is None:
+            output_dir = input_dir
+        else:
+            output_dir = path.join(TEST_DIR, output_dir)
 
-        ref_file = path.join(TEST_DIR, lang_dir,
-                             "expected", ref_fname)
+        ref_file = path.join(output_dir, "expected", ref_fname)
         res_str = buff.getvalue()
         # if fname == "aes.v":
         #     with open(ref_file, "w") as f:

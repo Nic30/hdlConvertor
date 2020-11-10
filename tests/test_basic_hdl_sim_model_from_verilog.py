@@ -19,7 +19,8 @@ class BasicHdlSimModelFromVerilogTC(HdlParseTC):
 
     def testSimpleSubunit(self):
         self.parseWithRef("simple_subunit.v", VERILOG,
-                          lang_dir="basic_hdl_sim_model",
+                          input_dir="verilog",
+                          output_dir="basic_hdl_sim_model",
                           ref_fname="simple_subunit.py.txt",
                           to_hdl=_to_basic_hdl_sim_model)
 
