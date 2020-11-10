@@ -36,7 +36,7 @@ cdef extern from "hdlConvertor/conversion_exception.h" namespace "hdlConvertor":
 cdef extern from "hdlConvertor/language.h" namespace "hdlConvertor":
     enum Language:
         VHDL, VERILOG1995, VERILOG2001, VERILOG2001_NOCONFIG, \
-            VERILOG2005, SV2005, SV2009, SV2012, SV2017
+            VERILOG2005, SV2005, SV2009, SV2012, SV2017, HWT
 
 cdef class ParseException(Exception):
     pass
@@ -126,6 +126,8 @@ cdef class HdlConvertorPy:
             return SV2012
         elif lang == L.SYSTEM_VERILOG_2017:
             return SV2017
+        elif lang == L.HWT:
+            return HWT
         else:
             raise ValueError(repr(lang) + " is not recognized"
                              " (expected hdlConvertor.language.Language value)")
