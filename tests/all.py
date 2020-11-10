@@ -16,6 +16,7 @@ from tests.test_verilog_preproc import VerilogPreprocTC
 from tests.test_verilog_preproc_grammar import VerilogPreprocGrammarTC
 from tests.test_verilog_preproc_include import VerilogPreprocIncludeTC
 from tests.test_verilog_preproc_macro_db_api import VerilogPreprocMacroDbApiTC
+from tests.test_verilog_to_hwt import VerilogToHwtTC
 from tests.test_vhdl_conversion import VhdlConversionTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
@@ -38,6 +39,7 @@ def main_test_suite():
         VUnitTestsuiteTC,
         UVVMTestsuite,
         BasicHdlSimModelFromVerilogTC,
+        VerilogToHwtTC,
         NotebookTC,
     ] + GhdlTestsuiteTCs
     for tc in tcs:
