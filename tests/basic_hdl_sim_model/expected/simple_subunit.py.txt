@@ -13,10 +13,10 @@ class subunit0(BasicRtlSimModel):
         # ports
         self.io.a = BasicRtlSimProxy(
             sim, self, "a",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         self.io.b = BasicRtlSimProxy(
             sim, self, "b",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         # internal signals
         # component instances
     def _init_body(self):
@@ -45,17 +45,17 @@ class SimpleSubunit(BasicRtlSimModel):
         # ports
         self.io.a = BasicRtlSimProxy(
             sim, self, "a",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         self.io.b = BasicRtlSimProxy(
             sim, self, "b",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         # internal signals
         self.io.sig_subunit0_a = BasicRtlSimProxy(
             sim, self, "sig_subunit0_a",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         self.io.sig_subunit0_b = BasicRtlSimProxy(
             sim, self, "sig_subunit0_b",
-            Bits3t(1, None), None)
+            Bits3t(1, 0), None)
         # component instances
         self.subunit0_inst = subunit0(sim, "subunit0_inst")
     def _init_body(self):
