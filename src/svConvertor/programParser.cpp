@@ -19,10 +19,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerProgramParser::VerProgramParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 void VerProgramParser::visitTf_item_declaration(
 		sv2017Parser::Tf_item_declarationContext *ctx,
 		vector<unique_ptr<iHdlObj>> &objs,
@@ -33,8 +29,7 @@ void VerProgramParser::visitTf_item_declaration(
 	// ;
 	auto bid = ctx->block_item_declaration();
 	if (bid)
-		VerStatementParser(commentParser).visitBlock_item_declaration(bid,
-				objs);
+		VerStatementParser(this).visitBlock_item_declaration(bid, objs);
 	else {
 		auto tpd = ctx->tf_port_declaration();
 		visitTf_port_declaration(tpd, ports);
@@ -51,11 +46,11 @@ void VerProgramParser::visitTf_port_declaration(
 	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	auto _tpd = ctx->tf_port_direction();
 	std::vector<VerPortParser::Non_ANSI_port_info_t> non_ansi_port_groups;
-	VerPortParser pp(commentParser, non_ansi_port_groups);
+	VerPortParser pp(this, non_ansi_port_groups);
 	auto pd = pp.visitTf_port_direction(_tpd);
 	if (ctx->KW_VAR())
 		pd = HdlDirection::DIR_LINKAGE;
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	auto dti = ctx->data_type_or_implicit();
 	auto t = tp.visitData_type_or_implicit(dti, nullptr);
 	auto lvi = ctx->list_of_tf_variable_identifiers();
@@ -96,16 +91,16 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_and_function_declara
 	f->is_task = is_task;
 	f->is_declaration_only = false;
 	std::vector<VerPortParser::Non_ANSI_port_info_t> non_ansi_port_groups;
-		auto pl = ctx->tf_port_list();
+	auto pl = ctx->tf_port_list();
 	if (pl) {
-		VerPortParser pp(commentParser, non_ansi_port_groups);
-				pp.visitTf_port_list(pl, *f->params);
+		VerPortParser pp(this, non_ansi_port_groups);
+		pp.visitTf_port_list(pl, *f->params);
 	} else {
-		for (auto tfp: ctx->tf_item_declaration()) {
+		for (auto tfp : ctx->tf_item_declaration()) {
 			visitTf_item_declaration(tfp, f->body, *f->params);
 		}
 	}
-	VerStatementParser sp(commentParser);
+	VerStatementParser sp(this);
 	for (auto _bid : ctx->block_item_declaration()) {
 		sp.visitBlock_item_declaration(_bid, f->body);
 	}
@@ -129,7 +124,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitTask_declaration(
 	//     KW_ENDTASK ( COLON identifier | {_input->LA(1) != COLON}? )
 	// ;
 
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	bool is_static = tp.visitLifetime(ctx->lifetime());
 	auto return_t = create_object<HdlValueId>(ctx, "void");
 	auto tfcom = ctx->task_and_function_declaration_common();
@@ -145,7 +140,7 @@ std::unique_ptr<HdlFunctionDef> VerProgramParser::visitFunction_declaration(
 	//    task_and_function_declaration_common
 	//    KW_ENDFUNCTION ( COLON identifier | {_input->LA(1) != COLON}? )
 	//;
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	bool is_static = tp.visitLifetime(ctx->lifetime());
 	auto fdti = ctx->function_data_type_or_implicit();
 	auto return_t = tp.visitFunction_data_type_or_implicit(fdti);

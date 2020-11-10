@@ -2,18 +2,17 @@
 
 #include <vector>
 
-#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 #include <hdlConvertor/hdlAst/hdlCompInst.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerModuleInstanceParser {
-	SVCommentParser &commentParser;
+class VerModuleInstanceParser: public VerPositionAwareParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	VerModuleInstanceParser(SVCommentParser &commentParser);
+	using VerPositionAwareParser::VerPositionAwareParser;
 
 	void visitModule_or_interface_or_program_or_udp_instantiation(
 			sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,

@@ -6,19 +6,18 @@
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerPortParser {
-	SVCommentParser &commentParser;
+class VerPortParser: public VerPositionAwareParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	using Non_ANSI_port_info_t = std::pair<std::string, hdlAst::HdlIdDef*>;
 	std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups;
 
-	VerPortParser(SVCommentParser &commentParser,
+	VerPortParser(VerPositionAwareParser* other,
 			std::vector<Non_ANSI_port_info_t> &non_ansi_port_groups);
 	std::unique_ptr<hdlAst::HdlIdDef> visitNonansi_port(
 			sv2017Parser::Nonansi_portContext *ctx);

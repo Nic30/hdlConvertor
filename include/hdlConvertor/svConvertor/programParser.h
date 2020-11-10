@@ -1,17 +1,16 @@
 #pragma once
 
-#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
 #include <hdlConvertor/hdlAst/hdlFunctionDef.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerProgramParser {
-	SVCommentParser &commentParser;
+class VerProgramParser: public VerPositionAwareParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	VerProgramParser(SVCommentParser &commentParser);
+	using VerPositionAwareParser::VerPositionAwareParser;
 
 	void visitTf_port_declaration(sv2017Parser::Tf_port_declarationContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &res);

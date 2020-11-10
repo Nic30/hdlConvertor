@@ -12,12 +12,8 @@
 namespace hdlConvertor {
 namespace sv {
 
-class VerModuleParser {
-	SVCommentParser &commentParser;
-	bool hierarchyOnly;
-
+class VerModuleParser: public VerPositionAwareParser{
 	// @note: non-ANSI ports are converted to ANSI ports after module body is parsed
-
 public:
 	class ModuleCtx {
 	public:
@@ -30,8 +26,8 @@ public:
 	};
 
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
+	using VerPositionAwareParser::VerPositionAwareParser;
 
-	VerModuleParser(SVCommentParser &commentParser, bool _hierarchyOnly);
 	void visitModule_header_common(
 			sv2017Parser::Module_header_commonContext *ctx,
 			hdlAst::HdlModuleDec &ent);

@@ -8,7 +8,7 @@
 #include <hdlConvertor/hdlAst/hdlStmBlock.h>
 #include <hdlConvertor/hdlAst/hdlStmIf.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/createObject.h>
 
@@ -16,13 +16,11 @@
 namespace hdlConvertor {
 namespace sv {
 
-class VerStatementParser {
-	SVCommentParser &commentParser;
+class VerStatementParser: public VerPositionAwareParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
 	// single statement or many statements, only one is set at the time, other is nullptr
-
-	VerStatementParser(SVCommentParser &commentParser);
+	using VerPositionAwareParser::VerPositionAwareParser;
 
 	std::unique_ptr<hdlAst::iHdlStatement> visitAlways_construct(
 			sv2017Parser::Always_constructContext *ctx);
@@ -73,7 +71,7 @@ public:
 		}
 		auto b = create_object_with_doc<hdlAst::HdlStmBlock>(ctx, commentParser, items);
 		if (_label) {
-			VerExprParser ep(commentParser);
+			VerExprParser ep(this);
 			b->labels.push_back(ep.getIdentifierStr(_label));
 		}
 		return b;

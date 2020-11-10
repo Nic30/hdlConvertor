@@ -15,10 +15,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerParamDefParser::VerParamDefParser(SVCommentParser &commentParser) :
-		commentParser(commentParser) {
-}
-
 void VerParamDefParser::visitParameter_port_list(
 		sv2017Parser::Parameter_port_listContext *ctx,
 		vector<unique_ptr<HdlIdDef>> &res) {
@@ -67,7 +63,7 @@ void VerParamDefParser::visitParameter_port_declaration(
 	assert(dt);
 	auto lpa = ctx->list_of_param_assignments();
 	assert(lpa);
-	auto t = VerTypeParser(commentParser).visitData_type(dt);
+	auto t = VerTypeParser(this).visitData_type(dt);
 	auto doc = commentParser.parse(ctx);
 	visitTyped_list_of_param_assignments(move(t), lpa, doc, res);
 }
@@ -111,12 +107,12 @@ unique_ptr<iHdlExprItem> VerParamDefParser::visitParam_expression(
 	// ;
 	auto me = ctx->mintypmax_expression();
 	if (me) {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		return ep.visitMintypmax_expression(me);
 	} else {
 		auto dt = ctx->data_type();
 		assert(dt);
-		VerTypeParser dp(commentParser);
+		VerTypeParser dp(this);
 		return dp.visitData_type(dt);
 	}
 }
@@ -126,7 +122,7 @@ void VerParamDefParser::visitList_of_type_assignments(
 		vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_type_assignments: type_assignment ( COMMA type_assignment )*;
 	// type_assignment: identifier ( ASSIGN data_type )?;
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	for (auto _ta : ctx->type_assignment()) {
 		auto name = VerExprParser::getIdentifierStr(_ta->identifier());
 		unique_ptr<iHdlExprItem> v = nullptr;
@@ -171,7 +167,7 @@ void VerParamDefParser::visitParameter_declaration(
 		visitList_of_type_assignments(lta, res);
 	} else {
 		auto _t = ctx->data_type_or_implicit();
-		VerTypeParser tp(commentParser);
+		VerTypeParser tp(this);
 		unique_ptr<iHdlExprItem> t;
 		if (_t)
 			t = tp.visitData_type_or_implicit(_t, nullptr);
@@ -201,7 +197,7 @@ void VerParamDefParser::visitLocal_parameter_declaration(
 		unique_ptr<iHdlExprItem> t;
 		auto dti = ctx->data_type_or_implicit();
 		if (dti) {
-			VerTypeParser tp(commentParser);
+			VerTypeParser tp(this);
 			t = tp.visitData_type_or_implicit(dti, nullptr);
 		} else
 			t = update_code_position(HdlValueSymbol::type_auto(), dti);

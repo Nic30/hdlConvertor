@@ -13,11 +13,6 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 
-VerModuleInstanceParser::VerModuleInstanceParser(
-		SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 void VerModuleInstanceParser::visitModule_or_interface_or_program_or_udp_instantiation(
 		sv2017Parser::Module_or_interface_or_program_or_udp_instantiationContext *ctx,
 		vector<unique_ptr<HdlCompInst>> &res) {
@@ -65,7 +60,7 @@ vector<unique_ptr<iHdlExprItem>> VerModuleInstanceParser::visitList_of_parameter
 
 	vector<unique_ptr<iHdlExprItem>> pcs;
 	auto pes = ctx->param_expression();
-	VerParamDefParser pp(commentParser);
+	VerParamDefParser pp(this);
 	if (pes.size()) {
 		for (auto pe : pes) {
 			auto e = pp.visitParam_expression(pe);
@@ -103,7 +98,7 @@ unique_ptr<HdlCompInst> VerModuleInstanceParser::visitHierarchical_instance(
 
 	auto name = VerExprParser::visitIdentifier(noi->identifier());
 	auto uds = noi->unpacked_dimension();
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	name = tp.applyUnpacked_dimension(move(name), uds);
 	auto portMap = visitList_of_port_connections(
 			ctx->list_of_port_connections());
@@ -122,7 +117,7 @@ vector<unique_ptr<iHdlExprItem>> VerModuleInstanceParser::visitList_of_port_conn
 	//
 	vector<unique_ptr<iHdlExprItem>> pcs;
 	auto opc = ctx->ordered_port_connection();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	if (opc.size()) {
 		for (auto pc : opc) {
 			// ordered_port_connection: ( attribute_instance )* ( expression )?;

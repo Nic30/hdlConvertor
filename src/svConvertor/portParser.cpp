@@ -20,14 +20,14 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlAst;
 
-VerPortParser::VerPortParser(SVCommentParser &commentParser,
+VerPortParser::VerPortParser(VerPositionAwareParser *other,
 		vector<Non_ANSI_port_info_t> &_non_ansi_port_groups) :
-		commentParser(commentParser), non_ansi_port_groups(
+		VerPositionAwareParser(other), non_ansi_port_groups(
 				_non_ansi_port_groups) {
 }
 
 std::pair<std::string, std::unique_ptr<iHdlExprItem>> split_type_base_name_and_array_size(
-		std::unique_ptr<iHdlExprItem> e, const char * typename_to_use) {
+		std::unique_ptr<iHdlExprItem> e, const char *typename_to_use) {
 	auto top = e.get();
 	while (true) {
 		auto c = dynamic_cast<HdlOp*>(top);
@@ -90,7 +90,7 @@ unique_ptr<iHdlExprItem> VerPortParser::visitNonansi_port__expr_as_expr(
 	//     identifier_doted_index_at_end
 	//     | LBRACE identifier_doted_index_at_end ( COMMA identifier_doted_index_at_end )* RBRACE
 	// ;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	if (ctx->LBRACE()) {
 		vector<unique_ptr<iHdlExprItem>> ops;
 		for (auto i : ctx->identifier_doted_index_at_end()) {
@@ -135,8 +135,7 @@ unique_ptr<vector<unique_ptr<HdlIdDef>>> VerPortParser::visitList_of_port_declar
 
 pair<unique_ptr<HdlIdDef>, iHdlExprItem*> VerPortParser::visitAnsi_port_declaration(
 		sv2017Parser::Ansi_port_declarationContext *ctx,
-		hdlAst::HdlIdDef *prev_var,
-		hdlAst::iHdlExprItem *prev_var_base_t) {
+		hdlAst::HdlIdDef *prev_var, hdlAst::iHdlExprItem *prev_var_base_t) {
 	// ansi_port_declaration:
 	//   ( port_direction ( net_or_var_data_type )? // net_port_header
 	//     | net_or_var_data_type                   // net_port_header or variable_port_header
@@ -157,8 +156,8 @@ pair<unique_ptr<HdlIdDef>, iHdlExprItem*> VerPortParser::visitAnsi_port_declarat
 	auto nvdt = ctx->net_or_var_data_type();
 	auto _pid = ctx->port_identifier()->identifier();
 	auto name = VerExprParser::getIdentifierStr(_pid);
-	VerExprParser ep(commentParser);
-	VerTypeParser tp(commentParser);
+	VerExprParser ep(this);
+	VerTypeParser tp(this);
 	if (nvdt) {
 		tie(t, is_latched) = tp.visitNet_or_var_data_type(nvdt);
 	} else {
@@ -215,7 +214,7 @@ void VerPortParser::visitNonansi_port_declaration(
 	string doc = commentParser.parse(ctx);
 	auto attribs = ctx->attribute_instance();
 	VerAttributeParser::visitAttribute_instance(attribs);
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 
 	auto lvi = ctx->list_of_variable_identifiers();
 	if (ctx->KW_INOUT()) {
@@ -292,7 +291,8 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 	std::vector<unique_ptr<HdlIdDef>> non_ansi_converted_ports(
 			non_ansi_port_groups.size());
 	// module x (.a(b, c)); input b, c; endmodule -> module x (input [2:0] a); wire b, c; assign {b, c} = a; endmodule
-	NotImplementedLogger::print("Conversion of non-ANSI ports not implemented", ctx_for_debug);
+	NotImplementedLogger::print("Conversion of non-ANSI ports not implemented",
+			ctx_for_debug);
 	// size_t i = 0;
 	// for (auto &g : non_ansi_port_groups) {
 	// 	unique_ptr<iHdlExprItem> lsb = make_unique<HdlValueInt>(0), msb = nullptr;
@@ -332,14 +332,15 @@ void VerPortParser::convert_non_ansi_ports_to_ansi(
 }
 void VerPortParser::visitList_of_tf_variable_identifiers(
 		sv2017Parser::List_of_tf_variable_identifiersContext *ctx,
-		unique_ptr<iHdlExprItem> base_type, bool is_latched, HdlDirection direction,
-		const std::string &doc, std::vector<unique_ptr<HdlIdDef>> &res) {
+		unique_ptr<iHdlExprItem> base_type, bool is_latched,
+		HdlDirection direction, const std::string &doc,
+		std::vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_tf_variable_identifiers:
 	//     list_of_tf_variable_identifiers_item
 	//     ( COMMA list_of_tf_variable_identifiers_item )*
 	// ;
-	VerTypeParser tp(commentParser);
-	VerExprParser ep(commentParser);
+	VerTypeParser tp(this);
+	VerExprParser ep(this);
 	auto base_t_tmp = base_type.get();
 	bool first = true;
 	for (auto i : ctx->list_of_tf_variable_identifiers_item()) {
@@ -372,11 +373,12 @@ void VerPortParser::visitList_of_tf_variable_identifiers(
 
 void VerPortParser::visitList_of_variable_identifiers(
 		sv2017Parser::List_of_variable_identifiersContext *ctx,
-		unique_ptr<iHdlExprItem> base_type, bool is_latched, HdlDirection direction,
-		const std::string &doc, std::vector<unique_ptr<HdlIdDef>> &res) {
+		unique_ptr<iHdlExprItem> base_type, bool is_latched,
+		HdlDirection direction, const std::string &doc,
+		std::vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_variable_identifiers:
 	//     list_of_variable_identifiers_item ( COMMA list_of_variable_identifiers_item )*;
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	auto base_type_tmp = base_type.get();
 	bool first = true;
 	for (auto i : ctx->list_of_variable_identifiers_item()) {
@@ -417,11 +419,11 @@ unique_ptr<HdlIdDef> VerPortParser::visitTf_port_item(
 	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	HdlDirection d = HdlDirection::DIR_IN;
 	auto dti = ctx->data_type_or_implicit();
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	auto t = tp.visitData_type_or_implicit(dti, nullptr);
 	auto vds = ctx->variable_dimension();
 	t = tp.applyVariable_dimension(move(t), vds);
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	string name = "";
 	auto id = ctx->identifier();
 	if (id) {

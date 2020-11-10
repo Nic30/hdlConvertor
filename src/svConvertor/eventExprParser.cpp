@@ -13,10 +13,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerEventExprParser::VerEventExprParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 void VerEventExprParser::visitEvent_expression(
 		sv2017Parser::Event_expressionContext *ctx,
 		std::vector<std::unique_ptr<iHdlExprItem>> &items) {
@@ -40,7 +36,7 @@ void VerEventExprParser::visitEvent_expression_item(
 		visitEvent_expression(ee, items);
 	} else {
 		auto _e = ctx->expression();
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		auto e = ep.visitExpression(_e[0]);
 		auto ei = ctx->edge_identifier();
 		if (ei) {

@@ -13,10 +13,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerTypeParser::VerTypeParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 unique_ptr<iHdlExprItem> VerTypeParser::visitType_reference(
 		sv2017Parser::Type_referenceContext *ctx) {
 	// type_reference:
@@ -28,7 +24,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitType_reference(
 	unique_ptr<iHdlExprItem> res = nullptr;
 	auto e = ctx->expression();
 	if (e) {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		res = ep.visitExpression(e);
 	} else {
 		auto dt = ctx->data_type();
@@ -151,7 +147,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type(
 		NotImplementedLogger::print("VerTypeParser.visitData_type - virtual",
 				ctx);
 		auto ids = ctx->identifier();
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		auto t = ep.visitIdentifier(ids[0]);
 		auto pva = ctx->parameter_value_assignment();
 		if (pva) {
@@ -187,12 +183,12 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type(
 				"VerTypeParser.visitData_type - struct or union", ctx);
 		t = create_object<HdlExprNotImplemented>(ctx);
 	} else {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		auto _p = ctx->package_or_class_scoped_path();
 		assert(_p);
 		t = ep.visitPackage_or_class_scoped_path(_p);
 	}
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	auto vds = ctx->variable_dimension();
 	t = tp.applyVariable_dimension(move(t), vds);
 	return t;
@@ -220,7 +216,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitUnpacked_dimension(
 		sv2017Parser::Unpacked_dimensionContext *ctx) {
 	// unpacked_dimension: LSQUARE_BR range_expression RSQUARE_BR;
 	auto ra = ctx->range_expression();
-	return VerExprParser(commentParser).visitRange_expression(ra);
+	return VerExprParser(this).visitRange_expression(ra);
 }
 
 unique_ptr<iHdlExprItem> VerTypeParser::applyUnpacked_dimension(
@@ -277,7 +273,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitPacked_dimension(
 	// packed_dimension: LSQUARE_BR  ( range_expression )? RSQUARE_BR;
 	auto ra = ctx->range_expression();
 	if (ra)
-		return VerExprParser(commentParser).visitRange_expression(ra);
+		return VerExprParser(this).visitRange_expression(ra);
 	return nullptr;
 }
 
@@ -351,12 +347,11 @@ unique_ptr<iHdlExprItem> VerTypeParser::_visitVariable_dimension(
 	}
 	auto dt = ctx->data_type();
 	if (dt) {
-		index = VerTypeParser(commentParser).visitData_type(dt);
+		index = VerTypeParser(this).visitData_type(dt);
 	} else {
 		auto are = ctx->array_range_expression();
 		if (are) {
-			index = VerExprParser(commentParser).visitArray_range_expression(
-					are);
+			index = VerExprParser(this).visitArray_range_expression(are);
 		}
 	}
 	return index;

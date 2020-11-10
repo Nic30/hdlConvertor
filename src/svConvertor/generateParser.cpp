@@ -24,11 +24,6 @@ using namespace std;
 using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 
-VerGenerateParser::VerGenerateParser(SVCommentParser &_commentParser,
-		bool _hierarchyOnly) :
-		commentParser(_commentParser), hierarchyOnly(_hierarchyOnly) {
-}
-
 void VerGenerateParser::visitGenerate_region(
 		sv2017Parser::Generate_regionContext *ctx,
 		vector<unique_ptr<iHdlObj>> &res) {
@@ -120,7 +115,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 
 			auto &res_comp =
 					reinterpret_cast<vector<unique_ptr<HdlCompInst>>&>(res);
-			VerModuleInstanceParser mp(commentParser);
+			VerModuleInstanceParser mp(this);
 			mp.visitModule_or_interface_or_program_or_udp_instantiation(o,
 					res_comp);
 			return;
@@ -138,7 +133,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->local_parameter_declaration();
 		if (o) {
-			VerParamDefParser pdp(commentParser);
+			VerParamDefParser pdp(this);
 			pdp.visitLocal_parameter_declaration(o, res_vars);
 			return;
 		}
@@ -146,7 +141,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->parameter_declaration();
 		if (o) {
-			VerParamDefParser pdp(commentParser);
+			VerParamDefParser pdp(this);
 			pdp.visitParameter_declaration(o, params);
 			return;
 		}
@@ -168,14 +163,14 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->data_declaration();
 		if (o) {
-			VerDeclrParser dp(commentParser);
+			VerDeclrParser dp(this);
 			return dp.visitData_declaration(o, res);
 		}
 	}
 	{
 		auto o = ctx->task_declaration();
 		if (o) {
-			VerProgramParser pp(commentParser);
+			VerProgramParser pp(this);
 			auto f = pp.visitTask_declaration(o);
 			res.push_back(move(f));
 			return;
@@ -184,7 +179,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->function_declaration();
 		if (o) {
-			VerProgramParser pp(commentParser);
+			VerProgramParser pp(this);
 			auto f = pp.visitFunction_declaration(o);
 			res.push_back(move(f));
 			return;
@@ -317,7 +312,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->continuous_assign();
 		if (o) {
-			VerStatementParser sp(commentParser);
+			VerStatementParser sp(this);
 			sp.visitContinuous_assign(o, res_stm);
 			return;
 		}
@@ -334,7 +329,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->initial_construct();
 		if (o) {
-			VerStatementParser sp(commentParser);
+			VerStatementParser sp(this);
 			auto ic = sp.visitInitial_construct(o);
 			res.push_back(move(ic));
 			return;
@@ -352,7 +347,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->always_construct();
 		if (o) {
-			VerStatementParser sp(commentParser);
+			VerStatementParser sp(this);
 			auto ac = sp.visitAlways_construct(o);
 			res.push_back(move(ac));
 			return;
@@ -376,7 +371,7 @@ void VerGenerateParser::visitModule_or_generate_item(
 	{
 		auto o = ctx->elaboration_system_task();
 		if (o) {
-			VerStatementParser sp(commentParser);
+			VerStatementParser sp(this);
 			auto est = sp.visitElaboration_system_task(o);
 			res.push_back(move(est));
 			return;
@@ -390,7 +385,7 @@ void VerGenerateParser::visitGenvar_declaration(
 	// identifier_list: identifier ( COMMA identifier )*;
 	auto il = ctx->identifier_list();
 	for (auto id: il->identifier()) {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		auto name = ep.getIdentifierStr(id);
 		auto t = create_object<HdlValueId>(id, "genvar");
 		auto v = create_object<HdlIdDef>(id, name, move(t), nullptr);
@@ -401,7 +396,7 @@ unique_ptr<HdlIdDef> VerGenerateParser::visitGenvar_initialization(
 		sv2017Parser::Genvar_initializationContext *ctx) {
 	// genvar_initialization:
 	//     ( KW_GENVAR )? identifier ASSIGN constant_expression;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto name = ep.getIdentifierStr(ctx->identifier());
 	auto _def_val = ctx->constant_expression();
 	auto def_val = ep.visitConstant_expression(_def_val);
@@ -419,7 +414,7 @@ unique_ptr<HdlStmExpr> VerGenerateParser::visitGenvar_iteration(
 	//     | inc_or_dec_operator identifier
 	// ;
 	auto _id = ctx->identifier();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto id = ep.visitIdentifier(_id);
 	auto iod = ctx->inc_or_dec_operator();
 	unique_ptr<iHdlExprItem> e;
@@ -441,7 +436,7 @@ unique_ptr<iHdlExprItem> VerGenerateParser::visitGenvar_expression(
 		sv2017Parser::Genvar_expressionContext *ctx) {
 	// genvar_expression: constant_expression;
 	auto ce = ctx->constant_expression();
-	return VerExprParser(commentParser).visitConstant_expression(ce);
+	return VerExprParser(static_cast<VerPositionAwareParser*>(this)).visitConstant_expression(ce);
 }
 
 unique_ptr<HdlStmFor> VerGenerateParser::visitLoop_generate_construct(
@@ -493,7 +488,7 @@ void VerGenerateParser::visitGenerate_begin_end_block(
 	auto b = create_object<HdlStmBlock>(ctx, items);
 
 	for (auto _label : ctx->identifier()) {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		b->labels.push_back(ep.getIdentifierStr(_label));
 	}
 	res.push_back(move(b));
@@ -548,7 +543,7 @@ void VerGenerateParser::visitIf_generate_construct(
 	//    ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? );
 	auto c = ctx->constant_expression();
 	auto s = ctx->generate_item();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto cond = ep.visitConstant_expression(c);
 
 	auto ifTrue_bl = create_object<HdlStmBlock>(s[0]);

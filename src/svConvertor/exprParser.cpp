@@ -17,10 +17,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerExprParser::VerExprParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 unique_ptr<iHdlExprItem> VerExprParser::visitConstant_expression(
 		sv2017Parser::Constant_expressionContext *ctx) {
 	// constant_expression : expression ;
@@ -194,7 +190,7 @@ unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
 
 	auto _p = ctx->primary();
 	if (_p) {
-		VerExprPrimaryParser pp(commentParser);
+		VerExprPrimaryParser pp(this);
 		auto p = pp.visitPrimary(_p);
 		auto _uo = ctx->unary_operator();
 		if (_uo) {
@@ -523,7 +519,7 @@ std::vector<unique_ptr<iHdlExprItem>> VerExprParser::visitParameter_value_assign
 	//   HASH LPAREN ( list_of_parameter_value_assignments )? RPAREN;
 	auto lpa = ctx->list_of_parameter_value_assignments();
 	if (lpa) {
-		VerModuleInstanceParser mip(commentParser);
+		VerModuleInstanceParser mip(this);
 		return mip.visitList_of_parameter_value_assignments(lpa);
 	} else {
 		return {};
@@ -650,7 +646,7 @@ void VerExprParser::visitList_of_arguments(
 	//      | ( COMMA ( expression )? )+
 	//     )
 	//     ( COMMA list_of_arguments_named_item )*;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	bool expecting_value = true;
 	for (auto c : ctx->children) {
 		auto t = dynamic_cast<antlr4::tree::TerminalNode*>(c);

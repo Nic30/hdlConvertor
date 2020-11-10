@@ -1,7 +1,7 @@
 #pragma once
 
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/hdlAst/hdlStmFor.h>
@@ -11,13 +11,11 @@
 namespace hdlConvertor {
 namespace sv {
 
-class VerGenerateParser {
-	SVCommentParser &commentParser;
-	bool hierarchyOnly;
+class VerGenerateParser : public VerPositionAwareParser {
 public:
-
+	using VerPositionAwareParser::VerPositionAwareParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	VerGenerateParser(SVCommentParser &commentParser, bool hierarchyOnly);
+
 	void visitGenerate_region(sv2017Parser::Generate_regionContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 	void visitGenerate_item(sv2017Parser::Generate_itemContext *ctx,

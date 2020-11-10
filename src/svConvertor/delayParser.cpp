@@ -13,10 +13,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerDelayParser::VerDelayParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-
-}
 VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 		sv2017Parser::Event_controlContext *ctx) {
 	// event_control:
@@ -33,14 +29,14 @@ VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 	}
 	auto pid = ctx->package_or_class_scoped_hier_id_with_select();
 	if (pid) {
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		res->push_back(
 				ep.visitPackage_or_class_scoped_hier_id_with_select(pid));
 		return res;
 	}
 	auto ee = ctx->event_expression();
 	assert(ee);
-	VerEventExprParser eep(commentParser);
+	VerEventExprParser eep(this);
 	eep.visitEvent_expression(ee, *res);
 	return res;
 }
@@ -87,7 +83,7 @@ unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_control(
 		return visitDelay_value(dv);
 	else {
 		auto me = ctx->mintypmax_expression();
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		return ep.visitMintypmax_expression(me);
 	}
 }
@@ -116,7 +112,7 @@ unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_value(
 	}
 	auto pi = ctx->ps_identifier();
 	assert(pi);
-	return VerExprParser(commentParser).visitPs_identifier(pi);
+	return VerExprParser(this).visitPs_identifier(pi);
 }
 
 pair<unique_ptr<iHdlExprItem>, VerDelayParser::HdlEventList> VerDelayParser::visitDelay_or_event_control(

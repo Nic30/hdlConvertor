@@ -14,11 +14,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerExprPrimaryParser::VerExprPrimaryParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-
-}
-
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimary(
 		sv2017Parser::PrimaryContext *ctx) {
 	// primary:
@@ -62,14 +57,14 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimary(
 	if (dynamic_cast<sv2017Parser::PrimaryPathContext*>(ctx)) {
 		auto p =
 				static_cast<sv2017Parser::PrimaryPathContext*>(ctx)->package_or_class_scoped_path();
-		VerExprParser ep(commentParser);
+		VerExprParser ep(this);
 		return ep.visitPackage_or_class_scoped_path(p);
 	}
 
 	if (dynamic_cast<sv2017Parser::PrimaryParContext*>(ctx)) {
 		auto e =
 				static_cast<sv2017Parser::PrimaryParContext*>(ctx)->mintypmax_expression();
-		return VerExprParser(commentParser).visitMintypmax_expression(e);
+		return VerExprParser(this).visitMintypmax_expression(e);
 	}
 
 	if (dynamic_cast<sv2017Parser::PrimaryCastContext*>(ctx)) {
@@ -168,7 +163,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCast2(
 	auto _p = ctx->primary();
 	auto p = visitPrimary(_p);
 	auto _e = ctx->expression();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto e = ep.visitExpression(_e);
 	return create_object<HdlOp>(ctx, move(p), HdlOpType::CALL, move(e));
 }
@@ -179,7 +174,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryBitSelect(
 	auto _p = ctx->primary();
 	auto p = visitPrimary(_p);
 	auto _bs = ctx->bit_select();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	return ep.visitBit_select(_bs, move(p));
 }
 
@@ -199,7 +194,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryIndex(
 	auto _p = ctx->primary();
 	auto p = visitPrimary(_p);
 	auto _are = ctx->array_range_expression();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto are = ep.visitArray_range_expression(_are);
 	p = append_expr(_p, move(p), HdlOpType::INDEX, move(are));
 	return p;
@@ -209,7 +204,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryConcat(
 		sv2017Parser::PrimaryConcatContext *ctx) {
 	//     | concatenation                                        #PrimaryConcat
 	auto c = ctx->concatenation();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	return ep.visitConcatenation(c);
 }
 
@@ -231,8 +226,8 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryTfCall(
 	auto astfi = ctx->any_system_tf_identifier();
 	auto id = VerLiteralParser::visitAny_system_tf_identifier(astfi);
 
-	VerExprParser ep(commentParser);
-	VerTypeParser tp(commentParser);
+	VerExprParser ep(this);
+	VerTypeParser tp(this);
 	vector<unique_ptr<iHdlExprItem>> args;
 	auto _dt = ctx->data_type();
 	if (_dt)
@@ -277,7 +272,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryTypeRef(
 		sv2017Parser::PrimaryTypeRefContext *ctx) {
 	//     | type_reference                              #PrimaryTypeRef
 	auto t = ctx->type_reference();
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	return tp.visitType_reference(t);
 }
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCall(
@@ -300,7 +295,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCall(
 		NotImplementedLogger::print(
 				"VerExprPrimaryParser.visitPrimaryCall.with", ctx);
 
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	vector<unique_ptr<iHdlExprItem>> args;
 	auto loa = ctx->list_of_arguments();
 	if (loa) {
@@ -324,7 +319,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs
 	// auto amn = visitArray_method_name(_amn);
 	// p = make_unique<HdlOp>(move(p), HdlOpType::DOT, move(amn));
 
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	vector<unique_ptr<iHdlExprItem>> args;
 	return HdlOp::call(ctx, move(p), args);
 }
@@ -349,7 +344,7 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallWith(
 		NotImplementedLogger::print(
 				"VerExprPrimaryParser.visitPrimaryCallWith.with", ctx);
 
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	vector<unique_ptr<iHdlExprItem>> args;
 	return HdlOp::call(ctx, move(p), args);
 }

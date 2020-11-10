@@ -1,17 +1,16 @@
 #pragma once
 
-#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerExprParser {
-	SVCommentParser &commentParser;
+class VerExprParser: public VerPositionAwareParser {
 public:
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	VerExprParser(SVCommentParser &commentParser);
+	using VerPositionAwareParser::VerPositionAwareParser;
 
 	std::unique_ptr<hdlAst::iHdlExprItem> visitExpression(
 			sv2017Parser::ExpressionContext *ctx);

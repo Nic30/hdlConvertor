@@ -15,10 +15,6 @@ using namespace hdlConvertor::hdlAst;
 namespace hdlConvertor {
 namespace sv {
 
-VerDeclrParser::VerDeclrParser(SVCommentParser &_commentParser) :
-		commentParser(_commentParser) {
-}
-
 void VerDeclrParser::visitData_declaration(
 		sv2017Parser::Data_declarationContext *ctx,
 		vector<unique_ptr<iHdlObj>> &res) {
@@ -32,7 +28,7 @@ void VerDeclrParser::visitData_declaration(
 	// ;
 	auto lvda = ctx->list_of_variable_decl_assignments();
 	if (lvda) {
-		VerTypeParser tp(commentParser);
+		VerTypeParser tp(this);
 		auto is_const = ctx->KW_CONST() != nullptr;
 		auto is_static = tp.visitLifetime(ctx->lifetime());
 		vector<unique_ptr<HdlIdDef>> res_tmp;
@@ -74,8 +70,8 @@ void VerDeclrParser::visitList_of_variable_decl_assignments(
 		vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_variable_decl_assignments:
 	//     variable_decl_assignment ( COMMA variable_decl_assignment )*;
-	VerExprParser ep(commentParser);
-	VerTypeParser tp(commentParser);
+	VerExprParser ep(this);
+	VerTypeParser tp(this);
 	auto base_type_tmp = base_type.get();
 	bool first = false;
 	for (auto vda : ctx->variable_decl_assignment()) {
@@ -131,8 +127,8 @@ unique_ptr<HdlIdDef> VerDeclrParser::visitType_declaration(
 	//             | ( KW_INTERFACE )? KW_CLASS
 	//           )? identifier
 	//     ) SEMI;
-	VerExprParser ep(commentParser);
-	VerTypeParser tp(commentParser);
+	VerExprParser ep(this);
+	VerTypeParser tp(this);
 	auto id0 = ctx->identifier(0);
 	auto _dt = ctx->data_type();
 	auto t = make_unique<HdlValueSymbol>(HdlValueSymbol_t::symb_T);

@@ -57,10 +57,6 @@ void HdlStmIf_collapse_elifs(HdlStmIf &ifStm) {
 
 }
 
-VerStatementParser::VerStatementParser(SVCommentParser &commentParser) :
-		commentParser(commentParser) {
-}
-
 unique_ptr<iHdlStatement> VerStatementParser::visitAlways_construct(
 		sv2017Parser::Always_constructContext *ctx) {
 	// always_construct:
@@ -80,7 +76,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitSubroutine_call_statement(
 	// subroutine_call_statement:
 	//     ( KW_VOID APOSTROPHE LPAREN expression RPAREN ) SEMI;
 	auto _e = ctx->expression();
-	auto e0 = VerExprParser(commentParser).visitExpression(_e);
+	auto e0 = VerExprParser(this).visitExpression(_e);
 	auto e1 = create_object<HdlOp>(_e,
 			create_object<HdlValueId>(ctx->KW_VOID(), "void"), HdlOpType::CALL,
 			move(e0));
@@ -97,7 +93,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitJumpStatement(
 	if (ctx->KW_RETURN()) {
 		auto _e = ctx->expression();
 		if (_e) {
-			auto e = VerExprParser(commentParser).visitExpression(_e);
+			auto e = VerExprParser(this).visitExpression(_e);
 			return create_object_with_doc<HdlStmReturn>(ctx, commentParser,
 					move(e));
 		} else {
@@ -155,12 +151,12 @@ unique_ptr<iHdlStatement> VerStatementParser::visitStatement_item(
 	}
 	auto ide = ctx->inc_or_dec_expression();
 	if (ide) {
-		auto e = VerExprParser(commentParser).visitInc_or_dec_expression(ide);
+		auto e = VerExprParser(this).visitInc_or_dec_expression(ide);
 		return create_object_with_doc<HdlStmExpr>(ctx, commentParser, move(e));
 	}
 	auto p = ctx->primary();
 	if (p) {
-		auto e = VerExprPrimaryParser(commentParser).visitPrimary(p);
+		auto e = VerExprPrimaryParser(this).visitPrimary(p);
 		return create_object_with_doc<HdlStmExpr>(ctx, commentParser, move(e));
 	}
 	auto cd = ctx->clocking_drive();
@@ -272,7 +268,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitBlocking_assignment(
 	//     | package_or_class_scoped_hier_id_with_select ASSIGN class_new
 	//     | operator_assignment
 	// ;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto vlv = ctx->variable_lvalue();
 	if (vlv) {
 		auto dst = ep.visitVariable_lvalue(vlv);
@@ -280,7 +276,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitBlocking_assignment(
 		if (e) {
 			auto src = ep.visitExpression(e);
 			auto dec = ctx->delay_or_event_control();
-			auto d = VerDelayParser(commentParser).visitDelay_or_event_control(
+			auto d = VerDelayParser(this).visitDelay_or_event_control(
 					dec);
 			return create_object_with_doc<HdlStmAssign>(ctx, commentParser,
 					move(dst), move(src), move(d.first), move(d.second), true);
@@ -328,7 +324,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 		NotImplementedLogger::print(
 				"VerStatementParser.visitCase_statement.unique_priority", ctx);
 	}
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto switchOn = ep.visitExpression(ctx->expression());
 	std::vector<HdlExprAndiHdlObj> cases;
 	unique_ptr<iHdlObj> default_ = nullptr;
@@ -381,7 +377,7 @@ std::vector<HdlExprAndiHdlObj> VerStatementParser::visitCase_item(
 	auto stms = ctx->statement_or_null();
 	if (conds.size()) {
 		for (auto c : conds) {
-			auto ce = VerExprParser(commentParser).visitExpression(c);
+			auto ce = VerExprParser(this).visitExpression(c);
 			// [TODO] it would be better to copy the statements instead of parsing again
 			auto _stms = visitStatement_or_null(stms);
 			auto o = HdlExprAndiHdlObj(move(ce), move(_stms));
@@ -398,7 +394,7 @@ unique_ptr<HdlStmAssign> VerStatementParser::visitVariable_assignment(
 		sv2017Parser::Variable_assignmentContext *ctx) {
 	// variable_assignment:
 	//     variable_lvalue ASSIGN expression;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto _dst = ctx->variable_lvalue();
 	auto dst = ep.visitVariable_lvalue(_dst);
 	auto _src = ctx->expression();
@@ -431,7 +427,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitLoop_statement(
 		assert(sn);
 		stm = visitStatement_or_null(sn);
 	}
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	if (ctx->KW_FOREVER()) {
 		return create_object_with_doc<HdlStmWhile>(ctx, commentParser,
 				create_object<HdlValueInt>(ctx->KW_FOREVER(), 1), move(stm));
@@ -500,8 +496,8 @@ void VerStatementParser::visitFor_variable_declaration(
 	//     ( COMMA for_variable_declaration_var_assign )*
 	// ;
 	auto _dt = ctx->data_type();
-	VerTypeParser tp(commentParser);
-	VerExprParser ep(commentParser);
+	VerTypeParser tp(this);
+	VerExprParser ep(this);
 
 	auto dt = tp.visitData_type(_dt);
 	auto dt_tmp = dt.get();
@@ -550,7 +546,7 @@ void VerStatementParser::visitFor_initialization(
 void VerStatementParser::visitFor_step(sv2017Parser::For_stepContext *ctx,
 		vector<unique_ptr<iHdlStatement>> &res) {
 	// for_step: sequence_match_item ( COMMA sequence_match_item )*;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	for (auto _smi : ctx->sequence_match_item()) {
 		auto smi = visitSequence_match_item(_smi);
 		res.push_back(move(smi));
@@ -561,7 +557,7 @@ void VerStatementParser::visitLoop_variables(
 		sv2017Parser::Loop_variablesContext *ctx,
 		vector<unique_ptr<iHdlStatement>> &res) {
 	// loop_variables: ( identifier )? ( COMMA ( identifier )? )*;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	for (auto _id : ctx->identifier()) {
 		auto id = ep.visitIdentifier(_id);
 		res.push_back(create_object<HdlStmExpr>(ctx, move(id)));
@@ -574,13 +570,13 @@ unique_ptr<HdlStmAssign> VerStatementParser::visitNonblocking_assignment(
 	//    : variable_lvalue '<=' (delay_or_event_control)? expression
 	//    ;
 	auto vl = ctx->variable_lvalue();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto dst = ep.visitVariable_lvalue(vl);
 	auto e = ctx->expression();
 	auto src = ep.visitExpression(e);
 	auto dec = ctx->delay_or_event_control();
 	if (dec) {
-		auto d = VerDelayParser(commentParser).visitDelay_or_event_control(dec);
+		auto d = VerDelayParser(this).visitDelay_or_event_control(dec);
 		return create_object_with_doc<HdlStmAssign>(ctx, commentParser,
 				move(dst), move(src), move(d.first), move(d.second), false);
 	} else {
@@ -640,11 +636,11 @@ void VerStatementParser::visitBlock_item_declaration(
 	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	auto dd = ctx->data_declaration();
 	if (dd) {
-		VerDeclrParser dp(commentParser);
+		VerDeclrParser dp(this);
 		dp.visitData_declaration(dd, res);
 		return;
 	}
-	VerParamDefParser pdp(commentParser);
+	VerParamDefParser pdp(this);
 	auto &res_var = reinterpret_cast<vector<unique_ptr<HdlIdDef>>&>(res);
 	auto lpd = ctx->local_parameter_declaration();
 	if (lpd) {
@@ -670,7 +666,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitConditional_statement(
 	//    ( KW_ELSE statement_or_null | {_input->LA(1) != KW_ELSE}? );
 	auto c = ctx->cond_predicate();
 	auto s = ctx->statement_or_null();
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	auto cond = ep.visitCond_predicate(c);
 
 	auto ifTrue = visitStatement_or_null(s[0]);
@@ -690,7 +686,7 @@ unique_ptr<HdlStmProcess> VerStatementParser::visitProcedural_timing_control_sta
 	// procedural_timing_control_statement: procedural_timing_control statement_or_null;
 
 	auto ptc = ctx->procedural_timing_control();
-	VerDelayParser dp(commentParser);
+	VerDelayParser dp(this);
 	auto sens_list = dp.visitProcedural_timing_control(ptc);
 	auto stms = visitStatement_or_null(ctx->statement_or_null());
 	if (sens_list.second) {
@@ -792,7 +788,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitSequence_match_item(
 	//     operator_assignment
 	//     | expression
 	// ;
-	VerExprParser ep(commentParser);
+	VerExprParser ep(this);
 	unique_ptr<iHdlExprItem> e;
 	auto oa = ctx->operator_assignment();
 	if (oa) {
@@ -833,7 +829,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitElaboration_system_task(
 	}
 	auto la = ctx->list_of_arguments();
 	if (la)
-		VerExprParser(commentParser).visitList_of_arguments(la, args);
+		VerExprParser(this).visitList_of_arguments(la, args);
 
 	auto e = HdlOp::call(ctx, create_object<HdlValueId>(ctx, name), args);
 	return create_object<HdlStmExpr>(ctx, move(e));

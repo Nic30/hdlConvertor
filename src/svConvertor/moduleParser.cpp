@@ -26,11 +26,6 @@ using namespace std;
 using namespace sv2017_antlr;
 using namespace hdlConvertor::hdlAst;
 
-VerModuleParser::VerModuleParser(SVCommentParser &commentParser,
-		bool _hierarchyOnly) :
-		commentParser(commentParser) {
-	hierarchyOnly = _hierarchyOnly;
-}
 void VerModuleParser::visitModule_header_common(
 		sv2017Parser::Module_header_commonContext *ctx, HdlModuleDec &ent) {
 	// module_header_common:
@@ -51,7 +46,7 @@ void VerModuleParser::visitModule_header_common(
 	}
 	auto mppl = ctx->parameter_port_list();
 	if (mppl) {
-		VerParamDefParser pp(commentParser);
+		VerParamDefParser pp(this);
 		pp.visitParameter_port_list(mppl, ent.generics);
 	}
 }
@@ -72,7 +67,7 @@ void VerModuleParser::visitModule_declaration(
 
 	auto lpd = ctx->list_of_port_declarations();
 	if (lpd) {
-		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
+		VerPortParser pp(this, m_ctx.non_ANSI_port_groups);
 		auto ps = pp.visitList_of_port_declarations(lpd);
 		for (auto &p : *ps) {
 			ent->ports.push_back(move(p));
@@ -114,7 +109,7 @@ void VerModuleParser::visitModule_declaration(
 	arch->dec = move(ent);
 
 	if (m_ctx.non_ANSI_port_groups.size()) {
-		VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
+		VerPortParser pp(this, m_ctx.non_ANSI_port_groups);
 		pp.convert_non_ansi_ports_to_ansi(ctx, m_ctx.ent.ports,
 				m_ctx.arch->objs);
 	}
@@ -251,7 +246,7 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	assert(npd);
 	// update port in module header to an ansi port
 	bool first = true;
-	VerPortParser pp(commentParser, m_ctx.non_ANSI_port_groups);
+	VerPortParser pp(this, m_ctx.non_ANSI_port_groups);
 	vector<unique_ptr<HdlIdDef>> portsDeclr;
 	pp.visitNonansi_port_declaration(npd, portsDeclr);
 
@@ -308,7 +303,7 @@ void VerModuleParser::visitNet_declaration(
 				"ModuleParser.visitNet_declaration.net_type interconnect", ctx);
 		return;
 	}
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	unique_ptr<iHdlExprItem> net_type = nullptr;
 	auto nt = ctx->net_type();
 	if (nt) {
@@ -366,7 +361,7 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_net_decl_assignments: net_decl_assignment ( COMMA net_decl_assignment )*;
 
-	VerTypeParser tp(commentParser);
+	VerTypeParser tp(this);
 	bool first = true;
 	auto base_type_tmp = base_type.get();
 	for (auto nd : ctx->net_decl_assignment()) {
@@ -377,7 +372,7 @@ void VerModuleParser::visitList_of_net_decl_assignments(
 		unique_ptr<iHdlExprItem> def_val = nullptr;
 		auto e = nd->expression();
 		if (e)
-			def_val = VerExprParser(commentParser).visitExpression(e);
+			def_val = VerExprParser(this).visitExpression(e);
 		unique_ptr<iHdlExprItem> t;
 		if (first) {
 			t = move(base_type);

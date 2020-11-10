@@ -3,17 +3,15 @@
 #include <hdlConvertor/hdlAst/hdlOpType.h>
 #include <hdlConvertor/hdlAst/iHdlExpr.h>
 #include <hdlConvertor/svConvertor/sv2017Parser/sv2017Parser.h>
-#include <hdlConvertor/svConvertor/commentParser.h>
+#include <hdlConvertor/svConvertor/positionAwareParser.h>
 
 namespace hdlConvertor {
 namespace sv {
 
-class VerEventExprParser {
+class VerEventExprParser: public VerPositionAwareParser {
 public:
+	using VerPositionAwareParser::VerPositionAwareParser;
 	using sv2017Parser = sv2017_antlr::sv2017Parser;
-	SVCommentParser &commentParser;
-
-	VerEventExprParser(SVCommentParser &commentParser);
 
 	void visitEvent_expression(sv2017Parser::Event_expressionContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> &items);
