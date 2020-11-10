@@ -1,4 +1,5 @@
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import unittest
 from tests.hdl_parse_tc import HdlParseTC, VERILOG

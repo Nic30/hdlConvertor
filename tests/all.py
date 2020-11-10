@@ -1,10 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import sys
 import unittest
 
-from tests.notebook_test import NotebookTC
 from tests.test_basic_hdl_sim_model_from_verilog import BasicHdlSimModelFromVerilogTC
 from tests.test_ghdl_testsuite import GhdlTestsuiteTCs
 from tests.test_icarus_verilog_testsuite import IcarusVerilogTestsuiteTC
+from tests.test_notebook import NotebookTC
 from tests.test_sv2017_std_examples_parse import Sv2017StdExamplesParseTC
 from tests.test_uvvm_testsuite import UVVMTestsuite
 from tests.test_verilator_testsuite import VerilatorTestsuiteTC

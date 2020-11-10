@@ -1,4 +1,6 @@
-# import sys
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from glob import glob
 import os
 import unittest

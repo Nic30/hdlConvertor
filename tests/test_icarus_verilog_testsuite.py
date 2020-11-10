@@ -1,4 +1,6 @@
-# import sys
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from copy import copy
 from itertools import chain
 import os
