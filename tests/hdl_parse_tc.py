@@ -112,7 +112,7 @@ class HdlParseTC(unittest.TestCase):
         # serialize a HDL code to a buff
         to_hdl(res, language, buff)
         if output_dir is None:
-            output_dir = input_dir
+            output_dir = path.dirname(_f)
         else:
             output_dir = path.join(TEST_DIR, output_dir)
 
