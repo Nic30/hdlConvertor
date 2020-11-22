@@ -113,31 +113,31 @@ module top;
         #10
             rst = 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req0 <= 1;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req0 <= 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req0 <= 1;
         req1 <= 1;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req2 <= 1;
         req1 <= 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req3 <= 1;
         req2 <= 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req3 <= 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         req0 <= 0;
         repeat (1) @(posedge clk)
-            null;
+        ;
         #10
             $finish();
     end
