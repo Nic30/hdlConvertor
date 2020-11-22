@@ -149,6 +149,7 @@ pair<unique_ptr<HdlIdDef>, iHdlExprItem*> VerPortParser::visitAnsi_port_declarat
 		d = prev_var->direction;
 	auto pd = ctx->port_direction();
 	if (pd) {
+		prev_var_base_t = nullptr;
 		d = visitPort_direction(pd);
 	}
 	unique_ptr<iHdlExprItem> t = nullptr;
