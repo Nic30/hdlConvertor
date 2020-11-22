@@ -1,7 +1,7 @@
 from hwt.code import power, If, Switch, Concat
 from hwt.hdl.types.array import HArray
 from hwt.hdl.types.bits import Bits
-from hwt.hdl.types.defs import INT, SLICE
+from hwt.hdl.types.defs import INT, SLICE, STR, BIT
 from hwt.hdl.types.enum import HEnum
 from hwt.interfaces.std import Signal
 from hwt.synthesizer.param import Param
@@ -19,11 +19,11 @@ class decoder_using_case(Unit):
     """
     def _declr(self):
         # ports
-        self.binary_in = Signal(dtype=Bits(4, 0))
+        self.binary_in = Signal(Bits(4, None))
         # 4 bit binary input
-        self.decoder_out = Signal(dtype=Bits(16, 0))._m()
+        self.decoder_out = Signal(Bits(16, None))._m()
         # 16-bit  out
-        self.enable = Signal(dtype=Bits(1, 0))
+        self.enable = Signal(BIT)
         # component instances
 
     def _impl(self):
@@ -36,29 +36,29 @@ class decoder_using_case(Unit):
             If(enable,
                 Switch(binary_in)\
                     .Case(0x0,
-                        decoder_out(0x1))\
+                        decoder_out(0x0001))\
                     .Case(0x1,
-                        decoder_out(0x2))\
+                        decoder_out(0x0002))\
                     .Case(0x2,
-                        decoder_out(0x4))\
+                        decoder_out(0x0004))\
                     .Case(0x3,
-                        decoder_out(0x8))\
+                        decoder_out(0x0008))\
                     .Case(0x4,
-                        decoder_out(0x10))\
+                        decoder_out(0x0010))\
                     .Case(0x5,
-                        decoder_out(0x20))\
+                        decoder_out(0x0020))\
                     .Case(0x6,
-                        decoder_out(0x40))\
+                        decoder_out(0x0040))\
                     .Case(0x7,
-                        decoder_out(0x80))\
+                        decoder_out(0x0080))\
                     .Case(0x8,
-                        decoder_out(0x100))\
+                        decoder_out(0x0100))\
                     .Case(0x9,
-                        decoder_out(0x200))\
+                        decoder_out(0x0200))\
                     .Case(0xa,
-                        decoder_out(0x400))\
+                        decoder_out(0x0400))\
                     .Case(0xb,
-                        decoder_out(0x800))\
+                        decoder_out(0x0800))\
                     .Case(0xc,
                         decoder_out(0x1000))\
                     .Case(0xd,

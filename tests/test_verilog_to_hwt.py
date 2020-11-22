@@ -33,10 +33,16 @@ class VerilogToHwtTC(HdlParseTC):
     def test_decoder_using_case(self):
         self.parseWithRef("decoder_using_case.v")
 
+    # def test_dsp48e1(self):
+    #     self.parseWithRef("dsp48e1.v")
+
+    def test_uart(self):
+        self.parseWithRef("uart.v")
+        
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_package_constants'))
+    # suite.addTest(VerilogToHwtTC('test_dsp48e1'))
     suite.addTest(unittest.makeSuite(VerilogToHwtTC))
 
     runner = unittest.TextTestRunner(verbosity=3)

@@ -1,0 +1,155 @@
+from hwt.code import power, If, Switch, Concat
+from hwt.hdl.types.array import HArray
+from hwt.hdl.types.bits import Bits
+from hwt.hdl.types.defs import INT, SLICE, STR, BIT
+from hwt.hdl.types.enum import HEnum
+from hwt.interfaces.std import Signal
+from hwt.synthesizer.param import Param
+from hwt.synthesizer.unit import Unit
+
+class uart(Unit):
+    """http://www.asic-world.com/examples/verilog/uart.html
+    -----------------------------------------------------
+     Design Name : uart 
+     File Name   : uart.v
+     Function    : Simple UART
+     Coder       : Deepak Kumar Tala
+    -----------------------------------------------------
+    
+    """
+    def _declr(self):
+        # ports
+        # Port declarations
+        self.reset = Signal(BIT)
+        self.txclk = Signal(BIT)
+        self.ld_tx_data = Signal(BIT)
+        self.tx_data = Signal(Bits(8, None))
+        self.tx_enable = Signal(BIT)
+        self.tx_out = Signal(BIT)._m()
+        self.tx_empty = Signal(BIT)._m()
+        self.rxclk = Signal(BIT)
+        self.uld_rx_data = Signal(BIT)
+        self.rx_data = Signal(Bits(8, None))._m()
+        self.rx_enable = Signal(BIT)
+        self.rx_in = Signal(BIT)
+        self.rx_empty = Signal(BIT)._m()
+        # component instances
+
+    def _impl(self):
+        # internal signals
+        reset, txclk, ld_tx_data, tx_data, tx_enable, tx_out, tx_empty, rxclk, uld_rx_data, rx_data, rx_enable, \
+        rx_in, rx_empty = \
+        self.reset, self.txclk, self.ld_tx_data, self.tx_data, self.tx_enable, self.tx_out, self.tx_empty, self.rxclk, self.uld_rx_data, self.rx_data, self.rx_enable, \
+        self.rx_in, self.rx_empty
+        # Internal Variables (@note: interference with ports)
+        tx_reg = self._sig("tx_reg", Bits(8, None))
+        tx_over_run = self._sig("tx_over_run", BIT)
+        tx_cnt = self._sig("tx_cnt", Bits(4, None))
+        rx_reg = self._sig("rx_reg", Bits(8, None))
+        rx_sample_cnt = self._sig("rx_sample_cnt", Bits(4, None))
+        rx_cnt = self._sig("rx_cnt", Bits(4, None))
+        rx_frame_err = self._sig("rx_frame_err", BIT)
+        rx_over_run = self._sig("rx_over_run", BIT)
+        rx_d1 = self._sig("rx_d1", BIT)
+        rx_d2 = self._sig("rx_d2", BIT)
+        rx_busy = self._sig("rx_busy", BIT)
+
+        # UART RX Logic
+        If(rxclk._onRisingEdge() | reset._onRisingEdge(),
+            If(reset,
+                rx_reg(0),
+                rx_data(0),
+                rx_sample_cnt(0),
+                rx_cnt(0),
+                rx_frame_err(0),
+                rx_over_run(0),
+                rx_empty(1),
+                rx_d1(1),
+                rx_d2(1),
+                rx_busy(0)
+            ).Else(
+                rx_d1(rx_in),
+                rx_d2(rx_d1),
+                # Uload the rx data
+                If(uld_rx_data,
+                    rx_data(rx_reg),
+                    rx_empty(1)
+                ),
+                # Receive data only when rx is enabled
+                If(rx_enable,
+                    # Check if just received start of frame
+                    If((~rx_busy._isOn())._isOn() & (~rx_d2._isOn())._isOn(),
+                        rx_busy(1),
+                        rx_sample_cnt(1),
+                        rx_cnt(0)
+                    ),
+                    # Start of frame detected, Proceed with rest of data
+                    If(rx_busy,
+                        rx_sample_cnt(rx_sample_cnt + 1),
+                        # Logic to sample at middle of data
+                        If(rx_sample_cnt._eq(7),
+                            If(rx_d2._eq(1)._isOn() & rx_cnt._eq(0)._isOn(),
+                                rx_busy(0)
+                            ).Else(
+                                rx_cnt(rx_cnt + 1),
+                                # Start storing the rx data
+                                If((rx_cnt > 0)._isOn() & (rx_cnt < 9)._isOn(),
+                                    rx_reg[rx_cnt - 1](rx_d2)
+                                ),
+                                If(rx_cnt._eq(9),
+                                    rx_busy(0),
+                                    # Check if End of frame received correctly
+                                    If(rx_d2._eq(0),
+                                        rx_frame_err(1)
+                                    ).Else(
+                                        rx_empty(0),
+                                        rx_frame_err(0),
+                                        rx_over_run(rx_empty._ternary__val(0, 1))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                If(~rx_enable._isOn(),
+                    rx_busy(0)
+                )
+            )
+        )
+
+        # UART TX Logic
+        If(txclk._onRisingEdge() | reset._onRisingEdge(),
+            If(reset,
+                tx_reg(0),
+                tx_empty(1),
+                tx_over_run(0),
+                tx_out(1),
+                tx_cnt(0)
+            ).Else(
+                If(ld_tx_data,
+                    If(~tx_empty._isOn(),
+                        tx_over_run(0)
+                    ).Else(
+                        tx_reg(tx_data),
+                        tx_empty(0)
+                    )
+                ),
+                If(tx_enable._isOn() & (~tx_empty._isOn())._isOn(),
+                    tx_cnt(tx_cnt + 1),
+                    If(tx_cnt._eq(0),
+                        tx_out(0)
+                    ),
+                    If((tx_cnt > 0)._isOn() & (tx_cnt < 9)._isOn(),
+                        tx_out(tx_reg[tx_cnt - 1])
+                    ),
+                    If(tx_cnt._eq(9),
+                        tx_out(1),
+                        tx_cnt(0),
+                        tx_empty(1)
+                    )
+                ),
+                If(~tx_enable._isOn(),
+                    tx_cnt(0)
+                )
+            )
+        )
