@@ -38,14 +38,6 @@ set_target_properties(hdlConvertor_core_static
 )
 set_coverage_if_enabled(hdlConvertor_core_static ON)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set(CPP_STD_FILESYSTEM_LIB_NAME c++)
-	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	set(CPP_STD_FILESYSTEM_LIB_NAME stdc++fs)
-endif()
-
-
 set(HDL_CONVERTOR_INTERNAL_LIBS 
 	svConvertor_static
 	verilogPreproc_static
@@ -62,8 +54,8 @@ if(HDLCONVERTOR_PYTHON)
 	target_link_libraries(hdlConvertor_cpp_static PUBLIC
 		${HDL_CONVERTOR_INTERNAL_LIBS}
 		${ANTLR4CPP_LIBRARIES}
-		${CPP_STD_FILESYSTEM_LIB_NAME}
 	)
+	target_compile_features(hdlConvertor_cpp_static PUBLIC cxx_std_17)
 
 	set_target_properties(hdlConvertor_cpp_static
 		PROPERTIES VERSION "1.0.0"
@@ -87,8 +79,8 @@ else()
 	target_link_libraries(hdlConvertor_cpp_shared
 		INTERFACE
 		${ANTLR4CPP_LIBRARIES}
-		${CPP_STD_FILESYSTEM_LIB_NAME}
 	)
+    target_compile_features(hdlConvertor_cpp_shared PUBLIC cxx_std_17)
 	set_coverage_if_enabled(hdlConvertor_cpp_shared ON)
 	if(CODE_COVERAGE)
 		target_link_libraries(hdlConvertor_cpp_shared PRIVATE gcov)
