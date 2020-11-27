@@ -30,7 +30,7 @@ install:
   - "cd ../../../../"
   - "%PYTHON%\\python.exe -m pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
-  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4"'
+  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4" -G"%GENERATOR%" -A%PLATFORM%'
 
 build: off
 
