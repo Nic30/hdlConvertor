@@ -10,8 +10,6 @@
 //            Xilinx website. It has some minor modifications.
 //=========================================
 
-`timescale 1ns/1ps
-
 module aFifo
   #(parameter    DATA_WIDTH    = 8,
                  ADDRESS_WIDTH = 4,
