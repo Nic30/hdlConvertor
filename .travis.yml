@@ -75,6 +75,7 @@ install:
     git fetch --depth 500;
     git fetch --tags;
     git checkout tags/"v$PIP_GIT_TAG";
+    rm -r hdlConvertor; 
   else
     pip install git+https://github.com/Nic30/hdlConvertorAst.git ;
     pip install -r requirements.txt ;
