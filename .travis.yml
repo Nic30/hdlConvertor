@@ -3,7 +3,7 @@ dist: focal
 language: python
 
 git:
-  depth: 1
+  #depth: 1
   submodules: true
 
 cache:
@@ -50,6 +50,15 @@ matrix:
             - g++-9
             - gcc-9
 
+    - name: "Python 3.8 gcc-9 from pip"
+      python: 3.8
+      env: CC=gcc-9 CXX=g++-9 FROM_PIP=1
+      addons:
+        apt:
+          packages:
+            - *base_deps
+            - g++-9
+            - gcc-9
 
 # command to install dependencies
 install:
@@ -59,10 +68,17 @@ install:
     gem install coveralls-lcov;
   fi
 
-- pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git
-- pip install -r requirements.txt
-- python setup.py build -j$(nproc) $BUILD_ARGS
-- python setup.py install $BUILD_ARGS
+- pip install jupyter
+- if [ "$FROM_PIP" == "1" ]; then
+    pip install hdlConvertor;
+    export PIP_GIT_TAG=$(pip show hdlConvertor | sed -n "s/^Version:\s*\(\S*\)$/\1/p");
+    git checkout "v$PIP_GIT_TAG"
+  else
+    pip install git+https://github.com/Nic30/hdlConvertorAst.git ;
+    pip install -r requirements.txt ;
+    python setup.py build -j$(nproc) $BUILD_ARGS ;
+    python setup.py install $BUILD_ARGS ;
+  fi
 
 script: 
   - python setup.py test $BUILD_ARGS # the scikit-build automatically executes setup.py develop which requires access to installation dir
@@ -83,6 +99,3 @@ deploy:
     tags: true
     branch: master
     condition: $DO_DELPLOY = 1
-
-
-
