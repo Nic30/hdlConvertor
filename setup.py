@@ -3,21 +3,11 @@
 
 import os
 from setuptools import find_packages
-import multiprocessing
 try:
     from skbuild import setup
 except ImportError:
     raise ImportError("Missing scikit-build, (should be automatically installed by pip)")
 import sys
-
-
-has_core_count_spec = False
-for a in sys.argv:
-    if a.startswith("-j"):
-        has_core_count_spec = True
-        break
-if not has_core_count_spec:
-    sys.argv.append("-j%d" % multiprocessing.cpu_count())
 
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
