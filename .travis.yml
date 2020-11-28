@@ -84,7 +84,7 @@ install:
   fi
 
 script: 
-  - python setup.py test $BUILD_ARGS # the scikit-build automatically executes setup.py develop which requires access to installation dir
+  - python -m tests.all
 
 after_success:
 - if [ "$CODE_COVERAGE" == "1" ]; then
