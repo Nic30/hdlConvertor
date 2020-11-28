@@ -73,6 +73,7 @@ install:
     pip install hdlConvertor;
     export PIP_GIT_TAG=$(pip show hdlConvertor | sed -n "s/^Version:\s*\(\S*\)$/\1/p");
     git fetch --all;
+    git pull;
     git tag;
     git checkout tags/"v$PIP_GIT_TAG";
   else
