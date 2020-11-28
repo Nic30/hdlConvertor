@@ -203,25 +203,5 @@ template std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGene
 		vhdlParser::Generate_statement_body_with_begin_endContext>(
 		vhdlParser::Generate_statement_body_with_begin_endContext *ctx);
 
-HdlModuleDec* VhdlGenerateStatementParser::visitComponent_declaration(
-		vhdlParser::Component_declarationContext *ctx) {
-	// component_declaration:
-	//       COMPONENT identifier ( IS )?
-	//           ( generic_clause )?
-	//           ( port_clause )?
-	//       END COMPONENT ( identifier )? SEMI
-	// ;
-	HdlModuleDec *e = new HdlModuleDec();
-	e->name = ctx->identifier(0)->getText();
-	auto gc = ctx->generic_clause();
-	if (gc)
-		VhdlEntityParser::visitGeneric_clause(gc, e->generics);
-	auto pc = ctx->port_clause();
-	if (pc)
-		VhdlEntityParser::visitPort_clause(pc, e->ports);
-
-	return e;
-}
-
 }
 }

@@ -30,8 +30,6 @@ public:
 			vhdlParser::Case_generate_statementContext *ctx);
 	template<typename CTX_T>
 	std::unique_ptr<hdlAst::iHdlObj> visitGenerate_statement_body(CTX_T *ctx);
-	static hdlAst::HdlModuleDec* visitComponent_declaration(
-			vhdlParser::Component_declarationContext *ctx);
 };
 
 }
