@@ -18,6 +18,8 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 install:
+  - 'systeminfo'
+  - 'wmic OS get FreePhysicalMemory /Value' 
   - 'git submodule update --init --recursive'
   - "curl -fsS -o antlr4-complete.jar https://www.antlr.org/download/antlr-4.8-complete.jar"
   - "git clone https://github.com/antlr/antlr4"
