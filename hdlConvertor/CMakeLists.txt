@@ -20,7 +20,7 @@ python_extension_module(_hdlConvertor)
 target_link_libraries(_hdlConvertor
 	hdlConvertor_cpp_static
 )
-if(Python_VERSION_MAJOR STREQUAL "2")
+if(PYTHON_VERSION_MAJOR STREQUAL "2")
     target_link_libraries(_hdlConvertor
         stdc++fs
     )
