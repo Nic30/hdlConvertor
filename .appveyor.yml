@@ -33,7 +33,7 @@ install:
 
 build_script:
   - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4" -G"%GENERATOR%" -A%PLATFORM%'
-  - 'rmdir /s hdlConvertor' # to not collide with installed module
+  - 'rmdir /s /q hdlConvertor' # to not collide with installed module
 
 test_script:
   - "%PYTHON%\\python.exe -m tests.all"
