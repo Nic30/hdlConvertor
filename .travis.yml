@@ -75,16 +75,16 @@ install:
     git fetch --depth 500;
     git fetch --tags;
     git checkout tags/"v$PIP_GIT_TAG";
-    rm -r hdlConvertor; 
   else
     pip install git+https://github.com/Nic30/hdlConvertorAst.git ;
     pip install -r requirements.txt ;
     python setup.py build -j$(nproc) $BUILD_ARGS ;
     python setup.py install $BUILD_ARGS ;
   fi
+- rm -r hdlConvertor; 
 
 script: 
-  - python -m tests.all
+- python -m tests.all
 
 after_success:
 - if [ "$CODE_COVERAGE" == "1" ]; then
