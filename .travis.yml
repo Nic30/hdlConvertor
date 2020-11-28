@@ -72,7 +72,7 @@ install:
 - if [ "$FROM_PIP" == "1" ]; then
     pip install hdlConvertor;
     export PIP_GIT_TAG=$(pip show hdlConvertor | sed -n "s/^Version:\s*\(\S*\)$/\1/p");
-    git fetch --all --tags –prune ;
+    git fetch --all;
     git checkout tags/"v$PIP_GIT_TAG";
   else
     pip install git+https://github.com/Nic30/hdlConvertorAst.git ;
