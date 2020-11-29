@@ -18,7 +18,7 @@ environment:
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
-      ANTLR_VER: 4.7
+      ANTLR_VER: 4.9
     #- GENERATOR: -G"Visual Studio 15 2017 Win64"
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  BUILD_TYPE: Release
