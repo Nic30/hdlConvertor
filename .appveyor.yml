@@ -36,7 +36,7 @@ install:
   - "cd antlr4/runtime/Cpp"
   - "mkdir build"
   - "cd build"
-  - 'cmake %GENERATOR% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
+  - 'cmake %GENERATOR% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
   - "msbuild LIBANTLR4.sln /p:configuration=%BUILD_TYPE% /p:platform=%PLATFORM%" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
   - "cd ../../../../"
