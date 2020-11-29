@@ -4,14 +4,14 @@ clone_depth: 5
 environment:
   matrix:
     # Visual Studio 2019 x64
-    - GENERATOR: Visual Studio 16 2019
-      BUILD_TYPE: Release
-      PYTHON: "C:\\Python39-x64"
-      # add to path otherwise Cython is not found
-      PATH: $(PYTHON)\Scripts;$(PATH) 
-      PLATFORM: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    - GENERATOR: Ninja
+    #- GENERATOR: -G"Visual Studio 16 2019" -A x64
+    #  BUILD_TYPE: Release
+    #  PYTHON: "C:\\Python39-x64"
+    #  # add to path otherwise Cython is not found
+    #  PATH: $(PYTHON)\Scripts;$(PATH) 
+    #  PLATFORM: x64
+    #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - GENERATOR: -G Ninja
       BUILD_TYPE: Release
       PYTHON: "C:\\Python39-x64"
       # add to path otherwise Cython is not found
@@ -28,7 +28,7 @@ install:
   - "cd antlr4/runtime/Cpp"
   - "mkdir build"
   - "cd build"
-  - 'cmake  -G"%GENERATOR%" -A%PLATFORM% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
+  - 'cmake %GENERATOR% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -Dgtest_force_shared_crt=ON -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
   - "msbuild LIBANTLR4.sln /p:configuration=%BUILD_TYPE% /p:platform=%PLATFORM%" # for other configuration installation does not work currently
   - "cmake -P cmake_install.cmake"
   - "cd ../../../../"
@@ -36,7 +36,7 @@ install:
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
 
 build_script:
-  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4" -G"%GENERATOR%" -A%PLATFORM%'
+  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4" %GENERATOR%'
   - 'rmdir /s /q hdlConvertor' # to not collide with installed module
 
 test_script:
