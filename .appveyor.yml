@@ -1,5 +1,6 @@
 clone_depth: 5
 
+# https://www.appveyor.com/docs/windows-images-software/
 environment:
   matrix:
     # Visual Studio 2019 x64
