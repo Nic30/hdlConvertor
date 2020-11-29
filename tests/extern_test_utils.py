@@ -5,6 +5,7 @@ from hdlConvertor import HdlConvertor
 from hdlConvertorAst.language import Language
 from tests.file_utils import generate_test_method_name, TestFilter, \
     get_file_name
+import sys
 
 
 class ExternTestSpec():
@@ -46,9 +47,10 @@ def gen_test(test_spec, test_filter):
         c.preproc_macro_db.update(test_spec.preproc_defs)
 
         try:
-            c.parse([test_spec.main_file, ], test_spec.language,
+            ctx = c.parse([test_spec.main_file, ], test_spec.language,
                     test_spec.include_dirs,
                     encoding=test_spec.encoding, debug=test_spec.debug)
+            assert sys.getrefcount(ctx) == 2
         except Exception:
             if test_spec.should_fail:
                 # [TODO] some expected erros in this test suite are not related to syntax
@@ -57,7 +59,6 @@ def gen_test(test_spec, test_filter):
                 pass
             else:
                 raise
-
         test_filter.mark_test_as_passed(self)
 
     return test

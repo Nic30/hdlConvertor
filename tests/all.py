@@ -44,11 +44,17 @@ def main_test_suite():
     ] + GhdlTestsuiteTCs
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))
+    # suite.addTest(VerilogPreprocTC("test_2012_p641"))
+    # suite.addTest(unittest.makeSuite(VerilatorTestsuiteTC))
+    # suite.addTest(VerilatorTestsuiteTC("test_SYSTEM_VERILOG_2009_t_math_cond_huge"))
 
     return suite
 
 
 if __name__ == "__main__":
+    #import tracemalloc
+    #
+    #tracemalloc.start()
     suite = main_test_suite()
     runner = TimeLoggingTestRunner(verbosity=3)
 
@@ -67,5 +73,13 @@ if __name__ == "__main__":
         res = runner.run(concurrent_suite)
     else:
         res = runner.run(suite)
+    
+    
+    #snapshot = tracemalloc.take_snapshot()
+    #top_stats = snapshot.statistics('lineno')
+    #
+    #for stat in top_stats:
+    #    if "hdlConvertor" in repr(stat):
+    #        print(stat)
     if not res.wasSuccessful():
         sys.exit(1)

@@ -15,6 +15,7 @@ from hdlConvertorAst.hdlAst import HdlContext as PyHdlContext
 from hdlConvertorAst.language import Language as PyHdlLanguageEnum
 from hdlConvertorAst.parse_hdlConvertor_json import \
     parse_hdlConvertor_json_file, parse_hdlConvertor_json_str
+from _ctypes  import Py_DECREF
 
 
 include "verilogPreproc.pyx"
@@ -178,6 +179,7 @@ cdef class HdlConvertorPy:
             if not d:
                 raise
             d_py = < object > d
+            Py_DECREF(d_py)
             return d_py
         else:
             return PyHdlContext()
@@ -201,6 +203,7 @@ cdef class HdlConvertorPy:
         hdl_str = str_encode(hdl_str)
         incdirs = [str_encode(item) for item in incdirs]
 
+
         cdef object d_py
         cdef PyObject * d
         cdef ToPy toPy
@@ -214,6 +217,7 @@ cdef class HdlConvertorPy:
             if not d:
                 raise
             d_py = < object > d
+            Py_DECREF(d_py)
             return d_py
         else:
             return PyHdlContext()

@@ -50,10 +50,10 @@ PyObject* ToPy::toPy(const HdlStmBlock *o) {
 	}
 	int e = PyObject_SetAttrString(py_inst, "join_t", join_t);
 	if (e) {
-		Py_DECREF(join_t);
 		Py_DECREF(py_inst);
 		return nullptr;
 	}
+	Py_DECREF(join_t);
 
 	if (toPy_arr(py_inst, "body", o->statements))
 		return nullptr;
@@ -175,9 +175,14 @@ PyObject* ToPy::toPy(const HdlStmAssign *o) {
 		if (!py_inst) {
 			break;
 		}
+		Py_DECREF(src);
+		Py_DECREF(dst);
+		Py_XDECREF(time_delay);
+		Py_XDECREF(event_delay);
 		auto _o = dynamic_cast<const HdlStmAssign*>(o);
-		e = PyObject_SetAttrString(py_inst, "is_blocking",
-				PyBool_FromLong((long) _o->is_blocking));
+		auto _is_blocking = PyBool_FromLong((long) _o->is_blocking);
+		e = PyObject_SetAttrString(py_inst, "is_blocking", _is_blocking);
+		Py_DECREF(_is_blocking);
 
 	} while (0);
 	if (e || !py_inst) {
@@ -217,9 +222,9 @@ PyObject* ToPy::toPy(const HdlStmProcess *o) {
 		}
 		if (PyObject_SetAttrString(py_inst, "sensitivity", sl)) {
 			Py_DECREF(py_inst);
-			Py_DECREF(sl);
 			return nullptr;
 		}
+		Py_DECREF(sl);
 
 		if (toPy_arr(sl, *o->sensitivity_list.get())) {
 			Py_DECREF(py_inst);
@@ -238,6 +243,7 @@ PyObject* ToPy::toPy(const HdlStmImport *o) {
 	}
 
 	auto py_inst = PyObject_CallFunctionObjArgs(HdlImportCls, p, NULL);
+	Py_DECREF(p);
 	if (!py_inst) {
 		Py_DECREF(p);
 		return nullptr;

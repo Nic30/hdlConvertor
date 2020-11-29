@@ -103,13 +103,13 @@ class ToPy {
 				return e;
 			}
 		}
+		Py_DECREF(parent_dict);
 		return 0;
 	}
 
 	template<typename OBJ_T>
 	int toPy_arr(PyObject *parent, const std::string &prop_name,
 			const std::vector<OBJ_T> &objs) {
-
 		PyObject *parent_list = PyObject_GetAttrString(parent,
 				prop_name.c_str());
 		if (parent_list == nullptr) {
@@ -120,7 +120,9 @@ class ToPy {
 			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 			return -1;
 		}
-		return toPy_arr<OBJ_T>(parent_list, objs);
+		auto res = toPy_arr<OBJ_T>(parent_list, objs);
+		Py_DECREF(parent_list);
+		return res;
 	}
 
 	template<typename OBJ_T>
@@ -144,6 +146,7 @@ class ToPy {
 	int toPy_property(PyObject *py_inst, const char *prop_name,
 			PyObject *py_o) {
 		int e = PyObject_SetAttrString(py_inst, prop_name, py_o);
+		Py_DECREF(py_o);
 		if (e < 0) {
 			Py_DECREF(py_inst);
 			return -1;

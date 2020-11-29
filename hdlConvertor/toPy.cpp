@@ -303,7 +303,10 @@ PyObject* ToPy::toPy(const HdlOp *o) {
 		return nullptr;
 	}
 
-	return PyObject_CallFunctionObjArgs(HdlOpCls, fn, ops, NULL);
+	auto res = PyObject_CallFunctionObjArgs(HdlOpCls, fn, ops, NULL);
+	Py_DECREF(fn);
+	Py_DECREF(ops);
+	return res;
 }
 
 // [TODO] too similar with the code for HdlModuleDef
@@ -324,9 +327,9 @@ PyObject* ToPy::toPy(const HdlValueIdspace *o) {
 
 	if (PyObject_SetAttrString(py_inst, "declaration_only", dec_only)) {
 		Py_DECREF(py_inst);
-		Py_DECREF(dec_only);
 		return nullptr;
 	}
+	Py_DECREF(dec_only);
 
 	return py_inst;
 }

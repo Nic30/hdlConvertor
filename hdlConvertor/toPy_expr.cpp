@@ -66,7 +66,9 @@ PyObject* ToPy::toPy(const HdlValueId *o) {
 	auto v = PyUnicode_FromString(o->_str.c_str());
 	if (!v)
 		return nullptr;
-	return PyObject_CallFunctionObjArgs(HdlValueIdCls, v, NULL);
+	auto res = PyObject_CallFunctionObjArgs(HdlValueIdCls, v, NULL);
+	Py_DECREF(v);
+	return res;
 }
 
 PyObject* ToPy::toPy(const HdlValueInt *o) {
@@ -101,7 +103,11 @@ PyObject* ToPy::toPy(const HdlValueInt *o) {
 		bits = Py_None;
 	}
 
-	return PyObject_CallFunctionObjArgs(HdlValueIntCls, v, bits, base, NULL);
+	auto res = PyObject_CallFunctionObjArgs(HdlValueIntCls, v, bits, base, NULL);
+	Py_DECREF(v);
+	Py_DECREF(bits);
+	Py_DECREF(base);
+	return res;
 }
 
 PyObject* ToPy::toPy(const HdlValueFloat *o) {
