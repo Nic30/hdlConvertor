@@ -24,7 +24,7 @@ SUCESSFULL_TEST_FILTER_FILE = None
 def get_verilator_test_configs():
     check_git_submodule(VERILATOR_TEST_ROOT)
     RE_TOPFILENAME = re.compile(
-        'top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
+        r'top_filename\("\s*([^"]+)"\s*\)', re.MULTILINE)
     for test_script_name in find_files(VERILATOR_TEST_ROOT, "*.pl"):
         do_ignore = False
         for ignored in ["t_flag_", "t_dist_", "t_vlcov_",
@@ -134,8 +134,8 @@ def get_verilator_test_configs():
             "TEST_EXPECT": "100ns",
             "time_scale_units": "1fs",
             "define time_scale_prec": "1fs",
-
         }
+
         incdirs = [VERILATOR_TEST_ROOT,
                    os.path.join(VERILATOR_ROOT, "include")]
 
