@@ -5,9 +5,9 @@ import unittest
 from hdlConvertor import HdlConvertor
 from hdlConvertorAst.hdlAst._structural import HdlModuleDec, HdlModuleDef
 from hdlConvertorAst.language import Language
+from hdlConvertorAst.to.hwt import ToHwt
 from hdlConvertorAst.to.verilog.verilog2005 import ToVerilog2005
 from hdlConvertorAst.to.vhdl.vhdl2008 import ToVhdl2008
-from hdlConvertorAst.to.hwt import ToHwt
 
 
 try:
