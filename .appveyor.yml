@@ -2,12 +2,6 @@ clone_depth: 5
 
 environment:
   matrix:
-    # For Python versions available on Appveyor, see
-    # http://www.appveyor.com/docs/installed-software#python
-
-    #  DISTUTILS_USE_SDK: "1"
-    #- TOOLSET: cygwin
-    #  CYGWIN: "c:\\cygwin64"
     # Visual Studio 2019 x64
     - GENERATOR: Visual Studio 16 2019
       BUILD_TYPE: Release
