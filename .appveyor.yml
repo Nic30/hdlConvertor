@@ -16,6 +16,13 @@ environment:
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - GENERATOR: Ninja
+      BUILD_TYPE: Release
+      PYTHON: "C:\\Python39-x64"
+      # add to path otherwise Cython is not found
+      PATH: $(PYTHON)\Scripts;$(PATH) 
+      PLATFORM: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 install:
   - 'systeminfo'
