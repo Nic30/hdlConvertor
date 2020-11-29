@@ -11,15 +11,22 @@ environment:
     #  PATH: $(PYTHON)\Scripts;$(PATH) 
     #  PLATFORM: x64
     #  ANTLR_VER: 4.9
-
-    - GENERATOR: -G"Visual Studio 15 2017 Win64"
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - GENERATOR: -G"Visual Studio 16 2019" -A x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       BUILD_TYPE: Release
       PYTHON: "C:\\Python39-x64"
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
       ANTLR_VER: 4.7
+    #- GENERATOR: -G"Visual Studio 15 2017 Win64"
+    #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    #  BUILD_TYPE: Release
+    #  PYTHON: "C:\\Python39-x64"
+    #  # add to path otherwise Cython is not found
+    #  PATH: $(PYTHON)\Scripts;$(PATH) 
+    #  PLATFORM: x64
+    #  ANTLR_VER: 4.7
 
     #- GENERATOR: Ninja
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
