@@ -11,7 +11,7 @@ environment:
     # Visual Studio 2019 x64
     - GENERATOR: Visual Studio 16 2019
       BUILD_TYPE: Release
-      PYTHON: "C:\\Python37-x64"
+      PYTHON: "C:\\Python39-x64"
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
