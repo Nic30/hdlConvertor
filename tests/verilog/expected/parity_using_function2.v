@@ -8,7 +8,7 @@
 module parity_using_function2 (
     input wire[7:0] data_in,
     // 8 bit data in
-    output wire parity_out
+    output reg parity_out
 );
     function wire parity (
         input wire[31:0] data
