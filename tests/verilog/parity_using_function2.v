@@ -12,7 +12,7 @@ parity_out   //  1 bit parity out
 output  parity_out ;
 input [7:0] data_in ;
 
-wire parity_out ;
+reg parity_out ;
 function parity;
   input [31:0] data;
   integer i;
