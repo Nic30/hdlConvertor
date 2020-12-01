@@ -1,0 +1,12 @@
+Source: libhdlconvertor-dev
+Section: devel
+Priority: optional
+Maintainer: Michal Orsak <your.email@some.where>
+Build-Depends: cmake, build-essential, default-jre, uuid-dev, libantlr4-runtime-dev, antlr4
+Homepage: https://github.com/Nic30/hdlConvertor
+
+Package: libhdlconvertor-dev
+Architecture: any
+Depends: uuid
+Description: System Verilog and VHDL parser, preprocessor for C++
+
