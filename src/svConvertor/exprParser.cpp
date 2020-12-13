@@ -495,19 +495,26 @@ unique_ptr<iHdlExprItem> VerExprParser::visitPackage_or_class_scoped_hier_id_wit
 	for (auto bs : ctx->bit_select()) {
 		res = visitBit_select(bs, move(res));
 	}
-	// "Vector bit-select and part-select addressing"
-	if (ctx->operator_plus_minus()) {
-		NotImplementedLogger::print(
-				"VerExprParser.visitPackage_or_class_scoped_hier_id_with_select - operator_plus_minus",
-				ctx);
-	}
+
 	auto exprs = ctx->expression();
 	if (exprs.size()) {
 		assert(exprs.size() == 2);
 		auto e0 = visitExpression(exprs[0]);
 		auto e1 = visitExpression(exprs[1]);
-		auto sel = create_object<HdlOp>(ctx, move(e0), HdlOpType::DOWNTO,
-				move(e1));
+		auto _pm = ctx->operator_plus_minus();
+		HdlOpType op = HdlOpType::DOWNTO;
+		if (_pm) {
+			// e0 is offset
+			// e1 is width
+			// pm specifies direction of slice from offset
+			auto pm = VerLiteralParser::visitOperator_plus_minus(_pm);
+			if (pm == HdlOpType::ADD) {
+				op = HdlOpType::PART_SELECT_POST;
+			} else {
+				op = HdlOpType::PART_SELECT_PRE;
+			}
+		}
+		auto sel = create_object<HdlOp>(ctx, move(e0), op, move(e1));
 		return append_expr(ctx, move(res), HdlOpType::INDEX, move(sel));
 	}
 	return res;
