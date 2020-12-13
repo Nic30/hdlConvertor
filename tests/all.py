@@ -73,8 +73,8 @@ if __name__ == "__main__":
         res = runner.run(concurrent_suite)
     else:
         res = runner.run(suite)
-    
-    
+
+
     #snapshot = tracemalloc.take_snapshot()
     #top_stats = snapshot.statistics('lineno')
     #
