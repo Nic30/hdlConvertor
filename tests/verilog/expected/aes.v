@@ -165,7 +165,7 @@ module aes_cipher_top (
         else if (|dcnt)
             dcnt <= #1 dcnt - 4'h1;
     always @(posedge clk)
-        done <= #1 !|dcnt[3:1] & dcnt[0] & !ld;
+        done <= #1 !(|dcnt[3:1]) & dcnt[0] & !ld;
     always @(posedge clk)
         if (ld)
             text_in_r <= #1 text_in;
