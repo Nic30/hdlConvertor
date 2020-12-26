@@ -26,7 +26,7 @@ COPY . ${HOME}
 USER root
 
 WORKDIR ${HOME}
-RUN python3 setup.py install -j $(nproc)
+RUN python3 setup.py install
 
 RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}

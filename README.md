@@ -41,16 +41,16 @@ sudo pip3 install hdlConvertor
 # or download repository and run
 sudo pip3 install --upgrade --force-reinstall --no-cache-dir git+https://github.com/Nic30/hdlConvertorAst.git
 sudo pip3 install -r requirements.txt
-sudo python3 setup.py install -j$(nproc)
+sudo python3 setup.py install
 
 # if you are using version from git rather uninstall
 # old library first if required
-# sudo pip3 uninstall hdlConvertor 
+# sudo pip3 uninstall hdlConvertor
 ```
 
 Installer also supports other options which may be usefull
 ```
-python setup.py install --prefix /tmp/python_install/ -j$(nproc) --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
+python setup.py install --prefix /tmp/python_install/ --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
 ```
 
 You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-based library)
@@ -74,7 +74,7 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 ### Similar projects:
 (Tell us If you know about some other project!)
 
-* [cl-vhdl](https://github.com/mabragor/cl-vhdl) - lisp, Parser of VHDL into lisp-expressions 
+* [cl-vhdl](https://github.com/mabragor/cl-vhdl) - lisp, Parser of VHDL into lisp-expressions
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
@@ -86,11 +86,11 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [sv-parser](https://github.com/dalance/sv-parser) - Rust, SystemVerilog parser library fully complient with IEEE 1800-2017
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
-* [veelox](https://github.com/martinda/veelox) - Java+ANTLR, An experiment in SystemVerilog Preprocessing 
+* [veelox](https://github.com/martinda/veelox) - Java+ANTLR, An experiment in SystemVerilog Preprocessing
 * [verible](https://github.com/chiplicity/verible) -C++, SystemVerilog parser, style-linter, and formatter
 * [verilog-parser](https://github.com/ben-marshall/verilog-parser) - A Flex/Bison Parser for the IEEE 1364-2001 Verilog Standard.
 * [vbpp](https://github.com/balanx/vbpp) - C, Verilog PreProcessor
-* [tree-sitter-verilog](https://github.com/tree-sitter/tree-sitter-verilog) - JS,  Verilog grammar for tree-sitter 
+* [tree-sitter-verilog](https://github.com/tree-sitter/tree-sitter-verilog) - JS,  Verilog grammar for tree-sitter
 * [Verilog-Perl](https://metacpan.org/pod/Verilog-Perl)
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 * [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
