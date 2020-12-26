@@ -202,7 +202,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitData_type_or_implicit(
 	//     | implicit_data_type
 	// ;
 	if (!ctx)
-		return Utils::mkWireT();
+		return HdlValueSymbol::type_auto();
 
 	auto dt = ctx->data_type();
 	if (dt)
@@ -301,7 +301,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitImplicit_data_type(
 		if (net_type)
 			return net_type;
 		else
-			return Utils::mkWireT();
+			return HdlValueSymbol::type_auto();
 	}
 	auto s = ctx->signing();
 	SIGNING_VAL is_signed = SIGNING_VAL::NO_SIGN;
@@ -393,7 +393,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitNet_port_type(
 	//   | data_type_or_implicit
 	// ;
 	if (!ctx)
-		return Utils::mkWireT();
+		return HdlValueSymbol::type_auto();
 
 	if (ctx->KW_INTERCONNECT()) {
 		NotImplementedLogger::print(
@@ -418,7 +418,7 @@ pair<unique_ptr<iHdlExprItem>, bool> VerTypeParser::visitNet_or_var_data_type(
 	//   | data_type_or_implicit
 	// ;
 	if (!ctx)
-		return {Utils::mkWireT(), false};
+		return {HdlValueSymbol::type_auto(), false};
 	if (ctx->KW_INTERCONNECT()) {
 		NotImplementedLogger::print(
 				"VerExprParser.visitNet_or_var_data_type.interconnect", ctx);
@@ -470,7 +470,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitVar_data_type(
 	//    | data_type
 	// ;
 	if (!ctx)
-		return Utils::mkWireT();
+		return HdlValueSymbol::type_auto();
 	auto dti = ctx->data_type_or_implicit();
 	if (dti)
 		return visitData_type_or_implicit(dti, nullptr);
@@ -479,7 +479,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitVar_data_type(
 		return visitData_type(dt);
 	else
 		assert(ctx->KW_VAR());
-	return Utils::mkWireT();
+	return HdlValueSymbol::type_auto();
 }
 
 unique_ptr<iHdlExprItem> VerTypeParser::visitFunction_data_type_or_implicit(
@@ -489,7 +489,7 @@ unique_ptr<iHdlExprItem> VerTypeParser::visitFunction_data_type_or_implicit(
 	//     | implicit_data_type
 	// ;
 	if (!ctx)
-		return Utils::mkWireT();
+		return HdlValueSymbol::type_auto();
 
 	auto dtv = ctx->data_type_or_void();
 	if (dtv) {
