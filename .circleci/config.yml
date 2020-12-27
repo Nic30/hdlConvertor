@@ -29,7 +29,7 @@ jobs:
       - py/install-gcov
       - run:
           command: |
-            echo export CXXFLAGS="$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=1048576" >> "$BASH_ENV"
+            echo export CXXFLAGS="$CXXFLAGS --param ggc-min-expand=10 --param ggc-min-heapsize=2147483648" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
       # - python/save-cache
