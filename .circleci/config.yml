@@ -30,9 +30,9 @@ jobs:
 
       - run: pip install jupyter
       - py/install-gcov
-      - run:
-          command: |
-            echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
+      #- run:
+      #    command: |
+      #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
           build-args: "--user -j1" # because we do not have enough RAM
