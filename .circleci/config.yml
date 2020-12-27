@@ -13,7 +13,7 @@ jobs:
       # - python/load-cache
       - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4
       - run: pip install jupyter
-      - install-gcov-9
+      - py/install-gcov-9
       - py/install-setup-py
       # - python/save-cache
       - py/test-and-coverage
