@@ -16,13 +16,14 @@ jobs:
       - run: sudo apt install -y build-essential libantlr4-runtime-dev antlr4 cmake python3-pip
       - run:
           command: |
+            sudo update-alternatives --install /usr/bin/python python /usr/bin/python3;
+            sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3;
+
+      - run:
+          command: |
             gcc -v;
             python --version;
             cmake --version;
-      - run:
-          command: |
-            sudo ln -s /usr/bin/pip3 /usr/bin/pip 
-            sudo ln -s /usr/bin/python3 /usr/bin/python
 
       - run: pip install jupyter
       - py/install-gcov
