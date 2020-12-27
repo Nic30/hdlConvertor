@@ -12,6 +12,8 @@ jobs:
       - image: circleci/buildpack-deps:groovy
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
       # - python/load-cache
       - run: sudo apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip
       - run:
