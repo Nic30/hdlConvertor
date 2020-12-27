@@ -36,7 +36,6 @@ jobs:
       - py/install-setup-py:
           rm-package-dir: true
           build-args: "--user -j1" # because we do not have enough RAM
-      - run: ls hdlConvertor
       # - python/save-cache
       - py/test-and-coverage:
           coverage: false
