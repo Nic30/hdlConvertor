@@ -24,12 +24,13 @@ jobs:
             gcc -v;
             python --version;
             cmake --version;
+            free;
 
       - run: pip install jupyter
       - py/install-gcov
       - run:
           command: |
-            echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=8 --param ggc-min-heapsize=3221225472\" >> "$BASH_ENV"
+            echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
       # - python/save-cache
