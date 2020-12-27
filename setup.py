@@ -48,7 +48,7 @@ setup(
         'hdlConvertorAst>=0.5',
     ] + deps,
     license="MIT",
-    packages=[p for p in find_packages() if p != "tests"],
+    packages=find_packages(exclude=["tests", ]),
     test_suite="tests.main_test_suite",
     test_runner="tests:TimeLoggingTestRunner",
     tests_require=deps,
