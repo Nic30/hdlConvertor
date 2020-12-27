@@ -29,9 +29,8 @@ jobs:
   deploy:
     # executor: python/default
     docker:
-      - image: circleci/buildpack-deps:focal
+      - image: gcc:10
     steps:
-      - run: sudo apt install -y python3-pip
       - py/deploy-pypi
 
 workflows:
