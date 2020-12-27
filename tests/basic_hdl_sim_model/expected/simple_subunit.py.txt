@@ -2,10 +2,10 @@ from pyMathBitPrecise.array3t import Array3t, Array3val
 from pyMathBitPrecise.bits3t import Bits3t, Bits3val
 from pyMathBitPrecise.enum3t import define_Enum3t
 
-from pycocotb.basic_hdl_simulator.model import BasicRtlSimModel
-from pycocotb.basic_hdl_simulator.model_utils import sensitivity, connectSimPort
-from pycocotb.basic_hdl_simulator.proxy import BasicRtlSimProxy
-from pycocotb.basic_hdl_simulator.sim_utils import sim_eval_cond
+from hwtSimApi.basic_hdl_simulator.model import BasicRtlSimModel
+from hwtSimApi.basic_hdl_simulator.model_utils import sensitivity, connectSimPort
+from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
+from hwtSimApi.basic_hdl_simulator.sim_utils import sim_eval_cond
 
 class subunit0(BasicRtlSimModel):
     def __init__(self, sim: "BasicRtlSimulator", name="subunit0"):
