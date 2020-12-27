@@ -28,10 +28,10 @@ jobs:
       - run: pip install jupyter
       - py/install-gcov
       - py/install-setup-py:
-          m-package-dir: true
-          coverage: false
+          rm-package-dir: true
       # - python/save-cache
-      - py/test-and-coverage
+      - py/test-and-coverage:
+          coverage: false
       - py/coverage-upload-lcov
 
   deploy:
