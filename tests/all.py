@@ -50,12 +50,12 @@ def main_test_suite():
 
     return suite
 
+suite = main_test_suite()
 
 if __name__ == "__main__":
     #import tracemalloc
     #
     #tracemalloc.start()
-    suite = main_test_suite()
     runner = TimeLoggingTestRunner(verbosity=3)
 
     try:
