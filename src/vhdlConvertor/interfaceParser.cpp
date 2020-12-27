@@ -7,12 +7,12 @@
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
 
 
-using std::vector;
-using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlAst;
-
 namespace hdlConvertor {
 namespace vhdl {
+
+using std::vector;
+using namespace hdlConvertor::hdlAst;
+
 
 std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::extractVariables(
 		vhdlParser::Identifier_listContext *identifier_list,

@@ -6,12 +6,11 @@
 #include <hdlConvertor/createObject.h>
 
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
 
 VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 		sv2017Parser::Event_controlContext *ctx) {

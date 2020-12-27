@@ -1,10 +1,11 @@
 #include <hdlConvertor/verilogPreproc/str_utils.h>
 #include <hdlConvertor/conversion_exception.h>
 
-using namespace std;
 
 namespace hdlConvertor {
 namespace verilog_pp {
+
+using namespace std;
 
 string& rtrim(string &str, const string &chars) {
 	str.erase(str.find_last_not_of(chars) + 1);

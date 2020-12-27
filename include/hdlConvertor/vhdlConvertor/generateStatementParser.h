@@ -15,7 +15,7 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-class VhdlGenerateStatementParser : public BaseVhdlParser {
+class VhdlGenerateStatementParser: public BaseVhdlParser {
 public:
 	using BaseVhdlParser::BaseVhdlParser;
 	using vhdlParser = vhdl_antlr::vhdlParser;

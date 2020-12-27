@@ -10,8 +10,8 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
+
 
 std::unique_ptr<HdlCompInst> VhdlCompInstParser::visitComponent_instantiation_statement(
 		vhdlParser::Component_instantiation_statementContext *ctx,

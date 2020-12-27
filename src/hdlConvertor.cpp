@@ -17,8 +17,6 @@
 namespace hdlConvertor {
 
 using namespace std;
-using namespace antlr4;
-using namespace antlr4::tree;
 using namespace hdlConvertor::hdlAst;
 
 bool HdlConvertor::debug = false;
@@ -58,7 +56,7 @@ public:
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
-		ANTLRInputStream input_for_parser(preprocessed_code);
+		antlr4::ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = file_name.u8string();
 		this->_parse(input_for_parser, hierarchyOnly);
 	}
@@ -72,7 +70,7 @@ public:
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
-		ANTLRInputStream input_for_parser(preprocessed_code);
+		antlr4::ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = STRING_FILENAME;
 		this->_parse(input_for_parser, hierarchyOnly);
 	}

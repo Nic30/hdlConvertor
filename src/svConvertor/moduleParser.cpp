@@ -23,7 +23,6 @@ namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
-using namespace sv2017_antlr;
 using namespace hdlConvertor::hdlAst;
 
 void VerModuleParser::visitModule_header_common(

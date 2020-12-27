@@ -10,12 +10,13 @@
 #include <hdlConvertor/svConvertor/exprPrimaryParser.h>
 #include <hdlConvertor/svConvertor/typeParser.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 unique_ptr<iHdlExprItem> VerExprParser::visitConstant_expression(
 		sv2017Parser::Constant_expressionContext *ctx) {

@@ -1,7 +1,5 @@
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
 
-using namespace std;
-
 namespace hdlConvertor {
 namespace hdlAst {
 

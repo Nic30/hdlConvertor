@@ -6,19 +6,19 @@
 
 #include <hdlConvertor/verilogPreproc/macro_def_verilog.h>
 
-using namespace antlr4;
-using namespace std;
 
 namespace hdlConvertor {
 namespace verilog_pp {
+
+using namespace std;
 
 using verilogPreprocParser = verilogPreproc_antlr::verilogPreprocParser;
 using verilogPreprocLexer = verilogPreproc_antlr::verilogPreprocLexer;
 
 VerilogPreproc::VerilogPreproc(VerilogPreprocContainer &_container,
-		VerilogPreprocOutBuffer &_preproc_out, TokenStream &tokens,
+		VerilogPreprocOutBuffer &_preproc_out, antlr4::TokenStream &tokens,
 		bool _added_incdir, const std::string _encoding, size_t include_depth_limit) :
-		container(_container), _tokens(*(CommonTokenStream*) &tokens), added_incdir(
+		container(_container), _tokens(*(antlr4::CommonTokenStream*) &tokens), added_incdir(
 				_added_incdir), include_depth_limit(include_depth_limit), preproc_out(
 				_preproc_out), encoding(_encoding) {
 	switch (container.lang) {
@@ -231,7 +231,7 @@ void VerilogPreproc::parse_macro_args(
 	for (auto _c = ctx->children.begin() + 1; _c != end; ++_c) {
 		auto &c = *_c;
 		string ch_text = c->getText();
-		if (antlrcpp::is<tree::TerminalNode*>(c)) {
+		if (antlrcpp::is<antlr4::tree::TerminalNode*>(c)) {
 			if (expected_value
 					&& (ch_text == "," || (last_was_comma && ch_text == ")"))) {
 				// the case for macro(,)
@@ -308,7 +308,7 @@ antlrcpp::Any VerilogPreproc::visitMacro_call(
 		auto a = ctx->start->getStartIndex() + macro_name.size();
 		auto b = ctx->stop->getStopIndex();
 		auto args_str = ctx->start->getInputStream()->getText(
-				misc::Interval(a, b));
+				antlr4::misc::Interval(a, b));
 		replacement += args_str;
 	}
 
@@ -478,9 +478,9 @@ void VerilogPreproc::throw_input_caused_error(antlr4::ParserRuleContext *ctx,
  * Remove unwanted comment in text macro.
  * Line escape and Line comment have to be removed
  */
-void VerilogPreproc::remove_comment(Token *start, Token *end, string *str) {
+void VerilogPreproc::remove_comment(antlr4::Token *start, antlr4::Token *end, string *str) {
 	//Get the list of token between the start and the end of replacement rule.
-	vector<Token*> cmtChannel = _tokens.getTokens(start->getTokenIndex(),
+	vector<antlr4::Token*> cmtChannel = _tokens.getTokens(start->getTokenIndex(),
 			end->getTokenIndex());
 	//For all those token we are going to their channel.
 	//If the channel is of the kind we search then we search and removed it from the string.

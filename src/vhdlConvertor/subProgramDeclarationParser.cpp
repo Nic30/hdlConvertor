@@ -15,7 +15,6 @@ namespace hdlConvertor {
 namespace vhdl {
 
 using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 
 std::unique_ptr<hdlAst::HdlFunctionDef> VhdlSubProgramDeclarationParser::visitSubprogram_declaration(
 		vhdlParser::Subprogram_declarationContext *ctx) {

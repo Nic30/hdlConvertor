@@ -10,7 +10,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<iHdlExprItem> VhdlReferenceParser::visitSelected_name(

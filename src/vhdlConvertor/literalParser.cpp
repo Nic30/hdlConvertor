@@ -11,7 +11,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<HdlValueInt> VhdlLiteralParser::visitBIT_STRING_LITERAL(

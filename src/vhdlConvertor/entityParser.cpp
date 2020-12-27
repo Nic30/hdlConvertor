@@ -7,11 +7,9 @@
 #include <hdlConvertor/vhdlConvertor/processParser.h>
 
 
-
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlAst;
 
 std::unique_ptr<HdlModuleDec> VhdlEntityParser::visitEntity_declaration(

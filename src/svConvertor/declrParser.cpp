@@ -8,12 +8,13 @@
 
 #include <assert.h>
 
-using namespace std;
-using namespace sv2017_antlr;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 void VerDeclrParser::visitData_declaration(
 		sv2017Parser::Data_declarationContext *ctx,

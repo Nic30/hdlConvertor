@@ -3,10 +3,11 @@
 
 #include <hdlConvertor/createObject.h>
 
-using namespace std;
 
 namespace hdlConvertor {
 namespace hdlAst {
+
+using namespace std;
 
 HdlStmProcess::HdlStmProcess() :
 		iHdlStatement(), body(create_object<HdlStmBlock>(nullptr)) {

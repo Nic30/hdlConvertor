@@ -7,7 +7,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<HdlValueIdspace> VhdlPackageParser::visitPackage_body(

@@ -3,8 +3,6 @@
 
 namespace hdlConvertor {
 namespace verilog_pp {
-using namespace std;
-using namespace antlr4;
 
 #define unused(x)
 
@@ -21,7 +19,7 @@ std::string MacroDef__LINE__::replace(std::vector<std::string> unused(args),
 	auto line = offset + ctx->getStart()->getLine();
 	assert(line > 0);
 	// numbering starts at 1
-	return to_string(line);
+	return std::to_string(line);
 }
 bool MacroDef__LINE__::requires_args() {
 	return false;
@@ -36,7 +34,7 @@ std::string MacroDef__FILE__::replace(std::vector<std::string> unused(args),
 	if (args_specified) {
 		throw_doest_not_support_args();
 	}
-	string replacement = "\"" + pp->preproc_out.file_line_map.back().file_override + "\"";
+	std::string replacement = "\"" + pp->preproc_out.file_line_map.back().file_override + "\"";
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32) || defined(WIN64)
 	auto replace_all = [](std::string &data, const std::string &to_search,
 			const std::string &replace_str) {

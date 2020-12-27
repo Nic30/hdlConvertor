@@ -8,12 +8,13 @@
 #include <hdlConvertor/svConvertor/typeParser.h>
 #include <hdlConvertor/svConvertor/exprParser.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 void VerParamDefParser::visitParameter_port_list(
 		sv2017Parser::Parameter_port_listContext *ctx,

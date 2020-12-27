@@ -2,11 +2,11 @@
 #include <hdlConvertor/vhdlConvertor/constantParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 
+
 namespace hdlConvertor {
 namespace vhdl {
 
 using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 
 std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlConstantParser::visitConstant_declaration(
 		vhdlParser::Constant_declarationContext *ctx) {

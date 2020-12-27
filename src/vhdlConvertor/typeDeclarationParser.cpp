@@ -2,7 +2,6 @@
 
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
-#include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/interfaceParser.h>
 #include <hdlConvertor/vhdlConvertor/referenceParser.h>
 #include <hdlConvertor/createObject.h>
@@ -12,9 +11,8 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
+using namespace hdlConvertor::hdlAst;
 
 unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitType_declaration(
 		vhdlParser::Type_declarationContext *ctx) {
@@ -59,21 +57,21 @@ unique_ptr<HdlIdDef> VhdlTypeDeclarationParser::visitType_definition(
 	//;
 	unique_ptr<iHdlExprItem> t;
 	auto scl = ctx->scalar_type_definition();
-	if (scl)
+	if (scl) {
 		t = visitScalar_type_definition(scl);
-	else {
+	} else {
 		auto cmp = ctx->composite_type_definition();
-		if (cmp)
+		if (cmp) {
 			t = visitComposite_type_definition(cmp);
-		else {
+		} else {
 			auto acc = ctx->access_type_definition();
-			if (acc)
+			if (acc) {
 				t = visitAccess_type_definition(acc);
-			else {
+			} else {
 				auto fil = ctx->file_type_definition();
-				if (fil)
+				if (fil) {
 					t = visitFile_type_definition(fil);
-				else {
+				} else {
 					auto pro = ctx->protected_type_definition();
 					assert(pro);
 					t = visitProtected_type_definition(pro);
@@ -409,7 +407,8 @@ unique_ptr<iHdlExprItem> VhdlTypeDeclarationParser::visitConstraint(
 	auto r = ctx->range_constraint();
 	if (r) {
 		auto rc = visitRange_constraint(r);
-		return create_object<HdlOp>(r, move(selectedName), HdlOpType::RANGE, move(rc));
+		return create_object<HdlOp>(r, move(selectedName), HdlOpType::RANGE,
+				move(rc));
 	} else {
 		auto ec = ctx->element_constraint();
 		return visitElement_constraint(move(selectedName), ec);

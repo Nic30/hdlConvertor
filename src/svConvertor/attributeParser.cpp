@@ -5,8 +5,6 @@
 namespace hdlConvertor {
 namespace sv {
 
-using namespace sv2017_antlr;
-
 void VerAttributeParser::visitAttribute_instance(
 		sv2017Parser::Attribute_instanceContext *ctx) {
 	// attribute_instance : '(' '*' attr_spec ( ',' attr_spec )* '*' ')' ;

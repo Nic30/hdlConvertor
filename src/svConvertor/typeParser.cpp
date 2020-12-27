@@ -7,11 +7,13 @@
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/hdlAst/hdlOp.h>
 
-using namespace std;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 unique_ptr<iHdlExprItem> VerTypeParser::visitType_reference(
 		sv2017Parser::Type_referenceContext *ctx) {

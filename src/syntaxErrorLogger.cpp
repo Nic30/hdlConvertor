@@ -10,13 +10,13 @@
 #define UNUSED(x)
 #endif
 
-using namespace antlr4;
-using namespace std;
 
 namespace hdlConvertor {
 
+using namespace std;
+
 SyntaxErrorLogger::SyntaxErrorLogger() :
-		ANTLRErrorListener(), file_line_map(nullptr) {
+		antlr4::ANTLRErrorListener(), file_line_map(nullptr) {
 }
 
 void SyntaxErrorLogger::check_errors() {
@@ -32,8 +32,8 @@ void SyntaxErrorLogger::check_errors() {
 	}
 }
 
-void SyntaxErrorLogger::syntaxError(Recognizer *recognizer,
-		Token *UNUSED(offendingSymbol), size_t line, size_t charPositionInLine,
+void SyntaxErrorLogger::syntaxError(antlr4::Recognizer *recognizer,
+		antlr4::Token *UNUSED(offendingSymbol), size_t line, size_t charPositionInLine,
 		const string &msg, exception_ptr UNUSED(e)) {
 
 	ErrorData err;
@@ -54,26 +54,26 @@ void SyntaxErrorLogger::syntaxError(Recognizer *recognizer,
 	//cerr << line << ":" << charPositionInLine << ":SyntaxError:" << msg << "\n";
 }
 
-void SyntaxErrorLogger::reportAmbiguity(Parser *UNUSED(recognizer),
-		const dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
+void SyntaxErrorLogger::reportAmbiguity(antlr4::Parser *UNUSED(recognizer),
+		const antlr4::dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
 		size_t UNUSED(stopIndex), bool UNUSED(exact),
 		const antlrcpp::BitSet &UNUSED(ambigAlts),
-		atn::ATNConfigSet *UNUSED(configs)) {
+		antlr4::atn::ATNConfigSet *UNUSED(configs)) {
 	//cerr << ":Ambiguity:" << std::endl;
 }
 
-void SyntaxErrorLogger::reportContextSensitivity(Parser *UNUSED(recognizer),
-		const dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
+void SyntaxErrorLogger::reportContextSensitivity(antlr4::Parser *UNUSED(recognizer),
+		const antlr4::dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
 		size_t UNUSED(stopIndex), size_t UNUSED(prediction),
-		atn::ATNConfigSet *UNUSED(configs)) {
+		antlr4::atn::ATNConfigSet *UNUSED(configs)) {
 	//cerr << ":ContextSensitivity:" << std::endl;
 }
 
-void SyntaxErrorLogger::reportAttemptingFullContext(Parser *UNUSED(recognizer),
-		const dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
+void SyntaxErrorLogger::reportAttemptingFullContext(antlr4::Parser *UNUSED(recognizer),
+		const antlr4::dfa::DFA &UNUSED(dfa), size_t UNUSED(startIndex),
 		size_t UNUSED(stopIndex),
 		const antlrcpp::BitSet &UNUSED(conflictingAlts),
-		atn::ATNConfigSet *UNUSED(configs)) {
+		antlr4::atn::ATNConfigSet *UNUSED(configs)) {
 	//cerr << ":AttemptingFullContext:" << std::endl;
 }
 

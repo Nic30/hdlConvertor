@@ -8,7 +8,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<HdlModuleDef> VhdlArchParser::visitArchitecture_body(

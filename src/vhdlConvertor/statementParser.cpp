@@ -15,12 +15,12 @@
 #include <hdlConvertor/vhdlConvertor/processParser.h>
 #include <hdlConvertor/vhdlConvertor/statementParser.h>
 
-using namespace std;
-using vhdlParser = vhdl_antlr::vhdlParser;
-using namespace hdlConvertor::hdlAst;
-
 namespace hdlConvertor {
 namespace vhdl {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 bool is_others(unique_ptr<iHdlExprItem> &e) {
 	auto _e = dynamic_cast<HdlValueSymbol*>(e.get());

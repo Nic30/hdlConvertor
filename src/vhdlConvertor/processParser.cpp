@@ -12,12 +12,12 @@
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
 using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 
 std::unique_ptr<hdlAst::HdlStmProcess> VhdlProcessParser::visitProcess_statement(
 		vhdlParser::Process_statementContext *ctx) {

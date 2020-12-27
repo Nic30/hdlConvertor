@@ -1,10 +1,11 @@
 #include <hdlConvertor/hdlAst/hdlOp.h>
 #include <hdlConvertor/createObject.h>
 
-using namespace std;
 
 namespace hdlConvertor {
 namespace hdlAst {
+
+using namespace std;
 
 HdlOp::HdlOp() {
 	op = HdlOpType::ARROW;

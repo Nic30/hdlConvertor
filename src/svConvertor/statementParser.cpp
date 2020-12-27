@@ -19,12 +19,13 @@
 #include <hdlConvertor/svConvertor/paramDefParser.h>
 #include <hdlConvertor/svConvertor/literalParser.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 void HdlStmIf_collapse_elifs(HdlStmIf &ifStm) {
 	if (ifStm.ifFalse) {
@@ -594,7 +595,7 @@ unique_ptr<HdlStmBlock> VerStatementParser::visitSeq_block(
 	return visit_block(ctx);
 }
 
-HdlStmBlockJoinType visitJoin_keyword(sv2017Parser::Join_keywordContext *ctx) {
+HdlStmBlockJoinType visitJoin_keyword(sv2017_antlr::sv2017Parser::Join_keywordContext *ctx) {
 	// join_keyword:
 	//     KW_JOIN
 	//     | KW_JOIN_ANY

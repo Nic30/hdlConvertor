@@ -22,7 +22,6 @@ namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 
 void VerGenerateParser::visitGenerate_region(

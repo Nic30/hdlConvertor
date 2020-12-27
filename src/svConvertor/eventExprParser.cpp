@@ -5,13 +5,13 @@
 #include <hdlConvertor/svConvertor/exprParser.h>
 #include <hdlConvertor/notImplementedLogger.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
-
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 void VerEventExprParser::visitEvent_expression(
 		sv2017Parser::Event_expressionContext *ctx,

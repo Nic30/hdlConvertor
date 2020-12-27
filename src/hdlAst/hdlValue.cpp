@@ -4,10 +4,11 @@
 #include <array>
 #include <assert.h>
 
-using namespace std;
 
 namespace hdlConvertor {
 namespace hdlAst {
+
+using namespace std;
 
 HdlValueArr::HdlValueArr(const HdlValueArr &other) :
 		iHdlExprItem() {

@@ -10,7 +10,6 @@ namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 
 void VerModuleInstanceParser::visitModule_or_interface_or_program_or_udp_instantiation(

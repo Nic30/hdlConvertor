@@ -1,10 +1,11 @@
 #include <hdlConvertor/hdlAst/hdlStmAssign.h>
 #include <stdexcept>
 
-using namespace std;
 
 namespace hdlConvertor {
 namespace hdlAst {
+
+using namespace std;
 
 HdlStmAssign::HdlStmAssign(std::unique_ptr<iHdlExprItem> _dst,
 		std::unique_ptr<iHdlExprItem> _src, bool _is_blocking) :

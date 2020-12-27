@@ -6,12 +6,13 @@
 
 #include <hdlConvertor/createObject.h>
 
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
-using namespace std;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace hdlConvertor::hdlAst;
+using namespace std;
+
 
 unique_ptr<iHdlExprItem> Utils::mkStringT() {
 	return make_unique<HdlValueId>("__str__");

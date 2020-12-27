@@ -6,13 +6,14 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/createObject.h>
 
-using sv2017Parser = sv2017_antlr::sv2017Parser;
+
+namespace hdlConvertor {
+namespace sv {
+
 using namespace hdlConvertor::hdlAst;
 using TerminalNode = antlr4::tree::TerminalNode;
 using namespace std;
 
-namespace hdlConvertor {
-namespace sv {
 
 unique_ptr<iHdlExprItem> VerLiteralParser::visitIntegral_number(
 		sv2017Parser::Integral_numberContext *ctx) {

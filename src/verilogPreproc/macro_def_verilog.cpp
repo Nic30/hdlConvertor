@@ -17,7 +17,7 @@ MacroDefVerilog::MacroDefVerilog(const string &_name, bool _has_params,
 	parse_body(_params, _body, body);
 }
 
-std::pair<size_t, size_t> MacroDefVerilog::get_possible_arg_cnt() const {
+pair<size_t, size_t> MacroDefVerilog::get_possible_arg_cnt() const {
 	size_t max_arg_cnt = params.size();
 	size_t optional_arg_cnt = 0;
 	for (auto &p : params) {
@@ -29,14 +29,14 @@ std::pair<size_t, size_t> MacroDefVerilog::get_possible_arg_cnt() const {
 string MacroDefVerilog::get_possible_arg_cnt_str() const {
 	auto cnt = get_possible_arg_cnt();
 	if (cnt.first != cnt.second) {
-		return std::to_string(cnt.first) + " to " + std::to_string(cnt.second);
+		return to_string(cnt.first) + " to " + to_string(cnt.second);
 	} else {
-		return std::to_string(cnt.second);
+		return to_string(cnt.second);
 	}
 }
 
-void MacroDefVerilog::parse_body(const std::vector<param_info_t> &params,
-		const std::string &body, std::vector<MacroDefVerilog::Fragment> &res) {
+void MacroDefVerilog::parse_body(const vector<param_info_t> &params,
+		const string &body, vector<MacroDefVerilog::Fragment> &res) {
 	collect_string_intervals(body);
 	bool no_body = body.size() == 0;
 	if (no_body || params.size() == 0) {
@@ -114,7 +114,7 @@ void MacroDefVerilog::parse_body(const std::vector<param_info_t> &params,
 
 // return false to skip this find because it is
 // from an already substitution of the same macro replacement
-std::pair<size_t, size_t>* MacroDefVerilog::check_is_in_string(size_t start) {
+pair<size_t, size_t>* MacroDefVerilog::check_is_in_string(size_t start) {
 	for (auto &p : _string_intervals) {
 		if ((p.first <= start) && (start < p.first + p.second)) {
 			return &p;
@@ -153,7 +153,7 @@ bool MacroDefVerilog::requires_args() {
 	return has_params;
 }
 
-string MacroDefVerilog::replace(std::vector<std::string> args,
+string MacroDefVerilog::replace(vector<string> args,
 		bool args_specified, VerilogPreproc*, antlr4::ParserRuleContext*) {
 	if (has_params && !args_specified) {
 		string msg = "Macro " + name + " requires braces and expects ";

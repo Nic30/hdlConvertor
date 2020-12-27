@@ -13,7 +13,6 @@
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 VhdlDesignFileParser::VhdlDesignFileParser(antlr4::TokenStream &tokens,

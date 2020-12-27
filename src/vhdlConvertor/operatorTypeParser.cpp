@@ -1,4 +1,5 @@
 #include <hdlConvertor/vhdlConvertor/operatorTypeParser.h>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace vhdl {

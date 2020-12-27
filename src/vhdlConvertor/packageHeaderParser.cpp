@@ -5,13 +5,12 @@
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/signalParser.h>
 #include <hdlConvertor/vhdlConvertor/processParser.h>
-
+#include <assert.h>
 #include <hdlConvertor/createObject.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace hdlConvertor::hdlAst;
 
 std::unique_ptr<HdlValueIdspace> VhdlPackageHeaderParser::visitPackage_declaration(

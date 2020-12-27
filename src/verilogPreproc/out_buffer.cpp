@@ -2,10 +2,10 @@
 #include <assert.h>
 #include <algorithm>
 
-using namespace std;
-
 namespace hdlConvertor {
 namespace verilog_pp {
+
+using namespace std;
 
 VerilogPreprocOutBuffer::VerilogPreprocOutBuffer(ssize_t _input_line_begin) :
 		output_line(0), input_line_offset(0), input_line_begin(
@@ -13,7 +13,7 @@ VerilogPreprocOutBuffer::VerilogPreprocOutBuffer(ssize_t _input_line_begin) :
 	assert(_input_line_begin >= 0);
 }
 
-void VerilogPreprocOutBuffer::set_input_line(const std::string &file_name,
+void VerilogPreprocOutBuffer::set_input_line(const string &file_name,
 		size_t input_line_no) {
 	if (file_line_map.size() > 0) {
 		const auto &last = file_line_map.back();
@@ -51,7 +51,7 @@ void VerilogPreprocOutBuffer::set_input_line(size_t input_line_no) {
 }
 
 VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
-		const std::string &str) {
+		const string &str) {
 	auto lines = count(str.begin(), str.end(), '\n');
 	output_line += lines;
 	(*static_cast<stringstream*>(this)) << str;
@@ -60,8 +60,8 @@ VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 
 VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 		const VerilogPreprocOutBuffer &other) {
-	(*this) << std::endl;
-	(*static_cast<std::stringstream*>(this)) << other.str();
+	(*this) << endl;
+	(*static_cast<stringstream*>(this)) << other.str();
 	for (auto &i : other.file_line_map) {
 		FileLineMapItem i_new(i.line + output_line, i.file_override,
 				i.line_override);
@@ -75,7 +75,7 @@ VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 		ostream& (*f)(ostream&)) {
 	if (f
-			== &std::endl<VerilogPreprocOutBuffer::char_type,
+			== &endl<VerilogPreprocOutBuffer::char_type,
 					VerilogPreprocOutBuffer::traits_type>) {
 		output_line++;
 	}

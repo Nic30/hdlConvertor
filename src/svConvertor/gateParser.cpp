@@ -7,12 +7,13 @@
 
 #include <assert.h>
 
-using namespace std;
-using namespace sv2017_antlr;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 std::unique_ptr<iHdlExprItem> VerGateParser::visitEnable_terminal(
 		sv2017Parser::Enable_terminalContext *ctx) {

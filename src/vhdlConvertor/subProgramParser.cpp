@@ -8,11 +8,12 @@
 
 #include <hdlConvertor/createObject.h>
 
-using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 
 namespace hdlConvertor {
 namespace vhdl {
+
+using namespace hdlConvertor::hdlAst;
+
 
 std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitSubprogram_body(
 		vhdlParser::Subprogram_bodyContext *ctx) {

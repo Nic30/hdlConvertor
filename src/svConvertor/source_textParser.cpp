@@ -7,7 +7,6 @@
 namespace hdlConvertor {
 namespace sv {
 
-using sv2017Parser = sv2017_antlr::sv2017Parser;
 using namespace hdlConvertor::hdlAst;
 
 Source_textParser::Source_textParser(antlr4::TokenStream &tokens,

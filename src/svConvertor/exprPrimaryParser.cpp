@@ -7,12 +7,13 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/createObject.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimary(
 		sv2017Parser::PrimaryContext *ctx) {

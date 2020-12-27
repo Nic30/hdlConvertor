@@ -18,12 +18,12 @@
 #include <hdlConvertor/vhdlConvertor/subProgramDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/subProgramParser.h>
 #include <hdlConvertor/vhdlConvertor/variableParser.h>
+#include <assert.h>
 
 namespace hdlConvertor {
 namespace vhdl {
 
 using namespace hdlConvertor::hdlAst;
-using vhdlParser = vhdl_antlr::vhdlParser;
 using namespace std;
 
 std::unique_ptr<iHdlStatement> VhdlGenerateStatementParser::visitGenerate_statement(
@@ -197,11 +197,11 @@ std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_stat
 }
 
 template std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body<
-		vhdlParser::Generate_statement_bodyContext>(
-		vhdlParser::Generate_statement_bodyContext *ctx);
+		vhdl_antlr::vhdlParser::Generate_statement_bodyContext>(
+		vhdl_antlr::vhdlParser::Generate_statement_bodyContext *ctx);
 template std::unique_ptr<hdlAst::iHdlObj> VhdlGenerateStatementParser::visitGenerate_statement_body<
-		vhdlParser::Generate_statement_body_with_begin_endContext>(
-		vhdlParser::Generate_statement_body_with_begin_endContext *ctx);
+		vhdl_antlr::vhdlParser::Generate_statement_body_with_begin_endContext>(
+		vhdl_antlr::vhdlParser::Generate_statement_body_with_begin_endContext *ctx);
 
 }
 }

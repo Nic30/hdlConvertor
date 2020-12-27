@@ -12,12 +12,13 @@
 #include <hdlConvertor/svConvertor/attributeParser.h>
 #include <hdlConvertor/createObject.h>
 
-using namespace std;
-using sv2017Parser = sv2017_antlr::sv2017Parser;
-using namespace hdlConvertor::hdlAst;
 
 namespace hdlConvertor {
 namespace sv {
+
+using namespace std;
+using namespace hdlConvertor::hdlAst;
+
 
 void VerProgramParser::visitTf_item_declaration(
 		sv2017Parser::Tf_item_declarationContext *ctx,
