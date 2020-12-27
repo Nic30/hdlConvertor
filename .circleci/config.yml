@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       # - python/load-cache
-      - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake python3-pip
+      - run: sudo apt install -y build-essential libantlr4-runtime-dev antlr4 cmake python3-pip
       - run:
           command: |
             gcc -v;
