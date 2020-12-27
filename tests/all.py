@@ -18,6 +18,7 @@ from tests.test_verilog_preproc_include import VerilogPreprocIncludeTC
 from tests.test_verilog_preproc_macro_db_api import VerilogPreprocMacroDbApiTC
 from tests.test_verilog_to_hwt import VerilogToHwtTC
 from tests.test_vhdl_conversion import VhdlConversionTC
+from tests.test_vhdl_std_examples_parse import Vhdl2008StdExamplesParseTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
@@ -33,6 +34,7 @@ def main_test_suite():
         VerilogConversionTC,
         VhdlConversionTC,
         Sv2017StdExamplesParseTC,
+        Vhdl2008StdExamplesParseTC,
         IcarusVerilogTestsuiteTC,
         VerilatorTestsuiteTC,
         YosysTestsuiteTC,
