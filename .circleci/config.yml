@@ -27,7 +27,9 @@ jobs:
 
       - run: pip install jupyter
       - py/install-gcov
-      - py/install-setup-py
+      - py/install-setup-py:
+          m-package-dir: true
+          coverage: false
       # - python/save-cache
       - py/test-and-coverage
       - py/coverage-upload-lcov
