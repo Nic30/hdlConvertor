@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       # - python/load-cache
-      - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake
+      - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake python3-pip
       - run: pip install jupyter
       - py/install-gcov
       - py/install-setup-py
@@ -26,6 +26,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:focal
     steps:
+      - run: sudo apt install -y python3-pip
       - py/deploy-pypi
 
 workflows:
