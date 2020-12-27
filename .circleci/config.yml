@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-  py: nic30/python-all-in-1@0.2.17
+  py: nic30/python-all-in-1@0.2.19
 
 jobs:
   install-and-test:
@@ -35,6 +35,7 @@ jobs:
             echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
+          build-args: "--user -j1" # because we do not have enough RAM
       - run: ls hdlConvertor
       # - python/save-cache
       - py/test-and-coverage:
