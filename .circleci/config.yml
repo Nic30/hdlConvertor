@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-  py: nic30/python-all-in-1@0.2.6
+  py: nic30/python-all-in-1@0.2.8
 
 jobs:
   install-and-test:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       # - python/load-cache
-      - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4
+      - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake
       - run: pip install jupyter
       - py/install-gcov
       - py/install-setup-py
