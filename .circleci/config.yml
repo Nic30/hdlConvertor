@@ -9,12 +9,16 @@ jobs:
     # executor: python/default
     resource_class: medium
     docker:
-      - image: gcc:10
+      - image: circleci/buildpack-deps:groovy
     steps:
       - checkout
       # - python/load-cache
-      - run: apt install -y sudo
       - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake python3-pip
+      - run:
+          command: |
+            gcc -v;
+            python --version;
+            cmake --version;
       - run:
           command: |
             sudo ln -s /usr/bin/pip3 /usr/bin/pip 
@@ -30,7 +34,7 @@ jobs:
   deploy:
     # executor: python/default
     docker:
-      - image: gcc:10
+      - image: circleci/buildpack-deps:groovy
     steps:
       - py/deploy-pypi
 
