@@ -70,8 +70,9 @@ install:
 
 - pip install jupyter
 - if [ "$FROM_PIP" == "1" ]; then
-    pip install hdlConvertor;
-    export PIP_GIT_TAG=$(pip show hdlConvertor | sed -n "s/^Version:\s*\(\S*\)$/\1/p");
+    export PACKAGE_NAME=hdlConvertor
+    pip install $PACKAGE_NAME;
+    export PIP_GIT_TAG=$(pip show $PACKAGE_NAME | sed -n "s/^Version:\s*\(\S*\)$/\1/p");
     git fetch --depth 500;
     git fetch --tags;
     git checkout tags/"v$PIP_GIT_TAG";
