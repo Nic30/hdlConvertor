@@ -6,8 +6,10 @@ orbs:
 
 jobs:
   install-and-test:
-    executor: python/default
+    # executor: python/default
     resource_class: medium
+    docker:
+      - image: circleci/buildpack-deps:focal
     steps:
       - checkout
       # - python/load-cache
@@ -20,7 +22,9 @@ jobs:
       - py/coverage-upload-lcov
 
   deploy:
-    executor: python/default
+    # executor: python/default
+    docker:
+      - image: circleci/buildpack-deps:focal
     steps:
       - py/deploy-pypi
 
