@@ -11,6 +11,7 @@ namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
+using namespace hdlConvertor::hdlAst;
 
 VerDelayParser::HdlEventList VerDelayParser::visitEvent_control(
 		sv2017Parser::Event_controlContext *ctx) {
