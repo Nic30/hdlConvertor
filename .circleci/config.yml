@@ -16,8 +16,8 @@ jobs:
       - run: sudo apt install -y build-essential cython libantlr4-runtime-dev antlr4 cmake python3-pip
       - run:
           command: |
-            echo alias pip=pip3 >> "$BASH_ENV"
-            echo alias python=python3 >> "$BASH_ENV"
+            sudo ln -s /usr/bin/pip3 /usr/bin/pip 
+            sudo ln -s /usr/bin/python3 /usr/bin/python
 
       - run: pip install jupyter
       - py/install-gcov
