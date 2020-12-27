@@ -7,7 +7,7 @@ orbs:
 jobs:
   install-and-test:
     # executor: python/default
-    resource_class: large
+    resource_class: medium+
     docker:
       - image: circleci/buildpack-deps:groovy
     steps:
@@ -35,7 +35,7 @@ jobs:
       - py/coverage-upload-lcov
 
   deploy:
-    resource_class: large
+    resource_class: medium+
     # executor: python/default
     docker:
       - image: circleci/buildpack-deps:groovy
