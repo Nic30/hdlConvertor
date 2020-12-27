@@ -7,7 +7,7 @@ orbs:
 jobs:
   install-and-test:
     # executor: python/default
-    resource_class: medium+
+    resource_class: medium
     docker:
       - image: circleci/buildpack-deps:groovy
     steps:
@@ -27,6 +27,9 @@ jobs:
 
       - run: pip install jupyter
       - py/install-gcov
+      - run:
+          command: |
+            echo export CXXFLAGS="$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
       # - python/save-cache
@@ -35,7 +38,7 @@ jobs:
       - py/coverage-upload-lcov
 
   deploy:
-    resource_class: medium+
+    resource_class: medium
     # executor: python/default
     docker:
       - image: circleci/buildpack-deps:groovy
