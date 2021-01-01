@@ -75,7 +75,6 @@ jobs:
       # - python/save-cache
       - py/test-and-coverage:
           coverage: false
-      - py/coverage-upload-lcov
       - py/deploy-pypi-on-tag
 
 workflows:
