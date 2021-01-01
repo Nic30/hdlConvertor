@@ -2,10 +2,10 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
-  py: nic30/python-all-in-1@0.2.42
+  py: nic30/python-all-in-1@0.2.44
 
 jobs:
-  install-and-test:
+  install-test-coverage:
     # executor: python/default
     resource_class: medium
     docker:
@@ -41,23 +41,52 @@ jobs:
           coverage: false
       - py/coverage-upload-lcov
 
-  deploy:
-    resource_class: medium
+  install-test-deploy:
     # executor: python/default
+    resource_class: medium
     docker:
       - image: circleci/buildpack-deps:groovy
     steps:
-      - py/deploy-pypi
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
+      # - python/load-cache
+      - run: sudo apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip
+      - run:
+          command: |
+            sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10;
+            sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10;
+
+      - run:
+          command: |
+            gcc -v;
+            python --version;
+            cmake --version;
+            free;
+
+      - run: pip install jupyter
+      - py/install-gcov
+      #- run:
+      #    command: |
+      #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
+      - py/install-setup-py:
+          rm-package-dir: true
+          build-args: "--user -j1" # because we do not have enough RAM
+      # - python/save-cache
+      - py/test-and-coverage:
+          coverage: false
+      - py/coverage-upload-lcov
+      - py/deploy-pypi-on-tag
 
 workflows:
   main:
     jobs:
-      - install-and-test
-      - deploy:
-         requires:
-           - install-and-test
-         filters:
-           tags:
-             only: /v[0-9]+(\.[0-9]+)*/
-           branches:
-             ignore: /.*/
+      - install-test-coverage
+      - install-test-deploy:
+          requires:
+            - install-test-coverage
+          context:
+            - pypi
+          filters:
+            tags:
+              only: /.*/
