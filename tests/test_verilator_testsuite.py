@@ -38,12 +38,6 @@ def get_verilator_test_configs():
         if do_ignore:
             continue
 
-        if os.name == 'nt':
-            if test_script_name == "t_math_cond_huge":
-                # skip this test on windows build because appveyor runout of the memory
-                # and there is no free way how to increase it
-                continue
-
         with open(test_script_name) as f:
             s = f.read()
         should_fail = "fails => 1" in s
@@ -69,6 +63,11 @@ def get_verilator_test_configs():
 
         lang = Language.SYSTEM_VERILOG_2009
         fn = get_file_name(main_file)
+        if os.name == 'nt':
+            if fn == "t_math_cond_huge":
+                # skip this test on windows build because appveyor runout of the memory
+                # and there is no free way how to increase it
+                continue
         if fn in {
                 # non std {} initializer
                 "t_struct_init",
