@@ -22,6 +22,7 @@ from tests.test_vhdl_std_examples_parse import Vhdl2008StdExamplesParseTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
+import os
 
 
 def main_test_suite():
@@ -42,8 +43,10 @@ def main_test_suite():
         UVVMTestsuite,
         BasicHdlSimModelFromVerilogTC,
         VerilogToHwtTC,
-        NotebookTC,
     ] + GhdlTestsuiteTCs
+    if os.name != 'nt':
+        tcs.append(NotebookTC)
+
     for tc in tcs:
         suite.addTest(unittest.makeSuite(tc))
     # suite.addTest(VerilogPreprocTC("test_2012_p641"))
@@ -52,12 +55,13 @@ def main_test_suite():
 
     return suite
 
+
 suite = main_test_suite()
 
 if __name__ == "__main__":
-    #import tracemalloc
+    # import tracemalloc
     #
-    #tracemalloc.start()
+    # tracemalloc.start()
     runner = TimeLoggingTestRunner(verbosity=3)
 
     try:
@@ -76,11 +80,10 @@ if __name__ == "__main__":
     else:
         res = runner.run(suite)
 
-
-    #snapshot = tracemalloc.take_snapshot()
-    #top_stats = snapshot.statistics('lineno')
+    # snapshot = tracemalloc.take_snapshot()
+    # top_stats = snapshot.statistics('lineno')
     #
-    #for stat in top_stats:
+    # for stat in top_stats:
     #    if "hdlConvertor" in repr(stat):
     #        print(stat)
     if not res.wasSuccessful():
