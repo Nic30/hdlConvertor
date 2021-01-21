@@ -112,6 +112,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_typedefs(self):
         self.parseWithRef("package_typedefs.vhd", Language.VHDL)
 
+    def test_package_for_in(self):
+        self.parseWithRef("for_in.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
