@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import unittest
 
@@ -22,7 +23,6 @@ from tests.test_vhdl_std_examples_parse import Vhdl2008StdExamplesParseTC
 from tests.test_vunit_testsuite import VUnitTestsuiteTC
 from tests.test_yosys_testsuite import YosysTestsuiteTC
 from tests.time_logging_test_runner import TimeLoggingTestRunner
-import os
 
 
 def main_test_suite():
