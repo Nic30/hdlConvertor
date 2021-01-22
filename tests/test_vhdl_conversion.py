@@ -115,6 +115,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_for_in(self):
         self.parseWithRef("for_in.vhd", Language.VHDL)
 
+    def test_package_stm_nop(self):
+        self.parseWithRef("stm_nop.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
