@@ -218,7 +218,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitNull_statement(
 	// null_statement:
 	//        NULL_SYM SEMI
 	// ;
-	return create_object<HdlStmExpr>(ctx, HdlValueSymbol::null());
+	return create_object<HdlStmNop>(ctx);
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitCase_statement(
