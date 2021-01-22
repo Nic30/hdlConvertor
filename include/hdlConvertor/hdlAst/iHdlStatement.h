@@ -14,8 +14,6 @@ namespace hdlAst {
 /*
  * Interface for statements which can appear in HDL AST
  *
- * [TODO] to separate classes
- *        iHdlStatement is not an interface yet but it is planed to make it an interface
  */
 class iHdlStatement: public WithDoc, public WithPos, public iHdlObj {
 public:
