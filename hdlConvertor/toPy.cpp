@@ -55,8 +55,9 @@ ToPy::ToPy() {
 	import(HdlStmForCls, "HdlStmFor");
 	import(HdlStmForInCls, "HdlStmForIn");
 	import(HdlStmWhileCls, "HdlStmWhile");
-	import(HdlStmReturnCls, "HdlStmReturn");
+	import(HdlStmNopCls, "HdlStmNop");
 	import(HdlStmRepeatCls, "HdlStmRepeat");
+	import(HdlStmReturnCls, "HdlStmReturn");
 	import(HdlStmBreakCls, "HdlStmBreak");
 	import(HdlStmContinueCls, "HdlStmContinue");
 	import(HdlStmWaitCls, "HdlStmWait");
@@ -387,6 +388,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmBreakCls);
 	Py_XDECREF(HdlStmReturnCls);
 	Py_XDECREF(HdlStmRepeatCls);
+	Py_XDECREF(HdlStmNopCls);
 	Py_XDECREF(HdlStmWhileCls);
 	Py_XDECREF(HdlStmForCls);
 	Py_XDECREF(HdlStmForInCls);
