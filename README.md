@@ -74,11 +74,14 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 ### Similar projects:
 (Tell us If you know about some other project!)
 
+* [circt](https://github.com/llvm/circt) - C++, LLVM based infrastructutre for SV/VHDL/FIRRTL compilation and simulation
 * [cl-vhdl](https://github.com/mabragor/cl-vhdl) - lisp, Parser of VHDL into lisp-expressions
 * [HDL_ANTLR4](https://github.com/denisgav/HDL_ANTLR4) - C# projects that use ANTLR4 library to analyse VHDL and Verilog code
 * [hdlparse](https://github.com/kevinpt/hdlparse/) - vhdl/verilog parser in python
 * [ieee1800_2017](https://github.com/veriktig/ieee1800_2017) - Java, SystemVerilog preprocessor
+* [istyle-verilog-formatter](https://github.com/thomasrussellmurphy/istyle-verilog-formatter) - c++, Verilog formatter
 * [Pyverilog](https://github.com/PyHDI/Pyverilog) - python verilog toolkit
+* [pyvsc](https://github.com/fvutils/pyvsc) - C++, library for Verification Stimulus and Coverage description
 * [pyVHDLParser](https://github.com/Paebbels/pyVHDLParser) - python vhdl parser with 2008 support
 * [RgGen](https://github.com/rggen/rggen) - CSR (Configuration and Status Registers) generator
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
@@ -96,8 +99,6 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
 * [Surelog](https://github.com/alainmarcel/Surelog) - C++, System Verilog 2017 Pre-processor and parser
 * [verible](https://github.com/google/verible) - C++, System Verilog 2017 parser
-* [pyvsc](https://github.com/fvutils/pyvsc) - C++, library for Verification Stimulus and Coverage description
 * [UHDM](https://github.com/alainmarcel/UHDM) - rust, universal hardware data model
-* [istyle-verilog-formatter](https://github.com/thomasrussellmurphy/istyle-verilog-formatter) - c++, Verilog formatter
 
 
