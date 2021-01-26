@@ -133,6 +133,9 @@ class VerilogConversionTC(HdlParseTC):
     def test_generate_for(self):
         self.parseWithRef("generate_for.v", VERILOG)
 
+    def test_stm_import(self):
+        self.parseWithRef("stm_import.sv", SV)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

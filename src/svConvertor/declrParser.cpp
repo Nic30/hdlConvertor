@@ -8,13 +8,11 @@
 
 #include <assert.h>
 
-
 namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
 using namespace hdlConvertor::hdlAst;
-
 
 void VerDeclrParser::visitData_declaration(
 		sv2017Parser::Data_declarationContext *ctx,
@@ -36,7 +34,7 @@ void VerDeclrParser::visitData_declaration(
 		auto dti = ctx->data_type_or_implicit();
 		auto t = tp.visitData_type_or_implicit(dti, nullptr);
 		visitList_of_variable_decl_assignments(lvda, move(t), res_tmp);
-		for (auto & vd : res_tmp) {
+		for (auto &vd : res_tmp) {
 			vd->is_const = is_const;
 			vd->is_static = is_static;
 			res.push_back(move(vd));
@@ -52,11 +50,8 @@ void VerDeclrParser::visitData_declaration(
 	}
 	auto _pid = ctx->package_import_declaration();
 	if (_pid) {
-		// auto pid = visitPackage_import_declaration(_pid);
-		// res.push_back(pid);
-		NotImplementedLogger::print(
-				"VerDeclrParser.visitData_declaration.package_import_declaration",
-				_pid);
+		auto pid = visitPackage_import_declaration(_pid);
+		res.push_back(move(pid));
 		return;
 	}
 	auto _ntd = ctx->net_type_declaration();
@@ -65,10 +60,30 @@ void VerDeclrParser::visitData_declaration(
 	return;
 }
 
+std::unique_ptr<hdlAst::HdlStmImport> VerDeclrParser::visitPackage_import_declaration(
+		sv2017Parser::Package_import_declarationContext *ctx) {
+	// package_import_declaration:
+	//     KW_IMPORT package_import_item ( COMMA package_import_item )* SEMI;
+	// package_import_item:
+	//     identifier DOUBLE_COLON ( MUL
+	//                              | identifier
+	//                            );
+	VerExprParser ep(this);
+	std::vector<std::unique_ptr<iHdlExprItem>> path;
+	for (auto pii : ctx->package_import_item()) {
+		for (auto id : pii->identifier()) {
+			path.push_back(ep.visitIdentifier(id));
+		}
+		if (pii->MUL()) {
+			path.push_back(HdlValueSymbol::all());
+		}
+	}
+	return create_object_with_doc<HdlStmImport>(ctx, commentParser, path);
+}
+
 void VerDeclrParser::visitList_of_variable_decl_assignments(
 		sv2017Parser::List_of_variable_decl_assignmentsContext *ctx,
-		unique_ptr<iHdlExprItem> base_type,
-		vector<unique_ptr<HdlIdDef>> &res) {
+		unique_ptr<iHdlExprItem> base_type, vector<unique_ptr<HdlIdDef>> &res) {
 	// list_of_variable_decl_assignments:
 	//     variable_decl_assignment ( COMMA variable_decl_assignment )*;
 	VerExprParser ep(this);
@@ -155,7 +170,8 @@ unique_ptr<HdlIdDef> VerDeclrParser::visitType_declaration(
 		val = create_object<HdlOp>(iwbs, move(val), HdlOpType::DOT, move(id));
 		name = ep.getIdentifierStr(ids[1]);
 	}
-	return create_object_with_doc<HdlIdDef>(ctx, commentParser, name, move(t), move(val));
+	return create_object_with_doc<HdlIdDef>(ctx, commentParser, name, move(t),
+			move(val));
 }
 void VerDeclrParser::visitNet_type_declaration(
 		sv2017Parser::Net_type_declarationContext *ctx,
