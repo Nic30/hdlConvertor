@@ -29,9 +29,31 @@ void VerProgramParser::visitTf_item_declaration(
 	//     | tf_port_declaration
 	// ;
 	auto bid = ctx->block_item_declaration();
-	if (bid)
+	if (bid) {
+		// the item may specify the type for port, we need to check it
+		// and merge it with te port definitions
+		auto prev_objs_size = objs.size();
 		VerStatementParser(this).visitBlock_item_declaration(bid, objs);
-	else {
+		for (auto it = objs.begin() + prev_objs_size; it != objs.end(); ) {
+			auto o = it->get();
+			auto o_id = dynamic_cast<HdlIdDef*>(o);
+			bool merged = false;
+			if (o_id) {
+				for (auto & port: ports) {
+					if (port->name == o_id->name) {
+						port->type = move(o_id->type);
+						port->value = move(o_id->value);
+						objs.erase(it);
+						merged = true;
+						break;
+					}
+				}
+			}
+			if (!merged) {
+				++it;
+			}
+		}
+	} else {
 		auto tpd = ctx->tf_port_declaration();
 		visitTf_port_declaration(tpd, ports);
 	}

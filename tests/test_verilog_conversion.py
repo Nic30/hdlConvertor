@@ -136,10 +136,14 @@ class VerilogConversionTC(HdlParseTC):
     def test_stm_import(self):
         self.parseWithRef("stm_import.sv", SV)
 
+    def test_function_non_ansi(self):
+        self.parseWithRef("function_non_ansi.v", VERILOG)
+
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogConversionTC('test_crc_functions'))
+    # suite.addTest(VerilogConversionTC('test_function_non_ansi'))
     suite.addTest(unittest.makeSuite(VerilogConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
