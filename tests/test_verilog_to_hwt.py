@@ -36,13 +36,18 @@ class VerilogToHwtTC(HdlParseTC):
     # def test_dsp48e1(self):
     #     self.parseWithRef("dsp48e1.v")
 
+    # def test_MMCME2_ADV(self):
+    #     self.parseWithRef("MMCME2_ADV.v")
+
     def test_uart(self):
         self.parseWithRef("uart.v")
-        
+
+    def test_binary_to_bcd(self):
+        self.parseWithRef("binary_to_bcd.v")
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VerilogToHwtTC('test_dsp48e1'))
+    # suite.addTest(VerilogToHwtTC('test_MMCME2_ADV'))
     suite.addTest(unittest.makeSuite(VerilogToHwtTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
