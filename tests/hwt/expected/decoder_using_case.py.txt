@@ -15,7 +15,7 @@ class decoder_using_case(Unit):
      Function    : decoder using case
      Coder       : Deepak Kumar Tala
     -----------------------------------------------------
-
+    
     """
     def _declr(self):
         # ports

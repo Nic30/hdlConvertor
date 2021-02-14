@@ -42,8 +42,6 @@ class VerilogToHwtTC(HdlParseTC):
     def test_uart(self):
         self.parseWithRef("uart.v")
 
-    def test_binary_to_bcd(self):
-        self.parseWithRef("binary_to_bcd.v")
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
