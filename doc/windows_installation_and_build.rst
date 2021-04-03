@@ -24,7 +24,8 @@ To begin, you'll need to download https://www.antlr.org/download/antlr-4.9-compl
 ``git clone https://github.com/Nic30/hdlConvertor.git``. Next, navigate to the root directory of the hdlConverter
 repository that you've just cloned and run the following commands:
 
-.. code:: batch
+.. code-block::
+
     pip3 install git+https://github.com/Nic30/hdlConvertorAst.git
     git clone https://github.com/antlr/antlr4
     cd antlr4/runtime/Cpp
@@ -37,24 +38,28 @@ repository that you've just cloned and run the following commands:
 
 Lastly, for installation, return to the root directory of the hdlConverter repo. This should be accessible via:
 
-.. code:: batch
+.. code-block::
+
     cd ../../../../
 
 
 Once you return to the root directory, run:
 
-.. code:: batch
+.. code-block::
+
     %PYTHON%\\python.exe -m pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git
     %PYTHON%\\python.exe -m pip install -r requirements.txt
 
 Finally, to build and install the library:
 
-.. code:: batch
+.. code-block::
+
     %PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS="C:\\The_Directory_Containing_The_JAR_File" -DANTLR4CPP_ROOT="C:\\Program Files\\LIBANTLR4" -G"Visual Studio 16 2019" -A x64
 
 Note that if you run the python in hdlConvertor root directory just after installation the python will import the hdlConvertor directory instead
 installed and module. Thus you will recieve some import errors about missing library which is build from c++.
 In order to prevent that you can delete or rename hdlConvertor direcotory or you can run python in a different folder.
 
-.. code:: batch
+.. code-block::
+
     rmdir /s /q hdlConvertor
