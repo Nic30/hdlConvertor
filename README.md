@@ -62,7 +62,7 @@ cpack # to generate .deb package
 
 Windows:
 
-Take a look at appveyor.yml. It is required to download antlr4 first and have visual studio or other c++ compiler installed.
+Take a look at appveyor.yml and [doc/windows_installation_and_build.rst](doc/windows_installation_and_build.rst). It is required to download antlr4 first and have visual studio or other c++ compiler installed.
 
 
 ## Usage
