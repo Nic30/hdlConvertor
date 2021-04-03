@@ -10,7 +10,7 @@ variables.
 You can reference the .appveyor.yml file located at https://github.com/Nic30/hdlConvertor.git for installation
 instructions as well as this document.
 (AppveyorCI is a continuous integration service and it checks the build with each commit.
- You can check the build output from clicking on the badge in the readme.)
+You can check the build output from clicking on the badge in the readme.)
 
 - In the following example, Visual Studio 16 2019 (-G "Visual Studio 16 2019") is used as the GENERATOR variable in CMake
 while x64 (-A x64) is used as the ARCHITECTURE variable. These can both also be seen from the .appveyor.yml file.
