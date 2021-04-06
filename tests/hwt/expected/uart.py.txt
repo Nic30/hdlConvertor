@@ -20,39 +20,39 @@ class uart(Unit):
     def _declr(self):
         # ports
         # Port declarations
-        self.reset = Signal(BIT)
-        self.txclk = Signal(BIT)
-        self.ld_tx_data = Signal(BIT)
-        self.tx_data = Signal(Bits(8, None))
-        self.tx_enable = Signal(BIT)
-        self.tx_out = Signal(BIT)._m()
-        self.tx_empty = Signal(BIT)._m()
-        self.rxclk = Signal(BIT)
-        self.uld_rx_data = Signal(BIT)
-        self.rx_data = Signal(Bits(8, None))._m()
-        self.rx_enable = Signal(BIT)
-        self.rx_in = Signal(BIT)
-        self.rx_empty = Signal(BIT)._m()
+        self.reset = Signal()
+        self.txclk = Signal()
+        self.ld_tx_data = Signal()
+        self.tx_data = Signal(Bits(9))
+        self.tx_enable = Signal()
+        self.tx_out = Signal()._m()
+        self.tx_empty = Signal()._m()
+        self.rxclk = Signal()
+        self.uld_rx_data = Signal()
+        self.rx_data = Signal(Bits(9))._m()
+        self.rx_enable = Signal()
+        self.rx_in = Signal()
+        self.rx_empty = Signal()._m()
         # component instances
 
     def _impl(self):
-        # internal signals
         reset, txclk, ld_tx_data, tx_data, tx_enable, tx_out, tx_empty, rxclk, uld_rx_data, rx_data, rx_enable, \
         rx_in, rx_empty = \
         self.reset, self.txclk, self.ld_tx_data, self.tx_data, self.tx_enable, self.tx_out, self.tx_empty, self.rxclk, self.uld_rx_data, self.rx_data, self.rx_enable, \
         self.rx_in, self.rx_empty
+        # internal signals
         # Internal Variables (@note: interference with ports)
-        tx_reg = self._sig("tx_reg", Bits(8, None))
-        tx_over_run = self._sig("tx_over_run", BIT)
-        tx_cnt = self._sig("tx_cnt", Bits(4, None))
-        rx_reg = self._sig("rx_reg", Bits(8, None))
-        rx_sample_cnt = self._sig("rx_sample_cnt", Bits(4, None))
-        rx_cnt = self._sig("rx_cnt", Bits(4, None))
-        rx_frame_err = self._sig("rx_frame_err", BIT)
-        rx_over_run = self._sig("rx_over_run", BIT)
-        rx_d1 = self._sig("rx_d1", BIT)
-        rx_d2 = self._sig("rx_d2", BIT)
-        rx_busy = self._sig("rx_busy", BIT)
+        tx_reg = self._sig("tx_reg", Bits(9))
+        tx_over_run = self._sig("tx_over_run")
+        tx_cnt = self._sig("tx_cnt", Bits(5))
+        rx_reg = self._sig("rx_reg", Bits(9))
+        rx_sample_cnt = self._sig("rx_sample_cnt", Bits(5))
+        rx_cnt = self._sig("rx_cnt", Bits(5))
+        rx_frame_err = self._sig("rx_frame_err")
+        rx_over_run = self._sig("rx_over_run")
+        rx_d1 = self._sig("rx_d1")
+        rx_d2 = self._sig("rx_d2")
+        rx_busy = self._sig("rx_busy")
 
         # UART RX Logic
         If(rxclk._onRisingEdge() | reset._onRisingEdge(),

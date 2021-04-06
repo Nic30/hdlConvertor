@@ -19,17 +19,17 @@ class decoder_using_case(Unit):
     """
     def _declr(self):
         # ports
-        self.binary_in = Signal(Bits(4, None))
+        self.binary_in = Signal(Bits(5))
         # 4 bit binary input
-        self.decoder_out = Signal(Bits(16, None))._m()
+        self.decoder_out = Signal(Bits(17))._m()
         # 16-bit  out
-        self.enable = Signal(BIT)
+        self.enable = Signal()
         # component instances
 
     def _impl(self):
-        # internal signals
         binary_in, decoder_out, enable = \
         self.binary_in, self.decoder_out, self.enable
+        # internal signals
 
         If(enable | binary_in,
             decoder_out(0),
