@@ -392,17 +392,23 @@ void VerGenerateParser::visitGenvar_declaration(
 		res.push_back(move(v));
 	}
 }
-unique_ptr<HdlIdDef> VerGenerateParser::visitGenvar_initialization(
+unique_ptr<iHdlObj> VerGenerateParser::visitGenvar_initialization(
 		sv2017Parser::Genvar_initializationContext *ctx) {
 	// genvar_initialization:
 	//     ( KW_GENVAR )? identifier ASSIGN constant_expression;
 	VerExprParser ep(this);
-	auto name = ep.getIdentifierStr(ctx->identifier());
 	auto _def_val = ctx->constant_expression();
 	auto def_val = ep.visitConstant_expression(_def_val);
-	auto dt = HdlValueSymbol::type_auto();
-	return create_object<HdlIdDef>(ctx, name, move(dt), move(def_val),
-			HdlDirection::DIR_INTERNAL, true);
+	if (ctx->KW_GENVAR()) {
+		auto name = ep.getIdentifierStr(ctx->identifier());
+		auto dt = HdlValueSymbol::type_auto();
+		return create_object<HdlIdDef>(ctx, name, move(dt), move(def_val),
+				HdlDirection::DIR_INTERNAL, true);
+	} else {
+		auto dst = ep.visitIdentifier(ctx->identifier());
+		return create_object_with_doc<HdlStmAssign>(ctx, commentParser,
+				move(dst), move(def_val), true);
+	}
 }
 
 unique_ptr<HdlStmExpr> VerGenerateParser::visitGenvar_iteration(
@@ -522,7 +528,7 @@ vector<HdlExprAndiHdlObj> VerGenerateParser::visitCase_generate_item(
 	auto ce = ctx->constant_expression();
 	auto gi = ctx->generate_item();
 	if (ce.size()) {
-		for (auto c: ce) {
+		for (auto c : ce) {
 			auto ce = VerExprParser(this).visitConstant_expression(c);
 			// [TODO] it would be better to copy the statements instead of parsing again
 			std::vector<std::unique_ptr<iHdlObj>> _gi;
@@ -564,8 +570,8 @@ unique_ptr<HdlStmCase> VerGenerateParser::visitCase_generate_construct(
 			}
 		}
 	}
-	return create_object_with_doc<HdlStmCase>(ctx, commentParser, HdlStmCaseType::CASE,
-			move(switchOn), cases, move(default_));
+	return create_object_with_doc<HdlStmCase>(ctx, commentParser,
+			HdlStmCaseType::CASE, move(switchOn), cases, move(default_));
 
 }
 

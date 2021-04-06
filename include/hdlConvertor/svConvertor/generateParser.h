@@ -27,7 +27,7 @@ public:
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &params);
 	void visitGenvar_declaration(sv2017Parser::Genvar_declarationContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &res);
-	std::unique_ptr<hdlAst::HdlIdDef> visitGenvar_initialization(
+	std::unique_ptr<hdlAst::iHdlObj> visitGenvar_initialization(
 			sv2017Parser::Genvar_initializationContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitGenvar_expression(
 			sv2017Parser::Genvar_expressionContext *ctx);
