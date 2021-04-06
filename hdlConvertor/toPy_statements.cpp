@@ -270,7 +270,6 @@ PyObject* ToPy::toPy(const HdlStmNop *o) {
 	return py_inst;
 }
 
-
 PyObject* ToPy::toPy(const HdlStmRepeat *o) {
 	auto py_inst = PyObject_CallObject(HdlStmRepeatCls, NULL);
 	if (!py_inst) {
@@ -371,6 +370,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 		PyErr_SetString(PyExc_TypeError, err_msg.c_str());
 		return nullptr;
 	} while (0);
+
 	if (!py_inst)
 		return nullptr;
 
@@ -381,6 +381,9 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 		return nullptr;
 	}
 	if (toPy_property(py_inst, "in_preproc", o->in_preproc))
+		return nullptr;
+
+	if (toPy(static_cast<const WithPos*>(o), py_inst))
 		return nullptr;
 
 	return py_inst;
