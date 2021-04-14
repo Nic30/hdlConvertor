@@ -127,6 +127,9 @@ class VerilogConversionTC(HdlParseTC):
     def test_crc_functions(self):
         self.parseWithRef("crc_functions.sv", SV)
 
+    def test_hierarchical_name_of_type(self):
+        self.parseWithRef("hierarchical_name_of_type.sv", SV)
+
     def test_operator_type(self):
         self.parseWithRef("operator_type.sv", SV)
 
