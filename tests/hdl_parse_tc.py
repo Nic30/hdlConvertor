@@ -8,6 +8,7 @@ from hdlConvertorAst.language import Language
 from hdlConvertorAst.to.hwt import ToHwt
 from hdlConvertorAst.to.verilog.verilog2005 import ToVerilog2005
 from hdlConvertorAst.to.vhdl.vhdl2008 import ToVhdl2008
+from hdlConvertorAst.to.json import ToJson
 
 
 try:
@@ -121,6 +122,11 @@ class HdlParseTC(unittest.TestCase):
         # if fname == "aes.v":
         #     with open(ref_file, "w") as f:
         #         f.write(res_str)
+
+        # check also that the content is serializable as json and that the repr works
+        tj = ToJson()
+        tj.visit_HdlContext(res)
+        repr(res)
 
         with open(ref_file, encoding="utf-8") as f:
             ref = f.read()
