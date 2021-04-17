@@ -288,7 +288,22 @@ std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitStructure_patte
 		return visitAssignment_pattern_key(ctx->assignment_pattern_key());
 	}
 }
-
+std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitArray_pattern_key(
+		sv2017Parser::Array_pattern_keyContext *ctx) {
+	// array_pattern_key:
+	//  constant_expression
+	//   | assignment_pattern_key
+	// ;
+	auto ce = ctx->constant_expression();
+	if (ce) {
+		VerExprParser ep(this);
+		return ep.visitConstant_expression(ce);
+	} else {
+		auto apk = ctx->assignment_pattern_key();
+		assert(apk);
+		return visitAssignment_pattern_key(apk);
+	}
+}
 std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitAssignment_pattern_key(
 		sv2017Parser::Assignment_pattern_keyContext *ctx) {
 	// assignment_pattern_key:
@@ -345,14 +360,8 @@ std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitAssignment_patt
 	} else {
 		auto ap = ctx->array_pattern_key();
 		if (ap.size()) {
-			// array_pattern_key:
-			//  constant_expression
-			// ;
-			VerExprParser ep(this);
 			for (auto _ap : ap) {
-				keys.push_back(
-						ep.visitConstant_expression(
-								_ap->constant_expression()));
+				keys.push_back(visitArray_pattern_key(_ap));
 			}
 		}
 	}
@@ -365,11 +374,13 @@ std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitAssignment_patt
 	}
 	if (keys.size()) {
 		// associate keys with items (create a list of key:expr)
-		auto new_exprs = make_unique<std::vector<std::unique_ptr<iHdlExprItem>>>();
+		auto new_exprs =
+				make_unique<std::vector<std::unique_ptr<iHdlExprItem>>>();
 		auto e_it = exprs->begin();
 		assert(keys.size() == exprs->size());
-		for (auto & k: keys) {
-			auto n_e = make_unique<HdlOp>(move(k), HdlOpType::MAP_ASSOCIATION, move(*e_it));
+		for (auto &k : keys) {
+			auto n_e = make_unique<HdlOp>(move(k), HdlOpType::MAP_ASSOCIATION,
+					move(*e_it));
 			new_exprs->push_back(move(n_e));
 			++e_it;
 		}

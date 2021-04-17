@@ -38,6 +38,8 @@ public:
 			sv2017Parser::PrimaryAssigContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitStructure_pattern_key(
 			sv2017Parser::Structure_pattern_keyContext *ctx);
+	std::unique_ptr<hdlAst::iHdlExprItem> visitArray_pattern_key(
+			sv2017Parser::Array_pattern_keyContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitAssignment_pattern_key(
 			sv2017Parser::Assignment_pattern_keyContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitAssignment_pattern(
