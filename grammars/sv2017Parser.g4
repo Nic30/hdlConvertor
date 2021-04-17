@@ -1371,6 +1371,7 @@ structure_pattern_key:
 ;
 array_pattern_key:
  constant_expression
+  | assignment_pattern_key
 ;
 assignment_pattern_key:
  KW_DEFAULT
