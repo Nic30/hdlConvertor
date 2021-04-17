@@ -5,12 +5,12 @@ options { tokenVocab=sv2017Lexer; }
  * IEEE1800-2017 grammar optimized for performance in the cost of allowing some ivalid syntax.
  * (= const/non-const is not checked, instance variants are same rule and ansi/non-ansi syntax can be mixed)
  * @note Thanks to lexer configuration abilities this grammar can be runtime configured to parse any previous
- *       SystemVerilog standard.  
+ *       SystemVerilog standard.
  *
  * This parser grammar is nearly target language independent. You have to replace "_input->LA".
  * (e.g. to "_input.LA" for Java/Python)
  */
- 
+
 /**********************************************************************************************************************/
 /* The start rule */
 source_text: ( timeunits_declaration )? ( description )* EOF;
@@ -498,19 +498,19 @@ statement_item:
   ) SEMI
   | case_statement
   | conditional_statement
-  | subroutine_call_statement 
-  | disable_statement 
-  | event_trigger     
-  | loop_statement    
-  | jump_statement    
-  | par_block         
+  | subroutine_call_statement
+  | disable_statement
+  | event_trigger
+  | loop_statement
+  | jump_statement
+  | par_block
   | procedural_timing_control_statement
-  | seq_block                          
-  | wait_statement                     
-  | procedural_assertion_statement     
-  | randsequence_statement             
-  | randcase_statement                 
-  | expect_property_statement          
+  | seq_block
+  | wait_statement
+  | procedural_assertion_statement
+  | randsequence_statement
+  | randcase_statement
+  | expect_property_statement
 ;
 cycle_delay:
    DOUBLE_HASH ( LPAREN expression RPAREN
@@ -545,7 +545,7 @@ delay_or_event_control:
 ;
 delay3:
     HASH ( LPAREN mintypmax_expression
-           ( COMMA mintypmax_expression 
+           ( COMMA mintypmax_expression
             ( COMMA mintypmax_expression )? )? RPAREN
           | delay_value
          );
@@ -579,18 +579,18 @@ action_block:
 ;
 seq_block:
     KW_BEGIN ( COLON identifier | {_input->LA(1) != COLON}? )
-        ( block_item_declaration )* ( statement_or_null )* 
+        ( block_item_declaration )* ( statement_or_null )*
     KW_END (COLON identifier |  {_input->LA(1) != COLON}?);
 par_block:
     KW_FORK ( COLON identifier | {_input->LA(1) != COLON}? )
-        ( block_item_declaration )* ( statement_or_null )* 
+        ( block_item_declaration )* ( statement_or_null )*
     join_keyword ( COLON identifier |  {_input->LA(1) != COLON}? );
 /******************************************** case ********************************************************************/
 case_statement:
     ( unique_priority )?
     ( KW_CASE LPAREN expression RPAREN KW_INSIDE ( case_inside_item )+
       | case_keyword LPAREN expression RPAREN
-        ( KW_MATCHES ( case_pattern_item )+ 
+        ( KW_MATCHES ( case_pattern_item )+
           | ( case_item )+
         )
     ) KW_ENDCASE;
@@ -664,7 +664,7 @@ wait_statement:
     KW_WAIT ( LPAREN expression RPAREN statement_or_null
               | KW_FORK SEMI
             )
-    | KW_WAIT_ORDER LPAREN hierarchical_identifier 
+    | KW_WAIT_ORDER LPAREN hierarchical_identifier
       ( COMMA hierarchical_identifier )* RPAREN action_block
 ;
 /**********************************************************************************************************************/
@@ -679,7 +679,7 @@ ordered_checker_port_connection:
     ( attribute_instance )* ( property_actual_arg )?;
 named_checker_port_connection:
     ( attribute_instance )* DOT (
-        MUL 
+        MUL
         | identifier ( LPAREN ( property_actual_arg )? RPAREN )?
     );
 procedural_assertion_statement:
@@ -929,10 +929,10 @@ bit_select: LSQUARE_BR expression RSQUARE_BR;
 identifier_with_bit_select: identifier ( bit_select )*;
 // '::' separated then '.' separated
 package_or_class_scoped_hier_id_with_select:
-    package_or_class_scoped_path ( bit_select )* 
-    ( DOT identifier_with_bit_select )* 
+    package_or_class_scoped_path ( bit_select )*
+    ( DOT identifier_with_bit_select )*
     ( LSQUARE_BR expression ( operator_plus_minus )? COLON expression RSQUARE_BR )?;
-    
+
 package_or_class_scoped_path_item: identifier ( parameter_value_assignment )?;
 // '::' separated
 package_or_class_scoped_path:
@@ -1183,7 +1183,7 @@ param_expression:
     | data_type
 ;
 constant_param_expression: param_expression ;
-                  
+
 unpacked_dimension: LSQUARE_BR range_expression RSQUARE_BR;
 packed_dimension: LSQUARE_BR  ( range_expression )? RSQUARE_BR;
 variable_dimension:
@@ -1439,7 +1439,7 @@ constraint_block_item:
    | constraint_expression
 ;
 constraint_expression:
-    KW_IF LPAREN expression RPAREN constraint_set 
+    KW_IF LPAREN expression RPAREN constraint_set
     ( KW_ELSE constraint_set | {_input->LA(1) != KW_ELSE}? )
     | ( KW_DISABLE KW_SOFT primary
         | ( KW_SOFT )? expression_or_dist
@@ -1565,7 +1565,7 @@ list_of_path_delay_expressions:
       tz1_path_delay_expression COMMA
       t1z_path_delay_expression COMMA
       tz0_path_delay_expression
-      ( COMMA 
+      ( COMMA
         t0x_path_delay_expression COMMA
         tx1_path_delay_expression COMMA
         t1x_path_delay_expression COMMA
@@ -1707,7 +1707,7 @@ system_timing_check:
   | dolar_nochange_timing_check
 ;
 dolar_setup_timing_check:
-    KW_DOLAR_SETUP LPAREN 
+    KW_DOLAR_SETUP LPAREN
         timing_check_event COMMA
         timing_check_event COMMA
         timing_check_limit ( COMMA ( notifier )? )?
@@ -1723,8 +1723,8 @@ dolar_setuphold_timing_check:
         timing_check_event COMMA
         timing_check_event COMMA
         timing_check_limit COMMA
-        timing_check_limit ( COMMA 
-            ( notifier )? ( COMMA 
+        timing_check_limit ( COMMA
+            ( notifier )? ( COMMA
                 ( timestamp_condition )? ( COMMA
                     ( timecheck_condition )? ( COMMA
                         ( delayed_reference )? ( COMMA
@@ -1761,7 +1761,7 @@ dolar_skew_timing_check:
         timing_check_limit ( COMMA ( notifier )? )?
     RPAREN SEMI;
 dolar_timeskew_timing_check:
-    KW_DOLAR_TIMESKEW LPAREN 
+    KW_DOLAR_TIMESKEW LPAREN
         timing_check_event COMMA
         timing_check_event COMMA
         timing_check_limit ( COMMA
@@ -1776,7 +1776,7 @@ dolar_fullskew_timing_check:
         timing_check_limit COMMA
         timing_check_limit ( COMMA
             ( notifier )? ( COMMA
-        	     ( event_based_flag )? ( COMMA 
+        	     ( event_based_flag )? ( COMMA
         	          ( remain_active_flag )? )? )? )?
     RPAREN SEMI;
 dolar_period_timing_check:
@@ -1830,7 +1830,7 @@ extern_tf_declaration:
               ) SEMI;
 function_declaration:
     KW_FUNCTION ( lifetime )?
-    ( function_data_type_or_implicit )? 
+    ( function_data_type_or_implicit )?
     task_and_function_declaration_common
     KW_ENDFUNCTION ( COLON identifier | {_input->LA(1) != COLON}? )
 ;
@@ -1884,7 +1884,7 @@ checker_port_direction:
     | KW_OUTPUT
 ;
 checker_declaration:
-    KW_CHECKER identifier ( LPAREN ( checker_port_list )? RPAREN )? SEMI 
+    KW_CHECKER identifier ( LPAREN ( checker_port_list )? RPAREN )? SEMI
     ( ( attribute_instance )* checker_or_generate_item )*
     KW_ENDCHECKER ( COLON identifier | {_input->LA(1) != COLON}? );
 class_declaration:
@@ -2063,7 +2063,7 @@ class_method:
 class_constructor_prototype:
    KW_FUNCTION KW_NEW ( LPAREN tf_port_list RPAREN )? SEMI;
 class_item:
- ( attribute_instance )* 
+ ( attribute_instance )*
    ( class_property
      | class_method
      | class_constraint
@@ -2115,7 +2115,7 @@ input_terminal: expression;
 output_terminal: net_lvalue;
 // udp_instantiation is designed to match only udp_instantiation which can not match other instantiations
 udp_instantiation:
- identifier ( drive_strength ( delay2 )? ( name_of_instance )? 
+ identifier ( drive_strength ( delay2 )? ( name_of_instance )?
  			  | delay2 ( name_of_instance )? )?
  udp_instance_body ( COMMA udp_instance )* SEMI;
 udp_instance:
@@ -2189,7 +2189,7 @@ conditional_generate_construct:
     | case_generate_construct
 ;
 if_generate_construct:
-    KW_IF LPAREN constant_expression RPAREN generate_item 
+    KW_IF LPAREN constant_expression RPAREN generate_item
     ( KW_ELSE generate_item | {_input->LA(1) != KW_ELSE}? );
 case_generate_construct:
     KW_CASE LPAREN constant_expression RPAREN ( case_generate_item )+ KW_ENDCASE;
@@ -2203,7 +2203,7 @@ generate_begin_end_block:
     KW_END ( COLON identifier | {_input->LA(1) != COLON}? )
 ;
 generate_item:
-    ( attribute_instance )* 
+    ( attribute_instance )*
 		( module_or_generate_item
           | extern_tf_declaration
         )
