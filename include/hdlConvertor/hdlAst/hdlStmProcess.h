@@ -7,7 +7,7 @@ namespace hdlConvertor {
 namespace hdlAst {
 
 enum HdlStmProcessTriggerConstrain {
-	NONE, COMB, FF, LATCH
+	ALWAYS_NONE, ALWAYS_COMB, ALWAYS_FF, ALWAYS_LATCH
 };
 
 /*

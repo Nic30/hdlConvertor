@@ -78,12 +78,12 @@ unique_ptr<iHdlStatement> VerStatementParser::visitAlways_construct(
 			stm = move(_proc);
 		}
 		if (ak->KW_ALWAYS_COMB()) {
-			proc->trigger_constrain = HdlStmProcessTriggerConstrain::COMB;
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::ALWAYS_COMB;
 		} else if (ak->KW_ALWAYS_FF()) {
-			proc->trigger_constrain = HdlStmProcessTriggerConstrain::FF;
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::ALWAYS_FF;
 		} else {
 			assert(ak->KW_ALWAYS_LATCH());
-			proc->trigger_constrain = HdlStmProcessTriggerConstrain::LATCH;
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::ALWAYS_LATCH;
 		}
 	}
 
@@ -339,10 +339,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 	//     | KW_CASEZ
 	//     | KW_CASEX
 	// ;
-	if (ctx->unique_priority()) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitCase_statement.unique_priority", ctx);
-	}
+
 	VerExprParser ep(this);
 	auto switchOn = ep.visitExpression(ctx->expression());
 	std::vector<HdlExprAndiHdlObj> cases;
@@ -381,9 +378,21 @@ unique_ptr<iHdlStatement> VerStatementParser::visitCase_statement(
 		}
 
 	}
-	return create_object_with_doc<HdlStmCase>(ctx, commentParser, case_t,
+	auto stm = create_object_with_doc<HdlStmCase>(ctx, commentParser, case_t,
 			move(switchOn), cases, move(default_));
 
+	auto up = ctx->unique_priority();
+	if (up) {
+		if (up->KW_PRIORITY()) {
+			stm->uniq_constrain = HdlStmCaseUniqConstrain::CASE_UNIQ_PRIORITY;
+		} else if (up->KW_UNIQUE()) {
+			stm->uniq_constrain = HdlStmCaseUniqConstrain::CASE_UNIQ_UNIQUE;
+		} else  {
+			assert(up->KW_UNIQUE0());
+			stm->uniq_constrain = HdlStmCaseUniqConstrain::CASE_UNIQ_UNIQUE0;
+		}
+	}
+	return stm;
 }
 std::vector<HdlExprAndiHdlObj> VerStatementParser::visitCase_item(
 		sv2017Parser::Case_itemContext *ctx) {

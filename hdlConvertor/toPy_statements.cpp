@@ -60,11 +60,34 @@ PyObject* ToPy::toPy(const HdlStmBlock *o) {
 
 	return py_inst;
 }
+PyObject* ToPy::toPy(const HdlStmCaseUniqConstrain o) {
+	const char * name = nullptr;
 
+	switch(o) {
+	case HdlStmCaseUniqConstrain::CASE_UNIQ_PRIORITY:
+		name = "PRIORITY";
+		break;
+	case HdlStmCaseUniqConstrain::CASE_UNIQ_UNIQUE:
+		name = "UNIQUE";
+		break;
+	case HdlStmCaseUniqConstrain::CASE_UNIQ_UNIQUE0:
+		name = "UNIQUE0";
+		break;
+	default:
+		PyErr_SetString(PyExc_ValueError, "Invalid value of HdlStmCaseUniqConstrain");
+		return nullptr;
+	}
+
+	return PyObject_GetAttrString(HdlStmCaseUniqConstrainEnum, name);
+}
 PyObject* ToPy::toPy(const HdlStmCase *o) {
 	auto py_inst = PyObject_CallObject(HdlStmCaseCls, NULL);
 	if (!py_inst) {
 		return nullptr;
+	}
+	if (o->uniq_constrain != HdlStmCaseUniqConstrain::CASE_UNIQ_NONE) {
+		if (toPy_property(py_inst, "uniq_constrain", o->uniq_constrain))
+			return nullptr;
 	}
 	if (toPy_property(py_inst, "type", o->type))
 		return nullptr;
@@ -211,13 +234,13 @@ PyObject* ToPy::toPy(const HdlStmProcessTriggerConstrain o) {
 	const char * name = nullptr;
 
 	switch(o) {
-	case HdlStmProcessTriggerConstrain::FF:
+	case HdlStmProcessTriggerConstrain::ALWAYS_FF:
 		name = "FF";
 		break;
-	case HdlStmProcessTriggerConstrain::COMB:
+	case HdlStmProcessTriggerConstrain::ALWAYS_COMB:
 		name = "COMB";
 		break;
-	case HdlStmProcessTriggerConstrain::LATCH:
+	case HdlStmProcessTriggerConstrain::ALWAYS_LATCH:
 		name = "LATCH";
 		break;
 	default:
@@ -232,7 +255,7 @@ PyObject* ToPy::toPy(const HdlStmProcess *o) {
 	if (!py_inst) {
 		return nullptr;
 	}
-	if (o->trigger_constrain != HdlStmProcessTriggerConstrain::NONE) {
+	if (o->trigger_constrain != HdlStmProcessTriggerConstrain::ALWAYS_NONE) {
 		if (toPy_property(py_inst, "trigger_constrain", o->trigger_constrain))
 			return nullptr;
 	}

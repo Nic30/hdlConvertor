@@ -51,6 +51,7 @@ ToPy::ToPy() {
 	import(HdlStmAssignCls, "HdlStmAssign");
 	import(HdlStmProcessTriggerConstrainEnum, "HdlStmProcessTriggerConstrain");
 	import(HdlStmProcessCls, "HdlStmProcess");
+	import(HdlStmCaseUniqConstrainEnum, "HdlStmCaseUniqConstrain");
 	import(HdlStmCaseTypeEnum, "HdlStmCaseType");
 	import(HdlStmCaseCls, "HdlStmCase");
 	import(HdlStmForCls, "HdlStmFor");
@@ -395,6 +396,7 @@ ToPy::~ToPy() {
 	Py_XDECREF(HdlStmForInCls);
 	Py_XDECREF(HdlStmCaseCls);
 	Py_XDECREF(HdlStmCaseTypeEnum);
+	Py_XDECREF(HdlStmCaseUniqConstrainEnum);
 	Py_XDECREF(HdlStmProcessCls);
 	Py_XDECREF(HdlStmProcessTriggerConstrainEnum);
 	Py_XDECREF(HdlStmAssignCls);

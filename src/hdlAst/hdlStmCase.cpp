@@ -20,15 +20,16 @@ const char* HdlStmCaseType_toString(HdlStmCaseType o) {
 HdlStmCase::HdlStmCase(HdlStmCaseType _type,
 		std::unique_ptr<iHdlExprItem> _select_on,
 		std::vector<HdlExprAndiHdlObj> &_cases) :
-		iHdlStatement(), type(_type), select_on(move(_select_on)), cases(
-				move(_cases)) {
+		iHdlStatement(), uniq_constrain(HdlStmCaseUniqConstrain::CASE_UNIQ_NONE), type(
+				_type), select_on(move(_select_on)), cases(move(_cases)) {
 }
 HdlStmCase::HdlStmCase(HdlStmCaseType _type,
 		std::unique_ptr<iHdlExprItem> _select_on,
 		std::vector<HdlExprAndiHdlObj> &_cases,
 		std::unique_ptr<iHdlObj> _default_) :
-		iHdlStatement(), type(_type), select_on(move(_select_on)), cases(
-				move(_cases)), default_(move(_default_)) {
+		iHdlStatement(), uniq_constrain(HdlStmCaseUniqConstrain::CASE_UNIQ_NONE), type(
+				_type), select_on(move(_select_on)), cases(move(_cases)), default_(
+				move(_default_)) {
 }
 HdlStmCase::HdlStmCase(std::unique_ptr<iHdlExprItem> _select_on,
 		std::vector<HdlExprAndiHdlObj> &_cases) :

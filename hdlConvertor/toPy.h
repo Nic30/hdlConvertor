@@ -57,6 +57,7 @@ class ToPy {
 	PyObject *HdlStmAssignCls;
 	PyObject *HdlStmProcessTriggerConstrainEnum;
 	PyObject *HdlStmProcessCls;
+	PyObject *HdlStmCaseUniqConstrainEnum;
 	PyObject *HdlStmCaseTypeEnum;
 	PyObject *HdlStmCaseCls;
 	PyObject *HdlStmForCls;
@@ -219,6 +220,7 @@ public:
 	PyObject* toPy(const hdlAst::HdlStmBlockJoinType o);
 	PyObject* toPy(const hdlAst::HdlStmBlock *o);
 	PyObject* toPy(const hdlAst::HdlStmCaseType o);
+	PyObject* toPy(const hdlAst::HdlStmCaseUniqConstrain o);
 	PyObject* toPy(const hdlAst::HdlStmCase *o);
 	PyObject* toPy(const hdlAst::HdlStmFor *o);
 	PyObject* toPy(const hdlAst::HdlStmForIn *o);
