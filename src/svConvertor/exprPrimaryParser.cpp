@@ -7,13 +7,11 @@
 #include <hdlConvertor/notImplementedLogger.h>
 #include <hdlConvertor/createObject.h>
 
-
 namespace hdlConvertor {
 namespace sv {
 
 using namespace std;
 using namespace hdlConvertor::hdlAst;
-
 
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimary(
 		sv2017Parser::PrimaryContext *ctx) {
@@ -265,9 +263,120 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryRandomize2(
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryAssig(
 		sv2017Parser::PrimaryAssigContext *ctx) {
 	//     | assignment_pattern_expression               #PrimaryAssig
+	// assignment_pattern_expression:
+	//  ( assignment_pattern_expression_type )? assignment_pattern;
+	auto ape = ctx->assignment_pattern_expression();
+	if (ape->assignment_pattern_expression_type()) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitPrimaryAssig assignment_pattern_expression_type",
+				ctx);
+	}
+	return visitAssignment_pattern(ape->assignment_pattern());
+}
 
-	NotImplementedLogger::print("VerExprPrimaryParser.visitPrimaryAssig", ctx);
-	return create_object<HdlExprNotImplemented>(ctx);
+std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitStructure_pattern_key(
+		sv2017Parser::Structure_pattern_keyContext *ctx) {
+	// structure_pattern_key:
+	//  identifier
+	//   | assignment_pattern_key
+	// ;
+	auto i = ctx->identifier();
+	if (i) {
+		VerExprParser ep(this);
+		return ep.visitIdentifier(i);
+	} else {
+		return visitAssignment_pattern_key(ctx->assignment_pattern_key());
+	}
+}
+
+std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitAssignment_pattern_key(
+		sv2017Parser::Assignment_pattern_keyContext *ctx) {
+	// assignment_pattern_key:
+	//  KW_DEFAULT
+	//   | integer_type
+	//   | non_integer_type
+	//   | package_or_class_scoped_path
+	// ;
+	if (ctx->KW_DEFAULT()) {
+		return make_unique<HdlValueId>("default");
+	}
+	auto it = ctx->integer_type();
+	if (it) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitAssignment_pattern_key integer_type",
+				ctx);
+		return create_object<HdlExprNotImplemented>(ctx);
+	}
+	auto nit = ctx->non_integer_type();
+	if (nit) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitAssignment_pattern non_integer_type",
+				ctx);
+		return create_object<HdlExprNotImplemented>(ctx);
+	}
+	auto pcsp = ctx->package_or_class_scoped_path();
+	assert(pcsp);
+	VerExprParser ep(this);
+	return ep.visitPackage_or_class_scoped_path(pcsp);
+}
+
+std::unique_ptr<hdlAst::iHdlExprItem> VerExprPrimaryParser::visitAssignment_pattern(
+		sv2017Parser::Assignment_patternContext *ctx) {
+	// assignment_pattern:
+	//     APOSTROPHE_LBRACE (
+	//         expression ( COMMA expression )*
+	//         | structure_pattern_key COLON expression
+	//            ( COMMA structure_pattern_key COLON expression )*
+	//         | array_pattern_key COLON expression
+	//            ( COMMA array_pattern_key COLON expression )*
+	//         | constant_expression LBRACE expression ( COMMA expression )* RBRACE
+	//     )? RBRACE;
+	std::vector<std::unique_ptr<iHdlExprItem>> keys;
+	auto exprs = make_unique<std::vector<std::unique_ptr<iHdlExprItem>>>();
+	for (auto e : ctx->expression()) {
+		auto o = VerExprParser(this).visitExpression(e);
+		exprs->push_back(move(o));
+	}
+	auto sp = ctx->structure_pattern_key();
+	if (sp.size()) {
+		for (auto _sp : sp) {
+			keys.push_back(visitStructure_pattern_key(_sp));
+		}
+	} else {
+		auto ap = ctx->array_pattern_key();
+		if (ap.size()) {
+			// array_pattern_key:
+			//  constant_expression
+			// ;
+			VerExprParser ep(this);
+			for (auto _ap : ap) {
+				keys.push_back(
+						ep.visitConstant_expression(
+								_ap->constant_expression()));
+			}
+		}
+	}
+	auto ce = ctx->constant_expression();
+	if (ce) {
+		NotImplementedLogger::print(
+				"VerExprPrimaryParser.visitAssignment_pattern constant_expression",
+				ctx);
+		return create_object<HdlExprNotImplemented>(ctx);
+	}
+	if (keys.size()) {
+		// associate keys with items (create a list of key:expr)
+		auto new_exprs = make_unique<std::vector<std::unique_ptr<iHdlExprItem>>>();
+		auto e_it = exprs->begin();
+		assert(keys.size() == exprs->size());
+		for (auto & k: keys) {
+			auto n_e = make_unique<HdlOp>(move(k), HdlOpType::MAP_ASSOCIATION, move(*e_it));
+			new_exprs->push_back(move(n_e));
+			++e_it;
+		}
+		exprs = move(new_exprs);
+	}
+
+	return make_unique<HdlValueArr>(move(exprs));
 }
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryTypeRef(
 		sv2017Parser::PrimaryTypeRefContext *ctx) {
