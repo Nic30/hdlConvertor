@@ -207,13 +207,35 @@ PyObject* ToPy::toPy(const HdlStmWhile *o) {
 		return nullptr;
 	return py_inst;
 }
+PyObject* ToPy::toPy(const HdlStmProcessTriggerConstrain o) {
+	const char * name = nullptr;
 
+	switch(o) {
+	case HdlStmProcessTriggerConstrain::FF:
+		name = "FF";
+		break;
+	case HdlStmProcessTriggerConstrain::COMB:
+		name = "COMB";
+		break;
+	case HdlStmProcessTriggerConstrain::LATCH:
+		name = "LATCH";
+		break;
+	default:
+		PyErr_SetString(PyExc_ValueError, "Invalid value of HdlStmProcessTriggerConstrain");
+		return nullptr;
+	}
+
+	return PyObject_GetAttrString(HdlStmProcessTriggerConstrainEnum, name);
+}
 PyObject* ToPy::toPy(const HdlStmProcess *o) {
 	auto py_inst = PyObject_CallObject(HdlStmProcessCls, NULL);
 	if (!py_inst) {
 		return nullptr;
 	}
-
+	if (o->trigger_constrain != HdlStmProcessTriggerConstrain::NONE) {
+		if (toPy_property(py_inst, "trigger_constrain", o->trigger_constrain))
+			return nullptr;
+	}
 	if (o->sensitivity_list) {
 		auto sl = PyList_New(0);
 		if (!sl) {

@@ -6,6 +6,10 @@
 namespace hdlConvertor {
 namespace hdlAst {
 
+enum HdlStmProcessTriggerConstrain {
+	NONE, COMB, FF, LATCH
+};
+
 /*
  * HDL AST node for HDL process construct
  * (Verilog always and assign constructs, VHDL process and top level assignments)
@@ -17,6 +21,7 @@ namespace hdlAst {
 class HdlStmProcess: public iHdlStatement {
 public:
 
+	HdlStmProcessTriggerConstrain trigger_constrain;
 	std::unique_ptr<std::vector<std::unique_ptr<iHdlExprItem>>> sensitivity_list;
 	std::unique_ptr<iHdlStatement> body;
 

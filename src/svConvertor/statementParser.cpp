@@ -63,13 +63,31 @@ unique_ptr<iHdlStatement> VerStatementParser::visitAlways_construct(
 	// always_construct:
 	//     always_keyword statement;
 	//
-	if (!ctx->always_keyword()->KW_ALWAYS()) {
-		NotImplementedLogger::print(
-				"VerStatementParser.visitAlways_construct.always_keyword - non pure always",
-				ctx->always_keyword());
+	// note: the actual sensitivity list of always construct is deeper (in procedural_timing_control_statement)
+
+	auto _stm = ctx->statement();
+	auto stm = visitStatement(_stm);
+	auto ak = ctx->always_keyword();
+	if (ak->KW_ALWAYS()) {
+	} else {
+		auto proc = dynamic_cast<HdlStmProcess*>(stm.get());
+		if (!proc) {
+			auto _proc = create_object_with_doc<HdlStmProcess>(ctx, commentParser);
+			_proc->body = move(stm);
+			proc = _proc.get();
+			stm = move(_proc);
+		}
+		if (ak->KW_ALWAYS_COMB()) {
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::COMB;
+		} else if (ak->KW_ALWAYS_FF()) {
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::FF;
+		} else {
+			assert(ak->KW_ALWAYS_LATCH());
+			proc->trigger_constrain = HdlStmProcessTriggerConstrain::LATCH;
+		}
 	}
-	auto stm = ctx->statement();
-	return visitStatement(stm);
+
+	return stm;
 }
 
 unique_ptr<iHdlStatement> VerStatementParser::visitSubroutine_call_statement(

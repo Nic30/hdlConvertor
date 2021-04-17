@@ -21,6 +21,13 @@ public:
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 	void visitGenerate_item(sv2017Parser::Generate_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
+	void visitModule_or_generate_or_interface_or_checker_item(
+			sv2017Parser::Module_or_generate_or_interface_or_checker_itemContext *ctx,
+			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
+	void visitModule_or_generate_or_interface_item(
+			sv2017Parser::Module_or_generate_or_interface_itemContext *ctx,
+			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res,
+			std::vector<std::unique_ptr<hdlAst::HdlIdDef>> &params);
 	void visitModule_or_generate_item(
 			sv2017Parser::Module_or_generate_itemContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res,

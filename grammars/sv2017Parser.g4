@@ -413,37 +413,7 @@ interface_item:
   | generate_region
   | ( attribute_instance )*
     (
-      ( default_clocking_or_dissable_construct
-          | local_parameter_declaration
-          | parameter_declaration
-      )? SEMI
-      | net_declaration
-      | data_declaration
-      | task_declaration
-      | function_declaration
-      | checker_declaration
-      | dpi_import_export
-      | extern_constraint_declaration
-      | class_declaration
-      | interface_class_declaration
-      | class_constructor_declaration
-      | covergroup_declaration
-      | property_declaration
-      | sequence_declaration
-      | let_declaration
-      | genvar_declaration
-      | clocking_declaration
-      | module_or_interface_or_program_or_udp_instantiation
-      | assertion_item
-      | bind_directive
-      | continuous_assign
-      | net_alias
-      | initial_construct
-      | final_construct
-      | always_construct
-      | loop_generate_construct
-      | conditional_generate_construct
-      | elaboration_system_task
+      module_or_generate_or_interface_item
       | extern_tf_declaration
     )
   | program_declaration
@@ -2017,20 +1987,8 @@ continuous_assign:
               ) SEMI;
 checker_or_generate_item:
  ( KW_RAND )? data_declaration
-  | function_declaration
-  | checker_declaration
-  | property_declaration
-  | sequence_declaration
-  | let_declaration
-  | covergroup_declaration
-  | genvar_declaration
-  | clocking_declaration
+  | module_or_generate_or_interface_or_checker_item
   | ( default_clocking_or_dissable_construct )? SEMI
-  | initial_construct
-  | always_construct
-  | final_construct
-  | assertion_item
-  | continuous_assign
   | program_generate_item
 ;
 constraint_prototype:
@@ -2217,40 +2175,48 @@ program_generate_item:
     | generate_region
     | elaboration_system_task
 ;
-module_or_generate_item:
-    parameter_override
-    | gate_instantiation
-    | udp_instantiation
-    | module_or_interface_or_program_or_udp_instantiation
+module_or_generate_or_interface_or_checker_item:
+    function_declaration
+    | checker_declaration
+    | property_declaration
+    | sequence_declaration
+    | let_declaration
+    | covergroup_declaration
+    | genvar_declaration
+    | clocking_declaration
+    | initial_construct
+    | always_construct
+    | final_construct
+    | assertion_item
+    | continuous_assign
+;
+module_or_generate_or_interface_item:
+    module_or_interface_or_program_or_udp_instantiation
     | ( default_clocking_or_dissable_construct
         | local_parameter_declaration
-        | parameter_declaration )? SEMI
+        | parameter_declaration
+    )? SEMI
     | net_declaration
     | data_declaration
     | task_declaration
-    | function_declaration
-    | checker_declaration
+    | module_or_generate_or_interface_or_checker_item
     | dpi_import_export
     | extern_constraint_declaration
     | class_declaration
     | interface_class_declaration
     | class_constructor_declaration
-    | covergroup_declaration
-    | property_declaration
-    | sequence_declaration
-    | let_declaration
-    | genvar_declaration
-    | clocking_declaration
-    | assertion_item
     | bind_directive
-    | continuous_assign
     | net_alias
-    | initial_construct
-    | final_construct
-    | always_construct
     | loop_generate_construct
     | conditional_generate_construct
     | elaboration_system_task
+;
+
+module_or_generate_item:
+    parameter_override
+    | gate_instantiation
+    | udp_instantiation
+    | module_or_generate_or_interface_item
 ;
 /**********************************************************************************************************************/
 elaboration_system_task:
