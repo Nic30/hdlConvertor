@@ -114,9 +114,9 @@ any_keyword:
     | KW_NULL
 ;
 name_literal:
-        identifier     
-       | operator_symbol   
-       | CHARACTER_LITERAL 
+        identifier
+       | operator_symbol
+       | CHARACTER_LITERAL
 
 ;
 name:
@@ -292,7 +292,7 @@ scalar_type_definition:
 range_constraint: KW_RANGE range;
 range:
       attribute_name
-      | simple_expression direction simple_expression
+      | explicit_range
 ;
 direction: KW_TO | KW_DOWNTO;
 enumeration_type_definition:
@@ -425,7 +425,7 @@ variable_declaration:
 file_declaration:
       KW_FILE identifier_list COLON subtype_indication ( file_open_information )? SEMI
 ;
-file_open_information: ( KW_OPEN expression )? KW_IS 
+file_open_information: ( KW_OPEN expression )? KW_IS
 	(KW_IN | KW_OUT)? // v87 only
     file_logical_name;
 file_logical_name: expression;
@@ -810,7 +810,7 @@ selected_force_assignment:
           target CONASGN KW_FORCE ( force_mode )? selected_expressions SEMI
 ;
 selected_expressions:
-      expression KW_WHEN choices ( COMMA 
+      expression KW_WHEN choices ( COMMA
       expression KW_WHEN choices )*
 ;
 variable_assignment_statement:

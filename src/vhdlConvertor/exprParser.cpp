@@ -83,16 +83,16 @@ unique_ptr<iHdlExprItem> VhdlExprParser::visitRange(
 		vhdlParser::RangeContext *ctx) {
 	//range:
 	//      attribute_name
-	//      | simple_expression direction simple_expression
+	//      | explicit_range
 	//;
 	auto an = ctx->attribute_name();
-	if (an)
+	if (an) {
 		return VhdlReferenceParser::visitAttribute_name(an);
-	auto se = ctx->simple_expression();
-	auto a = visitSimple_expression(se[0]);
-	auto o = visitDirection(ctx->direction());
-	auto b = visitSimple_expression(se[1]);
-	return create_object<HdlOp>(ctx, move(a), o, move(b));
+	} else {
+		auto er = ctx->explicit_range();
+		assert(er);
+		return visitExplicit_range(er);
+	}
 }
 
 unique_ptr<iHdlExprItem> VhdlExprParser::visitActual_part(
