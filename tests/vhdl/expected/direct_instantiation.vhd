@@ -5,15 +5,16 @@ ENTITY test_module IS
         a : integer
     );
     PORT(
-        clk : std_logic
+        clk : IN std_logic
     );
 END ENTITY;
+
 ENTITY test_entity_top IS
 END ENTITY;
 
 ARCHITECTURE test OF test_entity_top IS
 BEGIN
-    test_inst : ENTITY work.test_module GENERIC MAP(
+    test_inst: ENTITY work.test_module GENERIC MAP(
         a => 4
     ) PORT MAP(
         clk => clk

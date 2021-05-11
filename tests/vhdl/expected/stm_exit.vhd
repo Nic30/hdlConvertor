@@ -7,7 +7,7 @@ ARCHITECTURE test OF test_entity_top IS
 BEGIN
     PROCESS
     BEGIN
-        OuterLoop : LOOP
+        OuterLoop: LOOP
             FOR i IN 3 TO 5 LOOP
                 IF i = 5 THEN
                     EXIT OuterLoop;
