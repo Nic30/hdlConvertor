@@ -57,6 +57,9 @@ include/hdlConvertor/vhdlConvertor/vhdlParser/*.h
 .pydevproject
 .settings/
 
+# idea project files
+grammars/.idea
+
 # coverage files
 *.gcda
 coverage.info
