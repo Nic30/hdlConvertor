@@ -21,7 +21,6 @@ namespace vhdl {
 using namespace std;
 using namespace hdlConvertor::hdlAst;
 
-
 bool is_others(unique_ptr<iHdlExprItem> &e) {
 	auto _e = dynamic_cast<HdlValueSymbol*>(e.get());
 	return (_e && _e->symb == HdlValueSymbol_t::symb_OTHERS);
@@ -41,86 +40,134 @@ unique_ptr<HdlStmBlock> VhdlStatementParser::visitSequence_of_statements(
 	return b;
 }
 
+template<typename CTX_T, typename STM_CTX_T>
+unique_ptr<iHdlStatement> visitNextOrExit(CTX_T ctx,
+		unique_ptr<HdlValueId> fn_name, STM_CTX_T next_or_exit_stm_ctx) {
+	// (KW_NEXT | KW_EXIT) ( label )? ( KW_WHEN condition )? SEMI
+	vector<unique_ptr<iHdlExprItem>> args;
+	auto label = next_or_exit_stm_ctx->label();
+	if (label) {
+		// label_colon
+		// : identifier COLON
+		// ;
+		args.push_back(VhdlLiteralParser::visitIdentifier(label->identifier()));
+	} else {
+		args.push_back(HdlValueSymbol::null());
+	}
+	auto cond = next_or_exit_stm_ctx->condition();
+	if (cond) {
+		auto c = VhdlExprParser::visitCondition(cond);
+		args.push_back(move(c));
+	}
+	auto call = HdlOp::call(ctx, move(fn_name), args);
+	auto stm = create_object<HdlStmExpr>(ctx, move(call));
+
+	return stm;
+}
+
 unique_ptr<iHdlStatement> VhdlStatementParser::visitSequential_statement(
 		vhdlParser::Sequential_statementContext *ctx) {
 	// sequential_statement:
-	//       wait_statement
-	//       | assertion_statement
-	//       | report_statement
-	//       | signal_assignment_statement
-	//       | variable_assignment_statement
-	//       | procedure_call_statement
-	//       | if_statement
-	//       | case_statement
-	//       | loop_statement
-	//       | next_statement
-	//       | exit_statement
-	//       | return_statement
-	//       | null_statement
+	//       ( label COLON )?
+	//       ( wait_statement
+	//         | assertion_statement
+	//         | report_statement
+	//         | signal_assignment_statement
+	//         | variable_assignment_statement
+	//         | procedure_call_statement
+	//         | if_statement
+	//         | case_statement
+	//         | loop_statement
+	//         | next_statement
+	//         | exit_statement
+	//         | return_statement
+	//         | null_statement
+	//       )
 	// ;
-	auto ws = ctx->wait_statement();
-	if (ws) {
-		return visitWait_statement(ws);
+	unique_ptr<iHdlStatement> stm;
+	do {
+		auto ws = ctx->wait_statement();
+		if (ws) {
+			stm = visitWait_statement(ws);
+			break;
+		}
+
+		auto as = ctx->assertion_statement();
+		if (as) {
+			stm = visitAssertion_statement(as);
+			break;
+		}
+		auto r = ctx->report_statement();
+		if (r) {
+			stm = visitReport_statement(r);
+			break;
+		}
+		auto sas = ctx->signal_assignment_statement();
+		if (sas) {
+			stm = visitSignal_assignment_statement(sas);
+			break;
+		}
+		auto vas = ctx->variable_assignment_statement();
+		if (vas) {
+			stm = visitVariable_assignment_statement(vas);
+			break;
+		}
+		auto pcs = ctx->procedure_call_statement();
+		if (pcs) {
+			stm = create_object<HdlStmExpr>(ctx,
+					VhdlExprParser::visitProcedure_call_statement(pcs));
+			break;
+		}
+		auto ifStm = ctx->if_statement();
+		if (ifStm) {
+			stm = visitIf_statement(ifStm);
+			break;
+		}
+		auto c = ctx->case_statement();
+		if (c) {
+			stm = visitCase_statement(c);
+			break;
+		}
+		auto l = ctx->loop_statement();
+		if (l) {
+			stm = visitLoop_statement(l);
+			break;
+		}
+		auto ns = ctx->next_statement();
+		if (ns) {
+			// next_statement:
+			// 	      KW_NEXT ( label )? ( KW_WHEN condition )? SEMI
+			// ;
+			auto fn_name = create_object<HdlValueId>(ns->KW_NEXT(), "NEXT");
+			stm = visitNextOrExit(ctx, move(fn_name), ns);
+			break;
+		}
+
+		auto es = ctx->exit_statement();
+		if (es) {
+			// exit_statement:
+			//       KW_EXIT ( label )? ( KW_WHEN condition )? SEMI
+			// ;
+			auto fn_name = create_object<HdlValueId>(es->KW_EXIT(), "EXIT");
+			stm = visitNextOrExit(ctx, move(fn_name), es);
+			break;
+		}
+
+		auto rt = ctx->return_statement();
+		if (rt) {
+			stm = visitReturn_statement(rt);
+			break;
+		}
+		auto nl = ctx->null_statement();
+		assert(nl);
+		stm = visitNull_statement(nl);
+	} while (0);
+	auto label = ctx->label();
+	if (label) {
+		auto l = VhdlLiteralParser::visitLabel(label);
+		stm->labels.insert(stm->labels.begin(), l); // push_front
 	}
-
-	auto as = ctx->assertion_statement();
-	if (as)
-		return visitAssertion_statement(as);
-
-	auto r = ctx->report_statement();
-	if (r)
-		return visitReport_statement(r);
-
-	auto sas = ctx->signal_assignment_statement();
-	if (sas)
-		return visitSignal_assignment_statement(sas);
-
-	auto vas = ctx->variable_assignment_statement();
-	if (vas)
-		return visitVariable_assignment_statement(vas);
-
-	auto pcs = ctx->procedure_call_statement();
-	if (pcs)
-		return create_object<HdlStmExpr>(ctx,
-				VhdlExprParser::visitProcedure_call_statement(pcs));
-
-	auto ifStm = ctx->if_statement();
-	if (ifStm)
-		return visitIf_statement(ifStm);
-
-	auto c = ctx->case_statement();
-	if (c)
-		return visitCase_statement(c);
-
-	auto l = ctx->loop_statement();
-	if (l)
-		return visitLoop_statement(l);
-
-	auto ns = ctx->next_statement();
-	if (ns) {
-		// [todo] convert to wait statement
-		NotImplementedLogger::print(
-				"VhdlStatementParser.visitSequential_statement - next_statement",
-				ns);
-		return create_object<HdlStmNop>(ctx);
-	}
-
-	auto es = ctx->exit_statement();
-	if (es) {
-		// [todo] convert to regular call
-		NotImplementedLogger::print(
-				"VhdlStatementParser.visitSequential_statement - exit_statement",
-				es);
-		return create_object<HdlStmNop>(ctx);
-	}
-
-	auto rt = ctx->return_statement();
-	if (rt)
-		return visitReturn_statement(rt);
-
-	auto nl = ctx->null_statement();
-	assert(nl);
-	return visitNull_statement(nl);
+	return stm;
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
@@ -129,7 +176,7 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion_statement(
 	return visitAssertion(ctx->assertion());
 }
 unique_ptr<iHdlStatement> VhdlStatementParser::visitAssertion(
-			vhdlParser::AssertionContext *ctx) {
+		vhdlParser::AssertionContext *ctx) {
 	// assertion:
 	//       ASSERT condition
 	//           ( REPORT expression )?
@@ -160,7 +207,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_assertion_stateme
 				"VhdlStatementParser.visitConcurrent_selected_signal_assignment - KW_POSTPONED",
 				ctx);
 	}
-	return VhdlStatementParser::visitAssertion_statement(ctx->assertion_statement());
+	return VhdlStatementParser::visitAssertion_statement(
+			ctx->assertion_statement());
 }
 
 unique_ptr<iHdlStatement> VhdlStatementParser::visitReport_statement(
@@ -724,7 +772,8 @@ unique_ptr<iHdlStatement> VhdlStatementParser::visitConcurrent_statement_with_op
 	auto cpc = ctx->concurrent_procedure_call_statement();
 	if (cpc) {
 		NotImplementedLogger::print(
-				"VhdlStatementParser.visitConcurrent_procedure_call_statement", cpc);
+				"VhdlStatementParser.visitConcurrent_procedure_call_statement",
+				cpc);
 		auto pcs = cpc->procedure_call_statement();
 		return create_object<HdlStmExpr>(pcs,
 				VhdlExprParser::visitProcedure_call_statement(pcs));
@@ -754,8 +803,8 @@ void VhdlStatementParser::visitConcurrent_statement(
 		auto label = VhdlLiteralParser::visitLabel(_label);
 		auto b = ctx->block_statement();
 		if (b) {
-			NotImplementedLogger::print("VhdlStatementParser.visitBlock_statement",
-					b);
+			NotImplementedLogger::print(
+					"VhdlStatementParser.visitBlock_statement", b);
 			return;
 		}
 		auto ci = ctx->component_instantiation_statement();
