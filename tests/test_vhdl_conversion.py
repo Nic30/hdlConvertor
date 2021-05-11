@@ -118,10 +118,22 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_stm_nop(self):
         self.parseWithRef("stm_nop.vhd", Language.VHDL)
 
+    def test_package_function_noarg(self):
+        self.parseWithRef("function_noarg.vhd", Language.VHDL)
+
+    def test_package_association_open(self):
+        self.parseWithRef("association_open.vhd", Language.VHDL)
+
+    def test_package_direct_instantiation(self):
+        self.parseWithRef("direct_instantiation.vhd", Language.VHDL)
+
+    def test_package_stm_exit(self):
+        self.parseWithRef("stm_exit.vhd", Language.VHDL)
+
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    #suite.addTest(VhdlConversionTC('test_package_constants'))
+    # suite.addTest(VhdlConversionTC('test_package_stm_exit'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
