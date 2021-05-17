@@ -130,6 +130,8 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_stm_exit(self):
         self.parseWithRef("stm_exit.vhd", Language.VHDL)
 
+    def test_arch_signal_declr_identifier_list(self):
+        self.parseWithRef("arch_signal_declr_identifier_list.vhd", Language.VHDL)
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()

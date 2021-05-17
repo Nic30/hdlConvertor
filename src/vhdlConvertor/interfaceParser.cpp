@@ -21,9 +21,11 @@ std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::extractV
 	auto vl = std::make_unique<vector<std::unique_ptr<HdlIdDef>>>();
 	auto _type = VhdlTypeDeclarationParser::visitSubtype_indication(subType);
 	std::unique_ptr<iHdlExprItem> expr = nullptr;
-	if (_expr)
+	iHdlExprItem * expr_tmp = nullptr;
+	if (_expr) {
 		expr = VhdlExprParser::visitExpression(_expr);
-
+		expr_tmp = expr.get();
+	}
 	bool firstIt = true;
 	auto _type_tmp = _type.get();
 	for (auto i : identifier_list->identifier()) {
@@ -33,14 +35,14 @@ std::unique_ptr<vector<std::unique_ptr<HdlIdDef>>> VhdlInterfaceParser::extractV
 		if (!firstIt)
 			_type = _type_tmp->clone_uniq();
 		std::unique_ptr<iHdlExprItem> __expr;
-		if (!expr) {
+		if (!expr_tmp) {
 			firstIt = false;
 			__expr = nullptr;
 		} else if (firstIt) {
 			firstIt = false;
 			__expr = move(expr);
 		} else {
-			__expr = expr->clone_uniq();
+			__expr = expr_tmp->clone_uniq();
 		}
 		auto v = create_object<HdlIdDef>(i, i->getText(),
 				std::move(_type), std::move(__expr));
