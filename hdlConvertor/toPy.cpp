@@ -356,6 +356,8 @@ PyObject* ToPy::toPy(const HdlIdDef *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "is_static", o->is_static))
 		return nullptr;
+	if (toPy_property(py_inst, "is_shared", o->is_shared))
+		return nullptr;
 	if (toPy_property(py_inst, "direction", o->direction))
 		return nullptr;
 	return py_inst;

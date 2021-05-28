@@ -23,6 +23,7 @@ public:
 	bool is_latched;
 	bool is_const;
 	bool is_static;
+	bool is_shared;
 	HdlDirection direction;
 
 	HdlIdDef(const std::string &id, std::unique_ptr<iHdlExprItem> type,

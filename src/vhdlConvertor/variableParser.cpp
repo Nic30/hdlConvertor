@@ -14,15 +14,14 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlVariableParser::visi
 	// subtype_indication ( VARASGN expression )? SEMI
 	// ;
 
-	if (ctx->KW_SHARED())
-		NotImplementedLogger::print(
-				"VhdlVariableParser.visitVariable_declaration - SHARED", ctx);
+	auto vl = VhdlInterfaceParser::extractVariables(ctx->identifier_list(),
+			ctx->subtype_indication(), ctx->expression());
+	bool is_shared = ctx->KW_SHARED();
 
-	auto vl = VhdlInterfaceParser::extractVariables(
-			ctx->identifier_list(), ctx->subtype_indication(),
-			ctx->expression());
-	for (auto & v: *vl)
+	for (auto &v : *vl) {
 		v->is_latched = true;
+		v->is_shared = is_shared;
+	}
 
 	return vl;
 }

@@ -8,7 +8,7 @@ namespace hdlAst {
 HdlIdDef::HdlIdDef(const string &id, unique_ptr<iHdlExprItem> _type,
 		unique_ptr<iHdlExprItem> val) :
 		iHdlObj(), WithNameAndDoc(id), type(move(_type)), value(move(val)), is_latched(
-				false), is_const(false), is_static(false), direction(
+				false), is_const(false), is_static(false), is_shared(false), direction(
 				HdlDirection::DIR_INTERNAL) {
 }
 HdlIdDef::HdlIdDef(const string &id, unique_ptr<iHdlExprItem> _type,
