@@ -16,7 +16,7 @@ std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlVariableParser::visi
 
 	if (ctx->KW_SHARED())
 		NotImplementedLogger::print(
-				"VariableParser.visitVariable_declaration - SHARED", ctx);
+				"VhdlVariableParser.visitVariable_declaration - SHARED", ctx);
 
 	auto vl = VhdlInterfaceParser::extractVariables(
 			ctx->identifier_list(), ctx->subtype_indication(),
