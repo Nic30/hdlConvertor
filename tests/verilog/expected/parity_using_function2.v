@@ -11,7 +11,7 @@ module parity_using_function2 (
     output reg parity_out
 );
     function parity (
-        input wire[31:0] data
+        input [31:0] data
     );
         integer i;
         begin

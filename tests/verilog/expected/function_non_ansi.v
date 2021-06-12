@@ -2,7 +2,7 @@ module module0;
     function clkout_duty_chk (
         input integer CLKOUT_DIVIDE,
         input real CLKOUT_DUTY_CYCLE,
-        input reg[160:0] CLKOUT_DUTY_CYCLE_N
+        input [160:0] CLKOUT_DUTY_CYCLE_N
     );
         integer step_tmp;
         real CLK_DUTY_CYCLE_MIN;
