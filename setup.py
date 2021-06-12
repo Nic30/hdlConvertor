@@ -45,7 +45,7 @@ setup(
         'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
     ],
     install_requires=[
-        'hdlConvertorAst>=0.7',
+        'hdlConvertorAst>=0.9',
     ] + deps,
     license="MIT",
     packages=find_packages(exclude=["tests", ]),

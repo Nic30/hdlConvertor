@@ -287,11 +287,11 @@ module aes_cipher_top (
     //
     // Generic Functions
     //
-    function wire[31:0] mix_col (
-        input wire[7:0] s0,
-        input wire[7:0] s1,
-        input wire[7:0] s2,
-        input wire[7:0] s3
+    function [31:0] mix_col (
+        input [7:0] s0,
+        input [7:0] s1,
+        input [7:0] s2,
+        input [7:0] s3
     );
         reg[7:0] s0_o;
         reg[7:0] s1_o;
@@ -305,8 +305,8 @@ module aes_cipher_top (
         end
     endfunction
 
-    function wire[7:0] xtime (
-        input wire[7:0] b
+    function [7:0] xtime (
+        input [7:0] b
     );
         xtime = {b[6:0], 1'b0} ^ (8'h1b & {8{b[7]}});
     endfunction
