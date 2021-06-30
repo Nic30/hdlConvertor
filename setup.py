@@ -28,7 +28,7 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/Nic30/hdlConvertor',
     author='Michal Orsak',
-    author_email='michal.o.socials@gmail.com',
+    author_email='Nic30original@gmail.com',
     keywords=['hdl', 'vhdl', 'verilog', 'system verilog',
               'parser', 'preprocessor', 'antlr4'],
     classifiers=[
