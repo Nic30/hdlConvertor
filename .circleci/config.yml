@@ -82,7 +82,10 @@ jobs:
 workflows:
   main:
     jobs:
-      - install-test-coverage: {}
+      - install-test-coverage:
+          filters:
+            tags:
+              only: /.*/
       - install-test-deploy:
           requires:
             - install-test-coverage
