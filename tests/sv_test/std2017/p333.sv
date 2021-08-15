@@ -3,7 +3,7 @@ logic a, w;
 task t1 (output o = a) ; // default binds to m.a
 endtask :t1
 task t3 (inout io = w) ; // default binds to m.w
-endtask :t1
+endtask :t3
 endmodule :m
 module n;
 logic a;
