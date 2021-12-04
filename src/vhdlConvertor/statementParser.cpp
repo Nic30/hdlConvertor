@@ -10,6 +10,7 @@
 #include <hdlConvertor/hdlAst/hdlStmWhile.h>
 #include <hdlConvertor/vhdlConvertor/compInstanceParser.h>
 #include <hdlConvertor/vhdlConvertor/exprParser.h>
+#include <hdlConvertor/vhdlConvertor/blockParser.h>
 #include <hdlConvertor/vhdlConvertor/generateStatementParser.h>
 #include <hdlConvertor/vhdlConvertor/literalParser.h>
 #include <hdlConvertor/vhdlConvertor/processParser.h>
@@ -803,10 +804,13 @@ void VhdlStatementParser::visitConcurrent_statement(
 		auto label = VhdlLiteralParser::visitLabel(_label);
 		auto b = ctx->block_statement();
 		if (b) {
-			NotImplementedLogger::print(
-					"VhdlStatementParser.visitBlock_statement", b);
+			VhdlBlockStatementParser bp(commentParser, hierarchyOnly);
+			auto _b = bp.visitBlock_statement(b);
+			_b->labels.insert(_b->labels.begin(), label);
+			stms.push_back(move(_b));
 			return;
 		}
+
 		auto ci = ctx->component_instantiation_statement();
 		if (ci) {
 			auto _ci =
