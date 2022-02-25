@@ -87,6 +87,7 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [rust_hdl](https://github.com/kraigher/rust_hdl) - rust vhdl 2008 parser
 * [slang](https://github.com/MikePopoloski/slang) - Parser and compiler library for SystemVerilog.
 * [sv-parser](https://github.com/dalance/sv-parser) - Rust, SystemVerilog parser library fully complient with IEEE 1800-2017
+* [sv2chisel](https://github.com/ovh/sv2chisel) - Scala, SystemVerilog to [Chisel](https://github.com/chipsalliance/chisel3) translator
 * [systemc-clang](https://github.com/anikau31/systemc-clang) - SystemC Parser using the Clang Front-end
 * [v2sc](https://github.com/denisgav/v2sc) - vhdl to systemc
 * [veelox](https://github.com/martinda/veelox) - Java+ANTLR, An experiment in SystemVerilog Preprocessing
