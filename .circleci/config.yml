@@ -9,7 +9,7 @@ jobs:
     # executor: python/default
     resource_class: medium
     docker:
-      - image: circleci/buildpack-deps:groovy
+      - image: circleci/buildpack-deps:impish
     steps:
       - checkout
       - run: git submodule sync
@@ -46,7 +46,7 @@ jobs:
     # executor: python/default
     resource_class: medium
     docker:
-      - image: circleci/buildpack-deps:groovy
+      - image: circleci/buildpack-deps:impish
     steps:
       - checkout: {}
       - run: git submodule sync
