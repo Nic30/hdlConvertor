@@ -50,7 +50,21 @@ jobs:
       # - python/save-cache
       - py/test-and-coverage:
           coverage: false
-      - py/coverage-upload-lcov: {}
+      - run:
+          name: Filter lcov outputs for scikit-build and upload it to coveralls.io
+          command: |
+              if [ -d "removed_because_of_coverage_$MODULE_NAME" ]; then
+                 mv "removed_because_of_coverage_$MODULE_NAME" $MODULE_NAME;
+              fi
+              if  [ -z "$CIRCLE_PULL_REQUEST" ]; then
+                 lcov --compat-libtool --directory . --capture --output-file coverage.info.raw;
+                 lcov --remove coverage.info.raw -o coverage.info '/usr/*' '*_skbuild/*';
+                 sed -i 's/\/root\/project\///g' coverage.info;
+                 sed -i 's/\/root\///g' coverage.info;
+                 coveralls-lcov coverage.info --repo-token ${COVERALLS_REPO_TOKEN};
+              else
+                 echo "[INFO] Skipping the coverage upload because this is a pull request $CIRCLE_PULL_REQUEST"
+              fi
 
   install-test-deploy:
     # executor: python/default
