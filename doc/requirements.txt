@@ -1,1 +1,1 @@
-git+git://github.com/Nic30/hdlConvertorAst.git@master#egg=hdlConvertorAst
+git+https://github.com/Nic30/hdlConvertorAst.git@master#egg=hdlConvertorAst
