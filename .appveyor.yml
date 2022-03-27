@@ -18,7 +18,7 @@ environment:
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
-      ANTLR_VER: 4.9
+      ANTLR_VER: 4.9.3
     #- GENERATOR: -G"Visual Studio 15 2017 Win64"
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  BUILD_TYPE: Release
@@ -43,7 +43,7 @@ install:
   - "curl -fsS -o antlr4-complete.jar https://www.antlr.org/download/antlr-%ANTLR_VER%-complete.jar"
   - "git clone https://github.com/antlr/antlr4"
   - "cd antlr4/runtime/Cpp"
-  #- "git checkout %ANTLR_VER%"
+  - "git checkout %ANTLR_VER%"
   - "mkdir build"
   - "cd build"
   - 'cmake %GENERATOR% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
