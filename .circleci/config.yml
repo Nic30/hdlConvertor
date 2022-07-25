@@ -49,7 +49,7 @@ jobs:
       #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
-          build-args: "--user"
+          build-args: "--user --verbose"
       # - python/save-cache
       - py/test-and-coverage:
           coverage: false
@@ -110,7 +110,7 @@ jobs:
       #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
       - py/install-setup-py:
           rm-package-dir: true
-          build-args: "--user"
+          build-args: "--user --verbose"
       # - python/save-cache
       - py/test-and-coverage:
           coverage: false
