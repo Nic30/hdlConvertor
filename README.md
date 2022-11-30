@@ -99,7 +99,6 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [vpp.pl](https://www.beyond-circuits.com/wordpress/vpp-pl-man-page/) - verilog preprocessor with integrated Perl
 * [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
 * [Surelog](https://github.com/alainmarcel/Surelog) - C++, System Verilog 2017 Pre-processor and parser
-* [verible](https://github.com/google/verible) - C++, System Verilog 2017 parser
 * [UHDM](https://github.com/alainmarcel/UHDM) - rust, universal hardware data model
 
 
