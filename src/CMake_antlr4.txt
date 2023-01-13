@@ -148,6 +148,7 @@ macro(AddParserToBuild name folder_name
 	# create include directory
 	# run antlr to generate parser
 	# mv headers to include directory
+	# [todo] does not supports spaces in filenames
 	add_custom_command(
 		OUTPUT
 		${GENERATED_INC} ${GENERATED_SRC}
