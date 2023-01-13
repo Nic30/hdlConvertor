@@ -112,6 +112,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_typedefs(self):
         self.parseWithRef("package_typedefs.vhd", Language.VHDL)
 
+    def test_package_FloPoCoLibRightShifter(self):
+        self.parseWithRef("FloPoCoLibRightShifter.vhd", Language.VHDL_2008)
+
     def test_package_for_in(self):
         self.parseWithRef("for_in.vhd", Language.VHDL)
 
@@ -135,7 +138,7 @@ class VhdlConversionTC(HdlParseTC):
 
 if __name__ == "__main__":
     suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_package_stm_exit'))
+    # suite.addTest(VhdlConversionTC('test_package_FloPoCoLibRightShifter'))
     suite.addTest(unittest.makeSuite(VhdlConversionTC))
 
     runner = unittest.TextTestRunner(verbosity=3)
