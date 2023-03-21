@@ -100,5 +100,5 @@ The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAs
 * [sv2v](https://github.com/zachjs/sv2v)- Haskell, SystemVerilog to Verilog
 * [Surelog](https://github.com/alainmarcel/Surelog) - C++, System Verilog 2017 Pre-processor and parser
 * [UHDM](https://github.com/alainmarcel/UHDM) - rust, universal hardware data model
-
+* [HDLParserSharp](https://github.com/Aperture-Electronic/HDLParserSharp) - C#, VHDL/SV -> universal AST
 
