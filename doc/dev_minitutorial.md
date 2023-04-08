@@ -8,10 +8,11 @@
    python -m venv hdlConvertorVenv
    ```
 
-2. Activate the virtual env and install `scikit-build`:
+2. Activate the virtual env and install `scikit-build` and `CPython` using [requirements.txt](https://github.com/Nic30/hdlConvertor/blob/master/requirements.txt) from the base repo path:
    ```sh
    . ./hdlConvertorVenv/bin/activate
-   pip install scikit-build
+   cd hdlConvertor
+   pip install -r requirements.txt
    ```
 3. Use Python `setup.py` build to trigger a debug build:
    ```sh
