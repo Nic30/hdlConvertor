@@ -1,5 +1,27 @@
 # Tutorial for developing of C++ python extension with Cython and Scikit-build
 
+# Building a Debug Version of C++ python extension as a the pip package
+
+1. Create a Python Virtual Env.:
+
+   ```sh
+   python -m venv hdlConvertorVenv
+   ```
+
+2. Activate the virtual env and install `scikit-build`:
+   ```sh
+   . ./hdlConvertorVenv/bin/activate
+   pip install scikit-build
+   ```
+3. Use Python `setup.py` build to trigger a debug build:
+   ```sh
+   python setup.py build --build-type Debug -v
+   ```
+4. Installed the Debug version of C++ Extension:
+   ```sh
+   python setup.py install --build-type Debug -v
+   ```
+
 # Test execution
 
 In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
