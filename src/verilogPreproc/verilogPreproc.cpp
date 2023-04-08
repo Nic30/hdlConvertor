@@ -193,7 +193,7 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 	vector<MacroDefVerilog::param_info_t> *params;
 	vector<MacroDefVerilog::param_info_t> params_dummy;
 	if (da) {
-#if (ANTLRCPP_VERSION_MAJOR == 4 && ANTLRCPP_VERSION_MINOR <= 9)
+#if !defined(ANTLRCPP_VERSION_MAJOR) || (ANTLRCPP_VERSION_MAJOR == 4 && ANTLRCPP_VERSION_MINOR <= 9)
 		params = visitDefine_args(da);
 #else
 		params = std::any_cast<vector<MacroDefVerilog::param_info_t> *>(visitDefine_args(da));
@@ -408,7 +408,7 @@ antlrcpp::Any VerilogPreproc::visitInclude(
 	string inc_file_path;
 	auto mc = ctx->macro_call();
 	if (mc) {
-#if (ANTLRCPP_VERSION_MAJOR == 4 && ANTLRCPP_VERSION_MINOR <= 9)
+#if !defined(ANTLRCPP_VERSION_MAJOR) || (ANTLRCPP_VERSION_MAJOR == 4 && ANTLRCPP_VERSION_MINOR <= 9)
 		inc_file_path = visitMacro_call(mc, false).as<string>();
 #else
 		inc_file_path = std::any_cast<string>(visitMacro_call(mc, false));
