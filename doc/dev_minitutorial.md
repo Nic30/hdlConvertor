@@ -14,15 +14,38 @@
    cd hdlConvertor
    pip install -r requirements.txt
    ```
-3. Use Python `setup.py` build to trigger a debug build:
+
+3. Setup Debug Configuration for `sciki-build`:
    ```sh
-   python setup.py build --build-type Debug -v
+   export SKBUILD_CONFIGURE_OPTIONS="-DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
    ```
-4. Installed the Debug version of C++ Extension:
+   For ANTLR4 custom build installation configuration:
    ```sh
-   python setup.py install --build-type Debug -v
+   # Add Configuration from above if building in Debug Mode
+   export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=<Path to antlr4-cpp-runtime build/installation> ..."
+   export ANTLR_COMPLETE_PATH=<Absolute path to the directory where antlr4-complete.jar exists>
+   # e.g.:
+   # export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=/opt/antlr4/antlr4-cpp-runtime"
+   # export ANTLR_COMPLETE_PATH="/opt/antlr4"
+
+   ## The above path should have the 'antlr4-complete.jar' available at that directory.
+   # Also if the ANTLR4 Cpp Runtime is custom build one might need to add the library path to 'LD_LIBRARY_PATH'
+   ## e.g.:
+   ## export LD_LIBRARY_PATH=/opt/antlr4/antlr4-cpp-runtime/lib:$LD_LIBRARY_PATH
+   ```
+4. Use Python `pip` build and install the package in edit mode:
+   ```sh
+   # Use Python VirtualEnv for installation.
+   python -m pip install -e .
    ```
 
+5. Optional Step if you are also developing for `hdlConvertorAst` install the package locally as editable version of the package:
+   ```sh
+   # Use the same virtualenv for both of these packages
+   git clone https://github.com/Nic30/hdlConvertorAst
+   cd hdlConvertorAst
+   pip install -e .
+   ```
 # Test execution
 
 In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
