@@ -1,5 +1,51 @@
 # Tutorial for developing of C++ python extension with Cython and Scikit-build
 
+# Building a Debug Version of C++ python extension as a the pip package
+
+1. Create a Python Virtual Env.:
+
+   ```sh
+   python -m venv hdlConvertorVenv
+   ```
+
+2. Activate the virtual env and install `scikit-build` and `CPython` using [requirements.txt](https://github.com/Nic30/hdlConvertor/blob/master/requirements.txt) from the base repo path:
+   ```sh
+   . ./hdlConvertorVenv/bin/activate
+   cd hdlConvertor
+   pip install -r requirements.txt
+   ```
+
+3. Setup Debug Configuration for `sciki-build`:
+   ```sh
+   export SKBUILD_CONFIGURE_OPTIONS="-DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+   ```
+   For ANTLR4 custom build installation configuration:
+   ```sh
+   # Add Configuration from above if building in Debug Mode
+   export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=<Path to antlr4-cpp-runtime build/installation> ..."
+   export ANTLR_COMPLETE_PATH=<Absolute path to the directory where antlr4-complete.jar exists>
+   # e.g.:
+   # export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=/opt/antlr4/antlr4-cpp-runtime"
+   # export ANTLR_COMPLETE_PATH="/opt/antlr4"
+
+   ## The above path should have the 'antlr4-complete.jar' available at that directory.
+   # Also if the ANTLR4 Cpp Runtime is custom build one might need to add the library path to 'LD_LIBRARY_PATH'
+   ## e.g.:
+   ## export LD_LIBRARY_PATH=/opt/antlr4/antlr4-cpp-runtime/lib:$LD_LIBRARY_PATH
+   ```
+4. Use Python `pip` build and install the package in edit mode:
+   ```sh
+   # Use Python VirtualEnv for installation.
+   python -m pip install -e .
+   ```
+
+5. Optional Step if you are also developing for `hdlConvertorAst` install the package locally as editable version of the package:
+   ```sh
+   # Use the same virtualenv for both of these packages
+   git clone https://github.com/Nic30/hdlConvertorAst
+   cd hdlConvertorAst
+   pip install -e .
+   ```
 # Test execution
 
 In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
