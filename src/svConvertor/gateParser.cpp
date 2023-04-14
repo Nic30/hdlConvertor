@@ -4,8 +4,9 @@
 #include <hdlConvertor/hdlAst/hdlStmAssign.h>
 #include <hdlConvertor/createObject.h>
 #include <hdlConvertor/notImplementedLogger.h>
+#include <hdlConvertor/hdlAst/hdlCompInst.h>
 
-#include <assert.h>
+#include <cassert>
 
 
 namespace hdlConvertor {
@@ -52,6 +53,37 @@ HdlOpType VerGateParser::visitN_output_gatetype(
 	}
 }
 
+HdlOpType VerGateParser::visitN_input_gatetype(
+		sv2017Parser::N_input_gatetypeContext *ctx) {
+	// n_input_gatetype:
+    // KW_AND
+    // | KW_NAND
+    // | KW_OR
+    // | KW_NOR
+    // | KW_XOR
+    // | KW_XNOR
+	// ;
+	if(ctx->KW_AND()) {
+		return HdlOpType::AND;
+	}
+	if (ctx->KW_NAND()) {
+		return HdlOpType::NAND;
+	}
+	if (ctx->KW_OR()) {
+		return HdlOpType::OR;
+	}
+	if (ctx->KW_NOR()) {
+		return HdlOpType::NOR;
+	}
+	if (ctx->KW_XOR()) {
+		return HdlOpType::XOR;
+	}
+	assert(ctx->KW_XNOR());
+	{
+		return HdlOpType::XNOR;
+	}
+}
+
 std::pair<std::unique_ptr<iHdlExprItem>, std::unique_ptr<iHdlExprItem>> VerGateParser::visitN_output_gate_instance(
 		sv2017Parser::N_output_gate_instanceContext *ctx) {
 	// n_output_gate_instance:
@@ -77,6 +109,27 @@ std::pair<std::unique_ptr<iHdlExprItem>, std::unique_ptr<iHdlExprItem>> VerGateP
 	} else {
 		return {move(outputs[0]), move(it)};
 	}
+}
+
+std::vector<std::unique_ptr<iHdlExprItem>> VerGateParser::visitN_input_gate_instance(
+		sv2017Parser::N_input_gate_instanceContext *ctx) {
+	// n_input_gate_instance:
+	// ( name_of_instance )? LPAREN output_terminal ( COMMA input_terminal )+ RPAREN;
+	auto noi = ctx->name_of_instance();
+	if (noi) {
+		// name_of_instance: identifier ( unpacked_dimension )*;
+		// auto name = VerExprParser::visitIdentifier(noi->identifier());
+		NotImplementedLogger::print(
+				"VerGateParser.visitN_output_gate_instance name_of_instance",
+				ctx);
+	}
+	auto _ot = ctx->output_terminal();
+	vector<unique_ptr<iHdlExprItem>> terminals;
+	terminals.emplace_back(visitOutput_terminal(_ot));
+	for(auto _it : ctx->input_terminal()) {
+		terminals.emplace_back(visitInput_terminal(_it));
+	}
+	return move(terminals);
 }
 
 void VerGateParser::visitGate_instantiation(
@@ -122,6 +175,65 @@ void VerGateParser::visitGate_instantiation(
 						move(i), false);
 			}
 			res.push_back(move(a));
+		}
+	} else if (auto _ot2 = ctx->n_input_gatetype()) {
+		auto ot = visitN_input_gatetype(_ot2);
+		auto ds = ctx->drive_strength();
+		if (ds) {
+			NotImplementedLogger::print(
+					"VerGateParser.visitGate_instantiation drive_strength",
+					ctx);
+		}
+		auto d2 = ctx->delay2();
+		if (d2) {
+			NotImplementedLogger::print(
+					"VerGateParser.visitGate_instantiation delay2", ctx);
+		}
+		for (auto ogi : ctx->n_input_gate_instance()) {
+			unique_ptr<HdlCompInst> a;
+			auto output_input = visitN_input_gate_instance(ogi);
+			//
+			// n_input_gatetype:
+			// KW_AND
+			// | KW_NAND
+			// | KW_OR
+			// | KW_NOR
+			// | KW_XOR
+			// | KW_XNOR
+			// ;
+			auto noi = ogi->name_of_instance();
+			auto name = VerExprParser::visitIdentifier(noi->identifier());
+			std::unique_ptr<HdlValueId> gt;
+			switch(ot) {
+				case HdlOpType::AND:
+					gt = create_object<HdlValueId>(_ot2, "and");
+				break;
+				case HdlOpType::NAND:
+					gt = create_object<HdlValueId>(_ot2, "nand");
+				break;
+				case HdlOpType::OR:
+					gt = create_object<HdlValueId>(_ot2, "or");
+				break;
+				case HdlOpType::NOR:
+					gt = create_object<HdlValueId>(_ot2, "nor");
+				break;
+				case HdlOpType::XOR:
+					gt = create_object<HdlValueId>(_ot2, "xor");
+				break;
+				case HdlOpType::XNOR:
+					gt = create_object<HdlValueId>(_ot2, "xnor");
+				break;
+				default:
+					// Should not reach here!
+					assert(false);
+				break;
+			}
+			if (gt) {
+				a = create_object<HdlCompInst>(ogi, move(name), move(gt));
+				a->portMap = move(output_input);
+			}
+			if(a)
+				res.push_back(move(a));
 		}
 	} else {
 		NotImplementedLogger::print("VerGateParser.visitGate_instantiation",
