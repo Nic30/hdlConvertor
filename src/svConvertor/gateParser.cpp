@@ -120,7 +120,7 @@ std::vector<std::unique_ptr<iHdlExprItem>> VerGateParser::visitN_input_gate_inst
 		// name_of_instance: identifier ( unpacked_dimension )*;
 		// auto name = VerExprParser::visitIdentifier(noi->identifier());
 		NotImplementedLogger::print(
-				"VerGateParser.visitN_output_gate_instance name_of_instance",
+				"VerGateParser.visitN_input_gate_instance name_of_instance",
 				ctx);
 	}
 	auto _ot = ctx->output_terminal();
@@ -129,7 +129,7 @@ std::vector<std::unique_ptr<iHdlExprItem>> VerGateParser::visitN_input_gate_inst
 	for(auto _it : ctx->input_terminal()) {
 		terminals.emplace_back(visitInput_terminal(_it));
 	}
-	return move(terminals);
+	return terminals;
 }
 
 void VerGateParser::visitGate_instantiation(
@@ -202,7 +202,7 @@ void VerGateParser::visitGate_instantiation(
 			// | KW_XNOR
 			// ;
 			auto noi = ogi->name_of_instance();
-			auto name = VerExprParser::visitIdentifier(noi->identifier());
+			auto name = (noi)?VerExprParser::visitIdentifier(noi->identifier()): make_unique<HdlValueId>(" ");
 			std::unique_ptr<HdlValueId> gt;
 			switch(ot) {
 				case HdlOpType::AND:
