@@ -206,22 +206,22 @@ void VerGateParser::visitGate_instantiation(
 			std::unique_ptr<HdlValueId> gt;
 			switch(ot) {
 				case HdlOpType::AND:
-					gt = create_object<HdlValueId>(_ot2, "and");
+					gt = create_object<HdlValueId>(ogi, "and");
 				break;
 				case HdlOpType::NAND:
-					gt = create_object<HdlValueId>(_ot2, "nand");
+					gt = create_object<HdlValueId>(ogi, "nand");
 				break;
 				case HdlOpType::OR:
-					gt = create_object<HdlValueId>(_ot2, "or");
+					gt = create_object<HdlValueId>(ogi, "or");
 				break;
 				case HdlOpType::NOR:
-					gt = create_object<HdlValueId>(_ot2, "nor");
+					gt = create_object<HdlValueId>(ogi, "nor");
 				break;
 				case HdlOpType::XOR:
-					gt = create_object<HdlValueId>(_ot2, "xor");
+					gt = create_object<HdlValueId>(ogi, "xor");
 				break;
 				case HdlOpType::XNOR:
-					gt = create_object<HdlValueId>(_ot2, "xnor");
+					gt = create_object<HdlValueId>(ogi, "xnor");
 				break;
 				default:
 					// Should not reach here!
