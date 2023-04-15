@@ -56,12 +56,12 @@ HdlOpType VerGateParser::visitN_output_gatetype(
 HdlOpType VerGateParser::visitN_input_gatetype(
 		sv2017Parser::N_input_gatetypeContext *ctx) {
 	// n_input_gatetype:
-    // KW_AND
-    // | KW_NAND
-    // | KW_OR
-    // | KW_NOR
-    // | KW_XOR
-    // | KW_XNOR
+	// KW_AND
+	// | KW_NAND
+	// | KW_OR
+	// | KW_NOR
+	// | KW_XOR
+	// | KW_XNOR
 	// ;
 	if(ctx->KW_AND()) {
 		return HdlOpType::AND;
