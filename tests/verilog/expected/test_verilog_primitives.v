@@ -32,6 +32,12 @@ module example (
         b
     );
 
+    dummy du (
+        tmp2,
+        b,
+        c
+    );
+
     or o1 (
         d,
         tmp,

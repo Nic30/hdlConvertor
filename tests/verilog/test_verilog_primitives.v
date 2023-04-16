@@ -21,6 +21,6 @@ output d;
 wire tmp;
 wire tmp2;
 and a1 (tmp, a, b);
-dummy(tmp2, b, c);
+dummy du(tmp2, b, c);
 or o1 (d, tmp, tmp2);
 endmodule
