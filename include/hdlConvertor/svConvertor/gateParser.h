@@ -23,10 +23,14 @@ public:
 			sv2017Parser::Output_terminalContext *ctx);
 	hdlAst::HdlOpType visitN_output_gatetype(
 			sv2017Parser::N_output_gatetypeContext *ctx);
+	hdlAst::HdlOpType visitN_input_gatetype(
+			sv2017Parser::N_input_gatetypeContext *ctx);
 	// @return <output, input>
 	std::pair<std::unique_ptr<hdlAst::iHdlExprItem>,
 			std::unique_ptr<hdlAst::iHdlExprItem>> visitN_output_gate_instance(
 			sv2017Parser::N_output_gate_instanceContext *ctx);
+	std::vector<std::unique_ptr<hdlAst::iHdlExprItem>> visitN_input_gate_instance(
+			sv2017Parser::N_input_gate_instanceContext *ctx);
 	void visitGate_instantiation(sv2017Parser::Gate_instantiationContext *ctx,
 			std::vector<std::unique_ptr<hdlAst::iHdlObj>> &res);
 };

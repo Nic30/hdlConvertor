@@ -65,3 +65,5 @@ grammars/.idea
 coverage.info
 coverage.info.raw
 
+# Ignore .vscode files
+.vscode/

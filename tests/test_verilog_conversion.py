@@ -142,6 +142,9 @@ class VerilogConversionTC(HdlParseTC):
     def test_function_non_ansi(self):
         self.parseWithRef("function_non_ansi.v", VERILOG)
 
+    def test_verilog_primitives(self):
+        self.parseWithRef("test_verilog_primitives.v", VERILOG)
+
 
 
 if __name__ == "__main__":
