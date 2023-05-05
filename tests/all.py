@@ -26,7 +26,6 @@ from tests.time_logging_test_runner import TimeLoggingTestRunner
 
 
 def main_test_suite():
-    suite = unittest.TestSuite()
     tcs = [
         VerilogPreprocGrammarTC,
         VerilogPreprocTC,
@@ -46,11 +45,11 @@ def main_test_suite():
     ] + GhdlTestsuiteTCs
     if os.name != 'nt':
         tcs.append(NotebookTC)
-
     for tc in tcs:
-        suite.addTest(unittest.makeSuite(tc))
+        tc._multiprocess_can_split_ = True
+    loader = unittest.TestLoader()
+    suite = unittest.TestSuite([loader.loadTestsFromTestCase(tc) for tc in tcs])
     # suite.addTest(VerilogPreprocTC("test_2012_p641"))
-    # suite.addTest(unittest.makeSuite(VerilatorTestsuiteTC))
     # suite.addTest(VerilatorTestsuiteTC("test_SYSTEM_VERILOG_2009_t_math_cond_huge"))
 
     return suite

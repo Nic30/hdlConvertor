@@ -201,9 +201,9 @@ class VerilogPreprocTC(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocTC('test_stringify_multiline'))
-    suite.addTest(unittest.makeSuite(VerilogPreprocTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogPreprocTC("test_stringify_multiline")])
+    suite = testLoader.loadTestsFromTestCase(VerilogPreprocTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

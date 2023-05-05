@@ -59,9 +59,9 @@ class VerilogPreprocMacroDbApiTC(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocMacroDbApiTC('test_can_recover_defines_from_verilog'))
-    suite.addTest(unittest.makeSuite(VerilogPreprocMacroDbApiTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogPreprocMacroDbApiTC("test_can_recover_defines_from_verilog")])
+    suite = testLoader.loadTestsFromTestCase(VerilogPreprocMacroDbApiTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

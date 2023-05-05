@@ -156,10 +156,9 @@ VerilatorTestsuiteTC = generate_external_testcase_class(
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)
-    suite = unittest.TestSuite()
-
-    # suite.addTest(VerilatorTestsuiteTC('test_SYSTEM_VERILOG_2009_t_preproc_undefineall'))
-    suite.addTest(unittest.makeSuite(VerilatorTestsuiteTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilatorTestsuiteTC("test_SYSTEM_VERILOG_2009_t_preproc_undefineall")])
+    suite = testLoader.loadTestsFromTestCase(VerilatorTestsuiteTC)
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

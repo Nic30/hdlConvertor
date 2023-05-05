@@ -166,9 +166,9 @@ class VerilogPreprocGrammarTC(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocGrammarTC('test_comments'))
-    suite.addTest(unittest.makeSuite(VerilogPreprocGrammarTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogPreprocGrammarTC("test_comments")])
+    suite = testLoader.loadTestsFromTestCase(VerilogPreprocGrammarTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

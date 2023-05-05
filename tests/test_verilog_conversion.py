@@ -145,9 +145,9 @@ class VerilogConversionTC(HdlParseTC):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogConversionTC('test_function_non_ansi'))
-    suite.addTest(unittest.makeSuite(VerilogConversionTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogConversionTC("test_function_non_ansi")])
+    suite = testLoader.loadTestsFromTestCase(VerilogConversionTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

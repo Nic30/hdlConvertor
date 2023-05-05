@@ -43,10 +43,9 @@ VUnitTestsuiteTC = generate_external_testcase_class(
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)
-    suite = unittest.TestSuite()
-
-    # suite.addTest(VUnitTestsuiteTC('test_VHDL_2008_axi_lite_master_pkg'))
-    suite.addTest(unittest.makeSuite(VUnitTestsuiteTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VUnitTestsuiteTC("test_VHDL_2008_axi_lite_master_pkg")])
+    suite = testLoader.loadTestsFromTestCase(VUnitTestsuiteTC)
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

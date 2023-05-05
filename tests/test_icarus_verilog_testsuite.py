@@ -255,11 +255,7 @@ IcarusVerilogTestsuiteTC = generate_external_testcase_class(
 if __name__ == '__main__':
     # unittest.main(failfast=True)
 
-    suite = unittest.TestSuite()
-
-    # suite.addTest(IcarusVerilogTestsuiteTC('test_br_gh26'))
-    # suite.addTest(IcarusVerilogTestsuiteTC('test_VERILOG_2005_logp2'))
-    suite.addTest(unittest.makeSuite(IcarusVerilogTestsuiteTC))
-
+    testLoader = unittest.TestLoader()
+    suite = testLoader.loadTestsFromTestCase(IcarusVerilogTestsuiteTC)
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

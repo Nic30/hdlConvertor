@@ -44,9 +44,9 @@ class VerilogToHwtTC(HdlParseTC):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogToHwtTC('test_MMCME2_ADV'))
-    suite.addTest(unittest.makeSuite(VerilogToHwtTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogToHwtTC("test_MMCME2_ADV")])
+    suite = testLoader.loadTestsFromTestCase(VerilogToHwtTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

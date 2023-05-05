@@ -73,9 +73,9 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VerilogPreprocGrammarTC('test_undef'))
-    suite.addTest(unittest.makeSuite(VerilogPreprocIncludeTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VerilogPreprocIncludeTC("test_undef")])
+    suite = testLoader.loadTestsFromTestCase(VerilogPreprocIncludeTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

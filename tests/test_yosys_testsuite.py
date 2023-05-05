@@ -160,10 +160,9 @@ YosysTestsuiteTC = generate_external_testcase_class(
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)
-    suite = unittest.TestSuite()
-
-    # suite.addTest(YosysTestsuiteTC('test_SYSTEM_VERILOG_2009_gate2lut'))
-    suite.addTest(unittest.makeSuite(YosysTestsuiteTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([YosysTestsuiteTC("test_SYSTEM_VERILOG_2009_gate2lut")])
+    suite = testLoader.loadTestsFromTestCase(YosysTestsuiteTC)
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

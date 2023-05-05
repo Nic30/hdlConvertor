@@ -137,9 +137,9 @@ class VhdlConversionTC(HdlParseTC):
         self.parseWithRef("arch_signal_declr_identifier_list.vhd", Language.VHDL)
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    # suite.addTest(VhdlConversionTC('test_package_FloPoCoLibRightShifter'))
-    suite.addTest(unittest.makeSuite(VhdlConversionTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([VhdlConversionTC("test_package_FloPoCoLibRightShifter")])
+    suite = testLoader.loadTestsFromTestCase(VhdlConversionTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
     runner.run(suite)

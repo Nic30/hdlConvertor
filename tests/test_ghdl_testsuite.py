@@ -139,12 +139,9 @@ GhdlTestsuiteTCs = [
 
 if __name__ == '__main__':
     # unittest.main(failfast=True)
-    suite = unittest.TestSuite()
-
-    # suite.addTest(GhdlIEEETestsuiteTC('test_VHDL_2008_numeric_bit'))
-    for tc in GhdlTestsuiteTCs:
-        suite.addTest(unittest.makeSuite(tc))
-    # suite.addTest(unittest.makeSuite(GhdlTestsuiteTestsuiteTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([GhdlIEEETestsuiteTC("test_VHDL_2008_numeric_bit")])
+    suite = unittest.TestSuite([testLoader.loadTestsFromTestCase(tc) for tc in GhdlTestsuiteTCs])
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

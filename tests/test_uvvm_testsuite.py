@@ -38,8 +38,7 @@ UVVMTestsuite = generate_external_testcase_class(
 if __name__ == '__main__':
     # unittest.main(failfast=True)
     suite = unittest.TestSuite()
-
-    # suite.addTest(UVVMTestsuite('test_VHDL_2008_numeric_bit'))
-    suite.addTest(unittest.makeSuite(UVVMTestsuite))
+    testLoader = unittest.TestLoader()
+    suite = testLoader.loadTestsFromTestCase(UVVMTestsuite)
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)

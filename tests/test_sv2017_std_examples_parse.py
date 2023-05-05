@@ -45,10 +45,9 @@ Sv2017StdExamplesParseTC = Sv2017StdExamplesParseMeta(
     'Sv2017StdExamplesParseTC', (unittest.TestCase,), {})
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite()
-
-    # suite.addTest(Sv2017StdExamplesParseTC('test_p552'))
-    suite.addTest(unittest.makeSuite(Sv2017StdExamplesParseTC))
+    testLoader = unittest.TestLoader()
+    # suite = unittest.TestSuite([Sv2017StdExamplesParseTC("test_p552")])
+    suite = testLoader.loadTestsFromTestCase(Sv2017StdExamplesParseTC)
 
     runner = TimeLoggingTestRunner(verbosity=3)
     runner.run(suite)
