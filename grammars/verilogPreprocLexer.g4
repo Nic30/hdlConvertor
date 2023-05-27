@@ -197,11 +197,11 @@ mode DEFINE_MODE;
         }
     };
     ID: F_ID;
-    DN_CODE: ( ( '`' '"' ) |  ~('\\'| '\n' | '"') | ( '\\'+ ~[\n]) )+? {
+    DN_CODE: ( ( '`' '"' ) |  ~('\\' | '\r' | '\n' | '"') | ( '\\'+ ~[\r\n]) )+? {
         // inside of define body
         popMode();
         pushMode(DEFINE_BODY_MODE);
-    } -> type(CODE); // .* except newline or esacped newline
+    } -> type(CODE); // .* except newline or escaped newline
 
 
 

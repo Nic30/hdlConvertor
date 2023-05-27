@@ -57,6 +57,13 @@ class VerilogPreprocMacroDbApiTC(unittest.TestCase):
         db = c.preproc_macro_db
         self.assertIn("TEST_SYMBOL", db)
 
+    def test_dos_crlf(self):
+        c = HdlConvertor()
+        c.verilog_pp_str("`define P0 1\r\n`define P1 2\r\n`define TEST_SYMBOL `P0\\\r\n `P1\r\n", Language.SYSTEM_VERILOG)
+        db = c.preproc_macro_db
+        self.assertIn("TEST_SYMBOL", db)
+        self.assertEqual(db["TEST_SYMBOL"].get_body(), "1\r\n 2")
+
 
 if __name__ == "__main__":
     testLoader = unittest.TestLoader()
