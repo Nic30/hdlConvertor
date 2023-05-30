@@ -30,7 +30,6 @@ jobs:
             gcc -v;
             python --version;
             cmake --version;
-            meson --version;
             free;
 
       - run: pip install jupyter
