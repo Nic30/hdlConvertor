@@ -58,7 +58,7 @@ else
 	antlr4_cpp_inc = include_directories('/usr/include/antlr4-runtime/')
 	antlr4_cpp_dep = cc.find_library('antlr4-runtime', header_include_directories: antlr4_cpp_inc, has_headers: 'antlr4-runtime.h', required : false)
     # redeclare because include_dir somehow is not in dependency
-	antlr4_cpp_dep = declare_dependency('antlr4-runtime', dependencies: [antlr4_cpp_dep], include_directories: antlr4_cpp_inc)
+	antlr4_cpp_dep = declare_dependency(dependencies: [antlr4_cpp_dep], include_directories: antlr4_cpp_inc)
 	antlr4_java = find_program('antlr4', required : true)
 endif
 
