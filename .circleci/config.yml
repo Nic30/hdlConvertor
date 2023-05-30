@@ -6,7 +6,6 @@ orbs:
 
 jobs:
   install-test-coverage:
-    # executor: python/default
     resource_class: medium
     docker:
       - image: ubuntu:rolling
@@ -19,42 +18,30 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export TZ=America/USA
             apt update
-            apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git lcov rubygems
+            apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv python3-build git lcov rubygems
             python3 -m venv venv
             echo "source $PWD/venv/bin/activate" >> $BASH_ENV
-            echo 'export SKBUILD_CONFIGURE_OPTIONS="-DCMAKE_BUILD_TYPE:STRING=Debug -DCODE_COVERAGE=ON"' >> $BASH_ENV
-            # because we do not have enough RAM
-            echo 'export SKBUILD_BUILD_OPTIONS="-j1"' >> $BASH_ENV
             source $BASH_ENV
-
-
-      - run:
-          command: |
-            update-alternatives --install /usr/bin/python python /usr/bin/python3 10;
-            update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10;
 
       - run: git submodule sync
       - run: git submodule update --init
-      # - python/load-cache
-
       - run:
           command: |
             gcc -v;
             python --version;
             cmake --version;
+            meson --version;
             free;
 
       - run: pip install jupyter
       - run: gem install coveralls-lcov
-      #- run:
-      #    command: |
-      #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
-      - py/install-setup-py:
-          rm-package-dir: true
-          build-args: "--verbose"
-      # - python/save-cache
+      - run:
+          name: build
+          command: |
+              python3 -m build -Csetup-args="-Db_coverage=true" -Ccompile-args="-j 1 --verbose" . # -j1 because we do not have enough RAM
+              mv $MODULE_NAME "removed_because_of_coverage_$MODULE_NAME"
       - py/test-and-coverage:
-          coverage: false
+          coverage: false # dissable python coverage, we are collecting only C++ one
       - run:
           name: Filter lcov outputs for scikit-build and upload it to coveralls.io
           command: |
@@ -63,7 +50,7 @@ jobs:
               fi
               if  [ -z "$CIRCLE_PULL_REQUEST" ]; then
                  lcov --compat-libtool --directory . --capture --output-file coverage.info.raw;
-                 lcov --remove coverage.info.raw -o coverage.info '/usr/*' '*_skbuild/*';
+                 lcov --remove coverage.info.raw -o coverage.info '/usr/*';
                  sed -i 's/\/root\/project\///g' coverage.info;
                  sed -i 's/\/root\///g' coverage.info;
                  coveralls-lcov coverage.info --repo-token ${COVERALLS_REPO_TOKEN};
@@ -72,7 +59,6 @@ jobs:
               fi
 
   install-test-deploy:
-    # executor: python/default
     resource_class: medium
     docker:
       - image: ubuntu:rolling
@@ -85,16 +71,11 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export TZ=America/USA
             apt update
-            apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git lcov rubygems
+            # libantlr4-runtime-dev antlr4 are ommited in order that meson downloads them using wrap
+            apt install -y build-essential cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv python3-build git lcov rubygems
             python3 -m venv venv
             echo "source $PWD/venv/bin/activate" >> $BASH_ENV
-            # because we do not have enough RAM
-            echo 'export SKBUILD_BUILD_OPTIONS="-j1"' >> $BASH_ENV
             source $BASH_ENV
-      - run:
-          command: |
-            update-alternatives --install /usr/bin/python python /usr/bin/python3 10;
-            update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10;
 
       - run: git submodule sync
       - run: git submodule update --init
@@ -109,13 +90,12 @@ jobs:
 
       - run: pip install jupyter
       - run: gem install coveralls-lcov
-      #- run:
-      #    command: |
-      #      echo export CXXFLAGS=\"$CXXFLAGS --param ggc-min-expand=1 --param ggc-min-heapsize=32768\" >> "$BASH_ENV"
-      - py/install-setup-py:
-          rm-package-dir: true
-          build-args: "--verbose"
-      # - python/save-cache
+      - run:
+          name: build
+          command: |
+              python3 -m build -Ccompile-args="-j 1 --verbose" . # -j1 because we do not have enough RAM
+              rm -rf $MODULE_NAME
+
       - py/test-and-coverage:
           coverage: false
       - py/deploy-pypi-on-tag:
