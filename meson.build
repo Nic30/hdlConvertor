@@ -40,10 +40,11 @@ if not antlr4_cpp_dep.found()
 	  'ANTLR_BUILD_CPP_TESTS': false,
 	  'ANTLR_BUILD_SHARED': false,
 	  'ANTLR4_INSTALL': false,
-	  'CMAKE_CXX_FLAGS': ' '.join(EXTRA_CXX_FLAGS),
+	  'CMAKE_CXX_FLAGS': ' '.join(EXTRA_CXX_FLAGS + ['-Wno-overloaded-virtual']),
 	  'CMAKE_POSITION_INDEPENDENT_CODE': true,
 	  'CMAKE_BUILD_TYPE': 'Release',
 	})
+	
 	antlr4_runtime_opt.set_install(false) # because meson-python does not know where to install it
 	antlr4_runtime_proj = cmake.subproject('antlr4-runtime', options: antlr4_runtime_opt)
 	antlr4_cpp_dep = antlr4_runtime_proj.dependency('antlr4_static')
