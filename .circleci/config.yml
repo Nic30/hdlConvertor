@@ -38,7 +38,7 @@ jobs:
       - run:
           name: build
           command: |
-              python3 -m build -Csetup-args="-Db_coverage=true" -Ccompile-args="-j 1 --verbose" . # -j1 because we do not have enough RAM
+              python3 -m build -Csetup-args="-Db_coverage=true" -Ccompile-args="-j 2 --verbose" . # -j1 because we do not have enough RAM
               mv $MODULE_NAME "removed_because_of_coverage_$MODULE_NAME"
       - py/test-and-coverage:
           coverage: false # dissable python coverage, we are collecting only C++ one
