@@ -18,7 +18,6 @@ environment:
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
-      ANTLR_VER: 4.9.3
     #- GENERATOR: -G"Visual Studio 15 2017 Win64"
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  BUILD_TYPE: Release
@@ -40,21 +39,11 @@ environment:
 install:
   - 'systeminfo'
   - 'git submodule update --init --recursive'
-  - "curl -fsS -o antlr4-complete.jar https://www.antlr.org/download/antlr-%ANTLR_VER%-complete.jar"
-  - "git clone https://github.com/antlr/antlr4"
-  - "cd antlr4/runtime/Cpp"
-  - "git checkout %ANTLR_VER%"
-  - "mkdir build"
-  - "cd build"
-  - 'cmake %GENERATOR% -DWITH_STATIC_CRT=Off -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DCMAKE_INSTALL_PREFIX="C:\\Program Files" ..'
-  - "msbuild LIBANTLR4.sln /p:configuration=%BUILD_TYPE% /p:platform=%PLATFORM%" # for other configuration installation does not work currently
-  - "cmake -P cmake_install.cmake"
-  - "cd ../../../../"
   - "%PYTHON%\\python.exe -m pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
 
 build_script:
-  - '%PYTHON%\\python.exe setup.py install -- -DJava_JAR_PATHS:PATH="%cd%" -DANTLR4CPP_ROOT:PATH="C:\\Program Files\\LIBANTLR4" %GENERATOR%'
+  - '%PYTHON%\\python.exe -m pip install .'
   - 'rmdir /s /q hdlConvertor' # to not collide with installed module
 
 test_script:
