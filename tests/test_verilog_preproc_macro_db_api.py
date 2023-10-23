@@ -59,15 +59,22 @@ class VerilogPreprocMacroDbApiTC(unittest.TestCase):
 
     def test_dos_crlf(self):
         c = HdlConvertor()
-        c.verilog_pp_str("`define P0 1\r\n`define P1 2\r\n`define TEST_SYMBOL `P0\\\r\n `P1\r\n", Language.SYSTEM_VERILOG)
+        inputText = """\
+`define P0 1
+`define P1 2
+`define TEST_SYMBOL `P0\
+ `P1
+`TEST_SYMBOL
+""".replace("\n", "\r\n")
+        res = c.verilog_pp_str(inputText, Language.SYSTEM_VERILOG)
         db = c.preproc_macro_db
         self.assertIn("TEST_SYMBOL", db)
-        self.assertEqual(db["TEST_SYMBOL"].get_body(), "1\r\n 2")
-
+        self.assertEqual(db["TEST_SYMBOL"].get_body(), "`P0 `P1")
+        self.assertEqual(res, "\n\n\n1 2\r\n")
 
 if __name__ == "__main__":
     testLoader = unittest.TestLoader()
-    # suite = unittest.TestSuite([VerilogPreprocMacroDbApiTC("test_can_recover_defines_from_verilog")])
+    # suite = unittest.TestSuite([VerilogPreprocMacroDbApiTC("test_dos_crlf")])
     suite = testLoader.loadTestsFromTestCase(VerilogPreprocMacroDbApiTC)
 
     runner = unittest.TextTestRunner(verbosity=3)
