@@ -113,6 +113,7 @@ PyObject* ToPy::toPy(const HdlStmCaseType o) {
 	}
 	return PyObject_GetAttrString(HdlStmCaseTypeEnum, name);
 }
+
 PyObject* ToPy::toPy(const HdlStmFor *o) {
 	auto py_inst = PyObject_CallObject(HdlStmForCls, NULL);
 	if (!py_inst) {
@@ -230,6 +231,7 @@ PyObject* ToPy::toPy(const HdlStmWhile *o) {
 		return nullptr;
 	return py_inst;
 }
+
 PyObject* ToPy::toPy(const HdlStmProcessTriggerConstrain o) {
 	const char * name = nullptr;
 
@@ -250,6 +252,7 @@ PyObject* ToPy::toPy(const HdlStmProcessTriggerConstrain o) {
 
 	return PyObject_GetAttrString(HdlStmProcessTriggerConstrainEnum, name);
 }
+
 PyObject* ToPy::toPy(const HdlStmProcess *o) {
 	auto py_inst = PyObject_CallObject(HdlStmProcessCls, NULL);
 	if (!py_inst) {
@@ -307,7 +310,7 @@ PyObject* ToPy::toPy(const HdlStmWait *o) {
 	return py_inst;
 }
 
-PyObject* ToPy::toPy(const HdlStmNop *o) {
+PyObject* ToPy::toPy([[maybe_unused]] const HdlStmNop *o) {
 	auto py_inst = PyObject_CallObject(HdlStmNopCls, NULL);
 	if (!py_inst) {
 		return nullptr;
@@ -431,7 +434,7 @@ PyObject* ToPy::toPy(const iHdlStatement *o) {
 	if (toPy(static_cast<const WithPos*>(o), py_inst))
 		return nullptr;
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const hdlConvertor::hdlAst::HdlExprAndiHdlObj &o) {

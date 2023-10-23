@@ -411,7 +411,6 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCall(
 		// auto amn = visitArray_method_name(_amn);
 		// p = make_unique<HdlOp>(p, HdlOpType::DOT, amn);
 	}
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	if (ctx->KW_WITH())
 		NotImplementedLogger::print(
 				"VerExprPrimaryParser.visitPrimaryCall.with", ctx);
@@ -421,10 +420,10 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCall(
 	auto loa = ctx->list_of_arguments();
 	if (loa) {
 		ep.visitList_of_arguments(loa, args);
-		return HdlOp::call(ctx, move(p), args);
-	} else {
-		return p;
+		p = HdlOp::call(ctx, move(p), args);
 	}
+	VerAttributeParser(this).visitAttribute_instance(*p, ctx->attribute_instance());
+	return p;
 }
 
 unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallArrayMethodNoArgs(
@@ -460,14 +459,15 @@ unique_ptr<iHdlExprItem> VerExprPrimaryParser::visitPrimaryCallWith(
 		// auto amn = visitArray_method_name(_amn);
 		// p = make_unique<HdlOp>(p, HdlOpType::DOT, amn);
 	}
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	if (ctx->KW_WITH())
 		NotImplementedLogger::print(
 				"VerExprPrimaryParser.visitPrimaryCallWith.with", ctx);
 
 	VerExprParser ep(this);
 	vector<unique_ptr<iHdlExprItem>> args;
-	return HdlOp::call(ctx, move(p), args);
+	auto c = HdlOp::call(ctx, move(p), args);
+	VerAttributeParser(this).visitAttribute_instance(*c, ctx->attribute_instance());
+	return c;
 }
 
 }

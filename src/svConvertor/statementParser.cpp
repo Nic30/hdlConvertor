@@ -269,7 +269,6 @@ unique_ptr<iHdlStatement> VerStatementParser::visitStatement(
 	// statement: ( identifier COLON )? ( attribute_instance )* statement_item;
 
 	auto ai = ctx->attribute_instance();
-	VerAttributeParser::visitAttribute_instance(ai);
 	auto _stm = ctx->statement_item();
 	auto stm = visitStatement_item(_stm);
 	auto _label = ctx->identifier();
@@ -277,6 +276,7 @@ unique_ptr<iHdlStatement> VerStatementParser::visitStatement(
 		auto label = _label->getText();
 		stm->labels.insert(stm->labels.begin(), label);
 	}
+	VerAttributeParser(this).visitAttribute_instance(*stm, ai);
 	return stm;
 }
 
@@ -661,7 +661,7 @@ void VerStatementParser::visitBlock_item_declaration(
 	//         | let_declaration
 	//     )
 	// ;
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	VerVisitAttributeForVectorResult<VerStatementParser, sv2017Parser::Block_item_declarationContext, iHdlObj> ap(this, ctx, res);
 	auto dd = ctx->data_declaration();
 	if (dd) {
 		VerDeclrParser dp(this);
@@ -755,8 +755,10 @@ unique_ptr<iHdlStatement> VerStatementParser::visitStatement_or_null(
 	if (s) {
 		return visitStatement(s);
 	} else {
-		VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
-		return create_object<HdlStmNop>(ctx);
+		auto res = create_object<HdlStmNop>(ctx);
+		VerAttributeParser ap(this);
+		ap.visitAttribute_instance(*res, ctx->attribute_instance());
+		return res;
 	}
 }
 

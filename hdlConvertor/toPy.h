@@ -117,14 +117,30 @@ class ToPy {
 				prop_name.c_str());
 		if (parent_list == nullptr) {
 			std::string err_msg = (std::string(
-					"ToPy::toPy_arr object does not have specified property:")
+					"ToPy::toPy_arr object does not have specified property: ")
 					+ prop_name + std::string(" : ") + PyObject_repr(parent));
 			Py_DECREF(parent);
 			PyErr_SetString(PyExc_ValueError, err_msg.c_str());
 			return -1;
+		} else if (Py_IsNone(parent_list)) {
+			parent_list = PyList_New(0);
+			if (!parent_list)
+				return -1;
+			if (PyObject_SetAttrString(parent, prop_name.c_str(), parent_list)
+					< 0) {
+				std::string err_msg =
+						(std::string(
+								"ToPy::toPy_arr parent object has currently None stored in specified attribute and setting it to a new list have failed:")
+								+ prop_name + std::string(" : ")
+								+ PyObject_repr(parent));
+				Py_DECREF(parent);
+				PyErr_SetString(PyExc_ValueError, err_msg.c_str());
+				return -1;
+			}
 		}
 		auto res = toPy_arr<OBJ_T>(parent_list, objs);
-		Py_DECREF(parent_list);
+		if (res)
+			Py_DECREF(parent_list); // decr because we do not longer use porowed property
 		return res;
 	}
 
@@ -176,6 +192,9 @@ class ToPy {
 		}
 		return toPy_property(py_inst, prop_name, py_o);
 	}
+
+	int toPy_hdlAttributes(PyObject *parent, const hdlAst::iHdlObj *obj);
+	PyObject * toPy_fillHdlAttributes(PyObject *parent, const hdlAst::iHdlObj *obj);
 public:
 	ToPy();
 
@@ -189,7 +208,7 @@ public:
 	int toPy(const hdlAst::WithDoc *o, PyObject *py_inst);
 	int toPy(const hdlAst::WithPos *o, PyObject *py_inst);
 
-	PyObject* toPy(const hdlConvertor::hdlAst::HdlExprAndiHdlObj &o);
+	PyObject* toPy(const hdlAst::HdlExprAndiHdlObj &o);
 	PyObject* toPy(const hdlAst::iHdlStatement *o);
 	PyObject* toPy(const hdlAst::HdlModuleDef *o);
 	PyObject* toPy(const hdlAst::HdlCompInst *o);
@@ -244,6 +263,7 @@ public:
 					std::unique_ptr<hdlAst::iHdlExprItem>> &o);
 	PyObject* toPy(
 			const std::pair<std::string, std::unique_ptr<hdlAst::iHdlExprItem>> &o);
+	PyObject* toPy(const hdlAst::iHdlObj::HdlAttribute &o);
 
 	~ToPy();
 };

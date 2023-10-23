@@ -135,7 +135,7 @@ unique_ptr<iHdlExprItem> VerExprParser::visitInc_or_dec_expression(
 		auto _op = c->inc_or_dec_operator();
 		op = VerLiteralParser::visitInc_or_dec_operator(_op, true);
 		e = visitVariable_lvalue(c->variable_lvalue());
-		VerAttributeParser::visitAttribute_instance(c->attribute_instance());
+		VerAttributeParser(this).visitAttribute_instance(*e, c->attribute_instance());
 	} else {
 		auto c =
 				dynamic_cast<sv2017Parser::Inc_or_dec_expressionPostContext*>(ctx);
@@ -143,12 +143,22 @@ unique_ptr<iHdlExprItem> VerExprParser::visitInc_or_dec_expression(
 		auto _op = c->inc_or_dec_operator();
 		op = VerLiteralParser::visitInc_or_dec_operator(_op, false);
 		e = visitVariable_lvalue(c->variable_lvalue());
-		VerAttributeParser::visitAttribute_instance(c->attribute_instance());
+		VerAttributeParser(this).visitAttribute_instance(*e, c->attribute_instance());
 	}
 	return create_object<HdlOp>(ctx, op, move(e));
 }
 
+
 unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
+		sv2017Parser::ExpressionContext *ctx) {
+	auto e = _visitExpression(ctx);
+	VerAttributeParser ap(this);
+	for (auto ai : ctx->attribute_instance()) {
+		ap.visitAttribute_instance(*e, ai);
+	}
+	return e;
+}
+unique_ptr<iHdlExprItem> VerExprParser::_visitExpression(
 		sv2017Parser::ExpressionContext *ctx) {
 	// expression:
 	//   primary
@@ -185,9 +195,6 @@ unique_ptr<iHdlExprItem> VerExprParser::visitExpression(
 		return create_object<HdlExprNotImplemented>(ctx);
 	}
 
-	for (auto ai : ctx->attribute_instance()) {
-		VerAttributeParser::visitAttribute_instance(ai);
-	}
 
 	auto _p = ctx->primary();
 	if (_p) {

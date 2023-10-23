@@ -675,7 +675,7 @@ void VerGenerateParser::visitGenerate_item(
 				ctx->data_declaration());
 		return;
 	}
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
+	VerVisitAttributeForVectorResult<VerGenerateParser, sv2017Parser::Generate_itemContext, iHdlObj> ap(this, ctx, res);
 
 	{
 		auto o = ctx->module_or_generate_item();
