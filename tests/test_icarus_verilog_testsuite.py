@@ -48,6 +48,7 @@ def parse_verilator_record(line, dir_name):
         "sv_string_index": "string_index",
         "sv_timeunit_prec": "sv_timeunit_prec1",
         "sv_timeunit_prec_fail": "sv_timeunit_prec_fail1",
+        "sv_macro3": "sv_macro3a"
     }
     name = name_fix.get(name, name)
     args = columns[1]
