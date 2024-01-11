@@ -33,7 +33,7 @@ jobs:
     
     - name: Build Library
       run: |
-        python setup.renamed.py bdist_wheel -j 4
+        python setup.py bdist_wheel -j 4
         auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
 
     - name: Archive Artifacts
@@ -64,7 +64,7 @@ jobs:
 
     - name: Build Source Library
       run: |
-        python setup.renamed.py sdist
+        python setup.py sdist
 
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
