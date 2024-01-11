@@ -49,7 +49,7 @@ jobs:
 
 
   # Build on Different Platform.
-    build_linux_amd64:
+  build_linux_amd64:
     
     # This can be expensive so you might skip this if it is not tagged
     # by uncommenting the following
@@ -58,7 +58,7 @@ jobs:
     # Run only when the test is good.
     if: ${{ success() }}
 
-    need:
+    needs:
       - build_and_test
 
     strategy:
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-20.04
     if: ${{ success() }}
 
-    need:
+    needs:
       - build_and_test
 
     steps:
