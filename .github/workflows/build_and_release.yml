@@ -1,0 +1,103 @@
+name: Build and Publish Python Package
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  build_linux_amd64:
+    strategy:
+        matrix:
+          python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        sudo apt update -y
+        sudo apt install build-essential uuid-dev cmake default-jre \
+                libantlr4-runtime-dev antlr4 libssl-dev -yq
+        pip install setuptools wheel cmake ninja patchelf auditwheel
+        pip install -r requirements.txt
+
+    # Include ANTLR4's License file as we are redistributing their binary
+    - name: Adding ANTLR4 License
+      run: |
+        curl -s https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt >> LICENSE
+    
+    - name: Build Library
+      run: |
+        python setup.renamed.py bdist_wheel -j 4
+        auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
+
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: PythonPackage
+        path: |
+          wheelhouse
+  
+  build_sdist:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        sudo apt update -y
+        sudo apt install build-essential uuid-dev cmake default-jre \
+                libantlr4-runtime-dev antlr4 libssl-dev -yq
+        pip install setuptools wheel cmake ninja patchelf auditwheel
+        pip install -r requirements.txt
+
+    # Not including ANTLR4 license here as we don't redistribute ANTLR4 Binary in this package.
+
+    - name: Build Source Library
+      run: |
+        python setup.renamed.py sdist
+
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: PythonPackage
+        path: |
+          dist
+  
+  # Add your testing steps here
+
+  publish:
+
+    runs-on: ubuntu-latest
+
+    # Publish only when a tag "v*" is pushed. (which is a release)
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && success() }}
+
+    needs: 
+      - build_linux_amd64
+      - build_sdist
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hdlConvertor
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download Package Built
+      uses: actions/download-artifact@v3
+      with:
+        name: PythonPackage
+        path: dist
+
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@release/v1
