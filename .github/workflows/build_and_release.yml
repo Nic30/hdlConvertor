@@ -8,14 +8,14 @@ permissions:
 jobs:
   # Create a Debug build and test it.
   build_and_test:
-    runs-on: ubuntu-23.10
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.10"
 
     # Don't need to install Python / Create venv, as you are running in a container.
     # You don't even need to install g++/cmake as it comes with the docker image.
@@ -63,8 +63,8 @@ jobs:
 
     strategy:
         matrix:
-          python-version: [ "3.9", "3.10", "3.11", "3.12" ]
-    runs-on: ubuntu-23.10
+          python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
       with:
@@ -105,7 +105,7 @@ jobs:
   # Developer can still build on their machine with the source bundle
   # (i.e. the original `pip install` flow if the platform is not included by above steps)  
   build_sdist:
-    runs-on: ubuntu-23.10
+    runs-on: ubuntu-20.04
     if: ${{ success() }}
 
     needs:
@@ -117,7 +117,7 @@ jobs:
         submodules: recursive
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.9"
     - name: Install Dependencies
       run: |
         sudo apt update -y
