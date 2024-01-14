@@ -2,6 +2,8 @@
 # build of the main library
 ##############################################################################################
 
+set(CMAKE_CXX_STANDARD 17)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMake_antlr4.txt)
 
 include_directories(
