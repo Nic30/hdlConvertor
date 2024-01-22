@@ -49,20 +49,22 @@ jobs:
               # -j1 because we do not have enough RAM
               # :note: it is important that Ccompile-args are separated
               # :note: b_coverage=true is ignored for buildtype=release
-              python3 -m build -Csetup-args="-Dbuildtype=debug" -Csetup-args="-Db_coverage=true" -Ccompile-args="--verbose" -Ccompile-args="-j1" .
-              pip3 install dist/*.whl
-              mv $MODULE_NAME "removed_because_of_coverage_$MODULE_NAME"
+              pip3 install pybind11 meson-python
+              pip3 install -e . --no-build-isolation \
+                  -Csetup-args="-Dbuildtype=debug" \
+                  -Csetup-args="-Db_coverage=true" \
+                  -Ccompile-args="--verbose" \
+                  -Cbuild-dir=build-dbg \
+                  -Ccompile-args="-j1"     
+              
       - py/test-and-coverage:
           coverage: false # dissable python coverage, we are collecting only C++ one
       - run:
           name: Filter lcov outputs for scikit-build and upload it to coveralls.io
           command: |
-              if [ -d "removed_because_of_coverage_$MODULE_NAME" ]; then
-                 mv "removed_because_of_coverage_$MODULE_NAME" $MODULE_NAME;
-              fi
               if  [ -z "$CIRCLE_PULL_REQUEST" ]; then
-                 lcov --compat-libtool --directory . --capture --output-file coverage.info.raw;
-                 lcov --remove coverage.info.raw -o coverage.info '/usr/*';
+                 lcov --compat-libtool --directory . --capture --output-file coverage.info.raw --ignore-errors mismatch # collect coverage reports
+                 lcov --remove coverage.info.raw -o coverage.info '/usr/*' 'pybind11/*' # remove system includes and pybind11 from coverage
                  sed -i 's/\/root\/project\///g' coverage.info;
                  sed -i 's/\/root\///g' coverage.info;
                  coveralls-lcov coverage.info --repo-token ${COVERALLS_REPO_TOKEN};
