@@ -1,0 +1,169 @@
+name: Test, Build and Deploy
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  # Create a Debug build and test it.
+  build_and_test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    # Don't need to install Python / Create venv, as you are running in a container.
+    # You don't even need to install g++/cmake as it comes with the docker image.
+    - name: Install Dependencies
+      run: |
+        sudo apt update -y
+        sudo apt install build-essential uuid-dev cmake default-jre \
+                libantlr4-runtime-dev antlr4 libssl-dev -yq
+        pip install setuptools wheel cmake ninja patchelf auditwheel
+        pip install -r requirements.txt
+    
+    - name: Check Your Environment
+      run: |
+        gcc -v
+        python --version
+        cmake --version
+        free
+    
+    - name: Build
+      run: |
+        echo Your Build Script here
+        echo Make sure the Debug and Coverage Switch is on, only in this job.
+
+    - name: Test
+      run: |
+        echo Your Test Script here
+
+    - name: Extract Coverage Report
+      run: |
+        echo Your Coverage Report
+
+
+  # Build on Different Platform.
+  build_linux_amd64:
+    
+    # This can be expensive so you might skip this if it is not tagged
+    # by uncommenting the following
+    # if: ${{ startsWith(github.ref, 'refs/tags/v') && success() }}
+    
+    # Run only when the test is good.
+    if: ${{ success() }}
+
+    needs:
+      - build_and_test
+
+    strategy:
+        matrix:
+          python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        sudo apt update -y
+        sudo apt install build-essential uuid-dev cmake default-jre \
+                libantlr4-runtime-dev antlr4 libssl-dev -yq
+        pip install setuptools wheel cmake ninja patchelf auditwheel
+        pip install -r requirements.txt
+
+    # Include ANTLR4's License file as we are redistributing their binary
+    - name: Adding ANTLR4 License
+      run: |
+        curl -s https://raw.githubusercontent.com/antlr/antlr4/master/LICENSE.txt >> LICENSE
+
+    # Build the library.
+    # Don't include debug and coverage stuff here.
+    # GitHub runner on Open source project is equipped with 4 cores. 
+    # Use them with `-j 4` flag
+    - name: Build Library
+      run: |
+        python setup.py bdist_wheel -j 4
+        auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
+
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: PythonPackage
+        path: |
+          wheelhouse
+
+  # Build the Source Bundle
+  # Developer can still build on their machine with the source bundle
+  # (i.e. the original `pip install` flow if the platform is not included by above steps)  
+  build_sdist:
+    runs-on: ubuntu-20.04
+    if: ${{ success() }}
+
+    needs:
+      - build_and_test
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.9"
+    - name: Install Dependencies
+      run: |
+        sudo apt update -y
+        sudo apt install build-essential uuid-dev cmake default-jre \
+                libantlr4-runtime-dev antlr4 libssl-dev -yq
+        pip install setuptools wheel cmake ninja patchelf auditwheel
+        pip install -r requirements.txt
+
+    # Not including ANTLR4 license here as we don't redistribute ANTLR4 Binary in this package.
+
+    - name: Build Source Library
+      run: |
+        python setup.py sdist
+
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: PythonPackage
+        path: |
+          dist
+  
+  # Add your testing steps here
+
+  publish:
+
+    runs-on: ubuntu-latest
+
+    # Publish only when a tag "v*" is pushed. (which is a release)
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && success() }}
+
+    needs: 
+      - build_linux_amd64
+      - build_sdist
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/hdlConvertor
+    permissions:
+      id-token: write
+
+    steps:
+    - name: Download Package Built
+      uses: actions/download-artifact@v3
+      with:
+        name: PythonPackage
+        path: dist
+
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@release/v1

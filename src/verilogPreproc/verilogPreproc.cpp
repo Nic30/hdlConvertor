@@ -1,3 +1,5 @@
+#include <any>
+
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
 
 // antlr4-runtime/
@@ -194,7 +196,7 @@ antlrcpp::Any VerilogPreproc::visitDefine(
 	vector<MacroDefVerilog::param_info_t> params_dummy;
 	if (da) {
 #if !defined(ANTLRCPP_VERSION_MAJOR) || (ANTLRCPP_VERSION_MAJOR == 4 && ANTLRCPP_VERSION_MINOR <= 9)
-		params = visitDefine_args(da);
+		params = visitDefine_args(da).as<vector<MacroDefVerilog::param_info_t> *>();
 #else
 		params = std::any_cast<vector<MacroDefVerilog::param_info_t> *>(visitDefine_args(da));
 #endif
