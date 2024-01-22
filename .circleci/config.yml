@@ -117,6 +117,8 @@ jobs:
           coverage: false
       - py/deploy-pypi-on-tag:
           bin: false
+          build: true
+          src: false
 
 workflows:
   main:
