@@ -49,7 +49,7 @@ jobs:
               # -j1 because we do not have enough RAM
               # :note: it is important that Ccompile-args are separated
               # :note: b_coverage=true is ignored for buildtype=release
-              pip3 install pybind11 meson-python
+              pip3 install pybind11 meson-python Cython
               pip3 install -e . --no-build-isolation \
                   -Csetup-args="-Dbuildtype=debug" \
                   -Csetup-args="-Db_coverage=true" \
