@@ -63,7 +63,7 @@ jobs:
           name: Filter lcov outputs for scikit-build and upload it to coveralls.io
           command: |
               if  [ -z "$CIRCLE_PULL_REQUEST" ]; then
-                 lcov --compat-libtool --directory . --capture --output-file coverage.info.raw --ignore-errors mismatch # collect coverage reports
+                 lcov --compat-libtool --directory . --capture --output-file coverage.info.raw  # collect coverage reports
                  lcov --remove coverage.info.raw -o coverage.info '/usr/*' 'pybind11/*' # remove system includes and pybind11 from coverage
                  sed -i 's/\/root\/project\///g' coverage.info;
                  sed -i 's/\/root\///g' coverage.info;
