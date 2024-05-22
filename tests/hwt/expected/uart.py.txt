@@ -1,14 +1,14 @@
 from hwt.code import If, Switch, Concat
 from hwt.code_utils import rename_signal
+from hwt.hwIOs.std import HwIOSignal
+from hwt.hwModule import HwModule
+from hwt.hwParam import HwParam
 from hwt.hdl.types.array import HArray
-from hwt.hdl.types.bits import Bits
+from hwt.hdl.types.bits import HBits
 from hwt.hdl.types.defs import INT, SLICE, STR, BIT, FLOAT64
 from hwt.hdl.types.enum import HEnum
-from hwt.interfaces.std import Signal
-from hwt.synthesizer.param import Param
-from hwt.synthesizer.unit import Unit
 
-class uart(Unit):
+class uart(HwModule):
     """http://www.asic-world.com/examples/verilog/uart.html
     -----------------------------------------------------
      Design Name : uart 
@@ -21,19 +21,19 @@ class uart(Unit):
     def _declr(self):
         # ports
         # Port declarations
-        self.reset = Signal()
-        self.txclk = Signal()
-        self.ld_tx_data = Signal()
-        self.tx_data = Signal(Bits(9))
-        self.tx_enable = Signal()
-        self.tx_out = Signal()._m()
-        self.tx_empty = Signal()._m()
-        self.rxclk = Signal()
-        self.uld_rx_data = Signal()
-        self.rx_data = Signal(Bits(9))._m()
-        self.rx_enable = Signal()
-        self.rx_in = Signal()
-        self.rx_empty = Signal()._m()
+        self.reset = HwIOSignal()
+        self.txclk = HwIOSignal()
+        self.ld_tx_data = HwIOSignal()
+        self.tx_data = HwIOSignal(HBits(9))
+        self.tx_enable = HwIOSignal()
+        self.tx_out = HwIOSignal()._m()
+        self.tx_empty = HwIOSignal()._m()
+        self.rxclk = HwIOSignal()
+        self.uld_rx_data = HwIOSignal()
+        self.rx_data = HwIOSignal(HBits(9))._m()
+        self.rx_enable = HwIOSignal()
+        self.rx_in = HwIOSignal()
+        self.rx_empty = HwIOSignal()._m()
         # component instances
 
     def _impl(self):
@@ -43,12 +43,12 @@ class uart(Unit):
         self.rx_in, self.rx_empty
         # internal signals
         # Internal Variables (@note: interference with ports)
-        tx_reg = self._sig("tx_reg", Bits(9))
+        tx_reg = self._sig("tx_reg", HBits(9))
         tx_over_run = self._sig("tx_over_run")
-        tx_cnt = self._sig("tx_cnt", Bits(5))
-        rx_reg = self._sig("rx_reg", Bits(9))
-        rx_sample_cnt = self._sig("rx_sample_cnt", Bits(5))
-        rx_cnt = self._sig("rx_cnt", Bits(5))
+        tx_cnt = self._sig("tx_cnt", HBits(5))
+        rx_reg = self._sig("rx_reg", HBits(9))
+        rx_sample_cnt = self._sig("rx_sample_cnt", HBits(5))
+        rx_cnt = self._sig("rx_cnt", HBits(5))
         rx_frame_err = self._sig("rx_frame_err")
         rx_over_run = self._sig("rx_over_run")
         rx_d1 = self._sig("rx_d1")

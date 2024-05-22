@@ -53,7 +53,7 @@ You can also install only C++ library/generate .deb package (nothing specific, j
 meson setup build -Dpython_package=false
 ninja -C build
 ```
-For dev purposes also this link could be usefull https://meson-python.readthedocs.io/en/latest/how-to-guides/meson-args.html#how-to-guides-meson-args
+For dev purposes also this link could be useful https://meson-python.readthedocs.io/en/latest/how-to-guides/meson-args.html#how-to-guides-meson-args
 
 ## Usage
 

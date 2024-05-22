@@ -7,8 +7,8 @@ from hwtSimApi.basic_hdl_simulator.model_utils import sensitivity, connectSimPor
 from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
 from hwtSimApi.basic_hdl_simulator.sim_utils import sim_eval_cond
 
-class subunit0(BasicRtlSimModel):
-    def __init__(self, sim: "BasicRtlSimulator", name="subunit0"):
+class submodule0(BasicRtlSimModel):
+    def __init__(self, sim: "BasicRtlSimulator", name="submodule0"):
         BasicRtlSimModel.__init__(self, sim, name=name)
         # ports
         self.io.a = BasicRtlSimProxy(
@@ -27,12 +27,12 @@ class subunit0(BasicRtlSimModel):
         self._processes = (
             self.assig_process_b,
         )
-        self._units = ()
+        self._subHwModules = ()
         sensitivity(self.assig_process_b, self.io.a)
         self._outputs[self.assig_process_b] = (
             self.io.b,
         )
-        for u in self._units:
+        for u in self._subHwModules:
             u._init_body()
 
     # sensitivity: a
@@ -50,45 +50,45 @@ class SimpleSubunit(BasicRtlSimModel):
             sim, self, "b",
             Bits3t(1, 0), None)
         # internal signals
-        self.io.sig_subunit0_a = BasicRtlSimProxy(
-            sim, self, "sig_subunit0_a",
+        self.io.sig_submodule0_a = BasicRtlSimProxy(
+            sim, self, "sig_submodule0_a",
             Bits3t(1, 0), None)
-        self.io.sig_subunit0_b = BasicRtlSimProxy(
-            sim, self, "sig_subunit0_b",
+        self.io.sig_submodule0_b = BasicRtlSimProxy(
+            sim, self, "sig_submodule0_b",
             Bits3t(1, 0), None)
         # component instances
-        self.subunit0_inst = subunit0(sim, "subunit0_inst")
+        self.submodule0_inst = submodule0(sim, "submodule0_inst")
     def _init_body(self):
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_a", "a")
-        connectSimPort(self, self.subunit0_inst, "sig_subunit0_b", "b")
+        connectSimPort(self, self.submodule0_inst, "sig_submodule0_a", "a")
+        connectSimPort(self, self.submodule0_inst, "sig_submodule0_b", "b")
         self._interfaces = (
             self.io.a,
             self.io.b,
-            self.io.sig_subunit0_a,
-            self.io.sig_subunit0_b,
+            self.io.sig_submodule0_a,
+            self.io.sig_submodule0_b,
         )
         self._processes = (
             self.assig_process_b,
-            self.assig_process_sig_subunit0_a,
+            self.assig_process_sig_submodule0_a,
         )
-        self._units = (self.subunit0_inst,
+        self._subHwModules = (self.submodule0_inst,
         )
-        sensitivity(self.assig_process_b, self.io.sig_subunit0_b)
+        sensitivity(self.assig_process_b, self.io.sig_submodule0_b)
         self._outputs[self.assig_process_b] = (
             self.io.b,
         )
-        sensitivity(self.assig_process_sig_subunit0_a, self.io.a)
-        self._outputs[self.assig_process_sig_subunit0_a] = (
-            self.io.sig_subunit0_a,
+        sensitivity(self.assig_process_sig_submodule0_a, self.io.a)
+        self._outputs[self.assig_process_sig_submodule0_a] = (
+            self.io.sig_submodule0_a,
         )
-        for u in self._units:
+        for u in self._subHwModules:
             u._init_body()
 
-    # sensitivity: sig_subunit0_b
+    # sensitivity: sig_submodule0_b
     def assig_process_b(self):
-        self.io.b.val_next = (self.io.sig_subunit0_b.val, 0, )
+        self.io.b.val_next = (self.io.sig_submodule0_b.val, 0, )
 
     # sensitivity: a
-    def assig_process_sig_subunit0_a(self):
-        self.io.sig_subunit0_a.val_next = (self.io.a.val, 0, )
+    def assig_process_sig_submodule0_a(self):
+        self.io.sig_submodule0_a.val_next = (self.io.a.val, 0, )
 
