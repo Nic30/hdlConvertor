@@ -18,7 +18,7 @@ class decoder_using_case(HwModule):
     -----------------------------------------------------
     
     """
-    def _declr(self):
+    def hwDeclr(self):
         # ports
         self.binary_in = HwIOSignal(HBits(5))
         # 4 bit binary input
@@ -27,7 +27,7 @@ class decoder_using_case(HwModule):
         self.enable = HwIOSignal()
         # component instances
 
-    def _impl(self):
+    def hwImpl(self):
         binary_in, decoder_out, enable = \
         self.binary_in, self.decoder_out, self.enable
         # internal signals

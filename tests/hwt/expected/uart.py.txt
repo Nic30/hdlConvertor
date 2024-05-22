@@ -18,7 +18,7 @@ class uart(HwModule):
     -----------------------------------------------------
     
     """
-    def _declr(self):
+    def hwDeclr(self):
         # ports
         # Port declarations
         self.reset = HwIOSignal()
@@ -36,7 +36,7 @@ class uart(HwModule):
         self.rx_empty = HwIOSignal()._m()
         # component instances
 
-    def _impl(self):
+    def hwImpl(self):
         reset, txclk, ld_tx_data, tx_data, tx_enable, tx_out, tx_empty, rxclk, uld_rx_data, rx_data, rx_enable, \
         rx_in, rx_empty = \
         self.reset, self.txclk, self.ld_tx_data, self.tx_data, self.tx_enable, self.tx_out, self.tx_empty, self.rxclk, self.uld_rx_data, self.rx_data, self.rx_enable, \
