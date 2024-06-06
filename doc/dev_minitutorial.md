@@ -86,7 +86,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
      you need to copy or link library to it's package folder
      ```
      cd hdlConvertor
-     ln ../_skbuild/linux-*/setuptools/lib/hdlConvertor/_hdlConvertor.*.so . -s
+     ln ../build/hdlConvertor/_hdlConvertor.*.so . -s
 	 ```
    * for cmake.version < 3.15 automatic delete of generated files not working for ninja use:
    	 (only if something is seriously broken)
@@ -107,7 +107,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
 	* Arguments: $NAME_OF_YOUR_SCRIPT etc
-	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/_skbuild/linux-x86_64-3.8/setuptools/lib`
+	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/build`
 	* in CMakeLists.txt add  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	  to enable debuging build and disable optimisations
 	* now break points in c++ and all other debuging stuff should work as expected
@@ -119,9 +119,6 @@ This class contains a methods which simplifies the parsing/conversion test scena
   $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlAst7iHdlObjEi
   hdlConvertor::ToString::dump(hdlConvertor::hdlAst::iHdlObj const*, int)
   ```
-* to forece regeneration of generated files delete cmake file which
-  tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
-
 * antlr4 gui - visualize a parse tree
    ```
    CLASSPATH=/usr/share/java/stringtemplate4.jar:/usr/share/java/antlr4.jar:/usr/share/java/antlr4-runtime.jar:/usr/share/java/antlr3-runtime.jar/:/usr/share/java/treelayout.jar
