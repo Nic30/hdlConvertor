@@ -20,7 +20,7 @@ class submodule0(BasicRtlSimModel):
         # internal signals
         # component instances
     def _init_body(self):
-        self._interfaces = (
+        self._hwIOs = (
             self.io.a,
             self.io.b,
         )
@@ -61,7 +61,7 @@ class SimpleSubunit(BasicRtlSimModel):
     def _init_body(self):
         connectSimPort(self, self.submodule0_inst, "sig_submodule0_a", "a")
         connectSimPort(self, self.submodule0_inst, "sig_submodule0_b", "b")
-        self._interfaces = (
+        self._hwIOs = (
             self.io.a,
             self.io.b,
             self.io.sig_submodule0_a,
