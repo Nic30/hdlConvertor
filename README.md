@@ -27,10 +27,10 @@ It contains:
 ## Installation
 
 Linux:
-Installing dependencies (Ubuntu 20.10)
+Installing dependencies (Ubuntu 24.04)
 ```
-# gcc>=9, Visual Studio 2017 or equivalent recommended
-sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4 ninja-build
+# gcc>=13, Visual Studio 2017 or equivalent recommended
+sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip ninja-build
 ```
 
 Installing this library

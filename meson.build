@@ -30,8 +30,9 @@ elif host_machine.system() == 'linux'
     EXTRA_CXX_FLAGS += ['-Wall', '-pedantic', '-W', '-Wno-attributes']
 endif
 
-antlr4_cpp_dep = cc.find_library('antlr4-runtime', required : false)
-if not antlr4_cpp_dep.found()
+# [fixme] use of local antlr4-runtime dissabled because check for version does not work
+#antlr4_cpp_dep = cc.find_library('antlr4-runtime', required : false)
+#if not antlr4_cpp_dep.found()
 	message('atempting to download antrl4-complete.jar and antlr4-runtime for C++ because installation was not found')
 	cmake = import('cmake')
 	
@@ -40,7 +41,7 @@ if not antlr4_cpp_dep.found()
 	  'ANTLR_BUILD_CPP_TESTS': false,
 	  'ANTLR_BUILD_SHARED': false,
 	  'ANTLR4_INSTALL': false,
-	  'CMAKE_CXX_FLAGS': ' '.join(EXTRA_CXX_FLAGS + ['-Wno-overloaded-virtual']),
+	  'CMAKE_CXX_FLAGS': ' '.join(EXTRA_CXX_FLAGS + ['-Wno-overloaded-virtual', '-Wno-unused-parameter']),
 	  'CMAKE_POSITION_INDEPENDENT_CODE': true,
 	  'CMAKE_BUILD_TYPE': 'Release',
 	})
@@ -55,13 +56,13 @@ if not antlr4_cpp_dep.found()
 		f'https://www.antlr.org/download/antlr-@antlr4_cpp_version@-complete.jar', antlr4_jar,
 		'--hash', 'md5', 'c9c8b566a7fcf8ef80e229f14b154a26', check: true)
 	antlr4_java = find_program('utils/antlr4-complete.sh') # an extra script so we do not need to write all arguments everytime
-else
-	antlr4_cpp_inc = include_directories('/usr/include/antlr4-runtime/')
-	antlr4_cpp_dep = cc.find_library('antlr4-runtime', header_include_directories: antlr4_cpp_inc, has_headers: 'antlr4-runtime.h', required : false)
-    # redeclare because include_dir somehow is not in dependency
-	antlr4_cpp_dep = declare_dependency(dependencies: [antlr4_cpp_dep], include_directories: antlr4_cpp_inc)
-	antlr4_java = find_program('antlr4', required : true)
-endif
+#else
+#	antlr4_cpp_inc = include_directories('/usr/include/antlr4-runtime/')
+#	antlr4_cpp_dep = cc.find_library('antlr4-runtime', header_include_directories: antlr4_cpp_inc, has_headers: 'antlr4-runtime.h', required : false)
+#    # redeclare because include_dir somehow is not in dependency
+#	antlr4_cpp_dep = declare_dependency(dependencies: [antlr4_cpp_dep], include_directories: antlr4_cpp_inc)
+#	antlr4_java = find_program('antlr4', required : true)
+#endif
 
 cp = find_program('cp', required : true)
 

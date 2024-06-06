@@ -26,8 +26,7 @@ RUN adduser --disabled-password \
 	    ${NB_USER} 
 
 RUN apt install build-essential uuid-dev cmake default-jre\
-                python3 python3-dev python3-pip libantlr4-runtime-dev\
-                antlr4 libssl-dev -yq
+                python3 python3-dev python3-pip libssl-dev -yq
 RUN pip3 install scikit-build Cython notebook --break-system-packages
 # RUN pip3 install hdlConvertor
 
