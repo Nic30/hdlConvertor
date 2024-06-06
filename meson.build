@@ -49,7 +49,7 @@ endif
 	antlr4_runtime_opt.set_install(false) # because meson-python does not know where to install it
 	antlr4_runtime_proj = cmake.subproject('antlr4-runtime', options: antlr4_runtime_opt)
 	antlr4_cpp_dep = antlr4_runtime_proj.dependency('antlr4_static')
-	antlr4_cpp_version = '4.13.0'
+	antlr4_cpp_version = '4.13.1'
 	import('java') # to check that java is installed
 	antlr4_jar = join_paths(meson.current_build_dir() , 'antlr4-complete.jar')
 	run_command('python3', 'utils/download.py',
