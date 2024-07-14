@@ -8,6 +8,8 @@ hdlConvertor_core_src = [
 	'conversion_exception.cpp',
 	'universal_fs.cpp',
 	'encodingConversions.cpp',
+        'hdlConvertorToken.cpp',
+        'hdlConvertorTokenFactory.cpp'
 ]
 hdlConvertor_core_src += run_command(py3, '../utils/rec_glob.py', './hdlAst', '*.cpp', check:true)\
 	.stdout().strip().split('\n')

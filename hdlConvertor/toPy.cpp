@@ -190,6 +190,8 @@ PyObject* ToPy::toPy(const CodePosition o) {
 		return nullptr;
 	if (toPy_property(py_inst, "stop_column", o.stop_column))
 		return nullptr;
+	if (toPy_property(py_inst, "file_name", o.file_name))
+		return nullptr;
 	return py_inst;
 }
 
