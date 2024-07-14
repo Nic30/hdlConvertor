@@ -56,7 +56,7 @@ public:
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
-		/* Debug print FileLineMap data */
+		/* Debug print FileLineMap data
 		std::cout << "File_line_map" << std::endl;
 		for (hdlConvertor::verilog_pp::FileLineMapItem item : file_line_map){
 		  std::cout << item.line << ' ' << item.file_override.c_str() << ' ' << item.line_override << std::endl;
