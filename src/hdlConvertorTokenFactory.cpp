@@ -55,9 +55,11 @@ hdlConvertorTokenFactory::create(
 	}
 	if (found ==  false) {
 		ptr->setLine(line);
+		/* line not found ! For time beeing keep original data
 		std::cout << "Drama! "
 			<< text
 			<< "line: "<< line << " not found" << std::endl;
+		*/
 	}
 	ptr->setCharPositionInLine(charPositionInLine);
 	if (text != "") {

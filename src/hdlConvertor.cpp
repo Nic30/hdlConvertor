@@ -25,6 +25,20 @@ class VHDLParserContainer: public iParserContainer<vhdl_antlr::vhdlLexer,
 		vhdl_antlr::vhdlParser, vhdl::VhdlDesignFileParser> {
 	using iParserContainer::iParserContainer;
 	virtual void parseFn() override {
+
+		/*
+		 * Customize Lexer with our hdlConvertorToken factory
+		 * This allow us to enrich antlr4::CommonToken with filename on
+		 * each token, then spread this kind of detail everywhere token are
+		 * use.
+		 * Dummy structure for vhdl, since no processing step exist.
+		 * */
+		verilog_pp::FileLineMap dummy_file_line_map;
+		hdlConvertorTokenFactory factory;
+		factory.setFileLineMap(&dummy_file_line_map);
+		lexer.get()->setTokenFactory(factory.DEFAULT.get());
+
+
 		vhdl_antlr::vhdlParser::Design_fileContext *tree =
 				antlrParser->design_file();
 		syntaxErrLogger.check_errors(); // Throw exception if errors
