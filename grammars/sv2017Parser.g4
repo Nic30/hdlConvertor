@@ -529,6 +529,7 @@ delay_value:
     | KW_1STEP
     | real_number
     | ps_identifier
+    | hierarchical_identifier
 ;
 delay_control:
     HASH ( LPAREN mintypmax_expression RPAREN
