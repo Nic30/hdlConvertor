@@ -91,9 +91,8 @@ jobs:
     # Use them with `-j 4` flag
     - name: Build Library
       run: |
-        #python setup.py bdist_wheel -j 4
-        #auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
-        pip install .
+        python setup.py bdist_wheel -j 4
+        auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
 
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
