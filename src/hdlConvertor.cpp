@@ -56,6 +56,14 @@ public:
 		string preprocessed_code = preprocess_res.str();
 		file_line_map = preprocess_res.file_line_map;
 
+		/* Debug print FileLineMap data */
+		std::cout << "File_line_map" << std::endl;
+		for (hdlConvertor::verilog_pp::FileLineMapItem item : file_line_map){
+		  std::cout << item.line << ' ' << item.file_override.c_str() << ' ' << item.line_override << std::endl;
+		}
+		*/
+
+
 		antlr4::ANTLRInputStream input_for_parser(preprocessed_code);
 		input_for_parser.name = file_name.u8string();
 		this->_parse(input_for_parser, hierarchyOnly);
@@ -77,8 +85,28 @@ public:
 
 	virtual void parseFn() override {
 		lexer->language_version = lang;
+
+		/*
+		 * Customize Lexer with our hdlConvertorToken factory
+		 * This allow us to enrich antlr4::CommonToken with filename on
+		 * each token, then spread this kind of detail everywhere token are
+		 * use
+		 * */
+		hdlConvertorTokenFactory factory;
+		factory.setFileLineMap(&file_line_map);
+		lexer.get()->setTokenFactory(factory.DEFAULT.get());
+
+		/* Debug print hdlConvertorToken list
+		tokens.get()->fill();
+		for (auto token : tokens.get()->getTokens()) {
+    			std::cout << token->toString() << std::endl;
+  		}
+		*/
+
 		sv2017_antlr::sv2017Parser::Source_textContext *tree =
 				antlrParser->source_text();
+
+
 		syntaxErrLogger.check_errors(); // Throw exception if errors
 		hdlParser->visitSource_text(tree);
 	}

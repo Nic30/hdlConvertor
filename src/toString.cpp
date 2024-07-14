@@ -172,6 +172,7 @@ void ToString::dump(const CodePosition * o, int indent) {
 	dump_size_t("stopLine", o->stop_line);
 	dump_size_t("startColumn", o->start_column);
 	dump_size_t("stopColumn", o->stop_column);
+	dump_size_t("fileName",o->file_name);
 	indent -= INDENT_INCR;
 	mkIndent(indent) << "}";
 }
