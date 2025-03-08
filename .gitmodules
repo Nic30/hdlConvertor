@@ -8,7 +8,7 @@
 	branch = master
 [submodule "verilator"]
 	path = tests/verilator
-	url = http://git.veripool.org/git/verilator
+	url = https://github.com/verilator/verilator
 	branch = master
 [submodule "vunit"]
 	path = tests/vunit
