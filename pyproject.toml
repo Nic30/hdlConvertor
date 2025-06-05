@@ -38,7 +38,7 @@ classifiers = [
   'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
 ]
 dependencies  = [
-  'hdlConvertorAst@git+https://https://github.com/Nic30/hdlConvertorAst@master',
+  'hdlConvertorAst@git+https://github.com/Nic30/hdlConvertorAst@master',
 ]
 
 [project.urls]
