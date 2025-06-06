@@ -39,25 +39,25 @@ module arbiter (
             lgnt2 <= 0;
             lgnt3 <= 0;
         end else begin
-            lgnt0 <= ~lcomreq & ~lmask1 & ~lmask0 & ~req3 & ~req2 & ~req1 & req0 | (~lcomreq & ~lmask1 & lmask0 & ~req3 & ~req2 & req0) | (~lcomreq & lmask1 & ~lmask0 & ~req3 & req0) | (~lcomreq & lmask1 & lmask0 & req0) | (lcomreq & lgnt0);
-            lgnt1 <= ~lcomreq & ~lmask1 & ~lmask0 & req1 | (~lcomreq & ~lmask1 & lmask0 & ~req3 & ~req2 & req1 & ~req0) | (~lcomreq & lmask1 & ~lmask0 & ~req3 & req1 & ~req0) | (~lcomreq & lmask1 & lmask0 & req1 & ~req0) | (lcomreq & lgnt1);
-            lgnt2 <= ~lcomreq & ~lmask1 & ~lmask0 & req2 & ~req1 | (~lcomreq & ~lmask1 & lmask0 & req2) | (~lcomreq & lmask1 & ~lmask0 & ~req3 & req2 & ~req1 & ~req0) | (~lcomreq & lmask1 & lmask0 & req2 & ~req1 & ~req0) | (lcomreq & lgnt2);
-            lgnt3 <= ~lcomreq & ~lmask1 & ~lmask0 & req3 & ~req2 & ~req1 | (~lcomreq & ~lmask1 & lmask0 & req3 & ~req2) | (~lcomreq & lmask1 & ~lmask0 & req3) | (~lcomreq & lmask1 & lmask0 & req3 & ~req2 & ~req1 & ~req0) | (lcomreq & lgnt3);
+            lgnt0 <= ~lcomreq & ~lmask1 & ~lmask0 & ~req3 & ~req2 & ~req1 & req0 | ~lcomreq & ~lmask1 & lmask0 & ~req3 & ~req2 & req0 | ~lcomreq & lmask1 & ~lmask0 & ~req3 & req0 | ~lcomreq & lmask1 & lmask0 & req0 | lcomreq & lgnt0;
+            lgnt1 <= ~lcomreq & ~lmask1 & ~lmask0 & req1 | ~lcomreq & ~lmask1 & lmask0 & ~req3 & ~req2 & req1 & ~req0 | ~lcomreq & lmask1 & ~lmask0 & ~req3 & req1 & ~req0 | ~lcomreq & lmask1 & lmask0 & req1 & ~req0 | lcomreq & lgnt1;
+            lgnt2 <= ~lcomreq & ~lmask1 & ~lmask0 & req2 & ~req1 | ~lcomreq & ~lmask1 & lmask0 & req2 | ~lcomreq & lmask1 & ~lmask0 & ~req3 & req2 & ~req1 & ~req0 | ~lcomreq & lmask1 & lmask0 & req2 & ~req1 & ~req0 | lcomreq & lgnt2;
+            lgnt3 <= ~lcomreq & ~lmask1 & ~lmask0 & req3 & ~req2 & ~req1 | ~lcomreq & ~lmask1 & lmask0 & req3 & ~req2 | ~lcomreq & lmask1 & ~lmask0 & req3 | ~lcomreq & lmask1 & lmask0 & req3 & ~req2 & ~req1 & ~req0 | lcomreq & lgnt3;
         end
 
     //----------------------------------------------------
     // lasmask state machine.
     //----------------------------------------------------
-    assign beg = req3 | req2 | req1 | req0 & ~lcomreq;
+    assign beg = (req3 | req2 | req1 | req0) & ~lcomreq;
     always @(posedge clk) begin
         lasmask <= beg & ~ledge & ~lasmask;
-        ledge <= beg & ~ledge & lasmask | (beg & ledge & ~lasmask);
+        ledge <= beg & ~ledge & lasmask | beg & ledge & ~lasmask;
     end
 
     //----------------------------------------------------
     // comreq logic.
     //----------------------------------------------------
-    assign lcomreq = req3 & lgnt3 | (req2 & lgnt2) | (req1 & lgnt1) | (req0 & lgnt0);
+    assign lcomreq = req3 & lgnt3 | req2 & lgnt2 | req1 & lgnt1 | req0 & lgnt0;
     //----------------------------------------------------
     // Encoder logic.
     //----------------------------------------------------

@@ -69,8 +69,8 @@ module aFifo #(
     //'EqualAddresses' logic:
     assign EqualAddresses = pNextWordToWrite == pNextWordToRead;
     //'Quadrant selectors' logic:
-    assign Set_Status = pNextWordToWrite[ADDRESS_WIDTH - 2] ~^ pNextWordToRead[ADDRESS_WIDTH - 1] & (pNextWordToWrite[ADDRESS_WIDTH - 1] ^ pNextWordToRead[ADDRESS_WIDTH - 2]);
-    assign Rst_Status = pNextWordToWrite[ADDRESS_WIDTH - 2] ^ pNextWordToRead[ADDRESS_WIDTH - 1] & (pNextWordToWrite[ADDRESS_WIDTH - 1] ~^ pNextWordToRead[ADDRESS_WIDTH - 2]);
+    assign Set_Status = (pNextWordToWrite[ADDRESS_WIDTH - 2] ~^ pNextWordToRead[ADDRESS_WIDTH - 1]) & (pNextWordToWrite[ADDRESS_WIDTH - 1] ^ pNextWordToRead[ADDRESS_WIDTH - 2]);
+    assign Rst_Status = (pNextWordToWrite[ADDRESS_WIDTH - 2] ^ pNextWordToRead[ADDRESS_WIDTH - 1]) & (pNextWordToWrite[ADDRESS_WIDTH - 1] ~^ pNextWordToRead[ADDRESS_WIDTH - 2]);
     //'Status' latch logic:
     always @(Set_Status, Rst_Status, Clear_in)
         // Latch w/ Asynchronous Clear & Preset.
