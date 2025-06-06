@@ -8,9 +8,9 @@ permissions:
 jobs:
   # Create a Debug build and test it.
   build_and_test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -64,9 +64,9 @@ jobs:
     strategy:
         matrix:
           python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -91,12 +91,11 @@ jobs:
     # Use them with `-j 4` flag
     - name: Build Library
       run: |
-        #python setup.py bdist_wheel -j 4
-        #auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
-        pip install .
+        python setup.py bdist_wheel -j 4
+        auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: PythonPackage
         path: |
@@ -106,14 +105,14 @@ jobs:
   # Developer can still build on their machine with the source bundle
   # (i.e. the original `pip install` flow if the platform is not included by above steps)  
   build_sdist:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-20.04
     if: ${{ success() }}
 
     needs:
       - build_and_test
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -134,7 +133,7 @@ jobs:
         python setup.py sdist
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: PythonPackage
         path: |
@@ -161,7 +160,7 @@ jobs:
 
     steps:
     - name: Download Package Built
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v3
       with:
         name: PythonPackage
         path: dist
