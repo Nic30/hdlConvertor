@@ -64,7 +64,7 @@ jobs:
     strategy:
         matrix:
           python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v3
       with:
@@ -106,7 +106,7 @@ jobs:
   # Developer can still build on their machine with the source bundle
   # (i.e. the original `pip install` flow if the platform is not included by above steps)  
   build_sdist:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     if: ${{ success() }}
 
     needs:
