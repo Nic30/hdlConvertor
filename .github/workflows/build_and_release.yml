@@ -10,7 +10,7 @@ jobs:
   build_and_test:
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -66,7 +66,7 @@ jobs:
           python-version: [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12" ]
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -96,7 +96,7 @@ jobs:
         pip install .
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PythonPackage
         path: |
@@ -113,7 +113,7 @@ jobs:
       - build_and_test
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
     - uses: actions/setup-python@v5
@@ -134,7 +134,7 @@ jobs:
         python setup.py sdist
 
     - name: Archive Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: PythonPackage
         path: |
@@ -161,7 +161,7 @@ jobs:
 
     steps:
     - name: Download Package Built
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: PythonPackage
         path: dist
