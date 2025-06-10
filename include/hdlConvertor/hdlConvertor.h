@@ -12,6 +12,7 @@
 #include <hdlConvertor/parserContainer.h>
 #include <hdlConvertor/hdlAst/hdlContext.h>
 #include <hdlConvertor/verilogPreproc/verilogPreproc.h>
+#include <hdlConvertor/hdlConvertorTokenFactory.h>
 
 namespace hdlConvertor {
 
