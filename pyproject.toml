@@ -9,7 +9,6 @@ requires = [
   "ninja>=1.11.1", # build tool for meson to use
 ]
 build-backend = 'mesonpy'
-requires-python = ">= 3.10"
 
 
 [project]
