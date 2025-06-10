@@ -7,6 +7,7 @@ project(
   default_options: ['cpp_std=c++17'],
 )
 
+python_prog = find_program(['python3', 'python'])
 
 ##############################################################################################
 # Lookup all dependencies and prepare common variables
@@ -52,7 +53,7 @@ endif
 	antlr4_cpp_version = '4.13.1'
 	import('java') # to check that java is installed
 	antlr4_jar = join_paths(meson.current_build_dir() , 'antlr4-complete.jar')
-	run_command('python3', 'utils/download.py',
+	run_command(python_prog, 'utils/download.py',
 		f'https://www.antlr.org/download/antlr-@antlr4_cpp_version@-complete.jar', antlr4_jar,
 		'--hash', 'md5', '78af96af276609af0bfb3f1e2bfaef89', check: true)
 	antlr4_java = find_program('utils/antlr4-complete.sh') # an extra script so we do not need to write all arguments everytime
@@ -143,7 +144,7 @@ foreach parserTuple : ANTLR_PARSERS
 	endforeach
 	genIncludeDir = join_paths('include', 'hdlConvertor', folder_name, f'@name@Parser')
   	subdir(genIncludeDir)
-	parser_cpp_src = run_command(py3, 'utils/rec_glob.py', join_paths('src', folder_name), '*.cpp', check:true)\
+	parser_cpp_src = run_command(python_prog, 'utils/rec_glob.py', join_paths('src', folder_name), '*.cpp', check:true)\
     	.stdout().strip().split('\n')
 	
     parser_lib = static_library(name,
@@ -160,7 +161,3 @@ subdir('src')
 if get_option('python_package')
 	subdir('hdlConvertor')
 endif
-
-
-
-
