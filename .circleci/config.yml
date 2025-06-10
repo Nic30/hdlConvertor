@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.2.1
-  py: nic30/python-all-in-1@0.3.0
+  python: circleci/python@3.1.0
+  py: nic30/python-all-in-1@0.3.1
 
 jobs:
   install-test-coverage:
