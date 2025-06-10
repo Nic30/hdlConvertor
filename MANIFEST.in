@@ -12,3 +12,10 @@ recursive-include grammars *.g4
 recursive-include hdlConvertor *.cpp *.h *.txt *.pyx *.py
 global-include *.gcno
 
+exclude .appveyor.yml
+exclude .circleci/
+exclude .github
+exclude Dockerfile .dockerignore
+exclude tests/
+exclude notebooks/
+exclude .gitignore .gitmodules
