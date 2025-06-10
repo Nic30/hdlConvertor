@@ -28,7 +28,7 @@ module cam #(
     integer i;
     //-------------Code Starts Here-------
     always @(cam_data_in) begin
-        cam_addr_combo = {ADDR_WIDTH{1'b0}};
+        cam_addr_combo = ({ADDR_WIDTH{1'b0}});
         found_match = 1'b0;
         cam_hit_combo = 1'b0;
         for (i = 0; i < DEPTH; i = i + 1)

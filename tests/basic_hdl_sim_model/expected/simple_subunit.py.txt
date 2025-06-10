@@ -1,7 +1,6 @@
 from pyMathBitPrecise.array3t import Array3t, Array3val
-from pyMathBitPrecise.bits3t import Bits3t, Bits3val
+from pyMathBitPrecise.bits3t import Bits3t, Bits3val, bitsBitOp__ashr, bitsBitOp__lshr, bitsBitOp__ror, bitsBitOp__rol
 from pyMathBitPrecise.enum3t import define_Enum3t
-
 from hwtSimApi.basic_hdl_simulator.model import BasicRtlSimModel
 from hwtSimApi.basic_hdl_simulator.model_utils import sensitivity, connectSimPort
 from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
