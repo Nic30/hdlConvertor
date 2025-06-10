@@ -39,11 +39,12 @@ jobs:
       run: |
         python -m build -Ccompile-args="--verbose" -Ccompile-args="-j4" . # -j4 because we do not have enough RAM
         pip install dist/*.whl
-        rm -rf $MODULE_NAME
 
     - name: Test
       run: |
+        mv hdlConvertor tmp_hdlConvertor
         python -m tests.all
+        mv tmp_hdlConvertor hdlConvertor
 
     - name: Extract Coverage Report
       run: |
