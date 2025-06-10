@@ -23,7 +23,7 @@ cc = meson.get_compiler('cpp')
 EXTRA_CXX_FLAGS = []
 EXTRA_LD_FLAGS = []
 if meson.get_compiler('cpp').get_id() == 'msvc'
-	EXTRA_CXX_FLAGS.append('/bigobj')
+	EXTRA_CXX_FLAGS += ['-MP /wd4251', '/bigobj'] # https://github.com/antlr/antlr4/blob/dev/runtime/Cpp/demo/CMakeLists.txt
 	# using /MD flag for antlr4_runtime (for Visual C++ compilers only)
 elif host_machine.system() == 'cygwin'
 	EXTRA_CXX_FLAGS += ['-Wa,-mbig-obj']
