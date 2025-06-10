@@ -13,7 +13,7 @@ environment:
     - GENERATOR: -G"Visual Studio 16 2019" -A x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       BUILD_TYPE: Release
-      PYTHON: "C:\\Python39-x64"
+      PYTHON: "C:\\Python310-x64"
       # add to path otherwise Cython is not found
       PATH: C:\Program Files\Java\jdk11\bin;$(PYTHON)\Scripts;$(PATH)
       PLATFORM: x64
