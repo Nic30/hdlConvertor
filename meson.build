@@ -164,3 +164,10 @@ subdir('src')
 if get_option('python_package')
 	subdir('hdlConvertor')
 endif
+
+if fs.exists('tests/yosys/CHANGELOG')
+	# if tests files are in the package mark them as test data
+	test_data = run_command(python_prog, 'utils/rec_glob.py', 'tests', '*', check:true)\
+		.stdout().strip().split('\n')
+	install_data(test_data, install_tag : 'test')
+endif
