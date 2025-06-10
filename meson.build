@@ -55,7 +55,7 @@ endif
 	antlr4_jar = join_paths(meson.current_build_dir() , 'antlr4-complete.jar')
 	run_command(python_prog, 'utils/download.py',
 		f'https://www.antlr.org/download/antlr-@antlr4_cpp_version@-complete.jar', antlr4_jar,
-		'--hash', 'md5', '78af96af276609af0bfb3f1e2bfaef89', check: true)
+		'--hash', 'md5', 'c9c8b566a7fcf8ef80e229f14b154a26', check: true)
 	antlr4_java = find_program('utils/antlr4-complete.sh') # an extra script so we do not need to write all arguments everytime
 #else
 #	antlr4_cpp_inc = include_directories('/usr/include/antlr4-runtime/')
