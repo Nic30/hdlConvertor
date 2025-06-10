@@ -19,7 +19,7 @@ dynamic = ["version", ] # specified in meson.build
 # readme = {file = ["README.md"]}
 readme = "README.md"
 license = { file = 'LICENSE' }
-keyword = ['FPGA', 'ASIC', 'compiler', 'RTL', 'synthesis', 'logicsynthesis',
+keywords = ['FPGA', 'ASIC', 'compiler', 'RTL', 'synthesis', 'logicsynthesis',
            'hdl', 'vhdl', 'parser', 'preprocessor', 'antlr4', 'verification',
            'Verilog', 'SystemVerilog', 'system verilog']
 authors = [
