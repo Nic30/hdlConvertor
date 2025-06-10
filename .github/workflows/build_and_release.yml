@@ -26,7 +26,7 @@ jobs:
                 libantlr4-runtime-dev antlr4 libssl-dev -yq
         pip install setuptools wheel cmake ninja patchelf auditwheel
         pip install -r requirements.txt
-        pip install build
+        pip install build nbconvert
     
     - name: Check Your Environment
       run: |
