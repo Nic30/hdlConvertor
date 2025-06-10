@@ -13,9 +13,9 @@ recursive-include hdlConvertor *.cpp *.h *.txt *.pyx *.py
 global-include *.gcno
 
 exclude .appveyor.yml
-exclude .circleci/
+recursive-exclude .circleci/
 exclude .github
 exclude Dockerfile .dockerignore
-exclude tests/
-exclude notebooks/
+recursive-exclude tests/
+recursive-exclude notebooks/
 exclude .gitignore .gitmodules
