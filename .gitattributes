@@ -4,6 +4,5 @@
 Dockerfile export-ignore
 .dockerignore export-ignore
 tests/** export-ignore
+#tests/ivtest export-ignore
 notebooks export-ignore
-.gitignore export-ignore
-.gitmodules export-ignore
