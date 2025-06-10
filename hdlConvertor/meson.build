@@ -20,7 +20,7 @@ _hdlConvertor_cpp_sources = [
 
 py3.extension_module(
     '_hdlConvertor',
-    _hdlConvertor_cpp_sources + ['_hdlConvertor.pyx', 'python_ver_independent_str.pyx', 'verilogPreproc.pyx'],
+    _hdlConvertor_cpp_sources + ['_hdlConvertor.pyx'], # , 'python_ver_independent_str.pyx', 'verilogPreproc.pyx'
     include_directories: [mainIncludeDir_inc],
     dependencies : [py3_dep, antlr4_cpp_dep, hdlConvertor_cpp_dep],
     install: true,
