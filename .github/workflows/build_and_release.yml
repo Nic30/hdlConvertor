@@ -160,7 +160,7 @@ jobs:
 
     steps:
     - name: Download Package Built
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.7
       with:
         name: PythonPackage
         path: dist
