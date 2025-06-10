@@ -36,13 +36,13 @@ jobs:
     
     - name: Build
       run: |
-        python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j4" . # -j4 because we do not have enough RAM
-        pip3 install dist/*.whl
+        python -m build -Ccompile-args="--verbose" -Ccompile-args="-j4" . # -j4 because we do not have enough RAM
+        pip install dist/*.whl
         rm -rf $MODULE_NAME
 
     - name: Test
       run: |
-        python3 -m tests.all
+        python -m tests.all
 
     - name: Extract Coverage Report
       run: |
