@@ -166,9 +166,9 @@ if get_option('python_package')
 endif
 
 # if tests files are in the package mark them as test data
-#test_data = run_command(python_prog, 'utils/rec_glob.py', 'tests', '*', check:true)\
-#	.stdout().strip().split('\n')
-#message('test_data:\n' + '\n'.join(test_data))
-#	
-#install_data(test_data, install_tag : 'test')
+test_data = run_command(python_prog, 'utils/rec_glob.py', 'tests', '*', check:true)\
+	.stdout().strip().split('\n')
+message('test_data:\n' + '\n'.join(test_data))
+	
+install_data(test_data, install_tag : 'tests')
 
