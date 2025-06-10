@@ -3,7 +3,7 @@
 .github export-ignore
 Dockerfile export-ignore
 .dockerignore export-ignore
-tests export-ignore
+tests/** export-ignore
 notebooks export-ignore
 .gitignore export-ignore
 .gitmodules export-ignore
