@@ -30,7 +30,6 @@ void VerModuleParser::visitModule_header_common(
 	// module_header_common:
 	//   ( attribute_instance )* module_keyword ( lifetime )? identifier
 	//   ( package_import_declaration )* ( parameter_port_list )?;
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	auto lt = ctx->lifetime();
 	if (lt) {
 		NotImplementedLogger::print(
@@ -38,6 +37,7 @@ void VerModuleParser::visitModule_header_common(
 	}
 	ent.__doc__ = commentParser.parse(ctx);
 	ent.name = ctx->identifier()->getText();
+	VerAttributeParser(this).visitAttribute_instance(ent, ctx->attribute_instance());
 	for (auto pid : ctx->package_import_declaration()) {
 		NotImplementedLogger::print(
 				"VerModuleParser.visitModule_header_common - package_import_declaration",
@@ -49,6 +49,7 @@ void VerModuleParser::visitModule_header_common(
 		pp.visitParameter_port_list(mppl, ent.generics);
 	}
 }
+
 void VerModuleParser::visitModule_declaration(
 		sv2017Parser::Module_declarationContext *ctx,
 		vector<unique_ptr<iHdlObj>> &res) {
@@ -201,8 +202,10 @@ void VerModuleParser::visitModule_item(sv2017Parser::Module_itemContext *ctx,
 	auto mii = ctx->module_item_item();
 	if (mii) {
 		auto ai = ctx->attribute_instance();
-		VerAttributeParser::visitAttribute_instance(ai);
 		auto prev_size = objs.size();
+		VerVisitAttributeForVectorResult<VerModuleParser, sv2017Parser::Module_itemContext, iHdlObj> apForObjs(this, ctx, objs);
+		VerVisitAttributeForVectorResult<VerModuleParser, sv2017Parser::Module_itemContext, HdlIdDef> apForGenerics(this, ctx, m_ctx.ent.generics);
+
 		visitModule_item_item(mii, objs, m_ctx.ent.generics);
 		if (objs.size() != prev_size) {
 			iHdlObj *_last = objs[prev_size].get();

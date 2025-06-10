@@ -122,10 +122,10 @@ unique_ptr<vector<unique_ptr<HdlIdDef>>> VerPortParser::visitList_of_port_declar
 		// list_of_port_declarations_ansi_item:
 		// 	( attribute_instance )* ansi_port_declaration
 		// ;
-		VerAttributeParser::visitAttribute_instance(pdi->attribute_instance());
 		auto apd = pdi->ansi_port_declaration();
 		auto pd = visitAnsi_port_declaration(apd, prev.first, prev.second);
 		pd.first->__doc__ = commentParser.parse(pdi);
+		VerAttributeParser(this).visitAttribute_instance(*pd.first, pdi->attribute_instance());
 		prev = { pd.first.get(), pd.second };
 		ports->push_back(move(pd.first));
 	}
@@ -213,7 +213,7 @@ void VerPortParser::visitNonansi_port_declaration(
 	// ;
 	string doc = commentParser.parse(ctx);
 	auto attribs = ctx->attribute_instance();
-	VerAttributeParser::visitAttribute_instance(attribs);
+	VerVisitAttributeForVectorResult<VerPortParser, sv2017Parser::Nonansi_port_declarationContext, HdlIdDef> ap(this, ctx, res);
 	VerTypeParser tp(this);
 
 	auto lvi = ctx->list_of_variable_identifiers();
@@ -416,7 +416,6 @@ unique_ptr<HdlIdDef> VerPortParser::visitTf_port_item(
 	// tf_port_item:
 	//     ( attribute_instance )* ( tf_port_direction )? ( KW_VAR )? ( data_type_or_implicit )?
 	//     ( identifier ( variable_dimension )* ( ASSIGN expression )? )?;
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	HdlDirection d = HdlDirection::DIR_IN;
 	auto dti = ctx->data_type_or_implicit();
 	VerTypeParser tp(this);
@@ -436,7 +435,9 @@ unique_ptr<HdlIdDef> VerPortParser::visitTf_port_item(
 	}
 
 	bool is_latched = ctx->KW_VAR() != nullptr;
-	return create_object<HdlIdDef>(ctx, name, move(t), move(v), d, is_latched);
+	auto pdef = create_object<HdlIdDef>(ctx, name, move(t), move(v), d, is_latched);
+	VerAttributeParser(this).visitAttribute_instance(*pdef, ctx->attribute_instance());
+	return pdef;
 }
 
 HdlDirection VerPortParser::visitPort_direction(

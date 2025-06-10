@@ -23,10 +23,12 @@ ToPy::ToPy() {
 		PyErr_Print();
 		throw std::runtime_error("can not import hdlConvertorAst.hdlAst");
 	}
-	auto import = [this](PyObject *&obj, const std::string &name) {
-		obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
-		assert(obj != NULL && "hdlConvertorAst.hdlAst not as expected from hdlConvertor");
-	};
+	auto import =
+			[this](PyObject *&obj, const std::string &name) {
+				obj = PyObject_GetAttrString(hdlAst_module, name.c_str());
+				assert(
+						obj != NULL && "hdlConvertorAst.hdlAst not as expected from hdlConvertor");
+			};
 	import(ContextCls, "HdlContext");
 	import(CodePositionCls, "CodePosition");
 	import(HdlModuleDefCls, "HdlModuleDef");
@@ -104,7 +106,7 @@ PyObject* ToPy::toPy(const HdlLibrary *o) {
 		return nullptr;
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const iHdlObj *o) {
@@ -135,9 +137,6 @@ PyObject* ToPy::toPy(const iHdlObj *o) {
 	auto lib = dynamic_cast<const HdlLibrary*>(o);
 	if (lib)
 		return toPy(lib);
-	auto c = dynamic_cast<const HdlContext*>(o);
-	if (c)
-		return toPy(c);
 
 	std::string err_msg;
 	if (o)
@@ -211,7 +210,7 @@ PyObject* ToPy::toPy(const HdlModuleDef *o) {
 	if (toPy_arr(py_inst, "objs", o->objs))
 		return nullptr;
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const hdlAst::HdlCompInst *o) {
@@ -227,7 +226,7 @@ PyObject* ToPy::toPy(const hdlAst::HdlCompInst *o) {
 	if (toPy_arr(py_inst, "port_map", o->portMap))
 		return nullptr;
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const HdlModuleDec *o) {
@@ -247,7 +246,7 @@ PyObject* ToPy::toPy(const HdlModuleDec *o) {
 	if (toPy_arr(py_inst, "objs", o->objs))
 		return nullptr;
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const HdlFunctionDef *o) {
@@ -277,7 +276,7 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 	if (toPy_arr(py_inst, "body", o->body))
 		return nullptr;
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const HdlDirection o) {
@@ -334,7 +333,7 @@ PyObject* ToPy::toPy(const HdlValueIdspace *o) {
 	}
 	Py_DECREF(dec_only);
 
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(const HdlIdDef *o) {
@@ -360,7 +359,7 @@ PyObject* ToPy::toPy(const HdlIdDef *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "direction", o->direction))
 		return nullptr;
-	return py_inst;
+	return toPy_fillHdlAttributes(py_inst, o);
 }
 
 PyObject* ToPy::toPy(size_t o) {
@@ -377,6 +376,38 @@ PyObject* ToPy::toPy(bool o) {
 
 PyObject* ToPy::toPy(const std::string &o) {
 	return PyUnicode_FromString(o.c_str());
+}
+
+int ToPy::toPy_hdlAttributes(PyObject *parent, const iHdlObj *obj) {
+	if (!obj->hdlAttributes)
+		return 0;
+	return toPy_arr(parent, "hdlAttributes", *obj->hdlAttributes);
+}
+
+PyObject* ToPy::toPy_fillHdlAttributes(PyObject *parent,
+		const hdlAst::iHdlObj *obj) {
+	if (toPy_hdlAttributes(parent, obj) < 0) {
+		return nullptr;
+	}
+	return parent;
+}
+
+PyObject* ToPy::toPy(const hdlAst::iHdlObj::HdlAttribute &o) {
+	auto id = toPy(o.id);
+	if (!id)
+		return nullptr;
+	PyObject *val;
+	if (o.value) {
+		val = toPy(o.value);
+		if (!val) {
+			Py_DECREF(id);
+			return nullptr;
+		}
+	} else {
+		val = Py_None;
+		Py_INCREF(val);
+	}
+	return PyTuple_Pack(2, id, val);
 }
 
 ToPy::~ToPy() {

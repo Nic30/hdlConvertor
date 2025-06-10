@@ -10,4 +10,5 @@ recursive-include include *.h
 recursive-include src *.cpp *.h *.txt
 recursive-include grammars *.g4
 recursive-include hdlConvertor *.cpp *.h *.txt *.pyx *.py
+global-include *.gcno
 

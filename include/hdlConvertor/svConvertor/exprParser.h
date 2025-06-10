@@ -14,6 +14,8 @@ public:
 
 	std::unique_ptr<hdlAst::iHdlExprItem> visitExpression(
 			sv2017Parser::ExpressionContext *ctx);
+	std::unique_ptr<hdlAst::iHdlExprItem> _visitExpression(
+			sv2017Parser::ExpressionContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitNet_lvalue(
 			sv2017Parser::Net_lvalueContext *ctx);
 	std::unique_ptr<hdlAst::iHdlExprItem> visitConstant_expression(

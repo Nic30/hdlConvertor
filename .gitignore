@@ -36,15 +36,8 @@ dist/
 _skbuild/
 .eggs/
 hdlConvertor.egg-info
-
-# parser generated source dirs/files
-src/svConvertor/sv2017Parser/
-src/verilogPreproc/verilogPreprocParser/
-src/vhdlConvertor/vhdlParser/
-
-include/hdlConvertor/svConvertor/sv2017Parser/*.h
-include/hdlConvertor/verilogPreproc/verilogPreprocParser/*.h
-include/hdlConvertor/vhdlConvertor/vhdlParser/*.h
+venv/
+subprojects/antlr4-runtime
 
 
 # devel archives

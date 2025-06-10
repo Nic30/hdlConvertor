@@ -89,7 +89,7 @@ cdef class HdlConvertorPy:
     The container of the HdlConvertor which parses HDL code to universal AST
 
     :ivar ~.thisptr: pointer on HdlConvertor instance which is a wrapper around the parsers
-    :ivar ~.proproc_macro_db: dictinary of symbols defined in preprocessor
+    :ivar ~.proproc_macro_db: dictionary of symbols defined in preprocessor
     """
 
     cdef unique_ptr[HdlConvertor] thisptr

@@ -66,7 +66,6 @@ void VerProgramParser::visitTf_port_declaration(
 	//     ( attribute_instance )* tf_port_direction ( KW_VAR )? ( data_type_or_implicit )?
 	//     list_of_tf_variable_identifiers SEMI
 	// ;
-	VerAttributeParser::visitAttribute_instance(ctx->attribute_instance());
 	auto _tpd = ctx->tf_port_direction();
 	std::vector<VerPortParser::Non_ANSI_port_info_t> non_ansi_port_groups;
 	VerPortParser pp(this, non_ansi_port_groups);
@@ -78,6 +77,7 @@ void VerProgramParser::visitTf_port_declaration(
 	auto t = tp.visitData_type_or_implicit(dti, nullptr);
 	auto lvi = ctx->list_of_tf_variable_identifiers();
 	auto doc = commentParser.parse(ctx);
+	VerVisitAttributeForVectorResult<VerProgramParser, sv2017Parser::Tf_port_declarationContext, HdlIdDef> ap(this, ctx, res);
 	pp.visitList_of_tf_variable_identifiers(lvi, move(t), false, pd, doc, res);
 	assert(non_ansi_port_groups.size() == 0);
 }

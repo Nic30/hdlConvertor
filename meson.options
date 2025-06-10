@@ -1,0 +1,2 @@
+# use meson configure -Doption=newvalue to set
+option('python_package', type : 'boolean', value : true, description : 'Specifies if python package should be build or just C++ one.')

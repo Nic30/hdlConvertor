@@ -4,7 +4,6 @@
 #include <hdlConvertor/svConvertor/baseSvParser.h>
 #include <hdlConvertor/hdlAst/hdlIdDef.h>
 #include <hdlConvertor/hdlAst/iHdlStatement.h>
-#include <hdlConvertor/hdlAst/iHdlStatement.h>
 #include <hdlConvertor/hdlAst/hdlStm_others.h>
 
 

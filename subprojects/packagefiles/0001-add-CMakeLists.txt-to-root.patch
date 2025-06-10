@@ -1,0 +1,23 @@
+From 9abfddeb99e8293b0279f0b66c03e05caf808960 Mon Sep 17 00:00:00 2001
+From: Nic30 <nic30@seznam.cz>
+Date: Mon, 29 May 2023 12:14:29 +0200
+Subject: [PATCH] add CMakeLists.txt to root
+
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+ create mode 100644 CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 000000000..608f61056
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,4 @@
++# -*- mode:cmake -*-
++cmake_minimum_required (VERSION 3.15)
++project(antlr4runtime)
++add_subdirectory(runtime/Cpp)
+-- 
+2.39.2
+

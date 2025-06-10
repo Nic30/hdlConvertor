@@ -1,3 +1,46 @@
 [build-system]
-requires = ["setuptools", "wheel", "scikit-build", "Cython", "cmake", "ninja"]
-build-backend = "setuptools.build_meta"
+requires = [
+  "wheel", # python package distribution lib.
+  "Cython",
+  "cmake>=3.26.3", # cmake buildsystem for antrl
+  "meson>=1.1.0", # meson buildsystem
+  'meson-python>=0.12.1', # meson to pip adapter
+  "pybind11>=2.10.4", # c++ to Python binding
+  "ninja>=1.11.1", # build tool for meson to use
+]
+build-backend = 'mesonpy'
+
+
+[project]
+name = 'hdlConvertor'
+description = 'VHDL and System Verilog parser written in c++'
+dynamic = ["version", ] # specified in meson.build
+# dynamic = ["readme"]
+# readme = {file = ["README.md"]}
+readme = "README.md"
+license = { file = 'LICENSE' }
+keyword = ['FPGA', 'ASIC', 'compiler', 'RTL', 'synthesis', 'logicsynthesis',
+           'hdl', 'vhdl', 'parser', 'preprocessor', 'antlr4', 'verification',
+           'Verilog', 'SystemVerilog', 'system verilog']
+authors = [
+  { name = 'Michal Orsak', email = 'Nic30original@gmail.com' },
+]
+classifiers = [
+  'Development Status :: 4 - Beta',
+  'Intended Audience :: Developers',
+  'Intended Audience :: Science/Research',
+  'Operating System :: OS Independent',
+  'Topic :: Software Development :: Build Tools',
+  'Programming Language :: C++',
+  'Programming Language :: Cython',
+  'Programming Language :: Python :: Implementation :: CPython',
+  'Programming Language :: Python :: 3',
+  'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
+]
+dependencies  = [
+  'hdlConvertorAst@git+https://github.com/Nic30/hdlConvertorAst@master',
+]
+
+[project.urls]
+homepage = 'https://github.com/Nic30/hdlConvertor'
+repository = 'https://github.com/Nic30/hdlConvertor'

@@ -27,48 +27,37 @@ It contains:
 ## Installation
 
 Linux:
-Installing dependencies (Ubuntu 20.10)
+Installing dependencies (Ubuntu 24.04)
 ```
-# we recommend to use gcc>=9, Visual Studio 2017 or equivalent
-sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip libantlr4-runtime-dev antlr4 ninja-build
+# gcc>=13, Visual Studio 2017 or equivalent recommended
+sudo apt install build-essential uuid-dev cmake default-jre python3 python3-dev python3-pip ninja-build
 ```
 
 Installing this library
 ```
+# python recommends to use venv (virtualenv) https://docs.python.org/3/library/venv.html
+# sudo pip3 install venv
+# python3 -m venv myvenv
+# source myvenv/bin/activate
+
 # note this may be older version than you see in repo
-sudo pip3 install hdlConvertor
+pip3 install hdlConvertor
 
 # or download repository and run
-sudo pip3 install --upgrade --force-reinstall --no-cache-dir git+https://github.com/Nic30/hdlConvertorAst.git
-sudo pip3 install -r requirements.txt
-sudo python3 setup.py install
-
-# if you are using version from git rather uninstall
-# old library first if required
-# sudo pip3 uninstall hdlConvertor
-```
-
-Installer also supports other options which may be usefull
-```
-python setup.py install --prefix /tmp/python_install/ --build-type Debug -- -DANTLR_JAR_LOCATION=/antlr-4.7.1-complete.jar -- VERBOSE=1
+pip3 install --upgrade --force-reinstall --no-cache-dir git+https://github.com/Nic30/hdlConvertorAst.git # optionally
+pip3 install .
 ```
 
 You can also install only C++ library/generate .deb package (nothing specific, just normal cmake-based library)
 ```
-mkdir build && cd build
-cmake .. && cmake . --build
-cpack # to generate .deb package
+meson setup build -Dpython_package=false
+ninja -C build
 ```
-
-Windows:
-
-Take a look at appveyor.yml and [doc/windows_installation_and_build.rst](doc/windows_installation_and_build.rst). It is required to download antlr4 first and have visual studio or other c++ compiler installed.
-
+For dev purposes also this link could be useful https://meson-python.readthedocs.io/en/latest/how-to-guides/meson-args.html#how-to-guides-meson-args
 
 ## Usage
 
 The HDL AST (the parsed code) is represented by objects from `hdlConvertor.hdlAst`. Parsing and code modification is straightforward, as you can see in following example [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Nic30/hdlConvertor/master?filepath=notebooks%2F01_parse_and_dump.ipynb)
-
 
 
 ### Similar projects:

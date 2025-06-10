@@ -8,44 +8,32 @@
    python -m venv hdlConvertorVenv
    ```
 
-2. Activate the virtual env and install `scikit-build` and `CPython` using [requirements.txt](https://github.com/Nic30/hdlConvertor/blob/master/requirements.txt) from the base repo path:
+2. Activate the virtual env and install `build`, `meson`, `ninja` and `CPython` using [requirements.txt](https://github.com/Nic30/hdlConvertor/blob/master/requirements.txt) from the base repo path:
    ```sh
    . ./hdlConvertorVenv/bin/activate
    cd hdlConvertor
    pip install -r requirements.txt
    ```
 
-3. Setup Debug Configuration for `sciki-build`:
-   ```sh
-   export SKBUILD_CONFIGURE_OPTIONS="-DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-   ```
-   For ANTLR4 custom build installation configuration:
-   ```sh
-   # Add Configuration from above if building in Debug Mode
-   export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=<Path to antlr4-cpp-runtime build/installation> ..."
-   export ANTLR_COMPLETE_PATH=<Absolute path to the directory where antlr4-complete.jar exists>
-   # e.g.:
-   # export SKBUILD_CONFIGURE_OPTIONS="-DANTLR4CPP_ROOT=/opt/antlr4/antlr4-cpp-runtime"
-   # export ANTLR_COMPLETE_PATH="/opt/antlr4"
-
-   ## The above path should have the 'antlr4-complete.jar' available at that directory.
-   # Also if the ANTLR4 Cpp Runtime is custom build one might need to add the library path to 'LD_LIBRARY_PATH'
-   ## e.g.:
-   ## export LD_LIBRARY_PATH=/opt/antlr4/antlr4-cpp-runtime/lib:$LD_LIBRARY_PATH
-   ```
-4. Use Python `pip` build and install the package in edit mode:
+3. Use Python `pip` build and install the package in edit mode:
    ```sh
    # Use Python VirtualEnv for installation.
    python -m pip install -e .
    ```
+   Or you can just build inplace
+   ```sh
+   meson setup build
+   ninja -C build
+   ```
 
-5. Optional Step if you are also developing for `hdlConvertorAst` install the package locally as editable version of the package:
+4. Optional Step if you are also developing for `hdlConvertorAst` install the package locally as editable version of the package:
    ```sh
    # Use the same virtualenv for both of these packages
    git clone https://github.com/Nic30/hdlConvertorAst
    cd hdlConvertorAst
    pip install -e .
    ```
+
 # Test execution
 
 In order to run tests you need to have all dependencies installed or appended in python path so python can import it.
@@ -98,7 +86,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
      you need to copy or link library to it's package folder
      ```
      cd hdlConvertor
-     ln ../_skbuild/linux-*/setuptools/lib/hdlConvertor/_hdlConvertor.*.so . -s
+     ln ../build/hdlConvertor/_hdlConvertor.*.so . -s
 	 ```
    * for cmake.version < 3.15 automatic delete of generated files not working for ninja use:
    	 (only if something is seriously broken)
@@ -119,7 +107,7 @@ This class contains a methods which simplifies the parsing/conversion test scena
 * new debug configuration -> C++ Application
 	* C/C++ Aplication: `/usr/bin/python3-dbg`
 	* Arguments: $NAME_OF_YOUR_SCRIPT etc
-	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/_skbuild/linux-x86_64-3.8/setuptools/lib`
+	* enviroment add: `PYTHONPATH` `$PYTHONPATH:${project_path:hdlConvertor}/build`
 	* in CMakeLists.txt add  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	  to enable debuging build and disable optimisations
 	* now break points in c++ and all other debuging stuff should work as expected
@@ -131,9 +119,6 @@ This class contains a methods which simplifies the parsing/conversion test scena
   $ c++filt _ZN12hdlConvertor8ToString4dumpEPKNS_10hdlAst7iHdlObjEi
   hdlConvertor::ToString::dump(hdlConvertor::hdlAst::iHdlObj const*, int)
   ```
-* to forece regeneration of generated files delete cmake file which
-  tells cmake that the files were generated e.g. `rm _skbuild/linux-x86_64-3.7/cmake-build/src/vhdlConvertor/vhdlParsers_GENERATED_SRC`
-
 * antlr4 gui - visualize a parse tree
    ```
    CLASSPATH=/usr/share/java/stringtemplate4.jar:/usr/share/java/antlr4.jar:/usr/share/java/antlr4-runtime.jar:/usr/share/java/antlr3-runtime.jar/:/usr/share/java/treelayout.jar
