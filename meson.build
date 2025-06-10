@@ -42,7 +42,7 @@ endif
 	  'ANTLR_BUILD_CPP_TESTS': false,
 	  'ANTLR_BUILD_SHARED': false,
 	  'ANTLR4_INSTALL': false,
-	  'CMAKE_CXX_FLAGS': ' '.join(EXTRA_CXX_FLAGS + ['-Wno-overloaded-virtual', '-Wno-unused-parameter']),
+	  'CMAKE_CXX_FLAGS_RELEASE': ' '.join(EXTRA_CXX_FLAGS + ['-Wno-overloaded-virtual', '-Wno-unused-parameter']),
 	  'CMAKE_POSITION_INDEPENDENT_CODE': true,
 	  'CMAKE_BUILD_TYPE': 'Release',
 	})
@@ -152,7 +152,7 @@ foreach parserTuple : ANTLR_PARSERS
 	
     parser_lib = static_library(name,
 	    parser_cpp_src + antlr_parser_parser_src_gen + antrl_parser_headers,
-        cpp_args: ['-Wno-unused-parameter'] + EXTRA_CXX_FLAGS,
+        cpp_args: ['-Wno-unused-parameter', '-Wno-overloaded-virtual'] + EXTRA_CXX_FLAGS,
         dependencies: [antlr4_cpp_dep],
         include_directories: [mainIncludeDir_inc, include_directories(genIncludeDir)],
     )
