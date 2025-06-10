@@ -15,7 +15,7 @@ jobs:
         submodules: recursive
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.10"
+        python-version: "3.12"
 
     # Don't need to install Python / Create venv, as you are running in a container.
     # You don't even need to install g++/cmake as it comes with the docker image.
@@ -26,6 +26,7 @@ jobs:
                 libantlr4-runtime-dev antlr4 libssl-dev -yq
         pip install setuptools wheel cmake ninja patchelf auditwheel
         pip install -r requirements.txt
+        pip install build
     
     - name: Check Your Environment
       run: |
