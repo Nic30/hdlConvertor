@@ -18,6 +18,7 @@ environment:
       # add to path otherwise Cython is not found
       PATH: $(PYTHON)\Scripts;$(PATH) 
       PLATFORM: x64
+      JAVA_HOME: C:\Program Files\Java\jdk11
     #- GENERATOR: -G"Visual Studio 15 2017 Win64"
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  BUILD_TYPE: Release
@@ -38,6 +39,7 @@ environment:
 
 install:
   - 'systeminfo'
+  - 'java -version'
   - 'git submodule update --init --recursive'
   - "%PYTHON%\\python.exe -m pip install jupyter git+https://github.com/Nic30/hdlConvertorAst.git"
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
