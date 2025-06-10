@@ -109,7 +109,7 @@ jobs:
       - run:
           name: build
           command: |
-              python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j1"  . # -j1 because we do not have enough RAM
+              python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j1" . # -j1 because we do not have enough RAM
               pip3 install dist/*.whl
               rm -rf $MODULE_NAME
 
@@ -119,6 +119,7 @@ jobs:
           bin: false
           build: true
           src: false
+          build_extra_args: "-Ccompile-args=\"--verbose\" -Ccompile-args=\"-j1\""
 
 workflows:
   main:
