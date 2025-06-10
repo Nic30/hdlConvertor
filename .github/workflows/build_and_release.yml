@@ -36,16 +36,17 @@ jobs:
     
     - name: Build
       run: |
-        echo Your Build Script here
-        echo Make sure the Debug and Coverage Switch is on, only in this job.
+        python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j4" . # -j4 because we do not have enough RAM
+        pip3 install dist/*.whl
+        rm -rf $MODULE_NAME
 
     - name: Test
       run: |
-        echo Your Test Script here
+        python3 -m tests.all
 
     - name: Extract Coverage Report
       run: |
-        echo Your Coverage Report
+        echo "[todo] Coverage Report"
 
 
   # Build on Different Platform.
@@ -79,6 +80,7 @@ jobs:
                 libantlr4-runtime-dev antlr4 libssl-dev -yq
         pip install setuptools wheel cmake ninja patchelf auditwheel
         pip install -r requirements.txt
+        pip install build
 
     # Include ANTLR4's License file as we are redistributing their binary
     - name: Adding ANTLR4 License
@@ -91,7 +93,7 @@ jobs:
     # Use them with `-j 4` flag
     - name: Build Library
       run: |
-        python setup.py bdist_wheel -j 4
+        python -m build .
         auditwheel repair --plat manylinux_2_31_x86_64 dist/*.whl
 
     - name: Archive Artifacts
