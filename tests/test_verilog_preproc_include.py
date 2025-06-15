@@ -43,6 +43,9 @@ class VerilogPreprocIncludeTC(unittest.TestCase):
 
     def test_from_subdirectory(self):
         self.run_test(["include_many_dir", "from_subdirectory.txt"], [])
+    
+    def test_from_subdirectory2(self):
+        self.run_test(["include_many_dir", "from_subdirectory2.txt"], [])
 
     def test_local_include_higher_priority(self):
         self.run_test(

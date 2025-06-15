@@ -60,7 +60,6 @@ VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 
 VerilogPreprocOutBuffer& VerilogPreprocOutBuffer::operator<<(
 		const VerilogPreprocOutBuffer &other) {
-	(*this) << endl;
 	(*static_cast<stringstream*>(this)) << other.str();
 	for (auto &i : other.file_line_map) {
 		FileLineMapItem i_new(i.line + output_line, i.file_override,

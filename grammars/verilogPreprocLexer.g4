@@ -359,11 +359,15 @@ mode KEYWOORDS_MODE;
 // include argument processing
 mode INCLUDE_MODE;
     INCLUDE_MODE_STR
-        :  STR -> type(STR),popMode
+        :  STR -> type(STR)
         ;
+
     INCLUDE_MODE_STR_CHEVRONS
-        :  '<' ( ~('\\'|'>') )* '>' -> type(STR),popMode
+        :  '<' ( ~('\\'|'>') )* '>' -> type(STR)
         ;
+    INCLUDE_LINE_COMMENT : LINE_COMMENT -> popMode,type(LINE_COMMENT),channel(CH_LINE_COMMENT);
+    INCLUDE_MODE_NEW_LINE: CRLF -> type(NEW_LINE),popMode,skip;
+
     INCLUDE_MODE_MACRO_ENTER: '`' -> popMode,pushMode(DIRECTIVE_MODE),skip;
     INCLUDE_MODE_WS : WS ->skip;
 
