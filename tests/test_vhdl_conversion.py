@@ -65,6 +65,9 @@ class VhdlConversionTC(HdlParseTC):
         with self.assertRaises(ParseException):
             parseFile("malformed.vhdl")
 
+    def test_arch_with_alias(self):
+        self.parseWithRef("arch_with_alias.vhd", Language.VHDL)
+
     def test_arch_with_assig(self):
         self.parseWithRef("arch_with_assig.vhd", Language.VHDL)
 
