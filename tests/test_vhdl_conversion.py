@@ -124,6 +124,9 @@ class VhdlConversionTC(HdlParseTC):
     def test_package_stm_nop(self):
         self.parseWithRef("stm_nop.vhd", Language.VHDL)
 
+    def test_package_function_impure(self):
+        self.parseWithRef("function_impure.vhd", Language.VHDL)
+
     def test_package_function_noarg(self):
         self.parseWithRef("function_noarg.vhd", Language.VHDL)
 

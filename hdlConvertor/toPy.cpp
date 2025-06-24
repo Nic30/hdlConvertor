@@ -265,6 +265,8 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "is_virtual", o->is_virtual))
 		return nullptr;
+	if (toPy_property(py_inst, "is_impure", o->is_impure))
+		return nullptr;
 	if (o->params) {
 		if (toPy_arr(py_inst, "params", *o->params))
 			return nullptr;
