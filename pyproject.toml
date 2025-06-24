@@ -3,8 +3,8 @@ requires = [
   "wheel", # python package distribution lib.
   "Cython",
   "cmake>=3.26.3", # cmake buildsystem for antrl
-  "meson>=1.1.0", # meson buildsystem
-  'meson-python>=0.12.1', # meson to pip adapter
+  "meson>=1.8.2", # meson buildsystem
+  'meson-python>=0.18.0', # meson to pip adapter
   "pybind11>=2.10.4", # c++ to Python binding
   "ninja>=1.11.1", # build tool for meson to use
 ]
@@ -19,7 +19,7 @@ dynamic = ["version", ] # specified in meson.build
 # readme = {file = ["README.md"]}
 readme = "README.md"
 license = { file = 'LICENSE' }
-keyword = ['FPGA', 'ASIC', 'compiler', 'RTL', 'synthesis', 'logicsynthesis',
+keywords = ['FPGA', 'ASIC', 'compiler', 'RTL', 'synthesis', 'logicsynthesis',
            'hdl', 'vhdl', 'parser', 'preprocessor', 'antlr4', 'verification',
            'Verilog', 'SystemVerilog', 'system verilog']
 authors = [
@@ -38,7 +38,7 @@ classifiers = [
   'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
 ]
 dependencies  = [
-  'hdlConvertorAst>=1.2',
+  'hdlConvertorAst@git+https://github.com/Nic30/hdlConvertorAst@master',
 ]
 
 [project.urls]

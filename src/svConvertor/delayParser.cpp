@@ -95,7 +95,9 @@ unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_value(
 	//     | TIME_LITERAL
 	//     | KW_1STEP
 	//     | real_number
-	//     | ps_identifier;
+	//     | ps_identifier
+	//     | hierarchical_identifier
+	//     ;
 	auto un = ctx->UNSIGNED_NUMBER();
 	if (un) {
 		return VerLiteralParser::visitUNSIGNED_NUMBER(un);
@@ -111,8 +113,12 @@ unique_ptr<iHdlExprItem> VerDelayParser::visitDelay_value(
 		return VerLiteralParser::visitReal_number(r);
 	}
 	auto pi = ctx->ps_identifier();
-	assert(pi);
-	return VerExprParser(this).visitPs_identifier(pi);
+	if (pi) {
+		return VerExprParser(this).visitPs_identifier(pi);
+	}
+	auto hi = ctx->hierarchical_identifier();
+	assert(hi);
+	return VerExprParser(this).visitHierarchical_identifier(hi);
 }
 
 pair<unique_ptr<iHdlExprItem>, VerDelayParser::HdlEventList> VerDelayParser::visitDelay_or_event_control(

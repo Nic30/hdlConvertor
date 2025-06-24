@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.2.1
-  py: nic30/python-all-in-1@0.3.0
+  python: circleci/python@3.1.0
+  py: nic30/python-all-in-1@0.3.1
 
 jobs:
   install-test-coverage:
@@ -18,7 +18,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             export TZ=America/USA
             apt update
-            apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git rubygems gcovr
+            apt install -y build-essential libantlr4-runtime-dev antlr4 cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git rubygems gcovr  default-jre
             python3 -m venv venv
             echo "export PATH=$PATH:/usr/local/bin/" >> $BASH_ENV
             echo "source $PWD/venv/bin/activate" >> $BASH_ENV
@@ -86,7 +86,7 @@ jobs:
             export TZ=America/USA
             apt update
             # libantlr4-runtime-dev antlr4 are ommited in order that meson downloads them using wrap
-            apt install -y build-essential cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git lcov gcovr rubygems
+            apt install -y build-essential cmake ninja-build python3-pip python3-dev python3 python3-pip python3-venv git rubygems default-jre
             python3 -m venv venv
             echo "source $PWD/venv/bin/activate" >> $BASH_ENV
             echo "export MODULE_NAME=hdlConvertor" >> $BASH_ENV
@@ -109,7 +109,7 @@ jobs:
       - run:
           name: build
           command: |
-              python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j1"  . # -j1 because we do not have enough RAM
+              python3 -m build -Ccompile-args="--verbose" -Ccompile-args="-j1" . # -j1 because we do not have enough RAM
               pip3 install dist/*.whl
               rm -rf $MODULE_NAME
 
@@ -119,6 +119,7 @@ jobs:
           bin: false
           build: true
           src: false
+          build_extra_args: "-Ccompile-args=\"--verbose\" -Ccompile-args=\"-j1\""
 
 workflows:
   main:

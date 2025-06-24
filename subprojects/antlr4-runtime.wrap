@@ -1,5 +1,5 @@
 [wrap-git]
 url = https://github.com/antlr/antlr4.git
-revision = 4.13.1
+revision = 4.13.2
 diff_files=0001-add-CMakeLists.txt-to-root.patch
 depth=1

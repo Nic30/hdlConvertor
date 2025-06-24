@@ -308,7 +308,7 @@ module aes_cipher_top (
     function [7:0] xtime (
         input [7:0] b
     );
-        xtime = {b[6:0], 1'b0} ^ (8'h1b & {8{b[7]}});
+        xtime = ({b[6:0], 1'b0}) ^ 8'h1b & ({8{b[7]}});
     endfunction
 
     aes_key_expand_128 u0 (

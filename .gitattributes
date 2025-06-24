@@ -1,0 +1,10 @@
+.appveyor.yml export-ignore
+.circleci/ export-ignore
+.github export-ignore
+Dockerfile export-ignore
+.dockerignore export-ignore
+tests/** export-ignore
+tests/ghdl/** export-ignore
+tests/ghdl/ export-ignore
+tests/ghdl/logo.png export-ignore
+notebooks export-ignore
