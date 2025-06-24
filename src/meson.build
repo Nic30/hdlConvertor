@@ -17,7 +17,7 @@ hdlConvertor_core_src += run_command(py3, '../utils/rec_glob.py', './baseHdlPars
 hdlConvertor_core_static_lib = static_library('hdlConvertor_core_static',
     hdlConvertor_core_src,
     cpp_args: EXTRA_CXX_FLAGS,
-    dependencies: [antlr4_cpp_dep],
+    dependencies: [antlr4_cpp_dep, all_parser_deps],
     include_directories: [mainIncludeDir_inc],
     #link_with: [libtracker_common],
 )
@@ -34,7 +34,7 @@ if get_option('python_package')
 	hdlConvertor_cpp_static = static_library('hdlConvertor_cpp_static',
     	hdlConvertor_cpp_src,
 	    cpp_args: EXTRA_CXX_FLAGS,
-	    dependencies: [antlr4_cpp_dep],
+	    dependencies: [antlr4_cpp_dep, all_parser_deps],
 	    include_directories: [mainIncludeDir_inc],
 	    link_with: [hdlConvertor_core_static_lib, all_parser_libs],
 	)
@@ -44,7 +44,7 @@ else
 	hdlConvertor_cpp_shared = shared_library('hdlConvertor_cpp_shared',
 		hdlConvertor_cpp_src,
 	 	cpp_args: EXTRA_CXX_FLAGS,
-	    dependencies: [antlr4_cpp_dep],
+	    dependencies: [antlr4_cpp_dep, ] + all_parser_deps,
 	    include_directories: [mainIncludeDir_inc],
 	    link_with: [hdlConvertor_core_static_lib, all_parser_libs],
 	)

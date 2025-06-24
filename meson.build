@@ -88,6 +88,7 @@ curSrcDir = meson.current_source_dir()
 mainIncludeDir = 'include/'
 mainIncludeDir_inc = include_directories(mainIncludeDir)
 all_parser_libs = []
+all_parser_deps = []
 foreach parserTuple : ANTLR_PARSERS
 	name = parserTuple[0]
 	folder_name = parserTuple[1]
@@ -157,6 +158,9 @@ foreach parserTuple : ANTLR_PARSERS
         include_directories: [mainIncludeDir_inc, include_directories(genIncludeDir)],
     )
     all_parser_libs += parser_lib
+    parser_lib_dependency = declare_dependency(
+         link_with : [parser_lib],)
+    all_parser_deps += parser_lib_dependency
 endforeach
 
 subdir('src')
