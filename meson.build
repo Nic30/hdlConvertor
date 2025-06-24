@@ -89,6 +89,8 @@ mainIncludeDir = 'include/'
 mainIncludeDir_inc = include_directories(mainIncludeDir)
 all_parser_libs = []
 all_parser_deps = []
+all_parser_header_targets = []
+
 foreach parserTuple : ANTLR_PARSERS
 	name = parserTuple[0]
 	folder_name = parserTuple[1]
@@ -147,7 +149,11 @@ foreach parserTuple : ANTLR_PARSERS
 		endif
 	endforeach
 	genIncludeDir = join_paths('include', 'hdlConvertor', folder_name, f'@name@Parser')
-  	subdir(genIncludeDir)
+	subdir(genIncludeDir)
+
+	# Add the header copy target to our list of dependencies
+	all_parser_header_targets += antrl_parser_headers
+
 	parser_cpp_src = run_command(python_prog, 'utils/rec_glob.py', join_paths('src', folder_name), '*.cpp', check:true)\
     	.stdout().strip().split('\n')
 	
