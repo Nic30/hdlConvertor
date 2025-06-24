@@ -7,7 +7,7 @@ import sys
 
 def call_glob():
     if len(sys.argv) != 3:
-        print("[Error] Usage `glob.py path 'module'|pattern`, but provided `%r`" % sys.argv, file=sys.stderr)
+        print("[Error] Usage `glob.py path 'module'|any|pattern`, but provided `%r`" % sys.argv, file=sys.stderr)
         sys.exit(1)
 
     root, mode = sys.argv[1:]
@@ -23,10 +23,15 @@ def call_glob():
                 print(d)
                 seen_module_directories.add(d)
 
+    elif mode == '*':
+        for path in Path(root).rglob(mode):
+            if path.is_file():
+                print(path.as_posix())
     else:
         # list files by extension in a folder
         for path in Path(root).glob(mode):
-            print(path.as_posix())
+            if path.is_file():
+                print(path.as_posix())
 
 
 if __name__ == "__main__":

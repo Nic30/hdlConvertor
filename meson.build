@@ -23,7 +23,7 @@ cc = meson.get_compiler('cpp')
 EXTRA_CXX_FLAGS = []
 EXTRA_LD_FLAGS = []
 if meson.get_compiler('cpp').get_id() == 'msvc'
-	EXTRA_CXX_FLAGS.append('/bigobj')
+	EXTRA_CXX_FLAGS += ['-MP /wd4251', '/bigobj'] # https://github.com/antlr/antlr4/blob/dev/runtime/Cpp/demo/CMakeLists.txt
 	# using /MD flag for antlr4_runtime (for Visual C++ compilers only)
 elif host_machine.system() == 'cygwin'
 	EXTRA_CXX_FLAGS += ['-Wa,-mbig-obj']
@@ -50,7 +50,7 @@ endif
 	antlr4_runtime_opt.set_install(false) # because meson-python does not know where to install it
 	antlr4_runtime_proj = cmake.subproject('antlr4-runtime', options: antlr4_runtime_opt)
 	antlr4_cpp_dep = antlr4_runtime_proj.dependency('antlr4_static')
-	antlr4_cpp_version = '4.13.1'
+	antlr4_cpp_version = '4.13.2' # :note: must match version in antlr4-runtime.wrap
 	import('java') # to check that java is installed
 	antlr4_jar = join_paths(meson.current_build_dir() , 'antlr4-complete.jar')
 	fs = import('fs')
@@ -88,6 +88,7 @@ curSrcDir = meson.current_source_dir()
 mainIncludeDir = 'include/'
 mainIncludeDir_inc = include_directories(mainIncludeDir)
 all_parser_libs = []
+all_parser_deps = []
 foreach parserTuple : ANTLR_PARSERS
 	name = parserTuple[0]
 	folder_name = parserTuple[1]
@@ -157,6 +158,9 @@ foreach parserTuple : ANTLR_PARSERS
         include_directories: [mainIncludeDir_inc, include_directories(genIncludeDir)],
     )
     all_parser_libs += parser_lib
+    parser_lib_dependency = declare_dependency(
+         link_with : [parser_lib],)
+    all_parser_deps += parser_lib_dependency
 endforeach
 
 subdir('src')
@@ -164,3 +168,11 @@ subdir('src')
 if get_option('python_package')
 	subdir('hdlConvertor')
 endif
+
+# if tests files are in the package mark them as test data
+test_data = run_command(python_prog, 'utils/rec_glob.py', 'tests', '*', check:true)\
+	.stdout().strip().split('\n')
+message('test_data:\n' + '\n'.join(test_data))
+	
+install_data(test_data, install_tag : 'tests')
+
