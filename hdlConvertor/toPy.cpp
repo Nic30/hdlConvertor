@@ -265,6 +265,8 @@ PyObject* ToPy::toPy(const HdlFunctionDef *o) {
 		return nullptr;
 	if (toPy_property(py_inst, "is_virtual", o->is_virtual))
 		return nullptr;
+	if (toPy_property(py_inst, "is_impure", o->is_impure))
+		return nullptr;
 	if (o->params) {
 		if (toPy_arr(py_inst, "params", *o->params))
 			return nullptr;
@@ -343,8 +345,10 @@ PyObject* ToPy::toPy(const HdlIdDef *o) {
 	if (toPy(static_cast<const WithNameAndDoc*>(o), py_inst))
 		return nullptr;
 
-	if (toPy_property(py_inst, "type", o->type))
-		return nullptr;
+	if (o->type) {
+		if (toPy_property(py_inst, "type", o->type))
+			return nullptr;
+	}
 	if (o->value) {
 		if (toPy_property(py_inst, "value", o->value))
 			return nullptr;
@@ -356,6 +360,8 @@ PyObject* ToPy::toPy(const HdlIdDef *o) {
 	if (toPy_property(py_inst, "is_static", o->is_static))
 		return nullptr;
 	if (toPy_property(py_inst, "is_shared", o->is_shared))
+		return nullptr;
+	if (toPy_property(py_inst, "is_alias", o->is_alias))
 		return nullptr;
 	if (toPy_property(py_inst, "direction", o->direction))
 		return nullptr;

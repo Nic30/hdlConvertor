@@ -65,6 +65,9 @@ class VhdlConversionTC(HdlParseTC):
         with self.assertRaises(ParseException):
             parseFile("malformed.vhdl")
 
+    def test_arch_with_alias(self):
+        self.parseWithRef("arch_with_alias.vhd", Language.VHDL)
+
     def test_arch_with_assig(self):
         self.parseWithRef("arch_with_assig.vhd", Language.VHDL)
 
@@ -120,6 +123,9 @@ class VhdlConversionTC(HdlParseTC):
 
     def test_package_stm_nop(self):
         self.parseWithRef("stm_nop.vhd", Language.VHDL)
+
+    def test_package_function_impure(self):
+        self.parseWithRef("function_impure.vhd", Language.VHDL)
 
     def test_package_function_noarg(self):
         self.parseWithRef("function_noarg.vhd", Language.VHDL)

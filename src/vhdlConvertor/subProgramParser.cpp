@@ -91,8 +91,15 @@ std::unique_ptr<HdlFunctionDef> VhdlSubProgramParser::visitFunction_specificatio
 	if (fpl)
 		paramList = visitFormal_parameter_list(fpl);
 
-	return create_object<HdlFunctionDef>(ctx, name, isOperator,
+	auto is_impure = ctx->KW_IMPURE();
+
+	auto f = create_object<HdlFunctionDef>(ctx, name, isOperator,
 			std::move(returnT), std::move(paramList));
+
+	if (is_impure)
+		f->is_impure = true;
+
+	return f;
 }
 
 std::unique_ptr<std::vector<std::unique_ptr<HdlIdDef>>> VhdlSubProgramParser::visitFormal_parameter_list(

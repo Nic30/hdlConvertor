@@ -11,6 +11,7 @@
 #include <hdlConvertor/vhdlConvertor/typeDeclarationParser.h>
 #include <hdlConvertor/vhdlConvertor/packageHeaderParser.h>
 #include <hdlConvertor/vhdlConvertor/packageParser.h>
+#include <hdlConvertor/vhdlConvertor/aliasParser.h>
 #include <hdlConvertor/vhdlConvertor/designFileParser.h>
 #include <assert.h>
 
@@ -177,8 +178,8 @@ void VhdlProcessParser::visitProcess_or_package_declarative_item(
 	}
 	auto aliasd = ctx->alias_declaration();
 	if (aliasd) {
-		NotImplementedLogger::print("VhdlProcessParser.visitAlias_declaration",
-				aliasd);
+		auto alias = VhdlAliasParser::visitAlias_declaration(aliasd);
+		objs.push_back(std::move(alias));
 		return;
 	}
 	auto atrd = ctx->attribute_declaration();
