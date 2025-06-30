@@ -24,6 +24,7 @@ public:
 	bool is_const;
 	bool is_static;
 	bool is_shared;
+	bool is_alias;
 	HdlDirection direction;
 
 	HdlIdDef(const std::string &id, std::unique_ptr<iHdlExprItem> type,

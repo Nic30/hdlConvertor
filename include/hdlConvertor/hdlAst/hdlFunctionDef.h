@@ -22,6 +22,7 @@ public:
 	bool is_virtual;
 	bool is_task;
 	bool is_declaration_only;
+	bool is_impure;
 
 	HdlFunctionDef(const std::string &name, bool is_operator,
 			std::unique_ptr<iHdlExprItem> returnT,
